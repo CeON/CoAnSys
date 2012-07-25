@@ -2,7 +2,7 @@
  * (C) 2010-2012 ICM UW. All rights reserved.
  */
 
-package pl.ceon.research.ziparchives;
+package pl.edu.icm.coansys.importers;
 
 import pl.edu.icm.coansys.importers.ZipArchive;
 import java.io.BufferedReader;
