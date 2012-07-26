@@ -4,7 +4,6 @@
 
 package pl.edu.icm.coansys.importers;
 
-import pl.edu.icm.coansys.importers.ZipArchive;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
