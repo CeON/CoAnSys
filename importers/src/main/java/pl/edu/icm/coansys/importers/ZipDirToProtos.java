@@ -65,8 +65,9 @@ public class ZipDirToProtos implements Iterable<DocumentMetadata.Builder> {
 
             @Override
             public DocumentMetadata.Builder next() {
+                DocumentMetadata.Builder actualItem = nextItem;
                 moveToNextItem();
-                return nextItem;
+                return actualItem;
             }
 
             @Override
