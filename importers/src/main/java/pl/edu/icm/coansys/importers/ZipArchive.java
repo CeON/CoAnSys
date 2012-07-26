@@ -1,7 +1,6 @@
 /*
  * (C) 2010-2012 ICM UW. All rights reserved.
  */
-
 package pl.edu.icm.coansys.importers;
 
 import java.io.IOException;
@@ -14,32 +13,32 @@ import java.util.zip.ZipFile;
 
 /**
  *
- * @author acz
- * 
- * Klasa indeksująca zawartość archiwum ZIP, umożliwiająca filtrowanie plików 
- * według wzorca typu regular expression oraz dająca dostęp do pliku 
- * o podanej nazwie
- * 
+ * @author Artur Czeczko a.czeczko@icm.edu.pl
+ *
+ * Class which indexes a ZIP archive;
+ * provides file filtering by name (using regular expression);
+ * gives access to file as InputStream
+ *
  */
 public class ZipArchive {
 
     private ZipFile zipFile;
     private Enumeration<? extends ZipEntry> entries;
     private Map<String, ZipEntry> filesMap = new HashMap<String, ZipEntry>();
-    
+
     public ZipArchive(String zipFilePath) throws IOException {
         zipFile = new ZipFile(zipFilePath);
-        
+
         entries = zipFile.entries();
-        
+
         while (entries.hasMoreElements()) {
             ZipEntry entry = entries.nextElement();
             if (!entry.isDirectory()) {
-                filesMap.put(entry.getName(), entry); 
-           }
+                filesMap.put(entry.getName(), entry);
+            }
         }
     }
-    
+
     public List<String> filter(String regExp) {
         List<String> resultList = new ArrayList<String>();
         for (String path : filesMap.keySet()) {
@@ -51,13 +50,16 @@ public class ZipArchive {
         }
         return resultList;
     }
-    
+
     public List<String> listFiles() {
         return new ArrayList(filesMap.keySet());
     }
-    
+
     public InputStream getFileAsInputStream(String path) throws IOException {
         ZipEntry entry = filesMap.get(path);
-        return zipFile.getInputStream(entry);
+        if (entry != null) {
+            return zipFile.getInputStream(entry);
+        }
+        return null;
     }
 }
