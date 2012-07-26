@@ -3,16 +3,22 @@
  */
 package pl.edu.icm.coansys.importers;
 
+import com.google.protobuf.ByteString;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.yecht.Bytestring;
+import pl.edu.icm.coansys.importers.DocumentProtos.Document;
 import pl.edu.icm.coansys.importers.DocumentProtos.DocumentMetadata;
+import pl.edu.icm.coansys.importers.DocumentProtos.Media;
 import pl.edu.icm.synat.application.model.bwmeta.YContentEntry;
+import pl.edu.icm.synat.application.model.bwmeta.YContentFile;
 import pl.edu.icm.synat.application.model.bwmeta.YElement;
 import pl.edu.icm.synat.application.model.bwmeta.YExportable;
 
@@ -20,7 +26,7 @@ import pl.edu.icm.synat.application.model.bwmeta.YExportable;
  *
  * @author Artur Czeczko a.czeczko@icm.edu.pl
  */
-public class ZipDirToProtos implements Iterable<DocumentMetadata.Builder> {
+public class ZipDirToProtos implements Iterable<Document.Builder> {
     /*
      * The directory contains multiple zip files. Every zip file can contain
      * multiple xml files. Every xml file can contain multiple YExportable
@@ -40,9 +46,8 @@ public class ZipDirToProtos implements Iterable<DocumentMetadata.Builder> {
     private Iterator<String> xmlPathIterator = null;
     private Iterator<YExportable> yExportableIterator = null;
     //An object which will be returned by next call of iterators next() method
-    private DocumentMetadata.Builder nextItem = null;
+    private Document.Builder nextItem = null;
 
-    
     public ZipDirToProtos(String zipDirPath) {
         File zipDir = new File(zipDirPath);
         if (zipDir.isDirectory()) {
@@ -55,7 +60,7 @@ public class ZipDirToProtos implements Iterable<DocumentMetadata.Builder> {
     }
 
     @Override
-    public Iterator<DocumentMetadata.Builder> iterator() {
+    public Iterator<Document.Builder> iterator() {
         return new Iterator() {
 
             @Override
@@ -64,8 +69,8 @@ public class ZipDirToProtos implements Iterable<DocumentMetadata.Builder> {
             }
 
             @Override
-            public DocumentMetadata.Builder next() {
-                DocumentMetadata.Builder actualItem = nextItem;
+            public Document.Builder next() {
+                Document.Builder actualItem = nextItem;
                 moveToNextItem();
                 return actualItem;
             }
@@ -112,30 +117,50 @@ public class ZipDirToProtos implements Iterable<DocumentMetadata.Builder> {
             if (yExportable instanceof YElement) {
                 YElement yElement = (YElement) yExportable;
 
-                nextItem = MetadataPBParser.yelementToDocumentMetadata(yElement);
-                //if not null, this guarantees exit from while loop
+                DocumentMetadata.Builder dmBuilder = MetadataPBParser.yelementToDocumentMetadata(yElement);
 
                 // try to enrich nextItem to media content
-                if (nextItem != null) {
+                if (dmBuilder != null) {
+                    nextItem = Document.newBuilder();
+                    nextItem.setKey("temporary-key"); //TODO: insert "normal" key
+                    nextItem.setMetadata(dmBuilder.build());
+
                     List<YContentEntry> contents = yElement.getContents();
                     for (YContentEntry content : contents) {
                         InputStream pdfIS = null;
-                        try {
-                            //TODO: get a pdf path from yElement
-                            if (content.isFile()) {
-                                // content.getAttributes("lol");
-                            }
-                            
-                            String pdfPath = "(fix_me)not/yet/a/true/path...";
-                            pdfIS = actualZipArchive.getFileAsInputStream(pdfPath);
-                            // ... do something with pdfIS...
-                        } catch (IOException ex) {
-                            logger.error(ex.toString());
-                        } finally {
-                            try {
-                                pdfIS.close();
-                            } catch (IOException ex) {
-                                logger.error(ex.toString());
+                        //get a pdf path from yElement
+                        if (content.isFile()) {
+
+                            YContentFile yFile = (YContentFile) content;
+
+                            //supported format: PDF
+                            //Here you can add support of other formats (see also setMediaType() below)
+                            if ("application/pdf".equals(yFile.getFormat())) {
+                                for (String location : yFile.getLocations()) {
+                                    //path to pdf in yFile contains prefix yadda.pack:/, check and remove it
+                                    String prefix = "yadda.pack:/";
+                                    if (location.startsWith(prefix)) {
+                                        location = location.substring(prefix.length());
+                                        //path to pdf in zip file contains zip filename, not included in yFile
+                                        List<String> foundPaths = actualZipArchive.filter(".*" + location);
+                                        //foundPaths should contain 1 item
+                                        if (foundPaths.size() > 0) {
+                                            try {
+                                                pdfIS = actualZipArchive.getFileAsInputStream(foundPaths.get(0));
+                                                // ... do something with pdfIS
+                                                Media.Builder mediaBuilder = Media.newBuilder();
+                                                mediaBuilder.setKey("temporary-key"); //TODO: insert "normal" key
+                                                mediaBuilder.setMediaType("PDF"); //??
+                                                mediaBuilder.setContent(ByteString.copyFrom(IOUtils.toByteArray(pdfIS)));
+                                                nextItem.addMedia(mediaBuilder.build());
+                                            } catch (IOException ex) {
+                                                logger.error(ex.toString());
+                                            }
+                                        } else {
+                                            logger.error("File path in BWmeta, but not in archive: " + location);
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
