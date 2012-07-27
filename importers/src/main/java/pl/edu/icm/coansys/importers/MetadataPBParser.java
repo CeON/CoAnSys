@@ -228,7 +228,7 @@ public class MetadataPBParser {
         return doc;
     }
 
-    public static DocumentMetadata yelementToDocumentMetadata(YElement yElement) {
+    public static DocumentMetadata yelementToDocumentMetadata(YElement yElement, String collection) {
         YStructure struct = yElement.getStructure(YaddaIdConstants.ID_HIERARACHY_JOURNAL);
         if (struct == null || !YaddaIdConstants.ID_LEVEL_JOURNAL_ARTICLE.equals(struct.getCurrent().getLevel())) {
             return null;
@@ -346,11 +346,13 @@ public class MetadataPBParser {
         }
 
         docBuilder.addAllReference(references);
+        
+        docBuilder.setCollection(collection);
 
         return docBuilder.build();
     }
 
-    public static List<DocumentMetadata> parseStream(InputStream stream, MetadataType type) {
+    public static List<DocumentMetadata> parseStream(InputStream stream, MetadataType type, String collection) {
         List<DocumentMetadata> results = new ArrayList<DocumentMetadata>();
 
         try {
@@ -358,7 +360,7 @@ public class MetadataPBParser {
             if (elem != null) {
                 for (YExportable yExportable : elem) {
                     if (yExportable instanceof YElement) {
-                        DocumentMetadata doc = yelementToDocumentMetadata((YElement) yExportable);
+                        DocumentMetadata doc = yelementToDocumentMetadata((YElement) yExportable, collection);
                         if (doc != null) {
                             results.add(doc);
                         }

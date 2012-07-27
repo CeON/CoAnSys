@@ -36,6 +36,7 @@ public class ZipDirToProtos implements Iterable<Document> {
      */
 
     private static final Logger logger = LoggerFactory.getLogger(ZipDirToProtos.class);
+    private String collection;
     //List of zip files to process and actual position in this list
     private File[] listZipFiles;
     private int zipIndex;
@@ -47,7 +48,8 @@ public class ZipDirToProtos implements Iterable<Document> {
     //An object which will be returned by next call of iterators next() method
     private Document nextItem = null;
 
-    public ZipDirToProtos(String zipDirPath) {
+    public ZipDirToProtos(String zipDirPath, String collection) {
+        this.collection = collection;
         File zipDir = new File(zipDirPath);
         if (zipDir.isDirectory()) {
             listZipFiles = zipDir.listFiles(new ZipFilter());
@@ -115,7 +117,7 @@ public class ZipDirToProtos implements Iterable<Document> {
             if (yExportable instanceof YElement) {
                 YElement yElement = (YElement) yExportable;
 
-                DocumentMetadata docMetadata = MetadataPBParser.yelementToDocumentMetadata(yElement);
+                DocumentMetadata docMetadata = MetadataPBParser.yelementToDocumentMetadata(yElement, collection);
                 
                 if (docMetadata != null) {
                     docBuilder = Document.newBuilder();
@@ -146,7 +148,7 @@ public class ZipDirToProtos implements Iterable<Document> {
                                                 pdfIS = actualZipArchive.getFileAsInputStream(foundPaths.get(0));
                                                 // ... do something with pdfIS
                                                 Media.Builder mediaBuilder = Media.newBuilder();
-                                                mediaBuilder.setKey(nextItem.getKey()); //Media and Document should have the same key?
+                                                mediaBuilder.setKey(docBuilder.getKey()); //Media and Document should have the same key?
                                                 mediaBuilder.setMediaType("PDF"); //??
                                                 mediaBuilder.setContent(ByteString.copyFrom(IOUtils.toByteArray(pdfIS)));
                                                 docBuilder.addMedia(mediaBuilder.build());
