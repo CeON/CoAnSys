@@ -15,9 +15,9 @@ public class ZipDirToProtosTest {
         ZipDirToProtos zdtp = new ZipDirToProtos(zipDirPath);
         
         int counter = 0;
-        for (Document.Builder builder : zdtp) {
+        for (Document doc : zdtp) {
             System.out.println("counter: " + counter++);
-            System.out.println("builder: " + builder.toString());
+            System.out.println("builder: " + doc.toString());
         }
     }
 }

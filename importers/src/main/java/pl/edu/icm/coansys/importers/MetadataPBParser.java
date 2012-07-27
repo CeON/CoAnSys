@@ -24,6 +24,7 @@ import pl.edu.icm.synat.application.model.general.MetadataTransformers;
  *
  * @author piotrw
  * @author pdendek
+ * @author acz
  */
 public class MetadataPBParser {
 
@@ -163,7 +164,7 @@ public class MetadataPBParser {
         DocumentMetadata.Builder doc = DocumentProtos.DocumentMetadata.newBuilder();
 
         doc.setKey(UUID.randomUUID().toString());
-//        doc.setType(HBaseConstants.T_REFERENCE);
+//        docBuilder.setType(HBaseConstants.T_REFERENCE);
 
         String attr = item.getOneAttributeSimpleValue("reference-number");
         if (attr != null) {
@@ -227,13 +228,13 @@ public class MetadataPBParser {
         return doc;
     }
 
-    public static DocumentMetadata.Builder yelementToDocumentMetadata(YElement yElement) {
+    public static DocumentMetadata yelementToDocumentMetadata(YElement yElement) {
         YStructure struct = yElement.getStructure(YaddaIdConstants.ID_HIERARACHY_JOURNAL);
         if (struct == null || !YaddaIdConstants.ID_LEVEL_JOURNAL_ARTICLE.equals(struct.getCurrent().getLevel())) {
             return null;
         }
 
-        DocumentMetadata.Builder doc = DocumentProtos.DocumentMetadata.newBuilder();
+        DocumentMetadata.Builder docBuilder = DocumentProtos.DocumentMetadata.newBuilder();
 
         UUID uuId;
 
@@ -247,9 +248,9 @@ public class MetadataPBParser {
             log.warn("Error reading UUID from file: {}", e.toString());
             uuId = UUID.randomUUID();
         }
-        doc.setKey(uuId.toString());
-//        doc.setType(HBaseConstants.T_DOCUMENT_COPY);
-        doc.setTitle(yElement.getOneName().getText());
+        docBuilder.setKey(uuId.toString());
+//        docBuilder.setType(HBaseConstants.T_DOCUMENT_COPY);
+        docBuilder.setTitle(yElement.getOneName().getText());
 
         List<YContributor> authorNodeList = yElement.getContributors();
         List<Author> authors = new ArrayList<Author>();
@@ -262,42 +263,42 @@ public class MetadataPBParser {
                 authors.add(author.build());
             }
         }
-        doc.addAllAuthor(authors);
+        docBuilder.addAllAuthor(authors);
 
         List<String> keywords = Collections.emptyList();
         YTagList tagList = yElement.getTagList("keyword");
         if (tagList != null) {
             keywords = tagList.getValues();
         }
-        doc.addAllKeyword(keywords);
+        docBuilder.addAllKeyword(keywords);
         
         
         List<YDescription> abst = yElement.getDescriptions();
         if (abst != null && abst.size() > 0 && abst.get(0) != null) {
-            doc.setAbstrakt(abst.get(0).getText());
+            docBuilder.setAbstrakt(abst.get(0).getText());
         }
 
         YAncestor issue = yElement.getStructure(YaddaIdConstants.ID_HIERARACHY_JOURNAL).getAncestor("bwmeta1.level.hierarchy_Journal_Issue");
         if (issue != null && issue.getOneName() != null) {
-            doc.setIssue(issue.getOneName().getText());
+            docBuilder.setIssue(issue.getOneName().getText());
         }
 
         YAncestor volume = yElement.getStructure(YaddaIdConstants.ID_HIERARACHY_JOURNAL).getAncestor(YaddaIdConstants.ID_LEVEL_JOURNAL_VOLUME);
         if (volume != null) {
-            doc.setVolume(volume.getOneName().getText());
+            docBuilder.setVolume(volume.getOneName().getText());
         }
 
         String content;
         if((content = yElement.getId(YaddaIdConstants.IDENTIFIER_CLASS_DOI))!=null)
-        	doc.setDoi(content);
+        	docBuilder.setDoi(content);
         if((content = yElement.getId(YaddaIdConstants.IDENTIFIER_CLASS_ISSN))!=null)
-        	doc.setIssn(content);
+        	docBuilder.setIssn(content);
         if((content = yElement.getId(YaddaIdConstants.IDENTIFIER_CLASS_ISBN))!=null)
-        	doc.setIsbn(content);
+        	docBuilder.setIsbn(content);
         if((content = yElement.getId("bwmeta1.id-class.MR"))!=null)
-        	doc.setMrId(content);
+        	docBuilder.setMrId(content);
         if((content = yElement.getId("bwmeta1.id-class.Zbl"))!=null)
-        	doc.setZblId(content);
+        	docBuilder.setZblId(content);
 
         List<YCategoryRef> catRefs = yElement.getCategoryRefs();
         List<String> bwMscCodes = new ArrayList<String>();
@@ -313,21 +314,21 @@ public class MetadataPBParser {
                 }
             }
             if (bwMscCodes.size() > 0) {
-                doc.addAllMscCode(bwMscCodes);
+                docBuilder.addAllMscCode(bwMscCodes);
             }
             if (bwPacsCodes.size() > 0) {
-                doc.addAllPacsCode(bwPacsCodes);
+                docBuilder.addAllPacsCode(bwPacsCodes);
             }
         }
 
         YAncestor journal = yElement.getStructure(YaddaIdConstants.ID_HIERARACHY_JOURNAL).getAncestor(YaddaIdConstants.ID_LEVEL_JOURNAL_JOURNAL);
         if (journal != null) {
-            doc.setJournal(journal.getOneName().getText());
+            docBuilder.setJournal(journal.getOneName().getText());
         }
 
         YAncestor pages = yElement.getStructure(YaddaIdConstants.ID_HIERARACHY_JOURNAL).getAncestor(YaddaIdConstants.ID_LEVEL_JOURNAL_ARTICLE);
         if (pages != null) {
-            doc.setPages(pages.getPosition());
+            docBuilder.setPages(pages.getPosition());
         }
 
         List<YRelation> refNodes = yElement.getRelations("reference-to");
@@ -344,20 +345,20 @@ public class MetadataPBParser {
             }
         }
 
-        doc.addAllReference(references);
+        docBuilder.addAllReference(references);
 
-        return doc;
+        return docBuilder.build();
     }
 
-    public static List<DocumentMetadata.Builder> parseStream(InputStream stream, MetadataType type) {
-        List<DocumentMetadata.Builder> results = new ArrayList<DocumentMetadata.Builder>();
+    public static List<DocumentMetadata> parseStream(InputStream stream, MetadataType type) {
+        List<DocumentMetadata> results = new ArrayList<DocumentMetadata>();
 
         try {
             List<YExportable> elem = MetadataPBParser.streamToYExportable(stream, type);
             if (elem != null) {
                 for (YExportable yExportable : elem) {
                     if (yExportable instanceof YElement) {
-                        DocumentMetadata.Builder doc = yelementToDocumentMetadata((YElement) yExportable);
+                        DocumentMetadata doc = yelementToDocumentMetadata((YElement) yExportable);
                         if (doc != null) {
                             results.add(doc);
                         }
