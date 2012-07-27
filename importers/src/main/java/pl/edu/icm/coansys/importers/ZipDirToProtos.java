@@ -13,7 +13,6 @@ import java.util.List;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.yecht.Bytestring;
 import pl.edu.icm.coansys.importers.DocumentProtos.Document;
 import pl.edu.icm.coansys.importers.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.importers.DocumentProtos.Media;
@@ -26,7 +25,7 @@ import pl.edu.icm.synat.application.model.bwmeta.YExportable;
  *
  * @author Artur Czeczko a.czeczko@icm.edu.pl
  */
-public class ZipDirToProtos implements Iterable<Document.Builder> {
+public class ZipDirToProtos implements Iterable<Document> {
     /*
      * The directory contains multiple zip files. Every zip file can contain
      * multiple xml files. Every xml file can contain multiple YExportable
@@ -37,6 +36,7 @@ public class ZipDirToProtos implements Iterable<Document.Builder> {
      */
 
     private static final Logger logger = LoggerFactory.getLogger(ZipDirToProtos.class);
+    private String collection;
     //List of zip files to process and actual position in this list
     private File[] listZipFiles;
     private int zipIndex;
@@ -46,9 +46,10 @@ public class ZipDirToProtos implements Iterable<Document.Builder> {
     private Iterator<String> xmlPathIterator = null;
     private Iterator<YExportable> yExportableIterator = null;
     //An object which will be returned by next call of iterators next() method
-    private Document.Builder nextItem = null;
+    private Document nextItem = null;
 
-    public ZipDirToProtos(String zipDirPath) {
+    public ZipDirToProtos(String zipDirPath, String collection) {
+        this.collection = collection;
         File zipDir = new File(zipDirPath);
         if (zipDir.isDirectory()) {
             listZipFiles = zipDir.listFiles(new ZipFilter());
@@ -60,7 +61,7 @@ public class ZipDirToProtos implements Iterable<Document.Builder> {
     }
 
     @Override
-    public Iterator<Document.Builder> iterator() {
+    public Iterator<Document> iterator() {
         return new Iterator() {
 
             @Override
@@ -69,8 +70,8 @@ public class ZipDirToProtos implements Iterable<Document.Builder> {
             }
 
             @Override
-            public Document.Builder next() {
-                Document.Builder actualItem = nextItem;
+            public Document next() {
+                Document actualItem = nextItem;
                 moveToNextItem();
                 return actualItem;
             }
@@ -83,10 +84,9 @@ public class ZipDirToProtos implements Iterable<Document.Builder> {
     }
 
     private void moveToNextItem() {
+        Document.Builder docBuilder = null;
 
-        nextItem = null;
-
-        while (nextItem == null) {
+        while (docBuilder == null) {
             while (yExportableIterator == null || !yExportableIterator.hasNext()) {
                 while (xmlPathIterator == null || !xmlPathIterator.hasNext()) {
                     if (listZipFiles == null || zipIndex >= listZipFiles.length) {
@@ -117,13 +117,12 @@ public class ZipDirToProtos implements Iterable<Document.Builder> {
             if (yExportable instanceof YElement) {
                 YElement yElement = (YElement) yExportable;
 
-                DocumentMetadata.Builder dmBuilder = MetadataPBParser.yelementToDocumentMetadata(yElement);
-
-                // try to enrich nextItem to media content
-                if (dmBuilder != null) {
-                    nextItem = Document.newBuilder();
-                    nextItem.setKey("temporary-key"); //TODO: insert "normal" key
-                    nextItem.setMetadata(dmBuilder.build());
+                DocumentMetadata docMetadata = MetadataPBParser.yelementToDocumentMetadata(yElement, collection);
+                
+                if (docMetadata != null) {
+                    docBuilder = Document.newBuilder();
+                    docBuilder.setKey(docMetadata.getKey()); //Document and DocumentMetadata should have the same key?
+                    docBuilder.setMetadata(docMetadata);
 
                     List<YContentEntry> contents = yElement.getContents();
                     for (YContentEntry content : contents) {
@@ -149,10 +148,10 @@ public class ZipDirToProtos implements Iterable<Document.Builder> {
                                                 pdfIS = actualZipArchive.getFileAsInputStream(foundPaths.get(0));
                                                 // ... do something with pdfIS
                                                 Media.Builder mediaBuilder = Media.newBuilder();
-                                                mediaBuilder.setKey("temporary-key"); //TODO: insert "normal" key
+                                                mediaBuilder.setKey(docBuilder.getKey()); //Media and Document should have the same key?
                                                 mediaBuilder.setMediaType("PDF"); //??
                                                 mediaBuilder.setContent(ByteString.copyFrom(IOUtils.toByteArray(pdfIS)));
-                                                nextItem.addMedia(mediaBuilder.build());
+                                                docBuilder.addMedia(mediaBuilder.build());
                                             } catch (IOException ex) {
                                                 logger.error(ex.toString());
                                             }
@@ -167,6 +166,7 @@ public class ZipDirToProtos implements Iterable<Document.Builder> {
                 }
             }
         }
+        nextItem = docBuilder.build();
     }
 
     private static class ZipFilter implements FilenameFilter {
