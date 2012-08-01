@@ -13,7 +13,9 @@ import pl.edu.icm.coansys.importers.model.DocumentProtos.MediaConteiner;
 import pl.edu.icm.coansys.importers.model.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.importers.model.DocumentProtos.Media;
 
-
+/**
+ * @author pdendek
+ */
 public class DocumentDTO {
 
 	protected String collection;
