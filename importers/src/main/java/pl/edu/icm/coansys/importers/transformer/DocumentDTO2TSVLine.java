@@ -10,7 +10,7 @@ import pl.edu.icm.coansys.importers.model.DocumentDTO;
 /**
  * @author pdendek
  */
-public class DocumentDTO2TSV {
+public class DocumentDTO2TSVLine {
 	
 	public static String translate(DocumentDTO docDTO) {
 		return composeRow(docDTO) +"\t"+ docDTO.getDocumentMetadata() +"\t"+docDTO.getMediaConteiner() +"\n";
