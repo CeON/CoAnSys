@@ -7,13 +7,18 @@ package pl.edu.icm.coansys.importers.transformer;
 
 import pl.edu.icm.coansys.importers.model.DocumentDTO;
 
+
+
 /**
  * @author pdendek
  */
 public class DocumentDTO2TSVLine {
 	
+	public static final String separator = "################################";
+	public static final String lineEnding = "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n";
+	
 	public static String translate(DocumentDTO docDTO) {
-		return composeRow(docDTO) +"\t"+ docDTO.getDocumentMetadata() +"\t"+docDTO.getMediaConteiner() +"\n";
+		return composeRow(docDTO) + separator + docDTO.getDocumentMetadata() + separator +docDTO.getMediaConteiner() + lineEnding;
 	}
 
 	private static String composeRow(DocumentDTO docDTO) {

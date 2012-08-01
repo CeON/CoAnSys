@@ -16,7 +16,6 @@ import org.junit.Test;
 import pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator;
 import pl.edu.icm.coansys.importers.model.DocumentDTO;
 import pl.edu.icm.coansys.importers.transformer.DocumentDTO2TSVLine;
-import pl.edu.icm.coansys.importers.transformer.DocumentDto2KeyValue;
 
 /**
  * @author pdendek
@@ -33,10 +32,10 @@ public class ZipDirToTSVFileTest {
         ZipDirToDocumentDTOIterator zdtp = new ZipDirToDocumentDTOIterator(zipDirPath, "TEST_COLLECTION");
         BufferedWriter bw = new BufferedWriter(new FileWriter(new File("zip2tsvTEST.ignore.tsv")));
         
-        ArrayList<KeyValue> kvs = new ArrayList<KeyValue>();
-        
         for (DocumentDTO doc : zdtp) {
         	bw.write(DocumentDTO2TSVLine.translate(doc));
         }
+        bw.flush();
+        bw.close();
     }
 }
