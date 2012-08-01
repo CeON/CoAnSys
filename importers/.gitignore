@@ -1,5 +1,6 @@
 .project
-.gitignore~
 .settings
 .classpath
 target
+*~
+*.confidential.*
