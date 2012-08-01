@@ -27,6 +27,11 @@ import pl.edu.icm.synat.application.model.bwmeta.YContentFile;
 import pl.edu.icm.synat.application.model.bwmeta.YElement;
 import pl.edu.icm.synat.application.model.bwmeta.YExportable;
 
+/**
+ * 
+ * @author pdendek
+ *
+ */
 public class YElementFromZip2DocumentDto{
 
 	protected ZipArchive currentZipArchive;

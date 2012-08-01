@@ -1,7 +1,15 @@
+/*
+ * (C) 2010-2012 ICM UW. All rights reserved.
+ */
+
+
 package pl.edu.icm.coansys.importers.constants;
 
 import java.util.ArrayList;
 
+/**
+ * @author pdendek
+ */
 public class BWMetaConstants {
 	
 	public static final String mimePdfOneApplicationPdf = "application/pdf";

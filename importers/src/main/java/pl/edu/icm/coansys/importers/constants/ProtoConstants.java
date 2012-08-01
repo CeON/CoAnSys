@@ -4,7 +4,9 @@
 
 
 package pl.edu.icm.coansys.importers.constants;
-
+/**
+ * @author pdendek
+ */
 public class ProtoConstants {
 	public static final String authorExtIdZbl = "author.extid.zbl";
 	public static final String documentClassifCodeMsc = "document.classifcode.msc";

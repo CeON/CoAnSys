@@ -21,6 +21,7 @@ import pl.edu.icm.synat.application.model.bwmeta.YExportable;
 /**
  *
  * @author Artur Czeczko a.czeczko@icm.edu.pl
+ * @author pdendek
  */
 public class ZipDirToDocumentDTOIterator implements Iterable<DocumentDTO> {
     /*

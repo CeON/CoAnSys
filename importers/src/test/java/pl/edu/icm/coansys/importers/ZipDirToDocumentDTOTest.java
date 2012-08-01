@@ -12,6 +12,7 @@ import pl.edu.icm.coansys.importers.model.DocumentDTO;
 /**
  *
  * @author Artur Czeczko a.czeczko@icm.edu.pl
+ * @author pdendek
  */
 public class ZipDirToDocumentDTOTest {
     
