@@ -11,7 +11,7 @@ import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.edu.icm.coansys.importers.ProtoConstants;
+import pl.edu.icm.coansys.importers.constants.ProtoConstants;
 import pl.edu.icm.coansys.importers.model.DocumentProtos;
 import pl.edu.icm.coansys.importers.model.DocumentProtos.Author;
 import pl.edu.icm.coansys.importers.model.DocumentProtos.ClassifCode;
