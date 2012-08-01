@@ -19,7 +19,7 @@ import pl.edu.icm.coansys.importers.transformer.DocumentDto2KeyValue;
  */
 public class ZipDirToHFileTest {
     
-    @Test
+//    @Test
     public void readZipDirTest() {
         String zipDirPath = this.getClass().getClassLoader().getResource("zipdir").getPath();
         ZipDirToDocumentDTOIterator zdtp = new ZipDirToDocumentDTOIterator(zipDirPath, "TEST_COLLECTION");
