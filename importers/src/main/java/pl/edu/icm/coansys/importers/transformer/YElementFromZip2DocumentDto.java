@@ -16,6 +16,8 @@ import org.slf4j.LoggerFactory;
 import com.google.protobuf.ByteString;
 
 import pl.edu.icm.coansys.importers.ZipArchive;
+import pl.edu.icm.coansys.importers.constants.BWMetaConstants;
+import pl.edu.icm.coansys.importers.constants.ProtoConstants;
 import pl.edu.icm.coansys.importers.model.DocumentDTO;
 import pl.edu.icm.coansys.importers.model.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.importers.model.DocumentProtos.Media;
@@ -79,10 +81,7 @@ public class YElementFromZip2DocumentDto{
 
 		    YContentFile yFile = (YContentFile) content;
 
-		    //supported format: PDF
-		    //Here you can add support of other formats (see also setMediaType() below)
-		    //TODO: pdf may be represented by other strings, add support
-		    if ("application/pdf".equals(yFile.getFormat())) {
+		    if (BWMetaConstants.mimePdfListExtension.contains(yFile.getFormat())) {
 		        handlePDFContent(docDTO, pdfIS, yFile,currentZipArchive);
 		    }
 		}
@@ -104,7 +103,8 @@ public class YElementFromZip2DocumentDto{
 		                // ... do something with pdfIS
 		                Media.Builder mediaBuilder = Media.newBuilder();
 		                mediaBuilder.setKey(docDTO.getKey()); //Media and Document should have the same key?
-		                String type = "PDF";
+		                
+		                String type = ProtoConstants.mediaTypePdf;
 		                mediaBuilder.setMediaType(type); //??
 		                mediaBuilder.setContent(ByteString.copyFrom(IOUtils.toByteArray(pdfIS)));
 		                docDTO.addMedia(mediaBuilder.build());
