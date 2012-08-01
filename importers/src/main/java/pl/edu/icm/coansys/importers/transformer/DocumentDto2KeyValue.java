@@ -14,6 +14,9 @@ import org.apache.hadoop.hbase.util.Bytes;
 import pl.edu.icm.coansys.importers.constants.HBaseConstant;
 import pl.edu.icm.coansys.importers.model.DocumentDTO;
 
+/**
+ * @author pdendek
+ */
 public class DocumentDto2KeyValue {
 	
 	public DocumentDto2KeyValue(){

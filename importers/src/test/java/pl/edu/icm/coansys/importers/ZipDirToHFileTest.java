@@ -16,9 +16,14 @@ import pl.edu.icm.coansys.importers.transformer.DocumentDto2KeyValue;
 /**
  *
  * @author Artur Czeczko a.czeczko@icm.edu.pl
+ * @author pdendek
  */
 public class ZipDirToHFileTest {
-    
+
+    @Test
+    public void emptyTest() {
+    }	
+	
 //    @Test
     public void readZipDirTest() {
         String zipDirPath = this.getClass().getClassLoader().getResource("zipdir").getPath();
