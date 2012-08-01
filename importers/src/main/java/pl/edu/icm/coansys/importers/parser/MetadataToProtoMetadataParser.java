@@ -2,7 +2,7 @@
  * (C) 2010-2012 ICM UW. All rights reserved.
  */
 
-package pl.edu.icm.coansys.importers;
+package pl.edu.icm.coansys.importers.parser;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,8 +10,13 @@ import java.io.InputStreamReader;
 import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.edu.icm.coansys.importers.DocumentProtos.Author;
-import pl.edu.icm.coansys.importers.DocumentProtos.DocumentMetadata;
+
+import pl.edu.icm.coansys.importers.ProtoConstants;
+import pl.edu.icm.coansys.importers.model.DocumentProtos;
+import pl.edu.icm.coansys.importers.model.DocumentProtos.Author;
+import pl.edu.icm.coansys.importers.model.DocumentProtos.ClassifCode;
+import pl.edu.icm.coansys.importers.model.DocumentProtos.DocumentMetadata;
+import pl.edu.icm.coansys.importers.model.DocumentProtos.ExtId;
 import pl.edu.icm.synat.application.commons.transformers.MetadataFormat;
 import pl.edu.icm.synat.application.commons.transformers.MetadataReader;
 import pl.edu.icm.synat.application.commons.transformers.TransformationException;
@@ -26,13 +31,13 @@ import pl.edu.icm.synat.application.model.general.MetadataTransformers;
  * @author pdendek
  * @author acz
  */
-public class MetadataPBParser {
+public class MetadataToProtoMetadataParser {
 
     public enum MetadataType {
 
         BWMETA, OAI_DC, DMF
     }
-    private static final Logger log = LoggerFactory.getLogger(MetadataPBParser.class);
+    private static final Logger log = LoggerFactory.getLogger(MetadataToProtoMetadataParser.class);
 
     private static String convertStreamToString(InputStream is) throws IOException {
         InputStreamReader input = new InputStreamReader(is, "UTF-8");
@@ -123,7 +128,10 @@ public class MetadataPBParser {
                 }
             } else if (key.equals("zbl.author-fingerprint")) {
                 if (yAttribute.getValue() != null) {
-                	authorBuilder.setZbl(yAttribute.getValue());
+                	ExtId.Builder extId = ExtId.newBuilder();
+                	extId.setSource(ProtoConstants.authorExtIdZbl);
+                	extId.setValue(yAttribute.getValue());
+                	authorBuilder.addExtId(extId.build());
                 }
             } else if (key.equals("identity")) {
                 String authorIdentity = yAttribute.getValue();
@@ -155,8 +163,12 @@ public class MetadataPBParser {
         	author.setForenames(content);
         if((content = node.getOneAttributeSimpleValue("reference-parsed-author-surname"))!=null)
         	author.setSurname(content);
-        if((content = node.getOneAttributeSimpleValue("zbl.author-fingerprint"))!=null)
-        	author.setZbl(content);
+        if((content = node.getOneAttributeSimpleValue("zbl.author-fingerprint"))!=null){
+        	ExtId.Builder extId = ExtId.newBuilder();
+    		extId.setSource(ProtoConstants.authorExtIdZbl);
+    		extId.setValue(content);
+    		author.addExtId(extId.build());
+        }
         return author;
     }
 
@@ -181,17 +193,15 @@ public class MetadataPBParser {
             }
         }
 
-        doc.setBibRefText(item.getOneAttributeSimpleValue("reference-text"));
+        doc.setText(item.getOneAttributeSimpleValue("reference-text"));
 
-        ArrayList<Author> authors = new ArrayList<Author>();
         List<YAttribute> refAuthorsNodes = item.getAttributes("reference-parsed-author");
         for (int i = 0; i < refAuthorsNodes.size(); i++) {
             Author.Builder refAuthor = yattributeToAuthorMetadata(refAuthorsNodes.get(i));
             refAuthor.setDocId(doc.getKey().toString());
             refAuthor.setPositionNumber(i);
-            authors.add(refAuthor.build());
+            doc.addAuthor(refAuthor);
         }
-        doc.addAllAuthor(authors);
         
         String content = null;
         //References may not contain a title or any other then bibreftext filed
@@ -207,22 +217,21 @@ public class MetadataPBParser {
         	doc.setPages(content);
         
         //TODO czesc kodow MSC mylnie trafia do kwordow - mozna je stamtad wyciagnac porownujac z wzorcem kodu
-        List<String> refMscCodes = new ArrayList<String>();
         List<YAttribute> refMscCodesNodes = item.getAttributes(YaddaIdConstants.CATEGORY_CLASS_MSC);
         for (int i = 0; i < refMscCodesNodes.size(); i++) {
-            refMscCodes.add(refMscCodesNodes.get(i).getValue());
-        }
-        if (!refMscCodes.isEmpty()) {
-            doc.addAllMscCode(refMscCodes);
+        	ClassifCode.Builder ccb = ClassifCode.newBuilder();
+        	ccb.setSource(ProtoConstants.documentClassifCodeMsc);
+        	ccb.setValue(refMscCodesNodes.get(i).getValue());
+        	doc.addClassifCode(ccb);
         }
 
         List<String> refPacsCodes = new ArrayList<String>();
         List<YAttribute> refPacsCodesNodes = item.getAttributes(YaddaIdConstants.CATEGORY_CLASS_PACS);
         for (int i = 0; i < refPacsCodesNodes.size(); i++) {
-            refPacsCodes.add(refPacsCodesNodes.get(i).getValue());
-        }
-        if (!refPacsCodes.isEmpty()) {
-            doc.addAllPacsCode(refPacsCodes);
+        	ClassifCode.Builder ccb = ClassifCode.newBuilder();
+        	ccb.setSource(ProtoConstants.documentClassifCodePacs);
+        	ccb.setValue(refPacsCodesNodes.get(i).getValue());
+        	doc.addClassifCode(ccb);
         }
 
         return doc;
@@ -257,7 +266,7 @@ public class MetadataPBParser {
         for (int i = 0; i < authorNodeList.size(); i++) {
             YContributor currentNode = authorNodeList.get(i);
             if (currentNode != null && currentNode.isPerson() && "author".equals(currentNode.getRole())) {
-                Author.Builder author = MetadataPBParser.ycontributorToAuthorMetadata(currentNode);
+                Author.Builder author = MetadataToProtoMetadataParser.ycontributorToAuthorMetadata(currentNode);
                 author.setDocId(uuId.toString());
                 author.setPositionNumber(i);
                 authors.add(author.build());
@@ -295,10 +304,18 @@ public class MetadataPBParser {
         	docBuilder.setIssn(content);
         if((content = yElement.getId(YaddaIdConstants.IDENTIFIER_CLASS_ISBN))!=null)
         	docBuilder.setIsbn(content);
-        if((content = yElement.getId("bwmeta1.id-class.MR"))!=null)
-        	docBuilder.setMrId(content);
-        if((content = yElement.getId("bwmeta1.id-class.Zbl"))!=null)
-        	docBuilder.setZblId(content);
+        if((content = yElement.getId("bwmeta1.id-class.MR"))!=null){
+        	ExtId.Builder eib = ExtId.newBuilder();
+        	eib.setSource(ProtoConstants.documentExtIdMr);
+        	eib.setValue(content);
+        	docBuilder.setExtId(eib);
+        }
+        if((content = yElement.getId("bwmeta1.id-class.Zbl"))!=null){
+        	ExtId.Builder eib = ExtId.newBuilder();
+        	eib.setSource(ProtoConstants.documentExtIdZbl);
+        	eib.setValue(content);
+        	docBuilder.setExtId(eib);
+        }
 
         List<YCategoryRef> catRefs = yElement.getCategoryRefs();
         List<String> bwMscCodes = new ArrayList<String>();
@@ -308,16 +325,16 @@ public class MetadataPBParser {
         if (catRefs != null && catRefs.size() > 0) {
             for (YCategoryRef yCategoryRef : catRefs) {
                 if (yCategoryRef != null && yCategoryRef.getClassification().equals(YaddaIdConstants.CATEGORY_CLASS_MSC)) {
-                    bwMscCodes.add(yCategoryRef.getCode());
+                	ClassifCode.Builder ccode = ClassifCode.newBuilder();
+                	ccode.setSource(ProtoConstants.documentClassifCodeMsc);
+                	ccode.setValue(yCategoryRef.getCode());
+                	docBuilder.addClassifCode(ccode);
                 } else if (yCategoryRef != null && yCategoryRef.getClassification().equals(YaddaIdConstants.CATEGORY_CLASS_PACS)) {
-                    bwPacsCodes.add(yCategoryRef.getCode());
+                	ClassifCode.Builder ccode = ClassifCode.newBuilder();
+                	ccode.setSource(ProtoConstants.documentClassifCodePacs);
+                	ccode.setValue(yCategoryRef.getCode());
+                	docBuilder.addClassifCode(ccode);
                 }
-            }
-            if (bwMscCodes.size() > 0) {
-                docBuilder.addAllMscCode(bwMscCodes);
-            }
-            if (bwPacsCodes.size() > 0) {
-                docBuilder.addAllPacsCode(bwPacsCodes);
             }
         }
 
@@ -335,8 +352,8 @@ public class MetadataPBParser {
         List<DocumentMetadata> references = new ArrayList<DocumentMetadata>();
         if (refNodes != null && refNodes.size() > 0) {
             for (int i = 0; i < refNodes.size(); i++) {
-                DocumentMetadata.Builder refMetadata = MetadataPBParser.yrelationToDocumentMetadata(refNodes.get(i));
-                refMetadata.setBibRefSource(uuId.toString());
+                DocumentMetadata.Builder refMetadata = MetadataToProtoMetadataParser.yrelationToDocumentMetadata(refNodes.get(i));
+                refMetadata.setSource(uuId.toString());
                 if (refMetadata != null) {
                     // quick dirty fix
                     refMetadata.setBibRefPosition(i);
@@ -356,7 +373,7 @@ public class MetadataPBParser {
         List<DocumentMetadata> results = new ArrayList<DocumentMetadata>();
 
         try {
-            List<YExportable> elem = MetadataPBParser.streamToYExportable(stream, type);
+            List<YExportable> elem = MetadataToProtoMetadataParser.streamToYExportable(stream, type);
             if (elem != null) {
                 for (YExportable yExportable : elem) {
                     if (yExportable instanceof YElement) {
