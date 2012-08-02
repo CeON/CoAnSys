@@ -8,9 +8,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 
-import org.apache.hadoop.hbase.KeyValue;
 import org.junit.Test;
 
 import pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator;
@@ -29,7 +27,7 @@ public class ZipDirToTSVFileTest {
     @Test
     public void readZipDirTest() throws IOException {
         String zipDirPath = this.getClass().getClassLoader().getResource("zipdir").getPath();
-        ZipDirToDocumentDTOIterator zdtp = new ZipDirToDocumentDTOIterator(zipDirPath, "TEST_COLLECTION");
+        ZipDirToDocumentDTOIterator zdtp = new ZipDirToDocumentDTOIterator(zipDirPath, "TESTCOLLECTION");
         BufferedWriter bw = new BufferedWriter(new FileWriter(new File("zip2tsvTEST.ignore.tsv")));
         
         for (DocumentDTO doc : zdtp) {
