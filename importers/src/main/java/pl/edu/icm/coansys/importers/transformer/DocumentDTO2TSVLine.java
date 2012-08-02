@@ -5,6 +5,7 @@
 
 package pl.edu.icm.coansys.importers.transformer;
 
+import pl.edu.icm.coansys.importers.constants.HBaseConstant;
 import pl.edu.icm.coansys.importers.model.DocumentDTO;
 
 
@@ -24,10 +25,11 @@ public class DocumentDTO2TSVLine {
 	private static String composeRow(DocumentDTO docDTO) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(docDTO.getCollection());
+		sb.append(HBaseConstant.rowIdSeparator);
 //		sb.append(docDTO.getYear());
 		if(docDTO.getMediaTypes().size()>0)sb.append(1);
 		else sb.append(0);
-		sb.append("_");
+		sb.append(HBaseConstant.rowIdSeparator);
 		sb.append(docDTO.getKey());
 		
 		return sb.toString();
