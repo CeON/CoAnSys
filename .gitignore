@@ -1,6 +1,8 @@
 *.class
 .project
 *~
+*.confidential.*
+*.ignore.*
 
 # Package Files #
 *.jar
