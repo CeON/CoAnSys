@@ -1,6 +1,10 @@
 *.class
-.project
 *~
+
+# Eclipse files #
+.classpath
+.project
+.settings
 
 # IntelliJ IDEA files #
 .idea
