@@ -58,10 +58,6 @@ message DocumentMetadata{
     		optional string source = 19;
     		optional string text = 20;
     	optional string volume = 21;
-    	
-    	optional bool clusterActive = 22;
-    	repeated string clusterContents = 23;    	
-    	optional string partOfCluster = 24;
 }
 
 message Media {
@@ -70,6 +66,6 @@ message Media {
 	required bytes content = 3;
 }
 
-message MediaConteiner {
+message MediaContainer {
 	repeated Media media = 1;
 }

@@ -1,5 +1,7 @@
 *.class
 *~
+*.confidential.*
+*.ignore.*
 
 # Eclipse files #
 .classpath
