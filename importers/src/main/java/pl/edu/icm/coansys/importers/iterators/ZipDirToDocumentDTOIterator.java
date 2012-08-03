@@ -111,7 +111,7 @@ public class ZipDirToDocumentDTOIterator implements Iterable<DocumentDTO> {
             // here we have an yExportable:
             yElementFromZip2DocumentDTO.setCurrentZipArchive(currentZipArchive);
             docDTO = yElementFromZip2DocumentDTO.transformYElement(yExportableIterator.next(),currentZipArchive);
-            docDTO.setCollection(collection);
+            if(docDTO != null) docDTO.setCollection(collection);
         }
         nextItem = docDTO;
     }

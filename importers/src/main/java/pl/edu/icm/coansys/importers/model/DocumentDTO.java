@@ -9,9 +9,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import pl.edu.icm.coansys.importers.model.DocumentProtos.MediaConteiner;
 import pl.edu.icm.coansys.importers.model.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.importers.model.DocumentProtos.Media;
+import pl.edu.icm.coansys.importers.model.DocumentProtos.MediaContainer;
 
 /**
  * @author pdendek
@@ -22,7 +22,7 @@ public class DocumentDTO {
 //	protected String year;
 	protected DocumentMetadata docMetadata;
 	protected String key;
-	protected MediaConteiner.Builder medias = MediaConteiner.newBuilder(); 
+	protected MediaContainer.Builder medias = MediaContainer.newBuilder(); 
 	protected ArrayList<String> mediaTypes = new ArrayList<String>();
 
 	public String getCollection() {
@@ -69,7 +69,7 @@ public class DocumentDTO {
 		return this;
 	}
 
-	public MediaConteiner getMediaConteiner(){
+	public MediaContainer getMediaConteiner(){
 		return medias.build();
 	}
 	

@@ -222,7 +222,7 @@ public class MetadataToProtoMetadataParser {
         	ClassifCode.Builder ccb = ClassifCode.newBuilder();
         	ccb.setSource(ProtoConstants.documentClassifCodeMsc);
         	ccb.setValue(refMscCodesNodes.get(i).getValue());
-        	doc.addClassifCode(ccb);
+        	doc.addClassifCode(ccb.build());
         }
 
         List<String> refPacsCodes = new ArrayList<String>();
@@ -231,7 +231,7 @@ public class MetadataToProtoMetadataParser {
         	ClassifCode.Builder ccb = ClassifCode.newBuilder();
         	ccb.setSource(ProtoConstants.documentClassifCodePacs);
         	ccb.setValue(refPacsCodesNodes.get(i).getValue());
-        	doc.addClassifCode(ccb);
+        	doc.addClassifCode(ccb.build());
         }
 
         return doc;
@@ -308,13 +308,13 @@ public class MetadataToProtoMetadataParser {
         	ExtId.Builder eib = ExtId.newBuilder();
         	eib.setSource(ProtoConstants.documentExtIdMr);
         	eib.setValue(content);
-        	docBuilder.setExtId(eib);
+        	docBuilder.setExtId(eib.build());
         }
         if((content = yElement.getId("bwmeta1.id-class.Zbl"))!=null){
         	ExtId.Builder eib = ExtId.newBuilder();
         	eib.setSource(ProtoConstants.documentExtIdZbl);
         	eib.setValue(content);
-        	docBuilder.setExtId(eib);
+        	docBuilder.setExtId(eib.build());
         }
 
         List<YCategoryRef> catRefs = yElement.getCategoryRefs();
@@ -328,12 +328,12 @@ public class MetadataToProtoMetadataParser {
                 	ClassifCode.Builder ccode = ClassifCode.newBuilder();
                 	ccode.setSource(ProtoConstants.documentClassifCodeMsc);
                 	ccode.setValue(yCategoryRef.getCode());
-                	docBuilder.addClassifCode(ccode);
+                	docBuilder.addClassifCode(ccode.build());
                 } else if (yCategoryRef != null && yCategoryRef.getClassification().equals(YaddaIdConstants.CATEGORY_CLASS_PACS)) {
                 	ClassifCode.Builder ccode = ClassifCode.newBuilder();
                 	ccode.setSource(ProtoConstants.documentClassifCodePacs);
                 	ccode.setValue(yCategoryRef.getCode());
-                	docBuilder.addClassifCode(ccode);
+                	docBuilder.addClassifCode(ccode.build());
                 }
             }
         }

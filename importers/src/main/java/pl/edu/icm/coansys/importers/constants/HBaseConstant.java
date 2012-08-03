@@ -16,4 +16,6 @@ public class HBaseConstant {
 	
 	public static final String familyMetadataQualifierProto = "mproto";
 	public static final String familyContentQualifierProto = "cproto"; 
+	
+	public static final String rowIdSeparator = "_";
 }
