@@ -1,8 +1,0 @@
-CheckIfCopyrightExists.java
-.project
-.settings
-.classpath
-target
-*~
-*.confidential.*
-*.ignore.*

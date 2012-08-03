@@ -1,8 +1,16 @@
 *.class
-.project
 *~
 *.confidential.*
 *.ignore.*
+
+# Eclipse files #
+.classpath
+.project
+.settings
+
+# IntelliJ IDEA files #
+.idea
+*.iml
 
 # Package Files #
 *.jar
