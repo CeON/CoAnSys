@@ -28,8 +28,35 @@ import pl.edu.icm.coansys.importers.transformer.DocumentDto2HBasePut;
 public class HBaseRestWriter_Bwmeta {
 	
 	public static void main(String[] args) throws IOException{
-		String zipDirPath = new HBaseRestWriter_Bwmeta().getClass().getClassLoader().getResource("zipdir").getPath();
-		importBwmetaAndSendToHBase(zipDirPath, "TESTCOLLECTION", "localhost", 8080, "testProto");
+		
+		if(args == null || args.length!=5){
+			printHelp();
+			args = new String[5];
+			ClassLoader cl = new HBaseRestWriter_Bwmeta().getClass().getClassLoader(); 
+			args[0] = cl.getResource("pl/edu/icm/coansys/importers/hbaseRest/writer/ekonCollectionOneFullBwmeta").getPath();
+			args[1] = "TESTCOLLECTION";
+			args[2] = "localhost";
+			args[3] = "8080";
+			args[4] = "testProto";
+		}
+		importBwmetaAndSendToHBase(args[0], args[1],args[2],Integer.parseInt(args[3]),args[4]);
+	}
+
+	private static void printHelp() {
+		System.out.println("# of parameters not equal to 5");
+		System.out.println("You need to provide:");
+		System.out.println("* path to directory containing bwmeta zips");
+		System.out.println("* the collection name (without spaces");
+		System.out.println("* the remote host addres");
+		System.out.println("* the remote host port");
+		System.out.println("* the remote host htable name");
+		System.out.println("");
+		System.out.println("Default values will be used:");
+		System.out.println("* src/main/resources/zipdir");
+		System.out.println("* TESTCOLLECTION");
+		System.out.println("* localhost");
+		System.out.println("* 8080");
+		System.out.println("* testProto");
 	}
 	
 	public static void importBwmetaAndSendToHBase(String zipDirPath, String collectionName, String remoteHost, int remotePort, String remoteTable) throws IOException{
