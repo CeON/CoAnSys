@@ -10,8 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
-import org.apache.hadoop.hbase.client.Delete;
-import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.client.ResultScanner;
 import org.apache.hadoop.hbase.client.Scan;
@@ -20,16 +18,11 @@ import org.apache.hadoop.hbase.rest.client.Cluster;
 import org.apache.hadoop.hbase.rest.client.RemoteHTable;
 import org.apache.hadoop.hbase.util.Bytes;
 
-
 import pl.edu.icm.coansys.importers.constants.HBaseConstant;
-import pl.edu.icm.coansys.importers.hbaseRest.model_toy.AddressBookProtos.Person;
-import pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator;
-import pl.edu.icm.coansys.importers.model.DocumentDTO;
 import pl.edu.icm.coansys.importers.model.DocumentProtos.Author;
 import pl.edu.icm.coansys.importers.model.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.importers.model.DocumentProtos.Media;
-import pl.edu.icm.coansys.importers.model.DocumentProtos.MediaConteiner;
-import pl.edu.icm.coansys.importers.transformer.DocumentDto2HBasePut;
+import pl.edu.icm.coansys.importers.model.DocumentProtos.MediaContainer;
 
 /**
  * 
@@ -69,7 +62,7 @@ public class HBaseRestReader_Bwmeta {
             	ArrayList<String> names = new ArrayList<String>();
             	
             	if(scannerResult.getValue(Bytes.toBytes(HBaseConstant.familyContent), Bytes.toBytes(HBaseConstant.familyContentQualifierProto)) != null) {
-            		MediaConteiner mc = MediaConteiner.parseFrom(scannerResult.value());
+            		MediaContainer mc = MediaContainer.parseFrom(scannerResult.value());
             		for(Media media : mc.getMediaList()){
             			names.add(media.getMediaType());
             		}
