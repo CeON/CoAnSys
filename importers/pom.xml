@@ -67,7 +67,6 @@
             <groupId>pl.edu.icm.synat</groupId>
             <artifactId>synat-platform-api</artifactId>
             <version>1.6-SNAPSHOT</version>
-            <scope>test</scope>
             <type>jar</type>
         </dependency>
     </dependencies>

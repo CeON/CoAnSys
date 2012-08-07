@@ -1,0 +1,26 @@
+//
+// (C) 2010-2012 ICM UW. All rights reserved.
+//
+
+package pl.edu.icm.coansys.logs;
+
+option java_package = "pl.edu.icm.coansys.logs.model";
+option java_outer_classname = "AuditEntryProtos";
+
+enum Level {
+    FATAL = 0;
+    ERROR = 1;
+    WARN = 2;
+    INFO = 3;
+    DEBUG = 4;
+    TRACE = 5;
+}
+
+message Entry {
+    required string event_id = 1;
+    required Level level = 2;
+    required string service_id = 3;
+    required string event_type = 4;
+    required int64 timestamp = 5;
+    repeated string arg = 6;
+}
