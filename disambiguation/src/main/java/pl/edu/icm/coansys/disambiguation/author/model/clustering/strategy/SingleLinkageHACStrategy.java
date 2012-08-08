@@ -14,6 +14,16 @@ import pl.edu.icm.coansys.disambiguation.author.model.clustering.ClusterElement;
 public abstract class SingleLinkageHACStrategy implements ClusteringStrategy{
 	
 
+	
+	/**
+	 * The method proceeding single-linkage hierarchical agglomerative clustering over an objects' affinity matrix
+	 * with the O(N^2) complexity {@see <a href="http://nlp.stanford.edu/IR-book/html/htmledition/time-complexity-of-hac-1.html">the description of the Single-Linkage Clustering</a>, particulary the figure 17.6}. 
+	 * 
+	 * @param similarities A lower triangular matrix contains affinities between objects, 
+	 * where a positive value inclines similarity and a negative value reflects dissimilarity level.   
+	 * @return An array containing cluster numbers assigned to objects. 
+	 * Two objects sharing the same cluster number may be considered as the same one.
+	 */
 	@Override
 	public int[] clusterize(double sim[][]){
 		int[] I = new int[sim.length];

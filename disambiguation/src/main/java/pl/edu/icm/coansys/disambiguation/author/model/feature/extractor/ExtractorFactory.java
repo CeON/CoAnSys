@@ -6,12 +6,15 @@ package pl.edu.icm.coansys.disambiguation.author.model.feature.extractor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import pl.edu.icm.coansys.disambiguation.author.model.feature.Disambiguator;
 import pl.edu.icm.coansys.disambiguation.author.model.feature.Extractor;
 import pl.edu.icm.coansys.disambiguation.author.model.feature.FeatureInfo;
 
 import com.sun.el.util.ReflectionUtil;
 
 /**
+ * The factory for building {@link Extractor}s from the package "pl.edu.icm.coansys.disambiguation.author.model.feature.extractor"
+ * using description {@link FeatureInfo}.
  * 
  * @author pdendek
  * @version 1.0

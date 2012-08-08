@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
+ * The method to generate uuid from a list of strings using {@link UUID}.  
  * 
  * @author pdendek
  * @version 1.0

@@ -9,6 +9,8 @@ import java.util.logging.Logger;
 import com.sun.el.util.ReflectionUtil;
 
 /**
+ * The factory returning {@link IdGenerator}s from package "pl.edu.icm.coansys.disambiguation.author.model.idgenerator" 
+ *
  *
  * @author pdendek
  * @version 1.0

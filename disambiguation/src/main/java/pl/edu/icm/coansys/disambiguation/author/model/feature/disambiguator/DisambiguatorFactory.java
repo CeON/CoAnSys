@@ -12,7 +12,9 @@ import pl.edu.icm.coansys.disambiguation.author.model.feature.FeatureInfo;
 import com.sun.el.util.ReflectionUtil;
 
 /**
- * 
+ * The factory for building {@link Disambiguator}s from the package "pl.edu.icm.coansys.disambiguation.author.model.feature.disambiguator"
+ * using description {@link FeatureInfo}.
+ *  
  * @author pdendek
  * @version 1.0
  * @since 2012-08-07

@@ -21,7 +21,7 @@ import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
-import pl.edu.icm.coansys.disambiguation.author.model.clustering.strategy.CompliteLinkageHACStrategy_OnlyMax;
+import pl.edu.icm.coansys.disambiguation.author.model.clustering.strategy.CompleteLinkageHACStrategy_OnlyMax;
 import pl.edu.icm.coansys.disambiguation.author.model.feature.Disambiguator;
 import pl.edu.icm.coansys.disambiguation.author.model.feature.FeatureInfo;
 import pl.edu.icm.coansys.disambiguation.author.model.feature.disambiguator.DisambiguatorFactory;
@@ -80,7 +80,7 @@ public class ClusterDisambiguationReducer_Toy extends Reducer<Text, TextTextArra
     	
     	if(initialPreparations(key, values, context)) return;
         double[][] sim = calculateAffinity();
-        int[] clusterAssociations = new CompliteLinkageHACStrategy_OnlyMax().clusterize(sim);
+        int[] clusterAssociations = new CompleteLinkageHACStrategy_OnlyMax().clusterize(sim);
         Map<Integer,List<String>> clusterMap = splitIntoMap(clusterAssociations, authorIds);
         persistReslutsInHBase(clusterMap, authorIds, context);
         finalRoutine();

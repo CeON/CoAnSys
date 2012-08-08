@@ -3,7 +3,10 @@
  */
 package pl.edu.icm.coansys.disambiguation.author.model.feature.extractor.indicator;
 
+import pl.edu.icm.coansys.disambiguation.author.model.feature.Extractor;
+
 /**
+ * The interface for indicating that an {@link Extractor} results are author specific and must be calculated per author 
  * 
  * @author pdendek
  * @version 1.0

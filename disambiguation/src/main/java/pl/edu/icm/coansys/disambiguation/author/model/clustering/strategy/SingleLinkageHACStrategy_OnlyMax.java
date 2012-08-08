@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
+ * 
  * @author pdendek
  * @version 1.0
  * @since 2012-08-07
@@ -15,6 +16,7 @@ import org.slf4j.LoggerFactory;
 public class SingleLinkageHACStrategy_OnlyMax extends SingleLinkageHACStrategy{
 	
 	private static final Logger log = LoggerFactory.getLogger(SingleLinkageHACStrategy_OnlyMax.class);
+	
 	
 	public static void main(String[] args){
 		double[][] in = {{},{15},{-46,-3},{-2,-18,-20},{-100,-100,-3,-200}};

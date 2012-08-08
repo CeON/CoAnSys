@@ -6,7 +6,8 @@ package pl.edu.icm.coansys.disambiguation.author.model.idgenerator;
 import java.util.List;
 
 /**
- * 
+ * Method to generate an id string from a list of strings.
+ *  
  * @author pdendek
  * @version 1.0
  * @since 2012-08-07

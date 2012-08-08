@@ -4,6 +4,7 @@
 package pl.edu.icm.coansys.disambiguation.author.model.clustering;
 
 /**
+ * A container gathering all informations about a similarity matrix cell 
  * 
  * @author pdendek
  * @version 1.0
