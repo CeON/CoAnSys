@@ -8,9 +8,10 @@ import java.util.List;
 /**
  * 
  * @author pdendek
- *
+ * @version 1.0
+ * @since 2012-08-07
  */
-public abstract class Feature {
+public abstract class Disambiguator {
 	
 	public double calculateAffinity(List<String> f1, List<String> f2) {
 		f1.retainAll(f2);
