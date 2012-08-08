@@ -4,6 +4,10 @@
 
 package pl.edu.icm.coansys.importers.model;
 
+/**
+ * 
+ * @since 2012-08-03
+ */
 public final class DocumentProtos {
   private DocumentProtos() {}
   public static void registerAllExtensions(
