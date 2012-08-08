@@ -17,15 +17,16 @@ import pl.edu.icm.coansys.disambiguation.auxil.Pair;
  * @version 1.0
  * @since 2012-08-07
  */
-public abstract class CompliteLinkageHACStrategy implements ClusteringStrategy{
+public abstract class CompleteLinkageHACStrategy implements ClusteringStrategy{
 	
 	/**
-	 * method giving hierarchical agglomerative clustering among contributors
-	 * @param sim distances between contributors (level of similarity)
+	 * The method proceeding complete-linkage hierarchical agglomerative clustering over an objects' affinity matrix
+	 * with the O(N^2*logN) complexity {@see <a href="http://nlp.stanford.edu/IR-book/html/htmledition/time-complexity-of-hac-1.html">the description of the Complete-Linkage Clustering</a>, particulary the figure 17.5}. 
 	 * 
-	 * @return  clusterId assignments to particular groups
-	 * 
-	 * @author pdendek
+	 * @param similarities A lower triangular matrix contains affinities between objects, 
+	 * where a positive value inclines similarity and a negative value reflects dissimilarity level.   
+	 * @return An array containing cluster numbers assigned to objects. 
+	 * Two objects sharing the same cluster number may be considered as the same one.  
 	 */
 	@Override
 	public int[] clusterize(double sim[][]){
