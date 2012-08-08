@@ -12,14 +12,15 @@ import org.apache.log4j.Logger;
 
 import pl.edu.icm.coansys.disambiguation.author.jobs.DisambiguationJob_Toy;
 import pl.edu.icm.coansys.disambiguation.author.model.feature.Extractor;
-import pl.edu.icm.coansys.disambiguation.author.model.feature.indicator.AuthorBased;
+import pl.edu.icm.coansys.disambiguation.author.model.feature.extractor.indicator.AuthorBased;
 import pl.edu.icm.coansys.importers.model.DocumentProtos.Author;
 import pl.edu.icm.coansys.importers.model.DocumentProtos.DocumentMetadata;
 
 /**
  * 
  * @author pdendek
- *
+ * @version 1.0
+ * @since 2012-08-07
  */
 public class DocumentProto2EmailPrefixExtractor implements Extractor<DocumentMetadata>, AuthorBased {
 	

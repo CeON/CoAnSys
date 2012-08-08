@@ -7,7 +7,8 @@ package pl.edu.icm.coansys.disambiguation.author.model.clustering.strategy;
 /**
  * 
  * @author pdendek
- *
+ * @version 1.0
+ * @since 2012-08-07
  */
 public interface ClusteringStrategy extends Cloneable{
 

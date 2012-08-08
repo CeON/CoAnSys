@@ -9,7 +9,8 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author pdendek
- *
+ * @version 1.0
+ * @since 2012-08-07
  */
 public class CompliteLinkageHACStrategy_OnlyMax extends SingleLinkageHACStrategy{
 	

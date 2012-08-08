@@ -14,7 +14,8 @@ import pl.edu.icm.coansys.disambiguation.auxil.Pair;
 /**
  * 
  * @author pdendek
- *
+ * @version 1.0
+ * @since 2012-08-07
  */
 public abstract class CompliteLinkageHACStrategy implements ClusteringStrategy{
 	

@@ -8,7 +8,8 @@ import pl.edu.icm.coansys.disambiguation.author.model.clustering.ClusterElement;
 /**
  * 
  * @author pdendek
- *
+ * @version 1.0
+ * @since 2012-08-07
  */
 public abstract class SingleLinkageHACStrategy implements ClusteringStrategy{
 	

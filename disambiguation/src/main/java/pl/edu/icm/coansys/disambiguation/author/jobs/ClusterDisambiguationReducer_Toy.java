@@ -22,9 +22,9 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import pl.edu.icm.coansys.disambiguation.author.model.clustering.strategy.CompliteLinkageHACStrategy_OnlyMax;
-import pl.edu.icm.coansys.disambiguation.author.model.feature.Feature;
+import pl.edu.icm.coansys.disambiguation.author.model.feature.Disambiguator;
 import pl.edu.icm.coansys.disambiguation.author.model.feature.FeatureInfo;
-import pl.edu.icm.coansys.disambiguation.author.model.feature.impl.FeatureFactory;
+import pl.edu.icm.coansys.disambiguation.author.model.feature.disambiguator.DisambiguatorFactory;
 import pl.edu.icm.coansys.disambiguation.author.model.idgenerator.IdGenerator;
 import pl.edu.icm.coansys.disambiguation.author.model.idgenerator.UuIdGenerator;
 import pl.edu.icm.coansys.disambiguation.auxil.LoggingInDisambiguation;
@@ -34,7 +34,8 @@ import pl.edu.icm.coansys.disambiguation.auxil.constants.HBaseConstants;
 /**
  * 
  * @author pdendek
- *
+ * @version 1.0
+ * @since 2012-08-07
  */
 public class ClusterDisambiguationReducer_Toy extends Reducer<Text, TextTextArrayMapWritable, ImmutableBytesWritable, Put> {
 
@@ -43,7 +44,7 @@ public class ClusterDisambiguationReducer_Toy extends Reducer<Text, TextTextArra
 	
 	protected double threshold;
 	protected List<FeatureInfo> featureInfos;
-	protected Feature[] features;
+	protected Disambiguator[] features;
     
 	protected List<TextTextArrayMapWritable> featuresMapsList = new ArrayList<TextTextArrayMapWritable>();
 	protected List<String> authorIds = new ArrayList<String>();
@@ -63,9 +64,9 @@ public class ClusterDisambiguationReducer_Toy extends Reducer<Text, TextTextArra
         featureInfos = FeatureInfo.parseFeatureInfoString
         	(conf.get("FEATURE_DESCRIPTION"));
         	
-        features = new Feature[featureInfos.size()];  
+        features = new Disambiguator[featureInfos.size()];  
         
-        FeatureFactory ff = new FeatureFactory();
+        DisambiguatorFactory ff = new DisambiguatorFactory();
         int index = -1;
         for(FeatureInfo fi : featureInfos){
         	index++;
@@ -151,7 +152,7 @@ public class ClusterDisambiguationReducer_Toy extends Reducer<Text, TextTextArra
         			TextTextArrayMapWritable a = featuresMapsList.get(i);
         			TextTextArrayMapWritable b = featuresMapsList.get(j);
         			
-        			Feature feature = features[findex];
+        			Disambiguator feature = features[findex];
         			FeatureInfo featureInfo = featureInfos.get(findex);
         			
         			double partial = feature.calculateAffinity(

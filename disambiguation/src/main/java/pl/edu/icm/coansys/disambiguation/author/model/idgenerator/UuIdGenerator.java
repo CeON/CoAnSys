@@ -11,7 +11,8 @@ import java.util.UUID;
 /**
  * 
  * @author pdendek
- *
+ * @version 1.0
+ * @since 2012-08-07
  */
 
 public class UuIdGenerator implements IdGenerator {

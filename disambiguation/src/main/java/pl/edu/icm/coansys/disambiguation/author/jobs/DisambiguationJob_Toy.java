@@ -27,7 +27,8 @@ import pl.edu.icm.coansys.importers.constants.HBaseConstant;
 /**
  * 
  * @author pdendek
- *
+ * @version 1.0
+ * @since 2012-08-07
  */
 public class DisambiguationJob_Toy implements Tool {
 
