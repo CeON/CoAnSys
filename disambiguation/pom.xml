@@ -4,11 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>pl.edu.icm.coansys</groupId>
-    <artifactId>importers</artifactId>
+    <artifactId>disambiguation</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>Data Importers</name>
+    <name>Disambiguation Tool</name>
     <url>http://maven.apache.org</url>
 
     <properties>
@@ -46,6 +46,7 @@
             </plugin>
         </plugins>
     </build>
+
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
@@ -54,6 +55,11 @@
             <scope>test</scope>
             <type>jar</type>
         </dependency>        
+        <dependency>
+            <groupId>pl.edu.icm.coansys</groupId>
+    		<artifactId>importers</artifactId>
+    		<version>1.0-SNAPSHOT</version>
+        </dependency>
         <dependency>
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java</artifactId>
@@ -81,11 +87,16 @@
             <version>0.92.1-cdh4.0.1</version>
         </dependency>
         <dependency>
-            <groupId>pl.edu.icm.synat</groupId>
-            <artifactId>synat-platform-api</artifactId>
-            <version>1.5.1-SNAPSHOT</version>
-            <type>jar</type>
-        </dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.6.4</version>
+        </dependency>        
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.6.4</version>
+            <!-- <scope>test</scope> -->
+        </dependency>        
     </dependencies>
     <repositories>
         <repository>

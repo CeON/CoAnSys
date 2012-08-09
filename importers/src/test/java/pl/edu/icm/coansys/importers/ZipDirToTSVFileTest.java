@@ -12,8 +12,8 @@ import java.io.IOException;
 import org.junit.Test;
 
 import pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator;
-import pl.edu.icm.coansys.importers.model.DocumentDTO;
-import pl.edu.icm.coansys.importers.transformer.DocumentDTO2TSVLine;
+import pl.edu.icm.coansys.importers.models.DocumentDTO;
+import pl.edu.icm.coansys.importers.transformers.DocumentDTO2TSVLine;
 
 /**
  * @author pdendek
