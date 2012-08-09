@@ -4,7 +4,7 @@
 
 package pl.edu.icm.coansys.logs;
 
-option java_package = "pl.edu.icm.coansys.logs.model";
+option java_package = "pl.edu.icm.coansys.importers.models";
 option java_outer_classname = "AuditEntryProtos";
 
 enum Level {

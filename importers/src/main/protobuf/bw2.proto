@@ -2,6 +2,8 @@
 // (C) 2010-2012 ICM UW. All rights reserved.
 //
 
+//  @since 2012-08-07
+
 option java_package = "pl.edu.icm.coansys.importers.model";
 option java_outer_classname = "DocumentProtos";
 
