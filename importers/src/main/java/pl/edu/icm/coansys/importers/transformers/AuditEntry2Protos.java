@@ -5,8 +5,9 @@ package pl.edu.icm.coansys.importers.transformers;
 
 import java.util.Arrays;
 import java.util.Date;
-import pl.edu.icm.coansys.importers.model.AuditEntryProtos;
-import pl.edu.icm.coansys.importers.model.AuditEntryProtos.Entry.Builder;
+
+import pl.edu.icm.coansys.importers.models.AuditEntryProtos;
+import pl.edu.icm.coansys.importers.models.AuditEntryProtos.Entry.Builder;
 import pl.edu.icm.synat.api.services.audit.model.AuditEntry;
 
 /**
