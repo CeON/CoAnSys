@@ -15,17 +15,17 @@ import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.io.Text;
 import org.apache.log4j.Logger;
 
-import pl.edu.icm.coansys.disambiguation.author.model.feature.Extractor;
-import pl.edu.icm.coansys.disambiguation.author.model.feature.FeatureInfo;
-import pl.edu.icm.coansys.disambiguation.author.model.feature.extractor.ExtractorFactory;
-import pl.edu.icm.coansys.disambiguation.author.model.feature.extractor.indicator.AuthorBased;
-import pl.edu.icm.coansys.disambiguation.author.model.feature.extractor.indicator.DocumentBased;
+import pl.edu.icm.coansys.disambiguation.author.features.Extractor;
+import pl.edu.icm.coansys.disambiguation.author.features.FeatureInfo;
+import pl.edu.icm.coansys.disambiguation.author.features.extractors.ExtractorFactory;
+import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.AuthorBased;
+import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DocumentBased;
 import pl.edu.icm.coansys.disambiguation.auxil.DiacriticsRemover;
 import pl.edu.icm.coansys.disambiguation.auxil.LoggingInDisambiguation;
 import pl.edu.icm.coansys.disambiguation.auxil.TextTextArrayMapWritable;
 import pl.edu.icm.coansys.importers.constants.HBaseConstant;
-import pl.edu.icm.coansys.importers.model.DocumentProtos.Author;
-import pl.edu.icm.coansys.importers.model.DocumentProtos.DocumentMetadata;
+import pl.edu.icm.coansys.importers.models.DocumentProtos.Author;
+import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
 
 /**
  *

@@ -21,12 +21,12 @@ import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
-import pl.edu.icm.coansys.disambiguation.author.model.clustering.strategy.CompleteLinkageHACStrategy_OnlyMax;
-import pl.edu.icm.coansys.disambiguation.author.model.feature.Disambiguator;
-import pl.edu.icm.coansys.disambiguation.author.model.feature.FeatureInfo;
-import pl.edu.icm.coansys.disambiguation.author.model.feature.disambiguator.DisambiguatorFactory;
-import pl.edu.icm.coansys.disambiguation.author.model.idgenerator.IdGenerator;
-import pl.edu.icm.coansys.disambiguation.author.model.idgenerator.UuIdGenerator;
+import pl.edu.icm.coansys.disambiguation.author.clustering.strategies.CompleteLinkageHACStrategy_OnlyMax;
+import pl.edu.icm.coansys.disambiguation.author.features.Disambiguator;
+import pl.edu.icm.coansys.disambiguation.author.features.FeatureInfo;
+import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.DisambiguatorFactory;
+import pl.edu.icm.coansys.disambiguation.author.idgenerators.IdGenerator;
+import pl.edu.icm.coansys.disambiguation.author.idgenerators.UuIdGenerator;
 import pl.edu.icm.coansys.disambiguation.auxil.LoggingInDisambiguation;
 import pl.edu.icm.coansys.disambiguation.auxil.TextTextArrayMapWritable;
 import pl.edu.icm.coansys.disambiguation.auxil.constants.HBaseConstants;

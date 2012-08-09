@@ -10,8 +10,8 @@ import org.apache.hadoop.hbase.KeyValue;
 import org.junit.Test;
 
 import pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator;
-import pl.edu.icm.coansys.importers.model.DocumentDTO;
-import pl.edu.icm.coansys.importers.transformer.DocumentDto2KeyValue;
+import pl.edu.icm.coansys.importers.models.DocumentDTO;
+import pl.edu.icm.coansys.importers.transformers.DocumentDto2KeyValue;
 
 /**
  *
