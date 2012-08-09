@@ -1,7 +1,7 @@
 /*
  * (C) 2010-2012 ICM UW. All rights reserved.
  */
-package pl.edu.icm.coansys.logs;
+package pl.edu.icm.coansys.importers;
 
 import java.math.BigInteger;
 import java.net.MalformedURLException;
@@ -19,7 +19,7 @@ import pl.edu.icm.synat.api.services.audit.model.AuditEntry;
  */
 public class GenerateDummyLogs {
 
-    public static class AuditEntryComparator implements Comparator<AuditEntry> {
+    private static class AuditEntryComparator implements Comparator<AuditEntry> {
 
         @Override
         public int compare(AuditEntry o1, AuditEntry o2) {
