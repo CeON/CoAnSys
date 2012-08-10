@@ -69,6 +69,11 @@
             <version>1.5.1-SNAPSHOT</version>
             <type>jar</type>
         </dependency>
+        <dependency>
+            <groupId>com.twitter.elephantbird</groupId>
+            <artifactId>elephant-bird-core</artifactId>
+            <version>3.0.1</version>
+        </dependency>
     </dependencies>
     <repositories>
         <repository>
@@ -80,6 +85,11 @@
             <id>cloudera</id>
             <name>Cloudera hadoop repository</name>
             <url>https://repository.cloudera.com/artifactory/cloudera-repos/</url>
+        </repository>
+        <repository>
+            <id>sonatype</id>
+            <name>Sonatype</name>
+            <url>https://oss.sonatype.org/content/repositories/releases/</url>
         </repository>
     </repositories>
 </project>
