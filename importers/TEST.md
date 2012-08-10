@@ -1,1 +1,1 @@
-Here is the [link](../example)
+Here is the [link](../examples)
