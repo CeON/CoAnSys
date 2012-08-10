@@ -13,7 +13,7 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.io.Text;
-import pl.edu.icm.coansys.importers.model.AuditEntryProtos;
+import pl.edu.icm.coansys.importers.models.AuditEntryProtos;
 
 /**
  *
