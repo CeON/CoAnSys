@@ -15,13 +15,12 @@ As CDH4 depends on [Protocol Buffers](http://code.google.com/p/protobuf/) 2.4.1 
 ### Instalation
 ```
 # repository clone
-cd ~
-```
-git clone REPOSITORY_ADDRESS/CoAnSys.git
-cd CoAnSys/importers
-# package instalation
-## if you are not providing hadoop libraries, please modify pom.xml
-## by the text "<scope>provided</scope>" removal
+cd ~  
+git clone REPOSITORY_ADDRESS/CoAnSys.git  
+cd CoAnSys/importers  
+# package instalation  
+## if you are not providing hadoop libraries, please modify pom.xml  
+## by removing texts "<scope>provided</scope>"
 mvn install
 mvn assembly:single
 ```
@@ -30,7 +29,8 @@ mvn assembly:single
 ```
 # get
 ```
-[example data](../examples/otworz-ksiazke-tylkobwmeta-20110316-00000.zip)  
+[example data](../examples/otworz-ksiazke-tylkobwmeta-20110316-00000.zip)
+
 ```
 cd ~
 mkdir HBASE_IMPORT
