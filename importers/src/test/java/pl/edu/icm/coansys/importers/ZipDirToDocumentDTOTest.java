@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator;
-import pl.edu.icm.coansys.importers.model.DocumentDTO;
+import pl.edu.icm.coansys.importers.models.DocumentDTO;
 
 /**
  *
