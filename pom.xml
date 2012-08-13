@@ -23,7 +23,8 @@
         </plugins>
     </build>
     <modules>
-    <module>importers</module>
-    <module>disambiguation</module>
-  </modules>
+        <module>importers</module>
+        <module>disambiguation</module>
+        <module>logs-analysis</module>
+    </modules>
 </project>
