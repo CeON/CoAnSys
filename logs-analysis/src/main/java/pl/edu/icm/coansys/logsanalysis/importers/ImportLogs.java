@@ -1,7 +1,7 @@
 /*
  * (C) 2010-2012 ICM UW. All rights reserved.
  */
-package pl.edu.icm.coansys.importers;
+package pl.edu.icm.coansys.logsanalysis.importers;
 
 import com.twitter.elephantbird.mapreduce.io.ProtobufWritable;
 import com.twitter.elephantbird.util.TypeRef;
@@ -13,7 +13,7 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.io.Text;
-import pl.edu.icm.coansys.importers.models.AuditEntryProtos;
+import pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos;
 
 /**
  *
@@ -21,7 +21,7 @@ import pl.edu.icm.coansys.importers.models.AuditEntryProtos;
  */
 public class ImportLogs {
 
-    private static void writeLogsToSequenceFile(Iterable<AuditEntryProtos.Entry> messages, String uri, String filePath) throws IOException {
+    public static void writeLogsToSequenceFile(Iterable<AuditEntryProtos.Entry> messages, String uri, String filePath) throws IOException {
         Configuration conf = new Configuration();
         FileSystem fs = FileSystem.get(URI.create(uri), conf);
         Path path = new Path(uri);

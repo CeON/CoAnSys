@@ -1,13 +1,12 @@
 /*
  * (C) 2010-2012 ICM UW. All rights reserved.
  */
-package pl.edu.icm.coansys.importers.transformers;
+package pl.edu.icm.coansys.logsanalysis.transformers;
 
 import java.util.Arrays;
 import java.util.Date;
-
-import pl.edu.icm.coansys.importers.models.AuditEntryProtos;
-import pl.edu.icm.coansys.importers.models.AuditEntryProtos.Entry.Builder;
+import pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos;
+import pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.Entry.Builder;
 import pl.edu.icm.synat.api.services.audit.model.AuditEntry;
 
 /**
