@@ -1,0 +1,770 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xhtml="http://www.w3.org/1999/xhtml"
+	targetNamespace="http://yadda.icm.edu.pl/bwmeta-2.0.0.xsd" xmlns="http://yadda.icm.edu.pl/bwmeta-2.0.0.xsd"
+	elementFormDefault="qualified">
+
+	<xsd:annotation>
+		<xsd:appinfo>$Rev: 14336 $</xsd:appinfo>
+		<xsd:documentation xml:lang="en">BWmeta is a general-purpose metadata format capable of describing entities such as:
+		academic articles, books, audio recordings, laws, or molecular sequences.
+		A distinguishing feature of BWmeta is non-redundant, hierarchical storage of information.
+		For example, metadata for an article is typically distributed across four records: one for the article, one for the issue in which the article was published, one for the volume, and one for the journal. 
+		The root tag of any BWmeta document is &lt;bwmeta/&gt;, which may contain any number of top-level objects (&lt;person/&gt;, &lt;element/&gt;, &lt;license/&gt;, etc.).
+		
+		BWmeta is a flexible format: there are no enumerations of accepted values (most notably in various "type" attributes).
+		Instead, data providers are encouraged to define their own vocabularies.
+		</xsd:documentation>
+	</xsd:annotation>
+    
+    
+    <xsd:complexType name="richText" mixed="true">
+        <xsd:annotation>
+            <xsd:documentation xml:lang="en">This is type defined for rich text. It would be used in more then one element so it coud be better to take
+                                         it to separate type.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:any namespace="##other" minOccurs="0" maxOccurs="unbounded" processContents="skip"/>
+
+
+        </xsd:sequence>
+
+    </xsd:complexType>
+
+
+	<xsd:element name="affiliation">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">Contributors' affiliation.  Contains an identifier (see: id attribute) that may be referenced by one or more &lt;affiliation-ref/&gt; tags.
+			Presentational form is stored in &lt;text/&gt;.
+			The optional &lt;identity/&gt; child tag references an institution (see: &lt;institution/&gt; tag).
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="attribute" minOccurs="0" maxOccurs="unbounded" />
+				<xsd:element ref="identity" minOccurs="0" maxOccurs="1" />
+				<xsd:element ref="text" minOccurs="1" maxOccurs="1" />
+			</xsd:sequence>
+			<xsd:attribute name="id" type="xsd:string" use="required">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="en">Affiliation identifier.  Referenced by &lt;affiliation-ref/&gt;.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="affiliation-ref">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">Reference to an affiliation.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:attribute name="ref" type="xsd:string" use="required">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="en">Identifier of an affiliation.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="ancestor">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">Ancestor element in element structure.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="attribute" minOccurs="0" maxOccurs="unbounded" />
+				<xsd:element ref="description" minOccurs="0" maxOccurs="unbounded" />
+				<xsd:element ref="name" minOccurs="0" maxOccurs="unbounded" />
+			</xsd:sequence>
+			<xsd:attribute name="level" type="ExtIdType" use="required">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="en">Level on which the ancestor is located.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="identity" type="ExtIdType" use="optional">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="en">Reference to the ancestor element.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="position" type="xsd:string" use="optional">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="en">Position within the level.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="attribute">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">A tree-like structure with a key-value pair in each node.
+			May be used to hold information that does not map well to other tags.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+                                <xsd:element name="value" minOccurs="0" maxOccurs="1" type="richText" />
+				<xsd:element ref="attribute" minOccurs="0" maxOccurs="unbounded" />
+			</xsd:sequence>
+			<xsd:attribute name="key" type="xsd:string" use="required">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="en">Attribute's key.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+<!--			<xsd:attribute name="value" type="xsd:string" use="optional">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="en">Attribute's value.</xsd:documentation>
+				</xsd:annotation> 
+			</xsd:attribute>-->
+		</xsd:complexType>
+	</xsd:element>	
+
+	<xsd:element name="bwmeta">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">Root of any BWmeta document.  Top-level objects, such as persons or elements, are direct descendants.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:choice minOccurs="0" maxOccurs="unbounded">
+				<xsd:element ref="category" />
+				<xsd:element ref="classification" />
+				<xsd:element ref="element" />
+				<xsd:element ref="hierarchy" />
+				<xsd:element ref="id-scheme" />
+				<xsd:element ref="institution" />
+				<xsd:element ref="level" />
+				<xsd:element ref="license" />
+				<xsd:element ref="person" />
+			</xsd:choice>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="category">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">Category within a classification.  Contains code, name and description of the category, as well as code of the parent category (if applicable).</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="attribute" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="description" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="name" minOccurs="0" maxOccurs="unbounded"/>
+			</xsd:sequence>
+			<xsd:attributeGroup ref="IdVersion" />
+			<xsd:attribute name="classification" type="ExtIdType" use="required">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="en">Identifier of the classification to which the category belongs.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="code" type="xsd:string" use="required">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="en">Code of the category.  Examples: 83A05, 03.30.+p.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="parent" type="xsd:string" use="optional">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="en">The parent category's code. If present, both the category and its parent must belong to the same classification.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="category-ref">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">Reference to a given category.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:attribute name="classification" type="ExtIdType" use="required">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="en">Identifier of the classification containing the referenced category.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="code" type="xsd:string" use="required">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="en">Code of the referenced category.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="classification">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">Classification or taxonomy, a hierarchical structure of categories.
+			Notable examples include subject classifications, such as: MSC or PACS.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="attribute" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="description" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="name" minOccurs="0" maxOccurs="unbounded"/>
+			</xsd:sequence>
+			<xsd:attributeGroup ref="IdVersion" />
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="contents">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">Files and directories containing the element.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:choice minOccurs="0" maxOccurs="unbounded">
+				<xsd:element ref="directory" />
+				<xsd:element ref="file" />
+			</xsd:choice>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="contributor">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">A person or institution that contributed to this element.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="affiliation-ref" minOccurs="0" maxOccurs="unbounded" />
+				<xsd:element ref="attribute" minOccurs="0" maxOccurs="unbounded" />
+				<xsd:element ref="description" minOccurs="0" maxOccurs="unbounded" />
+				<xsd:element ref="identity" minOccurs="0" maxOccurs="1" />
+				<xsd:element ref="name" minOccurs="0" maxOccurs="unbounded" />
+			</xsd:sequence>
+			<xsd:attribute name="institution" type="xsd:boolean" use="required">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="en">Whether the contributor is an institution or a person.
+					This is a boolean field.  Value "true" indicates an institution, "false" indicates a person.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="role" type="xsd:string" use="required">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="en">Contributor's role.  Examples: author, editor, translator.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="current">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">Current element in element structure.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="attribute" minOccurs="0" maxOccurs="unbounded" />
+			</xsd:sequence>
+			<xsd:attribute name="level" type="ExtIdType" use="required">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="en">Current element's level.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="position" type="xsd:string" use="optional">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="en">Current element's relative position within this level.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="date">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">Date of an event associated with a given element.
+			The text present in tag's body contains a presentational form of the date,
+			while year, month and day attributes contain the actual (parsed) date.
+			Lack of day (or day and month) attribute(s) should be interpreted
+			as a date specified with a coarser granularity.
+			For example: &lt;date type="published" year="1809" month="9"&gt;September 1809&lt;/date&gt;
+			should be interpreted as indication of a month.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:simpleContent>
+				<xsd:extension base="xsd:string">
+					<xsd:attribute name="day" type="xsd:int" use="optional">
+						<xsd:annotation>
+							<xsd:documentation xml:lang="en">Day.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+					<xsd:attribute name="month" type="xsd:int" use="optional">
+						<xsd:annotation>
+							<xsd:documentation xml:lang="en">Month.  If not present, day should not be present either.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+					<xsd:attribute name="type" type="xsd:string" use="required">
+						<xsd:annotation>
+							<xsd:documentation xml:lang="en">Type of date. Examples: accepted, published, received.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+					<xsd:attribute name="year" type="xsd:int" use="optional">
+						<xsd:annotation>
+							<xsd:documentation xml:lang="en">Year.  If absent, day and month should be absent as well.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+				</xsd:extension>
+			</xsd:simpleContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="description">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">Multi-line description of an object.</xsd:documentation>
+		</xsd:annotation>
+
+		<xsd:complexType>
+
+                <xsd:complexContent>
+				<xsd:extension  base="richText">
+					<xsd:attribute name="lang" type="xsd:language" use="optional">
+						<xsd:annotation>
+							<xsd:documentation xml:lang="en">Language in which the description is written.  Only ISO 639-1 and 639-2 language codes are allowed.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+					<xsd:attribute name="type" type="xsd:string" use="optional">
+						<xsd:annotation>
+							<xsd:documentation xml:lang="en">Type of the description.  Examples: abstract, comment, summary.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="directory">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">Directory containing files and other directories.
+			It provides a logical, hierarchical structure of files.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="attribute" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="description" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:choice minOccurs="1" maxOccurs="unbounded">
+					<xsd:element ref="directory" />
+					<xsd:element ref="file" />
+				</xsd:choice>
+				<xsd:element ref="name" minOccurs="0" maxOccurs="unbounded"/>
+			</xsd:sequence>
+			<xsd:attribute name="id" type="xsd:string" use="required">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="en">Directory identifier.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="langs" type="LanguageListType" use="optional">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="en">List of languages of this content.  Only ISO 639-1 and 639-2 language codes are allowed.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="type" type="xsd:string" use="required">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="en">Type of content.  Examples: pages.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="element">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">Element describes a document, or in the case of compound documents, an atomic part of it.
+			For example — in the case of academic articles in journals — the article, the issue containing it, the volume and the journal,
+			are each respresented by a separate element.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="affiliation" minOccurs="0" maxOccurs="unbounded" />
+				<xsd:element ref="attribute" minOccurs="0" maxOccurs="unbounded" />
+				<xsd:element ref="category-ref" minOccurs="0" maxOccurs="unbounded" />
+				<xsd:element ref="contents" minOccurs="0" maxOccurs="1" />
+				<xsd:element ref="contributor" minOccurs="0" maxOccurs="unbounded" />
+				<xsd:element ref="date" minOccurs="0" maxOccurs="unbounded" />
+				<xsd:element ref="description" minOccurs="0" maxOccurs="unbounded" />
+				<xsd:element ref="id" minOccurs="0" maxOccurs="unbounded" />
+				<xsd:element ref="language" minOccurs="0" maxOccurs="unbounded" />
+				<xsd:element ref="license-ref" minOccurs="0" maxOccurs="unbounded" />
+				<xsd:element ref="name" minOccurs="0" maxOccurs="unbounded" />
+				<xsd:element ref="relation" minOccurs="0" maxOccurs="unbounded" />
+				<xsd:element ref="structure" minOccurs="0" maxOccurs="unbounded" />
+				<xsd:element ref="tags" minOccurs="0" maxOccurs="unbounded" />
+			</xsd:sequence>
+			<xsd:attributeGroup ref="IdVersion" />
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="file">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">Description of a file containing the element or part of it.
+			File is understood as a fixed array of bytes that can be stored in one or more locations.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="attribute" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="description" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="location" minOccurs="1" maxOccurs="unbounded"/>
+				<xsd:element ref="name" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element ref="signature" minOccurs="0" maxOccurs="unbounded"/>
+			</xsd:sequence>
+			<xsd:attribute name="format" type="xsd:string" use="required">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="en">MIME format of the file.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="id" type="xsd:string" use="required">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="en">File identifier.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="langs" type="LanguageListType" use="optional">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="en">List of languages of this content.  Only ISO 639-1 and 639-2 language codes are allowed.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="size" type="xsd:int" use="optional">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="en">Size of the file in bytes.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="type" type="xsd:string" use="optional">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="en">Type of content.  Examples: cover, full-text, plain-text, thumbnail.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="format" type="xsd:string">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">Format of identifiers in a given &lt;id-scheme/&gt; as a regular expression.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+	<xsd:element name="hierarchy">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">Hierarchy defines a logical organization of content in various types of compound documents.
+			Examples: journal-volume-issue-article, series-book-chapter, album-disc-track.
+			See &lt;level/&gt; for more details.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="attribute" minOccurs="0" maxOccurs="unbounded" />
+				<xsd:element ref="description" minOccurs="0" maxOccurs="unbounded" />
+				<xsd:element ref="name" minOccurs="0" maxOccurs="unbounded" />
+			</xsd:sequence>
+			<xsd:attributeGroup ref="IdVersion" />
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="id">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">Element identifier in a given scheme (such as: DOI, ISBN).</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:attribute name="scheme" type="ExtIdType" use="required">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="en">Identifier of the scheme (refers to &lt;id-scheme/&gt;).</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="value" type="xsd:string" use="required">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="en">Element identifier within a given scheme.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="identity">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">Reference to an object (&lt;person/&gt;, &lt;institution/&gt;) that matches a given textual representation.
+			Provides a semantics to what is otherwise a presentational form of an object.
+			For example, &lt;contributor/&gt; within &lt;element/&gt; may list a John Smith as an author and &lt;identity/&gt; may link this name to an actual &lt;person/&gt;.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:attribute name="ref" type="ExtIdType" use="required">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="en">Identifier of the referenced object.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="id-scheme">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">Describes a standard of identifing documents.  Serves as a kind of identifier namespace.
+			Examples of identifier schemes: DOI, ISBN, ISSN, PMID.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="attribute" minOccurs="0" maxOccurs="unbounded" />
+				<xsd:element ref="description" minOccurs="0" maxOccurs="unbounded" />
+				<xsd:element ref="format" minOccurs="0" maxOccurs="1" />
+				<xsd:element ref="name" minOccurs="0" maxOccurs="unbounded" />
+			</xsd:sequence>
+			<xsd:attributeGroup ref="IdVersion" />
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="institution">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">Information on an institution.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="attribute" minOccurs="0" maxOccurs="unbounded" />
+				<xsd:element ref="description" minOccurs="0" maxOccurs="unbounded" />
+				<xsd:element ref="name" minOccurs="0" maxOccurs="unbounded" />
+			</xsd:sequence>
+			<xsd:attributeGroup ref="IdVersion" />
+			<xsd:attribute name="parent" type="ExtIdType" use="optional">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="en">Parent institution.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="language">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">Language of an element.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:attribute name="lang" type="xsd:language" use="required">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="en">ISO 639-1 or ISO 639-2 language code.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="level">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">Level within a given hierarchy describes an element type.
+			Examples: journal, journal volume, journal issue, article in a journal, book series, book in a series, chapter in a book, music album, disc in an album, track on a disc.
+			Levels are grouped into hierarchies.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="attribute" minOccurs="0" maxOccurs="unbounded" />
+				<xsd:element ref="description" minOccurs="0" maxOccurs="unbounded" />
+				<xsd:element ref="name" minOccurs="0" maxOccurs="unbounded" />
+			</xsd:sequence>
+			<xsd:attributeGroup ref="IdVersion" />
+			<xsd:attribute name="hierarchy" type="ExtIdType" use="required">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="en">Identifier of the hierarchy in which the given level is located.
+					Example: journal issue is located in the journal-volume-issue-article hierarchy.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="parent" type="ExtIdType" use="optional">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="en">Identifier of the parent level.  Example: journal volume is the parent of journal issue.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="license">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">Description of a license.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="attribute" minOccurs="0" maxOccurs="unbounded" />
+				<xsd:element ref="description" minOccurs="0" maxOccurs="unbounded" />
+				<xsd:element ref="name" minOccurs="0" maxOccurs="unbounded" />
+			</xsd:sequence>
+			<xsd:attributeGroup ref="IdVersion" />
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="license-ref">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">License of a given element (refers to &lt;license/&gt;).</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:attribute name="ref" type="ExtIdType" use="required">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="en">Identifier of the license on which a given element is distributed.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="location" type="xsd:anyURI">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">URL describing location of a given file.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+	<xsd:element name="name">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">One-line name of an object.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="richText">
+					<xsd:attribute name="lang" type="xsd:language" use="optional">
+						<xsd:annotation>
+							<xsd:documentation xml:lang="en">Language in which the name is written.  Only ISO 639-1 and 639-2 language codes are allowed.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+					<xsd:attribute name="sort-key" type="xsd:string" use="optional">
+						<xsd:annotation>
+							<xsd:documentation xml:lang="en">Key to be used in collation.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+					<xsd:attribute name="type" type="xsd:string" use="optional">
+						<xsd:annotation>
+							<xsd:documentation xml:lang="en">Type of the name.  Examples: abbreviation, romanization, subtitle, surname, title.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="person">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">Information on a person.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="attribute" minOccurs="0" maxOccurs="unbounded" />
+				<xsd:element ref="description" minOccurs="0" maxOccurs="unbounded" />
+				<xsd:element ref="name" minOccurs="0" maxOccurs="unbounded" />
+			</xsd:sequence>
+			<xsd:attributeGroup ref="IdVersion" />
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="relation">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">Relation between the given element and some other element.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="attribute" minOccurs="0" maxOccurs="unbounded" />
+			</xsd:sequence>
+			<xsd:attribute name="id-scheme" type="ExtIdType" use="optional">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="en">Identifier scheme.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="id-value" type="xsd:string" use="optional">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="en">Identifier of the other element withing the given identifier scheme.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="type" type="xsd:string" use="required">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="en">Type of relation.  Examples: references, updates.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="signature">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">Checksum of a binary file.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:simpleContent>
+				<xsd:extension base="xsd:string">
+					<xsd:attribute name="type" type="xsd:string" use="optional">
+						<xsd:annotation>
+							<xsd:documentation xml:lang="en">Checksum type.  Examples (non-normative): SHA1, MD5.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+				</xsd:extension>
+			</xsd:simpleContent>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="structure">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">Structure provides links to upper-level elements according to a given hierarchy.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="ancestor" minOccurs="0" maxOccurs="unbounded" />
+				<xsd:element ref="current" minOccurs="1" maxOccurs="1" />
+			</xsd:sequence>
+			<xsd:attribute name="hierarchy" type="ExtIdType" use="required">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="en">Hierarchy of this structure.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="tag" type="richText"> <!--type="xsd:string"-->
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">A single tag within a set of tags.  See &lt;tags/&gt;.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+	<xsd:element name="tags">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">A set of tags describing the given element.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="tag" minOccurs="1" maxOccurs="unbounded" />
+			</xsd:sequence>
+			<xsd:attribute name="lang" type="xsd:language" use="optional">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="en">Language of the tags.  Only ISO 639-1 and 639-2 language codes are allowed.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+			<xsd:attribute name="type" type="xsd:string" use="required">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="en">Tag type.  Examples: genre, keyword, subject.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:attribute>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="text" type="xsd:string">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">Text of an affiliation.  This is a presentational form of the affiliation, as in the described document.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+
+
+	<!-- Attribute groups -->
+
+	<xsd:attributeGroup name="IdVersion">
+		<xsd:attribute name="id" type="ExtIdType" use="required">
+			<xsd:annotation>
+				<xsd:documentation xml:lang="en">Object identifier.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="version" type="VersionType" use="optional">
+			<xsd:annotation>
+				<xsd:documentation xml:lang="en">Object version.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:attributeGroup>
+
+
+
+	<!-- Simple types -->
+
+	<xsd:simpleType name="ExtIdType">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">Primary identifier of entities in the model.
+			Each exportable entity contains a unique extId.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="[A-Za-z0-9_./:@\-]+"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="LanguageListType">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">List of languages.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:list itemType="xsd:language" />
+	</xsd:simpleType>
+
+	<xsd:simpleType name="VersionType">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">Version information as well as 'deleted' or 'merged' flag.
+			Version regexp: [0-9]+(D|M(.+))?. 'D' stands for deleted, 'M' for merged
+			and everything after letter 'M' is id of object to which this object should be merged.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="[0-9]+(D|M(.+))?" />
+		</xsd:restriction>
+	</xsd:simpleType>
+</xsd:schema>
