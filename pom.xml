@@ -25,5 +25,6 @@
     <modules>
     <module>importers</module>
     <module>disambiguation</module>
-  </modules>
+        <module>commons</module>
+    </modules>
 </project>
