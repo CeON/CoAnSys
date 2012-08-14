@@ -15,22 +15,23 @@ import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.io.Text;
 import org.apache.log4j.Logger;
 
-import pl.edu.icm.coansys.disambiguation.author.model.feature.Extractor;
-import pl.edu.icm.coansys.disambiguation.author.model.feature.FeatureInfo;
-import pl.edu.icm.coansys.disambiguation.author.model.feature.extractor.ExtractorFactory;
-import pl.edu.icm.coansys.disambiguation.author.model.feature.indicator.AuthorBased;
-import pl.edu.icm.coansys.disambiguation.author.model.feature.indicator.DocumentBased;
+import pl.edu.icm.coansys.disambiguation.author.features.Extractor;
+import pl.edu.icm.coansys.disambiguation.author.features.FeatureInfo;
+import pl.edu.icm.coansys.disambiguation.author.features.extractors.ExtractorFactory;
+import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.AuthorBased;
+import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DocumentBased;
 import pl.edu.icm.coansys.disambiguation.auxil.DiacriticsRemover;
 import pl.edu.icm.coansys.disambiguation.auxil.LoggingInDisambiguation;
 import pl.edu.icm.coansys.disambiguation.auxil.TextTextArrayMapWritable;
 import pl.edu.icm.coansys.importers.constants.HBaseConstant;
-import pl.edu.icm.coansys.importers.model.DocumentProtos.Author;
-import pl.edu.icm.coansys.importers.model.DocumentProtos.DocumentMetadata;
+import pl.edu.icm.coansys.importers.models.DocumentProtos.Author;
+import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
 
 /**
  *
  * @author pdendek
- *
+ * @version 1.0
+ * @since 2012-08-07
  */
 @SuppressWarnings("rawtypes")
 public class FeaturesExtractionMapper_Toy extends TableMapper<Text, TextTextArrayMapWritable> {
@@ -134,7 +135,7 @@ public class FeaturesExtractionMapper_Toy extends TableMapper<Text, TextTextArra
         for(Extractor fe : featureExtractors){
         	firstIndex++;
         	if(fe instanceof DocumentBased){
-        		docBasedFeature.put(featureInfos.get(firstIndex).getFeatureName(), 
+        		docBasedFeature.put(featureInfos.get(firstIndex).getDisambiguatorName(), 
         				fe.extract(dm, null));        		
         	}
         }
@@ -150,14 +151,14 @@ public class FeaturesExtractionMapper_Toy extends TableMapper<Text, TextTextArra
 			secondIndex++;
 			//(3) extract author-based features 
 			if(fe instanceof AuthorBased){
-				String featureName = featureInfos.get(secondIndex).getFeatureName();
+				String featureName = featureInfos.get(secondIndex).getDisambiguatorName();
 				List<String> value = fe.extract(dm, authId);
 				featureName2FeatureValuesMap.put(featureName, value);
 			}
 			//(4) and enrich author featureName2FeatureValuesMap
 			//    with earlier extracted document-based features
 			if(fe instanceof DocumentBased){
-				String featureName = featureInfos.get(secondIndex).getFeatureName();
+				String featureName = featureInfos.get(secondIndex).getDisambiguatorName();
 				List<String> value = docBasedFeature.get(featureName);
 				featureName2FeatureValuesMap.put(featureName, value);
 			}              
