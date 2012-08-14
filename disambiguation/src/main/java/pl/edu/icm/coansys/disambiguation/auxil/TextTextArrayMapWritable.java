@@ -16,6 +16,8 @@ import org.apache.hadoop.io.Writable;
 /**
  *
  * @author akawa
+ * @version 1.0
+ * @since 2012-08-07
  */
 public class TextTextArrayMapWritable implements Writable, Serializable {
 

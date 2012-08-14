@@ -13,9 +13,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.importers.ZipArchive;
-import pl.edu.icm.coansys.importers.model.DocumentDTO;
-import pl.edu.icm.coansys.importers.parser.MetadataToProtoMetadataParser;
-import pl.edu.icm.coansys.importers.transformer.YElementFromZip2DocumentDto;
+import pl.edu.icm.coansys.importers.models.DocumentDTO;
+import pl.edu.icm.coansys.importers.parsers.MetadataToProtoMetadataParser;
+import pl.edu.icm.coansys.importers.transformers.YElementFromZip2DocumentDto;
 import pl.edu.icm.synat.application.model.bwmeta.YExportable;
 
 /**

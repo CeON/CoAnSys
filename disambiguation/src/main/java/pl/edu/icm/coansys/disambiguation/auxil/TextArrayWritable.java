@@ -12,6 +12,8 @@ import org.apache.hadoop.io.Text;
 /**
  *
  * @author akawa
+ * @version 1.0
+ * @since 2012-08-07
  */
     public class TextArrayWritable extends ArrayWritable {
 
