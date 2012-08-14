@@ -6,7 +6,7 @@ package pl.edu.icm.coansys.logsanalysis.transformers;
 import java.util.Arrays;
 import java.util.Date;
 import pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos;
-import pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.Entry.Builder;
+import pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.LogMessage.Builder;
 import pl.edu.icm.synat.api.services.audit.model.AuditEntry;
 
 /**
@@ -15,8 +15,8 @@ import pl.edu.icm.synat.api.services.audit.model.AuditEntry;
  */
 public class AuditEntry2Protos {
 
-    public static AuditEntryProtos.Entry serialize(AuditEntry entry) {
-        Builder builder = AuditEntryProtos.Entry.newBuilder();
+    public static AuditEntryProtos.LogMessage serialize(AuditEntry entry) {
+        Builder builder = AuditEntryProtos.LogMessage.newBuilder();
 
         builder.setEventId(entry.getEventId()).setServiceId(entry.getServiceId()).
                 setEventType(entry.getEventType()).setTimestamp(entry.getTimestamp().getTime());
@@ -28,7 +28,7 @@ public class AuditEntry2Protos {
         return builder.build();
     }
 
-    public static AuditEntry deserialize(AuditEntryProtos.Entry proto) {
+    public static AuditEntry deserialize(AuditEntryProtos.LogMessage proto) {
         String[] args = new String[proto.getArgCount()];
         
         for (int i = 0; i < proto.getArgCount(); i++) {
