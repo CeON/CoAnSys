@@ -11,6 +11,8 @@
 # IntelliJ IDEA files #
 .idea
 *.iml
+*.ipr
+*.iws
 
 # Package Files #
 *.jar
