@@ -1,7 +1,7 @@
 /*
  * (C) 2010-2012 ICM UW. All rights reserved.
  */
-package pl.edu.icm.coansys.logsanalysis.importers;
+package pl.edu.icm.coansys.logsanalysis.logsacquisition;
 
 import java.math.BigInteger;
 import java.net.MalformedURLException;

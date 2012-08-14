@@ -16,7 +16,7 @@ enum Level {
     TRACE = 5;
 }
 
-message Entry {
+message LogMessage {
     required string event_id = 1;
     required Level level = 2;
     required string service_id = 3;
