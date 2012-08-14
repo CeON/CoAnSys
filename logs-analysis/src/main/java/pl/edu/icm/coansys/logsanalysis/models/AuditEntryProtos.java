@@ -83,31 +83,31 @@ public final class AuditEntryProtos {
     // @@protoc_insertion_point(enum_scope:pl.edu.icm.coansys.logsanalysis.Level)
   }
   
-  public static final class Entry extends
+  public static final class LogMessage extends
       com.google.protobuf.GeneratedMessage {
-    // Use Entry.newBuilder() to construct.
-    private Entry() {
+    // Use LogMessage.newBuilder() to construct.
+    private LogMessage() {
       initFields();
     }
-    private Entry(boolean noInit) {}
+    private LogMessage(boolean noInit) {}
     
-    private static final Entry defaultInstance;
-    public static Entry getDefaultInstance() {
+    private static final LogMessage defaultInstance;
+    public static LogMessage getDefaultInstance() {
       return defaultInstance;
     }
     
-    public Entry getDefaultInstanceForType() {
+    public LogMessage getDefaultInstanceForType() {
       return defaultInstance;
     }
     
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.internal_static_pl_edu_icm_coansys_logsanalysis_Entry_descriptor;
+      return pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.internal_static_pl_edu_icm_coansys_logsanalysis_LogMessage_descriptor;
     }
     
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.internal_static_pl_edu_icm_coansys_logsanalysis_Entry_fieldAccessorTable;
+      return pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.internal_static_pl_edu_icm_coansys_logsanalysis_LogMessage_fieldAccessorTable;
     }
     
     // required string event_id = 1;
@@ -233,41 +233,41 @@ public final class AuditEntryProtos {
       return size;
     }
     
-    public static pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.Entry parseFrom(
+    public static pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.LogMessage parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return newBuilder().mergeFrom(data).buildParsed();
     }
-    public static pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.Entry parseFrom(
+    public static pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.LogMessage parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return newBuilder().mergeFrom(data, extensionRegistry)
                .buildParsed();
     }
-    public static pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.Entry parseFrom(byte[] data)
+    public static pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.LogMessage parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return newBuilder().mergeFrom(data).buildParsed();
     }
-    public static pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.Entry parseFrom(
+    public static pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.LogMessage parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return newBuilder().mergeFrom(data, extensionRegistry)
                .buildParsed();
     }
-    public static pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.Entry parseFrom(java.io.InputStream input)
+    public static pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.LogMessage parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return newBuilder().mergeFrom(input).buildParsed();
     }
-    public static pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.Entry parseFrom(
+    public static pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.LogMessage parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return newBuilder().mergeFrom(input, extensionRegistry)
                .buildParsed();
     }
-    public static pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.Entry parseDelimitedFrom(java.io.InputStream input)
+    public static pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.LogMessage parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       Builder builder = newBuilder();
       if (builder.mergeDelimitedFrom(input)) {
@@ -276,7 +276,7 @@ public final class AuditEntryProtos {
         return null;
       }
     }
-    public static pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.Entry parseDelimitedFrom(
+    public static pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.LogMessage parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -287,12 +287,12 @@ public final class AuditEntryProtos {
         return null;
       }
     }
-    public static pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.Entry parseFrom(
+    public static pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.LogMessage parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return newBuilder().mergeFrom(input).buildParsed();
     }
-    public static pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.Entry parseFrom(
+    public static pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.LogMessage parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -302,25 +302,25 @@ public final class AuditEntryProtos {
     
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.Entry prototype) {
+    public static Builder newBuilder(pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.LogMessage prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
     
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> {
-      private pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.Entry result;
+      private pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.LogMessage result;
       
-      // Construct using pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.Entry.newBuilder()
+      // Construct using pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.LogMessage.newBuilder()
       private Builder() {}
       
       private static Builder create() {
         Builder builder = new Builder();
-        builder.result = new pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.Entry();
+        builder.result = new pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.LogMessage();
         return builder;
       }
       
-      protected pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.Entry internalGetResult() {
+      protected pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.LogMessage internalGetResult() {
         return result;
       }
       
@@ -329,7 +329,7 @@ public final class AuditEntryProtos {
           throw new IllegalStateException(
             "Cannot call clear() after build().");
         }
-        result = new pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.Entry();
+        result = new pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.LogMessage();
         return this;
       }
       
@@ -339,24 +339,24 @@ public final class AuditEntryProtos {
       
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.Entry.getDescriptor();
+        return pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.LogMessage.getDescriptor();
       }
       
-      public pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.Entry getDefaultInstanceForType() {
-        return pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.Entry.getDefaultInstance();
+      public pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.LogMessage getDefaultInstanceForType() {
+        return pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.LogMessage.getDefaultInstance();
       }
       
       public boolean isInitialized() {
         return result.isInitialized();
       }
-      public pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.Entry build() {
+      public pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.LogMessage build() {
         if (result != null && !isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return buildPartial();
       }
       
-      private pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.Entry buildParsed()
+      private pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.LogMessage buildParsed()
           throws com.google.protobuf.InvalidProtocolBufferException {
         if (!isInitialized()) {
           throw newUninitializedMessageException(
@@ -365,7 +365,7 @@ public final class AuditEntryProtos {
         return buildPartial();
       }
       
-      public pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.Entry buildPartial() {
+      public pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.LogMessage buildPartial() {
         if (result == null) {
           throw new IllegalStateException(
             "build() has already been called on this Builder.");
@@ -374,22 +374,22 @@ public final class AuditEntryProtos {
           result.arg_ =
             java.util.Collections.unmodifiableList(result.arg_);
         }
-        pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.Entry returnMe = result;
+        pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.LogMessage returnMe = result;
         result = null;
         return returnMe;
       }
       
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.Entry) {
-          return mergeFrom((pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.Entry)other);
+        if (other instanceof pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.LogMessage) {
+          return mergeFrom((pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.LogMessage)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
       
-      public Builder mergeFrom(pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.Entry other) {
-        if (other == pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.Entry.getDefaultInstance()) return this;
+      public Builder mergeFrom(pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.LogMessage other) {
+        if (other == pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.LogMessage.getDefaultInstance()) return this;
         if (other.hasEventId()) {
           setEventId(other.getEventId());
         }
@@ -613,23 +613,23 @@ public final class AuditEntryProtos {
         return this;
       }
       
-      // @@protoc_insertion_point(builder_scope:pl.edu.icm.coansys.logsanalysis.Entry)
+      // @@protoc_insertion_point(builder_scope:pl.edu.icm.coansys.logsanalysis.LogMessage)
     }
     
     static {
-      defaultInstance = new Entry(true);
+      defaultInstance = new LogMessage(true);
       pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.internalForceInit();
       defaultInstance.initFields();
     }
     
-    // @@protoc_insertion_point(class_scope:pl.edu.icm.coansys.logsanalysis.Entry)
+    // @@protoc_insertion_point(class_scope:pl.edu.icm.coansys.logsanalysis.LogMessage)
   }
   
   private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_pl_edu_icm_coansys_logsanalysis_Entry_descriptor;
+    internal_static_pl_edu_icm_coansys_logsanalysis_LogMessage_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_pl_edu_icm_coansys_logsanalysis_Entry_fieldAccessorTable;
+      internal_static_pl_edu_icm_coansys_logsanalysis_LogMessage_fieldAccessorTable;
   
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -640,28 +640,28 @@ public final class AuditEntryProtos {
   static {
     java.lang.String[] descriptorData = {
       "\n\020auditentry.proto\022\037pl.edu.icm.coansys.l" +
-      "ogsanalysis\"\230\001\n\005Entry\022\020\n\010event_id\030\001 \002(\t\022" +
-      "5\n\005level\030\002 \002(\0162&.pl.edu.icm.coansys.logs" +
-      "analysis.Level\022\022\n\nservice_id\030\003 \002(\t\022\022\n\nev" +
-      "ent_type\030\004 \002(\t\022\021\n\ttimestamp\030\005 \002(\003\022\013\n\003arg" +
-      "\030\006 \003(\t*G\n\005Level\022\t\n\005FATAL\020\000\022\t\n\005ERROR\020\001\022\010\n" +
-      "\004WARN\020\002\022\010\n\004INFO\020\003\022\t\n\005DEBUG\020\004\022\t\n\005TRACE\020\005B" +
-      ":\n&pl.edu.icm.coansys.logsanalysis.model" +
-      "sB\020AuditEntryProtos"
+      "ogsanalysis\"\235\001\n\nLogMessage\022\020\n\010event_id\030\001" +
+      " \002(\t\0225\n\005level\030\002 \002(\0162&.pl.edu.icm.coansys" +
+      ".logsanalysis.Level\022\022\n\nservice_id\030\003 \002(\t\022" +
+      "\022\n\nevent_type\030\004 \002(\t\022\021\n\ttimestamp\030\005 \002(\003\022\013" +
+      "\n\003arg\030\006 \003(\t*G\n\005Level\022\t\n\005FATAL\020\000\022\t\n\005ERROR" +
+      "\020\001\022\010\n\004WARN\020\002\022\010\n\004INFO\020\003\022\t\n\005DEBUG\020\004\022\t\n\005TRA" +
+      "CE\020\005B:\n&pl.edu.icm.coansys.logsanalysis." +
+      "modelsB\020AuditEntryProtos"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
         public com.google.protobuf.ExtensionRegistry assignDescriptors(
             com.google.protobuf.Descriptors.FileDescriptor root) {
           descriptor = root;
-          internal_static_pl_edu_icm_coansys_logsanalysis_Entry_descriptor =
+          internal_static_pl_edu_icm_coansys_logsanalysis_LogMessage_descriptor =
             getDescriptor().getMessageTypes().get(0);
-          internal_static_pl_edu_icm_coansys_logsanalysis_Entry_fieldAccessorTable = new
+          internal_static_pl_edu_icm_coansys_logsanalysis_LogMessage_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_pl_edu_icm_coansys_logsanalysis_Entry_descriptor,
+              internal_static_pl_edu_icm_coansys_logsanalysis_LogMessage_descriptor,
               new java.lang.String[] { "EventId", "Level", "ServiceId", "EventType", "Timestamp", "Arg", },
-              pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.Entry.class,
-              pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.Entry.Builder.class);
+              pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.LogMessage.class,
+              pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.LogMessage.Builder.class);
           return null;
         }
       };
