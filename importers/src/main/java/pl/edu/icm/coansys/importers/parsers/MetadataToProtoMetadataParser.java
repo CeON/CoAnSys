@@ -245,34 +245,6 @@ public class MetadataToProtoMetadataParser {
 
         DocumentMetadata.Builder docBuilder = DocumentProtos.DocumentMetadata.newBuilder();
 
-        UUID uuId;
-
-        String uuIdStr = yElement.getId();
-        if (uuIdStr.length() >= 36) {
-            uuIdStr = uuIdStr.substring(uuIdStr.length() - 36);
-        }
-        try {
-            uuId = UUID.fromString(uuIdStr);
-        } catch (IllegalArgumentException e) {
-            log.warn("Error reading UUID from file: {}", e.toString());
-            uuId = UUID.randomUUID();
-        }
-        docBuilder.setKey(uuId.toString());
-//        docBuilder.setType(HBaseConstants.T_DOCUMENT_COPY);
-        docBuilder.setTitle(yElement.getOneName().getText());
-
-        List<YContributor> authorNodeList = yElement.getContributors();
-        List<Author> authors = new ArrayList<Author>();
-        for (int i = 0; i < authorNodeList.size(); i++) {
-            YContributor currentNode = authorNodeList.get(i);
-            if (currentNode != null && currentNode.isPerson() && "author".equals(currentNode.getRole())) {
-                Author.Builder author = MetadataToProtoMetadataParser.ycontributorToAuthorMetadata(currentNode);
-                author.setDocId(uuId.toString());
-                author.setPositionNumber(i);
-                authors.add(author.build());
-            }
-        }
-        docBuilder.addAllAuthor(authors);
 
         List<String> keywords = Collections.emptyList();
         YTagList tagList = yElement.getTagList("keyword");
@@ -307,6 +279,12 @@ public class MetadataToProtoMetadataParser {
         if((content = yElement.getId("bwmeta1.id-class.MR"))!=null){
         	ExtId.Builder eib = ExtId.newBuilder();
         	eib.setSource(ProtoConstants.documentExtIdMr);
+        	eib.setValue(content);
+        	docBuilder.setExtId(eib.build());
+        }
+        if((content = yElement.getId())!=null){
+        	ExtId.Builder eib = ExtId.newBuilder();
+        	eib.setSource(ProtoConstants.documentExtIdBwmeta);
         	eib.setValue(content);
         	docBuilder.setExtId(eib.build());
         }
@@ -348,6 +326,38 @@ public class MetadataToProtoMetadataParser {
             docBuilder.setPages(pages.getPosition());
         }
 
+
+        UUID uuId;
+
+        String uuIdStr = yElement.getId();
+        if (uuIdStr.length() >= 36) {
+            uuIdStr = uuIdStr.substring(uuIdStr.length() - 36);
+        }
+        
+        try {
+            uuId = UUID.fromString(uuIdStr);
+        } catch (IllegalArgumentException e) {
+            log.warn("Error reading UUID from file: {}", e.toString());
+            uuId = UUID.randomUUID();
+        }
+        docBuilder.setKey(uuId.toString());
+        
+//        docBuilder.setType(HBaseConstants.T_DOCUMENT_COPY);
+        docBuilder.setTitle(yElement.getOneName().getText());
+
+        List<YContributor> authorNodeList = yElement.getContributors();
+        List<Author> authors = new ArrayList<Author>();
+        for (int i = 0; i < authorNodeList.size(); i++) {
+            YContributor currentNode = authorNodeList.get(i);
+            if (currentNode != null && currentNode.isPerson() && "author".equals(currentNode.getRole())) {
+                Author.Builder author = MetadataToProtoMetadataParser.ycontributorToAuthorMetadata(currentNode);
+                author.setDocId(uuId.toString());
+                author.setPositionNumber(i);
+                authors.add(author.build());
+            }
+        }
+        docBuilder.addAllAuthor(authors);
+        
         List<YRelation> refNodes = yElement.getRelations("reference-to");
         List<DocumentMetadata> references = new ArrayList<DocumentMetadata>();
         if (refNodes != null && refNodes.size() > 0) {
