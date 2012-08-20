@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import pl.edu.icm.coansys.importers.constants.ProtoConstants;
 import pl.edu.icm.coansys.importers.models.DocumentProtos;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.Author;
+import pl.edu.icm.coansys.importers.models.DocumentProtos.Auxiliar;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.ClassifCode;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.ExtId;
@@ -175,6 +176,11 @@ public class MetadataToProtoMetadataParser {
     private static DocumentMetadata.Builder yrelationToDocumentMetadata(YRelation item) {
         DocumentMetadata.Builder doc = DocumentProtos.DocumentMetadata.newBuilder();
 
+        Auxiliar.Builder aux = Auxiliar.newBuilder();
+        aux.setType(ProtoConstants.documentAuxiliaryTypeOfDocument);
+        aux.setValue(ProtoConstants.documentAuxiliaryTypeOfDocument_Reference);
+        doc.addAuxiliarInfo(aux);
+        
         doc.setKey(UUID.randomUUID().toString());
 //        docBuilder.setType(HBaseConstants.T_REFERENCE);
 
@@ -218,22 +224,31 @@ public class MetadataToProtoMetadataParser {
         
         //TODO czesc kodow MSC mylnie trafia do kwordow - mozna je stamtad wyciagnac porownujac z wzorcem kodu
         List<YAttribute> refMscCodesNodes = item.getAttributes(YaddaIdConstants.CATEGORY_CLASS_MSC);
-        for (int i = 0; i < refMscCodesNodes.size(); i++) {
+        if(refMscCodesNodes.size()>0){
         	ClassifCode.Builder ccb = ClassifCode.newBuilder();
         	ccb.setSource(ProtoConstants.documentClassifCodeMsc);
-        	ccb.setValue(refMscCodesNodes.get(i).getValue());
+
+        	for (int i = 0; i < refMscCodesNodes.size(); i++)
+            	ccb.addValue(refMscCodesNodes.get(i).getValue());
+        	
         	doc.addClassifCode(ccb.build());
         }
+        
+        
 
         List<String> refPacsCodes = new ArrayList<String>();
         List<YAttribute> refPacsCodesNodes = item.getAttributes(YaddaIdConstants.CATEGORY_CLASS_PACS);
-        for (int i = 0; i < refPacsCodesNodes.size(); i++) {
+        
+        if(refPacsCodesNodes.size()>0){
         	ClassifCode.Builder ccb = ClassifCode.newBuilder();
         	ccb.setSource(ProtoConstants.documentClassifCodePacs);
-        	ccb.setValue(refPacsCodesNodes.get(i).getValue());
+        	
+        	for (int i = 0; i < refPacsCodesNodes.size(); i++)
+            	ccb.addValue(refPacsCodesNodes.get(i).getValue());
+        	
         	doc.addClassifCode(ccb.build());
         }
-
+        
         return doc;
     }
 
@@ -245,6 +260,11 @@ public class MetadataToProtoMetadataParser {
 
         DocumentMetadata.Builder docBuilder = DocumentProtos.DocumentMetadata.newBuilder();
 
+        
+        Auxiliar.Builder aux = Auxiliar.newBuilder();
+        aux.setType(ProtoConstants.documentAuxiliaryTypeOfDocument);
+        aux.setValue(ProtoConstants.documentAuxiliaryTypeOfDocument_Document);
+        docBuilder.addAuxiliarInfo(aux);
 
         List<String> keywords = Collections.emptyList();
         YTagList tagList = yElement.getTagList("keyword");
@@ -301,19 +321,24 @@ public class MetadataToProtoMetadataParser {
 
         //TODO czesc kodow MSC mylnie trafia do kwordow - mozna je stamtad wyciagnac porownujac z wzorcem kodu
         if (catRefs != null && catRefs.size() > 0) {
+        	
+        	ClassifCode.Builder ccodeMSC = ClassifCode.newBuilder();
+        	ccodeMSC.setSource(ProtoConstants.documentClassifCodeMsc);
+        	
+        	ClassifCode.Builder ccodePACS = ClassifCode.newBuilder();
+        	ccodePACS.setSource(ProtoConstants.documentClassifCodePacs);
+        	
             for (YCategoryRef yCategoryRef : catRefs) {
                 if (yCategoryRef != null && yCategoryRef.getClassification().equals(YaddaIdConstants.CATEGORY_CLASS_MSC)) {
-                	ClassifCode.Builder ccode = ClassifCode.newBuilder();
-                	ccode.setSource(ProtoConstants.documentClassifCodeMsc);
-                	ccode.setValue(yCategoryRef.getCode());
-                	docBuilder.addClassifCode(ccode.build());
+                	ccodeMSC.addValue(yCategoryRef.getCode());
                 } else if (yCategoryRef != null && yCategoryRef.getClassification().equals(YaddaIdConstants.CATEGORY_CLASS_PACS)) {
-                	ClassifCode.Builder ccode = ClassifCode.newBuilder();
-                	ccode.setSource(ProtoConstants.documentClassifCodePacs);
-                	ccode.setValue(yCategoryRef.getCode());
-                	docBuilder.addClassifCode(ccode.build());
+                	ccodePACS.addValue(yCategoryRef.getCode());
                 }
             }
+            if(ccodeMSC.getValueCount()>0)
+            	docBuilder.addClassifCode(ccodeMSC.build());
+            if(ccodePACS.getValueCount()>0)
+            	docBuilder.addClassifCode(ccodePACS.build());
         }
 
         YAncestor journal = yElement.getStructure(YaddaIdConstants.ID_HIERARACHY_JOURNAL).getAncestor(YaddaIdConstants.ID_LEVEL_JOURNAL_JOURNAL);
@@ -322,7 +347,7 @@ public class MetadataToProtoMetadataParser {
         }
 
         YAncestor pages = yElement.getStructure(YaddaIdConstants.ID_HIERARACHY_JOURNAL).getAncestor(YaddaIdConstants.ID_LEVEL_JOURNAL_ARTICLE);
-        if (pages != null) {
+        if (pages != null) {        	
             docBuilder.setPages(pages.getPosition());
         }
 
