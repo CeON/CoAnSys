@@ -33,7 +33,7 @@ public class DocumentProto2ClassifCodeExtractor implements Extractor<DocumentMet
 		DocumentMetadata dm = (DocumentMetadata) input;
 		ArrayList<String> ret = new ArrayList<String>();
 		for(ClassifCode cc : dm.getClassifCodeList()){
-			ret.add(cc.getValue());
+			ret.addAll(cc.getValueList());
 		}
 		return ret;
 	}
