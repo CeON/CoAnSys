@@ -110,7 +110,7 @@ public class YElementFromZip2DocumentDto{
 		                mediaBuilder.setKey(docDTO.getKey()); //Media and Document should have the same key?
 		                
 		                String type = ProtoConstants.mediaTypePdf;
-		                mediaBuilder.setMediaType(type); //??
+		                mediaBuilder.setMediaType(type);
 		                mediaBuilder.setContent(ByteString.copyFrom(IOUtils.toByteArray(pdfIS)));
 		                docDTO.addMedia(mediaBuilder.build());
 		                docDTO.addMediaType(type);
