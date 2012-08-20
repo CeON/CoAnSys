@@ -29,6 +29,11 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                            <descriptorRefs>
+                                <descriptorRef>jar-with-dependencies</descriptorRef>
+                            </descriptorRefs>
+                </configuration>
                 <executions>
                     <execution>
                         <id>create-my-bundle</id>
@@ -36,11 +41,7 @@
                         <goals>
                             <goal>single</goal>
                         </goals>
-                        <configuration>
-                            <descriptorRefs>
-                                <descriptorRef>jar-with-dependencies</descriptorRef>
-                            </descriptorRefs>
-                        </configuration>
+ 
                     </execution>
                 </executions>
             </plugin>
