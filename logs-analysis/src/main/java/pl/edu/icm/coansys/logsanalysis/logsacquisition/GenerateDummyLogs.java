@@ -3,19 +3,23 @@
  */
 package pl.edu.icm.coansys.logsanalysis.logsacquisition;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos;
+import pl.edu.icm.coansys.logsanalysis.transformers.AuditEntry2Protos;
+import pl.edu.icm.coansys.logsanalysis.transformers.AuditEntryProtos2SequenceFile;
 import pl.edu.icm.synat.api.services.audit.model.AuditEntry;
 
 /**
  *
  * @author Artur Czeczko <a.czeczko@icm.edu.pl>
- * 
+ *
  * This class generates a list of dummy log entries for tests.
- * 
+ *
  */
 public class GenerateDummyLogs {
 
@@ -26,7 +30,6 @@ public class GenerateDummyLogs {
             return o1.getTimestamp().compareTo(o2.getTimestamp());
         }
     }
-    
     private static final int SESSIONMIN = 5;
     private static final int SESSIONMAX = 40;
     private static String startLogs = "2012-01-01";
@@ -86,9 +89,9 @@ public class GenerateDummyLogs {
                 //timestamp
                 randomFloat = random.nextFloat();
                 long time = sessionStart + (long) (randomFloat * (sessionEnd - sessionStart));
-                
+
                 //args
-                String eventType = EVENTTYPES[random.nextInt(EVENTTYPES.length)];                
+                String eventType = EVENTTYPES[random.nextInt(EVENTTYPES.length)];
                 String args[];
                 if (eventType.equals("SAVE_TO_DISK")) {
                     args = new String[6];
@@ -109,5 +112,28 @@ public class GenerateDummyLogs {
 
         Collections.sort(result, new AuditEntryComparator());
         return result;
+    }
+
+    public static void main(String[] argv) throws ParseException, MalformedURLException, IOException {
+        if (argv.length != 2) {
+            System.err.println("Usage: GenerateDummyLogs <number> <file_uri>");
+            return;
+        }
+        int logLines;
+        try {
+            logLines = Integer.parseInt(argv[0]);
+        } catch (NumberFormatException ex)  {
+            System.err.println("Not a valid number: " + argv[0]);
+            return;
+        }
+
+        List<AuditEntry> entries = GenerateDummyLogs.generateLogs(logLines);
+        List<AuditEntryProtos.LogMessage> protobufMessages = new ArrayList<AuditEntryProtos.LogMessage>();
+
+        for (AuditEntry entry : entries) {
+            protobufMessages.add(AuditEntry2Protos.serialize(entry));
+        }
+
+        AuditEntryProtos2SequenceFile.writeLogsToSequenceFile(protobufMessages, argv[1]);
     }
 }
