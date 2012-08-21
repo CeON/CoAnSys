@@ -23,6 +23,7 @@
         </plugins>
     </build>
     <modules>
+        <module>commons</module>
         <module>importers</module>
         <module>disambiguation</module>
         <module>logs-analysis</module>
