@@ -4,11 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>pl.edu.icm.coansys</groupId>
-    <artifactId>disambiguation</artifactId>
+    <artifactId>commons</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>Disambiguation Tool</name>
+    <name>Coansys Commons</name>
     <url>http://maven.apache.org</url>
 
     <properties>
@@ -16,7 +16,7 @@
     </properties>
 
     <build>
-      <plugins>
+        <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -26,29 +26,26 @@
                     <target>1.6</target>
                 </configuration>
             </plugin>
-        	<plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <configuration>
-                	<descriptorRefs>
-                   		<descriptorRef>jar-with-dependencies</descriptorRef>
-                 	</descriptorRefs>
-					<archive>
-		            	<manifest>
-		              		<mainClass>pl.edu.icm.coansys.importers.io.writers.hbaserest.HBaseRestWriter_Bwmeta</mainClass>
-		            	</manifest>
-		          	</archive>
-                </configuration>   
-          		<executions>
-            		<execution>
-              			<id>create-my-bundle</id>
-                		<goals><goal>single</goal></goals>
-            		</execution>
-          		</executions>
-        	</plugin>
-      </plugins>
+                <executions>
+                    <execution>
+                        <id>create-my-bundle</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <descriptorRefs>
+                                <descriptorRef>jar-with-dependencies</descriptorRef>
+                            </descriptorRefs>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
-
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
@@ -58,9 +55,9 @@
             <type>jar</type>
         </dependency>        
         <dependency>
-            <groupId>pl.edu.icm.coansys</groupId>
-    		<artifactId>importers</artifactId>
-    		<version>1.0-SNAPSHOT</version>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>2.4.1</version>
         </dependency>
         <dependency>
             <groupId>pl.edu.icm.synat</groupId>
@@ -72,30 +69,17 @@
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-core</artifactId>
             <version>2.0.0-mr1-cdh4.0.1</version>
-            <scope>provided</scope>
         </dependency> 
         <dependency>
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-common</artifactId>
             <version>2.0.0-cdh4.0.1</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.hbase</groupId>
             <artifactId>hbase</artifactId>
             <version>0.92.1-cdh4.0.1</version>
-            <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.6.4</version>
-        </dependency>        
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>1.6.4</version>
-        </dependency>        
     </dependencies>
     <repositories>
         <repository>
