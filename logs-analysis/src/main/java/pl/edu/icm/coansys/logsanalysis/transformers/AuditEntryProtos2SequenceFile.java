@@ -3,22 +3,19 @@
  */
 package pl.edu.icm.coansys.logsanalysis.transformers;
 
-import com.twitter.elephantbird.mapreduce.io.ProtobufWritable;
-import com.twitter.elephantbird.util.TypeRef;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.text.ParseException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.io.Text;
-import pl.edu.icm.coansys.logsanalysis.logsacquisition.GenerateDummyLogs;
 import pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos;
-import pl.edu.icm.synat.api.services.audit.model.AuditEntry;
+import pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.LogMessage;
 
 /**
  *
@@ -26,17 +23,25 @@ import pl.edu.icm.synat.api.services.audit.model.AuditEntry;
  */
 public class AuditEntryProtos2SequenceFile {
 
-    public static void writeLogsToSequenceFile(Iterable<AuditEntryProtos.LogMessage> messages, String uri) throws IOException {
+    private static Configuration createConf() {
         Configuration conf = new Configuration();
-        conf.addResource("/etc/hadoop/conf/core-site.xml");
-        conf.addResource("/etc/hadoop/conf/hdfs-site.xml");
-        //FileSystem fs = FileSystem.get(URI.create(uri), conf);
-        FileSystem fs = FileSystem.get(conf);
+        String[] resources = {"/etc/hadoop/conf/core-site.xml", "/etc/hadoop/conf/hdfs-site.xml"};
+        for (String resource : resources) {
+            conf.addResource(resource);
+        }
+        conf.set("fs.hdfs.impl", "org.apache.hadoop.hdfs.DistributedFileSystem");
+        return conf;
+    }
+
+    public static void writeLogsToSequenceFile(Iterable<AuditEntryProtos.LogMessage> messages, String uri) throws IOException {
+        Configuration conf = createConf();
+        FileSystem fs = FileSystem.get(URI.create(uri), conf);
+        System.out.println("URI: " + fs.getUri());
         Path path = new Path(uri);
 
         Text key = new Text();
-        ProtobufWritable value = new ProtobufWritable(new TypeRef<AuditEntryProtos.LogMessage>() {
-        });
+        byte[] valueBytes;
+        BytesWritable value = new BytesWritable();
         SequenceFile.Writer writer = null;
 
         try {
@@ -45,50 +50,36 @@ public class AuditEntryProtos2SequenceFile {
 
             for (AuditEntryProtos.LogMessage message : messages) {
                 key.set(message.getEventId());
-                value.set(message);
+                valueBytes = message.toByteArray();
+                value.set(valueBytes, 0, valueBytes.length);
                 writer.append(key, value);
             }
         } finally {
             IOUtils.closeStream(writer);
         }
     }
-    
+
     public static Iterable<AuditEntryProtos.LogMessage> readLogsFromSequenceFile(String uri) throws IOException {
-        Configuration conf = new Configuration();
-        conf.addResource("/etc/hadoop/conf/core-site.xml");
-        conf.addResource("/etc/hadoop/conf/hdfs-site.xml");
-        //FileSystem fs = FileSystem.get(URI.create(uri), conf);
-        FileSystem fs = FileSystem.get(conf);
+        Configuration conf = createConf();
+        FileSystem fs = FileSystem.get(URI.create(uri), conf);
         Path path = new Path(uri);
 
         List<AuditEntryProtos.LogMessage> result = new ArrayList<AuditEntryProtos.LogMessage>();
-        
+
         Text key = new Text();
-        ProtobufWritable value = new ProtobufWritable(new TypeRef<AuditEntryProtos.LogMessage>() {
-        });
+        BytesWritable value = new BytesWritable();
         SequenceFile.Reader reader = null;
 
         try {
             reader = new SequenceFile.Reader(fs, path, conf);
-            
+
             while (reader.next(key, value)) {
-                result.add((AuditEntryProtos.LogMessage) value.get());
+                LogMessage parseFrom = AuditEntryProtos.LogMessage.parseFrom(value.copyBytes());
+                result.add(parseFrom);
             }
         } finally {
             IOUtils.closeStream(reader);
         }
         return result;
-    }
-    
-   
-    public static void main(String[] argv) throws ParseException, MalformedURLException, IOException {
-        List<AuditEntry> entries = GenerateDummyLogs.generateLogs(10);
-        List<AuditEntryProtos.LogMessage> protobufMessages = new ArrayList<AuditEntryProtos.LogMessage>();
-        
-        for (AuditEntry entry : entries) {
-            protobufMessages.add(AuditEntry2Protos.serialize(entry));
-        }
-        
-        writeLogsToSequenceFile(protobufMessages, "hdfs://localhost/tmp/testlogs.seqfile");
     }
 }
