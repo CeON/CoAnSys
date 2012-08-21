@@ -31,7 +31,7 @@ public class AuditEntryTransformersTest {
         Iterable<AuditEntryProtos.LogMessage> readProtosList;
         List<AuditEntry> deserializedAuditEntries = new ArrayList<AuditEntry>();
         File tempFile = File.createTempFile("auditEntriesTransformations", ".seqfile");
-        String tempFilePath = tempFile.getAbsolutePath();
+        String tempFilePath = tempFile.toURI().toString();
 
         auditEntries = GenerateDummyLogs.generateLogs(20);
         for (AuditEntry entry : auditEntries) {
@@ -46,7 +46,7 @@ public class AuditEntryTransformersTest {
         for (AuditEntryProtos.LogMessage protoEntry : readProtosList) {
             deserializedAuditEntries.add(AuditEntry2Protos.deserialize(protoEntry));
         }
-
+        
         // verifications: 
 
         assertEquals(auditEntries.size(), deserializedAuditEntries.size());
