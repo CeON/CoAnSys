@@ -53,7 +53,7 @@ cd ~/CoAnSys/importers/target
 # to HBase table "testProto" localized on localhost.
 # Port 8080 is the default port for such a communication.
 # Please specify the port adequate for your hbase configuration
-java -jar importers-1.0-SNAPSHOT-jar-with-dependencies.jar ~/HBASE_IMPORT/ TESTCOLLECTION localhost 8080 testProto
+java -cp importers-1.0-SNAPSHOT-jar-with-dependencies.jar pl.edu.icm.coansys.importers.io.writers.hbaserest.HBaseRestWriter_Bwmeta ~/HBASE_IMPORT/ TESTCOLLECTION localhost 8080 testProto
 ```
 
 #### via RichTSV file (TBD)
