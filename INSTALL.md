@@ -109,4 +109,4 @@ Based on [Cloudera CDH4 Oozie installation guide](https://ccp.cloudera.com/displ
 	
 	- Through a webpage - use a web browser to open: [http://localhost:11000/oozie/](http://localhost:11000/oozie/)
 
-If you want to check if Oozie correctly executes workflows, you can ran some example workflows as described in [Cloudera Oozie example workflows](http://archive.cloudera.com/cdh4/cdh/4/oozie/DG_Examples.html). Note that contrary to what is written there, the Oozie server is not available at `http://localhost:8080/oozie` but at `http://localhost:11000/oozie` address
+If you want to check if Oozie correctly executes workflows, you can run some example workflows as described in [Cloudera Oozie example workflows](http://archive.cloudera.com/cdh4/cdh/4/oozie/DG_Examples.html). Note that contrary to what is written there, the Oozie server is not available at `http://localhost:8080/oozie` but at `http://localhost:11000/oozie` address
