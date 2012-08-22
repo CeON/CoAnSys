@@ -18,4 +18,6 @@ public class HBaseConstant {
 	public static final String familyContentQualifierProto = "cproto"; 
 	
 	public static final String rowIdSeparator = "_";
+	
+	public static final String rowIdMediaTypePdf = "PDF";
 }
