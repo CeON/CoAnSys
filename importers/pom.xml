@@ -33,11 +33,6 @@
                 	<descriptorRefs>
                    		<descriptorRef>jar-with-dependencies</descriptorRef>
                  	</descriptorRefs>
-					<archive>
-		            	<manifest>
-		              		<mainClass>pl.edu.icm.coansys.importers.io.writers.hbaserest.HBaseRestWriter_Bwmeta</mainClass>
-		            	</manifest>
-		          	</archive>
                 </configuration>   
           		<executions>
             		<execution>
@@ -57,6 +52,11 @@
             <type>jar</type>
         </dependency>
         <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>2.4.1</version>
+        </dependency>
+        <dependency>
             <groupId>pl.edu.icm.synat</groupId>
             <artifactId>synat-platform-api</artifactId>
             <version>1.5.1-SNAPSHOT</version>
@@ -72,24 +72,16 @@
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-core</artifactId>
             <version>2.0.0-mr1-cdh4.0.1</version>
-	    	<scope>provided</scope>
         </dependency> 
         <dependency>
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-common</artifactId>
             <version>2.0.0-cdh4.0.1</version>
-	    	<scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.hbase</groupId>
             <artifactId>hbase</artifactId>
             <version>0.92.1-cdh4.0.1</version>
-	    <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.twitter.elephantbird</groupId>
-            <artifactId>elephant-bird-core</artifactId>
-            <version>3.0.1</version>
         </dependency>
     </dependencies>
     <repositories>
