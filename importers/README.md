@@ -7,7 +7,7 @@ CoAnSys/importers is a project containing methods to easily load [BWMeta documen
 It provides two way to do so - (a) with RichTSV file or (b) via REST.
 
 ## Prerequirements
-This package depends on (Hadoop)[http://hadoop.apache.org/] from [Cloudera distribution](https://ccp.cloudera.com/display/SUPPORT/CDH+Downloads), version CDH 4.0.1 and appropriate [HBase](hbase.apache.org) version. 
+This package depends on [Hadoop](http://hadoop.apache.org/) from [Cloudera distribution](https://ccp.cloudera.com/display/SUPPORT/CDH+Downloads), version CDH 4.0.1 and appropriate [HBase](hbase.apache.org) version. 
 As CDH4 depends on [Protocol Buffers](http://code.google.com/p/protobuf/) 2.4.1 so is CoAnSys/importers.
 
 ## Quick Start
