@@ -29,7 +29,7 @@ mvn assembly:single
 ```
 # get
 ```
-[example data](../examples/otworz-ksiazke-tylkobwmeta-20110316-00000.zip)
+[example data](../examples/GROTOAP-10.zip)
 
 ```
 cd ~
