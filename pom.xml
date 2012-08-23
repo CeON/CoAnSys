@@ -2,17 +2,18 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                       http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+  	<modelVersion>4.0.0</modelVersion>
 
-  <groupId>pl.edu.icm.coansys</groupId>
-  <artifactId>coansys</artifactId>
-  <name>Content Analysis Systems</name>
-  <version>1.0-SNAPSHOT</version>
-  <packaging>pom</packaging>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
+  	<groupId>pl.edu.icm.coansys</groupId>
+	<artifactId>coansys</artifactId>
+  	<name>Content Analysis Systems</name>
+  	<version>1.0-SNAPSHOT</version>
+  	<packaging>pom</packaging>
+
+  	<build>
+      	<plugins>
+          	<plugin>
+              	<groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.3.2</version>
                 <configuration>
@@ -20,13 +21,30 @@
                     <target>1.6</target>
                 </configuration>
             </plugin>
-        </plugins>
+      		<plugin>
+        		<artifactId>maven-assembly-plugin</artifactId>
+        		<version>2.3</version>
+			    <configuration>
+	        		<descriptors>
+            			<descriptor>assembly-target-jars.xml</descriptor>
+          			</descriptors>
+        		</configuration>
+          		<executions>
+            		<execution>
+              			<id>create-my-bundle</id>
+                		<goals><goal>single</goal></goals>
+            		</execution>
+          		</executions>
+      		</plugin>
+		</plugins>
     </build>
+
     <modules>
         <module>commons</module>
         <module>importers</module>
         <module>disambiguation</module>
 		<module>disambiguation-author</module>
+		<module>document-classification</module>
         <module>logs-analysis</module>
     </modules>
 </project>
