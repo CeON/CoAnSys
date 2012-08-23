@@ -4,17 +4,21 @@ CoAnSys/examples
 LICENSE INFORMATION
 -------------------
 
-### 'otworz-ksiazke-tylkobwmeta-20110316-00000.zip'
+### 'GROTOAP-10.zip'
 
-The example file 'otworz-ksiazke-tylkobwmeta-20110316-00000.zip' was created in the project [Otworz ksiazke](http://otworzksiazke.pl). 
-Otworz ksiazke is directed by [ICM UW](http://www.icm.edu.pl/) and partialy financed by [Funduszu Stypendialnego i Szkoleniowego](http://www.fss.org.pl/).
+As 'GROTOAP-10.zip' is aggregation of data from [CeON Repository](https://svn.ceon.pl/research/GROTOAP/), [copyright information from source repository](https://svn.ceon.pl/research/GROTOAP/COPYING) remains valid.
+
+You may also want to read [README file](https://svn.ceon.pl/research/GROTOAP/README) from the source repository.
+
 
 CONTENT INFORMATION
 -------------------
 
-### file 'otworz-ksiazke-tylkobwmeta-20110316-00000.zip'
+### file 'GROTOAP-10.zip'
 
-the example description of books from [Otworz ksiazke](http://otworzksiazke.pl)
+The 'GROTOAP-10.zip' is the subset of 10 first elements from [pdfs.zip](https://svn.ceon.pl/research/GROTOAP/pdfs.zip) and [xmls.zip](https://svn.ceon.pl/research/GROTOAP/xmls.zip) from 
+[CeON Repository](http://svn.ceon.pl/research/GROTOAP/) satisfying bwmeta-2.1.0.xsd schema.
+
 
 ### files bwmeta/bwmeta-*.xsd
 
