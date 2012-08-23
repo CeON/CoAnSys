@@ -13,8 +13,6 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.protobuf.ByteString;
-
 import pl.edu.icm.coansys.importers.ZipArchive;
 import pl.edu.icm.coansys.importers.constants.BWMetaConstants;
 import pl.edu.icm.coansys.importers.constants.ProtoConstants;
@@ -26,6 +24,8 @@ import pl.edu.icm.synat.application.model.bwmeta.YContentEntry;
 import pl.edu.icm.synat.application.model.bwmeta.YContentFile;
 import pl.edu.icm.synat.application.model.bwmeta.YElement;
 import pl.edu.icm.synat.application.model.bwmeta.YExportable;
+
+import com.google.protobuf.ByteString;
 
 /**
  * 

@@ -8,7 +8,6 @@ package pl.edu.icm.coansys.importers.transformers;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.hadoop.hbase.KeyValue;
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.util.Bytes;
 
@@ -28,7 +27,7 @@ public class DocumentDto2HBasePut {
 		
 		ArrayList<Put> puts = new ArrayList<Put>();
 		
-		byte[] row = composeRow(docDTO);
+		byte[] row = Bytes.toBytes(RowComposer.composeRow(docDTO));
 		
 		puts.add(composeMetadataFamily(row, docDTO));
 		puts.add(composeContentFamily(row, docDTO));
@@ -55,18 +54,4 @@ public class DocumentDto2HBasePut {
 		p.add(family, qualifier, value);
 		return p;
 	}
-
-	private static byte[] composeRow(DocumentDTO docDTO) {
-		StringBuilder sb = new StringBuilder();
-		sb.append(docDTO.getCollection());
-		sb.append(HBaseConstant.rowIdSeparator);
-//		sb.append(docDTO.getYear());
-		if(docDTO.getMediaTypes().size()>0)sb.append(1);
-		else sb.append(0);
-		sb.append(HBaseConstant.rowIdSeparator);
-		sb.append(docDTO.getKey());
-		
-		return Bytes.toBytes(sb.toString());
-	}
-
 }
