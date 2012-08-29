@@ -13,12 +13,7 @@ import org.apache.hadoop.hbase.rest.client.Cluster;
 import org.apache.hadoop.hbase.rest.client.RemoteHTable;
 import org.apache.hadoop.hbase.util.Bytes;
 
-
-import pl.edu.icm.coansys.importers.constants.HBaseConstant;
-import pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator;
-import pl.edu.icm.coansys.importers.models.DocumentDTO;
 import pl.edu.icm.coansys.importers.models.AddressBookProtos.Person;
-import pl.edu.icm.coansys.importers.transformers.DocumentDto2HBasePut;
 
 /**
  * 
