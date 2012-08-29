@@ -27,5 +27,6 @@
         <module>importers</module>
         <module>disambiguation</module>
         <module>logs-analysis</module>
+        <module>DocumentSimilarity</module>
     </modules>
 </project>
