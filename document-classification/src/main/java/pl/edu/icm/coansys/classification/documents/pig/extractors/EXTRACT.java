@@ -1,6 +1,8 @@
+/*
+ * (C) 2010-2012 ICM UW. All rights reserved.
+ */
+
 package pl.edu.icm.coansys.classification.documents.pig.extractors;
-
-
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -36,12 +38,8 @@ public class EXTRACT extends EvalFunc<Tuple>{
 		try{
 			Object obj = null;
 			try{
-//				System.out.println("Trying to read field rowId");
 				obj = input.get(0);
-//				System.out.println("Success!: "+ (String)obj);
-//				System.out.println("Trying to read field metadata bytes");
 				obj = (DataByteArray) input.get(1);
-//				System.out.println("Success!");
 			}catch(Exception e){
 				System.out.println("Trying to read field rowId");
 				System.out.println("Failure!");
@@ -51,9 +49,7 @@ public class EXTRACT extends EvalFunc<Tuple>{
 			
 			DataByteArray dba = null;
 			try{
-//				System.out.println("Trying to cast Object ("+input.getType(1)+") to DataByteArray");
-				dba = (DataByteArray) obj;
-//				System.out.println("Success!");	
+				dba = (DataByteArray) obj;	
 			}catch(Exception e){
 				System.out.println("Trying to cast Object ("+input.getType(1)+") to DataByteArray");
 				System.out.println("Failure!");
@@ -63,9 +59,7 @@ public class EXTRACT extends EvalFunc<Tuple>{
 			
 			DocumentMetadata dm = null;
 			try{
-//				System.out.println("Trying to read ByteArray to DocumentMetadata");
 				dm = DocumentMetadata.parseFrom(dba.get());
-//				System.out.println("Success!");
 			}catch(Exception e){
 				System.out.println("Trying to read ByteArray to DocumentMetadata");
 				System.out.println("Failure!");
@@ -74,8 +68,8 @@ public class EXTRACT extends EvalFunc<Tuple>{
 			}
 			 
 	        String key = dm.getKey();
-	        String[] to = new String[]{key,dm.getTitle(),"",""};
-//	        String[] to = new String[]{key,dm.getTitle(),dm.getAbstrakt(),Joiner.on(" ").join(dm.getKeywordList())};
+//	        String[] to = new String[]{key,dm.getTitle(),"",""};
+	        String[] to = new String[]{key,dm.getTitle(),dm.getAbstrakt(),Joiner.on(" ").join(dm.getKeywordList())};
 	        Tuple t = TupleFactory.getInstance().newTuple(Arrays.asList(to));
 			
 			return t;

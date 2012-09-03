@@ -1,3 +1,7 @@
+/*
+ * (C) 2010-2012 ICM UW. All rights reserved.
+ */
+
 package pl.edu.icm.coansys.classification.documents.auxil;
 
 import java.io.DataInput;
@@ -7,7 +11,11 @@ import java.io.Serializable;
 
 import org.apache.hadoop.io.Writable;
 
-
+/**
+ * 
+ * @author pdendek
+ *
+ */
 public class TextTextWritable implements Writable, Serializable {
 
 	private static final long serialVersionUID = 8606642353828143464L;

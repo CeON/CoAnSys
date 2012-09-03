@@ -1,3 +1,7 @@
+/*
+ * (C) 2010-2012 ICM UW. All rights reserved.
+ */
+
 package pl.edu.icm.coansys.classification.documents.pig.proceeders;
 
 
@@ -32,9 +36,6 @@ public class DOCSIM extends EvalFunc<Tuple>{
 		if (input == null || input.size() == 0)
 			return null;
 		try{
-			
-			System.out.println("\t\tUsing DOCSIM");
-			
 			String keyA = (String) input.get(0);
 			HashMap<String,Double> hmA = new HashMap<String,Double>();
 			HashSet<String> hsA = new HashSet<String>();
