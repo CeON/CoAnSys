@@ -158,6 +158,7 @@ public class MetadataToProtoMetadataParser {
                 try {
                 	authorBuilder.setKey(UUID.fromString(authorIdentity).toString());
                 } catch (IllegalArgumentException e) {
+                	log.warn("Invalid UUID string (author id): \"{}\" -- Random UUID will be generated", authorIdentity);
                 	authorBuilder.setKey(UUID.randomUUID().toString());
                 }
             }
@@ -378,7 +379,7 @@ public class MetadataToProtoMetadataParser {
         try {
             uuId = UUID.fromString(uuIdStr);
         } catch (IllegalArgumentException e) {
-            log.warn("Error reading UUID from file: {}", e.toString());
+            log.warn("Invalid UUID string (document id): \"{}\" -- random UUID will be generated", uuIdStr);
             uuId = UUID.randomUUID();
         }
         docBuilder.setKey(uuId.toString());
