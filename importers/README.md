@@ -7,7 +7,7 @@ CoAnSys/importers is a project containing methods to easily load [BWMeta documen
 It provides two way to do so - (a) with RichTSV file or (b) via REST.
 
 ## Prerequirements
-This package depends on (Hadoop)[http://hadoop.apache.org/] from [Cloudera distribution](https://ccp.cloudera.com/display/SUPPORT/CDH+Downloads), version CDH 4.0.1 and appropriate [HBase](hbase.apache.org) version. 
+This package depends on [Hadoop](http://hadoop.apache.org/) from [Cloudera distribution](https://ccp.cloudera.com/display/SUPPORT/CDH+Downloads), version CDH 4.0.1 and appropriate [HBase](hbase.apache.org) version. 
 As CDH4 depends on [Protocol Buffers](http://code.google.com/p/protobuf/) 2.4.1 so is CoAnSys/importers.
 
 ## Quick Start
@@ -29,7 +29,7 @@ mvn assembly:single
 ```
 # get
 ```
-[example data](../examples/otworz-ksiazke-tylkobwmeta-20110316-00000.zip)
+[example data](../examples/GROTOAP-10.zip)
 
 ```
 cd ~
@@ -53,7 +53,7 @@ cd ~/CoAnSys/importers/target
 # to HBase table "testProto" localized on localhost.
 # Port 8080 is the default port for such a communication.
 # Please specify the port adequate for your hbase configuration
-java -jar importers-1.0-SNAPSHOT-jar-with-dependencies.jar ~/HBASE_IMPORT/ TESTCOLLECTION localhost 8080 testProto
+java -cp importers-1.0-SNAPSHOT-jar-with-dependencies.jar pl.edu.icm.coansys.importers.io.writers.hbaserest.HBaseRestWriter_Bwmeta ~/HBASE_IMPORT/ TESTCOLLECTION localhost 8080 testProto
 ```
 
 #### via RichTSV file (TBD)
