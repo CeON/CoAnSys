@@ -1,9 +1,18 @@
+/*
+ * (C) 2010-2012 ICM UW. All rights reserved.
+ */
+
 package pl.edu.icm.coansys.classification.documents.auxil;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * 
+ * @author pdendek
+ *
+ */
 public class StopWordsRemover {
 
 	public static volatile List<String> stopwords;
