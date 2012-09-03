@@ -4,10 +4,7 @@
 register /usr/lib/hbase/lib/zookeeper.jar 
 register /usr/lib/hbase/hbase-0.92.1-cdh4.0.1-security.jar 
 register /usr/lib/hbase/lib/guava-11.0.2.jar 
-register ../../../target/coansys-1.0-SNAPSHOT-deps/target/document-classification-1.0-SNAPSHOT-jar-with-dependencies.jar
-register ../../../target/coansys-1.0-SNAPSHOT-fat/target/document-classification-1.0.jar
-
-/target/document-classification-1.0-SNAPSHOT-jar-with-dependencies.jar
+register lib/document-classification-1.0-SNAPSHOT-jar-with-dependencies.jar
 -- -----------------------------------------------------
 -- load HBase rows
 -- -----------------------------------------------------
@@ -60,12 +57,30 @@ F = foreach E generate flatten(
 		pl.edu.icm.coansys.classification.
 		documents.pig.proceeders.TFIDF(*))
 		as (key:chararray, word:chararray, tfidf:double);
--- -----------------------------------------------------
--- create the upper half of cross product
--- -----------------------------------------------------
+		
+/* **************************************************
+					BEGIN
+	Uncomment following code to use only information
+	in the lower triangle of a similarity matrix 
+*************************************************** */
+/*
+	Option A:  create the upper half of a cross product
+*/
+-- G = group F by key;
+-- H = foreach G generate *;
+-- CroZ = filter(cross G, H) by G::group < H::group;
+/*
+	XOR
+*/
+/*
+	Option B:  full data from similarity matrix
+*/
 G = group F by key;
 H = foreach G generate *;
-CroZ = filter(cross G, H) by G::group < H::group;
+CroZ = filter(cross G, H) by G::group != H::group;
+/* **************************************************
+					END 
+*************************************************** */
 -- -----------------------------------------------------
 -- measure cosine document similarity
 -- -----------------------------------------------------
@@ -75,8 +90,8 @@ I = foreach CroZ generate flatten(
 		as (keyA:chararray, keyB:chararray, sim:double);
 
 J = filter I by keyA is not null;
-STORE ordered_word_count INTO '/tmp/docsim.pigout';
 
+K = group J by keyA;
+DESCRIBE K;
 
-
-
+STORE J INTO '/tmp/docsim.pigout';
