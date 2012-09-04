@@ -20,7 +20,7 @@ import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
 
 import com.google.common.base.Joiner;
 
-public class EXTRACT extends EvalFunc<Tuple>{
+public class EXTRACT_KEY_TI_ABS_KW extends EvalFunc<Tuple>{
 
 	@Override
 	public Schema outputSchema(Schema p_input){
@@ -78,21 +78,4 @@ public class EXTRACT extends EvalFunc<Tuple>{
 			throw new IOException("Caught exception processing input row ", e);
 		}
 	}
-
-	
-	public static void main(String[] args) {
-		try {
-		    PigServer pigServer = new PigServer("local");
-		    runQuery(pigServer);
-		    }
-		    catch(Exception e) {
-		    }
-		 }
-		public static void runQuery(PigServer pigServer) throws IOException {
-			pigServer.registerJar("target/document-classification-1.0-SNAPSHOT-jar-with-depedencies.jar");
-		    pigServer.registerQuery("raw = LOAD 'hbase://testProto' USING org.apache.pig.backend.hadoop.hbase.HBaseStorage('m:mproto','-loadKey true') AS (id:bytearray, proto:bytearray);");
-		    pigServer.registerQuery("extracted = FOREACH raw GENERATE pl.edu.icm.coansys.classification.pig.EXTRACT(raw);");
-		    pigServer.registerQuery("DUMP raw;");
-		 }
-
 }
