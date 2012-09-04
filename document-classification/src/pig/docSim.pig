@@ -20,7 +20,7 @@ raw = LOAD 'hbase://testProto'
 -- -----------------------------------------------------
 extracted = FOREACH raw GENERATE 
 				FLATTEN(pl.edu.icm.coansys.classification.
-				documents.pig.extractors.EXTRACT($0,$1));
+				documents.pig.extractors.EXTRACT_KEY_TI_ABS_KW($0,$1));
 -- -----------------------------------------------------
 -- further processing: 
 -- * concatenate ti, abs and kw.
