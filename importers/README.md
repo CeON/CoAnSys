@@ -4,7 +4,9 @@ CoAnSys/importers
 ## About
 CoAnSys/importers is a project containing methods to easily load [BWMeta document](../examples/bwmeta) packages into HBase.
 
-It provides two way to do so - (a) with RichTSV file or (b) via REST.
+It provides two way to do so:
+* via REST
+* via put or bulkload method
 
 ## Prerequirements
 This package depends on [Hadoop](http://hadoop.apache.org/) from [Cloudera distribution](https://ccp.cloudera.com/display/SUPPORT/CDH+Downloads), version CDH 4.0.1 and appropriate [HBase](hbase.apache.org) version. 
@@ -19,17 +21,16 @@ cd ~
 git clone REPOSITORY_ADDRESS/CoAnSys.git  
 cd CoAnSys/importers  
 # package instalation  
-## if you are not providing hadoop libraries, please modify pom.xml  
-## by removing texts "<scope>provided</scope>"
+## if you are not providing hadoop libraries, please modify pom.xml by removing texts "<scope>provided</scope>"
 mvn install
 mvn assembly:single
 ```
 
 ### Example data acquisition
 ```
-# get
+# get sample data from the link bellow
 ```
-[example data](../examples/GROTOAP-10.zip)
+[Example Data](../examples/GROTOAP-10.zip)
 
 ```
 cd ~
@@ -43,7 +44,7 @@ wget 'LOCALIZATION_FROM_THE_LINK'
 echo "create 'testProto','m','c'" | hbase shell
 ```
 
-### import
+### Import
 #### via REST
 ```
 cd ~/CoAnSys/importers/target
@@ -56,5 +57,23 @@ cd ~/CoAnSys/importers/target
 java -cp importers-1.0-SNAPSHOT-jar-with-dependencies.jar pl.edu.icm.coansys.importers.io.writers.hbaserest.HBaseRestWriter_Bwmeta ~/HBASE_IMPORT/ TESTCOLLECTION localhost 8080 testProto
 ```
 
-#### via RichTSV file (TBD)
+#### via put or bulkload method
 
+Before running this data load make sure that
+* target table is already created in HBase
+* importers and commons project are successfully build (jars commons/target/commons-1.0-SNAPSHOT-jar-with-dependencies.jar and importers/target/importers-1.0-SNAPSHOT-jar-with-dependencies.jar are available)
+
+Two steps are required:
+* Pack the content of BWMeta archives (both metadata records and pdf/plain-text files) into sequence files
+```
+$ cd importers-sf
+$ ./generate-sequence-file.sh workflow/lib/importers*.jar /mnt/tmp/bwndata/collection-date collection ./collection-date.sf bwndata/sequence-file
+```
+Before running this command make sure that "bwndata/sequence-file" directory exists in HDFS.
+
+* Import the sequence files into HBase using "put" or "bulkloading" method (depending on a parameter) using Oozie workflow
+```
+cd ..
+vim importers-sf/available.collections.cluster.properties #specify at least "outputTableName" property
+./submit-to-oozie.sh importers-sf 1 akawa hadoop-master importers-sf/available.collections.cluster.properties
+```
