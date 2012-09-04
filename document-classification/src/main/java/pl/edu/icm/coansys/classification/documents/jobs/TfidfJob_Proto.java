@@ -1,12 +1,11 @@
 /*
-* (C) 2010-2012 ICM UW. All rights reserved.
-*/
+ * (C) 2010-2012 ICM UW. All rights reserved.
+ */
 
 package pl.edu.icm.coansys.classification.documents.jobs;
 
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
-import java.util.Iterator;
 import java.util.Random;
 
 import org.apache.hadoop.conf.Configuration;
@@ -19,7 +18,6 @@ import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapred.Counters;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
