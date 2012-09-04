@@ -52,7 +52,7 @@ public class HBaseRestReader_Bwmeta {
         	);
 		
 		Scan scan = new Scan();
-        ResultScanner scanner = table.getScanner(Bytes.toBytes(HBaseConstant.familyContent), Bytes.toBytes(HBaseConstant.familyContentQualifierProto));
+        ResultScanner scanner = table.getScanner(Bytes.toBytes(HBaseConstant.FAMILY_CONTENT), Bytes.toBytes(HBaseConstant.FAMILY_CONTENT_QUALIFIER_PROTO));
         
         HashMap<String, List<String>> rowAuthorsMap = new HashMap<String, List<String>>(); 
         
@@ -61,7 +61,7 @@ public class HBaseRestReader_Bwmeta {
             	String rowId = new String(scannerResult.getRow());
             	ArrayList<String> names = new ArrayList<String>();
             	
-            	if(scannerResult.getValue(Bytes.toBytes(HBaseConstant.familyContent), Bytes.toBytes(HBaseConstant.familyContentQualifierProto)) != null) {
+            	if(scannerResult.getValue(Bytes.toBytes(HBaseConstant.FAMILY_CONTENT), Bytes.toBytes(HBaseConstant.FAMILY_CONTENT_QUALIFIER_PROTO)) != null) {
             		MediaContainer mc = MediaContainer.parseFrom(scannerResult.value());
             		for(Media media : mc.getMediaList()){
             			names.add(media.getMediaType());
@@ -86,7 +86,7 @@ public class HBaseRestReader_Bwmeta {
         	);
 		
 		Scan scan = new Scan();
-        ResultScanner scanner = table.getScanner(Bytes.toBytes(HBaseConstant.familyMetadata), Bytes.toBytes(HBaseConstant.familyMetadataQualifierProto));
+        ResultScanner scanner = table.getScanner(Bytes.toBytes(HBaseConstant.FAMILY_METADATA), Bytes.toBytes(HBaseConstant.FAMILY_METADATA_QUALIFIER_PROTO));
         
         HashMap<String, List<String>> rowAuthorsMap = new HashMap<String, List<String>>(); 
         
@@ -95,7 +95,7 @@ public class HBaseRestReader_Bwmeta {
             	String rowId = new String(scannerResult.getRow());
             	ArrayList<String> names = new ArrayList<String>();
             	
-            	if(scannerResult.getValue(Bytes.toBytes(HBaseConstant.familyMetadata), Bytes.toBytes(HBaseConstant.familyMetadataQualifierProto)) != null) {
+            	if(scannerResult.getValue(Bytes.toBytes(HBaseConstant.FAMILY_METADATA), Bytes.toBytes(HBaseConstant.FAMILY_METADATA_QUALIFIER_PROTO)) != null) {
             		DocumentMetadata dm = DocumentMetadata.parseFrom(scannerResult.value());
             		for(Author a : dm.getAuthorList()){
             			names.add(a.getForenames() + " " + a.getSurname());

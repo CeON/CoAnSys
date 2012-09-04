@@ -37,8 +37,8 @@ public class DocumentDto2KeyValue {
 
 	private static KeyValue composeContentFamily(byte[] row, DocumentDTO docDTO) {
 		
-		byte[] family =  Bytes.toBytes(HBaseConstant.familyContent);
-		byte[] qualifier = Bytes.toBytes(HBaseConstant.familyContentQualifierProto);
+		byte[] family =  Bytes.toBytes(HBaseConstant.FAMILY_CONTENT);
+		byte[] qualifier = Bytes.toBytes(HBaseConstant.FAMILY_CONTENT_QUALIFIER_PROTO);
 		byte[] value = Bytes.toBytes(docDTO.getMediaConteiner().toString());
 		
 		return new KeyValue(row,family,qualifier, System.nanoTime(), value);
@@ -46,8 +46,8 @@ public class DocumentDto2KeyValue {
 
 	private static KeyValue composeMetadataFamily(byte[] row, DocumentDTO docDTO) {
 		
-		byte[] family =  Bytes.toBytes(HBaseConstant.familyMetadata);
-		byte[] qualifier = Bytes.toBytes(HBaseConstant.familyMetadataQualifierProto);
+		byte[] family =  Bytes.toBytes(HBaseConstant.FAMILY_METADATA);
+		byte[] qualifier = Bytes.toBytes(HBaseConstant.FAMILY_METADATA_QUALIFIER_PROTO);
 		byte[] value = Bytes.toBytes(docDTO.getDocumentMetadata().toString());
 		
 		return new KeyValue(row,family,qualifier, System.nanoTime(), value);

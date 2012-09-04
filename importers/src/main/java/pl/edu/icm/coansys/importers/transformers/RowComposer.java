@@ -12,14 +12,14 @@ public class RowComposer {
 	public static String composeRow(DocumentDTO docDTO) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(docDTO.getCollection());
-		if(docDTO.getMediaTypes().size()>0) sb.append(HBaseConstant.rowIdSeparator);
+		if(docDTO.getMediaTypes().size()>0) sb.append(HBaseConstant.ROW_ID_SEPARATOR);
 		for(String t : docDTO.getMediaTypes()){
 			if(ProtoConstants.mediaTypePdf.equals(t)){
-				sb.append(HBaseConstant.rowIdMediaTypePdf);
-				sb.append(HBaseConstant.rowIdSeparator);
+				sb.append(HBaseConstant.ROW_ID_MEDIA_TYPE_PDF);
+				sb.append(HBaseConstant.ROW_ID_SEPARATOR);
 			}
 		}
-		sb.append(HBaseConstant.rowIdSeparator);
+		sb.append(HBaseConstant.ROW_ID_SEPARATOR);
 		sb.append(docDTO.getKey());
 		
 		return sb.toString();
