@@ -4,17 +4,16 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>pl.edu.icm.coansys</groupId>
-    <artifactId>disambiguation-author</artifactId>
+    <artifactId>document-classification</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>Author Disambiguation Tool</name>
+    <name>Document Classification Tool</name>
     <url>http://maven.apache.org</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
 
 	<profiles>
   		<profile>
@@ -124,18 +123,30 @@
             <version>4.8.1</version>
             <scope>test</scope>
             <type>jar</type>
-        </dependency>        
-        <dependency>
-			<groupId>pl.edu.icm.coansys</groupId>
-			<artifactId>disambiguation</artifactId>
-			<version>1.0-SNAPSHOT</version>
         </dependency>
+                
+        <dependency>
+            <groupId>pl.edu.icm.coansys</groupId>
+    		<artifactId>importers</artifactId>
+    		<version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>pl.edu.icm.coansys</groupId>
+    		<artifactId>disambiguation</artifactId>
+    		<version>1.0-SNAPSHOT</version>
+    	</dependency>
+        <dependency>
+            <groupId>pl.edu.icm.coansys</groupId>
+    		<artifactId>disambiguation-author</artifactId>
+    		<version>1.0-SNAPSHOT</version>
+    	</dependency>    	
         <dependency>
             <groupId>pl.edu.icm.synat</groupId>
             <artifactId>synat-application-commons</artifactId>
             <version>1.5-SNAPSHOT</version>
             <type>jar</type>
         </dependency>
+        
         <dependency>
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-core</artifactId>
@@ -152,6 +163,11 @@
             <version>0.92.1-cdh4.0.1</version>
         </dependency>
         <dependency>
+			<groupId>org.apache.pig</groupId>
+			<artifactId>pig</artifactId>
+			<version>0.9.2</version>
+		</dependency>
+        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>1.6.4</version>
@@ -160,7 +176,7 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
             <version>1.6.4</version>
-        </dependency>
+        </dependency>        
     </dependencies>
     <repositories>
         <repository>

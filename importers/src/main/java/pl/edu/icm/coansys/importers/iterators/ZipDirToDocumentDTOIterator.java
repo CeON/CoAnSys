@@ -96,6 +96,7 @@ public class ZipDirToDocumentDTOIterator implements Iterable<DocumentDTO> {
                     }
                     // here we have a new zip file
                     try {
+                    	System.out.println("Processing " + (zipIndex+1) + ". zip of " + listZipFiles.length);
                         currentZipArchive = new ZipArchive(listZipFiles[zipIndex].getPath());
                         xmlPathIterator = currentZipArchive.filter(".*xml").iterator();
                     } catch (IOException ex) {logger.error(ex.toString());}
