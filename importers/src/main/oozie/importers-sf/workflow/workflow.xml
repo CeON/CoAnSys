@@ -94,6 +94,18 @@
                     <name>mapred.output.value.class</name>
                     <value>org.apache.hadoop.io.Writable</value>
                 </property>
+		<property>
+                    <name>mapred.child.java.opts</name>
+                    <value>${mapredChildJavaOpts}</value>
+		</property>
+                <property>
+                    <name>mapred.map.tasks.speculative.execution</name>
+                    <value>false</value>
+                </property>
+                <property>
+                    <name>mapred.reduce.tasks.speculative.execution</name>
+                    <value>false</value>
+                </property>
             </configuration>
         </map-reduce>
         <ok to='post-import-cleanup'/>
@@ -198,6 +210,18 @@
                 <property>
                     <name>mapred.create.symlink</name>
                     <value>yes</value>
+                </property>
+		<property>
+                    <name>mapred.child.java.opts</name>
+                    <value>${mapredChildJavaOpts}</value>
+		</property>
+                <property>
+                    <name>mapred.map.tasks.speculative.execution</name>
+                    <value>false</value>
+                </property>
+                <property>
+                    <name>mapred.reduce.tasks.speculative.execution</name>
+                    <value>false</value>
                 </property>
             </configuration>
             <file>${wf:actionData('importtsv-hfile-partifion-file')['mapred.cache.file.symlinked']}</file>

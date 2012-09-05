@@ -64,16 +64,16 @@ Before running this data load make sure that
 * importers and commons project are successfully build (jars commons/target/commons-1.0-SNAPSHOT-jar-with-dependencies.jar and importers/target/importers-1.0-SNAPSHOT-jar-with-dependencies.jar are available)
 
 Two steps are required:
-* Pack the content of BWMeta archives (both metadata records and pdf/plain-text files) into sequence files
+* Pack the content of BWMeta archives (both metadata records and pdf/plain-text files) into sequence files in HDFS
 ```
 $ cd importers-sf
-$ ./generate-sequence-file.sh workflow/lib/importers*.jar /mnt/tmp/bwndata/collection-date collection ./collection-date.sf bwndata/sequence-file
+$ # ./generate-sequence-file.sh <importers.jar> <bwndata_collection_directory> <collection_name> <sequence_file_in_hdfs>
+$ ./generate-sequence-file.sh workflow/lib/importers*.jar /mnt/tmp/bwndata/collection-date collection bwndata/sequence-file/collection-date.sf
 ```
-Before running this command make sure that "bwndata/sequence-file" directory exists in HDFS.
 
 * Import the sequence files into HBase using "put" or "bulkloading" method (depending on a parameter) using Oozie workflow
 ```
 cd ..
-vim importers-sf/available.collections.cluster.properties #specify at least "outputTableName" property
+vim importers-sf/available.collections.cluster.properties # specify at least "outputTableName" and "collectionDocumentWrapperSequenceFile" properties
 ./submit-to-oozie.sh importers-sf 1 akawa hadoop-master importers-sf/available.collections.cluster.properties
 ```
