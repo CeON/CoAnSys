@@ -27,6 +27,5 @@ public class DocumentDTO2WrapperLine {
 		
 		return dw.build().toByteString().toStringUtf8();
 	}
-        
-        
+               
 }

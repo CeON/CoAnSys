@@ -11,6 +11,7 @@ import java.io.IOException;
 
 import pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator;
 import pl.edu.icm.coansys.importers.models.DocumentDTO;
+import pl.edu.icm.coansys.importers.transformers.DocumentDTO2TSVLine;
 import pl.edu.icm.coansys.importers.transformers.DocumentDTO2WrapperLine;
 
 public class WrapperWriter_Bwmeta {

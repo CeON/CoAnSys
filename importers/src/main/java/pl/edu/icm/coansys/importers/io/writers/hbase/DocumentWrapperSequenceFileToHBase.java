@@ -13,7 +13,6 @@ import org.apache.hadoop.hbase.client.HTable;
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
 import org.apache.hadoop.hbase.mapreduce.HFileOutputFormat;
-import org.apache.hadoop.hbase.mapreduce.PutSortReducer;
 import org.apache.hadoop.hbase.mapreduce.TableMapReduceUtil;
 import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.mapreduce.Job;
@@ -23,7 +22,6 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import pl.edu.icm.coansys.importers.models.DocumentProtosWrapper.DocumentWrapper;
 
