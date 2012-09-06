@@ -10,10 +10,8 @@ import java.util.List;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.BytesWritable;
-import org.apache.hadoop.io.IOUtils;
-import org.apache.hadoop.io.SequenceFile;
-import org.apache.hadoop.io.Text;
+import org.apache.hadoop.io.*;
+import org.apache.hadoop.util.ReflectionUtils;
 import pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos;
 import pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.LogMessage;
 
@@ -66,12 +64,12 @@ public class AuditEntryProtos2SequenceFile {
 
         List<AuditEntryProtos.LogMessage> result = new ArrayList<AuditEntryProtos.LogMessage>();
 
-        Text key = new Text();
-        BytesWritable value = new BytesWritable();
         SequenceFile.Reader reader = null;
 
         try {
             reader = new SequenceFile.Reader(fs, path, conf);
+            Writable key = (Writable) ReflectionUtils.newInstance(reader.getKeyClass(), conf);
+            BytesWritable value = new BytesWritable();
 
             while (reader.next(key, value)) {
                 LogMessage parseFrom = AuditEntryProtos.LogMessage.parseFrom(value.copyBytes());
