@@ -37,7 +37,6 @@
         <module>disambiguation</module>
         <module>disambiguation-author</module>
         <module>document-classification</module> 
-        <module>document-similarity</module>
 	<module>importers</module>
         <module>logs-analysis</module>
     </modules>
