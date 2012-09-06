@@ -59,7 +59,7 @@ public class WrapperWriter_Bwmeta {
 
 	private static void usage() {
 		String usage = "Usage: \n" +
-		"java -jar importers-*-with-deps.jar pl.edu.icm.coansys.importers.io.writers.tsv.TsvWrapperWriter_Bwmeta <in_dir> <collectionName> <out_file>";
+		"java -jar importers-*-with-deps.jar pl.edu.icm.coansys.importers.io.writers.tsv. <in_dir> <collectionName> <out_file>";
 		System.out.println(usage);
 	}
 }

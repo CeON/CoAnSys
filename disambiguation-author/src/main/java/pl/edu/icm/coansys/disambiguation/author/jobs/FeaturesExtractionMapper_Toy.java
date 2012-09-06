@@ -84,8 +84,8 @@ public class FeaturesExtractionMapper_Toy extends TableMapper<Text, TextTextArra
         HashMap<String,List<String>> docBasedFeature = new HashMap<String,List<String>>();
         
         DocumentMetadata dm = DocumentMetadata.parseFrom(documentMetadataColumn.
-        		getValue(Bytes.toBytes(HBaseConstant.familyMetadata), 
-        				 Bytes.toBytes(HBaseConstant.familyMetadataQualifierProto)));
+        		getValue(Bytes.toBytes(HBaseConstant.FAMILY_METADATA), 
+        				 Bytes.toBytes(HBaseConstant.FAMILY_METADATA_QUALIFIER_PROTO)));
         //(1) extract all document-based features, 
         //[which will be passes to the object authorId2FeatureMap] 
         createDocumentBasedFeatureMap(docBasedFeature, dm);

@@ -45,8 +45,8 @@ public class WordCountMapper_Proto extends TableMapper<TextArrayWritable, IntWri
     protected void map(ImmutableBytesWritable rowId, Result documentMetadataColumn, Context context) throws IOException, InterruptedException { 
         
         DocumentMetadata dm = DocumentMetadata.parseFrom(documentMetadataColumn.
-        		getValue(Bytes.toBytes(HBaseConstant.familyMetadata), 
-        				 Bytes.toBytes(HBaseConstant.familyMetadataQualifierProto)));
+        		getValue(Bytes.toBytes(HBaseConstant.FAMILY_METADATA), 
+        				 Bytes.toBytes(HBaseConstant.FAMILY_METADATA_QUALIFIER_PROTO)));
 
         key = new Text(dm.getKey());
         

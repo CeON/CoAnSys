@@ -19,3 +19,6 @@
 *.war
 *.ear
 /logs-analysis/target/
+/DocumentSimilarity/target/
+/docsimilarity/target/
+/docsimilarity2/target/

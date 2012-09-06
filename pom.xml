@@ -36,8 +36,8 @@
         <module>commons</module>
         <module>disambiguation</module>
         <module>disambiguation-author</module>
-        <module>document-classification</module>
-        <module>importers</module>
+        <module>document-classification</module> 
+	<module>importers</module>
         <module>logs-analysis</module>
     </modules>
 </project>
