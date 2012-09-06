@@ -223,6 +223,10 @@
                     <name>mapred.reduce.tasks.speculative.execution</name>
                     <value>false</value>
                 </property>
+                <property>
+                    <name>hbase.client.keyvalue.maxsize</name>
+                    <value>${hbaseClientKeyvalueMaxsize}</value>
+                </property>
             </configuration>
             <file>${wf:actionData('importtsv-hfile-partifion-file')['mapred.cache.file.symlinked']}</file>
         </map-reduce>
