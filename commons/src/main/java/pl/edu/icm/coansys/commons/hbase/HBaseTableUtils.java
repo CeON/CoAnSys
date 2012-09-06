@@ -12,6 +12,7 @@ import org.apache.hadoop.hbase.MasterNotRunningException;
 import org.apache.hadoop.hbase.ZooKeeperConnectionException;
 import org.apache.hadoop.hbase.client.HBaseAdmin;
 import org.apache.hadoop.hbase.util.Bytes;
+import pl.edu.icm.coansys.commons.oozie.OozieWorkflowUtils;
 
 /**
  *
@@ -91,19 +92,29 @@ public class HBaseTableUtils {
         Configuration conf = HBaseConfiguration.create();
         HBaseAdmin admin = new HBaseAdmin(conf);
 
-        boolean success;
-        if (args[0].equals(CMD_EXIST)) {
-            success = isTableCreated(admin, args[1]);
-        } else if (args[0].equals(CMD_DROP)) {
-            success = dropTable(admin, args[1]);
-        } else if (args[0].equals(CMD_TRUNCATE)) {
-            success = truncateTable(admin, args[1]);
-        } else if (args[0].equals(CMD_CREATE)) {
-            success = createSimpleTable(admin, args[1], shiftArray(args, 2));
-        } else if (args[0].equals(CMD_RECREATE)) {
-            success = dropAndCreateSimpleTable(admin, args[1], shiftArray(args, 2));
+        boolean isOutputCaptured = Boolean.parseBoolean(args[0]);
+        String command = args[1];
+        String tableName = args[2];
+        
+        boolean success = false;
+        if (command.equals(CMD_EXIST)) {
+            success = isTableCreated(admin, tableName);
+        } else if (command.equals(CMD_DROP)) {
+            success = dropTable(admin, tableName);
+        } else if (command.equals(CMD_TRUNCATE)) {
+            success = truncateTable(admin, tableName);
+        } else if (command.equals(CMD_CREATE)) {
+            success = createSimpleTable(admin, tableName, shiftArray(args, 3));
+        } else if (command.equals(CMD_RECREATE)) {
+            success = dropAndCreateSimpleTable(admin, tableName, shiftArray(args, 3));
         } else {
             throw new IllegalArgumentException();
         }
+
+        if (isOutputCaptured) {
+            OozieWorkflowUtils.captureOutput("exit.value", Boolean.toString(success));
+        }
     }
+
+    
 }

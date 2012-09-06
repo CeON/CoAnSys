@@ -179,8 +179,8 @@ public class TfidfJob_Proto implements Tool {
         wordCountJob.setJarByClass(TfidfJob_Proto.class);
         //scan for relevant data
         Scan scan = new Scan();
-        scan.addColumn(Bytes.toBytes(HBaseConstant.familyMetadata),
-        		Bytes.toBytes(HBaseConstant.familyMetadataQualifierProto));
+        scan.addColumn(Bytes.toBytes(HBaseConstant.FAMILY_METADATA),
+        		Bytes.toBytes(HBaseConstant.FAMILY_METADATA_QUALIFIER_PROTO));
         //scan additional parameters
         scan.setCaching(1000);
         scan.setCacheBlocks(false);
