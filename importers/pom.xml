@@ -156,6 +156,11 @@
             <artifactId>hbase</artifactId>
             <version>0.92.1-cdh4.0.1</version>
         </dependency>
+        <dependency>
+            <groupId>com.twitter.elephantbird</groupId>
+            <artifactId>elephant-bird-core</artifactId>
+            <version>3.0.2</version>
+        </dependency>
     </dependencies>
     <repositories>
         <repository>
