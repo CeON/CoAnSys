@@ -93,12 +93,19 @@ public class SortUsagesPart implements Tool {
             if (counter > 0) {
                 MostPopularProtos.MostPopularStats.Builder statsBuilder = MostPopularProtos.MostPopularStats.newBuilder();
                 statsBuilder.setTimestamp(Calendar.getInstance().getTimeInMillis());
+                //revert order of usage counters using a stack
+                Stack<Long> countersStack = new Stack<Long>();
                 for (Long n : buffer.keySet()) {
+                    countersStack.push(n);
+                }
+                while (!countersStack.empty()) {
+                    long n = countersStack.pop();
                     for (String resource : buffer.get(n)) {
                         MostPopularProtos.ResourceStat.Builder resStatBuilder = MostPopularProtos.ResourceStat.newBuilder();
                         resStatBuilder.setResourceId(resource);
                         resStatBuilder.setCounter(n);
                         statsBuilder.addStat(resStatBuilder);
+
                     }
                 }
                 BytesWritable bw = new BytesWritable(statsBuilder.build().toByteArray());
