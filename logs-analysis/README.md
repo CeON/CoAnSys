@@ -51,7 +51,7 @@ hadoop jar target/logs-analysis-*-jar-with-dependencies.jar \
 ### Reporting results
 ```
 hadoop jar target/logs-analysis-*-jar-with-dependencies.jar \
-    pl.edu.icm.coansys.presentation.ReportMostPopular \
+    pl.edu.icm.coansys.logsanalysis.presentation.ReportMostPopular \
     /tmp/output_data/part-r-00000
 ```
 
