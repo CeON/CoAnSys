@@ -34,7 +34,7 @@
                     <value>${queueName}</value>
                 </property> 
             </configuration>
-            <main-class>pl.edu.icm.coansys.importers.hbaseRest.writer.HBaseRestWriter_Bwmeta</main-class>
+            <main-class>pl.edu.icm.coansys.importers.io.writers.hbaserest.HBaseRestWriter_Bwmeta</main-class>
             <java-opts></java-opts>
             <arg>${zipDirPath}</arg> 
             <arg>${collectionName}</arg>  
