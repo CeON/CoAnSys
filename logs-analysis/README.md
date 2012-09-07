@@ -41,9 +41,18 @@ hadoop jar target/logs-analysis-*-jar-with-dependencies.jar \
 ### Analysing logs
 ```
 # This command finds 10 most popular resources from example logs
+# Output directory /tmp/output_data must not exist. Results will be
+# saved in /tmp/output_data/part_r_00000 file.
 hadoop jar target/logs-analysis-*-jar-with-dependencies.jar \
     pl.edu.icm.coansys.logsanalysis.jobs.MostPopular \
     /tmp/example_logs.log /tmp/output_data 10
+```
+
+### Reporting results
+```
+hadoop jar target/logs-analysis-*-jar-with-dependencies.jar \
+    pl.edu.icm.coansys.presentation.ReportMostPopular \
+    /tmp/output_data/part-r-00000
 ```
 
 ## Data formats
