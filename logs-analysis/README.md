@@ -29,18 +29,21 @@ mvn assembly:single
 
 If Hadoop is installed in pseudo distributed or distributed mode,
 hadoop HDFS daemons (namenode, secondarynamenode, datanode(s)) should be
-running.
+running. In this case the result file will be created in the HDFS filesystem 
+(not in a local fs).
 ```
+# This command generates 5000 example log entries
 hadoop jar target/logs-analysis-*-jar-with-dependencies.jar \
     pl.edu.icm.coansys.logsanalysis.logsacquisition.GenerateDummyLogs \
-    60000 /tmp/example_logs.log
+    50000 /tmp/example_logs.log
 ```
 
 ### Analysing logs
 ```
+# This command finds 10 most popular resources from example logs
 hadoop jar target/logs-analysis-*-jar-with-dependencies.jar \
     pl.edu.icm.coansys.logsanalysis.jobs.MostPopular \
-    /tmp/example_logs.log /tmp/output_data
+    /tmp/example_logs.log /tmp/output_data 10
 ```
 
 ## Data formats
