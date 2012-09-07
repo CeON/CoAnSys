@@ -10,17 +10,16 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
+import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
-import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.edu.icm.coansys.logsanalysis.metrics.SimpleUsageWeight;
 import pl.edu.icm.coansys.logsanalysis.metrics.UsageWeight;
 import pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos;
 import pl.edu.icm.coansys.logsanalysis.transformers.AuditEntry2Protos;
@@ -35,12 +34,12 @@ public class CountUsagesPart implements Tool {
     private static final Logger logger = LoggerFactory.getLogger(CountUsagesPart.class);
     private Configuration conf;
 
-    public static class CounterMap extends Mapper<Text, BytesWritable, Text, LongWritable> {
+    public static class CounterMap extends Mapper<Writable, BytesWritable, Text, LongWritable> {
 
         private UsageWeight weight;
 
         @Override
-        protected void map(Text key, BytesWritable value, Context context) throws IOException, InterruptedException {
+        protected void map(Writable key, BytesWritable value, Context context) throws IOException, InterruptedException {
             AuditEntryProtos.LogMessage logMessage = AuditEntryProtos.LogMessage.parseFrom(value.copyBytes());
             AuditEntry entry = AuditEntry2Protos.deserialize(logMessage);
 
