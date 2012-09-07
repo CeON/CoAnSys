@@ -38,8 +38,8 @@ public class DocumentDto2HBasePut {
 	private static Put composeContentFamily(byte[] row, DocumentDTO docDTO) {
 		
 		Put p = new Put(row);
-		byte[] family =  Bytes.toBytes(HBaseConstant.familyContent);
-		byte[] qualifier = Bytes.toBytes(HBaseConstant.familyContentQualifierProto);
+		byte[] family =  Bytes.toBytes(HBaseConstant.FAMILY_CONTENT);
+		byte[] qualifier = Bytes.toBytes(HBaseConstant.FAMILY_CONTENT_QUALIFIER_PROTO);
 		byte[] value = docDTO.getMediaConteiner().toByteArray();
 		p.add(family, qualifier, value);
 		return p;
@@ -48,8 +48,8 @@ public class DocumentDto2HBasePut {
 	private static Put composeMetadataFamily(byte[] row, DocumentDTO docDTO) {
 		
 		Put p = new Put(row);
-		byte[] family =  Bytes.toBytes(HBaseConstant.familyMetadata);
-		byte[] qualifier = Bytes.toBytes(HBaseConstant.familyMetadataQualifierProto);
+		byte[] family =  Bytes.toBytes(HBaseConstant.FAMILY_METADATA);
+		byte[] qualifier = Bytes.toBytes(HBaseConstant.FAMILY_METADATA_QUALIFIER_PROTO);
 		byte[] value = docDTO.getDocumentMetadata().toByteArray();
 		p.add(family, qualifier, value);
 		return p;

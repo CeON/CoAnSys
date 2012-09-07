@@ -15,34 +15,75 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
-                <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <configuration>
-                	<descriptorRefs>
-                   		<descriptorRef>jar-with-dependencies</descriptorRef>
-                 	</descriptorRefs>
-                </configuration>
-                <executions>
-            		<execution>
-              			<id>create-my-bundle</id>
-                		<goals><goal>single</goal></goals>
-            		</execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
+	<profiles>
+  		<profile>
+		    <id>nrml</id>
+		    <activation>
+      			<activeByDefault>true</activeByDefault>
+    		</activation>	
+    		<build>
+		        <plugins>
+		            <plugin>
+		                <groupId>org.apache.maven.plugins</groupId>
+		                <artifactId>maven-compiler-plugin</artifactId>
+		                <version>2.3.2</version>
+		                <configuration>
+		                    <source>1.6</source>
+		                    <target>1.6</target>
+		                </configuration>
+		            </plugin>
+		            <plugin>
+		                <groupId>org.apache.maven.plugins</groupId>
+		                <artifactId>maven-assembly-plugin</artifactId>
+		                <configuration>
+		                	<descriptorRefs>
+		                   		<descriptorRef>jar-with-dependencies</descriptorRef>
+		                 	</descriptorRefs>
+		                </configuration>
+		                <executions>
+		            		<execution>
+		              			<id>create-my-bundle</id>
+		                		<goals><goal>single</goal></goals>
+		            		</execution>
+		                </executions>
+		            </plugin>
+		        </plugins>
+		    </build>
+  		</profile>
+  		<profile>
+		    <id>full</id>
+		    <build>
+	      		<plugins>
+    	      		<plugin>
+        	      		<groupId>org.apache.maven.plugins</groupId>
+            	    	<artifactId>maven-compiler-plugin</artifactId>
+                		<version>2.3.2</version>
+                		<configuration>
+	                    	<source>1.6</source>
+                    		<target>1.6</target>
+	                	</configuration>
+            		</plugin>
+            		<plugin>
+                		<groupId>org.apache.maven.plugins</groupId>
+                		<artifactId>maven-assembly-plugin</artifactId>
+                		<configuration>
+                			<descriptorRefs>
+                   				<descriptorRef>jar-with-dependencies</descriptorRef>
+                 			</descriptorRefs>
+                		</configuration>   
+          				<executions>
+            				<execution>
+            					<phase>package</phase>
+              					<id>create-my-bundle</id>
+              					<goals><goal>single</goal></goals>
+            				</execution>
+          				</executions>
+        			</plugin>
+				</plugins>
+    		</build>
+		</profile>
+	</profiles>
+
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
@@ -77,6 +118,26 @@
             <artifactId>hbase</artifactId>
             <version>0.92.1-cdh4.0.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.pig</groupId>
+            <artifactId>pig</artifactId>
+            <version>0.9.2-cdh4.0.1</version>
+        </dependency>  
+             <dependency>
+            <groupId>pl.edu.icm.coansys</groupId>
+    		<artifactId>importers</artifactId>
+    		<version>1.0-SNAPSHOT</version>
+        </dependency> 
+                <dependency>
+    <groupId>org.apache.tika</groupId>
+    <artifactId>tika-core</artifactId>
+    <version>1.2</version>
+  </dependency> 
+  <dependency>
+    <groupId>org.apache.tika</groupId>
+    <artifactId>tika-parsers</artifactId>
+    <version>1.2</version>
+  </dependency>   
     </dependencies>
     <repositories>
         <repository>
