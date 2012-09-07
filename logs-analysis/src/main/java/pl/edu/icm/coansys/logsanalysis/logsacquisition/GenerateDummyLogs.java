@@ -9,9 +9,8 @@ import java.net.MalformedURLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos;
 import pl.edu.icm.coansys.logsanalysis.transformers.AuditEntry2Protos;
-import pl.edu.icm.coansys.logsanalysis.transformers.AuditEntryProtos2SequenceFile;
+import pl.edu.icm.coansys.logsanalysis.transformers.BytesArray2SequenceFile;
 import pl.edu.icm.synat.api.services.audit.model.AuditEntry;
 
 /**
@@ -128,12 +127,12 @@ public class GenerateDummyLogs {
         }
 
         List<AuditEntry> entries = GenerateDummyLogs.generateLogs(logLines);
-        List<AuditEntryProtos.LogMessage> protobufMessages = new ArrayList<AuditEntryProtos.LogMessage>();
+        List<byte[]> protobufMessages = new ArrayList<byte[]>();
 
         for (AuditEntry entry : entries) {
-            protobufMessages.add(AuditEntry2Protos.serialize(entry));
+            protobufMessages.add(AuditEntry2Protos.serialize(entry).toByteArray());
         }
 
-        AuditEntryProtos2SequenceFile.writeLogsToSequenceFile(protobufMessages, argv[1]);
+        BytesArray2SequenceFile.write(protobufMessages, argv[1]);
     }
 }
