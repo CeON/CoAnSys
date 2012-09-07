@@ -24,27 +24,29 @@ public class AuditEntryTransformersTest {
     public void serializeDeserializeTest() throws IOException, ParseException {
 
         // go through: 
-        // AuditEntry -> AuditEntryProtos.LogMessage -> SequenceFile -> AuditEntryProtos.LogMessage -> AuditEntry
+        // AuditEntry -> AuditEntryProtos.LogMessage as bytes array -> SequenceFile -> AuditEntryProtos.LogMessage -> AuditEntry
 
         List<AuditEntry> auditEntries;
-        List<AuditEntryProtos.LogMessage> protosList = new ArrayList<AuditEntryProtos.LogMessage>();
-        Iterable<AuditEntryProtos.LogMessage> readProtosList;
+        List<byte[]> protosList = new ArrayList<byte[]>();
+        Iterable<byte[]> readProtosList;
         List<AuditEntry> deserializedAuditEntries = new ArrayList<AuditEntry>();
         File tempFile = File.createTempFile("auditEntriesTransformations", ".seqfile");
         String tempFilePath = tempFile.toURI().toString();
 
         auditEntries = GenerateDummyLogs.generateLogs(20);
         for (AuditEntry entry : auditEntries) {
-            protosList.add(AuditEntry2Protos.serialize(entry));
+            AuditEntryProtos.LogMessage protoMessage = AuditEntry2Protos.serialize(entry);
+            protosList.add(protoMessage.toByteArray());
         }
         try {
-            AuditEntryProtos2SequenceFile.writeLogsToSequenceFile(protosList, tempFilePath);
-            readProtosList = AuditEntryProtos2SequenceFile.readLogsFromSequenceFile(tempFilePath);
+            BytesArray2SequenceFile.write(protosList, tempFilePath);
+            readProtosList = BytesArray2SequenceFile.read(tempFilePath);
         } finally {
             tempFile.delete();
         }
-        for (AuditEntryProtos.LogMessage protoEntry : readProtosList) {
-            deserializedAuditEntries.add(AuditEntry2Protos.deserialize(protoEntry));
+        for (byte[] bytes : readProtosList) {
+            AuditEntryProtos.LogMessage protoMessage = AuditEntryProtos.LogMessage.parseFrom(bytes);
+            deserializedAuditEntries.add(AuditEntry2Protos.deserialize(protoMessage));
         }
         
         // verifications: 

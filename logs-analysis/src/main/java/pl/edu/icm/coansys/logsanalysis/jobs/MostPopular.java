@@ -27,6 +27,7 @@ public class MostPopular {
         } else if (args.length == 3) {
             countArgs = new String[2];
         } else {
+            System.err.println("Usage: MostPopular <input_file_uri> <output_dir> <nb_of_most_popular> [<weight_class>]");
             System.exit(1);
             return;
         }
