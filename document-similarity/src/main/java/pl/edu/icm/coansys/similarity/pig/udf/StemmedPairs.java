@@ -20,12 +20,11 @@ public class StemmedPairs extends EvalFunc<DataBag> {
 
     @Override
     public DataBag exec(Tuple input) throws IOException {
-        if (input == null || input.size() == 0) {
+        if (input == null || input.size() == 0 || input.get(0) == null) {
             return null;
         }
         try {
             String terms = (String) input.get(0);
-
             terms = terms.toLowerCase();
             terms = DiacriticsRemover.removeDiacritics(terms);
             terms = terms.replaceAll("[^a-z ]", "");
