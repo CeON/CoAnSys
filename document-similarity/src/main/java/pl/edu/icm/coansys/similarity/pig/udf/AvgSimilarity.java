@@ -42,9 +42,9 @@ public class AvgSimilarity extends EvalFunc<Double> {
     private Double getDocumentsKeywordSimilarity(Tuple input) {
         try {
             String keyword = (String) input.get(0);
-            byte[] doc1Key = (byte[]) ((DataByteArray) input.get(1)).get();
+            byte[] doc1Key = ((DataByteArray) input.get(1)).get();
             double doc1KeywordWeight = (Double) input.get(2);
-            byte[] doc2Key = (byte[]) ((DataByteArray) input.get(3)).get();
+            byte[] doc2Key = ((DataByteArray) input.get(3)).get();
             double doc2KeywordWeight = (Double) input.get(4);
 
             return simFunct.getDocumentsKeywordSimilarity(keyword, doc1Key, doc1KeywordWeight, doc2Key, doc2KeywordWeight);
@@ -58,16 +58,18 @@ public class AvgSimilarity extends EvalFunc<Double> {
      */
     private Double getDocumentsKeywordsCombinedSimilarity(Tuple input) {
         try {
-            byte[] doc1Key = (byte[]) ((DataByteArray) input.get(0)).get();
-            byte[] doc2Key = (byte[]) ((DataByteArray) input.get(1)).get();
-            
+            DataBag bag1 = (DataBag) input.get(0);
+            byte[] doc1Key = ((DataByteArray) bag1.iterator().next().get(0)).get();
+            DataBag bag2 = (DataBag) input.get(1);
+            byte[] doc2Key = ((DataByteArray) bag2.iterator().next().get(0)).get();
+
             Double totalSimilarity = null;
             List<Double> list = new LinkedList<Double>();
             DataBag bag = (DataBag) input.get(2);
             Iterator<Tuple> iterator = bag.iterator();
             while (iterator.hasNext()) {
                 Tuple tuple = iterator.next();
-                double similarity = (Double) tuple.get(5);
+                double similarity = (Double) tuple.get(0);
                 list.add(similarity);
             }
 

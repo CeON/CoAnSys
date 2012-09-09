@@ -18,7 +18,7 @@ public class StopWordFilter extends EvalFunc<Boolean> {
         }
         try {
             String word = (String) input.get(0);
-            return StopWordsRemover.isAnEnglishStopWords(word);
+            return !StopWordsRemover.isAnEnglishStopWords(word);
                 
         } catch (Exception e) {
             throw new IOException("Caught exception processing input row ", e);
