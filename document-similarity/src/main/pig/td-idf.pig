@@ -14,6 +14,8 @@ REGISTER /home/akawa/Documents/git-projects/CoAnSys/document-similarity/target/d
 -------------------------------------------------------
 DEFINE DocumentProtobufBytesToTuple pl.edu.icm.coansys.commons.pig.udf.DocumentProtobufBytesToTuple();
 DEFINE WeightedTFIDF pl.edu.icm.coansys.similarity.pig.udf.TFIDF('weighted');
+DEFINE StemmedPairs pl.edu.icm.coansys.similarity.pig.udf.StemmedPairs();
+DEFINE StopWordFilter pl.edu.icm.coansys.similarity.pig.udf.StopWordFilter();
 
 -------------------------------------------------------
 -- import section
@@ -38,10 +40,15 @@ IMPORT 'macros.pig';
 -------------------------------------------------------
 doc = load_bwndata('$tableName');
 
--- load data
-doc_keyword = FOREACH doc GENERATE rowkey AS docId, FLATTEN(TOKENIZE(LOWER(document#'keywords'))) AS term;
-doc_title = FOREACH doc GENERATE rowkey AS docId, FLATTEN(TOKENIZE(LOWER(document#'title'))) AS term;
-doc_abstract = FOREACH doc GENERATE rowkey AS docId, FLATTEN(TOKENIZE(LOWER(document#'abstract'))) AS term;
+-- load and clean data
+doc_keyword_stemmed = FOREACH doc GENERATE rowkey AS docId, FLATTEN(StemmedPairs(document#'keywords')) AS term;
+doc_title_stemmed = FOREACH doc GENERATE rowkey AS docId, FLATTEN(StemmedPairs(document#'title')) AS term;
+doc_abstract_stemmed = FOREACH doc GENERATE rowkey AS docId, FLATTEN(StemmedPairs(document#'abstract')) AS term;
+
+-- remove stop words
+doc_keyword = FILTER doc_keyword_stemmed BY StopWordFilter(term) = FALSE;
+doc_title = FILTER doc_title_stemmed BY StopWordFilter(term) = FALSE;
+doc_abstract = FILTER doc_abstract_stemmed BY StopWordFilter(term) = FALSE;
 
 -- calculate tf-idf for each group of terms
 tfidf_keyword = calculate_tf_idf(doc_keyword);
