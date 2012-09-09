@@ -13,16 +13,16 @@ REGISTER /usr/lib/zookeeper/zookeeper-3.4.3-cdh4.0.1.jar
 REGISTER /usr/lib/hbase/hbase.jar
 REGISTER /usr/lib/hbase/lib/guava-11.0.2.jar
 
-REGISTER /home/akawa/Documents/git-projects/CoAnSys/importers/target/importers-1.0-SNAPSHOT.jar
-REGISTER /home/akawa/Documents/git-projects/CoAnSys/commons/target/commons-1.0-SNAPSHOT.jar
-REGISTER /home/akawa/Documents/git-projects/CoAnSys/document-similarity/target/document-similarity-1.0-SNAPSHOT.jar
+REGISTER ../../../../importers/target/importers-1.0-SNAPSHOT.jar
+REGISTER ../../../../commons/target/commons-1.0-SNAPSHOT.jar
+REGISTER ../../../../document-similarity/target/document-similarity-1.0-SNAPSHOT.jar
 
 -------------------------------------------------------
 -- import section
 -------------------------------------------------------
 IMPORT 'macros.pig';
 
-TFIDF = LOAD '$tfidfPath' AS (docId, term, tfidf);
+TFIDF = LOAD '$tfidfPath' AS (docId: chararray, term: chararray, tfidf: double);
 TFIDF_group = GROUP TFIDF BY docId;
 TFIDF_group2 = get_copy(TFIDF_group);
 
