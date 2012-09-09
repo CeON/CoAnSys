@@ -13,9 +13,10 @@
                     <value>${queueName}</value>
                 </property> 
             </configuration>
-            <script>${pigScriptsDir}/td-idf.pig</script>
+            <script>${pigScriptsDir}/tfidf.pig</script>
             <param>tableName=${inputTableName}</param>
             <param>outputPath=${tfidfOutputDir}</param>
+            <file>${pigScriptsDir}/macros.pig#macros.pig</file>
         </pig>       
         <ok to='choose-similarity-method'/>
         <error to='kill'/>
@@ -25,10 +26,10 @@
             <case to="pairwise-similarity">
                 ${similarityAlgorithm == 'pairwiseSimilarity'}
             </case>
-            <case to="allpairs-similarity.pig">
+            <case to="allpairs-similarity">
                 ${similarityAlgorithm == 'allPairsSimilarity'}
             </case>
-            <default to="kill"/>
+            <default to="clean-tfidf-after-kill"/>
         </switch>
     </decision>
     <action name='pairwise-similarity'>
@@ -44,12 +45,13 @@
                     <value>${queueName}</value>
                 </property> 
             </configuration>
-            <script>${pigScriptsDir}/pairwise-similarity.pig</script>
+            <script>${pigScriptsDir}/pairwise_similarity.pig</script>
             <param>tfidfPath=${tfidfOutputDir}</param>
             <param>outputPath=${similarityOutputDir}</param>
+            <file>${pigScriptsDir}/macros.pig#macros.pig</file>
         </pig>
         <ok to='end'/>
-        <error to='kill'/>
+        <error to='clean-tfidf-after-kill'/>
     </action>
     <action name='allpairs-similarity'>
         <pig>
@@ -64,14 +66,21 @@
                     <value>${queueName}</value>
                 </property> 
             </configuration>
-            <script>${pigScriptsDir}/allpairs-similarity.pig</script>
+            <script>${pigScriptsDir}/allpairs_similarity.pig</script>
             <param>tfidfPath=${tfidfOutputDir}</param>
             <param>outputPath=${similarityOutputDir}</param>
+            <file>${pigScriptsDir}/macros.pig#macros.pig</file>
         </pig>
         <ok to='end'/>
-        <error to='kill'/>
+        <error to='clean-tfidf-after-kill'/>
     </action>
-    
+    <action name="clean-tfidf-after-kill">
+        <fs>
+            <mkdir path="${tfidfOutputDir}" />
+        </fs>
+        <ok to="kill" />
+        <error to="kill" />
+    </action>
     <kill name='kill'>
         <message>Workflow failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
     </kill>
