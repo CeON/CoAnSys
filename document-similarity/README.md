@@ -20,22 +20,26 @@ As CDH4 depends on [Protocol Buffers](http://code.google.com/p/protobuf/) 2.4.1 
 Please pass "-x local" option to run an example in a standalone mode, or ommit this option (or equivalently pass "-x mapreduce") to run in (pseudo)distributed mode.
 
 * Calculate TF-IDF measure for each of the document based on terms from title, abstract and keywords list
+
 ```
-$ cd CoAnSys/document-similarity/src/main/pig
-$ pig -x local -p tableName=grotoap10 -p outputPath=tfidf tfidf.pig
+cd CoAnSys/document-similarity/src/main/pig
+pig -x local -p tableName=grotoap10 -p outputPath=tfidf tfidf.pig
 # four subdirectories in output directory should be created
 # three of them contain tf-idf values based on terms for abstract/keywords/title, and one directory that contains averaged results
-$ ls tfidf/
+ls tfidf/
 abstract/ keyword/  title/    weighted/
 ```
+
 * Calculate document similarity between documents based on a) average function, b) cosine function
+
 ```
 # a) (compares documents that have at least one common term)
-$ pig -x local -p tfidfPath=tfidf/weighted -p outputPath=pairwise_similarity pairwise_similarity.pig
+pig -x local -p tfidfPath=tfidf/weighted -p outputPath=pairwise_similarity pairwise_similarity.pig
 
 # b) (compares all pairs of documents)
-$ pig -x local -p tfidfPath=tfidf/weighted -p outputPath=pairwise_similarity allpairs_similarity.pig
+pig -x local -p tfidfPath=tfidf/weighted -p outputPath=pairwise_similarity allpairs_similarity.pig
 ```
+
 #### an Oozie workflow
 
 The same scripts can be run by an Oozie.
@@ -44,5 +48,4 @@ The same scripts can be run by an Oozie.
 $ CoAnSys/document-similarity/src/main/oozie
 # you may want to edit "similarity/local.properties" before running the workflow
 $ ./submit-to-oozie.sh similarity 1 akawa localhost similarity/local.properties
-
 ```
