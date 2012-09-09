@@ -7,14 +7,15 @@ OOZIE_SERVER=$4
 PROPERTIES_FILE=$5
 
 WORKFLOW_HDFS_DIR="/user/${USER}/workflows/coansys/${TASK}-${TASK_ID}"
+WORKFLOW_LOCAL_LIB_DIR=${TASK}/workflow/lib/
 
 echo "Copying required libaries to ${TASK}/lib"
-sudo -u ${USER} rm ${TASK}/lib/*
-sudo -u ${USER} cp ../../../../commons/target/commons-1.0-SNAPSHOT-jar-with-dependencies.jar  ${TASK}/lib/
-sudo -u ${USER} cp ../../../../importers/target/importers-1.0-SNAPSHOT-jar-with-dependencies.jar ${TASK}/lib/
+sudo -u ${USER} cp ../../../../commons/target/commons-1.0-SNAPSHOT.jar  ${WORKFLOW_LOCAL_LIB_DIR}
+sudo -u ${USER} cp ../../../../importers/target/importers-1.0-SNAPSHOT.jar ${WORKFLOW_LOCAL_LIB_DIR}
+sudo -u ${USER} cp ../../../../disambiguation/target/disambiguation-1.0-SNAPSHOT.jar ${WORKFLOW_LOCAL_LIB_DIR}
 
 echo "Copying required pig scripts to ${TASK}"
-sudo -u ${USER} cp ../../pig/*.pig  ${TASK}/
+sudo -u ${USER} cp ../pig/*.pig  ${TASK}/workflow/pig/
 
 echo "Recreating workflow data in HDFS"
 sudo -u ${USER} hadoop fs -rm -r ${WORKFLOW_HDFS_DIR}
