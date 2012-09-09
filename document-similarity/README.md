@@ -22,11 +22,11 @@ Please pass "-x local" option to run an example in a standalone mode, or ommit t
 * Calculate TF-IDF measure for each of the document based on terms from title, abstract and keywords list
 
 ```
-cd CoAnSys/document-similarity/src/main/pig
-pig -x local -p tableName=grotoap10 -p outputPath=tfidf tfidf.pig
+$ cd CoAnSys/document-similarity/src/main/pig
+$ pig -x local -p tableName=grotoap10 -p outputPath=tfidf tfidf.pig
 # four subdirectories in output directory should be created
 # three of them contain tf-idf values based on terms for abstract/keywords/title, and one directory that contains averaged results
-ls tfidf/
+$ ls tfidf/
 abstract/ keyword/  title/    weighted/
 ```
 
@@ -34,10 +34,10 @@ abstract/ keyword/  title/    weighted/
 
 ```
 # a) (compares documents that have at least one common term)
-pig -x local -p tfidfPath=tfidf/weighted -p outputPath=pairwise_similarity pairwise_similarity.pig
+$ pig -x local -p tfidfPath=tfidf/weighted -p outputPath=pairwise_similarity pairwise_similarity.pig
 
 # b) (compares all pairs of documents)
-pig -x local -p tfidfPath=tfidf/weighted -p outputPath=pairwise_similarity allpairs_similarity.pig
+$ pig -x local -p tfidfPath=tfidf/weighted -p outputPath=pairwise_similarity allpairs_similarity.pig
 ```
 
 #### an Oozie workflow
