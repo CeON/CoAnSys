@@ -47,5 +47,5 @@ The same scripts can be run by an Oozie.
 ```
 $ CoAnSys/document-similarity/src/main/oozie
 # you may want to edit "similarity/local.properties" before running the workflow
-$ ./submit-to-oozie.sh similarity 1 akawa localhost similarity/local.properties
+$ ./submit-to-oozie.sh similarity 1 <user> <oozie-server> similarity/local.properties
 ```
