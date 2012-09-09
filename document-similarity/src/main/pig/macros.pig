@@ -10,6 +10,15 @@ DEFINE load_bwndata(tableName) RETURNS doc {
 };
 
 -------------------------------------------------------
+-- clean and drop nulls
+-------------------------------------------------------
+DEFINE stem_and_filter_out(docterms, type) RETURNS dt {
+	doc_keyword_stemmed = FOREACH $docterms GENERATE rowkey AS docId, FLATTEN(StemmedPairs(document#'$type')) AS term;
+	doc_keyword_not_stop = FILTER doc_keyword_stemmed BY StopWordFilter(term);
+	$dt = FILTER doc_keyword_not_stop BY term IS NOT NULL;
+};
+
+-------------------------------------------------------
 -- filer out nulls
 -------------------------------------------------------
 DEFINE drop_nulls(A, column) RETURNS B {

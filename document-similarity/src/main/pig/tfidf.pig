@@ -5,9 +5,10 @@ REGISTER /usr/lib/zookeeper/zookeeper-3.4.3-cdh4.0.1.jar
 REGISTER /usr/lib/hbase/hbase.jar
 REGISTER /usr/lib/hbase/lib/guava-11.0.2.jar
 
-REGISTER /home/akawa/Documents/git-projects/CoAnSys/importers/target/importers-1.0-SNAPSHOT.jar
-REGISTER /home/akawa/Documents/git-projects/CoAnSys/commons/target/commons-1.0-SNAPSHOT.jar
-REGISTER /home/akawa/Documents/git-projects/CoAnSys/document-similarity/target/document-similarity-1.0-SNAPSHOT.jar
+REGISTER ../../../../importers/target/importers-1.0-SNAPSHOT.jar
+REGISTER ../../../../commons/target/commons-1.0-SNAPSHOT.jar
+REGISTER ../../../../document-similarity/target/document-similarity-1.0-SNAPSHOT.jar
+REGISTER ../../../../disambiguation/target/disambiguation-1.0-SNAPSHOT.jar
 
 -------------------------------------------------------
 -- define section
@@ -40,15 +41,10 @@ IMPORT 'macros.pig';
 -------------------------------------------------------
 doc = load_bwndata('$tableName');
 
--- load and clean data
-doc_keyword_stemmed = FOREACH doc GENERATE rowkey AS docId, FLATTEN(StemmedPairs(document#'keywords')) AS term;
-doc_title_stemmed = FOREACH doc GENERATE rowkey AS docId, FLATTEN(StemmedPairs(document#'title')) AS term;
-doc_abstract_stemmed = FOREACH doc GENERATE rowkey AS docId, FLATTEN(StemmedPairs(document#'abstract')) AS term;
-
--- remove stop words
-doc_keyword = FILTER doc_keyword_stemmed BY StopWordFilter(term) = FALSE;
-doc_title = FILTER doc_title_stemmed BY StopWordFilter(term) = FALSE;
-doc_abstract = FILTER doc_abstract_stemmed BY StopWordFilter(term) = FALSE;
+-- stem, clean, filter out
+doc_keyword = stem_and_filter_out(doc, 'keywords');
+doc_title = stem_and_filter_out(doc, 'title');
+doc_abstract = stem_and_filter_out(doc, 'abstract');
 
 -- calculate tf-idf for each group of terms
 tfidf_keyword = calculate_tf_idf(doc_keyword);
