@@ -58,14 +58,14 @@ public class DocumentProtobufBytesToTuple extends EvalFunc<Map> {
             if (input.size() > 1) {
                 DataByteArray protoMedia = (DataByteArray) input.get(1);
                 if (protoMedia != null) {
-                MediaContainer media = MediaContainer.parseFrom(protoMedia.get());
-                String content = getFirstPDFContent(media.getMediaList());
-                if (content != null) {
-                    map.put("content", content);
-                }
+                    MediaContainer media = MediaContainer.parseFrom(protoMedia.get());
+                    String content = getFirstPDFContent(media.getMediaList());
+                    if (content != null) {
+                        map.put("content", content);
+                    }
                 }
             }
-            
+
             return map;
         } catch (Exception e) {
             // Throwing an exception will cause the task to fail.
@@ -89,7 +89,7 @@ public class DocumentProtobufBytesToTuple extends EvalFunc<Map> {
         }
         return null;
     }
-    
+
     private String getConcatenated(List<String> list) {
         if (list == null || list.isEmpty()) {
             return null;
@@ -100,6 +100,4 @@ public class DocumentProtobufBytesToTuple extends EvalFunc<Map> {
         }
         return concatenated;
     }
-    
-  
 }
