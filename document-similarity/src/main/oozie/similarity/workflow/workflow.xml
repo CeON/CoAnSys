@@ -1,0 +1,88 @@
+<workflow-app name='document-similarity' xmlns="uri:oozie:workflow:0.2">
+    <start to='tfidf'/>
+    <action name='tfidf'>
+        <pig>
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <prepare>
+                <delete path="${tfidfOutputDir}"/>
+            </prepare>
+            <configuration>
+                <property>
+                    <name>mapred.job.queue.name</name>
+                    <value>${queueName}</value>
+                </property> 
+            </configuration>
+            <script>${pigScriptsDir}/tfidf.pig</script>
+            <param>tableName=${inputTableName}</param>
+            <param>outputPath=${tfidfOutputDir}</param>
+            <file>${pigScriptsDir}/macros.pig#macros.pig</file>
+        </pig>       
+        <ok to='choose-similarity-method'/>
+        <error to='kill'/>
+    </action>
+    <decision name="choose-similarity-method">
+        <switch>
+            <case to="pairwise-similarity">
+                ${similarityAlgorithm == 'pairwiseSimilarity'}
+            </case>
+            <case to="allpairs-similarity">
+                ${similarityAlgorithm == 'allPairsSimilarity'}
+            </case>
+            <default to="clean-tfidf-after-kill"/>
+        </switch>
+    </decision>
+    <action name='pairwise-similarity'>
+        <pig>
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <prepare>
+                <delete path="${similarityOutputDir}"/>
+            </prepare>
+            <configuration>
+                <property>
+                    <name>mapred.job.queue.name</name>
+                    <value>${queueName}</value>
+                </property> 
+            </configuration>
+            <script>${pigScriptsDir}/pairwise_similarity.pig</script>
+            <param>tfidfPath=${tfidfOutputDir}</param>
+            <param>outputPath=${similarityOutputDir}</param>
+            <file>${pigScriptsDir}/macros.pig#macros.pig</file>
+        </pig>
+        <ok to='end'/>
+        <error to='clean-tfidf-after-kill'/>
+    </action>
+    <action name='allpairs-similarity'>
+        <pig>
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <prepare>
+                <delete path="${similarityOutputDir}"/>
+            </prepare>
+            <configuration>
+                <property>
+                    <name>mapred.job.queue.name</name>
+                    <value>${queueName}</value>
+                </property> 
+            </configuration>
+            <script>${pigScriptsDir}/allpairs_similarity.pig</script>
+            <param>tfidfPath=${tfidfOutputDir}</param>
+            <param>outputPath=${similarityOutputDir}</param>
+            <file>${pigScriptsDir}/macros.pig#macros.pig</file>
+        </pig>
+        <ok to='end'/>
+        <error to='clean-tfidf-after-kill'/>
+    </action>
+    <action name="clean-tfidf-after-kill">
+        <fs>
+            <mkdir path="${tfidfOutputDir}" />
+        </fs>
+        <ok to="kill" />
+        <error to="kill" />
+    </action>
+    <kill name='kill'>
+        <message>Workflow failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+    </kill>
+    <end name='end'/>
+</workflow-app>
