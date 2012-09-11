@@ -1,0 +1,155 @@
+<workflow-app xmlns="uri:oozie:workflow:0.1" name="logs-analysis-wf">
+    <start to="count-part" />
+    <action name="count-part">
+        <map-reduce>
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <prepare>
+                <delete path="${nameNode}/user/acz/intermediate-data" />
+            </prepare>
+            <configuration>
+                <!-- This is required for new api usage -->
+                <property>
+                    <name>mapred.mapper.new-api</name>
+                    <value>true</value>
+                </property>
+                <property>
+                    <name>mapred.reducer.new-api</name>
+                    <value>true</value>
+                </property>
+                <property>
+                    <name>mapreduce.map.class</name>
+                    <value>pl.edu.icm.coansys.logsanalysis.jobs.CountUsagesPart$CounterMap</value>
+                </property>
+                <property>
+                    <name>mapreduce.combine.class</name>
+                    <value>pl.edu.icm.coansys.logsanalysis.jobs.CountUsagesPart$CounterReduce</value>
+                </property>
+                <property>
+                    <name>mapreduce.reduce.class</name>
+                    <value>pl.edu.icm.coansys.logsanalysis.jobs.CountUsagesPart$CounterReduce</value>
+                </property>
+                <property>
+                    <name>mapred.map.tasks</name>
+                    <value>6</value>
+                </property>
+                <property>
+                    <name>mapred.input.dir</name>
+                    <value>/tmp/example_logs.log</value>
+                </property>
+                <property>
+                    <name>mapred.output.dir</name>
+                    <value>intermediate-data</value>
+                </property>
+                <property>
+                  <name>mapred.job.queue.name</name>
+                  <value>${queueName}</value>
+                </property>
+                <property>
+                    <name>mapreduce.inputformat.class</name>
+                    <value>org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat</value>
+                </property>
+                <property>
+                    <name>mapreduce.outputformat.class</name>
+                    <value>org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat</value>
+                </property>
+                <property>
+                    <name>mapred.mapoutput.key.class</name>
+                    <value>org.apache.hadoop.io.Text</value>
+                </property>                
+                <property>
+                    <name>mapred.mapoutput.value.class</name>
+                    <value>org.apache.hadoop.io.LongWritable</value>
+                </property>                
+                <property>
+                    <name>mapred.output.key.class</name>
+                    <value>org.apache.hadoop.io.Text</value>
+                </property>                
+                <property>
+                    <name>mapred.output.value.class</name>
+                    <value>org.apache.hadoop.io.LongWritable</value>
+                </property>
+            </configuration>
+        </map-reduce>
+        <ok to="sort-part"/>
+        <!-- ok to="end" / -->
+        <error to="count-fail"/>
+    </action>
+    <action name="sort-part">
+        <map-reduce>
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <prepare>
+                <delete path="${nameNode}/user/acz/output-data" />
+            </prepare>            
+            <configuration>
+                <!-- This is required for new api usage -->
+                <property>
+                    <name>mapred.mapper.new-api</name>
+                    <value>true</value>
+                </property>
+                <property>
+                    <name>mapred.reducer.new-api</name>
+                    <value>true</value>
+                </property>                
+                <property>
+                    <name>mapreduce.map.class</name>
+                    <value>pl.edu.icm.coansys.logsanalysis.jobs.SortUsagesPart$SorterMap</value>
+                </property>
+                <property>
+                    <name>mapreduce.reduce.class</name>
+                    <value>pl.edu.icm.coansys.logsanalysis.jobs.SortUsagesPart$SorterReduce</value>
+                </property>
+                <property>
+                    <name>mapred.map.tasks</name>
+                    <value>6</value>
+                </property>
+                <property>
+                    <name>mapred.input.dir</name>
+                    <value>intermediate-data</value>
+                </property>
+                <property>
+                    <name>mapred.output.dir</name>
+                    <value>output-data</value>
+                </property>
+                <property>
+                  <name>mapred.job.queue.name</name>
+                  <value>${queueName}</value>
+                </property>
+                <property>
+                    <name>mapreduce.inputformat.class</name>
+                    <value>org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat</value>
+                </property>
+                <property>
+                    <name>mapreduce.outputformat.class</name>
+                    <value>org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat</value>
+                </property>
+                <property>
+                    <name>mapred.mapoutput.key.class</name>
+                    <value>org.apache.hadoop.io.NullWritable</value>
+                </property>
+                <property>
+                    <name>mapred.mapoutput.value.class</name>
+                    <value>org.apache.hadoop.io.Text</value>
+                </property>
+                <property>
+                    <name>mapred.output.key.class</name>
+                    <value>org.apache.hadoop.io.NullWritable</value>
+                </property>
+                <property>
+                    <name>mapred.output.value.class</name>
+                    <value>org.apache.hadoop.io.BytesWritable</value>
+                </property>
+            </configuration>
+        </map-reduce>
+        <ok to="end" />
+        <error to="sort-fail" />
+    </action>
+    <kill name="count-fail">
+        <message>Failed first part of workflow (counting usages)</message>
+    </kill>
+    <kill name="sort-fail">
+        <message>Failed second part of workflow (sorting counted usages)</message>
+    </kill>
+    <end name="end" />
+</workflow-app>
