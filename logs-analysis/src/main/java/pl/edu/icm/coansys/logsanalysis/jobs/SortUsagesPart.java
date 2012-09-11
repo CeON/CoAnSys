@@ -30,7 +30,7 @@ import pl.edu.icm.coansys.logsanalysis.models.MostPopularProtos;
  * @author Artur Czeczko <a.czeczko@icm.edu.pl>
  */
 public class SortUsagesPart implements Tool {
-
+    
     private static final Logger logger = LoggerFactory.getLogger(SortUsagesPart.class);
     private Configuration conf;
 
