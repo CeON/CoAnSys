@@ -30,6 +30,8 @@ import pl.edu.icm.synat.api.services.audit.model.AuditEntry;
  * @author Artur Czeczko <a.czeczko@icm.edu.pl>
  */
 public class CountUsagesPart implements Tool {
+    
+    private static final String DEFAULT_USAGE_WEIGHT_CLASS = "pl.edu.icm.coansys.logsanalysis.metrics.SimpleUsageWeight";
 
     private static final Logger logger = LoggerFactory.getLogger(CountUsagesPart.class);
     private Configuration conf;
@@ -55,7 +57,7 @@ public class CountUsagesPart implements Tool {
             Configuration conf = context.getConfiguration();
             String weightClassName = conf.get("USAGE_WEIGHT_CLASS");
             if (weightClassName == null || "".equals(weightClassName)) {
-                weightClassName = conf.get("DEFAULT_USAGE_WEIGHT_CLASS");
+                weightClassName = DEFAULT_USAGE_WEIGHT_CLASS;
             }
             try {
                 Class weightClass = Class.forName(weightClassName);
@@ -88,7 +90,6 @@ public class CountUsagesPart implements Tool {
             return 1;
         }
 
-        conf.set("DEFAULT_USAGE_WEIGHT_CLASS", "pl.edu.icm.coansys.logsanalysis.metrics.SimpleUsageWeight");
         if (args.length > 2) {
             conf.set("USAGE_WEIGHT_CLASS", args[2]);
         }
@@ -101,9 +102,10 @@ public class CountUsagesPart implements Tool {
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(LongWritable.class);
         SequenceFileOutputFormat.setOutputPath(job, new Path(args[1]));
+        
         job.setMapperClass(CounterMap.class);
-        job.setMapOutputKeyClass(Text.class);
-        job.setMapOutputValueClass(LongWritable.class);
+        //job.setMapOutputKeyClass(Text.class);
+        //job.setMapOutputValueClass(LongWritable.class);
         job.setCombinerClass(CounterReduce.class);
         job.setReducerClass(CounterReduce.class);
 
