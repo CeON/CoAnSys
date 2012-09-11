@@ -41,14 +41,14 @@ DEFINE get_copy(A) RETURNS B {
 };
 
 -------------------------------------------------------
--- 
+-- calculate tfidf
 -------------------------------------------------------
 DEFINE calculate_tf_idf(docTerm) RETURNS tfidf {
 	-- term count in a given document
 	A1 = GROUP $docTerm BY (docId, term);
 	A = FOREACH A1 GENERATE FLATTEN(group), COUNT($docTerm) as tc;
 		
-	-- total term count in a given document
+	-- total terms count in a given document
 	B1 = GROUP A BY docId;
 	B = FOREACH B1 GENERATE FLATTEN(A) AS (docId, term, tc), SUM(A.tc) AS ttc;
 	
@@ -64,4 +64,3 @@ DEFINE calculate_tf_idf(docTerm) RETURNS tfidf {
 	
 	$tfidf = FOREACH E GENERATE docId, term, ((double) tc / (double) ttc) * LOG( (1.0 + (double) dc) / ( 1.0 + (double) ttdc)) AS tfidf;
 };
-
