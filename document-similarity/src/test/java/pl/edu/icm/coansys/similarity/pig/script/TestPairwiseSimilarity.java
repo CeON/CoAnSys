@@ -25,7 +25,7 @@ public class TestPairwiseSimilarity {
     private static final String[] params = {
         "tfidfPath=null",
         "outputPath=null",
-        "commonJarsPath=../jars/*.jar"
+        "commonJarsPath=."
     };
 
     @BeforeClass
