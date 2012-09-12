@@ -16,6 +16,7 @@
             <script>${pigScriptsDir}/tfidf.pig</script>
             <param>tableName=${inputTableName}</param>
             <param>outputPath=${tfidfOutputDir}</param>
+            <param>commonJarsPath=${commonJarsPath}</param>
             <file>${pigScriptsDir}/macros.pig#macros.pig</file>
         </pig>       
         <ok to='choose-similarity-method'/>
@@ -27,7 +28,7 @@
                 ${similarityAlgorithm == 'pairwiseSimilarity'}
             </case>
             <case to="allpairs-similarity">
-                ${similarityAlgorithm == 'allPairsSimilarity'}
+                ${similarityAlgorithm == 'allpairsSimilarity'}
             </case>
             <default to="clean-tfidf-after-kill"/>
         </switch>
@@ -48,6 +49,7 @@
             <script>${pigScriptsDir}/pairwise_similarity.pig</script>
             <param>tfidfPath=${tfidfOutputDir}</param>
             <param>outputPath=${similarityOutputDir}</param>
+            <param>commonJarsPath=${commonJarsPath}</param>
             <file>${pigScriptsDir}/macros.pig#macros.pig</file>
         </pig>
         <ok to='end'/>
@@ -69,6 +71,7 @@
             <script>${pigScriptsDir}/allpairs_similarity.pig</script>
             <param>tfidfPath=${tfidfOutputDir}</param>
             <param>outputPath=${similarityOutputDir}</param>
+            <param>commonJarsPath=${commonJarsPath}</param>
             <file>${pigScriptsDir}/macros.pig#macros.pig</file>
         </pig>
         <ok to='end'/>
