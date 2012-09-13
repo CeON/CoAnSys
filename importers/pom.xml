@@ -91,13 +91,6 @@
             <artifactId>commons</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <version>6.5.2</version>
-            <scope>test</scope>
-            <type>jar</type>
-        </dependency>
     </dependencies>
 
 </project>
