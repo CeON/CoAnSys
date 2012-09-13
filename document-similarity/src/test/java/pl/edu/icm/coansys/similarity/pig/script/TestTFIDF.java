@@ -19,6 +19,8 @@ import pl.edu.icm.coansys.similarity.test.utils.MacroExtractor;
  *
  * @author akawa
  */
+
+
 public class TestTFIDF {
 
     private PigTest test;

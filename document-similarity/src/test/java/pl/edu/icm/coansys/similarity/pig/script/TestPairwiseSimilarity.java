@@ -13,10 +13,13 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+
+
 /**
  *
  * @author akawa
  */
+
 public class TestPairwiseSimilarity {
 
     private PigTest test;
