@@ -23,7 +23,16 @@ public class SequenceFileKeysSplitingAlgorithm {
 
     public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException {
 
+        if (args.length < 2) {
+            System.out.println("two parameters needed: <sequence-file, number-of-regions>");
+            System.exit(1);
+        }
+        
+        
         String file = args[0];
+        int regionNum = Integer.parseInt(args[1]);
+        
+        
         long date = new Date().getTime();
 
         Configuration conf = new Configuration();
@@ -36,13 +45,13 @@ public class SequenceFileKeysSplitingAlgorithm {
         SequenceFileInputFormat.addInputPath(job, input);
         SequenceFileOutputFormat.setOutputPath(job, new Path(file + date));
 
-        job.setNumReduceTasks(2);
+        job.setNumReduceTasks(regionNum);
         job.setOutputKeyClass(BytesWritable.class);
         job.setOutputKeyClass(BytesWritable.class);
         job.setPartitionerClass(TotalOrderPartitioner.class);
 
         InputSampler.Sampler<BytesWritable, BytesWritable> sampler =
-                new InputSampler.RandomSampler<BytesWritable, BytesWritable>(0.9, 10000, 10);
+                new InputSampler.RandomSampler<BytesWritable, BytesWritable>(0.5, 10000, 10);
 
         Path partitionFile = new Path(input, "_partitions" + date);
         TotalOrderPartitioner.setPartitionFile(conf, partitionFile);
@@ -52,7 +61,5 @@ public class SequenceFileKeysSplitingAlgorithm {
         if (!success) {
             throw new IOException("Error with job!");
         }
-
-
     }
 }
