@@ -11,9 +11,6 @@ import org.apache.pig.pigunit.PigTest;
 import org.apache.pig.tools.parameters.ParseException;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Test;
-
-
 
 /**
  *
@@ -41,7 +38,7 @@ public class TestPairwiseSimilarity {
         cluster.delete(new Path("pigunit-input-overriden.txt"));
     }
 
-    @Test
+    @org.testng.annotations.Test(groups = {"fast"})
     public void testSingle() throws IOException, ParseException {
 
         test = new PigTest(PIG_SCRIPT_DIR + "pairwise_similarity.pig", params);
@@ -58,7 +55,7 @@ public class TestPairwiseSimilarity {
         test.assertOutput("TFIDF", input, "docs_similarity", docs_similarityOutput);
     }
 
-    @Test
+    @org.testng.annotations.Test(groups = {"medium"})
     public void testMultiple() throws IOException, ParseException {
 
         test = new PigTest(PIG_SCRIPT_DIR + "pairwise_similarity.pig", params);

@@ -11,7 +11,6 @@ import org.apache.pig.pigunit.PigTest;
 import org.apache.pig.tools.parameters.ParseException;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Test;
 
 
 /**
@@ -40,7 +39,7 @@ public class TestAllpairsCosineSimilarity {
         cluster.delete(new Path("pigunit-input-overriden.txt"));
     }
 
-    @Test
+    @org.testng.annotations.Test(groups = {"fast"})
     public void testSingle() throws IOException, ParseException {
 
         test = new PigTest(PIG_SCRIPT_DIR + "allpairs_similarity.pig", params);
