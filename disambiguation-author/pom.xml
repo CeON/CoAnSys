@@ -85,7 +85,12 @@
         </profile>
     </profiles>
 
-    <dependencies>      
+    <dependencies>    
+                <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>commons</artifactId>
+            <version>${project.version}</version>
+        </dependency>  
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>disambiguation</artifactId>
