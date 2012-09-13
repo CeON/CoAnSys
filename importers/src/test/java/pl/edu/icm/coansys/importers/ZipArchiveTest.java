@@ -7,7 +7,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
-import org.testng.annotations.*;
 import static org.junit.Assert.*;
 
 /**
@@ -16,15 +15,7 @@ import static org.junit.Assert.*;
  */
 public class ZipArchiveTest {
 
-    @Test(groups = {"fast"})
-    public void myFastTest() throws IOException {
-    }
-
-    @Test(groups = {"medium"})
-    public void myMediumTest() throws IOException {
-    }
-
-    @Test(groups = {"slow"})
+    @org.testng.annotations.Test(groups = {"fast"})
     public void myTest() throws IOException {
         URL zipPath = this.getClass().getClassLoader().getResource("test_archive.zip");
         ZipArchive archive = new ZipArchive(zipPath.getPath());

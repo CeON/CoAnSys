@@ -23,7 +23,7 @@ import pl.edu.icm.coansys.importers.transformers.DocumentDTO2TSVLine;
 @Category(SmallTest.class)
 public class ZipDirToTSVFileTest {
 	
-    @Test
+    @org.testng.annotations.Test(groups = {"fast"})
     public void readZipDirTest() throws IOException {
         String zipDirPath = this.getClass().getClassLoader().getResource("zipdir").getPath();
         ZipDirToDocumentDTOIterator zdtp = new ZipDirToDocumentDTOIterator(zipDirPath, "TESTCOLLECTION");
