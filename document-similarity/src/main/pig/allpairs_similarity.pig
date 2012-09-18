@@ -1,40 +1,45 @@
-/* 
-sudo -u hdfs hadoop fs -mkdir /user/pig/commonlibs/
-sudo -u hdfs hadoop fs -chmod 777 /user/pig/commonlibs/
-hadoop fs -put /usr/lib/hbase/lib/guava-11.2.jar /user/pig/commonlibs/
-hadoop fs -put /usr/lib/hbase/hbase.jar /user/pig/commonlibs/
-hadoop fs -put /usr/lib/zookeeper/zookeeper-3.4.3-cdh4.0.1.jar /user/pig/commonlibs/
-*/
+-------------------------------------------------------
+-- parameter section
+-------------------------------------------------------
+%default commonJarsPath ../../../target/document-similarity-1.0-SNAPSHOT-jar-with-dependencies.jar
 
 -------------------------------------------------------
 -- register section
 -------------------------------------------------------
-REGISTER /usr/lib/zookeeper/zookeeper-3.4.3-cdh4.0.1.jar
-REGISTER /usr/lib/hbase/hbase.jar
-REGISTER /usr/lib/hbase/lib/guava-11.0.2.jar
+REGISTER /usr/lib/zookeeper/zookeeper-3.4.3-cdh4.0.1.jar;
+REGISTER /usr/lib/hbase/hbase.jar;
+REGISTER /usr/lib/hbase/lib/guava-11.0.2.jar;
 
-REGISTER ../../../../importers/target/importers-1.0-SNAPSHOT.jar
-REGISTER ../../../../commons/target/commons-1.0-SNAPSHOT.jar
-REGISTER ../../../../document-similarity/target/document-similarity-1.0-SNAPSHOT.jar
+REGISTER '$commonJarsPath';
 
 -------------------------------------------------------
--- import section
+-- define section
 -------------------------------------------------------
-IMPORT 'macros.pig';
+DEFINE CosineSimilarity pl.edu.icm.coansys.similarity.pig.udf.CosineSimilarity();
 
+-------------------------------------------------------
+-- business code section
+-------------------------------------------------------
 TFIDF = LOAD '$tfidfPath' AS (docId: chararray, term: chararray, tfidf: double);
-TFIDF_group = GROUP TFIDF BY docId;
-TFIDF_group2 = get_copy(TFIDF_group);
+G1 = GROUP TFIDF BY docId;
+G2 = FOREACH G1 GENERATE *;
 
-TFIDF_cross = FILTER(CROSS TFIDF_group, TFIDF_group2) 
-				BY TFIDF_group::group < TFIDF_group2::group;
+TFIDF_cross = FILTER(CROSS G1, G2) BY G1::group < G2::group;
+
+DESCRIBE TFIDF_cross;
 	
 -- measure cosine document similarity
-similarities = FOREACH TFIDF_cross GENERATE FLATTEN(
-		pl.edu.icm.coansys.similarity.pig.udf.CosineSimilarity(*))
-		AS (docId1:chararray, docId2:chararray, similarity:double);
+similarity = FOREACH TFIDF_cross {
+		A = ORDER G1::TFIDF BY term;
+		B = ORDER G2::TFIDF BY term;
+		GENERATE CosineSimilarity(G1::group, A, G2::group, B) AS cosineTuple;
+};
 
-doc_similarity = GROUP similarities BY docId1;
+-- flatten cosine document similarity
+S1 = FOREACH similarity GENERATE FLATTEN(cosineTuple) AS (docId1, docId2, similarity);
+S2 = FOREACH S1 GENERATE docId2 AS docId1, docId1 AS docId2, similarity;
+S = UNION S1, S2;
+SG = GROUP S BY docId1;
 
 --measure cosine document similarity
-STORE doc_similarity INTO '$outputPath';
+STORE SG INTO '$outputPath';
