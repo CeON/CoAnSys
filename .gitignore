@@ -18,7 +18,11 @@
 *.jar
 *.war
 *.ear
+/commons/target/
+/disambiguation-author/target/
+/disambiguation/target/
+/document-similarity/target/
+/examples/target/
+/importers/target/
 /logs-analysis/target/
-/DocumentSimilarity/target/
-/docsimilarity/target/
-/docsimilarity2/target/
+/target/

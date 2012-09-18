@@ -63,17 +63,16 @@ public class AvgSimilarity extends EvalFunc<Double> {
             DataBag bag2 = (DataBag) input.get(1);
             byte[] doc2Key = ((DataByteArray) bag2.iterator().next().get(0)).get();
 
-            Double totalSimilarity = null;
-            List<Double> list = new LinkedList<Double>();
             DataBag bag = (DataBag) input.get(2);
             Iterator<Tuple> iterator = bag.iterator();
+            List<Double> list = new LinkedList<Double>();
             while (iterator.hasNext()) {
                 Tuple tuple = iterator.next();
                 double similarity = (Double) tuple.get(0);
                 list.add(similarity);
             }
 
-            totalSimilarity = simFunct.getDocumentsTotalSimilarity(doc1Key, doc2Key, list);
+            Double totalSimilarity = simFunct.getDocumentsTotalSimilarity(doc1Key, doc2Key, list);
             return totalSimilarity;
 
         } catch (ExecException ex) {

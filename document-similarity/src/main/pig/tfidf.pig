@@ -1,14 +1,26 @@
 -------------------------------------------------------
+-- parameter section
+-------------------------------------------------------
+%default KEYWORD_SUBDIR '/keyword'
+%default TITLE_SUBDIR '/title'
+%default ABSTRACT_SUBDIR '/abstract'
+%default JOINED_SUBDIR '/weighted'
+%default SIM_SUBDIR '/similarity'
+
+%default KEYWORD_WEIGHT 1.0
+%default TITLE_WEIGHT 1.0
+%default ABSTRACT_WEIGHT 1.0
+
+%default commonJarsPath ../../../target/document-similarity-1.0-SNAPSHOT-jar-with-dependencies.jar
+
+-------------------------------------------------------
 -- register section
 -------------------------------------------------------
-REGISTER /usr/lib/zookeeper/zookeeper-3.4.3-cdh4.0.1.jar
-REGISTER /usr/lib/hbase/hbase.jar
-REGISTER /usr/lib/hbase/lib/guava-11.0.2.jar
+REGISTER /usr/lib/zookeeper/zookeeper-3.4.3-cdh4.0.1.jar;
+REGISTER /usr/lib/hbase/hbase.jar;
+REGISTER /usr/lib/hbase/lib/guava-11.0.2.jar;
 
-REGISTER ../../../../importers/target/importers-1.0-SNAPSHOT.jar
-REGISTER ../../../../commons/target/commons-1.0-SNAPSHOT.jar
-REGISTER ../../../../document-similarity/target/document-similarity-1.0-SNAPSHOT.jar
-REGISTER ../../../../disambiguation/target/disambiguation-1.0-SNAPSHOT.jar
+REGISTER '$commonJarsPath';
 
 -------------------------------------------------------
 -- define section
@@ -24,19 +36,6 @@ DEFINE StopWordFilter pl.edu.icm.coansys.similarity.pig.udf.StopWordFilter();
 IMPORT 'macros.pig';
 
 -------------------------------------------------------
--- parameter section
--------------------------------------------------------
-%default KEYWORD_SUBDIR '/keyword'
-%default TITLE_SUBDIR '/title'
-%default ABSTRACT_SUBDIR '/abstract'
-%default JOINED_SUBDIR '/weighted'
-%default SIM_SUBDIR '/similarity'
-
-%default KEYWORD_WEIGHT 1.0
-%default TITLE_WEIGHT 1.0
-%default ABSTRACT_WEIGHT 1.0
-
--------------------------------------------------------
 -- business code section
 -------------------------------------------------------
 doc = load_bwndata('$tableName');
@@ -46,17 +45,17 @@ doc_keyword = stem_and_filter_out(doc, 'keywords');
 doc_title = stem_and_filter_out(doc, 'title');
 doc_abstract = stem_and_filter_out(doc, 'abstract');
 
--- calculate tf-idf for each group of terms
-tfidf_keyword = calculate_tf_idf(doc_keyword);
-tfidf_abstract = calculate_tf_idf(doc_abstract);
-tfidf_title = calculate_tf_idf(doc_title);
-
 -- get distinct words
 doc_term_K = FOREACH doc_keyword GENERATE docId, term;
 doc_term_T = FOREACH doc_title GENERATE docId, term;
 doc_term_A = FOREACH doc_abstract GENERATE docId, term;
 doc_term_union = UNION doc_term_K, doc_term_A, doc_term_T;
 doc_term_distinct = DISTINCT doc_term_union;
+
+-- calculate tf-idf for each group of terms
+tfidf_keyword = calculate_tf_idf(doc_keyword);
+tfidf_abstract = calculate_tf_idf(doc_abstract);
+tfidf_title = calculate_tf_idf(doc_title);
 
 -- calculate weighted results
 tfidf_all_joined_A1 = JOIN doc_term_distinct BY (docId, term) LEFT OUTER, tfidf_abstract BY (docId, term);
