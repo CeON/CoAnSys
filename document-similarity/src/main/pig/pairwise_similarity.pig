@@ -15,7 +15,6 @@ REGISTER '$commonJarsPath';
 -------------------------------------------------------
 -- define section
 -------------------------------------------------------
-DEFINE DocumentProtobufBytesToTuple pl.edu.icm.coansys.commons.pig.udf.DocumentProtobufBytesToTuple();
 DEFINE WeightedTFIDF pl.edu.icm.coansys.similarity.pig.udf.TFIDF('weighted');
 DEFINE KeywordSimilarity pl.edu.icm.coansys.similarity.pig.udf.AvgSimilarity('dks');
 DEFINE DocsCombinedSimilarity pl.edu.icm.coansys.similarity.pig.udf.AvgSimilarity('dkcs');
