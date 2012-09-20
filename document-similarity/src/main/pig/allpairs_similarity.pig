@@ -21,8 +21,6 @@ G2 = FOREACH G1 GENERATE *;
 
 TFIDF_cross = FILTER(CROSS G1, G2) BY G1::group < G2::group;
 
-DESCRIBE TFIDF_cross;
-	
 -- measure cosine document similarity
 similarity = FOREACH TFIDF_cross {
 		A = ORDER G1::TFIDF BY term;
