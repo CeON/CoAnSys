@@ -14,79 +14,8 @@
     <name>Author Disambiguation Tool</name>
     <url>http://maven.apache.org</url>
 
-    <profiles>
-        <profile>
-            <id>sep</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-compiler-plugin</artifactId>
-                        <version>2.3.2</version>
-                        <configuration>
-                            <source>1.6</source>
-                            <target>1.6</target>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-assembly-plugin</artifactId>
-                        <configuration>
-                            <descriptors>
-                                <descriptor>src/main/resources/assemblies/only-deps.xml</descriptor>
-                            </descriptors>
-                        </configuration>   
-                        <executions>
-                            <execution>
-                                <phase>package</phase>
-                                <id>create-my-bundle</id>
-                                <goals>
-                                    <goal>single</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>full</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-compiler-plugin</artifactId>
-                        <version>2.3.2</version>
-                        <configuration>
-                            <source>1.6</source>
-                            <target>1.6</target>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-assembly-plugin</artifactId>
-                        <configuration>
-                            <descriptorRefs>
-                                <descriptorRef>jar-with-dependencies</descriptorRef>
-                            </descriptorRefs>
-                        </configuration>   
-                        <executions>
-                            <execution>
-                                <phase>package</phase>
-                                <id>create-my-bundle</id>
-                                <goals>
-                                    <goal>single</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
-
     <dependencies>    
-                <dependency>
+        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>commons</artifactId>
             <version>${project.version}</version>
