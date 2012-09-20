@@ -29,7 +29,7 @@
             <artifactId>disambiguation</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
+ 	<dependency>
             <groupId>org.antlr</groupId>
             <artifactId>antlr-runtime</artifactId>
             <version>3.2</version>
