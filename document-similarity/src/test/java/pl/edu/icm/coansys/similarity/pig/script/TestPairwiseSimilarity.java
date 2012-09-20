@@ -1,16 +1,15 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package pl.edu.icm.coansys.similarity.pig.script;
 
 import java.io.IOException;
+import java.util.LinkedList;
 import org.apache.hadoop.fs.Path;
 import org.apache.pig.pigunit.Cluster;
 import org.apache.pig.pigunit.PigTest;
 import org.apache.pig.tools.parameters.ParseException;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Test;
+import pl.edu.icm.coansys.similarity.test.utils.PigScriptExtractor;
 
 /**
  *
@@ -40,8 +39,9 @@ public class TestPairwiseSimilarity {
 
     @org.testng.annotations.Test(groups = {"fast"})
     public void testSingle() throws IOException, ParseException {
-
-        test = new PigTest(PIG_SCRIPT_DIR + "pairwise_similarity.pig", params);
+        
+        LinkedList<String> script = PigScriptExtractor.extract(PIG_SCRIPT_DIR + "pairwise_similarity.pig");
+        test = new PigTest(script.toArray(new String[]{}), params);
 
         String[] input = {
             "d1\tt1\t1",
@@ -58,7 +58,8 @@ public class TestPairwiseSimilarity {
     @org.testng.annotations.Test(groups = {"medium"})
     public void testMultiple() throws IOException, ParseException {
 
-        test = new PigTest(PIG_SCRIPT_DIR + "pairwise_similarity.pig", params);
+        LinkedList<String> script = PigScriptExtractor.extract(PIG_SCRIPT_DIR + "pairwise_similarity.pig");
+        test = new PigTest(script.toArray(new String[]{}), params);
 
         String[] input = {
             "d1\tt1\t1",
