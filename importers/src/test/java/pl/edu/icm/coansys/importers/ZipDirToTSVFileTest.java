@@ -10,21 +10,20 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator;
 import pl.edu.icm.coansys.importers.models.DocumentDTO;
+import pl.edu.icm.coansys.importers.test.SmallTest;
 import pl.edu.icm.coansys.importers.transformers.DocumentDTO2TSVLine;
 
 /**
  * @author pdendek
  */
+@Category(SmallTest.class)
 public class ZipDirToTSVFileTest {
-
-    @Test
-    public void emptyTest() {
-    }	
 	
-    @Test
+    @org.testng.annotations.Test(groups = {"fast"})
     public void readZipDirTest() throws IOException {
         String zipDirPath = this.getClass().getClassLoader().getResource("zipdir").getPath();
         ZipDirToDocumentDTOIterator zdtp = new ZipDirToDocumentDTOIterator(zipDirPath, "TESTCOLLECTION");
