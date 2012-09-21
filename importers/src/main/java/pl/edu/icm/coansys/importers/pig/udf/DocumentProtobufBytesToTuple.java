@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package pl.edu.icm.coansys.commons.pig.udf;
+package pl.edu.icm.coansys.importers.pig.udf;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
