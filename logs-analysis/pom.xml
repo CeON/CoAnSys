@@ -147,6 +147,20 @@
             <artifactId>synat-platform-connector</artifactId>
             <version>1.6-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>pl.edu.icm.synat</groupId>
+            <artifactId>synat-core-services-impl</artifactId>
+            <version>1.6-SNAPSHOT</version>
+            <scope>test</scope>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.mrunit</groupId>
+            <artifactId>mrunit</artifactId>
+            <version>0.9.0-incubating</version>
+            <classifier>hadoop2</classifier>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <repositories>
         <repository>
