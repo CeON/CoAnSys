@@ -5,6 +5,7 @@ package pl.edu.icm.coansys.logsanalysis.jobs;
 
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -30,7 +31,7 @@ import pl.edu.icm.coansys.logsanalysis.models.MostPopularProtos;
  * @author Artur Czeczko <a.czeczko@icm.edu.pl>
  */
 public class SortUsagesPart implements Tool {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(SortUsagesPart.class);
     private Configuration conf;
 
@@ -48,6 +49,12 @@ public class SortUsagesPart implements Tool {
         @Override
         protected void reduce(NullWritable nullKey, Iterable<Text> values, Context context) throws IOException, InterruptedException {
             Configuration conf = context.getConfiguration();
+            Long timeInMilis;
+            try {
+                timeInMilis = new SimpleDateFormat("yyyy-MM-dd").parse(conf.get("RESULT_DATE")).getTime();
+            } catch (Exception ex) {
+                timeInMilis = System.currentTimeMillis();
+            }
 
             SortedMap<Long, List<String>> buffer = new TreeMap<Long, List<String>>();
 
@@ -64,6 +71,10 @@ public class SortUsagesPart implements Tool {
                     String id = matcher.group(2);
 
                     if (counter < nbOfRecords || nb > minValue) {
+                        
+                        if (nb < minValue) {
+                            minValue = nb;
+                        }
 
                         List<String> listToAdd;
                         if (!buffer.containsKey(nb)) {
@@ -92,7 +103,7 @@ public class SortUsagesPart implements Tool {
             }
             if (counter > 0) {
                 MostPopularProtos.MostPopularStats.Builder statsBuilder = MostPopularProtos.MostPopularStats.newBuilder();
-                statsBuilder.setTimestamp(Calendar.getInstance().getTimeInMillis());
+                statsBuilder.setTimestamp(timeInMilis);
                 //revert order of usage counters using a stack
                 Stack<Long> countersStack = new Stack<Long>();
                 for (Long n : buffer.keySet()) {
