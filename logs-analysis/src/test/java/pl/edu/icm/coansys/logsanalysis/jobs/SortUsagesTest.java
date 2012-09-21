@@ -64,7 +64,6 @@ public class SortUsagesTest {
 
         BytesWritable expectedOutput = new BytesWritable(statsBuilder.build().toByteArray());
 
-        System.out.println("Expected output: " + statsBuilder.build().toString());
         mapReduceDriver.addOutput(NullWritable.get(), expectedOutput);
 
         mapReduceDriver.runTest();
