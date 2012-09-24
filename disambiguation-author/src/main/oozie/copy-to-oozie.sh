@@ -6,6 +6,10 @@ USER=$2
 WORKFLOW_HDFS_DIR="/user/${USER}/workflows/${TASK}"
 WORKFLOW_LOCAL_LIB_DIR=${TASK}/workflow/lib/
 
+if [ ! -d "$WORKFLOW_LOCAL_LIB_DIR" ]; then
+    mkdir ${WORKFLOW_LOCAL_LIB_DIR}
+fi
+
 echo "Copying required libaries to ${TASK}/lib"
 sudo -u ${USER} cp ../../../../commons/target/commons-1.0-SNAPSHOT.jar  ${WORKFLOW_LOCAL_LIB_DIR}
 sudo -u ${USER} cp ../../../../importers/target/importers-1.0-SNAPSHOT.jar ${WORKFLOW_LOCAL_LIB_DIR}
