@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.AuthorBased;
-import pl.edu.icm.coansys.disambiguation.author.jobs.DisambiguationJob_Toy;
+import pl.edu.icm.coansys.disambiguation.author.jobs.hdfs.DisambiguationJob_Toy;
 import pl.edu.icm.coansys.disambiguation.features.Extractor;
 import pl.edu.icm.coansys.importers.models.DocumentProtos;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.Author;
