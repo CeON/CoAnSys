@@ -6,7 +6,7 @@
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
             <prepare>
-                <delete path="${hdfsOutputDir}"/>
+                <delete path="${contribPersonOutputDir}"/>
             </prepare>
             <configuration>
                 <!-- This is required for new api usage -->
@@ -50,7 +50,7 @@
                 </property>
                 <property>
                     <name>mapred.output.dir</name>
-                    <value>${hdfsOutputDir}</value>
+                    <value>${contribPersonOutputDir}</value>
                 </property>
                 <property>
                     <name>mapreduce.inputformat.class</name>

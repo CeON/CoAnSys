@@ -15,7 +15,7 @@
             </configuration>
             <script>${pigScriptsDir}/coauthor_pairs.pig</script>
             <param>tableName=${bwndataDocsTableName}</param>
-            <param>disambiguationDir=${disambiguationDir}</param>
+            <param>contribPersonDir=${contribPersonDir}</param>
             <param>outputDir=${coauthorPairsOutputDir}</param>
             <param>commonJarsPath=${commonJarsPath}</param>
             <file>${pigScriptsDir}/macros.pig#macros.pig</file>

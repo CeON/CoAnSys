@@ -23,7 +23,7 @@ IMPORT 'macros.pig';
 -------------------------------------------------------
 docRaw = load_bwndata('$tableName');
 docContirib = FOREACH docRaw GENERATE rowkey AS docId, FLATTEN(STRSPLIT(document#'contributorKeys','_')) AS contributorId;
-contribPerson = LOAD '$disambiguationDir' AS (contributorId: chararray, personId: chararray);
+contribPerson = LOAD '$contribPersonDir' AS (contributorId: chararray, personId: chararray);
 docContribPersonJoin = JOIN docContirib BY contributorId, contribPerson BY contributorId;
 docPerson = FOREACH docContribPersonJoin GENERATE docId, personId;
 docPerson2 = get_copy(docPerson);
