@@ -83,7 +83,7 @@ public class SequenceFileKeysSampler implements Tool {
             System.exit(-1);
         }
 
-        int result = ToolRunner.run(conf, new SequenceFileKeysSampler(), args);
+        int result = ToolRunner.run(conf, new SequenceFileKeysSampler(), otherArgs);
         System.exit(result);
     }
 
