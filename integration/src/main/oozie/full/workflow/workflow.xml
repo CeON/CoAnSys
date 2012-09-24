@@ -1,0 +1,41 @@
+<workflow-app name="integration-workflow-full" xmlns="uri:oozie:workflow:0.2">
+    <start to="pipeline-start"/>
+    
+    <fork name="pipeline-start">
+        <path start="document-similarity"/>
+        <path start="disambiguation-author-hdfs"/>
+    </fork>
+    
+    <action name="document-similarity">
+        <sub-workflow>
+            <app-path>${documentSimilarityWorkflowPath}</app-path>
+            <propagate-configuration/>
+        </sub-workflow>
+        <ok to="pipeline-end"/>
+        <error to="kill"/>
+    </action>
+    
+    <action name="disambiguation-author-hdfs">
+        <sub-workflow>
+            <app-path>${disambiguationAuthorHDFSWorkflowPath}</app-path>
+            <propagate-configuration/>
+        </sub-workflow>
+        <ok to="coauthor-pairs"/>
+        <error to="kill"/>
+    </action>
+    
+    <action name="coauthor-pairs">
+        <sub-workflow>
+            <app-path>${coauthorPairsWorkflowPath}</app-path>
+            <propagate-configuration/>
+        </sub-workflow>
+        <ok to="pipeline-end"/>
+        <error to="kill"/>
+    </action>
+    
+    <join name="pipeline-end" to="end"/>
+    <kill name="kill">
+        <message>Workflow failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+    </kill>
+    <end name="end"/>
+</workflow-app>
