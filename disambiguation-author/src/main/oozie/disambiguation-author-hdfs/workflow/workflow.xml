@@ -46,7 +46,7 @@
                 <!-- MapReduce input/output parameters -->
                 <property>
                     <name>hbase.mapreduce.inputtable</name>
-                    <value>${hbaseInputTable}</value>
+                    <value>${bwndataDocsTableName}</value>
                 </property>
                 <property>
                     <name>mapred.output.dir</name>

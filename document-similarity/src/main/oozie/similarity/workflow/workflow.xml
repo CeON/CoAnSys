@@ -15,7 +15,7 @@
                 </property> 
             </configuration>
             <script>${pigScriptsDir}/tfidf.pig</script>
-            <param>tableName=${inputTableName}</param>
+            <param>tableName=${bwndataDocsTableName}</param>
             <param>outputPath=${tfidfOutputDir}</param>
             <param>commonJarsPath=${commonJarsPath}</param>
             <file>${pigScriptsDir}/macros.pig#macros.pig</file>
