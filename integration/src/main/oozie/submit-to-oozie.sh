@@ -7,11 +7,13 @@ PROPERTIES_FILE=$4
 
 WORKFLOW_HDFS_DIR="/user/${USER}/workflows/${TASK}"
 
+echo "Copying subworkflow files"
 CD=`pwd`
 cd ../../../../document-similarity/src/main/oozie/
 ./copy-to-oozie.sh similarity ${USER}
 cd ../../../../disambiguation-author/src/main/oozie/
 ./copy-to-oozie.sh disambiguation-author-hdfs ${USER}
+./copy-to-oozie.sh coauthor-pairs ${USER}
 cd ${CD}
 
 echo "Recreating workflow data in HDFS"
