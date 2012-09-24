@@ -1,3 +1,4 @@
+
 <workflow-app name='document-similarity' xmlns="uri:oozie:workflow:0.2">
     <start to='tfidf'/>
     <action name='tfidf'>
