@@ -9,6 +9,10 @@ PROPERTIES_FILE=$5
 WORKFLOW_HDFS_DIR="/user/${USER}/workflows/coansys/${TASK}-${TASK_ID}"
 WORKFLOW_LOCAL_LIB_DIR="${TASK}/workflow/lib"
 
+if [ ! -d "$WORKFLOW_LOCAL_LIB_DIR" ]; then
+    mkdir ${WORKFLOW_LOCAL_LIB_DIR}
+fi
+
 echo "Copying required libaries to ${WORKFLOW_LOCAL_LIB_DIR}"
 sudo -u "${USER}" rm ${WORKFLOW_LOCAL_LIB_DIR}/*
 sudo -u "${USER}" cp ../../../../logs-analysis/target/logs-analysis-1.0-SNAPSHOT-jar-with-dependencies.jar  ${WORKFLOW_LOCAL_LIB_DIR}/
