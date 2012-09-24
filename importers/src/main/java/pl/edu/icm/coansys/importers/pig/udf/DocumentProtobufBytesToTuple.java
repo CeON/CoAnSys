@@ -6,6 +6,7 @@ package pl.edu.icm.coansys.importers.pig.udf;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,7 @@ import org.apache.tika.exception.TikaException;
 import org.xml.sax.SAXException;
 import pl.edu.icm.coansys.commons.pdf.TikaPDFExtractor;
 import pl.edu.icm.coansys.importers.constants.ProtoConstants;
+import pl.edu.icm.coansys.importers.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.Media;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.MediaContainer;
@@ -52,8 +54,17 @@ public class DocumentProtobufBytesToTuple extends EvalFunc<Map> {
             Map<String, Object> map = new HashMap<String, Object>();
             map.put("key", metadata.getKey());
             map.put("title", metadata.getTitle());
-            map.put("keywords", getConcatenated(metadata.getKeywordList()));
+            map.put("keywords", getConcatenated(metadata.getKeywordList(), "_"));
             map.put("abstract", metadata.getAbstrakt());
+            
+            List<String> authorKyes = new ArrayList<String>();
+            List<String> authorNames = new ArrayList<String>();
+            for (Author author : metadata.getAuthorList()) {
+                authorKyes.add(author.getKey());
+                authorNames.add(author.getName());
+            }
+            map.put("contributorKeys", getConcatenated(authorKyes, "_"));
+            map.put("contributorNames", getConcatenated(authorNames, "_"));
 
             if (input.size() > 1) {
                 DataByteArray protoMedia = (DataByteArray) input.get(1);
@@ -90,13 +101,13 @@ public class DocumentProtobufBytesToTuple extends EvalFunc<Map> {
         return null;
     }
 
-    private String getConcatenated(List<String> list) {
+    private String getConcatenated(List<String> list, String separator) {
         if (list == null || list.isEmpty()) {
             return null;
         }
         String concatenated = list.get(0);
         for (int i = 1; i < list.size(); ++i) {
-            concatenated += " " + list.get(i);
+            concatenated += separator + list.get(i);
         }
         return concatenated;
     }
