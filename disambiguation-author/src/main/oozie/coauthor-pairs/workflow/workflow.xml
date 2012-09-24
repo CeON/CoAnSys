@@ -14,7 +14,7 @@
                 </property> 
             </configuration>
             <script>${pigScriptsDir}/coauthor_pairs.pig</script>
-            <param>tableName=${inputTableName}</param>
+            <param>tableName=${bwndataDocsTableName}</param>
             <param>disambiguationDir=${disambiguationDir}</param>
             <param>outputDir=${coauthorPairsOutputDir}</param>
             <param>commonJarsPath=${commonJarsPath}</param>
