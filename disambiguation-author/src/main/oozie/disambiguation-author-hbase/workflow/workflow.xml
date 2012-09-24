@@ -1,0 +1,143 @@
+<workflow-app name='disambiguation-author-hbase-wf' xmlns="uri:oozie:workflow:0.2">
+    <start to='check'/>
+    <action name='check'>
+        <java>
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <prepare>
+            </prepare>
+            <configuration>
+                <property>
+                    <name>mapred.job.queue.name</name>
+                    <value>${queueName}</value>
+                </property> 
+            </configuration>
+            <main-class>pl.edu.icm.coansys.commons.hbase.HBaseTableUtils</main-class>
+            <java-opts></java-opts>
+            <arg>TRUE</arg> 
+            <arg>EXIST</arg> 
+            <arg>${hbaseInputTable}</arg>
+        </java>       
+        <ok to='prepare'/>
+        <error to='kill'/>
+    </action>  
+    <action name='prepare'>
+        <java>
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <prepare>
+            </prepare>
+            <configuration>
+                <property>
+                    <name>mapred.job.queue.name</name>
+                    <value>${queueName}</value>
+                </property> 
+            </configuration>
+            <main-class>pl.edu.icm.coansys.commons.hbase.HBaseTableUtils</main-class>
+            <java-opts></java-opts>
+            <arg>TRUE</arg> 
+            <arg>DROPCREATE</arg> 
+            <arg>${hbaseOutputTable}</arg>  
+            <arg>r</arg>  
+        </java>       
+        <ok to='disambiguation'/>
+        <error to='kill'/>
+    </action>    
+    <action name='disambiguation'>
+        <map-reduce>
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <prepare>
+            </prepare>
+            <configuration>
+                <!-- This is required for new api usage -->
+                <property>
+                    <name>mapred.mapper.new-api</name>
+                    <value>true</value>
+                </property>
+                <property>
+                    <name>mapred.reducer.new-api</name>
+                    <value>true</value>
+                </property>
+               
+                <!-- General job parameters -->
+                <property>
+                    <name>mapred.job.queue.name</name>
+                    <value>${queueName}</value>
+                </property>
+                <property>
+                    <name>mapred.job.name</name>
+                    <value>${jobName}</value>
+                </property>
+                
+                <!-- MapReduce Mapper/Reducer parameters -->
+                <property>
+                    <name>mapreduce.map.class</name>
+                    <value>pl.edu.icm.coansys.disambiguation.author.jobs.FeaturesExtractionMapper_Toy</value>
+                </property>
+                <property>
+                    <name>mapreduce.reduce.class</name>
+                    <value>pl.edu.icm.coansys.disambiguation.author.jobs.ClusterDisambiguationReducer_Toy</value>
+                </property>
+                <property>
+                    <name>mapred.reduce.tasks</name>
+                    <value>${reduceTasksNumber}</value>
+                </property>
+                
+                <!-- MapReduce input/output parameters -->
+                <property>
+                    <name>hbase.mapreduce.inputtable</name>
+                    <value>${hbaseInputTable}</value>
+                </property>
+                <property>
+                    <name>hbase.mapred.outputtable</name>
+                    <value>${hbaseOutputTable}</value>
+                </property>
+                <property>
+                    <name>mapreduce.inputformat.class</name>
+                    <value>org.apache.hadoop.hbase.mapreduce.TableInputFormat</value>
+                </property>
+                <property>
+                    <name>mapreduce.outputformat.class</name>
+                    <value>org.apache.hadoop.hbase.mapreduce.TableOutputFormat</value>
+                </property>
+                <property>
+                    <name>mapred.mapoutput.key.class</name>
+                    <value>org.apache.hadoop.io.Text</value>
+                </property>
+                <property>
+                    <name>mapred.mapoutput.value.class</name>
+                    <value>pl.edu.icm.coansys.disambiguation.auxil.TextTextArrayMapWritable</value>
+                </property>
+                <property>
+                    <name>mapred.output.key.class</name>
+                    <value>org.apache.hadoop.io.Text</value>
+                </property>                
+                <property>
+                    <name>mapred.output.value.class</name>
+                    <value>org.apache.hadoop.hbase.client.Put</value>
+                </property>
+                <property>
+                    <name>hbase.mapreduce.scan</name>
+                    <value>AgAAAAAAAf////8AAAPoAAAAAAAAAAAAAH//////////AQAAAAEBbQAAAAEGbXByb3RvAAAAAA==</value>
+                </property>
+                <!-- Job specific parameters -->
+                <property>
+                    <name>FEATURE_DESCRIPTION</name>
+                    <value>${featureDescription}</value>
+                </property>
+                <property>
+                    <name>THRESHOLD</name>
+                    <value>${threshold}</value>
+                </property>
+
+            </configuration>
+        </map-reduce>
+        <ok to='end'/>
+        <error to='kill'/>
+    </action>
+    <kill name='kill'>
+        <message>Map/Reduce failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+    </kill>
+    <end name='end'/>
+</workflow-app>
