@@ -145,7 +145,7 @@ public class SequenceFileKeysSamplerMR implements Tool {
             System.exit(-1);
         }
 
-        int result = ToolRunner.run(conf, new SequenceFileKeysSamplerMR(), args);
+        int result = ToolRunner.run(conf, new SequenceFileKeysSamplerMR(), otherArgs);
         System.exit(result);
     }
 
