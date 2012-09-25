@@ -9,6 +9,7 @@ import java.net.MalformedURLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import pl.edu.icm.coansys.logsanalysis.models.AuditEntryFactory;
 import pl.edu.icm.coansys.logsanalysis.transformers.AuditEntry2Protos;
 import pl.edu.icm.coansys.logsanalysis.transformers.BytesArray2SequenceFile;
 import pl.edu.icm.synat.api.services.audit.model.AuditEntry;
@@ -85,26 +86,20 @@ public class GenerateDummyLogs {
             for (int i = 0; i < sessionLength; i++) {
                 //one log entry
 
-                //timestamp
                 randomFloat = random.nextFloat();
                 long time = sessionStart + (long) (randomFloat * (sessionEnd - sessionStart));
-
-                //args
                 String eventType = EVENTTYPES[random.nextInt(EVENTTYPES.length)];
-                String args[];
-                if (eventType.equals("SAVE_TO_DISK")) {
-                    args = new String[6];
-                    args[5] = RESOURCES[random.nextInt(RESOURCES.length)];
-                } else {
-                    args = new String[5];
-                }
-                args[0] = IPADDRESSES[random.nextInt(IPADDRESSES.length)];
-                args[1] = URLS[random.nextInt(URLS.length)]; // URL
-                args[2] = URLS[random.nextInt(URLS.length)]; // referrer
-                args[3] = sessionId;
-                args[4] = user;
 
-                AuditEntry newLog = new AuditEntry(generateRandomId(), AuditEntry.Level.INFO, new Date(time), "PORTAL", eventType, args);
+                AuditEntry newLog;
+                if (eventType.equals("SAVE_TO_DISK")) {
+                    newLog = AuditEntryFactory.getAuditEntry(generateRandomId(), AuditEntry.Level.INFO, new Date(time), "PORTAL", eventType,
+                            IPADDRESSES[random.nextInt(IPADDRESSES.length)], URLS[random.nextInt(URLS.length)], URLS[random.nextInt(URLS.length)],
+                            sessionId, user, RESOURCES[random.nextInt(RESOURCES.length)]);
+                } else {
+                    newLog = AuditEntryFactory.getAuditEntry(generateRandomId(), AuditEntry.Level.INFO, new Date(time), "PORTAL", eventType,
+                            IPADDRESSES[random.nextInt(IPADDRESSES.length)], URLS[random.nextInt(URLS.length)], URLS[random.nextInt(URLS.length)],
+                            sessionId, user);
+                }
                 result.add(newLog);
             }
         }
@@ -121,7 +116,7 @@ public class GenerateDummyLogs {
         int logLines;
         try {
             logLines = Integer.parseInt(argv[0]);
-        } catch (NumberFormatException ex)  {
+        } catch (NumberFormatException ex) {
             System.err.println("Not a valid number: " + argv[0]);
             return;
         }
