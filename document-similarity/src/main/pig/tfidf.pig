@@ -11,16 +11,14 @@
 %default TITLE_WEIGHT 1.0
 %default ABSTRACT_WEIGHT 1.0
 
-%default commonJarsPath ../../../target/document-similarity-1.0-SNAPSHOT-jar-with-dependencies.jar
-
 -------------------------------------------------------
 -- register section
 -------------------------------------------------------
 REGISTER /usr/lib/zookeeper/zookeeper-3.4.3-cdh4.0.1.jar;
-REGISTER /usr/lib/hbase/hbase.jar;
+REGISTER /usr/lib/hbase/hbase-0.92.1-cdh4.0.1-security.jar
 REGISTER /usr/lib/hbase/lib/guava-11.0.2.jar;
 
-REGISTER '$commonJarsPath';
+REGISTER '$commonJarsPath'
 
 -------------------------------------------------------
 -- define section
@@ -37,6 +35,7 @@ IMPORT 'macros.pig';
 -------------------------------------------------------
 -- business code section
 -------------------------------------------------------
+set default_parallel $parallel
 doc = load_bwndata('$tableName');
 
 -- stem, clean, filter out

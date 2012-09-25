@@ -19,6 +19,13 @@
             <param>outputDir=${coauthorPairsOutputDir}</param>
             <param>commonJarsPath=${commonJarsPath}</param>
             <file>${pigScriptsDir}/macros.pig#macros.pig</file>
+
+
+	    <file>lib/commons-1.0-SNAPSHOT.jar#commons-1.0-SNAPSHOT.jar</file>
+            <file>lib/disambiguation-1.0-SNAPSHOT.jar#disambiguation-1.0-SNAPSHOT.jar</file>
+            <file>lib/document-similarity-1.0-SNAPSHOT.jar#document-similarity-1.0-SNAPSHOT.jar</file>
+            <file>lib/importers-1.0-SNAPSHOT.jar#importers-1.0-SNAPSHOT.jar</file>
+            <file>lib/pig-0.9.2-cdh4.0.1.jar#pig-0.9.2-cdh4.0.1.jar</file>
         </pig>       
         <ok to='end'/>
         <error to='kill'/>
