@@ -1,7 +1,7 @@
 -------------------------------------------------------
 -- parameter section
 -------------------------------------------------------
-%default commonJarsPath ../../../target/document-similarity-1.0-SNAPSHOT-jar-with-dependencies.jar
+%default commonJarsPath ../../../../document-similarity/target/document-similarity-1.0-SNAPSHOT-jar-with-dependencies.jar
 
 -------------------------------------------------------
 -- register section
@@ -20,6 +20,8 @@ DEFINE CosineSimilarity pl.edu.icm.coansys.similarity.pig.udf.CosineSimilarity()
 -------------------------------------------------------
 -- business code section
 -------------------------------------------------------
+set default_parallel $parallel
+
 TFIDF = LOAD '$tfidfPath' AS (docId: chararray, term: chararray, tfidf: double);
 G1 = GROUP TFIDF BY docId;
 G2 = FOREACH G1 GENERATE *;

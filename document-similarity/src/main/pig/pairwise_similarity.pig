@@ -1,7 +1,7 @@
 -------------------------------------------------------
 -- parameter section
 -------------------------------------------------------
-%default commonJarsPath ../../../target/document-similarity-1.0-SNAPSHOT-jar-with-dependencies.jar
+%default commonJarsPath ../../../../document-similarity/target/document-similarity-1.0-SNAPSHOT-jar-with-dependencies.jar
 
 -------------------------------------------------------
 -- register section
@@ -22,6 +22,7 @@ DEFINE DocsCombinedSimilarity pl.edu.icm.coansys.similarity.pig.udf.AvgSimilarit
 -------------------------------------------------------
 -- business code section
 ----------------------------------------------------
+set default_parallel $parallel
 TFIDF = LOAD '$tfidfPath' AS (docId, term: chararray, tfidf: double);
 TFIDF2 = FOREACH TFIDF GENERATE *;
 
