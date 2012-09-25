@@ -11,6 +11,7 @@ import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mrunit.mapreduce.MapReduceDriver;
 import org.junit.Before;
 import org.junit.Test;
+import pl.edu.icm.coansys.logsanalysis.models.AuditEntryFactory;
 import pl.edu.icm.coansys.logsanalysis.transformers.AuditEntry2Protos;
 import pl.edu.icm.synat.api.services.audit.model.AuditEntry;
 
@@ -34,14 +35,10 @@ public class CountUsagesTest {
     }
     
     @Test
-    public void countUsagesTest() {
-        String[] args = new String[6];
-        for (int i = 0; i < args.length; i++) {
-            args[i] = "resource01";
-        }
-        
+    public void countUsagesTest() {        
         for (int i = 0; i < TEST_ENTRIES_COUNT; i++) {
-            AuditEntry ae = new AuditEntry("event"+i, AuditEntry.Level.DEBUG, new Date(System.currentTimeMillis()), "testService", "SAVE_TO_DISK", args);
+            AuditEntry ae = AuditEntryFactory.getAuditEntry("event"+i, AuditEntry.Level.DEBUG, new Date(System.currentTimeMillis()), "testService", "SAVE_TO_DISK",
+                    "127.0.0.1", "http://localhost/", "http://localhost/", "test_session", "test_user", "resource01");
             byte[] bytes = AuditEntry2Protos.serialize(ae).toByteArray();
             mapReduceDriver.addInput(NullWritable.get(), new BytesWritable(bytes));
         }

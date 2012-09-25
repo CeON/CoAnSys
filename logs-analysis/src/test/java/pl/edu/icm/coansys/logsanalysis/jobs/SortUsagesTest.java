@@ -44,7 +44,7 @@ public class SortUsagesTest {
     }
 
     @Test
-    public void countUsagesTest() throws ParseException {
+    public void sortUsagesTest() throws ParseException {
         mapReduceDriver.addInput(new Text(RES1_ID), new LongWritable(COUNT1));
         mapReduceDriver.addInput(new Text(RES2_ID), new LongWritable(COUNT2));
         mapReduceDriver.addInput(new Text(RES3_ID), new LongWritable(COUNT3));
