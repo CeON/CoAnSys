@@ -84,6 +84,10 @@
                     <name>hbase.mapreduce.scan</name>
                     <value>AgAAAAAAAf////8AAAPoAAAAAAAAAAAAAH//////////AQAAAAEBbQAAAAEGbXByb3RvAAAAAA==</value>
                 </property>
+                <property>
+                    <name>mapred.child.java.opts</name>
+                    <value>${mapredChildJavaOpts}</value>
+                </property>
                 <!-- Job specific parameters -->
                 <property>
                     <name>FEATURE_DESCRIPTION</name>
