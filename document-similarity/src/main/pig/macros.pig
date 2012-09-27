@@ -3,7 +3,7 @@
 -------------------------------------------------------
 DEFINE load_bwndata(tableName) RETURNS doc {
 	raw_doc = LOAD 'hbase://$tableName' 
-		USING org.apache.pig.backend.hadoop.hbase.HBaseStorage('c:cproto, m:mproto', '-loadKey true -caching 50 -limit 10000')
+		USING org.apache.pig.backend.hadoop.hbase.HBaseStorage('c:cproto, m:mproto', '-loadKey true -caching 50 -limit 100')
 		AS (rowkey: bytearray, cproto: bytearray, mproto: bytearray);
 	
 	$doc = FOREACH raw_doc 
