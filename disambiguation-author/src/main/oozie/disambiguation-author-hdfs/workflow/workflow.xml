@@ -88,6 +88,14 @@
                     <name>mapred.child.java.opts</name>
                     <value>${mapredChildJavaOpts}</value>
                 </property>
+                <property>
+                    <name>mapred.map.tasks.speculative.execution</name>
+                    <value>false</value>
+                </property>
+                <property>
+                    <name>mapred.reduce.tasks.speculative.execution</name>
+                    <value>false</value>
+                </property> 
                 <!-- Job specific parameters -->
                 <property>
                     <name>FEATURE_DESCRIPTION</name>
