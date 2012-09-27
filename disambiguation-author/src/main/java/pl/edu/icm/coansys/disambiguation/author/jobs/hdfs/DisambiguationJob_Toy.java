@@ -16,7 +16,6 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
-import org.apache.hadoop.util.GenericOptionsParser;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 import org.apache.log4j.Logger;
@@ -155,16 +154,18 @@ public class DisambiguationJob_Toy extends Configured implements Tool {
     public int run(String[] args) throws Exception {
         parseArgs(args);
         
+        Configuration config = getConf();
+        
         /*
          * First job configuration
          */
-        conf.set("FEATURE_DESCRIPTION", FEATURES_DESCRIPTION);
-        conf.set("THRESHOLD", THRESHOLD);
+        config.set("FEATURE_DESCRIPTION", FEATURES_DESCRIPTION);
+        config.set("THRESHOLD", THRESHOLD);
         //setting input table
-        conf.set(TableInputFormat.INPUT_TABLE, INPUT_TABLE);
+        config.set(TableInputFormat.INPUT_TABLE, INPUT_TABLE);
 
         //job creation
-        Job job = new Job(conf);
+        Job job = new Job(config);
         job.setJobName(NAME + " (input: " + INPUT_TABLE + ")");
         job.setJarByClass(DisambiguationJob_Toy.class);
         //scan for relevant data
