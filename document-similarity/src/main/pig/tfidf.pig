@@ -36,6 +36,7 @@ IMPORT 'macros.pig';
 -- business code section
 -------------------------------------------------------
 set default_parallel $parallel
+
 doc = load_bwndata('$tableName');
 
 -- stem, clean, filter out
