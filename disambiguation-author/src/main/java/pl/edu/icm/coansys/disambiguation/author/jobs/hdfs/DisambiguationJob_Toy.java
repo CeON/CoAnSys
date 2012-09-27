@@ -153,9 +153,7 @@ public class DisambiguationJob_Toy extends Configured implements Tool {
      */
     @Override
     public int run(String[] args) throws Exception {
-
-        String[] otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();
-        parseArgs(otherArgs);
+        parseArgs(args);
         
         /*
          * First job configuration
