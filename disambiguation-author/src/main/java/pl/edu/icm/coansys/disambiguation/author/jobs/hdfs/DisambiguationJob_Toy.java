@@ -5,6 +5,7 @@ package pl.edu.icm.coansys.disambiguation.author.jobs.hdfs;
 
 import java.lang.management.ManagementFactory;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.client.Scan;
@@ -19,7 +20,6 @@ import org.apache.hadoop.util.GenericOptionsParser;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 import org.apache.log4j.Logger;
-
 import pl.edu.icm.coansys.disambiguation.auxil.LoggingInDisambiguation;
 import pl.edu.icm.coansys.disambiguation.auxil.TextTextArrayMapWritable;
 import pl.edu.icm.coansys.importers.constants.HBaseConstant;
@@ -30,7 +30,7 @@ import pl.edu.icm.coansys.importers.constants.HBaseConstant;
  * @version 1.0
  * @since 2012-08-07
  */
-public class DisambiguationJob_Toy implements Tool {
+public class DisambiguationJob_Toy extends Configured implements Tool {
 
     /*
      * 
@@ -102,11 +102,6 @@ public class DisambiguationJob_Toy implements Tool {
         return this;
     }
 
-    @SuppressWarnings("unused")
-    private static String gedPaddedNumber(int i) {
-        return String.format("%010d", i);
-    }
-
     @Override
     public void setConf(Configuration conf) {
         this.conf = conf;
@@ -161,6 +156,7 @@ public class DisambiguationJob_Toy implements Tool {
 
         String[] otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();
         parseArgs(otherArgs);
+        
         /*
          * First job configuration
          */
@@ -213,7 +209,7 @@ public class DisambiguationJob_Toy implements Tool {
      */
     public static void main(String args[]) throws Exception {
         Configuration conf = HBaseConfiguration.create();
-        DisambiguationJob_Toy job = new DisambiguationJob_Toy();
+        DisambiguationJob_Toy job = new DisambiguationJob_Toy();        
         int result = ToolRunner.run(conf, job, args);
         logger.debug("=== Job End ===");
         System.exit(result);
