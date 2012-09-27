@@ -4,11 +4,9 @@
 package pl.edu.icm.coansys.disambiguation.author.jobs.hdfs;
 
 import java.lang.management.ManagementFactory;
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hbase.HBaseConfiguration;
-import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.mapreduce.TableInputFormat;
 import org.apache.hadoop.hbase.mapreduce.TableMapReduceUtil;
@@ -163,8 +161,6 @@ public class DisambiguationJob_Toy implements Tool {
 
         String[] otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();
         parseArgs(otherArgs);
-
-
         /*
          * First job configuration
          */
