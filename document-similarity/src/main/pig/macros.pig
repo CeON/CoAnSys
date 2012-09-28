@@ -3,11 +3,23 @@
 -------------------------------------------------------
 DEFINE load_bwndata(tableName) RETURNS doc {
 	raw_doc = LOAD 'hbase://$tableName' 
-		USING org.apache.pig.backend.hadoop.hbase.HBaseStorage('c:cproto, m:mproto', '-loadKey true -caching 50 -limit 100')
-		AS (rowkey: bytearray, cproto: bytearray, mproto: bytearray);
+		USING org.apache.pig.backend.hadoop.hbase.HBaseStorage('m:mproto, c:cproto', '-loadKey true -caching 50 -limit 100')
+		AS (rowkey: bytearray, mproto: bytearray, cproto: bytearray);
 	
 	$doc = FOREACH raw_doc 
                 GENERATE rowkey, pl.edu.icm.coansys.importers.pig.udf.DocumentProtobufBytesToTuple(mproto, cproto) AS document;
+};
+
+-------------------------------------------------------
+-- load BWMeta documents form HBase tabls that contains
+-------------------------------------------------------
+DEFINE load_bwndata_metadata(tableName) RETURNS doc {
+	raw_doc = LOAD 'hbase://$tableName' 
+		USING org.apache.pig.backend.hadoop.hbase.HBaseStorage('m:mproto', '-loadKey true -caching 1000')
+		AS (rowkey: bytearray, mproto: bytearray);
+	
+	$doc = FOREACH raw_doc 
+                GENERATE rowkey, pl.edu.icm.coansys.importers.pig.udf.DocumentProtobufBytesToTuple(mproto) AS document;
 };
 
 -------------------------------------------------------
