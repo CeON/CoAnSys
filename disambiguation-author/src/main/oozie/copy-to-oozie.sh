@@ -15,6 +15,7 @@ sudo -u ${USER} cp /usr/lib/pig/pig-0.9.2-cdh4.0.1.jar ${WORKFLOW_LOCAL_LIB_DIR}
 sudo -u ${USER} cp ../../../../commons/target/commons-1.0-SNAPSHOT.jar  ${WORKFLOW_LOCAL_LIB_DIR}
 sudo -u ${USER} cp ../../../../importers/target/importers-1.0-SNAPSHOT.jar ${WORKFLOW_LOCAL_LIB_DIR}
 sudo -u ${USER} cp ../../../../disambiguation-author/target/disambiguation-author-1.0-SNAPSHOT.jar ${WORKFLOW_LOCAL_LIB_DIR}
+sudo -u ${USER} cp ../../../../disambiguation/target/disambiguation-1.0-SNAPSHOT.jar ${WORKFLOW_LOCAL_LIB_DIR}
 
 echo "Copying required pig scripts to ${TASK}"
 sudo -u ${USER} cp ../pig/*.pig  ${TASK}/workflow/pig/
