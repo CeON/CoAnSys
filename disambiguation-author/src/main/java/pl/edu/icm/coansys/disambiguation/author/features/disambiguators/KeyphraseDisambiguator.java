@@ -15,7 +15,7 @@ public class KeyphraseDisambiguator extends Disambiguator{
 
 	@Override
 	public String getName() {
-		return "KeywordFeature";
+		return KeyphraseDisambiguator.class.getSimpleName();
 	}
 
 }
