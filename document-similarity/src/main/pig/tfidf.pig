@@ -37,7 +37,7 @@ IMPORT 'macros.pig';
 -------------------------------------------------------
 set default_parallel $parallel
 
-doc = load_bwndata('$tableName');
+doc = load_bwndata_metadata('$tableName');
 
 -- stem, clean, filter out
 doc_keyword = stem_and_filter_out(doc, 'keywords');

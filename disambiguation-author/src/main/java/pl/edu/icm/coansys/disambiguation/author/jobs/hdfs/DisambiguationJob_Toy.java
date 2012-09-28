@@ -124,8 +124,8 @@ public class DisambiguationJob_Toy extends Configured implements Tool {
             logger.debug("Default values will be used:");
             logger.debug("* grotoap10");
             logger.debug("* grotoap10-out");
-            logger.debug("* EmailFeature#DocumentProto2EmailExtractor#0.81#1,"
-                    + "KeywordFeature#DocumentProto2KeyWordExtractor#0.13#33");
+            logger.debug("* EmailDisambiguator#DocumentProto2EmailExtractor#0.81#1,"
+                    + "KeywordDisambiguator#DocumentProto2KeyWordExtractor#0.13#33");
             logger.debug("* -0.846161134713438d");
             logger.debug("* DisambiguationJob_Toy");
 
