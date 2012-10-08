@@ -128,7 +128,7 @@ public class DocumentWrapperSequenceFileToHBase implements Tool {
         String command = "hadoop jar target/importers-1.0-SNAPSHOT-jar-with-dependencies.jar"
                 + " " + DocumentWrapperSequenceFileToHBase.class.getName()
                 + " -D" + BULK_OUTPUT_CONF_KEY + "=bulkoutputfile"
-                + " directory table";
+                + " <directory> <table>";
         
         System.out.println(command);
     }
