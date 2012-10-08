@@ -5,6 +5,7 @@ package pl.edu.icm.coansys.classification.documents.jobs;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.Random;
 
 import org.apache.hadoop.conf.Configuration;
@@ -47,10 +48,10 @@ public class TfidfReducer extends Reducer<Text, StringListIntListWritable, TextA
     public void reduce(Text key, Iterable<StringListIntListWritable> values, Context context) {
     	
     	int docsWithTerm = 0;
-    	for(final StringListIntListWritable v : values){
-    		docsWithTerm++;
-    	}
-    	double idf = Math.log(docs_num/(double)docsWithTerm);
+        for (Iterator it = values.iterator(); it.hasNext();) {
+            docsWithTerm++;
+        }
+        double idf = Math.log(docs_num/(double)docsWithTerm);
     	
     	for(final StringListIntListWritable v : values){
     		double tf = (double)(v.getIntList().get(0))/(double)(v.getIntList().get(1));
