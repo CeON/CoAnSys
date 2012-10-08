@@ -5,13 +5,12 @@ package pl.edu.icm.coansys.classification.documents.jobs;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.Random;
-
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-
 import pl.edu.icm.coansys.disambiguation.auxil.LoggingInDisambiguation;
 import pl.edu.icm.coansys.disambiguation.auxil.TextArrayWritable;
 
@@ -36,14 +35,15 @@ public class WordCountReducer extends Reducer<TextArrayWritable, IntWritable, Te
     /**
      * (IN) accepts key-value pairs containing K:docId + word from this document, V: value 1
      * (PROCESS) count occurrences of the word
-     * (OUT) emits key-value pairs containing K:docId + word from this document, V: the number of word occurences
+     * (OUT) emits key-value pairs containing K:docId + word from this document, V: the number of word occurrences
      */
     public void reduce(TextArrayWritable key, Iterable<IntWritable> values, Context context) {
     	
     	int wc = 0;
-    	for(@SuppressWarnings("unused") final IntWritable iw : values){
-    		wc++;
-    	}
+        for (Iterator it = values.iterator(); it.hasNext();) {
+            wc++;
+            
+        }
     	
     	try {
 			context.write(key, new IntWritable(wc));
