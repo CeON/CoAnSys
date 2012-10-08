@@ -53,7 +53,7 @@ public class TfidfReducer extends Reducer<Text, StringListIntListWritable, TextA
     	double idf = Math.log(docs_num/(double)docsWithTerm);
     	
     	for(final StringListIntListWritable v : values){
-    		double tf = v.getIntList().get(0)/v.getIntList().get(1);
+    		double tf = (double)(v.getIntList().get(0))/(double)(v.getIntList().get(1));
     		try {
 				context.write(new TextArrayWritable(new Text[]{new Text(v.getStringList().get(0)),
 																		key}),
