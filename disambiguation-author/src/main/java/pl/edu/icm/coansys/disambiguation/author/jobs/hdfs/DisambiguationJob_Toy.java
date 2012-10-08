@@ -4,16 +4,14 @@
 package pl.edu.icm.coansys.disambiguation.author.jobs.hdfs;
 
 import java.lang.management.ManagementFactory;
+import java.util.Date;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hbase.HBaseConfiguration;
-import org.apache.hadoop.hbase.client.Scan;
-import org.apache.hadoop.hbase.mapreduce.TableInputFormat;
-import org.apache.hadoop.hbase.mapreduce.TableMapReduceUtil;
-import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.Tool;
@@ -21,7 +19,6 @@ import org.apache.hadoop.util.ToolRunner;
 import org.apache.log4j.Logger;
 import pl.edu.icm.coansys.disambiguation.auxil.LoggingInDisambiguation;
 import pl.edu.icm.coansys.disambiguation.auxil.TextTextArrayMapWritable;
-import pl.edu.icm.coansys.importers.constants.HBaseConstant;
 
 /**
  *
@@ -31,73 +28,64 @@ import pl.edu.icm.coansys.importers.constants.HBaseConstant;
  */
 public class DisambiguationJob_Toy extends Configured implements Tool {
 
-    /*
-     * 
-     * Inner fields
-     * 
-     */
     private static Logger logger = Logger.getLogger(LoggingInDisambiguation.class);
     private Configuration conf;
     /*
-     * 
      * Fields to be set
-     * 
      */
-    String INPUT_TABLE = null;
-    String OUTPUT_DIR = null;
-    String FEATURES_DESCRIPTION = null;
-    String NAME = null;
-    String THRESHOLD = null;
-    int REDUCER_NUM = 65;
+    String inputPath = null;
+    String outputDir = null;
+    String featuresDescription = null;
+    String jobName = null;
+    String threshold = null;
+    int reducerNumber = 65;
 
     /*
-     * 
      * Getters and setters
-     * 
      */
-    public String getINPUT_TABLE() {
-        return INPUT_TABLE;
+    public String getInputPath() {
+        return inputPath;
     }
 
-    public DisambiguationJob_Toy setINPUT_TABLE(String iNPUT_TABLE) {
-        INPUT_TABLE = iNPUT_TABLE;
+    public DisambiguationJob_Toy setInputPath(String ip) {
+        inputPath = ip;
         return this;
     }
 
-    public String getOUTPUT_DIR() {
-        return OUTPUT_DIR;
+    public String getOutputDir() {
+        return outputDir;
     }
 
-    public DisambiguationJob_Toy setOUTPUT_TABLE(String oUTPUT_TABLE) {
-        OUTPUT_DIR = oUTPUT_TABLE;
+    public DisambiguationJob_Toy setOutputDir(String od) {
+        outputDir = od;
         return this;
     }
 
     public String getNAME() {
-        return NAME;
+        return jobName;
     }
 
     public DisambiguationJob_Toy setNAME(String nAME) {
-        NAME = nAME;
+        jobName = nAME;
         return this;
     }
 
     public String getFEATURES_DESCRIPTION() {
-        return FEATURES_DESCRIPTION;
+        return featuresDescription;
     }
 
     public DisambiguationJob_Toy setFEATURES_DESCRIPTION(String fEATURES_DESCRIPTION) {
-        FEATURES_DESCRIPTION = fEATURES_DESCRIPTION;
+        featuresDescription = fEATURES_DESCRIPTION;
         return this;
     }
 
-    public DisambiguationJob_Toy setREDUCER_NUM(int rEDUCER_NUM) {
-        REDUCER_NUM = rEDUCER_NUM;
+    public DisambiguationJob_Toy setReducerNumber(int rn) {
+        reducerNumber = rn;
         return this;
     }
 
     public DisambiguationJob_Toy setTHRESHOLD(String tHRESHOLD) {
-        THRESHOLD = tHRESHOLD;
+        threshold = tHRESHOLD;
         return this;
     }
 
@@ -130,65 +118,52 @@ public class DisambiguationJob_Toy extends Configured implements Tool {
             logger.debug("* DisambiguationJob_Toy");
 
             args = new String[5];
-            args[0] = "grotoap10";
-            args[1] = "grotoap10-out2";
+            //args[0] = "grotoap10";
+            args[0] = "/home/akawa/Documents/git-projects/CoAnSys/importers/grotoap10_dump_1349686854096/part-m-00000";
+            args[1] = "grotoap10" + "_disambig_" + (new Date()).getTime();
             args[2] = "EmailDisambiguator#DocumentProto2EmailExtractor#0.81#1,"
                     + "KeywordDisambiguator#DocumentProto2KeyWordExtractor#0.13#33";
             args[3] = "-0.846161134713438d";
             args[4] = "DisambiguationJob_Toy";
         }
 
-        setINPUT_TABLE(args[0]);
-        setOUTPUT_TABLE(args[1]);
+        setInputPath(args[0]);
+        setOutputDir(args[1]);
         setFEATURES_DESCRIPTION(args[2]);
         setTHRESHOLD(args[3]);
         setNAME(args[4]);
     }
 
     /*
-     * 
      * Job configuration and ignition
-     * 
      */
     @Override
     public int run(String[] args) throws Exception {
         parseArgs(args);
         
         Configuration config = getConf();
+        config.set("FEATURE_DESCRIPTION", featuresDescription);
+        config.set("THRESHOLD", threshold);
         
-        /*
-         * First job configuration
-         */
-        config.set("FEATURE_DESCRIPTION", FEATURES_DESCRIPTION);
-        config.set("THRESHOLD", THRESHOLD);
-        //setting input table
-        config.set(TableInputFormat.INPUT_TABLE, INPUT_TABLE);
-
         //job creation
         Job job = new Job(config);
-        job.setJobName(NAME + " (input: " + INPUT_TABLE + ")");
+        job.setJobName(jobName + " (input: " + inputPath + ")");
         job.setJarByClass(DisambiguationJob_Toy.class);
-        //scan for relevant data
-        Scan scan = new Scan();
-        scan.addColumn(Bytes.toBytes(HBaseConstant.FAMILY_METADATA),
-                Bytes.toBytes(HBaseConstant.FAMILY_METADATA_QUALIFIER_PROTO));
-        //scan additional parameters
-        scan.setCaching(1000);
-        scan.setCacheBlocks(false);
-        //initial map job ( from class _FeaturesExtractionMapper_Toy ) 
-        //on data from scan
-        TableMapReduceUtil.initTableMapperJob(INPUT_TABLE, scan,
-                FeaturesExtractionMapper_Toy.class, Text.class, TextTextArrayMapWritable.class,
-                job);
+        job.setInputFormatClass(SequenceFileInputFormat.class);
+        SequenceFileInputFormat.setInputPaths(job, inputPath);
+        job.setMapOutputKeyClass(Text.class);
+        job.setMapOutputValueClass(TextTextArrayMapWritable.class);
+        
+        job.setMapperClass(FeaturesExtractionMapper_Toy.class);
         //consume results of _FeaturesExtractionMapper_Toy 
         //by reduce function from FeaturesMergeShardReducer
         job.setReducerClass(ClusterDisambiguationReducer_Toy.class);
-        job.setNumReduceTasks(REDUCER_NUM);
+        job.setNumReduceTasks(reducerNumber);
         //setting output parameters
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);
         job.setOutputFormatClass(TextOutputFormat.class);
-        FileOutputFormat.setOutputPath(job, new Path(OUTPUT_DIR));
+        FileOutputFormat.setOutputPath(job, new Path(outputDir));
 
         /*
          * Launch job
@@ -202,9 +177,7 @@ public class DisambiguationJob_Toy extends Configured implements Tool {
     }
 
     /*
-     * 
      * The Main method
-     * 
      */
     public static void main(String args[]) throws Exception {
         Configuration conf = HBaseConfiguration.create();
