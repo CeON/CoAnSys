@@ -116,9 +116,7 @@ public class RichSequenceFileLoader extends FileInputLoadFunc {
             case DataType.BYTE:
                 return ((ByteWritable) w).get();
             case BYTES_WRITABLE:
-                return ((BytesWritable) w).get();
-            case RESULT:
-                return ((Result) w);
+                return (new DataByteArray(((BytesWritable) w).copyBytes())).get();
         }
 
         return null;
