@@ -37,7 +37,7 @@ IMPORT 'macros.pig';
 -------------------------------------------------------
 set default_parallel $parallel
 
-doc = load_bwndata_metadata('$tableName');
+doc = load_bwndata_metadata_hdfs('$inputPath');
 
 -- stem, clean, filter out
 doc_keyword = stem_and_filter_out(doc, 'keywords');
@@ -52,9 +52,9 @@ doc_term_union = UNION doc_term_K, doc_term_A, doc_term_T;
 doc_term_distinct = DISTINCT doc_term_union;
 
 -- calculate tf-idf for each group of terms
-tfidf_keyword = calculate_tf_idf(doc_keyword);
-tfidf_abstract = calculate_tf_idf(doc_abstract);
-tfidf_title = calculate_tf_idf(doc_title);
+tfidf_keyword = calculate_tf_idf2(doc_keyword);
+tfidf_abstract = calculate_tf_idf2(doc_abstract);
+tfidf_title = calculate_tf_idf2(doc_title);
 
 -- calculate weighted results
 tfidf_all_joined_A1 = JOIN doc_term_distinct BY (docId, term) LEFT OUTER, tfidf_abstract BY (docId, term);
