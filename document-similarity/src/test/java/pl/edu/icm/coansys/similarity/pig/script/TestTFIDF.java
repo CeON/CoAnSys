@@ -18,8 +18,6 @@ import pl.edu.icm.coansys.similarity.test.utils.MacroExtractor;
  *
  * @author akawa
  */
-
-
 public class TestTFIDF {
 
     private PigTest test;
@@ -35,7 +33,7 @@ public class TestTFIDF {
     public static void afterClass() throws Exception {
         cluster.delete(new Path("pigunit-input-overriden.txt"));
     }
-    
+
     @org.testng.annotations.Test(groups = {"fast"})
     public void testTFIDF() throws IOException, ParseException {
 
@@ -43,13 +41,13 @@ public class TestTFIDF {
         LinkedList<String> macro = MacroExtractor.extract(PIG_SCRIPT_DIR + "macros.pig", "calculate_tf_idf");
         macro.addFirst("docTerm = LOAD 'ommited' AS (docId, term);");
         String[] script = macro.toArray(new String[]{});
-        
+
         // set values for macro parameters
         final String[] params = {
             "docTerm=docTerm",
             "tfidf=tfidfResults",
-	    "para=1",
-	    "parallel=1"
+            "para=1",
+            "parallel=1"
         };
 
         test = new PigTest(script, params);
@@ -57,7 +55,37 @@ public class TestTFIDF {
             "d1\tt1",
             "d1\tt1",
             "d2\tt1"};
-        
+
+        // verify tfidf results
+        String[] tfidfOutput = {
+            "(d1,t1," + (2d / 2d) * Math.log((1d + 2d) / (1d + 2d)) + ")",
+            "(d2,t1," + (1d / 1d) * Math.log((1d + 2d) / (1d + 2d)) + ")"};
+
+        test.assertOutput("docTerm", input, "tfidfResults", tfidfOutput);
+    }
+
+    @org.testng.annotations.Test(groups = {"fast"})
+    public void testTFIDF2() throws IOException, ParseException {
+
+        // get the content of calculate_tf_idf macro from macros.pig file
+        LinkedList<String> macro = MacroExtractor.extract(PIG_SCRIPT_DIR + "macros.pig", "calculate_tf_idf2");
+        macro.addFirst("docTerm = LOAD 'ommited' AS (docId, term);");
+        String[] script = macro.toArray(new String[]{});
+
+        // set values for macro parameters
+        final String[] params = {
+            "docTerm=docTerm",
+            "tfidf=tfidfResults",
+            "para=1",
+            "parallel=1"
+        };
+
+        test = new PigTest(script, params);
+        String[] input = {
+            "d1\tt1",
+            "d1\tt1",
+            "d2\tt1"};
+
         // verify tfidf results
         String[] tfidfOutput = {
             "(d1,t1," + (2d / 2d) * Math.log((1d + 2d) / (1d + 2d)) + ")",
@@ -67,20 +95,20 @@ public class TestTFIDF {
     }
 
     @org.testng.annotations.Test(groups = {"medium"})
-    public void testTFIDF2() throws IOException, ParseException {
+    public void testTFIDF3() throws IOException, ParseException {
 
         // get the content of calculate_tf_idf macro from macros.pig file
         LinkedList<String> macro = MacroExtractor.extract(PIG_SCRIPT_DIR + "macros.pig", "calculate_tf_idf");
         // add LOAD to the script (in fact String[] input will be used as input data)
         macro.addFirst("docTerm = LOAD 'ommited' AS (docId, term);");
         String[] script = macro.toArray(new String[]{});
-        
+
         // set values for macro parameters
         final String[] params = {
             "docTerm=docTerm",
             "tfidf=tfidfResults",
             "para=1",
-	    "parallel=1"
+            "parallel=1"
         };
 
         test = new PigTest(script, params);
