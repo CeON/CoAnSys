@@ -12,7 +12,9 @@ import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
 import org.apache.hadoop.hbase.mapreduce.TableMapper;
 import org.apache.hadoop.hbase.util.Bytes;
+import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.log4j.Logger;
 
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.ExtractorFactory;
@@ -24,8 +26,11 @@ import pl.edu.icm.coansys.disambiguation.auxil.TextTextArrayMapWritable;
 import pl.edu.icm.coansys.disambiguation.features.Extractor;
 import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
 import pl.edu.icm.coansys.importers.constants.HBaseConstant;
+import pl.edu.icm.coansys.importers.models.DocumentProtos;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
+import pl.edu.icm.coansys.importers.models.DocumentProtosWrapper;
+import pl.edu.icm.coansys.importers.models.DocumentProtosWrapper.DocumentWrapper;
 
 /**
  *
@@ -34,7 +39,7 @@ import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
  * @since 2012-08-07
  */
 @SuppressWarnings("rawtypes")
-public class FeaturesExtractionMapper_Toy extends TableMapper<Text, TextTextArrayMapWritable> {
+public class FeaturesExtractionMapper_Toy extends Mapper<BytesWritable, BytesWritable, Text, TextTextArrayMapWritable> {
 
     private static Logger logger = Logger.getLogger(LoggingInDisambiguation.class);
     public List<FeatureInfo> featureInfos;
@@ -50,13 +55,13 @@ public class FeaturesExtractionMapper_Toy extends TableMapper<Text, TextTextArra
     }
 
     private List<Extractor> getFeatureExtractor(List<FeatureInfo> inputfeatureInfos) {
-        ArrayList<Extractor> featureExtractors = new ArrayList<Extractor>();
+        ArrayList<Extractor> extractors = new ArrayList<Extractor>();
         ExtractorFactory fe = new ExtractorFactory();
 
         for (FeatureInfo fi : inputfeatureInfos) {
-            featureExtractors.add(fe.create(fi));
+            extractors.add(fe.create(fi));
         }
-        return featureExtractors;
+        return extractors;
     }
 
     private static List<FeatureInfo> getFeaturesInfos(String feature) {
@@ -80,12 +85,11 @@ public class FeaturesExtractionMapper_Toy extends TableMapper<Text, TextTextArra
     }
 
     @Override
-    protected void map(ImmutableBytesWritable rowId, Result documentMetadataColumn, Context context) throws IOException, InterruptedException {
+    protected void map(BytesWritable skey, BytesWritable documentProto, Context context) throws IOException, InterruptedException {
         HashMap<String, List<String>> docBasedFeature = new HashMap<String, List<String>>();
-
-        DocumentMetadata dm = DocumentMetadata.parseFrom(documentMetadataColumn.
-                getValue(Bytes.toBytes(HBaseConstant.FAMILY_METADATA),
-                Bytes.toBytes(HBaseConstant.FAMILY_METADATA_QUALIFIER_PROTO)));
+        DocumentWrapper doc = DocumentWrapper.parseFrom(documentProto.copyBytes());
+        DocumentMetadata dm = DocumentProtos.DocumentMetadata.parseFrom(doc.getMproto());
+         
         //(1) extract all document-based features, 
         //[which will be passes to the object authorId2FeatureMap] 
         createDocumentBasedFeatureMap(docBasedFeature, dm);
@@ -117,7 +121,6 @@ public class FeaturesExtractionMapper_Toy extends TableMapper<Text, TextTextArra
 
             Text key = new Text();
             key.set(DiacriticsRemover.removeDiacritics(a.getSurname().toLowerCase()));
-//            key.set("TEST");
             context.write(key, featureName2FeatureValuesMap);
         }
     }
