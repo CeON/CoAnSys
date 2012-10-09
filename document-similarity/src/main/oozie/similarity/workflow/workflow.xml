@@ -14,7 +14,7 @@
                 </property> 
             </configuration>
             <script>${pigScriptsDir}/tfidf.pig</script>
-            <param>tableName=${bwndataDocsTableName}</param>
+            <param>inputPath=${bwndataMetadataInputPath}</param>
             <param>outputPath=${tfidfOutputDir}</param>
             <param>commonJarsPath=${commonJarsPath}</param>
 	    <param>parallel=${parallel}</param>
