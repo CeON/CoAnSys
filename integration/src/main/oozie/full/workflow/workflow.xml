@@ -1,5 +1,14 @@
 <workflow-app name="integration-workflow-full" xmlns="uri:oozie:workflow:0.2">
-    <start to="pipeline-start"/>
+    <start to="hbase-dump"/>
+    
+    <action name="hbase-dump">
+        <sub-workflow>
+            <app-path>${hbaseDumpWorkflowPath}</app-path>
+            <propagate-configuration/>
+        </sub-workflow>
+        <ok to="pipeline-start"/>
+        <error to="kill"/>
+    </action>
     
     <fork name="pipeline-start">
         <path start="document-similarity"/>
