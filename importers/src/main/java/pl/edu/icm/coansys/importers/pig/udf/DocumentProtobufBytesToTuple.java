@@ -10,12 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.pig.EvalFunc;
-import org.apache.pig.backend.executionengine.ExecException;
-import org.apache.pig.data.BagFactory;
-import org.apache.pig.data.DataBag;
 import org.apache.pig.data.DataByteArray;
 import org.apache.pig.data.Tuple;
-import org.apache.pig.data.TupleFactory;
 import org.apache.tika.exception.TikaException;
 import org.xml.sax.SAXException;
 import pl.edu.icm.coansys.commons.pdf.TikaPDFExtractor;
@@ -30,7 +26,7 @@ import pl.edu.icm.coansys.importers.models.DocumentProtos.MediaContainer;
  */
 public class DocumentProtobufBytesToTuple extends EvalFunc<Map> {
 
-    private <T> DataBag getBag(List<T> items) throws ExecException {
+    /*private <T> DataBag getBag(List<T> items) throws ExecException {
         DataBag bag = null;
         if (items != null) {
             bag = BagFactory.getInstance().newDefaultBag();
@@ -41,7 +37,7 @@ public class DocumentProtobufBytesToTuple extends EvalFunc<Map> {
             }
         }
         return bag;
-    }
+    }*/
 
     @Override
     public Map exec(Tuple input) throws IOException {
