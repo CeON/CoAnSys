@@ -21,7 +21,8 @@ IMPORT 'macros.pig';
 -------------------------------------------------------
 -- business code section
 -------------------------------------------------------
-docRaw = load_bwndata('$tableName');
+docRaw = load_bwndata_metadata('$tableName');
+
 docContirib = FOREACH docRaw GENERATE rowkey AS docId, FLATTEN(STRSPLIT(document#'contributorKeys','_')) AS contributorId;
 contribPerson = LOAD '$contribPersonDir' AS (contributorId: chararray, personId: chararray);
 docContribPersonJoin = JOIN docContirib BY contributorId, contribPerson BY contributorId;

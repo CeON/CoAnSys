@@ -1,6 +1,5 @@
 <workflow-app name='disambiguation-author-hdfs-wf' xmlns="uri:oozie:workflow:0.2">
     <start to='disambiguation'/>
-      
     <action name='disambiguation'>
         <map-reduce>
             <job-tracker>${jobTracker}</job-tracker>
@@ -49,8 +48,8 @@
                 
                 <!-- MapReduce input/output parameters -->
                 <property>
-                    <name>hbase.mapreduce.inputtable</name>
-                    <value>${bwndataDocsTableName}</value>
+                    <name>mapred.input.dir</name>
+                    <value>${bwndataMetadataInputPath}</value>
                 </property>
                 <property>
                     <name>mapred.output.dir</name>
@@ -58,7 +57,7 @@
                 </property>
                 <property>
                     <name>mapreduce.inputformat.class</name>
-                    <value>org.apache.hadoop.hbase.mapreduce.TableInputFormat</value>
+                    <value>org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat</value>
                 </property>
                 <property>
                     <name>mapreduce.outputformat.class</name>
@@ -79,10 +78,6 @@
                 <property>
                     <name>mapred.output.value.class</name>
                     <value>org.apache.hadoop.io.Text</value>
-                </property>
-                <property>
-                    <name>hbase.mapreduce.scan</name>
-                    <value>AgAAAAAAAf////8AAAPoAAAAAAAAAAAAAH//////////AQAAAAEBbQAAAAEGbXByb3RvAAAAAA==</value>
                 </property>
                 <property>
                     <name>mapred.child.java.opts</name>
