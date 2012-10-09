@@ -83,16 +83,19 @@ public class HBaseToDocumentProtoSequenceFile implements Tool {
                 mos.write("dproto", key, documentProto);
                 context.getCounter(Counters.DPROTO).increment(1);
             }
+	    
             if (mproto != null) {
                 metatdataProto.set(mproto, 0, mproto.length);
                 mos.write(FAMILY_METADATA_QUALIFIER_PROTO, key, metatdataProto);
                 context.getCounter(Counters.MPROTO).increment(1);
             }
+	    
             if (cproto != null) {
                 mediaProto.set(cproto, 0, cproto.length);
                 mos.write(FAMILY_CONTENT_QUALIFIER_PROTO, key, mediaProto);
                 context.getCounter(Counters.CPROTO).increment(1);
             }
+	    
         }
 
         @Override
