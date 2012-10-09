@@ -8,10 +8,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.apache.hadoop.hbase.client.Result;
-import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
-import org.apache.hadoop.hbase.mapreduce.TableMapper;
-import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
@@ -25,12 +21,9 @@ import pl.edu.icm.coansys.disambiguation.auxil.LoggingInDisambiguation;
 import pl.edu.icm.coansys.disambiguation.auxil.TextTextArrayMapWritable;
 import pl.edu.icm.coansys.disambiguation.features.Extractor;
 import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
-import pl.edu.icm.coansys.importers.constants.HBaseConstant;
 import pl.edu.icm.coansys.importers.models.DocumentProtos;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
-import pl.edu.icm.coansys.importers.models.DocumentProtosWrapper;
-import pl.edu.icm.coansys.importers.models.DocumentProtosWrapper.DocumentWrapper;
 
 /**
  *
@@ -85,10 +78,9 @@ public class FeaturesExtractionMapper_Toy extends Mapper<BytesWritable, BytesWri
     }
 
     @Override
-    protected void map(BytesWritable skey, BytesWritable documentProto, Context context) throws IOException, InterruptedException {
+    protected void map(BytesWritable skey, BytesWritable metadataProto, Context context) throws IOException, InterruptedException {
         HashMap<String, List<String>> docBasedFeature = new HashMap<String, List<String>>();
-        DocumentWrapper doc = DocumentWrapper.parseFrom(documentProto.copyBytes());
-        DocumentMetadata dm = DocumentProtos.DocumentMetadata.parseFrom(doc.getMproto());
+        DocumentMetadata dm = DocumentMetadata.parseFrom(metadataProto.copyBytes());
          
         //(1) extract all document-based features, 
         //[which will be passes to the object authorId2FeatureMap] 

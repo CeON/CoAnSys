@@ -4,7 +4,6 @@
 package pl.edu.icm.coansys.disambiguation.author.jobs.hdfs;
 
 import java.lang.management.ManagementFactory;
-import java.util.Date;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
@@ -61,12 +60,12 @@ public class DisambiguationJob_Toy extends Configured implements Tool {
         return this;
     }
 
-    public String getNAME() {
+    public String getName() {
         return jobName;
     }
 
-    public DisambiguationJob_Toy setNAME(String nAME) {
-        jobName = nAME;
+    public DisambiguationJob_Toy setName(String name) {
+        jobName = name;
         return this;
     }
 
@@ -110,8 +109,8 @@ public class DisambiguationJob_Toy extends Configured implements Tool {
             logger.debug("* a job name");
             logger.debug("");
             logger.debug("Default values will be used:");
-            logger.debug("* grotoap10");
-            logger.debug("* grotoap10-out");
+            logger.debug("* grotoap10_dump/mproto-m-00000");
+            logger.debug("* grotoap10_disambig");
             logger.debug("* EmailDisambiguator#DocumentProto2EmailExtractor#0.81#1,"
                     + "KeywordDisambiguator#DocumentProto2KeyWordExtractor#0.13#33");
             logger.debug("* -0.846161134713438d");
@@ -119,8 +118,8 @@ public class DisambiguationJob_Toy extends Configured implements Tool {
 
             args = new String[5];
             //args[0] = "grotoap10";
-            args[0] = "/home/akawa/Documents/git-projects/CoAnSys/importers/grotoap10_dump_1349686854096/part-m-00000";
-            args[1] = "grotoap10" + "_disambig_" + (new Date()).getTime();
+            args[0] = "grotoap10_dump/mproto-m-00000";
+            args[1] = "grotoap10_disambig";
             args[2] = "EmailDisambiguator#DocumentProto2EmailExtractor#0.81#1,"
                     + "KeywordDisambiguator#DocumentProto2KeyWordExtractor#0.13#33";
             args[3] = "-0.846161134713438d";
@@ -131,7 +130,7 @@ public class DisambiguationJob_Toy extends Configured implements Tool {
         setOutputDir(args[1]);
         setFEATURES_DESCRIPTION(args[2]);
         setTHRESHOLD(args[3]);
-        setNAME(args[4]);
+        setName(args[4]);
     }
 
     /*
