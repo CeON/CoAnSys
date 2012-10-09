@@ -22,9 +22,9 @@ import org.apache.hadoop.mapreduce.Job;
 public class DocumentWrapperSequenceFileIncrementalLoadConfigurator {
 
     public static void main(String[] args) throws Exception {
-        
+
         String tableName = args[0];
-        
+
         Job job = new Job();
         job.setMapOutputValueClass(Put.class);
         HTable table = new HTable(tableName);
@@ -49,10 +49,10 @@ public class DocumentWrapperSequenceFileIncrementalLoadConfigurator {
         os.close();
     }
 
-    private static void usage(String info) {
-        System.out.println(info);
-        System.out.println("Exemplary command: ");
-        String command = "";
-        System.out.println(command);
+    /*
+     * private static void usage(String info) { System.out.println(info);
+     * System.out.println("Exemplary command: "); String command = "";
+     * System.out.println(command);
     }
+     */
 }
