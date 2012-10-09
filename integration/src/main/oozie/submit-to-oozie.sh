@@ -9,6 +9,8 @@ WORKFLOW_HDFS_DIR="/user/${USER}/workflows/${TASK}"
 
 echo "Copying subworkflow files"
 CD=`pwd`
+cd ../../../../importers/src/main/oozie/
+./copy-to-oozie.sh importers-hbase-dump ${USER}
 cd ../../../../document-similarity/src/main/oozie/
 ./copy-to-oozie.sh similarity ${USER}
 cd ../../../../disambiguation-author/src/main/oozie/
