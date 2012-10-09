@@ -17,7 +17,6 @@ import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
 import org.apache.hadoop.hbase.mapreduce.TableMapReduceUtil;
 import org.apache.hadoop.hbase.mapreduce.TableMapper;
-import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper.Context;
@@ -155,7 +154,6 @@ public class HBaseToDocumentProtoSequenceFile implements Tool {
         Scan scan = new Scan();
         scan.setCaching(100);
         scan.setCacheBlocks(false);
-        scan.setStopRow(Bytes.toBytes("medline_13efd2e3-ef9c-3609-b3c6-9a5c940d31e5"));
 
         TableMapReduceUtil.initTableMapperJob(tableName, scan, RowToDocumentProtoMapper.class,
                 BytesWritable.class, BytesWritable.class, job);
