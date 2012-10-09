@@ -24,8 +24,7 @@ public class DocumentDTO2WrapperLine {
 		dw.setRowId(ByteString.copyFrom(RowComposer.composeRow(docDTO).getBytes()));
 		dw.setMproto(docDTO.getDocumentMetadata().toByteString());
 		dw.setCproto(docDTO.getMediaConteiner().toByteString());
-		
-		
+
 		return dw.build().toByteString().toStringUtf8();
 	}
                
