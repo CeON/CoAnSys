@@ -91,11 +91,14 @@ public class HBaseToDocumentProtoSequenceFile implements Tool {
                 context.getCounter(Counters.MPROTO).increment(1);
             }
 	    
+            // Currently does not save
+            /*
             if (cproto != null) {
                 mediaProto.set(cproto, 0, cproto.length);
                 mos.write(FAMILY_CONTENT_QUALIFIER_PROTO, key, mediaProto);
                 context.getCounter(Counters.CPROTO).increment(1);
             }
+            */
 	    
         }
 
@@ -158,7 +161,6 @@ public class HBaseToDocumentProtoSequenceFile implements Tool {
         Scan scan = new Scan();
         scan.setCaching(100);
         scan.setCacheBlocks(false);
-        scan.setStopRow(Bytes.toBytes("medline_0ef5d4e3-13f6-3"));
 
         TableMapReduceUtil.initTableMapperJob(tableName, scan, RowToDocumentProtoMapper.class,
                 BytesWritable.class, BytesWritable.class, job);
