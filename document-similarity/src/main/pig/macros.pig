@@ -1,4 +1,29 @@
 -------------------------------------------------------
+-- load BWMeta documents form sequence files stored in hdfs
+-------------------------------------------------------
+DEFINE load_bwndata_hdfs(inputPath) RETURNS doc {
+	raw_bytes = LOAD '$inputPath' USING pl.edu.icm.coansys.importers.pig.udf.RichSequenceFileLoader();
+	raw_doc = FOREACH raw_bytes GENERATE 
+			pl.edu.icm.coansys.importers.pig.udf.BytesToDataByteArray($0) AS rowkey, 
+			FLATTEN(pl.edu.icm.coansys.importers.pig.udf.DocumentComponentsProtoTupler($1)) AS (docId, mproto, cproto);
+	
+	$doc = FOREACH raw_doc GENERATE rowkey, pl.edu.icm.coansys.importers.pig.udf.DocumentProtobufBytesToTuple(mproto, cproto) AS document;
+};
+
+-------------------------------------------------------
+-- load BWMeta metadata form sequence files stored in hdfs
+-------------------------------------------------------
+DEFINE load_bwndata_metadata_hdfs(inputPath) RETURNS meta {
+	raw_bytes = LOAD '$inputPath' USING pl.edu.icm.coansys.importers.pig.udf.RichSequenceFileLoader();
+	raw_meta = FOREACH raw_bytes GENERATE 
+			pl.edu.icm.coansys.importers.pig.udf.BytesToDataByteArray($0) AS rowkey,
+			pl.edu.icm.coansys.importers.pig.udf.BytesToDataByteArray($1) AS mproto;
+
+	$meta = FOREACH raw_meta
+		GENERATE rowkey, pl.edu.icm.coansys.importers.pig.udf.DocumentProtobufBytesToTuple(mproto) AS document;
+};
+
+-------------------------------------------------------
 -- load BWMeta documents form HBase tabls that contains
 -------------------------------------------------------
 DEFINE load_bwndata(tableName) RETURNS doc {
@@ -70,6 +95,35 @@ DEFINE calculate_tf_idf(docTerm) RETURNS tfidf {
 	C2 = GROUP C1 all;
 	C = FOREACH C2 GENERATE FLATTEN(C1), COUNT(C1) AS dc;
 	D = FOREACH C GENERATE FLATTEN(B) AS (docId, term, tc, ttc), dc;
+	
+	-- total number of documents that a given word occurs in
+	E1 = GROUP D BY term;
+	E = FOREACH E1 GENERATE FLATTEN(D) AS (docId, term, tc, ttc, dc), COUNT(D) AS ttdc;
+	
+	$tfidf = FOREACH E GENERATE docId, term, ((double) tc / (double) ttc) * LOG( (1.0 + (double) dc) / ( 1.0 + (double) ttdc)) AS tfidf;
+};
+
+
+-------------------------------------------------------
+-- calculate tfidf
+-------------------------------------------------------
+DEFINE calculate_tf_idf2(docTerm) RETURNS tfidf {
+	-- term count in a given document
+	A1 = GROUP $docTerm BY (docId, term);
+	A = FOREACH A1 GENERATE FLATTEN(group), COUNT($docTerm) as tc;
+		
+	-- total terms count in a given document
+	B1 = GROUP A BY docId;
+	B = FOREACH B1 GENERATE FLATTEN(A) AS (docId, term, tc), SUM(A.tc) AS ttc;
+	
+	-- total number of documents in the corpus
+	CA1 = GROUP B BY docId;
+	CA2 = FOREACH CA1 GENERATE group AS docId;
+        CA3 = GROUP CA2 all;
+        CA4 = FOREACH CA3 GENERATE COUNT(CA2) AS dc;
+	C = CROSS B, CA4;	
+
+	D = FOREACH C GENERATE docId, term, tc, ttc, dc;
 	
 	-- total number of documents that a given word occurs in
 	E1 = GROUP D BY term;
