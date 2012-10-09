@@ -8,7 +8,6 @@ import java.io.IOException;
 import org.apache.pig.EvalFunc;
 import org.apache.pig.data.Tuple;
 import org.apache.pig.backend.executionengine.ExecException;
-import org.apache.pig.tools.pigstats.PigStatusReporter;
 
 public class TFIDF extends EvalFunc<Double> {
 
@@ -23,8 +22,6 @@ public class TFIDF extends EvalFunc<Double> {
     public TFIDF(String type) {
         this.type = type;
     }
-    
-    enum TEMPERATURE {POSITIVE, NEGATIVE}
 
     @Override
     public Double exec(Tuple input) throws IOException {
