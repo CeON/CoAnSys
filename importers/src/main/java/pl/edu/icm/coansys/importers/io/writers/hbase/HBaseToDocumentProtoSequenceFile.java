@@ -20,15 +20,13 @@ import org.apache.hadoop.hbase.mapreduce.TableMapper;
 import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper.Context;
+import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
 import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 import org.apache.log4j.Logger;
 import org.apache.pig.backend.executionengine.ExecException;
-import pl.edu.icm.coansys.importers.models.DocumentProtos;
-import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
-import pl.edu.icm.coansys.importers.models.DocumentProtos.MediaContainer;
 import pl.edu.icm.coansys.importers.models.DocumentProtosWrapper.DocumentWrapper;
 
 /**
@@ -50,21 +48,56 @@ public class HBaseToDocumentProtoSequenceFile implements Tool {
         return conf;
     }
 
+    public static enum Counters {
+        DPROTO, CPROTO, MPROTO
+    }
+
     public static class RowToDocumentProtoMapper extends TableMapper<BytesWritable, BytesWritable> {
 
         private BytesWritable key = new BytesWritable();
         private BytesWritable documentProto = new BytesWritable();
-        
+        private BytesWritable metatdataProto = new BytesWritable();
+        private BytesWritable mediaProto = new BytesWritable();
         private ResultToProtoBytesConverter converter = new ResultToProtoBytesConverter();
         private DocumentWrapper.Builder dw = DocumentWrapper.newBuilder();
+        private MultipleOutputs mos = null;
+
+        @Override
+        public void setup(Context context) {
+            mos = new MultipleOutputs(context);
+        }
 
         @Override
         public void map(ImmutableBytesWritable row, Result values, Context context) throws IOException, InterruptedException {
             converter.set(values, dw);
+            byte[] rowId = converter.getRowId();
+            byte[] mproto = converter.getDocumentMetadata();
+            byte[] cproto = converter.getDocumentMedia();
             DocumentWrapper documentWrapper = converter.toDocumentWrapper();
-            byte[] dwBytes = documentWrapper.toByteArray();
-            documentProto.set(dwBytes, 0, dwBytes.length);
-            context.write(key, documentProto);
+            byte[] dproto = documentWrapper.toByteArray();
+
+            key.set(rowId, 0, rowId.length);
+            
+            if (dproto != null) {
+                documentProto.set(dproto, 0, dproto.length);
+                mos.write("dproto", key, documentProto);
+                context.getCounter(Counters.DPROTO).increment(1);
+            }
+            if (mproto != null) {
+                metatdataProto.set(mproto, 0, mproto.length);
+                mos.write(FAMILY_METADATA_QUALIFIER_PROTO, key, metatdataProto);
+                context.getCounter(Counters.MPROTO).increment(1);
+            }
+            if (cproto != null) {
+                mediaProto.set(cproto, 0, cproto.length);
+                mos.write(FAMILY_CONTENT_QUALIFIER_PROTO, key, mediaProto);
+                context.getCounter(Counters.CPROTO).increment(1);
+            }
+        }
+
+        @Override
+        public void cleanup(Context context) throws IOException, InterruptedException {
+            mos.close();
         }
     }
 
@@ -130,6 +163,10 @@ public class HBaseToDocumentProtoSequenceFile implements Tool {
         job.setOutputValueClass(BytesWritable.class);
         job.setOutputFormatClass(SequenceFileOutputFormat.class);
         SequenceFileOutputFormat.setOutputPath(job, new Path(outputDir));
+
+        MultipleOutputs.addNamedOutput(job, FAMILY_METADATA_QUALIFIER_PROTO, SequenceFileOutputFormat.class, BytesWritable.class, BytesWritable.class);
+        MultipleOutputs.addNamedOutput(job, FAMILY_CONTENT_QUALIFIER_PROTO, SequenceFileOutputFormat.class, BytesWritable.class, BytesWritable.class);
+        MultipleOutputs.addNamedOutput(job, "dproto", SequenceFileOutputFormat.class, BytesWritable.class, BytesWritable.class);
 
         boolean success = job.waitForCompletion(true);
         if (!success) {
