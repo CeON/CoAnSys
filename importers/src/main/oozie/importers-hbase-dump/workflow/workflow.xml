@@ -100,6 +100,10 @@
                     <name>hbase.client.scanner.caching</name>
                     <value>100</value> 
                 </property>
+		<property>
+		    <name>mapred.child.java.opts</name>
+		    <value>${hbaseDump_mapredChildJavaOpts}</value>
+		</property>
                 <!-- Multiple output -->
                 <property>
                     <name>mapreduce.multipleoutputs.namedOutput.mproto.key</name>
