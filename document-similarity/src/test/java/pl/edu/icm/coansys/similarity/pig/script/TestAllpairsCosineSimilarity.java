@@ -28,7 +28,9 @@ public class TestAllpairsCosineSimilarity {
     private static final String[] params = {
         "tfidfPath=null",
         "outputPath=null",
-        "commonJarsPath=."
+        "commonJarsPath=.",
+	"para=1",
+	"parallel=1"
     };
 
     @BeforeClass

@@ -47,7 +47,9 @@ public class TestTFIDF {
         // set values for macro parameters
         final String[] params = {
             "docTerm=docTerm",
-            "tfidf=tfidfResults"
+            "tfidf=tfidfResults",
+	    "para=1",
+	    "parallel=1"
         };
 
         test = new PigTest(script, params);
@@ -76,7 +78,9 @@ public class TestTFIDF {
         // set values for macro parameters
         final String[] params = {
             "docTerm=docTerm",
-            "tfidf=tfidfResults"
+            "tfidf=tfidfResults",
+            "para=1",
+	    "parallel=1"
         };
 
         test = new PigTest(script, params);
