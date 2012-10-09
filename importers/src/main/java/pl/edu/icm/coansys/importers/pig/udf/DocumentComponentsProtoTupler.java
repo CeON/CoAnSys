@@ -11,22 +11,33 @@ import org.apache.pig.data.DataType;
 import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
+import pl.edu.icm.coansys.importers.models.DocumentProtos;
 import pl.edu.icm.coansys.importers.models.DocumentProtosWrapper.DocumentWrapper;
 
 /**
  *
  * @author akawa
  */
-public class DocumentProtoToTuple extends EvalFunc<Tuple> {
+public class DocumentComponentsProtoTupler extends EvalFunc<Tuple> {
+    
+    private DataByteArray rowId = new DataByteArray();
+    private DataByteArray mproto = new DataByteArray();
+    private DataByteArray cproto = new DataByteArray();
+    private Tuple output = TupleFactory.getInstance().newTuple(3);
 
     @Override
     public Tuple exec(Tuple input) throws IOException {
-        DataByteArray documentProto = (DataByteArray) input.get(0);
-        DocumentWrapper document = DocumentWrapper.parseFrom(documentProto.get());
-        Tuple output = TupleFactory.getInstance().newTuple(3);
-        output.set(0, document.getRowId());
-        output.set(1, document.getMproto());
-        output.set(2, document.getCproto());
+        byte[] documentProto = (byte[]) input.get(0);
+        DocumentWrapper document = DocumentWrapper.parseFrom(documentProto);
+        
+        rowId.set(document.getRowId().toByteArray());
+        mproto.set(document.getMproto().toByteArray());
+        cproto.set(document.getCproto().toByteArray());
+        
+        output.set(0, rowId);
+        output.set(1, mproto);
+        output.set(2, cproto);
+        
         return output;
     }
 
