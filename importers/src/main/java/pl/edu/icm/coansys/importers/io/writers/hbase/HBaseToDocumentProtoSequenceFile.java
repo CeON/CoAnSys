@@ -73,7 +73,7 @@ public class HBaseToDocumentProtoSequenceFile implements Tool {
             converter.set(values, dw);
             byte[] rowId = converter.getRowId();
             byte[] mproto = converter.getDocumentMetadata();
-            byte[] cproto = converter.getDocumentMedia();
+            // byte[] cproto = converter.getDocumentMedia();
             DocumentWrapper documentWrapper = converter.toDocumentWrapper();
             byte[] dproto = documentWrapper.toByteArray();
 
@@ -90,8 +90,7 @@ public class HBaseToDocumentProtoSequenceFile implements Tool {
                 mos.write(FAMILY_METADATA_QUALIFIER_PROTO, key, metatdataProto);
                 context.getCounter(Counters.MPROTO).increment(1);
             }
-	    
-            // Currently does not save
+
             /*
             if (cproto != null) {
                 mediaProto.set(cproto, 0, cproto.length);
