@@ -17,7 +17,6 @@ import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
 import org.apache.hadoop.hbase.mapreduce.TableMapReduceUtil;
 import org.apache.hadoop.hbase.mapreduce.TableMapper;
-import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper.Context;
@@ -71,20 +70,23 @@ public class HBaseToDocumentProtoSequenceFile implements Tool {
         @Override
         public void map(ImmutableBytesWritable row, Result values, Context context) throws IOException, InterruptedException {
             converter.set(values, dw);
+            context.setStatus("reading data from HBase");
             byte[] rowId = converter.getRowId();
             byte[] mproto = converter.getDocumentMetadata();
-            // byte[] cproto = converter.getDocumentMedia();
-            DocumentWrapper documentWrapper = converter.toDocumentWrapper();
+            byte[] cproto = converter.getDocumentMedia();
+            
+            context.setStatus("converting raw bytes to protocol buffers");
+            DocumentWrapper documentWrapper = converter.toDocumentWrapper(rowId, mproto, cproto);
             byte[] dproto = documentWrapper.toByteArray();
 
             key.set(rowId, 0, rowId.length);
-            
+            context.setStatus("writing dproto to output");
             if (dproto != null) {
                 documentProto.set(dproto, 0, dproto.length);
                 mos.write("dproto", key, documentProto);
                 context.getCounter(Counters.DPROTO).increment(1);
             }
-	    
+            context.setStatus("writing mproto to output");
             if (mproto != null) {
                 metatdataProto.set(mproto, 0, mproto.length);
                 mos.write(FAMILY_METADATA_QUALIFIER_PROTO, key, metatdataProto);
@@ -98,7 +100,6 @@ public class HBaseToDocumentProtoSequenceFile implements Tool {
                 context.getCounter(Counters.CPROTO).increment(1);
             }
             */
-	    
         }
 
         @Override
@@ -133,6 +134,14 @@ public class HBaseToDocumentProtoSequenceFile implements Tool {
             dw.setRowId(ByteString.copyFrom(getRowId()));
             dw.setMproto(ByteString.copyFrom(getDocumentMetadata()));
             dw.setCproto(ByteString.copyFrom(getDocumentMedia()));
+            DocumentWrapper build = dw.build();
+            return build;
+        }
+        
+        public DocumentWrapper toDocumentWrapper(byte[] rowid, byte[] mproto, byte[] cproto) throws ExecException, InvalidProtocolBufferException {
+            dw.setRowId(ByteString.copyFrom(rowid));
+            dw.setMproto(ByteString.copyFrom(mproto));
+            dw.setCproto(ByteString.copyFrom(cproto));
             DocumentWrapper build = dw.build();
             return build;
         }
