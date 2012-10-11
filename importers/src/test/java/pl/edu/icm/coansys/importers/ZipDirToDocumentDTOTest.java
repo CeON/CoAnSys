@@ -8,21 +8,20 @@ package pl.edu.icm.coansys.importers;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator;
 import pl.edu.icm.coansys.importers.models.DocumentDTO;
+import pl.edu.icm.coansys.importers.test.SmallTest;
 
 /**
  *
  * @author Artur Czeczko a.czeczko@icm.edu.pl
  * @author pdendek
  */
+@Category(SmallTest.class)
 public class ZipDirToDocumentDTOTest {
-    
-    @Test
-    public void emptyTest() {
-    }
-	
+    	
 //    @Test
     public void readZipDirTest() {
         String zipDirPath = this.getClass().getClassLoader().getResource("zipdir").getPath();

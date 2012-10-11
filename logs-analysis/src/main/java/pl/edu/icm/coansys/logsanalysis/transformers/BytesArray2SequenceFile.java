@@ -34,7 +34,6 @@ public class BytesArray2SequenceFile {
 
     public static void write(Iterable<byte[]> byteArrays, String uri) throws IOException {
         Configuration conf = createConf();
-        FileSystem fs = FileSystem.get(URI.create(uri), conf);
         Path path = new Path(uri);
 
         Writable key = NullWritable.get();

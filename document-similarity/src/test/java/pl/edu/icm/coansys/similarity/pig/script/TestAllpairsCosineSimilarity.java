@@ -19,6 +19,7 @@ import pl.edu.icm.coansys.similarity.test.utils.PigScriptExtractor;
  *
  * @author akawa
  */
+
 public class TestAllpairsCosineSimilarity {
 
     private PigTest test;
@@ -40,7 +41,7 @@ public class TestAllpairsCosineSimilarity {
         cluster.delete(new Path("pigunit-input-overriden.txt"));
     }
 
-    @Test
+    @org.testng.annotations.Test(groups = {"fast"})
     public void testSingle() throws IOException, ParseException {
 
         LinkedList<String> script = PigScriptExtractor.extract(PIG_SCRIPT_DIR + "allpairs_similarity.pig");

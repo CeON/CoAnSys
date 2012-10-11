@@ -252,8 +252,6 @@ public class MetadataToProtoMetadataParser {
         }
         
         
-
-        List<String> refPacsCodes = new ArrayList<String>();
         List<YAttribute> refPacsCodesNodes = item.getAttributes(YaddaIdConstants.CATEGORY_CLASS_PACS);
         
         if(refPacsCodesNodes.size()>0){
@@ -333,8 +331,6 @@ public class MetadataToProtoMetadataParser {
         }
 
         List<YCategoryRef> catRefs = yElement.getCategoryRefs();
-        List<String> bwMscCodes = new ArrayList<String>();
-        List<String> bwPacsCodes = new ArrayList<String>();
 
         //TODO czesc kodow MSC mylnie trafia do kwordow - mozna je stamtad wyciagnac porownujac z wzorcem kodu
         if (catRefs != null && catRefs.size() > 0) {

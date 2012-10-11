@@ -6,7 +6,8 @@ DEFINE load_bwndata(tableName) RETURNS doc {
 		USING org.apache.pig.backend.hadoop.hbase.HBaseStorage('c:cproto, m:mproto', '-loadKey true')
 		AS (rowkey: bytearray, cproto: bytearray, mproto: bytearray);
 	
-	$doc = FOREACH raw_doc GENERATE rowkey, DocumentProtobufBytesToTuple(mproto, cproto) AS document;
+	$doc = FOREACH raw_doc 
+                GENERATE rowkey, pl.edu.icm.coansys.importers.pig.udf.DocumentProtobufBytesToTuple(mproto, cproto) AS document;
 };
 
 -------------------------------------------------------
