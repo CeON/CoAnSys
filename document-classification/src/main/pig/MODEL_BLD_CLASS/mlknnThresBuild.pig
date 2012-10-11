@@ -1,3 +1,7 @@
+--
+-- (C) 2010-2012 ICM UW. All rights reserved.
+--
+
 DEFINE mlknnThresBuild(part,DEF_NEIGH) RETURNS ret{
 	B1 = foreach $part generate flatten(pl.edu.icm.coansys.classification.
                 documents.pig.proceeders.POS_NEG(keyA,keyB,categsA,categsB,categQ)) as (keyA, categQ, pos, neg);

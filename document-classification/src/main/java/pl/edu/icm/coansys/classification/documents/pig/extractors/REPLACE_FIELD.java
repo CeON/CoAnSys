@@ -1,3 +1,7 @@
+/*
+ * (C) 2010-2012 ICM UW. All rights reserved.
+ */
+
 package pl.edu.icm.coansys.classification.documents.pig.extractors;
 
 import java.io.IOException;
@@ -9,7 +13,7 @@ import org.apache.pig.data.Tuple;
 
 /**
 *
-* @author akawa
+* @author pdendek
 */
 @SuppressWarnings("rawtypes")
 public class REPLACE_FIELD extends EvalFunc<Map> {

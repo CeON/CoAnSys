@@ -25,6 +25,10 @@ import pl.edu.icm.coansys.disambiguation.auxil.DiacriticsRemover;
 
 import com.google.common.base.Joiner;
 
+/**
+*
+* @author pdendek
+*/
 public class STEMMED_PAIRS extends EvalFunc<DataBag>{
 
 	@Override

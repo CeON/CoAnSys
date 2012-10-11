@@ -17,6 +17,10 @@ import org.apache.pig.data.TupleFactory;
 import org.apache.pig.impl.logicalLayer.FrontendException;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
 
+/**
+*
+* @author pdendek
+*/
 public class ACC_PREC_RECALL_F1_HL_ZOL extends EvalFunc<Tuple>{
 
 	@Override

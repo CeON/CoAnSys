@@ -1,3 +1,7 @@
+--
+-- (C) 2010-2012 ICM UW. All rights reserved.
+--
+
 DEFINE mlknnThresClassify(model,data) RETURNS ret{
 	posX = filter $data by categB == categQ;  -- keyA, categB, categQ; 
 	posXGR = group posX by (keyA,categB);

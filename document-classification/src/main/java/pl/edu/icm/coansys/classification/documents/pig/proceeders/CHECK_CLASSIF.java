@@ -17,6 +17,10 @@ import org.apache.pig.data.TupleFactory;
 import org.apache.pig.impl.logicalLayer.FrontendException;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
 
+/**
+*
+* @author pdendek
+*/
 public class CHECK_CLASSIF extends EvalFunc<Tuple>{
 
 	@Override

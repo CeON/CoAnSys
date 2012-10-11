@@ -22,6 +22,10 @@ import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
 
 import com.google.common.base.Joiner;
 
+/**
+*
+* @author pdendek
+*/
 public class EXTRACT_KEY_TI_ABS_KW_CATEG_WHEN_CATEG extends EvalFunc<Tuple>{
 
 	@Override

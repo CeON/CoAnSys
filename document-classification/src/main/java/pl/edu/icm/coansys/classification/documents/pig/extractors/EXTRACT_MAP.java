@@ -1,3 +1,7 @@
+/*
+ * (C) 2010-2012 ICM UW. All rights reserved.
+ */
+
 package pl.edu.icm.coansys.classification.documents.pig.extractors;
 
 import java.io.IOException;
@@ -18,7 +22,7 @@ import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
 
 /**
 *
-* @author akawa
+* @author pdendek
 */
 @SuppressWarnings("rawtypes")
 public class EXTRACT_MAP extends EvalFunc<Map> {
