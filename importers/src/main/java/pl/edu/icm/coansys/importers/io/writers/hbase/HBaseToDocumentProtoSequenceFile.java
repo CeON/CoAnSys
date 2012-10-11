@@ -62,7 +62,7 @@ public class HBaseToDocumentProtoSequenceFile implements Tool {
         private ResultToProtoBytesConverter converter = new ResultToProtoBytesConverter();
         private DocumentWrapper.Builder dw = DocumentWrapper.newBuilder();
         private MultipleOutputs mos = null;
-        private int MAX_SIZE = 5000000;
+        private int MAX_SIZE = 1000000;
 
         @Override
         public void setup(Context context) {
@@ -98,7 +98,7 @@ public class HBaseToDocumentProtoSequenceFile implements Tool {
                 mos.write("dproto", key, documentProto);
                 context.getCounter(Counters.DPROTO).increment(1);
             } else {
-                System.out.println("dproto size = " + MAX_SIZE);
+                System.out.println("dproto size = " + dproto.length);
                 context.getCounter(Counters.DPROTO_SKIPPED).increment(1);
             }
             
