@@ -10,8 +10,8 @@ import pl.edu.icm.synat.api.services.audit.model.AuditEntry;
  *
  * @author Artur Czeczko <a.czeczko@icm.edu.pl>
  */
-public class AuditEntryFactory {
-    private AuditEntryFactory() {
+public class AuditEntryHelper {
+    private AuditEntryHelper() {
     }
     
     public static AuditEntry getAuditEntry(final String eventId, final AuditEntry.Level level, 
