@@ -6,20 +6,26 @@ package pl.edu.icm.coansys.classification.documents.pig.extractors;
 
 import java.io.IOException;
 import java.util.Arrays;
+
 import org.apache.pig.EvalFunc;
 import org.apache.pig.data.*;
 import org.apache.pig.impl.logicalLayer.FrontendException;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
+
 import pl.edu.icm.coansys.importers.models.DocumentProtos.ClassifCode;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
 
+/**
+*
+* @author pdendek
+*/
 public class EXTRACT_KEY_CATEG extends EvalFunc<Tuple>{
 
 	@Override
 	public Schema outputSchema(Schema p_input){
 		try{
 			return Schema.generateNestedSchema(DataType.TUPLE, 
-					DataType.CHARARRAY, DataType.CHARARRAY);
+					DataType.CHARARRAY, DataType.BAG, DataType.INTEGER );
 		}catch(FrontendException e){
 			throw new IllegalStateException(e);
 		}
@@ -61,11 +67,17 @@ public class EXTRACT_KEY_CATEG extends EvalFunc<Tuple>{
 			 
 	        String key = dm.getKey();
 	        DataBag db = new DefaultDataBag();
-	        
+	        int bagsize = 0;
+//	        System.out.print(key+":");
 	        for(ClassifCode code : dm.getClassifCodeList())
-	        	db.add(TupleFactory.getInstance().newTuple(code.getValueList()));
+	        	for(String co_str : code.getValueList()){
+	        		bagsize++;
+//	        		System.out.print(" "+co_str);
+	        		db.add(TupleFactory.getInstance().newTuple(co_str));
+	        	}
+//	        System.out.println("");
 	        
-	        Object[] to = new Object[]{key,db};
+	        Object[] to = new Object[]{key,db,bagsize};
 	        Tuple t = TupleFactory.getInstance().newTuple(Arrays.asList(to));
 	        return t;
 			
