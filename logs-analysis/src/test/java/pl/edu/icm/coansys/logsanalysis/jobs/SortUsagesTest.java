@@ -13,8 +13,7 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mrunit.mapreduce.MapReduceDriver;
-import org.junit.Before;
-import org.junit.Test;
+import org.testng.annotations.BeforeClass;
 import pl.edu.icm.coansys.logsanalysis.models.MostPopularProtos;
 
 /**
@@ -33,8 +32,8 @@ public class SortUsagesTest {
     private final static String TEST_DATE = "2012-09-21";
     MapReduceDriver<Text, LongWritable, NullWritable, Text, NullWritable, BytesWritable> mapReduceDriver;
 
-    @Before
-    public void setUp() {
+    @BeforeClass
+    public void beforeClass() {
         Mapper m = new SortUsagesPart.SorterMap();
         Reducer r = new SortUsagesPart.SorterReduce();
         mapReduceDriver = new MapReduceDriver(m, r);
@@ -43,7 +42,7 @@ public class SortUsagesTest {
         conf.set("RESULT_DATE", TEST_DATE);
     }
 
-    @Test
+    @org.testng.annotations.Test(groups = {"fast"})
     public void sortUsagesTest() throws ParseException {
         mapReduceDriver.addInput(new Text(RES1_ID), new LongWritable(COUNT1));
         mapReduceDriver.addInput(new Text(RES2_ID), new LongWritable(COUNT2));
