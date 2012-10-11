@@ -50,7 +50,6 @@ public class HBaseToDocumentProtoSequenceFile implements Tool {
     }
 
     public static enum Counters {
-
         DPROTO, CPROTO, MPROTO, DPROTO_SKIPPED
     }
 
@@ -62,7 +61,7 @@ public class HBaseToDocumentProtoSequenceFile implements Tool {
         private ResultToProtoBytesConverter converter = new ResultToProtoBytesConverter();
         private DocumentWrapper.Builder dw = DocumentWrapper.newBuilder();
         private MultipleOutputs mos = null;
-        private int MAX_SIZE = 1000000;
+        private int MAX_DPROTO_SIZE = 100000;
 
         @Override
         public void setup(Context context) {
@@ -93,7 +92,7 @@ public class HBaseToDocumentProtoSequenceFile implements Tool {
                 logger.debug("writing dproto to output");
             }
             
-            if (dproto != null && dproto.length < MAX_SIZE) {
+            if (dproto != null && dproto.length < MAX_DPROTO_SIZE) {
                 documentProto.set(dproto, 0, dproto.length);
                 mos.write("dproto", key, documentProto);
                 context.getCounter(Counters.DPROTO).increment(1);
@@ -219,6 +218,7 @@ public class HBaseToDocumentProtoSequenceFile implements Tool {
 
     public static void main(String[] args) throws Exception {
         logger.setLevel(Level.ALL);
+        
         if (args == null || args.length == 0) {
             args = new String[2];
             args[0] = "grotoap10";
