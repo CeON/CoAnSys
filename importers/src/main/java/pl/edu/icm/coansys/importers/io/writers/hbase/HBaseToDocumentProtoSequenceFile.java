@@ -59,7 +59,6 @@ public class HBaseToDocumentProtoSequenceFile implements Tool {
         private BytesWritable key = new BytesWritable();
         private BytesWritable documentProto = new BytesWritable();
         private BytesWritable metatdataProto = new BytesWritable();
-        private BytesWritable mediaProto = new BytesWritable();
         private ResultToProtoBytesConverter converter = new ResultToProtoBytesConverter();
         private DocumentWrapper.Builder dw = DocumentWrapper.newBuilder();
         private MultipleOutputs mos = null;
@@ -72,7 +71,7 @@ public class HBaseToDocumentProtoSequenceFile implements Tool {
         @Override
         public void map(ImmutableBytesWritable row, Result values, Context context) throws IOException, InterruptedException {
             converter.set(values, dw);
-            context.setStatus("reading data from HBase");
+            System.out.println("reading data from HBase");
             if (logger.isDebugEnabled()) {
                 logger.debug("reading data from HBase");
             }
@@ -80,7 +79,7 @@ public class HBaseToDocumentProtoSequenceFile implements Tool {
             byte[] mproto = converter.getDocumentMetadata();
             byte[] cproto = converter.getDocumentMedia();
 
-            context.setStatus("converting raw bytes to protocol buffers");
+            System.out.println("converting raw bytes to protocol buffers");
             if (logger.isDebugEnabled()) {
                 logger.debug("converting raw bytes to protocol buffers");
             }
@@ -88,19 +87,22 @@ public class HBaseToDocumentProtoSequenceFile implements Tool {
             byte[] dproto = documentWrapper.toByteArray();
 
             key.set(rowId, 0, rowId.length);
-            context.setStatus("writing dproto to output");
+            System.out.println("writing dproto to output");
             if (logger.isDebugEnabled()) {
                 logger.debug("writing dproto to output");
             }
+            
             if (dproto != null) {
                 documentProto.set(dproto, 0, dproto.length);
                 mos.write("dproto", key, documentProto);
                 context.getCounter(Counters.DPROTO).increment(1);
             }
+            
             if (logger.isDebugEnabled()) {
                 logger.debug("writing mproto to output");
             }
-            context.setStatus("writing mproto to output");
+            
+            System.out.println("writing mproto to output");
             if (mproto != null) {
                 metatdataProto.set(mproto, 0, mproto.length);
                 mos.write(FAMILY_METADATA_QUALIFIER_PROTO, key, metatdataProto);
