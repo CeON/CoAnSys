@@ -61,7 +61,7 @@ public class HBaseToDocumentProtoSequenceFile implements Tool {
         private ResultToProtoBytesConverter converter = new ResultToProtoBytesConverter();
         private DocumentWrapper.Builder dw = DocumentWrapper.newBuilder();
         private MultipleOutputs mos = null;
-        private int MAX_DPROTO_SIZE = 10000;
+        private int MAX_DPROTO_SIZE = 1000;
 
         @Override
         public void setup(Context context) {
