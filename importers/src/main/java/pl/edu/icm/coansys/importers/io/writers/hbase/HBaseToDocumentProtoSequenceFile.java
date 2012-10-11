@@ -25,6 +25,7 @@ import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.pig.backend.executionengine.ExecException;
 import pl.edu.icm.coansys.importers.models.DocumentProtosWrapper.DocumentWrapper;
@@ -49,6 +50,7 @@ public class HBaseToDocumentProtoSequenceFile implements Tool {
     }
 
     public static enum Counters {
+
         DPROTO, CPROTO, MPROTO
     }
 
@@ -71,20 +73,32 @@ public class HBaseToDocumentProtoSequenceFile implements Tool {
         public void map(ImmutableBytesWritable row, Result values, Context context) throws IOException, InterruptedException {
             converter.set(values, dw);
             context.setStatus("reading data from HBase");
+            if (logger.isDebugEnabled()) {
+                logger.debug("reading data from HBase");
+            }
             byte[] rowId = converter.getRowId();
             byte[] mproto = converter.getDocumentMetadata();
             byte[] cproto = converter.getDocumentMedia();
-            
+
             context.setStatus("converting raw bytes to protocol buffers");
+            if (logger.isDebugEnabled()) {
+                logger.debug("converting raw bytes to protocol buffers");
+            }
             DocumentWrapper documentWrapper = converter.toDocumentWrapper(rowId, mproto, cproto);
             byte[] dproto = documentWrapper.toByteArray();
 
             key.set(rowId, 0, rowId.length);
             context.setStatus("writing dproto to output");
+            if (logger.isDebugEnabled()) {
+                logger.debug("writing dproto to output");
+            }
             if (dproto != null) {
                 documentProto.set(dproto, 0, dproto.length);
                 mos.write("dproto", key, documentProto);
                 context.getCounter(Counters.DPROTO).increment(1);
+            }
+            if (logger.isDebugEnabled()) {
+                logger.debug("writing mproto to output");
             }
             context.setStatus("writing mproto to output");
             if (mproto != null) {
@@ -94,12 +108,12 @@ public class HBaseToDocumentProtoSequenceFile implements Tool {
             }
 
             /*
-            if (cproto != null) {
-                mediaProto.set(cproto, 0, cproto.length);
-                mos.write(FAMILY_CONTENT_QUALIFIER_PROTO, key, mediaProto);
-                context.getCounter(Counters.CPROTO).increment(1);
-            }
-            */
+             if (cproto != null) {
+             mediaProto.set(cproto, 0, cproto.length);
+             mos.write(FAMILY_CONTENT_QUALIFIER_PROTO, key, mediaProto);
+             context.getCounter(Counters.CPROTO).increment(1);
+             }
+             */
         }
 
         @Override
@@ -137,7 +151,7 @@ public class HBaseToDocumentProtoSequenceFile implements Tool {
             DocumentWrapper build = dw.build();
             return build;
         }
-        
+
         public DocumentWrapper toDocumentWrapper(byte[] rowid, byte[] mproto, byte[] cproto) throws ExecException, InvalidProtocolBufferException {
             dw.setRowId(ByteString.copyFrom(rowid));
             dw.setMproto(ByteString.copyFrom(mproto));
@@ -199,7 +213,7 @@ public class HBaseToDocumentProtoSequenceFile implements Tool {
     }
 
     public static void main(String[] args) throws Exception {
-
+        logger.setLevel(Level.ALL);
         if (args == null || args.length == 0) {
             args = new String[2];
             args[0] = "grotoap10";
