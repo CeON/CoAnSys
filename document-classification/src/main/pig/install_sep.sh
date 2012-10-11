@@ -1,5 +1,9 @@
 #!/bin/bash
 
+#
+# (C) 2010-2012 ICM UW. All rights reserved.
+#
+
 eval "cd ../../..";
 eval "mvn clean install -P sep";
 eval "mkdir src/main/pig/lib";
