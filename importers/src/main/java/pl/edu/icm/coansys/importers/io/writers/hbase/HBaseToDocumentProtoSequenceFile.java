@@ -51,7 +51,7 @@ public class HBaseToDocumentProtoSequenceFile implements Tool {
 
     public static enum Counters {
 
-        DPROTO, CPROTO, MPROTO
+        DPROTO, CPROTO, MPROTO, DPROTO_SKIPPED
     }
 
     public static class RowToDocumentProtoMapper extends TableMapper<BytesWritable, BytesWritable> {
@@ -97,6 +97,9 @@ public class HBaseToDocumentProtoSequenceFile implements Tool {
                 documentProto.set(dproto, 0, dproto.length);
                 mos.write("dproto", key, documentProto);
                 context.getCounter(Counters.DPROTO).increment(1);
+            } else {
+                System.out.println("dproto size = " + MAX_SIZE);
+                context.getCounter(Counters.DPROTO_SKIPPED).increment(1);
             }
             
             if (logger.isDebugEnabled()) {
