@@ -9,15 +9,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
-
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.client.ResultScanner;
-import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.rest.client.Client;
 import org.apache.hadoop.hbase.rest.client.Cluster;
 import org.apache.hadoop.hbase.rest.client.RemoteHTable;
 import org.apache.hadoop.hbase.util.Bytes;
-
 import pl.edu.icm.coansys.importers.constants.HBaseConstant;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
@@ -51,7 +48,6 @@ public class HBaseRestReader_Bwmeta {
         		), remoteTable
         	);
 		
-		Scan scan = new Scan();
         ResultScanner scanner = table.getScanner(Bytes.toBytes(HBaseConstant.FAMILY_CONTENT), Bytes.toBytes(HBaseConstant.FAMILY_CONTENT_QUALIFIER_PROTO));
         
         HashMap<String, List<String>> rowAuthorsMap = new HashMap<String, List<String>>(); 
@@ -85,7 +81,6 @@ public class HBaseRestReader_Bwmeta {
         		), remoteTable
         	);
 		
-		Scan scan = new Scan();
         ResultScanner scanner = table.getScanner(Bytes.toBytes(HBaseConstant.FAMILY_METADATA), Bytes.toBytes(HBaseConstant.FAMILY_METADATA_QUALIFIER_PROTO));
         
         HashMap<String, List<String>> rowAuthorsMap = new HashMap<String, List<String>>(); 
