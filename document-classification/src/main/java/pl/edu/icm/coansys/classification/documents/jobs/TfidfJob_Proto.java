@@ -28,6 +28,10 @@ import pl.edu.icm.coansys.classification.documents.auxil.StringListIntListWritab
 import pl.edu.icm.coansys.disambiguation.auxil.TextArrayWritable;
 import pl.edu.icm.coansys.importers.constants.HBaseConstant;
 
+/**
+*
+* @author pdendek
+*/
 public class TfidfJob_Proto implements Tool {
     /*
      *

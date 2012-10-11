@@ -1,6 +1,6 @@
-/*
- * (C) 2010-2012 ICM UW. All rights reserved.
- */
+--
+-- (C) 2010-2012 ICM UW. All rights reserved.
+--
 
 -- -----------------------------------------------------
 -- import section
@@ -8,7 +8,8 @@
 register /usr/lib/hbase/lib/zookeeper.jar 
 register /usr/lib/hbase/hbase-0.92.1-cdh4.0.1-security.jar 
 register /usr/lib/hbase/lib/guava-11.0.2.jar 
-register lib/document-classification-1.0-SNAPSHOT-jar-with-dependencies.jar
+register lib/document-classification-1.0-SNAPSHOT.jar
+register lib/document-classification-1.0-SNAPSHOT-only-dependencies.jar
 -- -----------------------------------------------------
 -- declaration section
 -- -----------------------------------------------------
@@ -24,12 +25,12 @@ train =  LOAD '/tmp/train.pigout' as (key:chararray, categories:bag{(category:ch
 -- Categories unconditional probability
 -- -----------------------------------------------------
 -- -----------------------------------------------------
-allT = group train all;
-train2 = foreach allT generate flatten(train), COUNT(train) as num;
-ft = foreach train2 generate key, flatten(categories), num;
-ftc = group ft by (category,num);
+A = group train all;	--key + categ
+B = foreach A generate flatten(train), COUNT(train) as num;
+C = foreach B generate key, flatten(categories), num;
+D = group C by (category,num);
 
-cat_pos_Prob_H_q = foreach ftc generate group.category as category, (double)$S+(double)COUNT(ft)/(double)(2*$S+group.num) as pos_Prob_H_q;
+cat_pos_Prob_H_q = foreach D generate group.category as category, (double)$S+(double)COUNT(C)/(double)(2*$S+group.num) as pos_Prob_H_q;
 STORE cat_pos_Prob_H_q INTO '/tmp/PIG_UNCOND_Prob_PH.pigout';
 cat_neg_Prob_H_q = foreach cat_pos_Prob_H_q generate category as category, 1 - pos_Prob_H_q as neg_Prob_H_q;
 STORE cat_neg_Prob_H_q INTO '/tmp/PIG_UNCOND_Prob_NH.pigout';
