@@ -62,6 +62,7 @@ public class HBaseToDocumentProtoSequenceFile implements Tool {
         private ResultToProtoBytesConverter converter = new ResultToProtoBytesConverter();
         private DocumentWrapper.Builder dw = DocumentWrapper.newBuilder();
         private MultipleOutputs mos = null;
+        private int MAX_SIZE = 10000000;
 
         @Override
         public void setup(Context context) {
@@ -71,28 +72,28 @@ public class HBaseToDocumentProtoSequenceFile implements Tool {
         @Override
         public void map(ImmutableBytesWritable row, Result values, Context context) throws IOException, InterruptedException {
             converter.set(values, dw);
-            System.out.println("reading data from HBase");
             if (logger.isDebugEnabled()) {
                 logger.debug("reading data from HBase");
             }
+            
             byte[] rowId = converter.getRowId();
             byte[] mproto = converter.getDocumentMetadata();
             byte[] cproto = converter.getDocumentMedia();
 
-            System.out.println("converting raw bytes to protocol buffers");
             if (logger.isDebugEnabled()) {
                 logger.debug("converting raw bytes to protocol buffers");
             }
+            
             DocumentWrapper documentWrapper = converter.toDocumentWrapper(rowId, mproto, cproto);
             byte[] dproto = documentWrapper.toByteArray();
 
             key.set(rowId, 0, rowId.length);
-            System.out.println("writing dproto to output");
+            
             if (logger.isDebugEnabled()) {
                 logger.debug("writing dproto to output");
             }
             
-            if (dproto != null) {
+            if (dproto != null && dproto.length < MAX_SIZE) {
                 documentProto.set(dproto, 0, dproto.length);
                 mos.write("dproto", key, documentProto);
                 context.getCounter(Counters.DPROTO).increment(1);
@@ -102,7 +103,6 @@ public class HBaseToDocumentProtoSequenceFile implements Tool {
                 logger.debug("writing mproto to output");
             }
             
-            System.out.println("writing mproto to output");
             if (mproto != null) {
                 metatdataProto.set(mproto, 0, mproto.length);
                 mos.write(FAMILY_METADATA_QUALIFIER_PROTO, key, metatdataProto);
