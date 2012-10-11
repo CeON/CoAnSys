@@ -16,6 +16,10 @@ import pl.edu.icm.coansys.importers.constants.ProtoConstants;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.ClassifCode;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
 
+/**
+*
+* @author pdendek
+*/
 public class EXTRACT_KEY_MSCCATEG extends EvalFunc<Tuple>{
 
 	@Override

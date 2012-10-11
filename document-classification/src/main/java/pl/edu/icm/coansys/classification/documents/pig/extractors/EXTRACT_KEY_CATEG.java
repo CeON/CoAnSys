@@ -15,6 +15,10 @@ import org.apache.pig.impl.logicalLayer.schema.Schema;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.ClassifCode;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
 
+/**
+*
+* @author pdendek
+*/
 public class EXTRACT_KEY_CATEG extends EvalFunc<Tuple>{
 
 	@Override
