@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.disambiguation.auxil.LoggingInDisambiguation;
 /**
@@ -28,7 +28,7 @@ import pl.edu.icm.coansys.disambiguation.auxil.LoggingInDisambiguation;
  */
 public class FeatureInfo {
 	
-	private static Logger logger = Logger.getLogger(LoggingInDisambiguation.class);
+	private static Logger logger = LoggerFactory.getLogger(LoggingInDisambiguation.class);
 	
 	/**
 	 * A name of a {@link Disambiguator}.
