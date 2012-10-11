@@ -9,8 +9,7 @@ import org.apache.hadoop.io.*;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mrunit.mapreduce.MapReduceDriver;
-import org.junit.Before;
-import org.junit.Test;
+import org.testng.annotations.BeforeClass;
 import pl.edu.icm.coansys.logsanalysis.models.AuditEntryFactory;
 import pl.edu.icm.coansys.logsanalysis.transformers.AuditEntry2Protos;
 import pl.edu.icm.synat.api.services.audit.model.AuditEntry;
@@ -25,8 +24,8 @@ public class CountUsagesTest {
     
     MapReduceDriver<Writable, BytesWritable, Text, LongWritable, Text, LongWritable> mapReduceDriver;
     
-    @Before
-    public void setUp() {
+    @BeforeClass
+    public void beforeClass() {
         Mapper m = new CountUsagesPart.CounterMap();
         Reducer r = new CountUsagesPart.CounterReduce();
         mapReduceDriver = new MapReduceDriver(m, r);
@@ -34,7 +33,7 @@ public class CountUsagesTest {
         conf.set("USAGE_WEIGHT_CLASS", "pl.edu.icm.coansys.logsanalysis.metrics.SimpleUsageWeight");
     }
     
-    @Test
+    @org.testng.annotations.Test(groups = {"fast"})
     public void countUsagesTest() {        
         for (int i = 0; i < TEST_ENTRIES_COUNT; i++) {
             AuditEntry ae = AuditEntryFactory.getAuditEntry("event"+i, AuditEntry.Level.DEBUG, new Date(System.currentTimeMillis()), "testService", "SAVE_TO_DISK",

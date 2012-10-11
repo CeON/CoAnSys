@@ -9,7 +9,6 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import static org.junit.Assert.*;
-import org.junit.Test;
 import pl.edu.icm.coansys.logsanalysis.logsacquisition.GenerateDummyLogs;
 import pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos;
 import pl.edu.icm.synat.api.services.audit.model.AuditEntry;
@@ -20,7 +19,7 @@ import pl.edu.icm.synat.api.services.audit.model.AuditEntry;
  */
 public class AuditEntryTransformersTest {
 
-    @Test
+    @org.testng.annotations.Test(groups = {"fast"})
     public void serializeDeserializeTest() throws IOException, ParseException {
 
         // go through: 
