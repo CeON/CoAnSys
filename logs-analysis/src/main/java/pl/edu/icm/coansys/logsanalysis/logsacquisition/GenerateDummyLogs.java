@@ -9,7 +9,7 @@ import java.net.MalformedURLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import pl.edu.icm.coansys.logsanalysis.models.AuditEntryFactory;
+import pl.edu.icm.coansys.logsanalysis.models.AuditEntryHelper;
 import pl.edu.icm.coansys.logsanalysis.transformers.AuditEntry2Protos;
 import pl.edu.icm.coansys.logsanalysis.transformers.BytesArray2SequenceFile;
 import pl.edu.icm.synat.api.services.audit.model.AuditEntry;
@@ -92,11 +92,11 @@ public class GenerateDummyLogs {
 
                 AuditEntry newLog;
                 if (eventType.equals("SAVE_TO_DISK")) {
-                    newLog = AuditEntryFactory.getAuditEntry(generateRandomId(), AuditEntry.Level.INFO, new Date(time), "PORTAL", eventType,
+                    newLog = AuditEntryHelper.getAuditEntry(generateRandomId(), AuditEntry.Level.INFO, new Date(time), "PORTAL", eventType,
                             IPADDRESSES[random.nextInt(IPADDRESSES.length)], URLS[random.nextInt(URLS.length)], URLS[random.nextInt(URLS.length)],
                             sessionId, user, RESOURCES[random.nextInt(RESOURCES.length)]);
                 } else {
-                    newLog = AuditEntryFactory.getAuditEntry(generateRandomId(), AuditEntry.Level.INFO, new Date(time), "PORTAL", eventType,
+                    newLog = AuditEntryHelper.getAuditEntry(generateRandomId(), AuditEntry.Level.INFO, new Date(time), "PORTAL", eventType,
                             IPADDRESSES[random.nextInt(IPADDRESSES.length)], URLS[random.nextInt(URLS.length)], URLS[random.nextInt(URLS.length)],
                             sessionId, user);
                 }
