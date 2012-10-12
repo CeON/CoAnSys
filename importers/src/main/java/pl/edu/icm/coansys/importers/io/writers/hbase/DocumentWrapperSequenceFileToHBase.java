@@ -45,9 +45,15 @@ public class DocumentWrapperSequenceFileToHBase implements Tool {
         return conf;
     }
 
+    public static enum Counters {
+
+        DPROTO, CPROTO, MPROTO, CPROTO_SKIPPED
+    }
+
     public static class DocumentWrapperToHBasePutMapper extends Mapper<BytesWritable, BytesWritable, ImmutableBytesWritable, Put> {
 
         private ImmutableBytesWritable docWrapRowKey = new ImmutableBytesWritable();
+        private int MAX_CPROTO_SIZE = 10000000;
 
         @Override
         protected void map(BytesWritable rowKey, BytesWritable documentWrapper, Context context)
@@ -55,10 +61,16 @@ public class DocumentWrapperSequenceFileToHBase implements Tool {
 
             DocumentWrapper docWrap = DocumentWrapper.parseFrom(documentWrapper.copyBytes());
             docWrapRowKey.set(docWrap.getRowId().toByteArray());
-            
+
             Put put = new Put(docWrap.getRowId().toByteArray());
             put.add(FAMILY_METADATA_BYTES, FAMILY_METADATA_QUALIFIER_PROTO_BYTES, docWrap.getMproto().toByteArray());
-            put.add(FAMILY_CONTENT_BYTES, FAMILY_CONTENT_QUALIFIER_PROTO_BYTES, docWrap.getCproto().toByteArray());
+            byte[] cproto = docWrap.getCproto().toByteArray();
+            
+            if (cproto.length < MAX_CPROTO_SIZE) {
+                put.add(FAMILY_CONTENT_BYTES, FAMILY_CONTENT_QUALIFIER_PROTO_BYTES, cproto);
+            } else {
+                context.getCounter(Counters.CPROTO_SKIPPED).increment(1);
+            }
 
             context.write(docWrapRowKey, put);
         }
@@ -127,7 +139,7 @@ public class DocumentWrapperSequenceFileToHBase implements Tool {
                 + " " + DocumentWrapperSequenceFileToHBase.class.getName()
                 + " -D" + BULK_OUTPUT_CONF_KEY + "=bulkoutputfile"
                 + " <directory> <table>";
-        
+
         System.out.println(command);
     }
 }
