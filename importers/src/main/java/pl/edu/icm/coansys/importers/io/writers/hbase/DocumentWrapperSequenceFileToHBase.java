@@ -33,7 +33,6 @@ public class DocumentWrapperSequenceFileToHBase implements Tool {
 
     private static Logger logger = Logger.getLogger(DocumentWrapperSequenceFileToHBase.class);
     private Configuration conf;
-    private static final String LOCAL_JOBTRACKER = "local";
     final static String BULK_OUTPUT_CONF_KEY = "bulk.output";
 
     @Override
@@ -55,7 +54,6 @@ public class DocumentWrapperSequenceFileToHBase implements Tool {
                 throws IOException, InterruptedException {
 
             DocumentWrapper docWrap = DocumentWrapper.parseFrom(documentWrapper.copyBytes());
-
             docWrapRowKey.set(docWrap.getRowId().toByteArray());
             
             Put put = new Put(docWrap.getRowId().toByteArray());
