@@ -22,10 +22,13 @@ import org.apache.pig.impl.logicalLayer.schema.Schema;
 import pl.edu.icm.coansys.classification.documents.auxil.PorterStemmer;
 import pl.edu.icm.coansys.classification.documents.auxil.StopWordsRemover;
 import pl.edu.icm.coansys.disambiguation.auxil.DiacriticsRemover;
-//import pl.edu.icm.coansys.disambiguation.auxil.DiacriticsRemover;
 
 import com.google.common.base.Joiner;
 
+/**
+*
+* @author pdendek
+*/
 public class STEMMED_PAIRS extends EvalFunc<DataBag>{
 
 	@Override
@@ -45,9 +48,10 @@ public class STEMMED_PAIRS extends EvalFunc<DataBag>{
 			String key = (String) input.get(0);
 			String[] vals = new String[3];
 
-			for(int i = 1; i<4 ;i++)
-				vals[i-1] = (String) input.get(i);
-			
+			for(int i = 1; i<4 ;i++){
+				Object tmp = input.get(i);
+				vals[i-1] = tmp==null ? "" : tmp.toString();  
+			}
 			String vals_str = Joiner.on(" ").join(vals);
 			vals_str = vals_str.toLowerCase();
 			vals_str = DiacriticsRemover.removeDiacritics(vals_str);

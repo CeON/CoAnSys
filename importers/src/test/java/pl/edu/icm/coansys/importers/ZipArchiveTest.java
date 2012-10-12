@@ -7,7 +7,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
-import static org.junit.Assert.*;
+import static org.testng.Assert.*;
 
 /**
  *

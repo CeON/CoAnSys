@@ -6,21 +6,27 @@ package pl.edu.icm.coansys.classification.documents.pig.extractors;
 
 import java.io.IOException;
 import java.util.Arrays;
+
 import org.apache.pig.EvalFunc;
 import org.apache.pig.data.*;
+
 import org.apache.pig.impl.logicalLayer.FrontendException;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
 import pl.edu.icm.coansys.importers.constants.ProtoConstants;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.ClassifCode;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
 
+/**
+*
+* @author pdendek
+*/
 public class EXTRACT_KEY_MSCCATEG extends EvalFunc<Tuple>{
 
 	@Override
 	public Schema outputSchema(Schema p_input){
 		try{
 			return Schema.generateNestedSchema(DataType.TUPLE, 
-					DataType.CHARARRAY, DataType.CHARARRAY);
+					DataType.CHARARRAY, DataType.BAG);
 		}catch(FrontendException e){
 			throw new IllegalStateException(e);
 		}
