@@ -7,8 +7,8 @@ import java.io.IOException;
 import java.util.Iterator;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.mapreduce.Reducer;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.edu.icm.coansys.disambiguation.auxil.LoggingInDisambiguation;
 import pl.edu.icm.coansys.disambiguation.auxil.TextArrayWritable;
 
@@ -20,12 +20,11 @@ import pl.edu.icm.coansys.disambiguation.auxil.TextArrayWritable;
  */
 public class WordCountReducer extends Reducer<TextArrayWritable, IntWritable, TextArrayWritable, IntWritable> {
 
-    private static Logger logger = Logger.getLogger(LoggingInDisambiguation.class);
+    private static Logger logger = LoggerFactory.getLogger(LoggingInDisambiguation.class);
     //protected String reducerId = new Date().getTime() + "_" + new Random().nextFloat();
 
     @Override
     public void setup(Context context) throws IOException, InterruptedException {
-        logger.setLevel(Level.DEBUG);
     }
 
     @Override
