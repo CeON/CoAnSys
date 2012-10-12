@@ -20,7 +20,7 @@ import pl.edu.icm.synat.common.ListingResult;
  *
  * @author Artur Czeczko <a.czeczko@icm.edu.pl>
  */
-public class AcquireAuditService {
+public class AuditServiceToSequenceFile {
 
     @SynatServiceRef(serviceId = "AuditService")
     private AuditService auditService;
@@ -33,7 +33,7 @@ public class AcquireAuditService {
         }
 
         final ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("audit-client.xml");
-        final AcquireAuditService client = applicationContext.getBean("auditServiceClient", AcquireAuditService.class);
+        final AuditServiceToSequenceFile client = applicationContext.getBean("auditServiceClient1", AuditServiceToSequenceFile.class);
 
         client.doAcquire(args[0]);
 
