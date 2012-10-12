@@ -10,7 +10,8 @@ import pl.edu.icm.synat.api.services.audit.model.AuditEntry;
  *
  * @author Artur Czeczko <a.czeczko@icm.edu.pl>
  */
-public class AuditEntryHelper {
+public final class AuditEntryHelper {
+
     private AuditEntryHelper() {
     }
     
