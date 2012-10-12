@@ -6,9 +6,8 @@ import org.apache.hadoop.fs.Path;
 import org.apache.pig.pigunit.Cluster;
 import org.apache.pig.pigunit.PigTest;
 import org.apache.pig.tools.parameters.ParseException;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import pl.edu.icm.coansys.similarity.test.utils.PigScriptExtractor;
 
 /**

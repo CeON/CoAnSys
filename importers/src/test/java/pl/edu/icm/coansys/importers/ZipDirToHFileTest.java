@@ -4,14 +4,9 @@
 package pl.edu.icm.coansys.importers;
 
 import java.util.ArrayList;
-
 import org.apache.hadoop.hbase.KeyValue;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
-
 import pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator;
 import pl.edu.icm.coansys.importers.models.DocumentDTO;
-import pl.edu.icm.coansys.importers.test.SmallTest;
 import pl.edu.icm.coansys.importers.transformers.DocumentDto2KeyValue;
 
 /**
@@ -19,7 +14,6 @@ import pl.edu.icm.coansys.importers.transformers.DocumentDto2KeyValue;
  * @author Artur Czeczko a.czeczko@icm.edu.pl
  * @author pdendek
  */
-@Category(SmallTest.class)
 public class ZipDirToHFileTest {
 
 //    @Test
