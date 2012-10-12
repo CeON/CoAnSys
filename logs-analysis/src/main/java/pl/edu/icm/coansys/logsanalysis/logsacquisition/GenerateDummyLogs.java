@@ -4,6 +4,7 @@
 package pl.edu.icm.coansys.logsanalysis.logsacquisition;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.text.ParseException;
@@ -21,9 +22,12 @@ import pl.edu.icm.synat.api.services.audit.model.AuditEntry;
  * This class generates a list of dummy log entries for tests.
  *
  */
-public class GenerateDummyLogs {
+public final class GenerateDummyLogs {
 
-    private static class AuditEntryComparator implements Comparator<AuditEntry> {
+    private GenerateDummyLogs() {
+    }
+
+    private static class AuditEntryComparator implements Comparator<AuditEntry>, Serializable {
 
         @Override
         public int compare(AuditEntry o1, AuditEntry o2) {
