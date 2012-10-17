@@ -21,6 +21,11 @@
             <artifactId>scalding_2.9.2</artifactId>
             <version>0.8.0</version>
         </dependency>
+        <dependency>
+            <groupId>pl.edu.icm.coansys</groupId>
+            <artifactId>commons-scala</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

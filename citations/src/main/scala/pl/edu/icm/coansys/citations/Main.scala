@@ -8,6 +8,7 @@ import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.{Path, FileSystem}
 import java.net.URI
 
+import pl.edu.icm.coansys.commons.scala.automatic_resource_management.using
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -19,13 +20,12 @@ class Main(args: Args) extends Job(args) {
     val fs = FileSystem.get(URI.create(uri), conf)
     val map = new Path(uri)
     val mapData = new Path(map, MapFile.DATA_FILE_NAME)
-    //TODO: automatic resource management
-    val reader = new hadoop.io.SequenceFile.Reader(fs, mapData, conf)
-    val keyClass = reader.getKeyClass
-    val valueClass = reader.getValueClass
-    reader.close()
-
-    MapFile.fix(fs, map, keyClass.asInstanceOf[Class[_ <: Writable]], valueClass.asInstanceOf[Class[_ <: Writable]], false, conf)
+    using(new hadoop.io.SequenceFile.Reader(fs, mapData, conf)) {
+      reader =>
+        val keyClass = reader.getKeyClass
+        val valueClass = reader.getValueClass
+        MapFile.fix(fs, map, keyClass.asInstanceOf[Class[_ <: Writable]], valueClass.asInstanceOf[Class[_ <: Writable]], false, conf)
+    }
   }
 
   def buildIndex() {
@@ -38,16 +38,18 @@ class Main(args: Args) extends Job(args) {
           .mapValues(_._2)
           .toList
 
-      val rotationsWithDocs = tokensWithDocs.flatMap{
-        case (token, docs) => rotations(token) zip Iterator.continually(docs).toIterable}
+      val rotationsWithDocs = tokensWithDocs.flatMap {
+        case (token, docs) => rotations(token) zip Iterator.continually(docs).toIterable
+      }
 
       rotationsWithDocs
     }
 
     val tmpSeqFile = throw new RuntimeException
-    indexEntries(readDocs()).write((0,1), new SequenceFile(tmpSeqFile))
+    indexEntries(readDocs()).write((0, 1), new SequenceFile(tmpSeqFile))
     convertSeqToMap(tmpSeqFile)
   }
+
   def doMatching() {
     throw new RuntimeException
   }
