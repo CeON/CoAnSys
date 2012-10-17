@@ -21,8 +21,9 @@
         <testng.version>6.5.2</testng.version>
         <maven.surefire.plugin.version>2.12.3</maven.surefire.plugin.version>
         <synat.version>1.6-SNAPSHOT</synat.version>
+        <scala.version>2.9.2</scala.version>
     </properties>
-    
+
     <build>
         <plugins>
             <plugin>
@@ -51,7 +52,7 @@
             </plugin>
         </plugins>
     </build>
-                                                                                            
+
     <profiles>
         <profile>
             <id>slowTests</id>
@@ -86,12 +87,12 @@
                     </plugin>
                 </plugins>
             </build>
-        </profile>      
+        </profile>
         <profile>
             <id>nrml</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
-            </activation>		    
+            </activation>
             <build>
                 <plugins>
                     <plugin>
@@ -126,7 +127,7 @@
                             <descriptors>
                                 <descriptor>src/main/resources/assemblies/only-deps.xml</descriptor>
                             </descriptors>
-                        </configuration>   
+                        </configuration>
                         <executions>
                             <execution>
                                 <phase>package</phase>
@@ -160,7 +161,7 @@
                             <descriptorRefs>
                                 <descriptorRef>jar-with-dependencies</descriptorRef>
                             </descriptorRefs>
-                        </configuration>   
+                        </configuration>
                         <executions>
                             <execution>
                                 <phase>package</phase>
@@ -177,13 +178,15 @@
     </profiles>
 
     <modules>
+        <module>citations</module>
         <module>commons</module>
         <module>disambiguation</module>
         <module>disambiguation-author</module>
-        <module>document-classification</module> 
-        <module>document-similarity</module> 
+        <module>document-classification</module>
+        <module>document-similarity</module>
         <module>importers</module>
         <module>logs-analysis</module>
+        <module>citations</module>
     </modules>
 
     <dependencies>
