@@ -180,6 +180,7 @@
     <modules>
         <module>citations</module>
         <module>commons</module>
+        <module>commons-scala</module>
         <module>disambiguation</module>
         <module>disambiguation-author</module>
         <module>document-classification</module>
@@ -187,6 +188,7 @@
         <module>importers</module>
         <module>logs-analysis</module>
         <module>citations</module>
+        <module>commons-scala</module>
     </modules>
 
     <dependencies>
