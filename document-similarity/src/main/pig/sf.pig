@@ -14,6 +14,4 @@ A1 = LOAD 'grotoap10_dump/mproto-m-00000' USING RichSequenceFileLoader();
 B1 = FOREACH A1 GENERATE ToDataByteArray($1) AS meta;
 C1 = FOREACH B1 GENERATE DocumentFielder(meta) AS fields;
 D1 = FOREACH C1 GENERATE fields#'title';
-
-STORE A INTO '$output';
-AA = LOAD '$output' USING RichSequenceFileLoader();
+DUMP D1;

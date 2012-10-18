@@ -1,4 +1,9 @@
 -------------------------------------------------------
+-- parameter section
+-------------------------------------------------------
+%default commonJarsPath ../../../../document-similarity/target/document-similarity-1.0-SNAPSHOT-jar-with-dependencies.jar
+
+-------------------------------------------------------
 -- register section
 -------------------------------------------------------
 REGISTER /usr/lib/zookeeper/zookeeper-3.4.3-cdh4.0.1.jar;
@@ -38,4 +43,4 @@ docs_similarity2 = FOREACH docs_similarity GENERATE docId2 AS docId1, docId1 AS 
 docs_similarity_union = UNION docs_similarity, docs_similarity2;
 doc_similarities = GROUP docs_similarity_union BY docId1;
 
-STORE docs_similarity INTO '$outputPath';
+STORE doc_similarities INTO '$outputPath';
