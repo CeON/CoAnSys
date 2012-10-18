@@ -12,10 +12,9 @@ import org.apache.hadoop.hbase.client.HBaseAdmin
 import org.apache.hadoop.hbase.util.Merge
 import org.apache.hadoop.hbase.util.RegionSplitter
 
-def main(threshold = 500000)
+def main(table, threshold = 500000)
         conf = HBaseConfiguration.new()
         admin = HBaseAdmin.new(conf)
-        merge = Merge.new(conf)
 
         region_map = {}
         region_map.default = {}
@@ -27,13 +26,14 @@ def main(threshold = 500000)
                 regions_load = load.regionsLoad
                 regions_load.each do |key, region|
                         region_name = region.nameAsString
+			table_name = region_name.split(',')[0]
                         size = region.storefileSizeMB
                         read_requests = region.writeRequestsCount
                         write_requests = region.readRequestsCount
                         requests = region.requestsCount
 
                         region_map[region_name] = size
-                        if (requests > threshold)
+                        if ((table == table_name) && (requests > threshold))
 				print "Splitting " + region_name
 				puts
                                 admin.split region_name
@@ -45,5 +45,6 @@ def main(threshold = 500000)
         end
 end
 
-threshold = ARGV[0].to_i
-main(threshold)
+table = ARGV[0]
+threshold = ARGV[1].to_i
+main(table, threshold)
