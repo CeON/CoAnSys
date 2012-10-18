@@ -5,7 +5,7 @@
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
             <prepare>
-                <delete path="${ca_coauthorPairsOutputDir}"/>
+                <delete path="${cp_coauthorPairsOutputDir}"/>
             </prepare>
             <configuration>
                 <property>
@@ -14,9 +14,9 @@
                 </property> 
             </configuration>
             <script>${pigScriptsDir}/coauthor_pairs.pig</script>
-            <param>bwndataMetadataInputPath=${ca_bwndataMetadataInputPath}</param>
-            <param>contribPersonDir=${ca_contribPersonDir}</param>
-            <param>outputDir=${ca_coauthorPairsOutputDir}</param>
+            <param>bwndataMetadataInputPath=${cp_bwndataMetadataInputPath}</param>
+            <param>contribPersonDir=${cp_contribPersonDir}</param>
+            <param>outputDir=${cp_coauthorPairsOutputDir}</param>
             <param>commonJarsPath=${commonJarsPath}</param>
             <file>${pigScriptsDir}/macros.pig#macros.pig</file>
         </pig>       
