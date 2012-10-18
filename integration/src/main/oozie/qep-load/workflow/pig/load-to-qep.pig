@@ -21,5 +21,5 @@ coauthors_typed = FOREACH coauthors_filtered GENERATE CONCAT('cp$separator', CON
 docsim_typed = FOREACH docsim_filtered GENERATE CONCAT('ds$separator', CONCAT(docId1, CONCAT('$separator', docId2))), similarity;
 
 STORE disambig_typed INTO 'hbase://$qepTable' USING org.apache.pig.backend.hadoop.hbase.HBaseStorage('v:personId');
---STORE coauthors_typed INTO 'hbase://$qepTable' USING org.apache.pig.backend.hadoop.hbase.HBaseStorage('v:cnt');
+STORE coauthors_typed INTO 'hbase://$qepTable' USING org.apache.pig.backend.hadoop.hbase.HBaseStorage('v:cnt');
 STORE docsim_typed INTO 'hbase://$qepTable' USING org.apache.pig.backend.hadoop.hbase.HBaseStorage('v:sim');
