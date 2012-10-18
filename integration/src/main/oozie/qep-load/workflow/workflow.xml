@@ -37,12 +37,32 @@
                     <name>mapred.job.queue.name</name>
                     <value>${queueName}</value>
                 </property> 
+                <property>
+                    <name>hbase.mapred.outputtable</name>
+                    <value>hbase://${ql_qepTableName}</value>
+                </property>
+                <property>
+                    <name>pig.map.output.dirs</name>
+                    <value>hbase://${ql_qepTableName}</value>
+                </property>
+                <property>
+                    <name>pig.streaming.task.output.dirs</name>
+                    <value>hbase://${ql_qepTableName}</value>
+                </property>
+                <property>
+                    <name>hbase.rootdir</name>
+                    <value>${nameNode}/hbase</value>
+                </property>
+                   <property>
+                    <name>hbase.zookeeper.quorum</name>
+                    <value>${hbaseZookeeperQuorum}</value>
+                </property>
             </configuration>
             <script>${pigScriptsDir}/load-to-qep.pig</script>
             <param>disambigPath=${ql_disambigurationResultPath}</param>
             <param>coauthorsPath=${ql_couauthorPairsResultPath}</param>
             <param>docsimPath=${ql_documentSimilarityResultPath}</param>
-	    <param>qepTable=${ql_qepTableName}</param>
+            <param>qepTable=${ql_qepTableName}</param>
         </pig>       
         <ok to='end'/>
         <error to='kill'/>
