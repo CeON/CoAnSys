@@ -1,0 +1,54 @@
+<workflow-app name='hbase-qep-load' xmlns="uri:oozie:workflow:0.2">
+    <start to='check-table-existence'/>
+    <action name='check-table-existence'>
+        <java>
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <configuration>
+                <property>
+                    <name>mapred.job.queue.name</name>
+                    <value>${queueName}</value>
+                </property> 
+            </configuration>
+            <main-class>pl.edu.icm.coansys.commons.hbase.HBaseTableUtils</main-class>
+            <java-opts></java-opts>
+            <arg>true</arg>
+            <arg>EXIST</arg> 
+            <arg>${ql_qepTableName}</arg>  
+            <capture-output/>
+        </java>       
+        <ok to='go-if-table-exists'/>
+        <error to='kill'/>
+    </action>
+    <decision name="go-if-table-exists">
+        <switch>
+            <case to="qep-load">
+                ${wf:actionData('check-table-existence')['exit.value']}
+            </case>
+            <default to="kill"/>
+        </switch>
+    </decision>
+    <action name='qep-load'>
+        <pig>
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <configuration>
+                <property>
+                    <name>mapred.job.queue.name</name>
+                    <value>${queueName}</value>
+                </property> 
+            </configuration>
+            <script>${pigScriptsDir}/load-to-qep.pig</script>
+            <param>disambigPath=${ql_disambigurationResultPath}</param>
+            <param>coauthorsPath=${ql_couauthorPairsResultPath}</param>
+            <param>docsimPath=${ql_documentSimilarityResultPath}</param>
+	    <param>qepTable=${ql_qepTableName}</param>
+        </pig>       
+        <ok to='end'/>
+        <error to='kill'/>
+    </action>
+    <kill name='kill'>
+        <message>Workflow failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+    </kill>
+    <end name='end'/>
+</workflow-app>
