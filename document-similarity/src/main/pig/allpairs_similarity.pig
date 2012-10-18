@@ -1,9 +1,4 @@
 -------------------------------------------------------
--- parameter section
--------------------------------------------------------
-%default commonJarsPath ../../../../document-similarity/target/document-similarity-1.0-SNAPSHOT-jar-with-dependencies.jar
-
--------------------------------------------------------
 -- register section
 -------------------------------------------------------
 REGISTER /usr/lib/zookeeper/zookeeper-3.4.3-cdh4.0.1.jar;
@@ -42,4 +37,4 @@ S = UNION S1, S2;
 SG = GROUP S BY docId1;
 
 --measure cosine document similarity
-STORE SG INTO '$outputPath';
+STORE S INTO '$outputPath';

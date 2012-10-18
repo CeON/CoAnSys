@@ -5,7 +5,7 @@
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
             <prepare>
-                <delete path="${coauthorPairsOutputDir}"/>
+                <delete path="${ca_coauthorPairsOutputDir}"/>
             </prepare>
             <configuration>
                 <property>
@@ -14,18 +14,11 @@
                 </property> 
             </configuration>
             <script>${pigScriptsDir}/coauthor_pairs.pig</script>
-            <param>tableName=${bwndataDocsTableName}</param>
-            <param>contribPersonDir=${contribPersonDir}</param>
-            <param>outputDir=${coauthorPairsOutputDir}</param>
+            <param>bwndataMetadataInputPath=${ca_bwndataMetadataInputPath}</param>
+            <param>contribPersonDir=${ca_contribPersonDir}</param>
+            <param>outputDir=${ca_coauthorPairsOutputDir}</param>
             <param>commonJarsPath=${commonJarsPath}</param>
             <file>${pigScriptsDir}/macros.pig#macros.pig</file>
-
-
-	    <file>lib/commons-1.0-SNAPSHOT.jar#commons-1.0-SNAPSHOT.jar</file>
-            <file>lib/disambiguation-1.0-SNAPSHOT.jar#disambiguation-1.0-SNAPSHOT.jar</file>
-            <file>lib/document-similarity-1.0-SNAPSHOT.jar#document-similarity-1.0-SNAPSHOT.jar</file>
-            <file>lib/importers-1.0-SNAPSHOT.jar#importers-1.0-SNAPSHOT.jar</file>
-            <file>lib/pig-0.9.2-cdh4.0.1.jar#pig-0.9.2-cdh4.0.1.jar</file>
         </pig>       
         <ok to='end'/>
         <error to='kill'/>

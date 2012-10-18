@@ -16,7 +16,7 @@
             <java-opts></java-opts>
             <arg>TRUE</arg> 
             <arg>EXIST</arg> 
-            <arg>${bwndataDocsTableName}</arg>
+            <arg>${bwndataTableName}</arg>
         </java>       
         <ok to='prepare'/>
         <error to='kill'/>
@@ -91,7 +91,7 @@
                 <!-- MapReduce input/output parameters -->
                 <property>
                     <name>hbase.mapreduce.inputtable</name>
-                    <value>${bwndataDocsTableName}</value>
+                    <value>${bwndataTableName}</value>
                 </property>
                 <property>
                     <name>hbase.mapred.outputtable</name>
