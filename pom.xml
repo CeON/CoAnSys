@@ -115,7 +115,7 @@
                         <artifactId>maven-assembly-plugin</artifactId>
                         <configuration>
                             <descriptors>
-                                <descriptor>src/main/resources/assemblies/only-deps.xml</descriptor>
+                                <descriptor>${artifactId}/src/main/resources/assemblies/only-deps.xml</descriptor>
                             </descriptors>
                         </configuration>   
                         <executions>
