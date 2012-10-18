@@ -94,10 +94,10 @@
                     <name>mapred.output.value.class</name>
                     <value>org.apache.hadoop.io.Writable</value>
                 </property>
-		<property>
+                <property>
                     <name>mapred.child.java.opts</name>
                     <value>${mapredChildJavaOpts}</value>
-		</property>
+                </property>
                 <property>
                     <name>mapred.map.tasks.speculative.execution</name>
                     <value>false</value>
@@ -110,7 +110,8 @@
                     <name>hbase.client.keyvalue.maxsize</name>
                     <value>${hbaseClientKeyvalueMaxsize}</value>
                 </property>
-          </configuration>
+                
+            </configuration>
         </map-reduce>
         <ok to='post-import-cleanup'/>
         <error to='kill'/>
@@ -215,10 +216,10 @@
                     <name>mapred.create.symlink</name>
                     <value>yes</value>
                 </property>
-		<property>
+                <property>
                     <name>mapred.child.java.opts</name>
                     <value>${mapredChildJavaOpts}</value>
-		</property>
+                </property>
                 <property>
                     <name>mapred.map.tasks.speculative.execution</name>
                     <value>false</value>
@@ -226,6 +227,18 @@
                 <property>
                     <name>mapred.reduce.tasks.speculative.execution</name>
                     <value>false</value>
+                </property>
+                <property>
+                    <name>io.sort.mb</name>
+                    <value>${ioSortMb}</value>
+                </property>
+                <property>
+                    <name>io.sort.spill.percent</name>
+                    <value>${ioSortSpillPercent}</value>
+                </property>
+                <property>
+                    <name>io.sort.record.percent</name>
+                    <value>${ioSortRecordPercent}</value>
                 </property>
             </configuration>
             <file>${wf:actionData('importtsv-hfile-partifion-file')['mapred.cache.file.symlinked']}</file>
@@ -260,14 +273,14 @@
     </action> 
     <action name="post-completebulkload-cleanup">
         <fs>
-             <delete path="${wf:actionData('importtsv-hfile-partifion-file')['mapred.cache.file']}"/> 
+            <delete path="${wf:actionData('importtsv-hfile-partifion-file')['mapred.cache.file']}"/> 
         </fs>
         <ok to="post-import-cleanup"/>
         <error to="kill"/>
     </action>
     <action name="post-import-cleanup">
         <fs>
-             <delete path='${workflowPath}'/> 
+            <delete path='${workflowPath}'/> 
         </fs>
         <ok to="end"/>
         <error to="kill"/>
