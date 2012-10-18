@@ -14,7 +14,7 @@
             <java-opts></java-opts>
             <arg>true</arg>
             <arg>EXIST</arg> 
-            <arg>${bwndataTableName}</arg>  
+            <arg>${hd_bwndataTableName}</arg>  
             <capture-output/>
         </java>       
         <ok to='go-if-table-exists'/>
@@ -33,7 +33,7 @@
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
             <prepare>
-                <delete path="${bwndataDumpOutputDir}"/>
+                <delete path="${hd_bwndataDumpOutputDir}"/>
             </prepare>
             <configuration>
                 <!-- This is required for new api usage -->
@@ -66,11 +66,11 @@
                 <!-- MapReduce input/output parameters -->
                 <property>
                     <name>hbase.mapreduce.inputtable</name>
-                    <value>${bwndataTableName}</value>
+                    <value>${hd_bwndataTableName}</value>
                 </property>
                 <property>
                     <name>mapred.output.dir</name>
-                    <value>${bwndataDumpOutputDir}</value>
+                    <value>${hd_bwndataDumpOutputDir}</value>
                 </property>
                 <property>
                     <name>mapreduce.inputformat.class</name>
@@ -102,7 +102,7 @@
                 </property>
 		<property>
 		    <name>mapred.child.java.opts</name>
-		    <value>${hbaseDump_mapredChildJavaOpts}</value>
+		    <value>${hd_mapredChildJavaOpts}</value>
 		</property>
                 <!-- Multiple output -->
                 <property>
