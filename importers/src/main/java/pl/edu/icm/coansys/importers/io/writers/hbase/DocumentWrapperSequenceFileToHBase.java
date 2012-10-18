@@ -46,7 +46,6 @@ public class DocumentWrapperSequenceFileToHBase implements Tool {
     }
 
     public static enum Counters {
-
         DPROTO, CPROTO, MPROTO, CPROTO_SKIPPED
     }
 
@@ -70,7 +69,7 @@ public class DocumentWrapperSequenceFileToHBase implements Tool {
             } else {
                 context.getCounter(Counters.CPROTO_SKIPPED).increment(1);
             }
-
+            
             context.write(docWrapRowKey, put);
         }
     }
@@ -113,7 +112,7 @@ public class DocumentWrapperSequenceFileToHBase implements Tool {
     }
 
     private void getOptimizedConfiguration(Configuration conf) {
-        conf.set("mapred.child.java.opts", "-Xmx2000m");
+        conf.set("mapred.child.java.opts", "-Xmx4000m");
         conf.set("io.sort.mb", "500");
         conf.set("io.sort.spill.percent", "0.90");
         conf.set("io.sort.record.percent", "0.15");
