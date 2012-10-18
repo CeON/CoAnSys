@@ -50,6 +50,7 @@ public class HBaseToDocumentProtoSequenceFile implements Tool {
     }
 
     public static enum Counters {
+
         DPROTO, CPROTO, MPROTO, DPROTO_SKIPPED
     }
 
@@ -73,7 +74,7 @@ public class HBaseToDocumentProtoSequenceFile implements Tool {
             if (logger.isDebugEnabled()) {
                 logger.debug("reading data from HBase");
             }
-            
+
             byte[] rowId = converter.getRowId();
             byte[] mproto = converter.getDocumentMetadata();
             byte[] cproto = converter.getDocumentMedia();
@@ -81,26 +82,26 @@ public class HBaseToDocumentProtoSequenceFile implements Tool {
             if (logger.isDebugEnabled()) {
                 logger.debug("converting raw bytes to protocol buffers");
             }
-            
+
             DocumentWrapper documentWrapper = converter.toDocumentWrapper(rowId, mproto, cproto);
             byte[] dproto = documentWrapper.toByteArray();
 
             key.set(rowId, 0, rowId.length);
-            
+
             if (logger.isDebugEnabled()) {
                 logger.debug("writing dproto to output");
             }
-            
+
             if (dproto != null) {
                 documentProto.set(dproto, 0, dproto.length);
                 mos.write("dproto", key, documentProto);
                 context.getCounter(Counters.DPROTO).increment(1);
             }
-            
+
             if (logger.isDebugEnabled()) {
                 logger.debug("writing mproto to output");
             }
-            
+
             if (mproto != null) {
                 metatdataProto.set(mproto, 0, mproto.length);
                 mos.write(FAMILY_METADATA_QUALIFIER_PROTO, key, metatdataProto);
@@ -145,17 +146,17 @@ public class HBaseToDocumentProtoSequenceFile implements Tool {
         }
 
         public DocumentWrapper toDocumentWrapper() throws ExecException, InvalidProtocolBufferException {
-            dw.setRowId(ByteString.copyFrom(getRowId()));
-            dw.setMproto(ByteString.copyFrom(getDocumentMetadata()));
-            dw.setCproto(ByteString.copyFrom(getDocumentMedia()));
-            DocumentWrapper build = dw.build();
-            return build;
+            return toDocumentWrapper(getRowId(), getDocumentMetadata(), getDocumentMedia());
         }
 
         public DocumentWrapper toDocumentWrapper(byte[] rowid, byte[] mproto, byte[] cproto) throws ExecException, InvalidProtocolBufferException {
             dw.setRowId(ByteString.copyFrom(rowid));
-            dw.setMproto(ByteString.copyFrom(mproto));
-            dw.setCproto(ByteString.copyFrom(cproto));
+            if (mproto != null) {
+                dw.setMproto(ByteString.copyFrom(mproto));
+            }
+            if (cproto != null) {
+                dw.setCproto(ByteString.copyFrom(cproto));
+            }
             DocumentWrapper build = dw.build();
             return build;
         }
@@ -214,7 +215,7 @@ public class HBaseToDocumentProtoSequenceFile implements Tool {
 
     public static void main(String[] args) throws Exception {
         logger.setLevel(Level.ALL);
-        
+
         if (args == null || args.length == 0) {
             args = new String[2];
             args[0] = "grotoap10";
