@@ -1,6 +1,6 @@
 <workflow-app name="integration-workflow-full" xmlns="uri:oozie:workflow:0.2">
-    
     <start to="hbase-dump"/>
+    
     <action name="hbase-dump">
         <sub-workflow>
             <app-path>${hbaseDumpWorkflowPath}</app-path>
@@ -42,17 +42,7 @@
         <error to="kill"/>
     </action>
     
-    <join name="pipeline-end" to="qep-load"/>
-    
-    <action name="qep-load">
-        <sub-workflow>
-            <app-path>${qepLoadWorkflowPath}</app-path>
-            <propagate-configuration/>
-        </sub-workflow>
-        <ok to="end"/>
-        <error to="kill"/>
-    </action>
-    
+    <join name="pipeline-end" to="end"/>
     <kill name="kill">
         <message>Workflow failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
     </kill>

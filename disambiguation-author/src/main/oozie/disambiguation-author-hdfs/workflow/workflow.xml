@@ -5,7 +5,7 @@
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
             <prepare>
-                <delete path="${da_contribPersonOutputDir}"/>
+                <delete path="${contribPersonOutputDir}"/>
             </prepare>
             <configuration>
                 <!-- This is required for new api usage -->
@@ -24,6 +24,10 @@
                     <value>${queueName}</value>
                 </property>
                 <property>
+                    <name>mapred.job.name</name>
+                    <value>${jobName}</value>
+                </property>
+                <property>
                     <name>hbase.zookeeper.quorum</name>
                     <value>${hbaseZookeeperQuorum}</value>
                 </property>
@@ -39,17 +43,17 @@
                 </property>
                 <property>
                     <name>mapred.reduce.tasks</name>
-                    <value>${da_reduceTasksNumber}</value>
+                    <value>${reduceTasksNumber}</value>
                 </property>
                 
                 <!-- MapReduce input/output parameters -->
                 <property>
                     <name>mapred.input.dir</name>
-                    <value>${da_bwndataMetadataInputPath}</value>
+                    <value>${bwndataMetadataInputPath}</value>
                 </property>
                 <property>
                     <name>mapred.output.dir</name>
-                    <value>${da_contribPersonOutputDir}</value>
+                    <value>${contribPersonOutputDir}</value>
                 </property>
                 <property>
                     <name>mapreduce.inputformat.class</name>
@@ -77,7 +81,7 @@
                 </property>
                 <property>
                     <name>mapred.child.java.opts</name>
-                    <value>${da_mapredChildJavaOpts}</value>
+                    <value>${mapredChildJavaOpts}</value>
                 </property>
                 <property>
                     <name>mapred.map.tasks.speculative.execution</name>
@@ -90,12 +94,13 @@
                 <!-- Job specific parameters -->
                 <property>
                     <name>FEATURE_DESCRIPTION</name>
-                    <value>${da_featureDescription}</value>
+                    <value>${featureDescription}</value>
                 </property>
                 <property>
                     <name>THRESHOLD</name>
-                    <value>${da_threshold}</value>
+                    <value>${threshold}</value>
                 </property>
+
             </configuration>
         </map-reduce>
         <ok to='end'/>
