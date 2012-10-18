@@ -10,7 +10,6 @@ WORKFLOW_LOCAL_PIG_DIR=${TASK}/workflow/pig
 if [ ! -d "$WORKFLOW_LOCAL_LIB_DIR" ]; then
     mkdir ${WORKFLOW_LOCAL_LIB_DIR}
 fi
-
 if [ ! -d "$WORKFLOW_LOCAL_PIG_DIR" ]; then
     mkdir ${WORKFLOW_LOCAL_PIG_DIR}
 fi
