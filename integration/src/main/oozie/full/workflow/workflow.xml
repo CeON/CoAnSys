@@ -3,7 +3,7 @@
     <start to="hbase-dump"/>
     <action name="hbase-dump">
         <sub-workflow>
-            <app-path>${hbaseDumpWorkflowPath}</app-path>
+            <app-path>${hd_workflowPath}</app-path>
             <propagate-configuration/>
         </sub-workflow>
         <ok to="pipeline-start"/>
@@ -17,7 +17,7 @@
     
     <action name="document-similarity">
         <sub-workflow>
-            <app-path>${documentSimilarityWorkflowPath}</app-path>
+            <app-path>${ds_workflowPath}</app-path>
             <propagate-configuration/>
         </sub-workflow>
         <ok to="pipeline-end"/>
@@ -26,7 +26,7 @@
     
     <action name="disambiguation-author-hdfs">
         <sub-workflow>
-            <app-path>${disambiguationAuthorHDFSWorkflowPath}</app-path>
+            <app-path>${da_workflowPath}</app-path>
             <propagate-configuration/>
         </sub-workflow>
         <ok to="coauthor-pairs"/>
@@ -35,7 +35,7 @@
     
     <action name="coauthor-pairs">
         <sub-workflow>
-            <app-path>${coauthorPairsWorkflowPath}</app-path>
+            <app-path>${cp_workflowPath}</app-path>
             <propagate-configuration/>
         </sub-workflow>
         <ok to="pipeline-end"/>
@@ -46,7 +46,7 @@
     
     <action name="qep-load">
         <sub-workflow>
-            <app-path>${qepLoadWorkflowPath}</app-path>
+            <app-path>${ql_workflowPath}</app-path>
             <propagate-configuration/>
         </sub-workflow>
         <ok to="end"/>
