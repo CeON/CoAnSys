@@ -53,7 +53,7 @@ public class DocumentWrapperSequenceFileToHBase implements Tool {
     public static class DocumentWrapperToHBasePutMapper extends Mapper<BytesWritable, BytesWritable, ImmutableBytesWritable, Put> {
 
         private ImmutableBytesWritable docWrapRowKey = new ImmutableBytesWritable();
-        private int MAX_CPROTO_SIZE = 5000000;
+        private int MAX_CPROTO_SIZE = 1000000;
 
         @Override
         protected void map(BytesWritable rowKey, BytesWritable documentWrapper, Context context)
