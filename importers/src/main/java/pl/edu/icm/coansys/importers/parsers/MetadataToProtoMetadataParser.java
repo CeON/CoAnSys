@@ -1,7 +1,6 @@
 /*
  * (C) 2010-2012 ICM UW. All rights reserved.
  */
-
 package pl.edu.icm.coansys.importers.parsers;
 
 import java.io.IOException;
@@ -122,17 +121,17 @@ public class MetadataToProtoMetadataParser {
     }
 
     private static Author.Builder ycontributorToAuthorMetadata(YContributor yContributor) {
-    	Author.Builder authorBuilder = DocumentProtos.Author.newBuilder(); 
-        
-    	List<YName> names = yContributor.getNames();
+        Author.Builder authorBuilder = DocumentProtos.Author.newBuilder();
+
+        List<YName> names = yContributor.getNames();
         for (YName yName : names) {
             String type = yName.getType();
             if ("canonical".equals(type)) {
-            	authorBuilder.setName(yName.getText());
+                authorBuilder.setName(yName.getText());
             } else if ("forenames".equals(type)) {
-            	authorBuilder.setForenames(yName.getText());
+                authorBuilder.setForenames(yName.getText());
             } else if ("surname".equals(type)) {
-            	authorBuilder.setSurname(yName.getText());
+                authorBuilder.setSurname(yName.getText());
             }
         }
 
@@ -141,14 +140,14 @@ public class MetadataToProtoMetadataParser {
             String key = yAttribute.getKey();
             if (key.equals("contact-email")) {
                 if (yAttribute.getValue() != null) {
-                	authorBuilder.setEmail(yAttribute.getValue());
+                    authorBuilder.setEmail(yAttribute.getValue());
                 }
             } else if (key.equals("zbl.author-fingerprint")) {
                 if (yAttribute.getValue() != null) {
-                	ExtId.Builder extId = ExtId.newBuilder();
-                	extId.setSource(ProtoConstants.authorExtIdZbl);
-                	extId.setValue(yAttribute.getValue());
-                	authorBuilder.addExtId(extId.build());
+                    ExtId.Builder extId = ExtId.newBuilder();
+                    extId.setSource(ProtoConstants.authorExtIdZbl);
+                    extId.setValue(yAttribute.getValue());
+                    authorBuilder.addExtId(extId.build());
                 }
             } else if (key.equals("identity")) {
                 String authorIdentity = yAttribute.getValue();
@@ -156,36 +155,39 @@ public class MetadataToProtoMetadataParser {
                     authorIdentity = authorIdentity.substring(authorIdentity.length() - 36);
                 }
                 try {
-                	authorBuilder.setKey(UUID.fromString(authorIdentity).toString());
+                    authorBuilder.setKey(UUID.fromString(authorIdentity).toString());
                 } catch (IllegalArgumentException e) {
-                	log.warn("Invalid UUID string (author id): \"{}\" -- Random UUID will be generated", authorIdentity);
-                	authorBuilder.setKey(UUID.randomUUID().toString());
+                    log.warn("Invalid UUID string (author id): \"{}\" -- Random UUID will be generated", authorIdentity);
+                    authorBuilder.setKey(UUID.randomUUID().toString());
                 }
             }
         }
         if (authorBuilder.getKey() == null || authorBuilder.getKey().length() == 0) {
-        	authorBuilder.setKey(UUID.randomUUID().toString());
+            authorBuilder.setKey(UUID.randomUUID().toString());
         }
 //        authorBuilder.setType(HBaseConstants.T_AUTHOR_COPY);
         return authorBuilder;
     }
 
     private static Author.Builder yattributeToAuthorMetadata(YAttribute node) {
-    	Author.Builder author = DocumentProtos.Author.newBuilder();
+        Author.Builder author = DocumentProtos.Author.newBuilder();
         author.setKey(UUID.randomUUID().toString());
 //        author.setType(HBaseConstants.T_AUTHOR_COPY);
         String content;
-        if((content = node.getValue())!=null)
-        	author.setName(content);
-        if((content = node.getOneAttributeSimpleValue("reference-parsed-author-forenames"))!=null)
-        	author.setForenames(content);
-        if((content = node.getOneAttributeSimpleValue("reference-parsed-author-surname"))!=null)
-        	author.setSurname(content);
-        if((content = node.getOneAttributeSimpleValue("zbl.author-fingerprint"))!=null){
-        	ExtId.Builder extId = ExtId.newBuilder();
-    		extId.setSource(ProtoConstants.authorExtIdZbl);
-    		extId.setValue(content);
-    		author.addExtId(extId.build());
+        if ((content = node.getValue()) != null) {
+            author.setName(content);
+        }
+        if ((content = node.getOneAttributeSimpleValue("reference-parsed-author-forenames")) != null) {
+            author.setForenames(content);
+        }
+        if ((content = node.getOneAttributeSimpleValue("reference-parsed-author-surname")) != null) {
+            author.setSurname(content);
+        }
+        if ((content = node.getOneAttributeSimpleValue("zbl.author-fingerprint")) != null) {
+            ExtId.Builder extId = ExtId.newBuilder();
+            extId.setSource(ProtoConstants.authorExtIdZbl);
+            extId.setValue(content);
+            author.addExtId(extId.build());
         }
         return author;
     }
@@ -197,7 +199,7 @@ public class MetadataToProtoMetadataParser {
         aux.setType(ProtoConstants.documentAuxiliaryTypeOfDocument);
         aux.setValue(ProtoConstants.documentAuxiliaryTypeOfDocument_Reference);
         doc.addAuxiliarInfo(aux);
-        
+
         doc.setKey(UUID.randomUUID().toString());
 //        docBuilder.setType(HBaseConstants.T_REFERENCE);
 
@@ -225,57 +227,64 @@ public class MetadataToProtoMetadataParser {
             refAuthor.setPositionNumber(i);
             doc.addAuthor(refAuthor);
         }
-        
+
         String content = null;
         //References may not contain a title or any other then bibreftext filed
-        if((content = item.getOneAttributeSimpleValue("reference-parsed-title"))!=null) 
-        	doc.setTitle(content);
-       	if((content = item.getOneAttributeSimpleValue("reference-parsed-journal"))!=null) 
-       		doc.setJournal(content);
-      	if((content = item.getOneAttributeSimpleValue("reference-parsed-volume"))!=null) 
-      		doc.setVolume(content);
-      	if((content = item.getOneAttributeSimpleValue("reference-parsed-issue"))!=null) 
-      		doc.setIssue(content);
-        if((content = item.getOneAttributeSimpleValue("reference-parsed-pages"))!=null) 
-        	doc.setPages(content);
-        
+        if ((content = item.getOneAttributeSimpleValue("reference-parsed-title")) != null) {
+            doc.setTitle(content);
+        }
+        if ((content = item.getOneAttributeSimpleValue("reference-parsed-journal")) != null) {
+            doc.setJournal(content);
+        }
+        if ((content = item.getOneAttributeSimpleValue("reference-parsed-volume")) != null) {
+            doc.setVolume(content);
+        }
+        if ((content = item.getOneAttributeSimpleValue("reference-parsed-issue")) != null) {
+            doc.setIssue(content);
+        }
+        if ((content = item.getOneAttributeSimpleValue("reference-parsed-pages")) != null) {
+            doc.setPages(content);
+        }
+
         //TODO czesc kodow MSC mylnie trafia do kwordow - mozna je stamtad wyciagnac porownujac z wzorcem kodu
         List<YAttribute> refMscCodesNodes = item.getAttributes(YaddaIdConstants.CATEGORY_CLASS_MSC);
-        if(refMscCodesNodes.size()>0){
-        	ClassifCode.Builder ccb = ClassifCode.newBuilder();
-        	ccb.setSource(ProtoConstants.documentClassifCodeMsc);
+        if (refMscCodesNodes.size() > 0) {
+            ClassifCode.Builder ccb = ClassifCode.newBuilder();
+            ccb.setSource(ProtoConstants.documentClassifCodeMsc);
 
-        	for (int i = 0; i < refMscCodesNodes.size(); i++)
-            	ccb.addValue(refMscCodesNodes.get(i).getValue());
-        	
-        	doc.addClassifCode(ccb.build());
+            for (int i = 0; i < refMscCodesNodes.size(); i++) {
+                ccb.addValue(refMscCodesNodes.get(i).getValue());
+            }
+
+            doc.addClassifCode(ccb.build());
         }
-        
-        
+
+
         List<YAttribute> refPacsCodesNodes = item.getAttributes(YaddaIdConstants.CATEGORY_CLASS_PACS);
-        
-        if(refPacsCodesNodes.size()>0){
-        	ClassifCode.Builder ccb = ClassifCode.newBuilder();
-        	ccb.setSource(ProtoConstants.documentClassifCodePacs);
-        	
-        	for (int i = 0; i < refPacsCodesNodes.size(); i++)
-            	ccb.addValue(refPacsCodesNodes.get(i).getValue());
-        	
-        	doc.addClassifCode(ccb.build());
+
+        if (refPacsCodesNodes.size() > 0) {
+            ClassifCode.Builder ccb = ClassifCode.newBuilder();
+            ccb.setSource(ProtoConstants.documentClassifCodePacs);
+
+            for (int i = 0; i < refPacsCodesNodes.size(); i++) {
+                ccb.addValue(refPacsCodesNodes.get(i).getValue());
+            }
+
+            doc.addClassifCode(ccb.build());
         }
-        
+
         return doc;
     }
 
     public static DocumentMetadata yelementToDocumentMetadata(YElement yElement, String collection) {
         YStructure struct = yElement.getStructure(YaddaIdConstants.ID_HIERARACHY_JOURNAL);
-        if (struct == null || !YaddaIdConstants.ID_LEVEL_JOURNAL_ARTICLE.equals(struct.getCurrent().getLevel())) {
+        if (struct != null && !YaddaIdConstants.ID_LEVEL_JOURNAL_ARTICLE.equals(struct.getCurrent().getLevel())) {
             return null;
         }
 
         DocumentMetadata.Builder docBuilder = DocumentProtos.DocumentMetadata.newBuilder();
 
-        
+
         Auxiliar.Builder aux = Auxiliar.newBuilder();
         aux.setType(ProtoConstants.documentAuxiliaryTypeOfDocument);
         aux.setValue(ProtoConstants.documentAuxiliaryTypeOfDocument_Document);
@@ -287,83 +296,87 @@ public class MetadataToProtoMetadataParser {
             keywords = tagList.getValues();
         }
         docBuilder.addAllKeyword(keywords);
-        
-        
+
+
         List<YDescription> abst = yElement.getDescriptions();
         if (abst != null && abst.size() > 0 && abst.get(0) != null) {
             docBuilder.setAbstrakt(abst.get(0).getText());
         }
 
-        YAncestor issue = yElement.getStructure(YaddaIdConstants.ID_HIERARACHY_JOURNAL).getAncestor("bwmeta1.level.hierarchy_Journal_Issue");
-        if (issue != null && issue.getOneName() != null) {
-            docBuilder.setIssue(issue.getOneName().getText());
-        }
+        if (struct != null) {
+            YAncestor issue = struct.getAncestor("bwmeta1.level.hierarchy_Journal_Issue");
+            if (issue != null && issue.getOneName() != null) {
+                docBuilder.setIssue(issue.getOneName().getText());
+            }
+            YAncestor volume = struct.getAncestor(YaddaIdConstants.ID_LEVEL_JOURNAL_VOLUME);
+            if (volume != null) {
+                docBuilder.setVolume(volume.getOneName().getText());
+            }
+            YAncestor journal = struct.getAncestor(YaddaIdConstants.ID_LEVEL_JOURNAL_JOURNAL);
+            if (journal != null) {
+                docBuilder.setJournal(journal.getOneName().getText());
+            }
 
-        YAncestor volume = yElement.getStructure(YaddaIdConstants.ID_HIERARACHY_JOURNAL).getAncestor(YaddaIdConstants.ID_LEVEL_JOURNAL_VOLUME);
-        if (volume != null) {
-            docBuilder.setVolume(volume.getOneName().getText());
+            YAncestor pages = struct.getAncestor(YaddaIdConstants.ID_LEVEL_JOURNAL_ARTICLE);
+            if (pages != null) {
+                docBuilder.setPages(pages.getPosition());
+            }
         }
 
         String content;
-        if((content = yElement.getId(YaddaIdConstants.IDENTIFIER_CLASS_DOI))!=null)
-        	docBuilder.setDoi(content);
-        if((content = yElement.getId(YaddaIdConstants.IDENTIFIER_CLASS_ISSN))!=null)
-        	docBuilder.setIssn(content);
-        if((content = yElement.getId(YaddaIdConstants.IDENTIFIER_CLASS_ISBN))!=null)
-        	docBuilder.setIsbn(content);
-        if((content = yElement.getId("bwmeta1.id-class.MR"))!=null){
-        	ExtId.Builder eib = ExtId.newBuilder();
-        	eib.setSource(ProtoConstants.documentExtIdMr);
-        	eib.setValue(content);
-        	docBuilder.setExtId(eib.build());
+        if ((content = yElement.getId(YaddaIdConstants.IDENTIFIER_CLASS_DOI)) != null) {
+            docBuilder.setDoi(content);
         }
-        if((content = yElement.getId())!=null){
-        	ExtId.Builder eib = ExtId.newBuilder();
-        	eib.setSource(ProtoConstants.documentExtIdBwmeta);
-        	eib.setValue(content);
-        	docBuilder.setExtId(eib.build());
+        if ((content = yElement.getId(YaddaIdConstants.IDENTIFIER_CLASS_ISSN)) != null) {
+            docBuilder.setIssn(content);
         }
-        if((content = yElement.getId("bwmeta1.id-class.Zbl"))!=null){
-        	ExtId.Builder eib = ExtId.newBuilder();
-        	eib.setSource(ProtoConstants.documentExtIdZbl);
-        	eib.setValue(content);
-        	docBuilder.setExtId(eib.build());
+        if ((content = yElement.getId(YaddaIdConstants.IDENTIFIER_CLASS_ISBN)) != null) {
+            docBuilder.setIsbn(content);
+        }
+        if ((content = yElement.getId("bwmeta1.id-class.MR")) != null) {
+            ExtId.Builder eib = ExtId.newBuilder();
+            eib.setSource(ProtoConstants.documentExtIdMr);
+            eib.setValue(content);
+            docBuilder.setExtId(eib.build());
+        }
+        if ((content = yElement.getId()) != null) {
+            ExtId.Builder eib = ExtId.newBuilder();
+            eib.setSource(ProtoConstants.documentExtIdBwmeta);
+            eib.setValue(content);
+            docBuilder.setExtId(eib.build());
+        }
+        if ((content = yElement.getId("bwmeta1.id-class.Zbl")) != null) {
+            ExtId.Builder eib = ExtId.newBuilder();
+            eib.setSource(ProtoConstants.documentExtIdZbl);
+            eib.setValue(content);
+            docBuilder.setExtId(eib.build());
         }
 
         List<YCategoryRef> catRefs = yElement.getCategoryRefs();
 
         //TODO czesc kodow MSC mylnie trafia do kwordow - mozna je stamtad wyciagnac porownujac z wzorcem kodu
         if (catRefs != null && catRefs.size() > 0) {
-        	
-        	ClassifCode.Builder ccodeMSC = ClassifCode.newBuilder();
-        	ccodeMSC.setSource(ProtoConstants.documentClassifCodeMsc);
-        	
-        	ClassifCode.Builder ccodePACS = ClassifCode.newBuilder();
-        	ccodePACS.setSource(ProtoConstants.documentClassifCodePacs);
-        	
+
+            ClassifCode.Builder ccodeMSC = ClassifCode.newBuilder();
+            ccodeMSC.setSource(ProtoConstants.documentClassifCodeMsc);
+
+            ClassifCode.Builder ccodePACS = ClassifCode.newBuilder();
+            ccodePACS.setSource(ProtoConstants.documentClassifCodePacs);
+
             for (YCategoryRef yCategoryRef : catRefs) {
                 if (yCategoryRef != null && yCategoryRef.getClassification().equals(YaddaIdConstants.CATEGORY_CLASS_MSC)) {
-                	ccodeMSC.addValue(yCategoryRef.getCode());
+                    ccodeMSC.addValue(yCategoryRef.getCode());
                 } else if (yCategoryRef != null && yCategoryRef.getClassification().equals(YaddaIdConstants.CATEGORY_CLASS_PACS)) {
-                	ccodePACS.addValue(yCategoryRef.getCode());
+                    ccodePACS.addValue(yCategoryRef.getCode());
                 }
             }
-            if(ccodeMSC.getValueCount()>0)
-            	docBuilder.addClassifCode(ccodeMSC.build());
-            if(ccodePACS.getValueCount()>0)
-            	docBuilder.addClassifCode(ccodePACS.build());
+            if (ccodeMSC.getValueCount() > 0) {
+                docBuilder.addClassifCode(ccodeMSC.build());
+            }
+            if (ccodePACS.getValueCount() > 0) {
+                docBuilder.addClassifCode(ccodePACS.build());
+            }
         }
-
-        YAncestor journal = yElement.getStructure(YaddaIdConstants.ID_HIERARACHY_JOURNAL).getAncestor(YaddaIdConstants.ID_LEVEL_JOURNAL_JOURNAL);
-        if (journal != null) {
-            docBuilder.setJournal(journal.getOneName().getText());
-        }
-
-        YAncestor pages = yElement.getStructure(YaddaIdConstants.ID_HIERARACHY_JOURNAL).getAncestor(YaddaIdConstants.ID_LEVEL_JOURNAL_ARTICLE);
-        if (pages != null) {        	
-            docBuilder.setPages(pages.getPosition());
-        }
-
 
         UUID uuId;
 
@@ -371,7 +384,7 @@ public class MetadataToProtoMetadataParser {
         if (uuIdStr.length() >= 36) {
             uuIdStr = uuIdStr.substring(uuIdStr.length() - 36);
         }
-        
+
         try {
             uuId = UUID.fromString(uuIdStr);
         } catch (IllegalArgumentException e) {
@@ -379,7 +392,7 @@ public class MetadataToProtoMetadataParser {
             uuId = UUID.randomUUID();
         }
         docBuilder.setKey(uuId.toString());
-        
+
 //        docBuilder.setType(HBaseConstants.T_DOCUMENT_COPY);
         docBuilder.setTitle(yElement.getOneName().getText());
 
@@ -395,7 +408,7 @@ public class MetadataToProtoMetadataParser {
             }
         }
         docBuilder.addAllAuthor(authors);
-        
+
         List<YRelation> refNodes = yElement.getRelations("reference-to");
         List<DocumentMetadata> references = new ArrayList<DocumentMetadata>();
         if (refNodes != null && refNodes.size() > 0) {
@@ -411,7 +424,7 @@ public class MetadataToProtoMetadataParser {
         }
 
         docBuilder.addAllReference(references);
-        
+
         docBuilder.setCollection(collection);
 
         return docBuilder.build();
