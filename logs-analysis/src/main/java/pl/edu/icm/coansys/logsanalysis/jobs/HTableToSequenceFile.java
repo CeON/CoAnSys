@@ -63,11 +63,13 @@ public class HTableToSequenceFile implements Tool {
         job.setMapperClass(ConvertMap.class);
         job.setMapOutputKeyClass(NullWritable.class);
         job.setMapOutputValueClass(BytesWritable.class);
+        job.setOutputKeyClass(NullWritable.class);
+        job.setOutputValueClass(BytesWritable.class);
         job.setInputFormatClass(TableInputFormat.class);
         job.setOutputFormatClass(SequenceFileOutputFormat.class);
 
         Scan scan = new Scan();
-        TableMapReduceUtil.initTableMapperJob("tabela", scan, ConvertMap.class, NullWritable.class, BytesWritable.class, job);
+        TableMapReduceUtil.initTableMapperJob(args[0], scan, ConvertMap.class, NullWritable.class, BytesWritable.class, job);
         SequenceFileOutputFormat.setOutputPath(job, new Path(args[3]));
         
         /*
