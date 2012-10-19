@@ -1,9 +1,10 @@
 -------------------------------------------------------
 -- load BWMeta documents form sequence files stored in hdfs
 -------------------------------------------------------
-DEFINE load_bwndata_hdfs(inputPath) RETURNS doc {
-	raw_bytes = LOAD '$inputPath' USING pl.edu.icm.coansys.importers.pig.udf.RichSequenceFileLoader();
-	raw_doc = FOREACH raw_bytes GENERATE 
+DEFINE load_bwndata_hdfs(inputPath, sampling) RETURNS doc {
+	raw_bytes = LOAD '$inputPath' USING pl.edu.icm.coansys.importers.pig.udf.RichSequenceFileLoader();	
+	raw_bytes_sample = SAMPLE raw_bytes $sampling;
+	raw_doc = FOREACH raw_bytes_sample GENERATE 
 			pl.edu.icm.coansys.importers.pig.udf.BytesToDataByteArray($0) AS rowkey, 
 			FLATTEN(pl.edu.icm.coansys.importers.pig.udf.DocumentComponentsProtoTupler($1)) AS (docId, mproto, cproto);
 	
@@ -13,9 +14,10 @@ DEFINE load_bwndata_hdfs(inputPath) RETURNS doc {
 -------------------------------------------------------
 -- load BWMeta metadata form sequence files stored in hdfs
 -------------------------------------------------------
-DEFINE load_bwndata_metadata_hdfs(inputPath) RETURNS meta {
+DEFINE load_bwndata_metadata_hdfs(inputPath, sampling) RETURNS meta {
 	raw_bytes = LOAD '$inputPath' USING pl.edu.icm.coansys.importers.pig.udf.RichSequenceFileLoader();
-	raw_meta = FOREACH raw_bytes GENERATE 
+	raw_bytes_sample = SAMPLE raw_bytes $sampling;
+	raw_meta = FOREACH raw_bytes_sample GENERATE 
 			pl.edu.icm.coansys.importers.pig.udf.BytesToDataByteArray($0) AS rowkey,
 			pl.edu.icm.coansys.importers.pig.udf.BytesToDataByteArray($1) AS mproto;
 
@@ -105,7 +107,7 @@ DEFINE calculate_tf_idf(docTerm) RETURNS tfidf {
 
 
 -------------------------------------------------------
--- calculate tfidf
+-- calculate tfidf 2
 -------------------------------------------------------
 DEFINE calculate_tf_idf2(docTerm) RETURNS tfidf {
 	-- term count in a given document
@@ -130,4 +132,40 @@ DEFINE calculate_tf_idf2(docTerm) RETURNS tfidf {
 	E = FOREACH E1 GENERATE FLATTEN(D) AS (docId, term, tc, ttc, dc), COUNT(D) AS ttdc;
 	
 	$tfidf = FOREACH E GENERATE docId, term, ((double) tc / (double) ttc) * LOG( (1.0 + (double) dc) / ( 1.0 + (double) ttdc)) AS tfidf;
+};
+
+DEFINE tf_idf(in_relation, id_field, token_field, paral) RETURNS out_relation { 
+  	/* Calculate the term count per document */
+  	doc_word_totals = foreach (group $in_relation by ($id_field, $token_field) parallel $paral) generate 
+    		FLATTEN(group) as ($id_field, token), 
+		COUNT_STAR($in_relation) as doc_total;
+ 
+  	/* Calculate the document size */
+  	pre_term_counts = foreach (group doc_word_totals by $id_field parallel $paral) generate
+    		group AS $id_field,
+    		FLATTEN(doc_word_totals.(token, doc_total)) as (token, doc_total), 
+    		SUM(doc_word_totals.doc_total) as doc_size;
+ 
+  	/* Calculate the TF */
+  	term_freqs = foreach pre_term_counts generate $id_field as $id_field,
+    		token as token,
+    		((double)doc_total / (double)doc_size) AS term_freq;
+ 
+  	/* Get count of documents using each token, for idf */
+  	token_usages = foreach (group term_freqs by token parallel $paral) generate
+    		FLATTEN(term_freqs) as ($id_field, token, term_freq),
+    		COUNT_STAR(term_freqs) as num_docs_with_token;
+ 
+  	/* Get document count */
+  	just_ids = foreach $in_relation generate $id_field;
+  	ndocs = foreach (group just_ids all parallel $paral) generate COUNT_STAR(just_ids) as total_docs;
+ 
+  	/* Note the use of Pig Scalars to calculate idf */
+  	$out_relation = foreach token_usages {
+    		idf    = LOG((double)ndocs.total_docs/(double)num_docs_with_token);
+    		tf_idf = (double)term_freq * idf;
+    		generate $id_field as $id_field,
+      			token as $token_field,
+      			tf_idf as tfidf;
+  	};
 };
