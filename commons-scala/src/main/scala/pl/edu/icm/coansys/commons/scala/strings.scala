@@ -1,4 +1,4 @@
-package pl.edu.icm.coansys.citations.commons
+package pl.edu.icm.coansys.commons.scala
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)

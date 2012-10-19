@@ -1,14 +1,15 @@
 package pl.edu.icm.coansys.citations
 
-import com.twitter.scalding.{SequenceFile, TypedPipe, Args, Job}
-import commons.strings.rotations
+import com.twitter.scalding._
 import org.apache.hadoop
 import hadoop.io.{Writable, MapFile}
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.{Path, FileSystem}
 import java.net.URI
-
+import pl.edu.icm.coansys.commons.scala.strings.rotations
 import pl.edu.icm.coansys.commons.scala.automatic_resource_management.using
+import com.twitter.scalding.SequenceFile
+import cascading.tuple.Fields
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -28,8 +29,8 @@ class Main(args: Args) extends Job(args) {
     }
   }
 
-  def buildIndex() {
-    def readDocs(): TypedPipe[DocumentWrapper] = throw new RuntimeException
+  def buildIndex(readDocs: () => TypedPipe[DocumentWrapper], indexFile: String) {
+//    def readDocs(): TypedPipe[DocumentWrapper] = throw new RuntimeException
     def indexEntries(allDocs: TypedPipe[DocumentWrapper]) = {
       val tokensWithDocs =
         allDocs
@@ -45,15 +46,33 @@ class Main(args: Args) extends Job(args) {
       rotationsWithDocs
     }
 
-    val tmpSeqFile = throw new RuntimeException
-    indexEntries(readDocs()).write((0, 1), new SequenceFile(tmpSeqFile))
-    convertSeqToMap(tmpSeqFile)
+//    indexEntries(readDocs()).write((0, 1), SequenceFile(indexFile))
+//    convertSeqToMap(indexFile)
   }
 
   def doMatching() {
     throw new RuntimeException
   }
 
-  buildIndex()
-  doMatching()
+  def mockReadDocs(): TypedPipe[DocumentWrapper] = {
+    val docs = List(
+      new MockDocumentWrapper("1", "aaa bbb"),
+      new MockDocumentWrapper("2", "bbb ccc"),
+      new MockDocumentWrapper("3", "aaa ddd"),
+      new MockDocumentWrapper("4", "bbb eee"),
+      new MockDocumentWrapper("5", "abc adb"),
+      new MockDocumentWrapper("6", "ewr fds"),
+      new MockDocumentWrapper("7", "sda czx"),
+      new MockDocumentWrapper("8", "aca bba")
+    )
+    TypedPipe.from(IterableSource(docs))
+  }
+
+  def mockReadStrings(): TypedPipe[String] =
+    TypedPipe.from(TextLine(args("input")))
+
+
+  mockReadStrings().map(d => (d, d)).write((0, 1), SequenceFile(args("indexFile")))
+//  buildIndex(mockReadDocs, args("indexFile"))
+//  doMatching()
 }
