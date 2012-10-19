@@ -11,7 +11,6 @@ import org.apache.hadoop.hbase.mapreduce.TableMapper;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
-import org.apache.log4j.Logger;
 
 import pl.edu.icm.coansys.classification.documents.auxil.PorterStemmer;
 import pl.edu.icm.coansys.disambiguation.auxil.DiacriticsRemover;
@@ -22,6 +21,8 @@ import pl.edu.icm.coansys.importers.constants.HBaseConstant;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
 
 import com.google.common.base.Joiner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -31,7 +32,7 @@ import com.google.common.base.Joiner;
  */
 public class WordCountMapper_Proto extends TableMapper<TextArrayWritable, IntWritable> {
 
-	private static Logger logger = Logger.getLogger(LoggingInDisambiguation.class);
+	private static Logger logger = LoggerFactory.getLogger(LoggingInDisambiguation.class);
 	private final static IntWritable one = new IntWritable(1);
 	private Text key = null;
     

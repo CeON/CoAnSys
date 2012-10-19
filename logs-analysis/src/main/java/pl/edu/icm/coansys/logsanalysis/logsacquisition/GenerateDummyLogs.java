@@ -4,12 +4,13 @@
 package pl.edu.icm.coansys.logsanalysis.logsacquisition;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import pl.edu.icm.coansys.logsanalysis.models.AuditEntryFactory;
+import pl.edu.icm.coansys.logsanalysis.models.AuditEntryHelper;
 import pl.edu.icm.coansys.logsanalysis.transformers.AuditEntry2Protos;
 import pl.edu.icm.coansys.logsanalysis.transformers.BytesArray2SequenceFile;
 import pl.edu.icm.synat.api.services.audit.model.AuditEntry;
@@ -21,9 +22,12 @@ import pl.edu.icm.synat.api.services.audit.model.AuditEntry;
  * This class generates a list of dummy log entries for tests.
  *
  */
-public class GenerateDummyLogs {
+public final class GenerateDummyLogs {
 
-    private static class AuditEntryComparator implements Comparator<AuditEntry> {
+    private GenerateDummyLogs() {
+    }
+
+    private static class AuditEntryComparator implements Comparator<AuditEntry>, Serializable {
 
         @Override
         public int compare(AuditEntry o1, AuditEntry o2) {
@@ -92,11 +96,11 @@ public class GenerateDummyLogs {
 
                 AuditEntry newLog;
                 if (eventType.equals("SAVE_TO_DISK")) {
-                    newLog = AuditEntryFactory.getAuditEntry(generateRandomId(), AuditEntry.Level.INFO, new Date(time), "PORTAL", eventType,
+                    newLog = AuditEntryHelper.getAuditEntry(generateRandomId(), AuditEntry.Level.INFO, new Date(time), "PORTAL", eventType,
                             IPADDRESSES[random.nextInt(IPADDRESSES.length)], URLS[random.nextInt(URLS.length)], URLS[random.nextInt(URLS.length)],
                             sessionId, user, RESOURCES[random.nextInt(RESOURCES.length)]);
                 } else {
-                    newLog = AuditEntryFactory.getAuditEntry(generateRandomId(), AuditEntry.Level.INFO, new Date(time), "PORTAL", eventType,
+                    newLog = AuditEntryHelper.getAuditEntry(generateRandomId(), AuditEntry.Level.INFO, new Date(time), "PORTAL", eventType,
                             IPADDRESSES[random.nextInt(IPADDRESSES.length)], URLS[random.nextInt(URLS.length)], URLS[random.nextInt(URLS.length)],
                             sessionId, user);
                 }

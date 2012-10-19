@@ -13,7 +13,10 @@ import pl.edu.icm.coansys.logsanalysis.transformers.BytesArray2SequenceFile;
  *
  * @author Artur Czeczko <a.czeczko@icm.edu.pl>
  */
-public class ReportMostPopular {
+public final class ReportMostPopular {
+
+    private ReportMostPopular() {
+    }
 
     public static void main(String[] args) throws IOException {
         if (args.length < 1) {
