@@ -5,7 +5,16 @@ import java.io.{DataOutput, DataInput}
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
-class MockDocumentWrapper(var id: String, var authors: String) extends DocumentWrapper {
+class MockDocumentWrapper extends DocumentWrapper {
+  var id: String = ""
+  var authors: String = ""
+
+  def this(id: String, authors: String) {
+    this()
+    this.id = id
+    this.authors = authors
+  }
+
   def normalisedAuthorTokens = authors.toLowerCase.split("""\s+""")
 
   def write(out: DataOutput) {
