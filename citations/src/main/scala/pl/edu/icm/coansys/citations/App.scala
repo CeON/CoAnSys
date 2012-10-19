@@ -8,9 +8,12 @@ import org.apache.hadoop.io.{SequenceFile, MapFile, Writable}
 
 import pl.edu.icm.coansys.commons.scala.strings.rotations
 import pl.edu.icm.coansys.commons.scala.automatic_resource_management.using
-import com.nicta.scoobi.core.DList
+import com.nicta.scoobi.core.{WireFormat, DList}
 import com.nicta.scoobi.Persist.persist
-import com.nicta.scoobi.InputsOutputs.toSequenceFile
+import com.nicta.scoobi.InputsOutputs.{convertToSequenceFile, toSequenceFile}
+import java.io.{DataInput, DataOutput}
+import com.nicta.scoobi.io.sequence.SeqSchema
+import collection.mutable.ListBuffer
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -23,7 +26,7 @@ object App extends ScoobiApp {
     val fs = FileSystem.get(URI.create(uri), conf)
     val map = new Path(uri)
     val mapData = new Path(map, MapFile.DATA_FILE_NAME)
-    using(new SequenceFile.Reader(fs, mapData, conf)) {
+    using(new SequenceFile.Reader(fs, map, conf)) {
       reader =>
         val keyClass = reader.getKeyClass
         val valueClass = reader.getValueClass
@@ -31,13 +34,13 @@ object App extends ScoobiApp {
     }
   }
 
-  def buildIndex(readDocs: () => DList[DocumentWrapper], indexFile: String) {
-    //    def readDocs(): TypedPipe[DocumentWrapper] = throw new RuntimeException
-    def indexEntries(allDocs: DList[DocumentWrapper]) = {
+  def buildIndex(readDocs: () => DList[MockDocumentWrapper], indexFile: String) {
+    //    def readDocs(): TypedPipe[MockDocumentWrapper] = throw new RuntimeException
+    def indexEntries(allDocs: DList[MockDocumentWrapper]) = {
       val tokensWithDocs =
         allDocs
           .flatMap(d => d.normalisedAuthorTokens zip Iterator.continually(d).toIterable)
-          .groupByKey[String, DocumentWrapper]
+          .groupByKey[String, MockDocumentWrapper]
 
       val rotationsWithDocs = tokensWithDocs.flatMap {
         case (token, docs) => rotations(token) zip Iterator.continually(docs).toIterable
@@ -45,7 +48,8 @@ object App extends ScoobiApp {
 
       rotationsWithDocs
     }
-    persist(toSequenceFile(indexEntries(readDocs()), indexFile))
+    implicit val docsIterableSchema = new IterableSchema(new MockDocumentWrapper())
+    persist(convertToSequenceFile(indexEntries(readDocs()), indexFile))
     convertSeqToMap(indexFile)
   }
 
@@ -53,7 +57,7 @@ object App extends ScoobiApp {
     throw new RuntimeException
   }
 
-  def mockReadDocs(): DList[DocumentWrapper] = DList.apply[DocumentWrapper](
+  def mockReadDocs(): DList[MockDocumentWrapper] = DList.apply[MockDocumentWrapper](
     new MockDocumentWrapper("1", "aaa bbb"),
     new MockDocumentWrapper("2", "bbb ccc"),
     new MockDocumentWrapper("3", "aaa ddd"),
