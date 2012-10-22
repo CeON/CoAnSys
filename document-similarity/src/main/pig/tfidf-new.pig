@@ -7,10 +7,10 @@
 %default KEYWORD_WEIGHT 1.0
 %default TITLE_WEIGHT 1.0
 %default ABSTRACT_WEIGHT 1.0
-%default sample 1.0
+%default sample 0.1
 
 %default inputPath hdfs://hadoop-master:8020/user/akawa/full/hbase-dump/mproto-m*
-%default outputPath hdfs://hadoop-master:8020/user/akawa/full/similarity/tfidf-new-1
+%default outputPath hdfs://hadoop-master:8020/user/akawa/full/similarity/tfidf-new-lzo2
 %default commonJarsPath ../oozie/similarity/workflow/lib/*.jar
 %default parallel 32
 
@@ -28,7 +28,7 @@ IMPORT 'macros.pig';
 set default_parallel $parallel
 set mapred.child.java.opts -Xmx8000m
 SET pig.tmpfilecompression true
-SET pig.tmpfilecompression.codec gz
+SET pig.tmpfilecompression.codec lzo
 
 -------------------------------------------------------
 -- business code section
