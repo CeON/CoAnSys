@@ -55,7 +55,7 @@ public class BytesArray2SequenceFile {
         Configuration conf = createConf();
         FileSystem fs = FileSystem.get(URI.create(uri), conf);
         Path path = new Path(uri);
-        SequenceFile.Reader reader = new SequenceFile.Reader(fs, path, conf);
+        SequenceFile.Reader reader = new SequenceFile.Reader(conf, SequenceFile.Reader.file(path));
 
         return new BWIterable(reader, conf);
     }

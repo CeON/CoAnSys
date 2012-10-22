@@ -8,7 +8,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Map;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  *
  * @author akawa
@@ -16,7 +17,7 @@ import org.apache.log4j.Logger;
 
 public class JavaShellRunner {
 
-    private static Logger logger = Logger.getLogger(JavaShellRunner.class);
+    private static Logger logger = LoggerFactory.getLogger(JavaShellRunner.class);
 
     private static String[] parseArgs(String[] args) {
         if (args == null || args.length < 2) {
