@@ -71,7 +71,7 @@
                 </property> 
             </configuration>
             <script>${pigScriptsDir}/allpairs_similarity.pig</script>
-            <param>tfidfPath=${ds_tfidfOutputDir}</param>
+            <param>tfidfPath=${ds_tfidfOutputDir}/weighted</param>
             <param>outputPath=${ds_similarityOutputDir}</param>
             <param>commonJarsPath=${commonJarsPath}</param>
 	    <param>parallel=${ds_parallel}</param>
