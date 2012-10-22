@@ -1,5 +1,5 @@
-%default tfidfPath 'hdfs://hadoop-master:8020/user/akawa/full/similarity/tfidf-new1'
-%default outputPath 'hdfs://hadoop-master:8020/user/akawa/full/similarity/docsim-ps5'
+%default tfidfPath 'hdfs://hadoop-master:8020/user/akawa/full/similarity/tfidf-new9/weighted'
+%default outputPath 'hdfs://hadoop-master:8020/user/akawa/full/similarity/docsim-10'
 %default commonJarsPath '../oozie/similarity/workflow/lib/*.jar'
 %default parallel 10
 
@@ -21,7 +21,7 @@ set default_parallel $parallel
 tfidf = LOAD '$tfidfPath' AS (docId: bytearray, term: chararray, tfidf: double);
 tfidf2 = LOAD '$tfidfPath' AS (docId: bytearray, term: chararray, tfidf: double);
 
-tfidf_join = FILTER(JOIN tfidf BY term, tfidf2 BY term USING 'merge') BY tfidf::docId < tfidf2::docId;
+tfidf_join = FILTER(JOIN tfidf BY term, tfidf2 BY term USING 'merge' parallel $parallel) BY tfidf::docId < tfidf2::docId;
 	
 term_docs_TFIDF = FOREACH tfidf_join GENERATE 
 	tfidf::term AS term, 

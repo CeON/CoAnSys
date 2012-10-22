@@ -54,8 +54,8 @@ DEFINE load_bwndata_metadata(tableName) RETURNS doc {
 -------------------------------------------------------
 DEFINE stem_and_filter_out(docterms, type) RETURNS dt {
 	doc_keyword_stemmed = FOREACH $docterms GENERATE rowkey AS docId, FLATTEN(StemmedPairs(document#'$type')) AS term;
-	doc_keyword_not_stop = FILTER doc_keyword_stemmed BY StopWordFilter(term);
-	$dt = FILTER doc_keyword_not_stop BY term IS NOT NULL;
+	doc_keyword_filtered = FILTER doc_keyword_stemmed BY term IS NOT NULL AND term != '' AND StopWordFilter(term);
+	$dt = FOREACH doc_keyword_filtered GENERATE docId, (chararray) term;
 };
 
 -------------------------------------------------------
@@ -135,32 +135,32 @@ DEFINE calculate_tf_idf2(docTerm) RETURNS tfidf {
 };
 
 DEFINE tf_idf(in_relation, id_field, token_field, paral) RETURNS out_relation { 
-  	/* Calculate the term count per document */
+  	-- Calculate the term count per document
   	doc_word_totals = foreach (group $in_relation by ($id_field, $token_field) parallel $paral) generate 
     		FLATTEN(group) as ($id_field, token), 
 		COUNT_STAR($in_relation) as doc_total;
- 
-  	/* Calculate the document size */
+
+  	-- Calculate the document size
   	pre_term_counts = foreach (group doc_word_totals by $id_field parallel $paral) generate
     		group AS $id_field,
     		FLATTEN(doc_word_totals.(token, doc_total)) as (token, doc_total), 
     		SUM(doc_word_totals.doc_total) as doc_size;
  
-  	/* Calculate the TF */
+  	-- Calculate the TF
   	term_freqs = foreach pre_term_counts generate $id_field as $id_field,
     		token as token,
     		((double)doc_total / (double)doc_size) AS term_freq;
  
-  	/* Get count of documents using each token, for idf */
+  	-- Get count of documents using each token, for idf
   	token_usages = foreach (group term_freqs by token parallel $paral) generate
     		FLATTEN(term_freqs) as ($id_field, token, term_freq),
     		COUNT_STAR(term_freqs) as num_docs_with_token;
  
-  	/* Get document count */
+  	-- Get document count
   	just_ids = foreach $in_relation generate $id_field;
   	ndocs = foreach (group just_ids all parallel $paral) generate COUNT_STAR(just_ids) as total_docs;
  
-  	/* Note the use of Pig Scalars to calculate idf */
+  	-- Note the use of Pig Scalars to calculate idf
   	$out_relation = foreach token_usages {
     		idf    = LOG((double)ndocs.total_docs/(double)num_docs_with_token);
     		tf_idf = (double)term_freq * idf;
