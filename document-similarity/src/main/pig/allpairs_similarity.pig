@@ -23,6 +23,8 @@ DEFINE CosineSimilarity pl.edu.icm.coansys.similarity.pig.udf.CosineSimilarity()
 -- business code section
 -------------------------------------------------------
 set default_parallel $parallel
+set pig.tmpfilecompression true
+set pig.tmpfilecompression.codec gz
 
 tfidf = LOAD '$tfidfPath' AS (docId: chararray, term: chararray, tfidf: double);
 g1 = GROUP tfidf BY docId;

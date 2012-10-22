@@ -16,6 +16,9 @@ DEFINE DocsCombinedSimilarity pl.edu.icm.coansys.similarity.pig.udf.AvgSimilarit
 -- business code section
 ----------------------------------------------------
 set default_parallel $parallel
+set pig.tmpfilecompression true
+set pig.tmpfilecompression.codec gz
+
 
 /* tfidf should be pre-sorted by term, since the current version of merge join does not support order operator between load and join */
 tfidf = LOAD '$tfidfPath' AS (docId: bytearray, term: chararray, tfidf: double);
