@@ -25,8 +25,8 @@ DEFINE StopWordFilter pl.edu.icm.coansys.similarity.pig.udf.StopWordFilter();
 
 IMPORT 'macros.pig';
 
-set default_parallel $parallel
-set mapred.child.java.opts -Xmx8000m
+SET default_parallel $parallel
+SET mapred.child.java.opts -Xmx8000m
 SET pig.tmpfilecompression true
 SET pig.tmpfilecompression.codec lzo
 
