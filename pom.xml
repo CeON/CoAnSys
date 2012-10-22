@@ -20,7 +20,7 @@
         <protobuf.java.version>2.4.1</protobuf.java.version>
         <testng.version>6.5.2</testng.version>
         <maven.surefire.plugin.version>2.12.3</maven.surefire.plugin.version>
-        <synat.version>1.6-SNAPSHOT</synat.version>
+        <synat.version>1.7-SNAPSHOT</synat.version>
     </properties>
     
     <build>
@@ -204,13 +204,6 @@
             <groupId>pl.edu.icm.synat</groupId>
             <artifactId>synat-platform-connector</artifactId>
             <version>${synat.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>pl.edu.icm.synat</groupId>
-            <artifactId>synat-core-services-impl</artifactId>
-            <version>${synat.version}</version>
-            <scope>test</scope>
-            <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.apache.hadoop</groupId>

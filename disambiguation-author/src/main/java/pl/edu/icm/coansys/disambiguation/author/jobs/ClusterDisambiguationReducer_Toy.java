@@ -18,14 +18,13 @@ import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.disambiguation.author.constants.HBaseConstants;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.DisambiguatorFactory;
 import pl.edu.icm.coansys.disambiguation.auxil.LoggingInDisambiguation;
 import pl.edu.icm.coansys.disambiguation.auxil.TextTextArrayMapWritable;
-import pl.edu.icm.coansys.disambiguation.clustering.strategies.CompleteLinkageHACStrategy_OnlyMax;
 import pl.edu.icm.coansys.disambiguation.clustering.strategies.SingleLinkageHACStrategy_OnlyMax;
 import pl.edu.icm.coansys.disambiguation.features.Disambiguator;
 import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
@@ -40,7 +39,7 @@ import pl.edu.icm.coansys.disambiguation.idgenerators.UuIdGenerator;
  */
 public class ClusterDisambiguationReducer_Toy extends Reducer<Text, TextTextArrayMapWritable, ImmutableBytesWritable, Put> {
 
-	private static Logger logger = Logger.getLogger(LoggingInDisambiguation.class);
+	private static Logger logger = LoggerFactory.getLogger(LoggingInDisambiguation.class);
 	protected String reducerId = new Date().getTime() + "_" + new Random().nextFloat();
 	
 	protected double threshold;
@@ -57,8 +56,6 @@ public class ClusterDisambiguationReducer_Toy extends Reducer<Text, TextTextArra
     @Override
     public void setup(Context context) throws IOException, InterruptedException {
 
-        logger.setLevel(Level.DEBUG);
-        
         Configuration conf = context.getConfiguration();
         
         threshold = Double.parseDouble(conf.getStrings("THRESHOLD")[0]);
@@ -217,11 +214,9 @@ public class ClusterDisambiguationReducer_Toy extends Reducer<Text, TextTextArra
 		try {
 			context.write(null, put);
 		} catch (IOException e) {
-			logger.debug("During persisting the cluster "+rowId+" following IOException occured:");
-			logger.debug(e);
+			logger.debug("During persisting the cluster "+rowId+" following IOException occured: " + e);
 		} catch (InterruptedException e) {
-			logger.debug("During persisting the cluster "+rowId+" following InterruptedException occured:");
-			logger.debug(e);
+			logger.debug("During persisting the cluster "+rowId+" following InterruptedException occured: " + e);
 		}
 	}
 
