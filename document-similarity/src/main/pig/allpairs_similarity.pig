@@ -1,3 +1,10 @@
+%default sample 0.1
+
+%default tfidfPath 'hdfs://hadoop-master:8020/user/akawa/full/similarity/tfidf-new9/weighted'
+%default outputPath 'hdfs://hadoop-master:8020/user/akawa/full/similarity/docsim-11'
+%default commonJarsPath '../oozie/similarity/workflow/lib/*.jar'
+%default parallel 10
+
 -------------------------------------------------------
 -- register section
 -------------------------------------------------------
@@ -17,17 +24,17 @@ DEFINE CosineSimilarity pl.edu.icm.coansys.similarity.pig.udf.CosineSimilarity()
 -------------------------------------------------------
 set default_parallel $parallel
 
-TFIDF = LOAD '$tfidfPath' AS (docId: chararray, term: chararray, tfidf: double);
-G1 = GROUP TFIDF BY docId;
-G2 = FOREACH G1 GENERATE *;
+tfidf = LOAD '$tfidfPath' AS (docId: chararray, term: chararray, tfidf: double);
+g1 = GROUP tfidf BY docId;
+g2 = FOREACH g1 GENERATE *;
 
-TFIDF_cross = FILTER(CROSS G1, G2) BY G1::group < G2::group;
+tfidf_cross = FILTER(CROSS g1, g2 parallel $parallel) BY g1::group < g2::group;
 
 -- measure cosine document similarity
-similarity = FOREACH TFIDF_cross {
-		A = ORDER G1::TFIDF BY term;
-		B = ORDER G2::TFIDF BY term;
-		GENERATE CosineSimilarity(G1::group, A, G2::group, B) AS cosineTuple;
+similarity = FOREACH tfidf_cross {
+		A = ORDER g1::tfidf BY term;
+		B = ORDER g2::tfidf BY term;
+		GENERATE CosineSimilarity(g1::group, A, g2::group, B) AS cosineTuple;
 };
 
 -- flatten cosine document similarity
