@@ -9,9 +9,9 @@
 %default ABSTRACT_WEIGHT 1.0
 %default sample 1.0
 
-%default inputPath hdfs://hadoop-master:8020/user/akawa/full/hbase-dump/mproto-m*
-%default outputPath hdfs://hadoop-master:8020/user/akawa/full/similarity/tfidf-new-1
-%default commonJarsPath ../oozie/similarity/workflow/lib/*.jar
+%default inputPath 'hdfs://hadoop-master:8020/user/akawa/full/hbase-dump/mproto-m*'
+%default outputPath 'hdfs://hadoop-master:8020/user/akawa/full/similarity/tfidf-new-1'
+%default commonJarsPath '../oozie/similarity/workflow/lib/*.jar'
 %default parallel 32
 
 REGISTER /usr/lib/zookeeper/zookeeper-3.4.3-cdh4.0.1.jar;
@@ -25,8 +25,8 @@ DEFINE StopWordFilter pl.edu.icm.coansys.similarity.pig.udf.StopWordFilter();
 
 IMPORT 'macros.pig';
 
-set default_parallel $parallel
-set mapred.child.java.opts -Xmx8000m
+SET default_parallel $parallel
+SET mapred.child.java.opts -Xmx8000m
 SET pig.tmpfilecompression true
 SET pig.tmpfilecompression.codec gz
 
