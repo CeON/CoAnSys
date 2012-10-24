@@ -8,7 +8,7 @@ package pl.edu.icm.coansys.commons.scala
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 object automatic_resource_management {
-  def using[T <: { def close() }](resource: => T)(block: T => Unit) {
+  def using[T <: { def close() }, R](resource: => T)(block: T => R): R = {
     var actualResource: T = null.asInstanceOf[T]
     try {
       actualResource = resource
