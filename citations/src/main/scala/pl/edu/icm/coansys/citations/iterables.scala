@@ -8,7 +8,9 @@ import com.nicta.scoobi.io.sequence.SeqSchema
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
-class WritableIterable[T <: Writable](var iterable: Iterable[T], factory: => T) extends Writable {
+class WritableIterable[T <: Writable : Manifest](var iterable: Iterable[T], factory: => T) extends Writable {
+  def this() = this(Nil, manifest[T].erasure.newInstance().asInstanceOf[T])
+
   def write(out: DataOutput) {
     out.writeInt(iterable.size)
     iterable foreach {
@@ -23,6 +25,13 @@ class WritableIterable[T <: Writable](var iterable: Iterable[T], factory: => T) 
       x => x.readFields(in)
     }
   }
+}
+
+/**
+ * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
+ */
+class MockDocumentWritableIterable(var iter:Iterable[MockDocumentWrapper]) extends WritableIterable[MockDocumentWrapper](iter, new MockDocumentWrapper()) {
+  def this() = this(Nil)
 }
 
 /**
