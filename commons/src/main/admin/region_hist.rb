@@ -16,10 +16,10 @@ def main()
 	output_file = ARGV[0]
     	f = File.open(output_file, 'w')
 	conf = HBaseConfiguration.new()
-    client = HBaseAdmin.new(conf)
+    	client = HBaseAdmin.new(conf)
 
-    status = client.clusterStatus
-    status.serverInfo.each do |server|
+    	status = client.clusterStatus
+    	status.serverInfo.each do |server|
         server_name = server.serverName
         printed_server = false
 
