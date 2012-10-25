@@ -134,7 +134,7 @@ DEFINE calculate_tf_idf2(docTerm) RETURNS tfidf {
 	$tfidf = FOREACH E GENERATE docId, term, ((double) tc / (double) ttc) * LOG( (1.0 + (double) dc) / ( 1.0 + (double) ttdc)) AS tfidf;
 };
 
-DEFINE tf_idf(in_relation, id_field, token_field, tfidfThreshold, keywordLimit, paral) RETURNS tfidf_values { 
+DEFINE tf_idf(in_relation, id_field, token_field, minTfidf, paral) RETURNS tfidf_values { 
   	-- Calculate the term count per document
   	doc_word_totals = foreach (group $in_relation by ($id_field, $token_field) parallel $paral) generate 
     		FLATTEN(group) as ($id_field, token), 

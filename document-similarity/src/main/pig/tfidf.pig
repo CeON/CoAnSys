@@ -13,7 +13,6 @@
 %default commonJarsPath '../oozie/similarity/workflow/lib/*.jar'
 %default parallel 32
 %default minTdfidf 0.50
-%default termLimit 20
 
 REGISTER '$commonJarsPath'
 
@@ -46,9 +45,9 @@ doc_term_union = UNION doc_term_K, doc_term_A, doc_term_T;
 doc_term_distinct = DISTINCT doc_term_union;
 
 -- calculate tf-idf for each group of terms
-tfidf_keyword = tf_idf(doc_keyword, docId, term, $minTfidf, $termLimit, $parallel);
-tfidf_abstract = tf_idf(doc_abstract, docId, term, $minTfidf, $termLimit, $parallel);
-tfidf_title = tf_idf(doc_title, docId, term, $minTfidf, $termLimit, $parallel);
+tfidf_keyword = tf_idf(doc_keyword, docId, term, $minTfidf, $parallel);
+tfidf_abstract = tf_idf(doc_abstract, docId, term, $minTfidf, $parallel);
+tfidf_title = tf_idf(doc_title, docId, term, $minTfidf, $parallel);
 
 -- calculate weighted results
 tfidf_all_joined_A = FOREACH (JOIN doc_term_distinct BY (docId, term) LEFT OUTER, tfidf_abstract BY (docId, term) parallel $parallel)
