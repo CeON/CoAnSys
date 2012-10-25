@@ -7,10 +7,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
-
 import org.apache.pig.EvalFunc;
-import org.apache.pig.backend.executionengine.ExecException;
 import org.apache.pig.data.DataBag;
 import org.apache.pig.data.DataType;
 import org.apache.pig.data.Tuple;
@@ -34,7 +31,7 @@ public class CosineSimilarity extends EvalFunc<Tuple> {
         if (input == null || input.size() == 0) {
             return null;
         }
-        
+
         try {
             String keyA = (String) input.get(0);
             HashMap<String, Double> hmA = new HashMap<String, Double>();
@@ -81,11 +78,12 @@ public class CosineSimilarity extends EvalFunc<Tuple> {
         }
     }
 
-    private Map<String, Double> extractToMap(Tuple input, int bagIndex, int keyIndex, int valIndex) throws ExecException {
-        HashMap<String, Double> hm = new HashMap<String, Double>();
-        for (Tuple t : (DataBag) input.get(bagIndex)) {
-            hm.put((String) t.get(keyIndex), (Double) t.get(valIndex));
-        }
-        return hm;
+    /*
+     * private Map<String, Double> extractToMap(Tuple input, int bagIndex, int
+     * keyIndex, int valIndex) throws ExecException { HashMap<String, Double> hm
+     * = new HashMap<String, Double>(); for (Tuple t : (DataBag)
+     * input.get(bagIndex)) { hm.put((String) t.get(keyIndex), (Double)
+     * t.get(valIndex)); } return hm;
     }
+     */
 }

@@ -4,7 +4,6 @@
 package pl.edu.icm.coansys.disambiguation.author.jobs;
 
 import java.lang.management.ManagementFactory;
-
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.client.Put;
@@ -18,8 +17,8 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.util.GenericOptionsParser;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
-import org.apache.log4j.Logger;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.edu.icm.coansys.disambiguation.auxil.LoggingInDisambiguation;
 import pl.edu.icm.coansys.disambiguation.auxil.TextTextArrayMapWritable;
 import pl.edu.icm.coansys.importers.constants.HBaseConstant;
@@ -38,7 +37,7 @@ public class DisambiguationJob_Toy implements Tool {
      * 
      */
     
-    private static Logger logger = Logger.getLogger(LoggingInDisambiguation.class);
+    private static Logger logger = LoggerFactory.getLogger(LoggingInDisambiguation.class);
     private Configuration conf;
 	
 	/*
@@ -108,10 +107,10 @@ public class DisambiguationJob_Toy implements Tool {
         return this;
     }
     
-    @SuppressWarnings("unused")
+    /*@SuppressWarnings("unused")
     private static String gedPaddedNumber(int i) {
         return String.format("%010d", i);
-    }
+    }*/
 
     @Override
     public void setConf(Configuration conf) {

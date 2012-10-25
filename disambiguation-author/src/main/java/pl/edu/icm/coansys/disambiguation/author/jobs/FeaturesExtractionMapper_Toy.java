@@ -7,14 +7,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
 import org.apache.hadoop.hbase.mapreduce.TableMapper;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.io.Text;
-import org.apache.log4j.Logger;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.ExtractorFactory;
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.AuthorBased;
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DocumentBased;
@@ -36,9 +35,9 @@ import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
 @SuppressWarnings("rawtypes")
 public class FeaturesExtractionMapper_Toy extends TableMapper<Text, TextTextArrayMapWritable> {
 
-	private static Logger logger = Logger.getLogger(LoggingInDisambiguation.class);
+    private static Logger logger = LoggerFactory.getLogger(LoggingInDisambiguation.class);
     public List<FeatureInfo> featureInfos;
-	public List<Extractor> featureExtractors;
+    public List<Extractor> featureExtractors;
 
     @Override
     public void setup(Context context) throws IOException, InterruptedException {
@@ -49,125 +48,123 @@ public class FeaturesExtractionMapper_Toy extends TableMapper<Text, TextTextArra
         }
     }
 
-	private List<Extractor> getFeatureExtractor(List<FeatureInfo> inputfeatureInfos) {
-		ArrayList<Extractor> featureExtractors = new ArrayList<Extractor>();
-		ExtractorFactory fe = new ExtractorFactory();
-		
-		for(FeatureInfo fi : inputfeatureInfos){
-			featureExtractors.add(fe.create(fi));
-		}
-		return featureExtractors;
-	}
+    private List<Extractor> getFeatureExtractor(List<FeatureInfo> inputfeatureInfos) {
+        ArrayList<Extractor> featureExtractors = new ArrayList<Extractor>();
+        ExtractorFactory fe = new ExtractorFactory();
 
-	private static List<FeatureInfo> getFeaturesInfos(String feature) {
-    	ArrayList<FeatureInfo> ret = new ArrayList<FeatureInfo>(); 
-    	String[] finfos = feature.split(",");
-    	for(String finfo : finfos){
-    		String[] details = finfo.split("#");
-    		if(details.length != 4){
-    			logger.error("Feature info does not contains enought data. " +
-    					"It should follow the pattern featureName#FeatureExtractorName" +
-    					"#Weight#MaxValue");
-    			logger.error("FeatureInfo contains: "+finfo);
-    			continue;
-    		}else{
-    			ret.add(new FeatureInfo(details[0],details[1],
-    					Double.parseDouble(details[2]),
-    					Integer.parseInt(details[3])));
-    		}
-    	}
-    	return ret;
+        for (FeatureInfo fi : inputfeatureInfos) {
+            featureExtractors.add(fe.create(fi));
+        }
+        return featureExtractors;
     }
-    
+
+    /*private static List<FeatureInfo> getFeaturesInfos(String feature) {
+        ArrayList<FeatureInfo> ret = new ArrayList<FeatureInfo>();
+        String[] finfos = feature.split(",");
+        for (String finfo : finfos) {
+            String[] details = finfo.split("#");
+            if (details.length != 4) {
+                logger.error("Feature info does not contains enought data. "
+                        + "It should follow the pattern featureName#FeatureExtractorName"
+                        + "#Weight#MaxValue");
+                logger.error("FeatureInfo contains: " + finfo);
+                continue;
+            } else {
+                ret.add(new FeatureInfo(details[0], details[1],
+                        Double.parseDouble(details[2]),
+                        Integer.parseInt(details[3])));
+            }
+        }
+        return ret;
+    }*/
+
     @Override
-    protected void map(ImmutableBytesWritable rowId, Result documentMetadataColumn, Context context) throws IOException, InterruptedException { 
-        HashMap<String,List<String>> docBasedFeature = new HashMap<String,List<String>>();
-        
-        DocumentMetadata dm = DocumentMetadata.parseFrom(documentMetadataColumn.
-        		getValue(Bytes.toBytes(HBaseConstant.FAMILY_METADATA), 
-        				 Bytes.toBytes(HBaseConstant.FAMILY_METADATA_QUALIFIER_PROTO)));
+    protected void map(ImmutableBytesWritable rowId, Result documentMetadataColumn, Context context) throws IOException, InterruptedException {
+        HashMap<String, List<String>> docBasedFeature = new HashMap<String, List<String>>();
+
+        DocumentMetadata dm = DocumentMetadata.parseFrom(documentMetadataColumn.getValue(Bytes.toBytes(HBaseConstant.FAMILY_METADATA),
+                Bytes.toBytes(HBaseConstant.FAMILY_METADATA_QUALIFIER_PROTO)));
         //(1) extract all document-based features, 
         //[which will be passes to the object authorId2FeatureMap] 
         createDocumentBasedFeatureMap(docBasedFeature, dm);
         //(2) for each of authors ...
-        for(Author a : dm.getAuthorList()){
-        	String authId = a.getKey();
-        	TextTextArrayMapWritable featureName2FeatureValuesMap = 
-        		new TextTextArrayMapWritable();
-        	//(3) extract author-based features to author's featureName2FeatureValuesMap
-			//(4) and enrich author's featureName2FeatureValuesMap
-			//    with earlier extracted document-based features            
+        for (Author a : dm.getAuthorList()) {
+            String authId = a.getKey();
+            TextTextArrayMapWritable featureName2FeatureValuesMap =
+                    new TextTextArrayMapWritable();
+            //(3) extract author-based features to author's featureName2FeatureValuesMap
+            //(4) and enrich author's featureName2FeatureValuesMap
+            //    with earlier extracted document-based features            
             createFeatureMapForOneAuthor(docBasedFeature, dm, authId,
-					featureName2FeatureValuesMap);
-			//(5) in the end add AuthorID          
+                    featureName2FeatureValuesMap);
+            //(5) in the end add AuthorID          
             addAuthorID(authId, featureName2FeatureValuesMap);
-        	//(6) log extracted features 
+            //(6) log extracted features 
             logAllFeaturesExtractedForOneAuthor(authId,
-					featureName2FeatureValuesMap);
+                    featureName2FeatureValuesMap);
             //(7) after preparing featureName2FeatureValuesMap for one author
             //    emit pair<authId:key,feature2featureValue:value> 
 
-            
-            if("".equals(DiacriticsRemover.removeDiacritics(a.getSurname().toLowerCase()))){
-            	logger.debug("has empty surname: " +a.getSurname());
+
+            if ("".equals(DiacriticsRemover.removeDiacritics(a.getSurname().toLowerCase()))) {
+                logger.debug("has empty surname: " + a.getSurname());
             }
-            
-            logger.debug("==== surname: "+new Text(DiacriticsRemover.removeDiacritics(a.getSurname().toLowerCase())).toString());
+
+            logger.debug("==== surname: " + new Text(DiacriticsRemover.removeDiacritics(a.getSurname().toLowerCase())).toString());
             featureName2FeatureValuesMap.getText(new Text(DiacriticsRemover.removeDiacritics(a.getSurname().toLowerCase())).toString());
-            
+
             Text key = new Text();
             key.set(DiacriticsRemover.removeDiacritics(a.getSurname().toLowerCase()));
 //            key.set("TEST");
             context.write(key, featureName2FeatureValuesMap);
         }
     }
-    
-    private void addAuthorID(String authId,
-			TextTextArrayMapWritable featureName2FeatureValuesMap) {
-		featureName2FeatureValuesMap.put("authId", authId);
-	}
 
-	protected void createDocumentBasedFeatureMap(
-			HashMap<String, List<String>> docBasedFeature, DocumentMetadata dm) {
+    private void addAuthorID(String authId,
+            TextTextArrayMapWritable featureName2FeatureValuesMap) {
+        featureName2FeatureValuesMap.put("authId", authId);
+    }
+
+    protected void createDocumentBasedFeatureMap(
+            HashMap<String, List<String>> docBasedFeature, DocumentMetadata dm) {
         //(1) extract all document-based features, 
         //[which will be passes to the object authorId2FeatureMap]
-		int firstIndex = -1;
-        for(Extractor fe : featureExtractors){
-        	firstIndex++;
-        	if(fe instanceof DocumentBased){
-        		docBasedFeature.put(featureInfos.get(firstIndex).getDisambiguatorName(), 
-        				fe.extract(dm, null));        		
-        	}
+        int firstIndex = -1;
+        for (Extractor fe : featureExtractors) {
+            firstIndex++;
+            if (fe instanceof DocumentBased) {
+                docBasedFeature.put(featureInfos.get(firstIndex).getDisambiguatorName(),
+                        fe.extract(dm, null));
+            }
         }
-	}
+    }
 
+    protected void createFeatureMapForOneAuthor(HashMap<String, List<String>> docBasedFeature,
+            DocumentMetadata dm, String authId,
+            TextTextArrayMapWritable featureName2FeatureValuesMap) {
 
-	protected void createFeatureMapForOneAuthor(HashMap<String, List<String>> docBasedFeature, 
-			DocumentMetadata dm, String authId,
-			TextTextArrayMapWritable featureName2FeatureValuesMap) {
-		
-		int secondIndex = -1;
-		for(Extractor fe : featureExtractors){
-			secondIndex++;
-			//(3) extract author-based features 
-			if(fe instanceof AuthorBased){
-				String featureName = featureInfos.get(secondIndex).getDisambiguatorName();
-				List<String> value = fe.extract(dm, authId);
-				featureName2FeatureValuesMap.put(featureName, value);
-			}
-			//(4) and enrich author featureName2FeatureValuesMap
-			//    with earlier extracted document-based features
-			if(fe instanceof DocumentBased){
-				String featureName = featureInfos.get(secondIndex).getDisambiguatorName();
-				List<String> value = docBasedFeature.get(featureName);
-				featureName2FeatureValuesMap.put(featureName, value);
-			}              
-		}
-	}
-	
-	protected void logAllFeaturesExtractedForOneAuthor(String authId,
-			TextTextArrayMapWritable featureName2FeatureValuesMap) {
-		logger.debug("MAPPER: output key: " + authId);
-		logger.debug("MAPPER: output value: "+featureName2FeatureValuesMap);
-	}
+        int secondIndex = -1;
+        for (Extractor fe : featureExtractors) {
+            secondIndex++;
+            //(3) extract author-based features 
+            if (fe instanceof AuthorBased) {
+                String featureName = featureInfos.get(secondIndex).getDisambiguatorName();
+                List<String> value = fe.extract(dm, authId);
+                featureName2FeatureValuesMap.put(featureName, value);
+            }
+            //(4) and enrich author featureName2FeatureValuesMap
+            //    with earlier extracted document-based features
+            if (fe instanceof DocumentBased) {
+                String featureName = featureInfos.get(secondIndex).getDisambiguatorName();
+                List<String> value = docBasedFeature.get(featureName);
+                featureName2FeatureValuesMap.put(featureName, value);
+            }
+        }
+    }
+
+    protected void logAllFeaturesExtractedForOneAuthor(String authId,
+            TextTextArrayMapWritable featureName2FeatureValuesMap) {
+        logger.debug("MAPPER: output key: " + authId);
+        logger.debug("MAPPER: output value: " + featureName2FeatureValuesMap);
+    }
 }

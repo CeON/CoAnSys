@@ -22,7 +22,8 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.edu.icm.coansys.importers.models.DocumentProtosWrapper.DocumentWrapper;
 
 /**
@@ -31,7 +32,7 @@ import pl.edu.icm.coansys.importers.models.DocumentProtosWrapper.DocumentWrapper
  */
 public class DocumentWrapperSequenceFileToHBase implements Tool {
 
-    private static Logger logger = Logger.getLogger(DocumentWrapperSequenceFileToHBase.class);
+    private static Logger logger = LoggerFactory.getLogger(DocumentWrapperSequenceFileToHBase.class);
     private Configuration conf;
     final static String BULK_OUTPUT_CONF_KEY = "bulk.output";
 

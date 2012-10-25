@@ -4,22 +4,22 @@
 
 package pl.edu.icm.coansys.classification.documents.pig.extractors;
 
+import com.google.common.base.Joiner;
 import java.io.IOException;
 import java.util.Arrays;
-
 import org.apache.pig.EvalFunc;
-import org.apache.pig.PigServer;
 import org.apache.pig.data.DataByteArray;
 import org.apache.pig.data.DataType;
 import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
 import org.apache.pig.impl.logicalLayer.FrontendException;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
-
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
 
-import com.google.common.base.Joiner;
-
+/**
+*
+* @author pdendek
+*/
 public class EXTRACT_KEY_TI_ABS_KW extends EvalFunc<Tuple>{
 
 	@Override
@@ -38,7 +38,6 @@ public class EXTRACT_KEY_TI_ABS_KW extends EvalFunc<Tuple>{
 		try{
 			Object obj = null;
 			try{
-				obj = input.get(0);
 				obj = (DataByteArray) input.get(1);
 			}catch(Exception e){
 				System.out.println("Trying to read field rowId");
