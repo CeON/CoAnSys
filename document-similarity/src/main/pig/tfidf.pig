@@ -12,7 +12,7 @@
 %default outputPath 'hdfs://hadoop-master:8020/user/akawa/full/similarity/tfidf-limited-20'
 %default commonJarsPath '../oozie/similarity/workflow/lib/*.jar'
 %default parallel 32
-%default minTdfidf 0.50
+%default minTfidf 0.50
 
 REGISTER '$commonJarsPath'
 
@@ -57,7 +57,7 @@ tfidf_all_joined_AK = FOREACH (JOIN tfidf_all_joined_A BY (docId, term) LEFT OUT
 tfidf_all_joined_AKT = FOREACH (JOIN tfidf_all_joined_AK BY (docId, term) LEFT OUTER, tfidf_title BY (docId, term) parallel $parallel)
 	GENERATE tfidf_all_joined_AK::docId AS docId, tfidf_all_joined_AK::term AS term, tfidfAbstract, tfidfKeyword, tfidf AS tfidfTitle;
 -- calculate weighted tfidf
-tfidf_all_joined = FOREACH tfidf_all_joined_AKT 
+tfidf_all = FOREACH tfidf_all_joined_AKT 
 	GENERATE docId, (chararray) term, WeightedTFIDF($keywordWeight, tfidfKeyword, $titleWeight, tfidfTitle, $abstractWeight, tfidfAbstract) AS tfidf;
 
 -- store into separate direcotires
