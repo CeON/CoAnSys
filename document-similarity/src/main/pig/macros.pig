@@ -134,7 +134,7 @@ DEFINE calculate_tf_idf2(docTerm) RETURNS tfidf {
 	$tfidf = FOREACH E GENERATE docId, term, ((double) tc / (double) ttc) * LOG( (1.0 + (double) dc) / ( 1.0 + (double) ttdc)) AS tfidf;
 };
 
-DEFINE tf_idf(in_relation, id_field, token_field, paral) RETURNS out_relation { 
+DEFINE tf_idf(in_relation, id_field, token_field, tfidfThreshold, keywordLimit, paral) RETURNS tfidf_values { 
   	-- Calculate the term count per document
   	doc_word_totals = foreach (group $in_relation by ($id_field, $token_field) parallel $paral) generate 
     		FLATTEN(group) as ($id_field, token), 
@@ -161,11 +161,24 @@ DEFINE tf_idf(in_relation, id_field, token_field, paral) RETURNS out_relation {
   	ndocs = foreach (group just_ids all parallel $paral) generate COUNT_STAR(just_ids) as total_docs;
  
   	-- Note the use of Pig Scalars to calculate idf
-  	$out_relation = foreach token_usages {
+  	$tfidf_values = foreach token_usages {
     		idf    = LOG((double)ndocs.total_docs/(double)num_docs_with_token);
     		tf_idf = (double)term_freq * idf;
     		generate $id_field as $id_field,
       			token as $token_field,
       			tf_idf as tfidf;
   	};
+};
+
+
+DEFINE top_n_per_group(in_relation, group_field, order_field, order_direction, topn, paral) RETURNS out_relation { 
+	grouped = GROUP $in_relation BY $group_field;
+	$out_relation = FOREACH in_relation {
+           sorted = ORDER $in_relation BY $order_field $order_direction;
+           top = LIMIT sorted $topn;
+           GENERATE flatten(top);
+	};
+}
+
+
 };
