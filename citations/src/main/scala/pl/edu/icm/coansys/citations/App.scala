@@ -62,7 +62,9 @@ object App extends ScoobiApp {
           .groupByKey[String, MockDocumentWrapper]
 
       val rotationsWithDocs = tokensWithDocs.flatMap {
-        case (token, docs) => rotations(token) zip Iterator.continually(docs).toIterable
+        case (token, docs) =>
+          val materializedDocs = docs.toList.toIterable //that's important: if we don't do that docs can be traversed once only
+          rotations(token) zip Iterator.continually(materializedDocs).toIterable
       }
 
       rotationsWithDocs
