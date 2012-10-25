@@ -31,7 +31,7 @@ public class DocumentWrapperSequenceFileIncrementalLoadConfigurator {
         HFileOutputFormat.configureIncrementalLoad(job, table);
 
         Properties props = new Properties();
-        props.setProperty("mapred.reduce.tasks", new Integer(job.getNumReduceTasks()).toString());
+        props.setProperty("mapred.reduce.tasks", Integer.valueOf(job.getNumReduceTasks()).toString());
         URI[] cacheUris = DistributedCache.getCacheFiles(job.getConfiguration());
         if (cacheUris != null) {
             for (URI cacheUri : cacheUris) {
