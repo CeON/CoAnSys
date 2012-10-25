@@ -7,31 +7,26 @@ package pl.edu.icm.coansys.classification.documents.pig.extractors;
 import java.io.IOException;
 import java.util.Arrays;
 
-import org.apache.commons.collections.Bag;
 import org.apache.pig.EvalFunc;
-import org.apache.pig.PigServer;
-import org.apache.pig.data.DataBag;
-import org.apache.pig.data.DataByteArray;
-import org.apache.pig.data.DataType;
-import org.apache.pig.data.DefaultDataBag;
-import org.apache.pig.data.Tuple;
-import org.apache.pig.data.TupleFactory;
+import org.apache.pig.data.*;
+
 import org.apache.pig.impl.logicalLayer.FrontendException;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
-
 import pl.edu.icm.coansys.importers.constants.ProtoConstants;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.ClassifCode;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
 
-import com.google.common.base.Joiner;
-
+/**
+*
+* @author pdendek
+*/
 public class EXTRACT_KEY_MSCCATEG extends EvalFunc<Tuple>{
 
 	@Override
 	public Schema outputSchema(Schema p_input){
 		try{
 			return Schema.generateNestedSchema(DataType.TUPLE, 
-					DataType.CHARARRAY, DataType.CHARARRAY);
+					DataType.CHARARRAY, DataType.BAG);
 		}catch(FrontendException e){
 			throw new IllegalStateException(e);
 		}
@@ -43,7 +38,6 @@ public class EXTRACT_KEY_MSCCATEG extends EvalFunc<Tuple>{
 		try{
 			Object obj = null;
 			try{
-				obj = input.get(0);
 				obj = (DataByteArray) input.get(1);
 			}catch(Exception e){
 				System.out.println("Trying to read field rowId");

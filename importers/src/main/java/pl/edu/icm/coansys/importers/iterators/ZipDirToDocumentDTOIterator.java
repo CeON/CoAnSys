@@ -7,11 +7,11 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.Iterator;
-
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import pl.edu.icm.coansys.importers.ZipArchive;
 import pl.edu.icm.coansys.importers.models.DocumentDTO;
 import pl.edu.icm.coansys.importers.parsers.MetadataToProtoMetadataParser;
@@ -46,6 +46,8 @@ public class ZipDirToDocumentDTOIterator implements Iterable<DocumentDTO> {
     //An object which will be returned by next call of iterators next() method
     private DocumentDTO nextItem = null;
 	private YElementFromZip2DocumentDto yElementFromZip2DocumentDTO;
+	List<String> xmls = null;
+	int currentXml = 0;
 
     public ZipDirToDocumentDTOIterator(String zipDirPath, String collection) {
         this.collection = collection;
@@ -98,7 +100,9 @@ public class ZipDirToDocumentDTOIterator implements Iterable<DocumentDTO> {
                     try {
                     	System.out.println("Processing " + (zipIndex+1) + ". zip of " + listZipFiles.length);
                         currentZipArchive = new ZipArchive(listZipFiles[zipIndex].getPath());
-                        xmlPathIterator = currentZipArchive.filter(".*xml").iterator();
+                        xmls = currentZipArchive.filter(".*xml");
+                        currentXml = 0;
+                        xmlPathIterator = xmls.iterator();
                     } catch (IOException ex) {logger.error(ex.toString());}
                     zipIndex++;
                 }
@@ -107,10 +111,11 @@ public class ZipDirToDocumentDTOIterator implements Iterable<DocumentDTO> {
                 try {
                     InputStream xmlIS = currentZipArchive.getFileAsInputStream(xmlPath);
                     yExportableIterator = MetadataToProtoMetadataParser.streamToYExportable(xmlIS, MetadataToProtoMetadataParser.MetadataType.BWMETA).iterator();
+                    currentXml++;
+                    if(currentXml % 10 == 0)System.out.println("\t"+new Date()+"\tProceeded " + currentXml + ". xml of " + xmls.size());
                 } catch (IOException ex) {logger.error(ex.toString());}
             }
             // here we have an yExportable:
-            yElementFromZip2DocumentDTO.setCurrentZipArchive(currentZipArchive);
             docDTO = yElementFromZip2DocumentDTO.transformYElement(yExportableIterator.next(),currentZipArchive);
             if(docDTO != null) docDTO.setCollection(collection);
         }

@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package pl.edu.icm.coansys.importers.pig.udf;
 
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -31,7 +27,7 @@ public class DocumentProtobufBytesToTuple extends ToDocumentProtobufTuple {
             DataByteArray protoMedia = (DataByteArray) input.get(1);
             media = MediaContainer.parseFrom(protoMedia.get());
         }
-        
+
         return media;
     }
 }

@@ -1,11 +1,32 @@
 <workflow-app xmlns="uri:oozie:workflow:0.1" name="logs-analysis-wf">
-    <start to="count-part" />
+    <start to="acquire-logs" />
+    <action name="acquire-logs">
+        <java>
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <prepare>
+                <delete path="${LOGS_STORE_DIR}" />
+                <mkdir path="${LOGS_STORE_DIR}" />
+            </prepare>
+            <configuration>
+                <property>
+                    <name>mapred.job.queue.name</name>
+                    <value>${queueName}</value>
+                </property> 
+            </configuration>
+            <main-class>pl.edu.icm.coansys.logsanalysis.logsacquisition.AcquireAuditService</main-class>
+            <java-opts></java-opts>
+            <arg>${LOGS_STORE_DIR}</arg> 
+        </java>
+        <ok to="count-part" />
+        <error to="finalize-error" />
+    </action>
     <action name="count-part">
         <map-reduce>
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
             <prepare>
-                <delete path="${nameNode}/user/acz/intermediate-data" />
+                <delete path="${INTERMEDIATE_DATA}" />
             </prepare>
             <configuration>
                 <!-- This is required for new api usage -->
@@ -35,11 +56,11 @@
                 </property>
                 <property>
                     <name>mapred.input.dir</name>
-                    <value>/tmp/example_logs.log</value>
+                    <value>${LOGS_STORE_DIR}</value>
                 </property>
                 <property>
                     <name>mapred.output.dir</name>
-                    <value>intermediate-data</value>
+                    <value>${INTERMEDIATE_DATA}</value>
                 </property>
                 <property>
                   <name>mapred.job.queue.name</name>
@@ -69,18 +90,21 @@
                     <name>mapred.output.value.class</name>
                     <value>org.apache.hadoop.io.LongWritable</value>
                 </property>
+                <property>
+                    <name>USAGE_WEIGHT_CLASS</name>
+                    <value>${USAGE_WEIGHT_CLASS}</value>
+                </property>
             </configuration>
         </map-reduce>
         <ok to="sort-part"/>
-        <!-- ok to="end" / -->
-        <error to="count-fail"/>
+        <error to="finalize-error"/>
     </action>
     <action name="sort-part">
         <map-reduce>
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
             <prepare>
-                <delete path="${nameNode}/user/acz/output-data" />
+                <delete path="${OUTPUT_DATA}" />
             </prepare>            
             <configuration>
                 <!-- This is required for new api usage -->
@@ -106,11 +130,11 @@
                 </property>
                 <property>
                     <name>mapred.input.dir</name>
-                    <value>intermediate-data</value>
+                    <value>${INTERMEDIATE_DATA}</value>
                 </property>
                 <property>
                     <name>mapred.output.dir</name>
-                    <value>output-data</value>
+                    <value>${OUTPUT_DATA}</value>
                 </property>
                 <property>
                   <name>mapred.job.queue.name</name>
@@ -140,16 +164,33 @@
                     <name>mapred.output.value.class</name>
                     <value>org.apache.hadoop.io.BytesWritable</value>
                 </property>
+                <property>
+                    <name>NB_OF_RECORDS</name>
+                    <value>${NB_OF_RECORDS}</value>
+                </property>
             </configuration>
         </map-reduce>
-        <ok to="end" />
-        <error to="sort-fail" />
+        <ok to="finalize" />
+        <error to="finalize-error" />
     </action>
-    <kill name="count-fail">
-        <message>Failed first part of workflow (counting usages)</message>
-    </kill>
-    <kill name="sort-fail">
-        <message>Failed second part of workflow (sorting counted usages)</message>
+    <action name="finalize">
+        <fs>
+            <delete path="${LOGS_STORE_DIR}" />
+            <delete path="${INTERMEDIATE_DATA}" />
+        </fs>
+        <ok to="end" />
+        <error to="fail" />
+    </action>
+    <action name="finalize-error">
+        <fs>
+            <delete path="${LOGS_STORE_DIR}" />
+            <delete path="${INTERMEDIATE_DATA}" />
+        </fs>
+        <ok to="fail" />
+        <error to="fail" />
+    </action>
+    <kill name="fail">
+        <message>Workflow failed</message>
     </kill>
     <end name="end" />
 </workflow-app>
