@@ -178,7 +178,4 @@ DEFINE top_n_per_group(in_relation, group_field, order_field, order_direction, t
            top = LIMIT sorted $topn;
            GENERATE flatten(top);
 	};
-}
-
-
 };
