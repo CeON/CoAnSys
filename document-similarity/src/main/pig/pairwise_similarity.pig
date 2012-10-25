@@ -1,4 +1,4 @@
-%default tfidfPath 'hdfs://hadoop-master:8020/user/akawa/full/similarity/tfidf-new-lzo3/weighted'
+%default inputPath 'hdfs://hadoop-master:8020/user/akawa/full/similarity/tfidf-new-lzo3/weighted'
 %default outputPath 'hdfs://hadoop-master:8020/user/akawa/full/similarity/docsim-lzo'
 %default commonJarsPath '../oozie/similarity/workflow/lib/*.jar'
 
@@ -18,8 +18,8 @@ set pig.tmpfilecompression true
 set pig.tmpfilecompression.codec lzo
 
 /* tfidf should be pre-sorted by term, since the current version of merge join does not support order operator between load and join */
-T = LOAD '$tfidfPath' AS (docId: bytearray, term: chararray, tfidf: double);
-T2 = LOAD '$tfidfPath' AS (docId: bytearray, term: chararray, tfidf: double);
+T = LOAD '$inputPath' AS (docId: bytearray, term: chararray, tfidf: double);
+T2 = LOAD '$inputPath' AS (docId: bytearray, term: chararray, tfidf: double);
 
 TJ = JOIN T BY term, T2 BY term USING 'merge';
 TJP = FOREACH TJ 
