@@ -8,7 +8,6 @@ import java.io.DataOutput;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
-
 import org.apache.hadoop.io.MapWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.Writable;
@@ -103,13 +102,12 @@ public class TextTextArrayMapWritable implements Writable, Serializable {
 
     @Override
     public String toString() {
-        String s = "";
+        StringBuilder sb = new StringBuilder(map.size());
         for (Writable wkey : map.keySet()) {
-            s += wkey.toString();
+            sb.append(wkey.toString());
             List<String> values = getStringList(new Text(wkey.toString()));
-            s += "\t" + values;
-            s += "\n";
+            sb.append("\t").append(values).append("\n");
         }
-        return s;
+        return sb.toString();
     }
 }
