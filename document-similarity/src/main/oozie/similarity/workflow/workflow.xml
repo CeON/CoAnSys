@@ -20,6 +20,29 @@
 	    <param>parallel=${ds_parallel}</param>
 	    <file>${pigScriptsDir}/macros.pig#macros.pig</file> 
         </pig>       
+        <ok to='top-tfidf-per-document'/>
+        <error to='kill'/>
+    </action>
+        <action name='top-tfidf-per-document'>
+        <pig>
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <prepare>
+                <delete path="${ds_topTfidfOutputDir}"/>
+            </prepare>
+            <configuration>
+                <property>
+                    <name>mapred.job.queue.name</name>
+                    <value>${queueName}</value>
+                </property> 
+            </configuration>
+            <script>${pigScriptsDir}/topn_tfidf_per_document.pig</script>
+            <param>inputPath=${ds_tfidfOutputDir}/weighted</param>
+            <param>outputPath=${ds_topTfidfOutputDir}</param>
+            <param>commonJarsPath=${commonJarsPath}</param>
+	    <param>parallel=${ds_parallel}</param>
+	    <file>${pigScriptsDir}/macros.pig#macros.pig</file> 
+        </pig>       
         <ok to='choose-similarity-method'/>
         <error to='kill'/>
     </action>
@@ -31,7 +54,7 @@
             <case to="allpairs-similarity">
                 ${ds_similarityAlgorithm == 'allpairsSimilarity'}
             </case>
-            <default to="clean-tfidf-after-kill"/>
+            <default to="kill"/>
         </switch>
     </decision>
     <action name='pairwise-similarity'>
@@ -48,14 +71,14 @@
                 </property> 
             </configuration>
             <script>${pigScriptsDir}/pairwise_similarity.pig</script>
-            <param>tfidfPath=${ds_tfidfOutputDir}</param>
+            <param>inputPath=${ds_topTfidfOutputDir}</param>
             <param>outputPath=${ds_similarityOutputDir}</param>
             <param>commonJarsPath=${commonJarsPath}</param>
 	    <param>parallel=${ds_parallel}</param>
             <file>${pigScriptsDir}/macros.pig#macros.pig</file>
         </pig>
         <ok to='end'/>
-        <error to='clean-tfidf-after-kill'/>
+        <error to='kill'/>
     </action>
     <action name='allpairs-similarity'>
         <pig>
@@ -71,21 +94,14 @@
                 </property> 
             </configuration>
             <script>${pigScriptsDir}/allpairs_similarity.pig</script>
-            <param>tfidfPath=${ds_tfidfOutputDir}/weighted</param>
+             <param>inputPath=${ds_topTfidfOutputDir}</param>
             <param>outputPath=${ds_similarityOutputDir}</param>
             <param>commonJarsPath=${commonJarsPath}</param>
 	    <param>parallel=${ds_parallel}</param>
             <file>${pigScriptsDir}/macros.pig#macros.pig</file>
         </pig>
         <ok to='end'/>
-        <error to='clean-tfidf-after-kill'/>
-    </action>
-    <action name="clean-tfidf-after-kill">
-        <fs>
-            <mkdir path="${ds_tfidfOutputDir}" />
-        </fs>
-        <ok to="kill" />
-        <error to="kill" />
+        <error to='kill'/>
     </action>
     <kill name='kill'>
         <message>Workflow failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
