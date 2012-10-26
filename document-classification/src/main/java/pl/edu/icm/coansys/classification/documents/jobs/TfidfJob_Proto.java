@@ -212,7 +212,7 @@ public class TfidfJob_Proto implements Tool {
         return success;
     }
 
-    private int calculateDocsNum(Job wordCountJob) throws IOException {
+    private int calculateDocsNum(Job wordCountJob) throws IOException, InterruptedException {
         org.apache.hadoop.mapreduce.Counters cs = wordCountJob.getCounters();
         org.apache.hadoop.mapreduce.CounterGroup cg = cs.getGroup("org.apache.hadoop.mapreduce.TaskCounter");
         org.apache.hadoop.mapreduce.Counter cr = cg.findCounter("MAP_INPUT_RECORDS");
