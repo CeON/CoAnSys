@@ -186,8 +186,6 @@
         <module>document-similarity</module>
         <module>importers</module>
         <module>logs-analysis</module>
-        <module>citations</module>
-        <module>commons-scala</module>
     </modules>
 
     <dependencies>
@@ -265,6 +263,11 @@
             <id>sonatype</id>
             <name>Sonatype</name>
             <url>https://oss.sonatype.org/content/repositories/releases/</url>
+        </repository>
+        <repository>
+            <id>nicta-scoobi</id>
+            <name>Scoobi repository</name>
+            <url>http://nicta.github.com/scoobi/releases/</url>
         </repository>
     </repositories>
 </project>
