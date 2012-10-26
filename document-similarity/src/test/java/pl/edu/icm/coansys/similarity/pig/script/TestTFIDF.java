@@ -24,19 +24,18 @@ public class TestTFIDF {
     private PigTest test;
     private static Cluster cluster;
     private static final String PIG_SCRIPT_DIR = "src/main/pig/";
-    private static String[] script;
     private static String[] params = {
-            "in_relation=in_relation",
-            "id_field=docId",
-            "token_field=term",
-            "tfidf_values=tfidf_values",
-            "parallel=1"
-        };
+        "in_relation=in_relation",
+        "id_field=docId",
+        "token_field=term",
+        "tfidf_values=tfidf_values",
+        "parallel=1"
+    };
 
     @BeforeClass
     public static void beforeClass() throws Exception {
         cluster = PigTest.getCluster();
-        script = getScriptToTestTfIdfMacro();
+
     }
 
     @AfterClass
@@ -54,6 +53,7 @@ public class TestTFIDF {
     @org.testng.annotations.Test(groups = {"fast"})
     public void testTfIdf() throws IOException, ParseException {
 
+        String[] script = getScriptToTestTfIdfMacro();
         test = new PigTest(script, params);
         String[] input = {
             "d1\tt1",
@@ -73,6 +73,7 @@ public class TestTFIDF {
     @org.testng.annotations.Test(groups = {"medium"})
     public void testTfIdfMedium() throws IOException, ParseException {
 
+        String[] script = getScriptToTestTfIdfMacro();
         test = new PigTest(script, params);
         String[] input = {
             "d1\tt1",
@@ -98,6 +99,7 @@ public class TestTFIDF {
     @org.testng.annotations.Test(groups = {"medium"})
     public void testTfIdfMedium2() throws IOException, ParseException {
 
+        String[] script = getScriptToTestTfIdfMacro();
         test = new PigTest(script, params);
         String[] input = {
             "d1\tt1",
