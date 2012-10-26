@@ -25,18 +25,13 @@ public class TestTFIDF {
     private static Cluster cluster;
     private static final String PIG_SCRIPT_DIR = "src/main/pig/";
     private static String[] script;
-    private static String[] params = {
-            "in_relation=in_relation",
-            "id_field=docId",
-            "token_field=term",
-            "tfidf_values=tfidf_values",
-            "parallel=1"
-        };
+    private static String[] params;
 
     @BeforeClass
     public static void beforeClass() throws Exception {
         cluster = PigTest.getCluster();
         script = getScriptToTestTfIdfMacro();
+        params = getDefaultParams();
         
     }
 
@@ -59,12 +54,21 @@ public class TestTFIDF {
         return macro.toArray(new String[]{});
     }
 
-    
+    private static String[] getDefaultParams() {
+        String[] defaultParams = {
+            "in_relation=in_relation",
+            "id_field=docId",
+            "token_field=term",
+            "tfidf_values=tfidf_values",
+            "parallel=1"
+        };
+        return defaultParams;
+    }
 
     @org.testng.annotations.Test(groups = {"fast"})
     public void testTfIdf() throws IOException, ParseException {
 
-        test = new PigTest(script, params);
+       
         String[] input = {
             "d1\tt1",
             "d1\tt1",
