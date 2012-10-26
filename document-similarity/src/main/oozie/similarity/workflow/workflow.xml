@@ -17,13 +17,14 @@
             <param>inputPath=${ds_bwndataMetadataInputPath}</param>
             <param>outputPath=${ds_tfidfOutputDir}</param>
             <param>commonJarsPath=${commonJarsPath}</param>
-	    <param>parallel=${ds_parallel}</param>
-	    <file>${pigScriptsDir}/macros.pig#macros.pig</file> 
+            <param>parallel=${ds_parallel}</param>
+            <param>tmpCompressionCodec=${ds_tmpCompressionCodec}</param>
+            <file>${pigScriptsDir}/macros.pig#macros.pig</file> 
         </pig>       
         <ok to='top-tfidf-per-document'/>
         <error to='kill'/>
     </action>
-        <action name='top-tfidf-per-document'>
+    <action name='top-tfidf-per-document'>
         <pig>
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
@@ -40,8 +41,9 @@
             <param>inputPath=${ds_tfidfOutputDir}/weighted</param>
             <param>outputPath=${ds_topTfidfOutputDir}</param>
             <param>commonJarsPath=${commonJarsPath}</param>
-	    <param>parallel=${ds_parallel}</param>
-	    <file>${pigScriptsDir}/macros.pig#macros.pig</file> 
+            <param>parallel=${ds_parallel}</param>
+            <param>tmpCompressionCodec=${ds_tmpCompressionCodec}</param>
+            <file>${pigScriptsDir}/macros.pig#macros.pig</file> 
         </pig>       
         <ok to='choose-similarity-method'/>
         <error to='kill'/>
@@ -74,7 +76,8 @@
             <param>inputPath=${ds_topTfidfOutputDir}</param>
             <param>outputPath=${ds_similarityOutputDir}</param>
             <param>commonJarsPath=${commonJarsPath}</param>
-	    <param>parallel=${ds_parallel}</param>
+            <param>parallel=${ds_parallel}</param>
+            <param>tmpCompressionCodec=${ds_tmpCompressionCodec}</param>
             <file>${pigScriptsDir}/macros.pig#macros.pig</file>
         </pig>
         <ok to='end'/>
@@ -94,10 +97,11 @@
                 </property> 
             </configuration>
             <script>${pigScriptsDir}/allpairs_similarity.pig</script>
-             <param>inputPath=${ds_topTfidfOutputDir}</param>
+            <param>inputPath=${ds_topTfidfOutputDir}</param>
             <param>outputPath=${ds_similarityOutputDir}</param>
             <param>commonJarsPath=${commonJarsPath}</param>
-	    <param>parallel=${ds_parallel}</param>
+            <param>parallel=${ds_parallel}</param>
+            <param>tmpCompressionCodec=${ds_tmpCompressionCodec}</param>
             <file>${pigScriptsDir}/macros.pig#macros.pig</file>
         </pig>
         <ok to='end'/>
