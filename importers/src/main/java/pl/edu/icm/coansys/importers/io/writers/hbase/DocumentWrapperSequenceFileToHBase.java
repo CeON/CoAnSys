@@ -34,7 +34,6 @@ public class DocumentWrapperSequenceFileToHBase implements Tool {
 
     private static Logger logger = LoggerFactory.getLogger(DocumentWrapperSequenceFileToHBase.class);
     private Configuration conf;
-    private static final String LOCAL_JOBTRACKER = "local";
     final static String BULK_OUTPUT_CONF_KEY = "bulk.output";
 
     @Override
@@ -47,22 +46,31 @@ public class DocumentWrapperSequenceFileToHBase implements Tool {
         return conf;
     }
 
+    public static enum Counters {
+        DPROTO, CPROTO, MPROTO, CPROTO_SKIPPED
+    }
+
     public static class DocumentWrapperToHBasePutMapper extends Mapper<BytesWritable, BytesWritable, ImmutableBytesWritable, Put> {
 
         private ImmutableBytesWritable docWrapRowKey = new ImmutableBytesWritable();
+        private int MAX_CPROTO_SIZE = 1000000;
 
         @Override
         protected void map(BytesWritable rowKey, BytesWritable documentWrapper, Context context)
                 throws IOException, InterruptedException {
 
             DocumentWrapper docWrap = DocumentWrapper.parseFrom(documentWrapper.copyBytes());
-
             docWrapRowKey.set(docWrap.getRowId().toByteArray());
-            
+
             Put put = new Put(docWrap.getRowId().toByteArray());
             put.add(FAMILY_METADATA_BYTES, FAMILY_METADATA_QUALIFIER_PROTO_BYTES, docWrap.getMproto().toByteArray());
-            put.add(FAMILY_CONTENT_BYTES, FAMILY_CONTENT_QUALIFIER_PROTO_BYTES, docWrap.getCproto().toByteArray());
-
+            byte[] cproto = docWrap.getCproto().toByteArray();
+            if (cproto.length < MAX_CPROTO_SIZE) {
+                put.add(FAMILY_CONTENT_BYTES, FAMILY_CONTENT_QUALIFIER_PROTO_BYTES, cproto);
+            } else {
+                context.getCounter(Counters.CPROTO_SKIPPED).increment(1);
+            }
+            
             context.write(docWrapRowKey, put);
         }
     }
@@ -105,7 +113,7 @@ public class DocumentWrapperSequenceFileToHBase implements Tool {
     }
 
     private void getOptimizedConfiguration(Configuration conf) {
-        conf.set("mapred.child.java.opts", "-Xmx2000m");
+        conf.set("mapred.child.java.opts", "-Xmx4000m");
         conf.set("io.sort.mb", "500");
         conf.set("io.sort.spill.percent", "0.90");
         conf.set("io.sort.record.percent", "0.15");
@@ -129,8 +137,8 @@ public class DocumentWrapperSequenceFileToHBase implements Tool {
         String command = "hadoop jar target/importers-1.0-SNAPSHOT-jar-with-dependencies.jar"
                 + " " + DocumentWrapperSequenceFileToHBase.class.getName()
                 + " -D" + BULK_OUTPUT_CONF_KEY + "=bulkoutputfile"
-                + " directory table";
-        
+                + " <directory> <table>";
+
         System.out.println(command);
     }
 }

@@ -60,18 +60,14 @@ public class JavaShellRunner {
     }
 
     public static void main(String[] args) throws IOException, InterruptedException {
-
         args = parseArgs(args);
 
         ProcessBuilder pb = buildProcess(args);
         Process proc = pb.start();
-        
         printOutputStream(proc);
-
         if (proc.waitFor() == 0) {
             System.out.println("Process terminates normally");
         }
-
         proc.destroy();
     }
 }

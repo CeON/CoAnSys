@@ -137,16 +137,16 @@ public class DisambiguationJob_Toy implements Tool {
     		logger.debug("Default values will be used:");
     		logger.debug("* testProto");
     		logger.debug("* disambigTest");
-    		logger.debug("* EmailFeature#DocumentProto2EmailExtractor#0.81#1," +
-        		"KeywordFeature#DocumentProto2KeyWordExtractor#0.13#33");
+    		logger.debug("* EmailDisambiguator#DocumentProto2EmailExtractor#0.81#1," +
+        		"KeywordDisambiguator#DocumentProto2KeyWordExtractor#0.13#33");
     		logger.debug("* -0.846161134713438d");
     		logger.debug("* DisambiguationJob_Toy");
     		
     		args = new String[5];
     		args[0] = "testProto";
     		args[1] = "disambigTest"; 
-    		args[2] = "EmailFeature#DocumentProto2EmailExtractor#0.81#1," +
-        		"KeywordFeature#DocumentProto2KeyWordExtractor#0.13#33";
+    		args[2] = "EmailDisambiguator#DocumentProto2EmailExtractor#0.81#1," +
+        		"KeywordDisambiguator#DocumentProto2KeyWordExtractor#0.13#33";
     		args[3] = "-0.846161134713438d";
     		args[4] = "DisambiguationJob_Toy";
         }

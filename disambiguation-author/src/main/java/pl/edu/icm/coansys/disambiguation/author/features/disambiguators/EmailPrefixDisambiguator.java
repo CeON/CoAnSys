@@ -15,7 +15,7 @@ public class EmailPrefixDisambiguator extends Disambiguator{
 
 	@Override
 	public String getName() {
-		return "EmailPrefixFeature";
+		return EmailPrefixDisambiguator.class.getSimpleName();
 	}
 
 }
