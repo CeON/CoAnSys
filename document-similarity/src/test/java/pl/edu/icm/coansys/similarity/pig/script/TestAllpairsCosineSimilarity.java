@@ -28,7 +28,6 @@ public class TestAllpairsCosineSimilarity {
         "tfidfPath=null",
         "outputPath=null",
         "commonJarsPath=.",
-	"para=1",
 	"parallel=1"
     };
 
@@ -57,8 +56,8 @@ public class TestAllpairsCosineSimilarity {
 
         // verify intermdiate data
         String[] similaritiesOutput = {
-            "(d1,d2," + (3d + 8d) / (Math.sqrt(5) * Math.sqrt(9+16)) + ")"
+            "(d1,d2," + (3d + 8d) / (Math.sqrt(5d) * Math.sqrt(9d+16d)) + ")"
         };
-        test.assertOutput("TFIDF", input, "S1", similaritiesOutput);    
+        test.assertOutput("t", input, "sim", similaritiesOutput);    
     }
 }
