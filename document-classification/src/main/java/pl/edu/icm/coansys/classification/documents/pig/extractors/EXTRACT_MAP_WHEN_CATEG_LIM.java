@@ -8,17 +8,10 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.pig.EvalFunc;
-import org.apache.pig.data.DataBag;
-import org.apache.pig.data.DataByteArray;
-import org.apache.pig.data.DataType;
-import org.apache.pig.data.DefaultDataBag;
-import org.apache.pig.data.Tuple;
-import org.apache.pig.data.TupleFactory;
+import org.apache.pig.data.*;
 import org.apache.pig.impl.logicalLayer.FrontendException;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
-
 import pl.edu.icm.coansys.importers.models.DocumentProtos.ClassifCode;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
 
@@ -76,10 +69,11 @@ private String getConcatenated(List<String> list) {
        if (list == null || list.isEmpty()) {
            return null;
        }
-       String concatenated = list.get(0);
-       for (int i = 1; i < list.size(); ++i) {
-           concatenated += " " + list.get(i);
+       StringBuilder sb = new StringBuilder(list.size());
+       sb.append(list.get(0));
+       for (int i = 1; i < list.size(); i++) {
+           sb.append(" ").append(list.get(i));
        }
-       return concatenated;
+       return sb.toString();
    }
 }

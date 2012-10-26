@@ -7,13 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.AuthorBased;
 import pl.edu.icm.coansys.disambiguation.author.jobs.DisambiguationJob_Toy;
 import pl.edu.icm.coansys.disambiguation.features.Extractor;
-import pl.edu.icm.coansys.importers.models.DocumentProtos;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
 
@@ -27,7 +26,7 @@ import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
  */
 public class DocumentProto2EmailPrefixExtractor implements Extractor<DocumentMetadata>, AuthorBased {
 	
-	private static Logger logger = Logger.getLogger(new DisambiguationJob_Toy().getClass());
+	private static Logger logger = LoggerFactory.getLogger(new DisambiguationJob_Toy().getClass());
 	
 	public List<String> extract(DocumentMetadata input,  String... auxil) {
 		String authId = auxil[0];

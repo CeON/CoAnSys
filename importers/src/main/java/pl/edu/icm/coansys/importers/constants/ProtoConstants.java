@@ -13,6 +13,7 @@ public class ProtoConstants {
 	public static final String documentClassifCodePacs = "document.classifcode.pacs";
 	public static final String documentExtIdMr = "document.extid.mr";
 	public static final String documentExtIdZbl = "document.extid.zbl";
+        public static final String documentExtIdOai = "document.extid.dc";
 	public static final String mediaTypePdf = "media.type.pdf";
 	public static final String documentExtIdBwmeta = "document.extid.bwmeta";
 	public static final String documentAuxiliaryTypeOfDocument = "document.auxil.type";

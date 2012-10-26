@@ -1,4 +1,4 @@
-CoAnSys/importers
+CoAnSys/document-similarity
 =============
 
 ## About

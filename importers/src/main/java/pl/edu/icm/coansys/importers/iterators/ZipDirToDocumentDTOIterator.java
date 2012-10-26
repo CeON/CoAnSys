@@ -10,10 +10,8 @@ import java.io.InputStream;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import pl.edu.icm.coansys.importers.ZipArchive;
 import pl.edu.icm.coansys.importers.models.DocumentDTO;
 import pl.edu.icm.coansys.importers.parsers.MetadataToProtoMetadataParser;
@@ -118,7 +116,6 @@ public class ZipDirToDocumentDTOIterator implements Iterable<DocumentDTO> {
                 } catch (IOException ex) {logger.error(ex.toString());}
             }
             // here we have an yExportable:
-            yElementFromZip2DocumentDTO.setCurrentZipArchive(currentZipArchive);
             docDTO = yElementFromZip2DocumentDTO.transformYElement(yExportableIterator.next(),currentZipArchive);
             if(docDTO != null) docDTO.setCollection(collection);
         }

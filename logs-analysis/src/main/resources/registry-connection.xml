@@ -22,7 +22,7 @@
                             <bean class="pl.edu.icm.synat.api.services.registry.model.ConnectionDescriptor">
                                 <property name="location">
                                     <bean class="java.net.URI">
-                                        <constructor-arg value="http://yadda2-demo.vls.icm.edu.pl/trunk-registry/serviceRegistry_httpinvoker" />
+                                        <constructor-arg value="http://yadda2-demo.vls.icm.edu.pl:8091/serviceRegistry_httpinvoker" />
                                     </bean>
                                 </property>
                                 <property name="protocol" value="httpinvoker" />
@@ -40,7 +40,7 @@
     <!-- CLIENT part END -->
 
 
-    <import resource="classpath:connectors.xml"/>
-    <import resource="classpath:client-registry.xml"/>
+    <import resource="classpath:pl/edu/icm/synat/platform/connector/connectors.xml"/>
+    <import resource="classpath:pl/edu/icm/synat/platform/connector/client-registry.xml"/>
 
 </beans>

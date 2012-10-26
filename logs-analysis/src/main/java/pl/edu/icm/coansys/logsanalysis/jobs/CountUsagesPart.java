@@ -21,7 +21,7 @@ import org.apache.hadoop.util.ToolRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.edu.icm.coansys.logsanalysis.metrics.UsageWeight;
-import pl.edu.icm.coansys.logsanalysis.models.AuditEntryFactory;
+import pl.edu.icm.coansys.logsanalysis.models.AuditEntryHelper;
 import pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos;
 import pl.edu.icm.coansys.logsanalysis.transformers.AuditEntry2Protos;
 import pl.edu.icm.synat.api.services.audit.model.AuditEntry;
@@ -48,7 +48,7 @@ public class CountUsagesPart implements Tool {
 
             long usageWeight = weight.getWeight(entry);
             if (usageWeight > 0) {
-                String resourceId = AuditEntryFactory.getResourceId(entry);
+                String resourceId = AuditEntryHelper.getResourceId(entry);
                 context.write(new Text(resourceId), new LongWritable(usageWeight));
             }
         }

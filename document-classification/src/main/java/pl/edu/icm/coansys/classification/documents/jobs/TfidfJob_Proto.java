@@ -22,7 +22,8 @@ import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.edu.icm.coansys.classification.documents.auxil.LoggingInClassification;
 import pl.edu.icm.coansys.classification.documents.auxil.StringListIntListWritable;
 import pl.edu.icm.coansys.disambiguation.auxil.TextArrayWritable;
@@ -39,7 +40,7 @@ public class TfidfJob_Proto implements Tool {
      *
      */
 
-    private static Logger logger = Logger.getLogger(LoggingInClassification.class);
+    private static Logger logger = LoggerFactory.getLogger(LoggingInClassification.class);
     private Configuration conf;
     /*
      *

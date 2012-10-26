@@ -17,7 +17,8 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.util.GenericOptionsParser;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.edu.icm.coansys.disambiguation.auxil.LoggingInDisambiguation;
 import pl.edu.icm.coansys.disambiguation.auxil.TextTextArrayMapWritable;
 import pl.edu.icm.coansys.importers.constants.HBaseConstant;
@@ -36,7 +37,7 @@ public class DisambiguationJob_Toy implements Tool {
      * 
      */
     
-    private static Logger logger = Logger.getLogger(LoggingInDisambiguation.class);
+    private static Logger logger = LoggerFactory.getLogger(LoggingInDisambiguation.class);
     private Configuration conf;
 	
 	/*

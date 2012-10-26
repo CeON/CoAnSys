@@ -26,19 +26,14 @@ import pl.edu.icm.coansys.importers.models.DocumentProtos.MediaContainer;
  */
 public class DocumentProtobufBytesToTuple extends EvalFunc<Map> {
 
-    /*private <T> DataBag getBag(List<T> items) throws ExecException {
-        DataBag bag = null;
-        if (items != null) {
-            bag = BagFactory.getInstance().newDefaultBag();
-            for (T item : items) {
-                Tuple tuple = TupleFactory.getInstance().newTuple(2);
-                tuple.set(0, item);
-                bag.add(tuple);
-            }
-        }
-        return bag;
-    }*/
-
+    /*
+     * private <T> DataBag getBag(List<T> items) throws ExecException { DataBag
+     * bag = null; if (items != null) { bag =
+     * BagFactory.getInstance().newDefaultBag(); for (T item : items) { Tuple
+     * tuple = TupleFactory.getInstance().newTuple(2); tuple.set(0, item);
+     * bag.add(tuple); } } return bag;
+    }
+     */
     @Override
     public Map exec(Tuple input) throws IOException {
         try {
@@ -90,10 +85,11 @@ public class DocumentProtobufBytesToTuple extends EvalFunc<Map> {
         if (list == null || list.isEmpty()) {
             return null;
         }
-        String concatenated = list.get(0);
-        for (int i = 1; i < list.size(); ++i) {
-            concatenated += " " + list.get(i);
+        StringBuilder sb = new StringBuilder(list.size());
+        sb.append(list.get(0));
+        for (int i = 1; i < list.size(); i++) {
+            sb.append(" ").append(list.get(i));
         }
-        return concatenated;
+        return sb.toString();
     }
 }

@@ -4,10 +4,8 @@
 package pl.edu.icm.coansys.logsanalysis.transformers;
 
 import java.io.IOException;
-import java.net.URI;
 import java.util.Iterator;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.*;
 import org.apache.hadoop.util.ReflectionUtils;
@@ -53,9 +51,8 @@ public class BytesArray2SequenceFile {
 
     public static Iterable<byte[]> read(String uri) throws IOException {
         Configuration conf = createConf();
-        FileSystem fs = FileSystem.get(URI.create(uri), conf);
         Path path = new Path(uri);
-        SequenceFile.Reader reader = new SequenceFile.Reader(fs, path, conf);
+        SequenceFile.Reader reader = new SequenceFile.Reader(conf, SequenceFile.Reader.file(path));
 
         return new BWIterable(reader, conf);
     }
