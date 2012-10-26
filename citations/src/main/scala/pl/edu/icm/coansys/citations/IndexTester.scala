@@ -6,6 +6,8 @@ import com.nicta.scoobi.application.ScoobiApp
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 object IndexTester extends ScoobiApp {
+  override def upload = false
+
   def testIndex(indexUri: String) {
     val index = new ApproximateIndex[MockDocumentWritableIterable](indexUri)
     index.get("aaa").flatMap(_.iterable).foreach(x => println(x.id))
