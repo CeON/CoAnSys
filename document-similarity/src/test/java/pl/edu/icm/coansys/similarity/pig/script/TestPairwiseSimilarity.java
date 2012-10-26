@@ -58,8 +58,8 @@ public class TestPairwiseSimilarity {
 
         LinkedList<String> script = PigScriptExtractor.extract(PIG_SCRIPT_DIR + "pairwise_similarity.pig");
         test = new PigTest(script.toArray(new String[]{}), params);
-        
-        
+
+
         String[] input = {
             "t1\td1\td2\t5\t4",
             "t2\td1\td2\t2\t8"
