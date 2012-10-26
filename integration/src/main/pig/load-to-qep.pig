@@ -16,10 +16,10 @@ disambig_filtered = FILTER disambig BY contributorId IS NOT NULL AND personId IS
 coauthors_filtered = FILTER coauthors BY personId1 IS NOT NULL AND personId2 IS NOT NULL AND count IS NOT NULL;
 docsim_filtered = FILTER docsim BY docId1 IS NOT NULL AND docId2 IS NOT NULL AND similarity IS NOT NULL;
 
-disambig_typed = FOREACH disambig_filtered GENERATE CONCAT('da$separator', contributorId), personId;
-coauthors_typed = FOREACH coauthors_filtered GENERATE CONCAT('cp$separator', CONCAT(personId1, CONCAT('$separator', personId2))), count;
-docsim_typed = FOREACH docsim_filtered GENERATE CONCAT('ds$separator', CONCAT(docId1, CONCAT('$separator', docId2))), similarity;
+disambig_typed = FOREACH disambig_filtered GENERATE CONCAT('da$separator', contributorId) AS rowkey, personId;
+coauthors_typed = FOREACH coauthors_filtered GENERATE CONCAT('cp$separator', CONCAT(personId1, CONCAT('$separator', personId2))) AS rowkey, count;
+docsim_typed = FOREACH docsim_filtered GENERATE CONCAT('ds$separator', CONCAT(docId1, CONCAT('$separator', docId2))) AS rowkey, similarity;
 
-STORE disambig_typed INTO 'hbase://$qepTable' USING org.apache.pig.backend.hadoop.hbase.HBaseStorage('v:personId');
+STORE disambig_typed INTO 'hbase://$qepTable' USING org.apache.pig.backend.hadoop.hbase.HBaseStorage('v:pId');
 STORE coauthors_typed INTO 'hbase://$qepTable' USING org.apache.pig.backend.hadoop.hbase.HBaseStorage('v:cnt');
 STORE docsim_typed INTO 'hbase://$qepTable' USING org.apache.pig.backend.hadoop.hbase.HBaseStorage('v:sim');
