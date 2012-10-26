@@ -59,7 +59,7 @@ message DocumentMetadata{
    	optional string issn = 13;
    	optional string issue = 14;
    	optional string journal = 15;
-   	optional ExtId  extId = 16;
+   	repeated ExtId  extId = 16;
    	repeated ClassifCode classifCode = 17;
    	optional string pages = 18;
 	optional string source = 19;
