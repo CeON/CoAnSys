@@ -10,7 +10,7 @@ import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mrunit.mapreduce.MapReduceDriver;
 import org.testng.annotations.BeforeClass;
-import pl.edu.icm.coansys.logsanalysis.models.AuditEntryFactory;
+import pl.edu.icm.coansys.logsanalysis.models.AuditEntryHelper;
 import pl.edu.icm.coansys.logsanalysis.transformers.AuditEntry2Protos;
 import pl.edu.icm.synat.api.services.audit.model.AuditEntry;
 
@@ -36,7 +36,7 @@ public class CountUsagesTest {
     @org.testng.annotations.Test(groups = {"fast"})
     public void countUsagesTest() {        
         for (int i = 0; i < TEST_ENTRIES_COUNT; i++) {
-            AuditEntry ae = AuditEntryFactory.getAuditEntry("event"+i, AuditEntry.Level.DEBUG, new Date(System.currentTimeMillis()), "testService", "SAVE_TO_DISK",
+            AuditEntry ae = AuditEntryHelper.getAuditEntry("event"+i, AuditEntry.Level.DEBUG, new Date(System.currentTimeMillis()), "testService", "SAVE_TO_DISK",
                     "127.0.0.1", "http://localhost/", "http://localhost/", "test_session", "test_user", "resource01");
             byte[] bytes = AuditEntry2Protos.serialize(ae).toByteArray();
             mapReduceDriver.addInput(NullWritable.get(), new BytesWritable(bytes));

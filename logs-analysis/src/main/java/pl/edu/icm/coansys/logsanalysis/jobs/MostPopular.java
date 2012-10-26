@@ -6,14 +6,21 @@ package pl.edu.icm.coansys.logsanalysis.jobs;
 import java.math.BigInteger;
 import java.util.Random;
 import org.apache.hadoop.util.ToolRunner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author Artur Czeczko <a.czeczko@icm.edu.pl>
  */
-public class MostPopular {
+public final class MostPopular {
 
-    public static void main(String[] args) throws Exception {
+    private static final Logger logger = LoggerFactory.getLogger(MostPopular.class);
+
+    private MostPopular() {
+    }
+
+    public static void main(String[] args) {
         String[] countArgs;
         String[] sortArgs = new String[3];
 
@@ -36,11 +43,16 @@ public class MostPopular {
         sortArgs[0] = tempPath;
         sortArgs[1] = args[1];
         sortArgs[2] = args[2];
-        int countStatus = ToolRunner.run(new CountUsagesPart(), countArgs);
-        if (countStatus != 0) {
-            System.exit(countStatus);
-        } else {
-            System.exit(ToolRunner.run(new SortUsagesPart(), sortArgs));
+        try {
+            int countStatus = ToolRunner.run(new CountUsagesPart(), countArgs);
+            if (countStatus != 0) {
+                System.exit(countStatus);
+            } else {
+                System.exit(ToolRunner.run(new SortUsagesPart(), sortArgs));
+            }
+        } catch (Exception e) {
+            logger.error("Error: " + e);
+            System.exit(1);
         }
     }
 }

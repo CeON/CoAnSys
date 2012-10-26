@@ -5,7 +5,10 @@
 
 	<import resource="registry-connection.xml"/>
 
-	<bean id="auditServiceClient" class="pl.edu.icm.coansys.logsanalysis.logsacquisition.AcquireAuditService">
+	<bean id="auditServiceClient1" class="pl.edu.icm.coansys.logsanalysis.logsacquisition.AuditServiceToSequenceFile">
+	</bean>
+
+	<bean id="auditServiceClient2" class="pl.edu.icm.coansys.logsanalysis.logsacquisition.AuditServiceToRemoteHTable">
 	</bean>
 
 </beans>
