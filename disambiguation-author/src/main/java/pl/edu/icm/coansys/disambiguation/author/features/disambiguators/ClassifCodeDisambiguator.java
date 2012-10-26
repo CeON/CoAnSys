@@ -15,7 +15,7 @@ public class ClassifCodeDisambiguator extends Disambiguator{
 
 	@Override
 	public String getName() {
-		return "ClassifCodeFeature";
+		return ClassifCodeDisambiguator.class.getSimpleName();
 	}
 
 }

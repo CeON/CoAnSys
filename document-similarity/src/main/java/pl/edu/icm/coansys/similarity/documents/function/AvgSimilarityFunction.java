@@ -27,12 +27,12 @@ public class AvgSimilarityFunction implements SimilarityFunction {
             return EMPTY_VALUE;
         }
         
-        double similarity = keywordsSimilarities.get(0);
-        for (int i = 1; i < keywordsSimilarities.size(); ++i) {
+        double similarity = 1d;
+        for (int i = 0; i < keywordsSimilarities.size(); ++i) {
             similarity *= keywordsSimilarities.get(i);
         }
         
-        similarity /= keywordsSimilarities.size();
+        similarity /= (double) keywordsSimilarities.size();
         return similarity;
     }
 }

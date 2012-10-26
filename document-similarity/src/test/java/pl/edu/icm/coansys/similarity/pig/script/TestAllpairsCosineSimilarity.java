@@ -18,7 +18,6 @@ import pl.edu.icm.coansys.similarity.test.utils.PigScriptExtractor;
  *
  * @author akawa
  */
-
 public class TestAllpairsCosineSimilarity {
 
     private PigTest test;
@@ -27,7 +26,8 @@ public class TestAllpairsCosineSimilarity {
     private static final String[] params = {
         "tfidfPath=null",
         "outputPath=null",
-        "commonJarsPath=."
+        "commonJarsPath=.",
+        "parallel=1"
     };
 
     @BeforeClass
@@ -55,8 +55,8 @@ public class TestAllpairsCosineSimilarity {
 
         // verify intermdiate data
         String[] similaritiesOutput = {
-            "(d1,d2," + (3d + 8d) / (Math.sqrt(5) * Math.sqrt(9+16)) + ")"
+            "(d1,d2," + (3d + 8d) / (Math.sqrt(5d) * Math.sqrt(9d + 16d)) + ")"
         };
-        test.assertOutput("TFIDF", input, "S1", similaritiesOutput);    
+        test.assertOutput("t", input, "sim", similaritiesOutput);
     }
 }

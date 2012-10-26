@@ -1,7 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-                      http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0                       http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>pl.edu.icm.coansys</groupId>
@@ -14,6 +12,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <hadoop.version>2.0.0-mr1-cdh4.0.1</hadoop.version>
         <hadoop.common.version>2.0.0-cdh4.0.1</hadoop.common.version>
+        <hadoop.client.version>2.0.0-cdh4.0.1</hadoop.client.version>
         <pig.version>0.9.2-cdh4.0.1</pig.version>
         <hbase.version>0.92.1-cdh4.0.1</hbase.version>
         <slf4j.version>1.6.4</slf4j.version>
@@ -124,7 +123,7 @@
                         <artifactId>maven-assembly-plugin</artifactId>
                         <configuration>
                             <descriptors>
-                                <descriptor>src/main/resources/assemblies/only-deps.xml</descriptor>
+                                <descriptor>${artifactId}/src/main/resources/assemblies/only-deps.xml</descriptor>
                             </descriptors>
                         </configuration>
                         <executions>
@@ -185,8 +184,9 @@
         <module>document-classification</module>
         <module>document-similarity</module>
         <module>importers</module>
+        <module>integration</module>
         <module>logs-analysis</module>
-    </modules>
+  </modules>
 
     <dependencies>
         <dependency>
@@ -209,13 +209,36 @@
         </dependency>
         <dependency>
             <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-client</artifactId>
+            <version>${hadoop.client.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-client</artifactId>
+            <version>${hadoop.client.version}</version>
+            <classifier>javadoc</classifier>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-core</artifactId>
             <version>${hadoop.version}</version>
         </dependency> 
+            <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-core</artifactId>
+            <version>${hadoop.version}</version>
+            <classifier>sources</classifier>
+        </dependency>
         <dependency>
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-common</artifactId>
             <version>${hadoop.common.version}</version>
+        </dependency>
+               <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-common</artifactId>
+            <version>${hadoop.common.version}</version>
+            <classifier>sources</classifier>
         </dependency>
         <dependency>
             <groupId>org.apache.hbase</groupId>
@@ -223,9 +246,21 @@
             <version>${hbase.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.apache.hbase</groupId>
+            <artifactId>hbase</artifactId>
+            <version>${hbase.version}</version>
+            <classifier>sources</classifier>
+        </dependency>
+        <dependency>
             <groupId>org.apache.pig</groupId>
             <artifactId>pig</artifactId>
             <version>${pig.version}</version>
+        </dependency>
+          <dependency>
+            <groupId>org.apache.pig</groupId>
+            <artifactId>pig</artifactId>
+            <version>${pig.version}</version>
+            <classifier>sources</classifier>
         </dependency>
         <dependency>
             <groupId>org.apache.pig</groupId>

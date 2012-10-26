@@ -1,0 +1,30 @@
+<workflow-app name='coauthor-pairs-workflow' xmlns="uri:oozie:workflow:0.2">
+    <start to='cauthor-pairs'/>
+    <action name='cauthor-pairs'>
+        <pig>
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <prepare>
+                <delete path="${cp_coauthorPairsOutputDir}"/>
+            </prepare>
+            <configuration>
+                <property>
+                    <name>mapred.job.queue.name</name>
+                    <value>${queueName}</value>
+                </property> 
+            </configuration>
+            <script>${pigScriptsDir}/coauthor_pairs.pig</script>
+            <param>bwndataMetadataInputPath=${cp_bwndataMetadataInputPath}</param>
+            <param>contribPersonDir=${cp_contribPersonDir}</param>
+            <param>outputDir=${cp_coauthorPairsOutputDir}</param>
+            <param>commonJarsPath=${commonJarsPath}</param>
+            <file>${pigScriptsDir}/macros.pig#macros.pig</file>
+        </pig>       
+        <ok to='end'/>
+        <error to='kill'/>
+    </action>
+    <kill name='kill'>
+        <message>Workflow failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+    </kill>
+    <end name='end'/>
+</workflow-app>

@@ -59,8 +59,7 @@ public class SequenceFileKeysSampler implements Tool {
 
         Configuration config = sampler.getConfiguration();
         
-      
-
+     
         InputSampler.Sampler<BytesWritable, NullWritable> inputSampler =
                 new InputSampler.RandomSampler<BytesWritable, NullWritable>(
                 config.getFloat(SAMPLER_FREQUENCY_KEY, SAMPLER_FREQUENCY_DEFAULT_VALUE),
@@ -83,7 +82,7 @@ public class SequenceFileKeysSampler implements Tool {
             System.exit(-1);
         }
 
-        int result = ToolRunner.run(conf, new SequenceFileKeysSampler(), args);
+        int result = ToolRunner.run(conf, new SequenceFileKeysSampler(), otherArgs);
         System.exit(result);
     }
 

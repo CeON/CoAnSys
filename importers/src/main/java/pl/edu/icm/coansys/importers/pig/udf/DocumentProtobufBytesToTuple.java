@@ -1,95 +1,33 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package pl.edu.icm.coansys.importers.pig.udf;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import org.apache.pig.EvalFunc;
+import com.google.protobuf.InvalidProtocolBufferException;
+import org.apache.pig.backend.executionengine.ExecException;
 import org.apache.pig.data.DataByteArray;
 import org.apache.pig.data.Tuple;
-import org.apache.tika.exception.TikaException;
-import org.xml.sax.SAXException;
-import pl.edu.icm.coansys.commons.pdf.TikaPDFExtractor;
-import pl.edu.icm.coansys.importers.constants.ProtoConstants;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
-import pl.edu.icm.coansys.importers.models.DocumentProtos.Media;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.MediaContainer;
 
 /**
  *
  * @author akawa
  */
-public class DocumentProtobufBytesToTuple extends EvalFunc<Map> {
+public class DocumentProtobufBytesToTuple extends ToDocumentProtobufTuple {
 
-    /*
-     * private <T> DataBag getBag(List<T> items) throws ExecException { DataBag
-     * bag = null; if (items != null) { bag =
-     * BagFactory.getInstance().newDefaultBag(); for (T item : items) { Tuple
-     * tuple = TupleFactory.getInstance().newTuple(2); tuple.set(0, item);
-     * bag.add(tuple); } } return bag;
-    }
-     */
     @Override
-    public Map exec(Tuple input) throws IOException {
-        try {
-            DataByteArray protoMetadata = (DataByteArray) input.get(0);
-            DocumentMetadata metadata = DocumentMetadata.parseFrom(protoMetadata.get());
-
-            Map<String, Object> map = new HashMap<String, Object>();
-            map.put("key", metadata.getKey());
-            map.put("title", metadata.getTitle());
-            map.put("keywords", getConcatenated(metadata.getKeywordList()));
-            map.put("abstract", metadata.getAbstrakt());
-
-            if (input.size() > 1) {
-                DataByteArray protoMedia = (DataByteArray) input.get(1);
-                if (protoMedia != null) {
-                    MediaContainer media = MediaContainer.parseFrom(protoMedia.get());
-                    String content = getFirstPDFContent(media.getMediaList());
-                    if (content != null) {
-                        map.put("content", content);
-                    }
-                }
-            }
-
-            return map;
-        } catch (Exception e) {
-            // Throwing an exception will cause the task to fail.
-            throw new RuntimeException("Error while parsing DocumentMetadata", e);
-        }
+    public DocumentMetadata getDocumentMetadata(Tuple input) throws ExecException, InvalidProtocolBufferException {
+        DataByteArray protoMetadata = (DataByteArray) input.get(0);
+        DocumentMetadata metadata = DocumentMetadata.parseFrom(protoMetadata.get());
+        return metadata;
     }
 
-    private String getFirstPDFContent(List<Media> medias) throws IOException, SAXException, TikaException {
-        if (medias != null && medias.size() > 0) {
-            for (Media medium : medias) {
-                if (ProtoConstants.mediaTypePdf.equals(medium.getMediaType())) {
-                    ByteArrayInputStream inputStream = new ByteArrayInputStream(medium.getContent().toByteArray());
-                    try {
-                        String content = TikaPDFExtractor.getContent(inputStream);
-                        return content;
-                    } finally {
-                        inputStream.close();
-                    }
-                }
-            }
+    @Override
+    public MediaContainer getDocumentMedia(Tuple input) throws ExecException, InvalidProtocolBufferException {
+        MediaContainer media = null;
+        if (input.size() >= 1) {
+            DataByteArray protoMedia = (DataByteArray) input.get(1);
+            media = MediaContainer.parseFrom(protoMedia.get());
         }
-        return null;
-    }
 
-    private String getConcatenated(List<String> list) {
-        if (list == null || list.isEmpty()) {
-            return null;
-        }
-        StringBuilder sb = new StringBuilder(list.size());
-        sb.append(list.get(0));
-        for (int i = 1; i < list.size(); i++) {
-            sb.append(" ").append(list.get(i));
-        }
-        return sb.toString();
+        return media;
     }
 }
