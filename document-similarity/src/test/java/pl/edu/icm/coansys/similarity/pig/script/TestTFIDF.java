@@ -25,14 +25,18 @@ public class TestTFIDF {
     private static Cluster cluster;
     private static final String PIG_SCRIPT_DIR = "src/main/pig/";
     private static String[] script;
-    private static String[] params;
+    private static String[] params = {
+            "in_relation=in_relation",
+            "id_field=docId",
+            "token_field=term",
+            "tfidf_values=tfidf_values",
+            "parallel=1"
+        };
 
     @BeforeClass
     public static void beforeClass() throws Exception {
         cluster = PigTest.getCluster();
         script = getScriptToTestTfIdfMacro();
-        params = getDefaultParams();
-        
     }
 
     @AfterClass
@@ -40,35 +44,17 @@ public class TestTFIDF {
         cluster.delete(new Path("pigunit-input-overriden.txt"));
     }
 
-    private void print(String[] script) {
-        for (String line : script) {
-            System.out.println(line);
-        }
-    }
-
     private static String[] getScriptToTestTfIdfMacro() throws FileNotFoundException, IOException {
-        // get the content of calculate_tf_idf macro from macros.pig file
         LinkedList<String> macro = MacroExtractor.extract(PIG_SCRIPT_DIR + "macros.pig", "tf_idf");
         macro.addFirst("in_relation = LOAD 'ommited' AS (docId, term);");
         macro.addLast("tfidf_values = ORDER tfidf_values BY docId, term;");
         return macro.toArray(new String[]{});
     }
 
-    private static String[] getDefaultParams() {
-        String[] defaultParams = {
-            "in_relation=in_relation",
-            "id_field=docId",
-            "token_field=term",
-            "tfidf_values=tfidf_values",
-            "parallel=1"
-        };
-        return defaultParams;
-    }
-
     @org.testng.annotations.Test(groups = {"fast"})
     public void testTfIdf() throws IOException, ParseException {
 
-       
+        test = new PigTest(script, params);
         String[] input = {
             "d1\tt1",
             "d1\tt1",
@@ -134,7 +120,8 @@ public class TestTFIDF {
             "(d3,t2," + (2d / 4d) * Math.log(4d / 2d) + ")",
             "(d3,t3," + (1d / 4d) * Math.log(4d / 1d) + ")",
             "(d3,t4," + (1d / 4d) * Math.log(4d / 1d) + ")",
-            "(d4,t5," + (1d / 1d) * Math.log(4d / 1d) + ")",};
+            "(d4,t5," + (1d / 1d) * Math.log(4d / 1d) + ")"
+        };
 
         test.assertOutput("in_relation", input, "tfidf_values", tfidfOutput);
     }
