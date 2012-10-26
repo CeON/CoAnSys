@@ -22,7 +22,7 @@
         <maven.surefire.plugin.version>2.12.3</maven.surefire.plugin.version>
         <synat.version>1.7-SNAPSHOT</synat.version>
     </properties>
-    
+
     <build>
         <plugins>
             <plugin>
@@ -51,7 +51,7 @@
             </plugin>
         </plugins>
     </build>
-                                                                                            
+
     <profiles>
         <profile>
             <id>slowTests</id>
@@ -86,12 +86,12 @@
                     </plugin>
                 </plugins>
             </build>
-        </profile>      
+        </profile>
         <profile>
             <id>nrml</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
-            </activation>		    
+            </activation>
             <build>
                 <plugins>
                     <plugin>
@@ -126,7 +126,7 @@
                             <descriptors>
                                 <descriptor>src/main/resources/assemblies/only-deps.xml</descriptor>
                             </descriptors>
-                        </configuration>   
+                        </configuration>
                         <executions>
                             <execution>
                                 <phase>package</phase>
@@ -160,7 +160,7 @@
                             <descriptorRefs>
                                 <descriptorRef>jar-with-dependencies</descriptorRef>
                             </descriptorRefs>
-                        </configuration>   
+                        </configuration>
                         <executions>
                             <execution>
                                 <phase>package</phase>
@@ -177,11 +177,13 @@
     </profiles>
 
     <modules>
+        <module>citations</module>
         <module>commons</module>
+        <module>commons-scala</module>
         <module>disambiguation</module>
         <module>disambiguation-author</module>
-        <module>document-classification</module> 
-        <module>document-similarity</module> 
+        <module>document-classification</module>
+        <module>document-similarity</module>
         <module>importers</module>
         <module>logs-analysis</module>
     </modules>
@@ -261,6 +263,11 @@
             <id>sonatype</id>
             <name>Sonatype</name>
             <url>https://oss.sonatype.org/content/repositories/releases/</url>
+        </repository>
+        <repository>
+            <id>nicta-scoobi</id>
+            <name>Scoobi repository</name>
+            <url>http://nicta.github.com/scoobi/releases/</url>
         </repository>
     </repositories>
 </project>
