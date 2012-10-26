@@ -4,9 +4,6 @@
  */
 package pl.edu.icm.coansys.commons.hbase;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
 import java.net.URI;
 import java.util.Properties;
 import org.apache.hadoop.filecache.DistributedCache;
@@ -32,7 +29,7 @@ public class IncrementalLoadConfigurator {
         HFileOutputFormat.configureIncrementalLoad(job, table);
 
         Properties props = new Properties();
-        props.setProperty("mapred.reduce.tasks", new Integer(job.getNumReduceTasks()).toString());
+        props.setProperty("mapred.reduce.tasks", Integer.valueOf(job.getNumReduceTasks()).toString());
         URI[] cacheUris = DistributedCache.getCacheFiles(job.getConfiguration());
         if (cacheUris != null) {
             for (URI cacheUri : cacheUris) {
