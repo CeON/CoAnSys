@@ -6,11 +6,9 @@ package pl.edu.icm.coansys.importers.iterators;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.logging.Level;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.*;
@@ -22,7 +20,7 @@ import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
+import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import pl.edu.icm.coansys.importers.models.DocumentDTO;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
@@ -112,10 +110,11 @@ public class OAIPMHDirToDocumentDTOIterator implements Iterable<DocumentDTO> {
                 }
             }
 
-            Node item = nodeList.item(nodeListIndex++);
+            Element item = (Element) nodeList.item(nodeListIndex++);
 
             String str;
             try {
+                item.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
                 str = nodeToXmlString(item);
                 List<DocumentMetadata> docs = MetadataToProtoMetadataParser.parseStream(new ByteArrayInputStream(str.getBytes("UTF-8")),
                         MetadataToProtoMetadataParser.MetadataType.OAI_DC, collection);
@@ -133,11 +132,13 @@ public class OAIPMHDirToDocumentDTOIterator implements Iterable<DocumentDTO> {
         }
     }
 
-    private static String nodeToXmlString(Node item) throws TransformerConfigurationException, TransformerException {
+    private static String nodeToXmlString(Element item) throws TransformerConfigurationException, TransformerException {
         Transformer transformer = TransformerFactory.newInstance().newTransformer();
         StringWriter buffer = new StringWriter();
         transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-        transformer.transform(new DOMSource(item), new StreamResult(buffer));
+        DOMSource domSource = new DOMSource(item);
+        StreamResult streamResult = new StreamResult(buffer);
+        transformer.transform(domSource, streamResult);
         return buffer.toString();
     }
 }
