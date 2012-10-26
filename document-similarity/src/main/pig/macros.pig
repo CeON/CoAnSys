@@ -102,7 +102,7 @@ DEFINE calculate_tf_idf(docTerm) RETURNS tfidf {
 	E1 = GROUP D BY term;
 	E = FOREACH E1 GENERATE FLATTEN(D) AS (docId, term, tc, ttc, dc), COUNT(D) AS ttdc;
 	
-	$tfidf = FOREACH E GENERATE docId, term, ((double) tc / (double) ttc) * LOG( (1.0 + (double) dc) / ( 1.0 + (double) ttdc)) AS tfidf;
+	$tfidf = FOREACH E GENERATE docId, term, ((double) tc / (double) ttc) * LOG((double) dc / (double) ttdc) AS tfidf;
 };
 
 
@@ -131,17 +131,19 @@ DEFINE calculate_tf_idf2(docTerm) RETURNS tfidf {
 	E1 = GROUP D BY term;
 	E = FOREACH E1 GENERATE FLATTEN(D) AS (docId, term, tc, ttc, dc), COUNT(D) AS ttdc;
 	
-	$tfidf = FOREACH E GENERATE docId, term, ((double) tc / (double) ttc) * LOG( (1.0 + (double) dc) / ( 1.0 + (double) ttdc)) AS tfidf;
+	$tfidf = FOREACH E GENERATE docId, term, ((double) tc / (double) ttc) * LOG( (double) dc / (double) ttdc) AS tfidf;
 };
 
-DEFINE tf_idf(in_relation, id_field, token_field, minTfidf, paral) RETURNS tfidf_values { 
+DEFINE tf_idf(in_relation, id_field, token_field, minTfidf) RETURNS tfidf_values { 
   	-- Calculate the term count per document
-  	doc_word_totals = foreach (group $in_relation by ($id_field, $token_field) parallel $paral) generate 
+	doc_word_group = group $in_relation by ($id_field, $token_field);
+  	doc_word_totals = foreach doc_word_group generate 
     		FLATTEN(group) as ($id_field, token), 
 		COUNT_STAR($in_relation) as doc_total;
 
   	-- Calculate the document size
-  	pre_term_counts = foreach (group doc_word_totals by $id_field parallel $paral) generate
+	pre_term_group = group doc_word_totals by $id_field;
+  	pre_term_counts = foreach pre_term_group generate
     		group AS $id_field,
     		FLATTEN(doc_word_totals.(token, doc_total)) as (token, doc_total), 
     		SUM(doc_word_totals.doc_total) as doc_size;
@@ -152,13 +154,16 @@ DEFINE tf_idf(in_relation, id_field, token_field, minTfidf, paral) RETURNS tfidf
     		((double)doc_total / (double)doc_size) AS term_freq;
  
   	-- Get count of documents using each token, for idf
-  	token_usages = foreach (group term_freqs by token parallel $paral) generate
+	token_usages_group = group term_freqs by token;
+  	token_usages = foreach token_usages_group generate
     		FLATTEN(term_freqs) as ($id_field, token, term_freq),
     		COUNT_STAR(term_freqs) as num_docs_with_token;
  
   	-- Get document count
   	just_ids = foreach $in_relation generate $id_field;
-  	ndocs = foreach (group just_ids all parallel $paral) generate COUNT_STAR(just_ids) as total_docs;
+	just_unique_ids = distinct just_ids;
+	ndocs_group = group just_unique_ids all;
+  	ndocs = foreach ndocs_group generate COUNT_STAR(just_unique_ids) as total_docs;
  
   	-- Note the use of Pig Scalars to calculate idf
   	$tfidf_values = foreach token_usages {
