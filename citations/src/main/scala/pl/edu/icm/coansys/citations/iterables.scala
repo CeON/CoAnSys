@@ -13,6 +13,7 @@ class WritableIterable[T <: Writable : Manifest](var iterable: Iterable[T], fact
 
   def write(out: DataOutput) {
     out.writeInt(iterable.size)
+    //println("Writing size " + iterable.size)
     iterable foreach {
       x => x.write(out)
     }
@@ -20,6 +21,7 @@ class WritableIterable[T <: Writable : Manifest](var iterable: Iterable[T], fact
 
   def readFields(in: DataInput) {
     val size = in.readInt()
+    //println("Read size " + size)
     iterable = (1 to size) map (_ => factory)
     iterable foreach {
       x => x.readFields(in)
