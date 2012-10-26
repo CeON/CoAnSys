@@ -32,7 +32,7 @@ public class AvgSimilarityFunction implements SimilarityFunction {
             similarity *= keywordsSimilarities.get(i);
         }
         
-        similarity /= keywordsSimilarities.size();
+        similarity /= (double) keywordsSimilarities.size();
         return similarity;
     }
 }
