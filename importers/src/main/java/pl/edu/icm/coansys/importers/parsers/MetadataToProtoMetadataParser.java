@@ -26,17 +26,7 @@ import pl.edu.icm.coansys.importers.models.DocumentProtos.ExtId;
 import pl.edu.icm.synat.application.commons.transformers.MetadataFormat;
 import pl.edu.icm.synat.application.commons.transformers.MetadataReader;
 import pl.edu.icm.synat.application.commons.transformers.TransformationException;
-import pl.edu.icm.synat.application.model.bwmeta.YAncestor;
-import pl.edu.icm.synat.application.model.bwmeta.YAttribute;
-import pl.edu.icm.synat.application.model.bwmeta.YCategoryRef;
-import pl.edu.icm.synat.application.model.bwmeta.YContributor;
-import pl.edu.icm.synat.application.model.bwmeta.YDescription;
-import pl.edu.icm.synat.application.model.bwmeta.YElement;
-import pl.edu.icm.synat.application.model.bwmeta.YExportable;
-import pl.edu.icm.synat.application.model.bwmeta.YName;
-import pl.edu.icm.synat.application.model.bwmeta.YRelation;
-import pl.edu.icm.synat.application.model.bwmeta.YStructure;
-import pl.edu.icm.synat.application.model.bwmeta.YTagList;
+import pl.edu.icm.synat.application.model.bwmeta.*;
 import pl.edu.icm.synat.application.model.bwmeta.constants.YaddaIdConstants;
 import pl.edu.icm.synat.application.model.bwmeta.transformers.BwmetaTransformerConstants;
 import pl.edu.icm.synat.application.model.general.MetadataTransformers;
@@ -322,7 +312,7 @@ public class MetadataToProtoMetadataParser {
                 docBuilder.setPages(pages.getPosition());
             }
         }
-
+        
         String content;
         if ((content = yElement.getId(YaddaIdConstants.IDENTIFIER_CLASS_DOI)) != null) {
             docBuilder.setDoi(content);
@@ -337,19 +327,25 @@ public class MetadataToProtoMetadataParser {
             ExtId.Builder eib = ExtId.newBuilder();
             eib.setSource(ProtoConstants.documentExtIdMr);
             eib.setValue(content);
-            docBuilder.setExtId(eib.build());
+            docBuilder.addExtId(eib.build());
+        }
+        if ((content = yElement.getId("oai")) != null) {
+            ExtId.Builder eib = ExtId.newBuilder();
+            eib.setSource(ProtoConstants.documentExtIdOai);
+            eib.setValue(content);
+            docBuilder.addExtId(eib);
         }
         if ((content = yElement.getId()) != null) {
             ExtId.Builder eib = ExtId.newBuilder();
             eib.setSource(ProtoConstants.documentExtIdBwmeta);
             eib.setValue(content);
-            docBuilder.setExtId(eib.build());
+            docBuilder.addExtId(eib.build());
         }
         if ((content = yElement.getId("bwmeta1.id-class.Zbl")) != null) {
             ExtId.Builder eib = ExtId.newBuilder();
             eib.setSource(ProtoConstants.documentExtIdZbl);
             eib.setValue(content);
-            docBuilder.setExtId(eib.build());
+            docBuilder.addExtId(eib.build());
         }
 
         List<YCategoryRef> catRefs = yElement.getCategoryRefs();
@@ -392,9 +388,11 @@ public class MetadataToProtoMetadataParser {
             uuId = UUID.randomUUID();
         }
         docBuilder.setKey(uuId.toString());
-
-//        docBuilder.setType(HBaseConstants.T_DOCUMENT_COPY);
-        docBuilder.setTitle(yElement.getOneName().getText());
+        //        docBuilder.setType(HBaseConstants.T_DOCUMENT_COPY);
+        YName oneName = yElement.getOneName();
+        if (oneName != null) {
+            docBuilder.setTitle(yElement.getOneName().getText());
+        }
 
         List<YContributor> authorNodeList = yElement.getContributors();
         List<Author> authors = new ArrayList<Author>();
