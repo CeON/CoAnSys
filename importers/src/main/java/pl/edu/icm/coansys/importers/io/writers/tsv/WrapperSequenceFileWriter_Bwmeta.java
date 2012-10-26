@@ -17,6 +17,8 @@ import org.apache.hadoop.io.Writable;
 
 import pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator;
 import pl.edu.icm.coansys.importers.models.DocumentDTO;
+import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
+import pl.edu.icm.coansys.importers.models.DocumentProtos.MediaContainer;
 import pl.edu.icm.coansys.importers.models.DocumentProtosWrapper;
 import pl.edu.icm.coansys.importers.models.DocumentProtosWrapper.DocumentWrapper;
 import pl.edu.icm.coansys.importers.transformers.RowComposer;
@@ -24,55 +26,62 @@ import pl.edu.icm.coansys.importers.transformers.RowComposer;
 public class WrapperSequenceFileWriter_Bwmeta {
 
     public static void main(String[] args) throws IOException {
-  
+
         if (args.length != 3) {
             usage();
             System.exit(1);
         }
 
-        String in = args[0];
-        String col = args[1];
-        String out = args[2];
+        String inputDir = args[0];
+        String collection = args[1];
+        String outputSequenceFile = args[2];
 
-        File inf = new File(in);
-        if (!inf.exists()) {
-            System.out.println("<Input dir> does not exist: " + in);
+        checkPaths(inputDir, collection, outputSequenceFile);
+        generateSequenceFile(inputDir, collection, outputSequenceFile);
+
+    }
+
+    private static void checkPaths(String inputDir, String collection, String outputSequenceFile) throws IOException {
+        File input = new File(inputDir);
+        if (!input.exists()) {
+            System.out.println("<Input dir> does not exist: " + inputDir);
             System.exit(2);
         }
-        if (!inf.isDirectory()) {
-            System.out.println("<Input dir> is not a directory:" + in);
+        if (!input.isDirectory()) {
+            System.out.println("<Input dir> is not a directory:" + inputDir);
             System.exit(3);
         }
-
-        if (col.length() != col.replaceAll("[^a-zA-Z0-9]", "").length()) {
-            System.out.println("Only alphanumeric signs (a space sign is also excluded) are allowed for a collection name: " + col);
+        if (collection.length() != collection.replaceAll("[^a-zA-Z0-9]", "").length()) {
+            System.out.println("Only alphanumeric signs (a space sign is also excluded) are allowed for a collection name: " + collection);
             System.exit(4);
         }
-
-        File outf = new File(out);
+        File outf = new File(outputSequenceFile);
         if (!outf.getParentFile().exists()) {
             outf.getParentFile().mkdirs();
         }
 
-        ZipDirToDocumentDTOIterator zdtp = new ZipDirToDocumentDTOIterator(in, col);
+    }
+
+    private static void generateSequenceFile(String inputDir, String collection, String outputSequenceFile) throws IOException {
+        ZipDirToDocumentDTOIterator zdtp = new ZipDirToDocumentDTOIterator(inputDir, collection);
         SequenceFile.Writer writer = null;
         try {
             BytesWritable rowKeyBytesWritable = new BytesWritable();
             BytesWritable documentWrapperBytesWritable = new BytesWritable();
             DocumentProtosWrapper.DocumentWrapper.Builder dw = DocumentProtosWrapper.DocumentWrapper.newBuilder();
-            
-            writer = createSequenceFileWriter(out, rowKeyBytesWritable, documentWrapperBytesWritable);
+
+            writer = createSequenceFileWriter(outputSequenceFile, rowKeyBytesWritable, documentWrapperBytesWritable);
             for (DocumentDTO doc : zdtp) {
                 DocumentWrapper docWrap = buildFrom(dw, doc);
-                
+
                 // specify key
                 byte[] rowKey = docWrap.getRowId().toByteArray();
                 rowKeyBytesWritable.set(rowKey, 0, rowKey.length);
-                
+
                 // specify value
                 byte[] dwBytes = docWrap.toByteArray();
                 documentWrapperBytesWritable.set(dwBytes, 0, dwBytes.length);
-                
+
                 // append to the sequence file
                 writer.append(rowKeyBytesWritable, documentWrapperBytesWritable);
             }
@@ -82,9 +91,23 @@ public class WrapperSequenceFileWriter_Bwmeta {
     }
 
     private static DocumentWrapper buildFrom(DocumentProtosWrapper.DocumentWrapper.Builder dw, DocumentDTO doc) {
-        dw.setRowId(ByteString.copyFrom(RowComposer.composeRow(doc).getBytes()));
-        dw.setMproto(doc.getDocumentMetadata().toByteString());
-        dw.setCproto(doc.getMediaConteiner().toByteString());
+        ByteString rowId = ByteString.copyFrom(RowComposer.composeRow(doc).getBytes());
+        dw.setRowId(rowId);
+        
+        System.out.println("Building: " + rowId.toString());
+        
+        DocumentMetadata documentMetadata = doc.getDocumentMetadata();
+        if (documentMetadata != null) {
+            dw.setMproto(documentMetadata.toByteString());
+            System.out.println("\tdocumentMetadata size: " + documentMetadata.toByteString().size());
+        }
+        
+        MediaContainer mediaConteiner = doc.getMediaConteiner();
+        if (mediaConteiner != null) {
+            dw.setCproto(mediaConteiner.toByteString());
+            System.out.println("\tmediaConteiner size: " + mediaConteiner.toByteString().size());
+        }
+        
         return dw.build();
     }
 
