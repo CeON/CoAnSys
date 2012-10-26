@@ -43,10 +43,11 @@ public class TfidfReducer extends Reducer<Text, StringListIntListWritable, TextA
     public void reduce(Text key, Iterable<StringListIntListWritable> values, Context context) {
 
     	int docsWithTerm = 0;
-    	for(@SuppressWarnings("unused") final StringListIntListWritable v : values){
+        for (Iterator<StringListIntListWritable> it = values.iterator(); it.hasNext();) {
     		docsWithTerm++;
-    	}
-    	double idf = Math.log(docs_num/(double)docsWithTerm);
+        }
+
+        double idf = Math.log(docs_num/(double)docsWithTerm);
 
         for (final StringListIntListWritable v : values) {
             double tf = (double) (v.getIntList().get(0)) / (double) (v.getIntList().get(1));
