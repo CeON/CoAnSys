@@ -30,7 +30,7 @@ mvn assembly:single
 ```
 # get sample data from the link bellow
 ```
-[Example Data](../examples/GROTOAP-10.zip)
+[Example Data](https://svn.ceon.pl/research/CoAnSys-examples/GROTOAP-10.zip)
 
 ```
 cd ~
