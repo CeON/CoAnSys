@@ -101,11 +101,11 @@ public class BwmetaToDocumentWraperSequenceFileWriter {
         String rowId = RowComposer.composeRow(doc);
         dw.setRowId(rowId);
 
-        LOGGER.info("Building: ");
+        LOGGER.trace("Building: ");
         LOGGER.trace("\tKey = " + doc.getKey());
         LOGGER.trace("\tCollection = " + doc.getCollection());
-        LOGGER.info("\tArchiveZip = " + doc.getArchiveZip());
-        LOGGER.info("\tSourcePath = " + doc.getSourcePath());
+        LOGGER.trace("\tArchiveZip = " + doc.getArchiveZip());
+        LOGGER.trace("\tSourcePath = " + doc.getSourcePath());
 
         DocumentMetadata documentMetadata = doc.getDocumentMetadata();
         if (documentMetadata.getSerializedSize() > 0) {
