@@ -78,6 +78,7 @@ message Media {
         optional string sourcePath = 4;
         optional string sourceArchive = 5;
         optional string destinationPath = 6;
+        optional int64 sourcePathFilesize = 7;
 }
 
 message MediaContainer {
