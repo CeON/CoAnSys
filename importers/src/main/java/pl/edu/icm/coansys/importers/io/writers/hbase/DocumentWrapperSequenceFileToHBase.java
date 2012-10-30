@@ -22,7 +22,8 @@ import org.apache.hadoop.util.GenericOptionsParser;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 import static pl.edu.icm.coansys.importers.constants.HBaseConstant.*;
-import pl.edu.icm.coansys.importers.models.DocumentProtosWrapper.DocumentWrapper;
+import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentWrapper;
+import pl.edu.icm.coansys.importers.transformers.DocumentWrapper2HBasePut;
 
 /**
  *
@@ -51,23 +52,14 @@ public class DocumentWrapperSequenceFileToHBase implements Tool {
     public static class DocumentWrapperToHBasePutMapper extends Mapper<BytesWritable, BytesWritable, ImmutableBytesWritable, Put> {
 
         private ImmutableBytesWritable docWrapRowKey = new ImmutableBytesWritable();
-        private final int MAX_CPROTO_SIZE = 1000000;
 
         @Override
-        protected void map(BytesWritable rowKey, BytesWritable documentWrapper, Context context)
+        protected void map(BytesWritable rowKey, BytesWritable documentWrapperBytes, Context context)
                 throws IOException, InterruptedException {
 
-            DocumentWrapper docWrap = DocumentWrapper.parseFrom(documentWrapper.copyBytes());
-            docWrapRowKey.set(docWrap.getRowId().toByteArray());
-
-            Put put = new Put(docWrap.getRowId().toByteArray());
-            put.add(FAMILY_METADATA_BYTES, FAMILY_METADATA_QUALIFIER_PROTO_BYTES, docWrap.getMproto().toByteArray());
-            byte[] cproto = docWrap.getCproto().toByteArray();
-            if (cproto.length < MAX_CPROTO_SIZE) {
-                put.add(FAMILY_CONTENT_BYTES, FAMILY_CONTENT_QUALIFIER_PROTO_BYTES, cproto);
-            } else {
-                context.getCounter(Counters.CPROTO_SKIPPED).increment(1);
-            }
+            DocumentWrapper documentWrapper = DocumentWrapper.parseFrom(documentWrapperBytes.copyBytes());
+            Put put = DocumentWrapper2HBasePut.translate(documentWrapper);
+            docWrapRowKey.set(put.getRow());
             
             context.write(docWrapRowKey, put);
         }

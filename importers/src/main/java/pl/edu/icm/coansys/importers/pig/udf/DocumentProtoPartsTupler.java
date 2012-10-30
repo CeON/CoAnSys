@@ -11,14 +11,13 @@ import org.apache.pig.data.DataType;
 import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
-import pl.edu.icm.coansys.importers.models.DocumentProtos;
-import pl.edu.icm.coansys.importers.models.DocumentProtosWrapper.DocumentWrapper;
+import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentWrapper;
 
 /**
  *
  * @author akawa
  */
-public class DocumentComponentsProtoTupler extends EvalFunc<Tuple> {
+public class DocumentProtoPartsTupler extends EvalFunc<Tuple> {
     
     private DataByteArray rowId = new DataByteArray();
     private DataByteArray mproto = new DataByteArray();
@@ -30,9 +29,9 @@ public class DocumentComponentsProtoTupler extends EvalFunc<Tuple> {
         byte[] documentProto = (byte[]) input.get(0);
         DocumentWrapper document = DocumentWrapper.parseFrom(documentProto);
         
-        rowId.set(document.getRowId().toByteArray());
-        mproto.set(document.getMproto().toByteArray());
-        cproto.set(document.getCproto().toByteArray());
+        rowId.set(document.getRowId());
+        mproto.set(document.getDocumentMetadata().toByteArray());
+        cproto.set(document.getMediaContainer().toByteArray());
         
         output.set(0, rowId);
         output.set(1, mproto);

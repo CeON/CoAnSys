@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import org.apache.hadoop.hbase.KeyValue;
 import pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator;
 import pl.edu.icm.coansys.importers.models.DocumentDTO;
-import pl.edu.icm.coansys.importers.transformers.DocumentDto2KeyValue;
+import pl.edu.icm.coansys.importers.transformers.DocumentDTO2KeyValue;
 
 /**
  *
@@ -26,7 +26,7 @@ public class ZipDirToHFileTest {
         ArrayList<KeyValue> kvs = new ArrayList<KeyValue>();
 
         for (DocumentDTO doc : zdtp) {
-            kvs.addAll(DocumentDto2KeyValue.translate(doc));
+            kvs.addAll(DocumentDTO2KeyValue.translate(doc));
         }
 
 //        HFile.Writer hfw = new HFile.Writer(Fs);
