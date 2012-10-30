@@ -6,6 +6,9 @@ package pl.edu.icm.coansys.importers.io.writers.file;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -33,6 +36,7 @@ public class BwmetaToDocumentWraperSequenceFileWriter {
     private static long metadataCount = 0;
     private static long mediaCount = 0;
     private static long mediaConteinerCount = 0;
+    private static Map<Long, Long> sizeMap = new HashMap<Long, Long>();
 
     public static void main(String[] args) throws IOException {
 
@@ -57,6 +61,9 @@ public class BwmetaToDocumentWraperSequenceFileWriter {
         LOGGER.info(metadataCount + " metadata records");
         LOGGER.info(mediaConteinerCount + " mediaContainer records");
         LOGGER.info(mediaCount + " media records");
+        for (Entry<Long, Long> entry : sizeMap.entrySet()) {
+          LOGGER.info(entry.getKey() + " = " + entry.getValue()); 
+        }
     }
 
     private static void checkPaths(String inputDir, String collection, String outputSequenceFile) throws IOException {
@@ -130,10 +137,12 @@ public class BwmetaToDocumentWraperSequenceFileWriter {
             dw.setMediaContainer(mediaConteiner);
             LOGGER.info("\tMediaConteiner size: " + (mediaConteiner.toByteArray().length / 1024 / 1024) + " MB");
             for (Media media : mediaConteiner.getMediaList()) {
+                long size = media.getSourcePathFilesize() / 1024 / 1024;
                 LOGGER.info("\tArchiveZip = " + media.getSourceArchive());
                 LOGGER.info("\tSourcePath = " + media.getSourcePath());
-                LOGGER.info("\tSourcePathFilesize = " + (media.getSourcePathFilesize() / 1024 / 1024) + " MB");
+                LOGGER.info("\tSourcePathFilesize = " + size + " MB");
                 mediaCount++;
+                sizeMap.put(size, (sizeMap.get(size) == null ? sizeMap.get(size) + 1 : 1));
             }
             mediaConteinerCount++;
         }
