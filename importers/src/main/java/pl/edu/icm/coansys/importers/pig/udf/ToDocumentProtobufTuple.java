@@ -5,7 +5,6 @@
 package pl.edu.icm.coansys.importers.pig.udf;
 
 import com.google.protobuf.InvalidProtocolBufferException;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,7 +16,6 @@ import org.apache.pig.EvalFunc;
 import org.apache.pig.backend.executionengine.ExecException;
 import org.apache.pig.data.Tuple;
 import org.xml.sax.SAXException;
-import pl.edu.icm.coansys.importers.constants.ProtoConstants;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.Media;
@@ -78,13 +76,7 @@ public abstract class ToDocumentProtobufTuple extends EvalFunc<Map> {
     }
 
     private String getFirstPDFContent(List<Media> medias) throws IOException, SAXException {
-        if (medias != null && medias.size() > 0) {
-            for (Media medium : medias) {
-                if (ProtoConstants.mediaTypePdf.equals(medium.getMediaType())) {
-                    ByteArrayInputStream inputStream = new ByteArrayInputStream(medium.getContent().toByteArray());
-                }
-            }
-        }
+        //TODO: implement this
         return null;
     }
 
@@ -92,10 +84,11 @@ public abstract class ToDocumentProtobufTuple extends EvalFunc<Map> {
         if (list == null || list.isEmpty()) {
             return null;
         }
-        String concatenated = list.get(0);
-        for (int i = 1; i < list.size(); ++i) {
-            concatenated += separator + list.get(i);
+        StringBuilder sb = new StringBuilder(list.size());
+        sb.append(list.get(0));
+        for (int i = 1; i < list.size(); i++) {
+            sb.append(separator).append(list.get(i));
         }
-        return concatenated;
+        return sb.toString();
     }
 }
