@@ -32,12 +32,12 @@ public class DisambiguationJob_Toy extends Configured implements Tool {
     /*
      * Fields to be set
      */
-    String inputPath = null;
-    String outputDir = null;
-    String featuresDescription = null;
-    String jobName = null;
-    String threshold = null;
-    int reducerNumber = 65;
+    private String inputPath = null;
+    private String outputDir = null;
+    private String featuresDescription = null;
+    private String jobName = null;
+    private String threshold = null;
+    private int reducerNumber = 65;
 
     /*
      * Getters and setters

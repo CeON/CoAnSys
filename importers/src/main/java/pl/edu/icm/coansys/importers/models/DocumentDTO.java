@@ -8,7 +8,6 @@ package pl.edu.icm.coansys.importers.models;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.Media;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.MediaContainer;
@@ -18,12 +17,12 @@ import pl.edu.icm.coansys.importers.models.DocumentProtos.MediaContainer;
  */
 public class DocumentDTO {
 
-	protected String collection;
+	private String collection;
 //	protected String year;
-	protected DocumentMetadata docMetadata;
-	protected String key;
-	protected MediaContainer.Builder medias = MediaContainer.newBuilder(); 
-	protected ArrayList<String> mediaTypes = new ArrayList<String>();
+	private DocumentMetadata docMetadata;
+	private String key;
+	private MediaContainer.Builder medias = MediaContainer.newBuilder(); 
+	private ArrayList<String> mediaTypes = new ArrayList<String>();
 
 	public String getCollection() {
 		return collection;

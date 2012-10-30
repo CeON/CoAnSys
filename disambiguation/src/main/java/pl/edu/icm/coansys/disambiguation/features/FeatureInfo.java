@@ -9,7 +9,6 @@ import java.util.Comparator;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import pl.edu.icm.coansys.disambiguation.auxil.LoggingInDisambiguation;
 /**
  * {@link FeatureInfo} is an information container binding data about associated {@link Extractor} and {@link Disambiguator}.
@@ -33,19 +32,19 @@ public class FeatureInfo {
 	/**
 	 * A name of a {@link Disambiguator}.
 	 */
-	protected String disambiguatorName;
+	private String disambiguatorName;
 	/**
 	 * A name of a {@link Extractor}.
 	 */
-	protected String featureExtractorName;
+	private String featureExtractorName;
 	/**
 	 * A weight/importance factor of a {@link Disambiguator}.
 	 */
-	protected double weight;
+	private double weight;
 	/**
 	 * A value for scaling integer result of a {@link Disambiguator} to the range [0,1].
 	 */
-	protected int maxValue;
+	private int maxValue;
 	
 	/**
 	 * Build a list of {@link FeatureInfo} objects.  

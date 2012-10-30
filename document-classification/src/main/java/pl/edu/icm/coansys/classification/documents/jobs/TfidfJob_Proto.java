@@ -47,12 +47,12 @@ public class TfidfJob_Proto implements Tool {
      * Fields to be set
      *
      */
-    String INPUT_TABLE = null;
-    String AUXIL_PATH = null;
-    String FINAL_PATH = null;
-    String NAME = null;
-    int DOCS_NUM = 0;
-    int REDUCER_NUM = 65;
+    private String INPUT_TABLE = null;
+    private String AUXIL_PATH = null;
+    private String FINAL_PATH = null;
+    private String NAME = null;
+    private int DOCS_NUM = 0;
+    private int REDUCER_NUM = 65;
 
     /*
      *

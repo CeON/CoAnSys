@@ -7,12 +7,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.log4j.Logger;
-
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.ExtractorFactory;
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.AuthorBased;
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DocumentBased;
@@ -21,7 +19,6 @@ import pl.edu.icm.coansys.disambiguation.auxil.LoggingInDisambiguation;
 import pl.edu.icm.coansys.disambiguation.auxil.TextTextArrayMapWritable;
 import pl.edu.icm.coansys.disambiguation.features.Extractor;
 import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
-import pl.edu.icm.coansys.importers.models.DocumentProtos;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
 
@@ -35,8 +32,8 @@ import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
 public class FeaturesExtractionMapper_Toy extends Mapper<BytesWritable, BytesWritable, Text, TextTextArrayMapWritable> {
 
     private static Logger logger = Logger.getLogger(LoggingInDisambiguation.class);
-    public List<FeatureInfo> featureInfos;
-    public List<Extractor> featureExtractors;
+    private List<FeatureInfo> featureInfos;
+    private List<Extractor> featureExtractors;
 
     @Override
     public void setup(Context context) throws IOException, InterruptedException {

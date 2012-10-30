@@ -46,11 +46,11 @@ public class RichSequenceFileLoader extends FileInputLoadFunc {
     private Writable key;
     private Writable value;
     private ArrayList<Object> mProtoTuple = null;
-    protected static final Log LOG = LogFactory.getLog(RichSequenceFileLoader.class);
-    protected TupleFactory mTupleFactory = TupleFactory.getInstance();
-    protected SerializationFactory serializationFactory;
-    protected byte keyType = DataType.UNKNOWN;
-    protected byte valType = DataType.UNKNOWN;
+    private static final Log LOG = LogFactory.getLog(RichSequenceFileLoader.class);
+    private TupleFactory mTupleFactory = TupleFactory.getInstance();
+    private SerializationFactory serializationFactory;
+    private byte keyType = DataType.UNKNOWN;
+    private byte valType = DataType.UNKNOWN;
 
     public RichSequenceFileLoader() {
         mProtoTuple = new ArrayList<Object>(2);

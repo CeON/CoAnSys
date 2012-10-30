@@ -32,7 +32,7 @@ import com.google.protobuf.ByteString;
  */
 public class YElementFromZip2DocumentDto {
 
-    protected String collection;
+    private String collection;
     private static final Logger logger = LoggerFactory.getLogger(YElementFromZip2DocumentDto.class);
 
     public String getCollection() {

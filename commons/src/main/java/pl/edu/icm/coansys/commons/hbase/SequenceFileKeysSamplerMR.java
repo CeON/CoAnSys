@@ -46,8 +46,8 @@ public class SequenceFileKeysSamplerMR implements Tool {
 
     public static class Map extends Mapper<BytesWritable, BytesWritable, BooleanWritable, BytesWritable> {
 
-        int count = 0;
-        int limit = SAMPLE_SAMPLES_PER_SPLIT_DV;
+        private int count = 0;
+        private int limit = SAMPLE_SAMPLES_PER_SPLIT_DV;
         private static final BooleanWritable TRUE = new BooleanWritable(true);
 
         @Override

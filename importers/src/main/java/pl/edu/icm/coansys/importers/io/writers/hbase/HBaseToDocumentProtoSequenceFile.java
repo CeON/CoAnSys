@@ -6,7 +6,6 @@ package pl.edu.icm.coansys.importers.io.writers.hbase;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
-import static pl.edu.icm.coansys.importers.constants.HBaseConstant.*;
 import java.io.IOException;
 import java.util.Date;
 import org.apache.hadoop.conf.Configuration;
@@ -28,6 +27,7 @@ import org.apache.hadoop.util.ToolRunner;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.pig.backend.executionengine.ExecException;
+import static pl.edu.icm.coansys.importers.constants.HBaseConstant.*;
 import pl.edu.icm.coansys.importers.models.DocumentProtosWrapper.DocumentWrapper;
 
 /**
@@ -109,11 +109,9 @@ public class HBaseToDocumentProtoSequenceFile implements Tool {
             }
 
             /*
-             if (cproto != null) {
-             mediaProto.set(cproto, 0, cproto.length);
-             mos.write(FAMILY_CONTENT_QUALIFIER_PROTO, key, mediaProto);
-             context.getCounter(Counters.CPROTO).increment(1);
-             }
+             * if (cproto != null) { mediaProto.set(cproto, 0, cproto.length);
+             * mos.write(FAMILY_CONTENT_QUALIFIER_PROTO, key, mediaProto);
+             * context.getCounter(Counters.CPROTO).increment(1); }
              */
         }
 
@@ -125,8 +123,8 @@ public class HBaseToDocumentProtoSequenceFile implements Tool {
 
     public static class ResultToProtoBytesConverter {
 
-        Result result;
-        DocumentWrapper.Builder dw;
+        private Result result;
+        private DocumentWrapper.Builder dw;
 
         public ResultToProtoBytesConverter() {
         }
