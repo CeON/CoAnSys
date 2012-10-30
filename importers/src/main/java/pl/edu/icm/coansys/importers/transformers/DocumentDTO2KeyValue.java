@@ -15,9 +15,9 @@ import pl.edu.icm.coansys.importers.models.DocumentDTO;
 /**
  * @author pdendek
  */
-public class DocumentDto2KeyValue {
+public class DocumentDTO2KeyValue {
 	
-	private DocumentDto2KeyValue() {}
+	private DocumentDTO2KeyValue() {}
 	
 	public static List<KeyValue> translate(DocumentDTO docDTO) {
 		

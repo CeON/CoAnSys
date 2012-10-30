@@ -55,7 +55,8 @@ public class YElementFromZip2DocumentDto {
 
             if (docMetadata != null) {
                 productObject = new DocumentDTO();
-                productObject.setKey(docMetadata.getKey()); //Document and DocumentMetadata should have the same key?
+                productObject.setKey(docMetadata.getKey()); 
+                //Document and DocumentMetadata should have the same key?
                 productObject.setDocumentMetadata(docMetadata);
 
                 List<YContentEntry> contents = yElement.getContents();
@@ -71,9 +72,7 @@ public class YElementFromZip2DocumentDto {
     private void handleContent(DocumentDTO docDTO, YContentEntry content,
             ZipArchive currentZipArchive) {
         if (content.isFile()) {
-
             YContentFile yFile = (YContentFile) content;
-
             if (BWMetaConstants.mimePdfListExtension.contains(yFile.getFormat())) {
                 handlePDFContent(docDTO, yFile, currentZipArchive);
             }
@@ -102,6 +101,7 @@ public class YElementFromZip2DocumentDto {
                         mediaBuilder.setContent(ByteString.copyFrom(IOUtils.toByteArray(pdfIS)));
                         docDTO.addMedia(mediaBuilder.build());
                         docDTO.addMediaType(type);
+
                     } catch (IOException ex) {
                         logger.error(ex.toString());
                     }
