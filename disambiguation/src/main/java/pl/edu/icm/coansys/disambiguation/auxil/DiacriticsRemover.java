@@ -32,6 +32,8 @@ import org.apache.commons.lang.StringUtils;
  */
 public class DiacriticsRemover {
 
+    private DiacriticsRemover() {
+    }
     private static final Character[] from = {
         'Æ', 'Ð', 'Ø', 'Þ', 'ß', 'æ', 'ð', 'ø', 'þ', 'Đ', 'đ', 'Ħ',
         'ħ', 'ı', 'ĸ', 'Ł', 'ł', 'Ŋ', 'ŋ', 'Œ', 'œ', 'Ŧ', 'ŧ'};

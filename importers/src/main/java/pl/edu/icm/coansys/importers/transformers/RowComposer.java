@@ -8,6 +8,8 @@ import pl.edu.icm.coansys.importers.constants.ProtoConstants;
 import pl.edu.icm.coansys.importers.models.DocumentDTO;
 
 public class RowComposer {
+    
+    private RowComposer() {}
 
     public static String composeRow(DocumentDTO docDTO) {
         StringBuilder sb = new StringBuilder();

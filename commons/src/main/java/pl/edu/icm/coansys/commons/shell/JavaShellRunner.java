@@ -19,6 +19,8 @@ public class JavaShellRunner {
 
     private static Logger logger = LoggerFactory.getLogger(JavaShellRunner.class);
 
+    private JavaShellRunner() {}
+    
     private static String[] parseArgs(String[] args) {
         if (args == null || args.length < 2) {
             logger.debug("# of parameters should be greater or equal to 2");

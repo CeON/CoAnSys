@@ -28,6 +28,9 @@ public class StopWordsRemover {
 
     }
 
+    private StopWordsRemover() {
+    }
+
     public static boolean isAnEnglishStopWords(String input) throws IOException {
         return stopwords.contains(input);
     }

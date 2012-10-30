@@ -3,11 +3,9 @@
  */
 package pl.edu.icm.coansys.disambiguation.clustering.strategies;
 
+import com.sun.el.util.ReflectionUtil;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import com.sun.el.util.ReflectionUtil;
-
 
 /**
  *
@@ -18,6 +16,9 @@ import com.sun.el.util.ReflectionUtil;
 public class ClusteringStrategyFactory {
 
     private static final String THIS_PACKAGE = new ClusteringStrategyFactory().getClass().getPackage().getName();
+
+    private ClusteringStrategyFactory() {
+    }
 
     public static ClusteringStrategy create(String name) {
         try {

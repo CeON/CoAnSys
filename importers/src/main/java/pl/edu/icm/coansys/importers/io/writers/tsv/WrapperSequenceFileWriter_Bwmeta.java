@@ -14,7 +14,6 @@ import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.io.Writable;
-
 import pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator;
 import pl.edu.icm.coansys.importers.models.DocumentDTO;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
@@ -24,6 +23,9 @@ import pl.edu.icm.coansys.importers.models.DocumentProtosWrapper.DocumentWrapper
 import pl.edu.icm.coansys.importers.transformers.RowComposer;
 
 public class WrapperSequenceFileWriter_Bwmeta {
+
+    private WrapperSequenceFileWriter_Bwmeta() {
+    }
 
     public static void main(String[] args) throws IOException {
 
@@ -93,21 +95,21 @@ public class WrapperSequenceFileWriter_Bwmeta {
     private static DocumentWrapper buildFrom(DocumentProtosWrapper.DocumentWrapper.Builder dw, DocumentDTO doc) {
         ByteString rowId = ByteString.copyFrom(RowComposer.composeRow(doc).getBytes());
         dw.setRowId(rowId);
-        
+
         System.out.println("Building: " + rowId.toString());
-        
+
         DocumentMetadata documentMetadata = doc.getDocumentMetadata();
         if (documentMetadata != null) {
             dw.setMproto(documentMetadata.toByteString());
             System.out.println("\tdocumentMetadata size: " + documentMetadata.toByteString().size());
         }
-        
+
         MediaContainer mediaConteiner = doc.getMediaConteiner();
         if (mediaConteiner != null) {
             dw.setCproto(mediaConteiner.toByteString());
             System.out.println("\tmediaConteiner size: " + mediaConteiner.toByteString().size());
         }
-        
+
         return dw.build();
     }
 

@@ -18,11 +18,14 @@ import pl.edu.icm.coansys.commons.oozie.OozieWorkflowUtils;
  * @author akawa
  */
 public class IncrementalLoadConfigurator {
-    
+
+    private IncrementalLoadConfigurator() {
+    }
+
     public static void main(String[] args) throws Exception {
-        
+
         String tableName = args[0];
-        
+
         Job job = new Job();
         job.setMapOutputValueClass(Put.class);
         HTable table = new HTable(tableName);
@@ -40,7 +43,7 @@ public class IncrementalLoadConfigurator {
                 }
             }
         }
-        
+
         OozieWorkflowUtils.captureOutput(props);
     }
 }

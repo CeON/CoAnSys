@@ -21,6 +21,8 @@ public class HBaseTableUtils {
     private static final String CMD_TRUNCATE = "TRUNCATE";
     private static final String CMD_CREATE = "CREATE";
     private static final String CMD_RECREATE = "DROPCREATE";
+    
+    private HBaseTableUtils() {}
 
     public static boolean isTableCreated(HBaseAdmin admin, String tableName) throws IOException {
         return admin.tableExists(tableName);
