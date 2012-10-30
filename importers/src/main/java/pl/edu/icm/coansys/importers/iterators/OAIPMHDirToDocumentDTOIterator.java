@@ -34,6 +34,7 @@ public class OAIPMHDirToDocumentDTOIterator implements Iterable<DocumentDTO> {
 
     private static final Logger logger = LoggerFactory.getLogger(OAIPMHDirToDocumentDTOIterator.class);
     private String collection = "unset";
+    private boolean collectionFromFilename;
     private Iterator<File> filesIterator;
     private NodeList nodeList = null;
     private int nodeListIndex;
@@ -41,12 +42,23 @@ public class OAIPMHDirToDocumentDTOIterator implements Iterable<DocumentDTO> {
 
     public OAIPMHDirToDocumentDTOIterator(String oaipmhDirPath, String collection) {
         this.collection = collection;
+        this.collectionFromFilename = false;
+        init(oaipmhDirPath);
+    }
+
+    public OAIPMHDirToDocumentDTOIterator(String oaipmhDirPath) {
+        this.collectionFromFilename = true;
+        init(oaipmhDirPath);
+    }
+    
+    private void init(String oaipmhDirPath) {
         File thisFile = new File(oaipmhDirPath);
         if (thisFile.isDirectory()) {
             filesIterator = FileUtils.listFiles(thisFile, TrueFileFilter.TRUE, TrueFileFilter.TRUE).iterator();
         }
         moveToNextItem();
     }
+
 
     @Override
     public Iterator<DocumentDTO> iterator() {
@@ -103,6 +115,10 @@ public class OAIPMHDirToDocumentDTOIterator implements Iterable<DocumentDTO> {
                     if (nodeList.getLength() == 0) {
                         logger.warn("There's no records in " + nextFile.getPath());
                         continue;
+                    }
+                    if (collectionFromFilename) {
+                        this.collection = nextFile.getName().replaceFirst("listRecords_", "oai-")
+                                .replaceFirst("\\.xml$", "").replaceAll("[^a-zA-Z0-9]", "-").replaceFirst("-$", "");
                     }
                     nodeListIndex = 0;
                 } catch (Exception ex) {
