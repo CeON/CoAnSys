@@ -16,13 +16,11 @@ import pl.edu.icm.coansys.importers.models.DocumentProtos.MediaContainer;
 public class DocumentDTO {
 
     private String collection;
-//	protected String year;
+//  protected String year;
     private DocumentMetadata docMetadata;
     private String key;
     private MediaContainer.Builder medias = MediaContainer.newBuilder();
     private ArrayList<String> mediaTypes = new ArrayList<String>();
-    private String sourcePath;
-    private String archiveZip;
 
     public String getCollection() {
         return collection;
@@ -71,33 +69,5 @@ public class DocumentDTO {
 
     public List<String> getMediaTypes() {
         return this.mediaTypes;
-    }
-
-    /**
-     * @return the sourcePath
-     */
-    public String getSourcePath() {
-        return sourcePath;
-    }
-
-    /**
-     * @param sourcePath the sourcePath to set
-     */
-    public void setSourcePath(String sourcePath) {
-        this.sourcePath = sourcePath;
-    }
-
-    /**
-     * @return the archiveZip
-     */
-    public String getArchiveZip() {
-        return archiveZip;
-    }
-
-    /**
-     * @param archiveZip the archiveZip to set
-     */
-    public void setArchiveZip(String archiveZip) {
-        this.archiveZip = archiveZip;
     }
 }

@@ -7436,6 +7436,10 @@ public final class DocumentProtos {
     // optional string destinationPath = 6;
     boolean hasDestinationPath();
     String getDestinationPath();
+    
+    // optional int64 sourcePathFilesize = 7;
+    boolean hasSourcePathFilesize();
+    long getSourcePathFilesize();
   }
   public static final class Media extends
       com.google.protobuf.GeneratedMessage
@@ -7636,6 +7640,16 @@ public final class DocumentProtos {
       }
     }
     
+    // optional int64 sourcePathFilesize = 7;
+    public static final int SOURCEPATHFILESIZE_FIELD_NUMBER = 7;
+    private long sourcePathFilesize_;
+    public boolean hasSourcePathFilesize() {
+      return ((bitField0_ & 0x00000040) == 0x00000040);
+    }
+    public long getSourcePathFilesize() {
+      return sourcePathFilesize_;
+    }
+    
     private void initFields() {
       key_ = "";
       mediaType_ = "";
@@ -7643,6 +7657,7 @@ public final class DocumentProtos {
       sourcePath_ = "";
       sourceArchive_ = "";
       destinationPath_ = "";
+      sourcePathFilesize_ = 0L;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -7686,6 +7701,9 @@ public final class DocumentProtos {
       if (((bitField0_ & 0x00000020) == 0x00000020)) {
         output.writeBytes(6, getDestinationPathBytes());
       }
+      if (((bitField0_ & 0x00000040) == 0x00000040)) {
+        output.writeInt64(7, sourcePathFilesize_);
+      }
       getUnknownFields().writeTo(output);
     }
     
@@ -7718,6 +7736,10 @@ public final class DocumentProtos {
       if (((bitField0_ & 0x00000020) == 0x00000020)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(6, getDestinationPathBytes());
+      }
+      if (((bitField0_ & 0x00000040) == 0x00000040)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(7, sourcePathFilesize_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -7855,6 +7877,8 @@ public final class DocumentProtos {
         bitField0_ = (bitField0_ & ~0x00000010);
         destinationPath_ = "";
         bitField0_ = (bitField0_ & ~0x00000020);
+        sourcePathFilesize_ = 0L;
+        bitField0_ = (bitField0_ & ~0x00000040);
         return this;
       }
       
@@ -7917,6 +7941,10 @@ public final class DocumentProtos {
           to_bitField0_ |= 0x00000020;
         }
         result.destinationPath_ = destinationPath_;
+        if (((from_bitField0_ & 0x00000040) == 0x00000040)) {
+          to_bitField0_ |= 0x00000040;
+        }
+        result.sourcePathFilesize_ = sourcePathFilesize_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -7950,6 +7978,9 @@ public final class DocumentProtos {
         }
         if (other.hasDestinationPath()) {
           setDestinationPath(other.getDestinationPath());
+        }
+        if (other.hasSourcePathFilesize()) {
+          setSourcePathFilesize(other.getSourcePathFilesize());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -8022,6 +8053,11 @@ public final class DocumentProtos {
             case 50: {
               bitField0_ |= 0x00000020;
               destinationPath_ = input.readBytes();
+              break;
+            }
+            case 56: {
+              bitField0_ |= 0x00000040;
+              sourcePathFilesize_ = input.readInt64();
               break;
             }
           }
@@ -8232,6 +8268,27 @@ public final class DocumentProtos {
         bitField0_ |= 0x00000020;
         destinationPath_ = value;
         onChanged();
+      }
+      
+      // optional int64 sourcePathFilesize = 7;
+      private long sourcePathFilesize_ ;
+      public boolean hasSourcePathFilesize() {
+        return ((bitField0_ & 0x00000040) == 0x00000040);
+      }
+      public long getSourcePathFilesize() {
+        return sourcePathFilesize_;
+      }
+      public Builder setSourcePathFilesize(long value) {
+        bitField0_ |= 0x00000040;
+        sourcePathFilesize_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearSourcePathFilesize() {
+        bitField0_ = (bitField0_ & ~0x00000040);
+        sourcePathFilesize_ = 0L;
+        onChanged();
+        return this;
       }
       
       // @@protoc_insertion_point(builder_scope:Media)
@@ -9583,16 +9640,17 @@ public final class DocumentProtos {
       "\r\n\005pages\030\022 \001(\t\022\016\n\006source\030\023 \001(\t\022\014\n\004text\030\024" +
       " \001(\t\022\016\n\006volume\030\025 \001(\t\022\014\n\004year\030\026 \001(\t\022\037\n\014au" +
       "xiliarInfo\030\027 \003(\0132\t.Auxiliar\022\022\n\nsourcePat" +
-      "h\030\030 \001(\t\022\025\n\rsourceArchive\030\031 \001(\t\"|\n\005Media\022" +
-      "\013\n\003key\030\001 \002(\t\022\021\n\tmediaType\030\002 \002(\t\022\017\n\007conte" +
-      "nt\030\003 \002(\014\022\022\n\nsourcePath\030\004 \001(\t\022\025\n\rsourceAr" +
-      "chive\030\005 \001(\t\022\027\n\017destinationPath\030\006 \001(\t\"\'\n\016" +
-      "MediaContainer\022\025\n\005media\030\001 \003(\0132\006.Media\"v\n" +
-      "\017DocumentWrapper\022\r\n\005rowId\030\001 \002(\t\022+\n\020docum" +
-      "entMetadata\030\002 \001(\0132\021.DocumentMetadata\022\'\n\016",
-      "mediaContainer\030\003 \001(\0132\017.MediaContainerB5\n" +
-      "#pl.edu.icm.coansys.importers.modelsB\016Do" +
-      "cumentProtos"
+      "h\030\030 \001(\t\022\025\n\rsourceArchive\030\031 \001(\t\"\230\001\n\005Media" +
+      "\022\013\n\003key\030\001 \002(\t\022\021\n\tmediaType\030\002 \002(\t\022\017\n\007cont" +
+      "ent\030\003 \002(\014\022\022\n\nsourcePath\030\004 \001(\t\022\025\n\rsourceA" +
+      "rchive\030\005 \001(\t\022\027\n\017destinationPath\030\006 \001(\t\022\032\n" +
+      "\022sourcePathFilesize\030\007 \001(\003\"\'\n\016MediaContai" +
+      "ner\022\025\n\005media\030\001 \003(\0132\006.Media\"v\n\017DocumentWr" +
+      "apper\022\r\n\005rowId\030\001 \002(\t\022+\n\020documentMetadata",
+      "\030\002 \001(\0132\021.DocumentMetadata\022\'\n\016mediaContai" +
+      "ner\030\003 \001(\0132\017.MediaContainerB5\n#pl.edu.icm" +
+      ".coansys.importers.modelsB\016DocumentProto" +
+      "s"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -9660,7 +9718,7 @@ public final class DocumentProtos {
           internal_static_Media_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_Media_descriptor,
-              new java.lang.String[] { "Key", "MediaType", "Content", "SourcePath", "SourceArchive", "DestinationPath", },
+              new java.lang.String[] { "Key", "MediaType", "Content", "SourcePath", "SourceArchive", "DestinationPath", "SourcePathFilesize", },
               pl.edu.icm.coansys.importers.models.DocumentProtos.Media.class,
               pl.edu.icm.coansys.importers.models.DocumentProtos.Media.Builder.class);
           internal_static_MediaContainer_descriptor =
