@@ -123,7 +123,7 @@
                         <artifactId>maven-assembly-plugin</artifactId>
                         <configuration>
                             <descriptors>
-                                <descriptor>${artifactId}/src/main/resources/assemblies/only-deps.xml</descriptor>
+                                <descriptor>${project.artifactId}/src/main/resources/assemblies/only-deps.xml</descriptor>
                             </descriptors>
                         </configuration>
                         <executions>
