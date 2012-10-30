@@ -3,10 +3,7 @@ package pl.edu.icm.coansys.commons.hbase;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
-import org.apache.hadoop.mapreduce.Job;
-import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hbase.util.Bytes;
@@ -14,9 +11,11 @@ import org.apache.hadoop.io.BooleanWritable;
 import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Mapper.Context;
 import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
@@ -30,10 +29,10 @@ import org.apache.hadoop.util.ToolRunner;
 public class SequenceFileKeysSamplerMR implements Tool {
 
     private Configuration conf;
-    private static String SAMPLE_SAMPLES_TOTAL_COUNT = "sampler.samples.total.count";
-    private static int SAMPLE_SAMPLES_TOTAL_COUNT_DV = 20;
-    private static String SAMPLE_SAMPLES_PER_SPLIT = "sampler.samples.per.split";
-    private static int SAMPLE_SAMPLES_PER_SPLIT_DV = 3;
+    private static final String SAMPLE_SAMPLES_TOTAL_COUNT = "sampler.samples.total.count";
+    private static final int SAMPLE_SAMPLES_TOTAL_COUNT_DV = 20;
+    private static final String SAMPLE_SAMPLES_PER_SPLIT = "sampler.samples.per.split";
+    private static final int SAMPLE_SAMPLES_PER_SPLIT_DV = 3;
 
     @Override
     public void setConf(Configuration conf) {

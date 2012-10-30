@@ -5,11 +5,7 @@ package pl.edu.icm.coansys.commons.hbase;
 
 import java.io.IOException;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.hbase.HBaseConfiguration;
-import org.apache.hadoop.hbase.HColumnDescriptor;
-import org.apache.hadoop.hbase.HTableDescriptor;
-import org.apache.hadoop.hbase.MasterNotRunningException;
-import org.apache.hadoop.hbase.ZooKeeperConnectionException;
+import org.apache.hadoop.hbase.*;
 import org.apache.hadoop.hbase.client.HBaseAdmin;
 import org.apache.hadoop.hbase.util.Bytes;
 import pl.edu.icm.coansys.commons.oozie.OozieWorkflowUtils;
@@ -20,11 +16,11 @@ import pl.edu.icm.coansys.commons.oozie.OozieWorkflowUtils;
  */
 public class HBaseTableUtils {
 
-    public static String CMD_EXIST = "EXIST";
-    public static String CMD_DROP = "DROP";
-    public static String CMD_TRUNCATE = "TRUNCATE";
-    public static String CMD_CREATE = "CREATE";
-    public static String CMD_RECREATE = "DROPCREATE";
+    public static final String CMD_EXIST = "EXIST";
+    public static final String CMD_DROP = "DROP";
+    public static final String CMD_TRUNCATE = "TRUNCATE";
+    public static final String CMD_CREATE = "CREATE";
+    public static final String CMD_RECREATE = "DROPCREATE";
 
     public static boolean isTableCreated(HBaseAdmin admin, String tableName) throws IOException {
         return admin.tableExists(tableName);

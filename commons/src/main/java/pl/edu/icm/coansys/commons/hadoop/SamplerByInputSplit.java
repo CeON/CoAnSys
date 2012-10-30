@@ -23,8 +23,8 @@ import org.apache.hadoop.util.ToolRunner;
 public class SamplerByInputSplit implements Tool {
 
     private Configuration conf;
-    private static String SAMPLE_FREQUENCY = "sampler.frequency";
-    private static float SAMPLE_FREQUENCY_DV = 0.01f;
+    private static final String SAMPLE_FREQUENCY = "sampler.frequency";
+    private static final float SAMPLE_FREQUENCY_DV = 0.01f;
 
     @Override
     public void setConf(Configuration conf) {

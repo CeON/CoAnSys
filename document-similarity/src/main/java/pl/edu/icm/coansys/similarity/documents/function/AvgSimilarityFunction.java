@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class AvgSimilarityFunction implements SimilarityFunction {
     
-    private static double EMPTY_VALUE = 0d;
+    private static final double EMPTY_VALUE = 0d;
 
     @Override
     public double getDocumentsKeywordSimilarity(String keyword, byte[] doc1key, double doc1keywordWeight, byte[] doc2key, double doc2keywordWeight) {

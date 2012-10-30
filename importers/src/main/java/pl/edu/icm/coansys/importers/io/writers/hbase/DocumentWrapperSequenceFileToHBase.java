@@ -4,7 +4,6 @@
  */
 package pl.edu.icm.coansys.importers.io.writers.hbase;
 
-import static pl.edu.icm.coansys.importers.constants.HBaseConstant.*;
 import java.io.IOException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
@@ -22,8 +21,7 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static pl.edu.icm.coansys.importers.constants.HBaseConstant.*;
 import pl.edu.icm.coansys.importers.models.DocumentProtosWrapper.DocumentWrapper;
 
 /**
@@ -32,7 +30,7 @@ import pl.edu.icm.coansys.importers.models.DocumentProtosWrapper.DocumentWrapper
  */
 public class DocumentWrapperSequenceFileToHBase implements Tool {
 
-    private static Logger logger = LoggerFactory.getLogger(DocumentWrapperSequenceFileToHBase.class);
+  
     private Configuration conf;
     final static String BULK_OUTPUT_CONF_KEY = "bulk.output";
 
@@ -53,7 +51,7 @@ public class DocumentWrapperSequenceFileToHBase implements Tool {
     public static class DocumentWrapperToHBasePutMapper extends Mapper<BytesWritable, BytesWritable, ImmutableBytesWritable, Put> {
 
         private ImmutableBytesWritable docWrapRowKey = new ImmutableBytesWritable();
-        private int MAX_CPROTO_SIZE = 1000000;
+        private final int MAX_CPROTO_SIZE = 1000000;
 
         @Override
         protected void map(BytesWritable rowKey, BytesWritable documentWrapper, Context context)

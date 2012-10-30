@@ -1,13 +1,13 @@
 package pl.edu.icm.coansys.commons.hbase;
 
 import java.io.IOException;
-import org.apache.hadoop.mapreduce.Job;
-import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
-import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.NullWritable;
+import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.partition.InputSampler;
 import org.apache.hadoop.mapreduce.lib.partition.TotalOrderPartitioner;
 import org.apache.hadoop.util.GenericOptionsParser;
@@ -21,12 +21,12 @@ import org.apache.hadoop.util.ToolRunner;
 public class SequenceFileKeysSampler implements Tool {
 
     private Configuration conf;
-    private String OUTPUT_KEYS_FILE_NAME_KEY = "output.keys.file.name";
-    private String OUTPUT_KEYS_FILE_NAME_DEFAULT_VALUE = "keys";
-    private String SAMPLER_FREQUENCY_KEY = "sampler.frequency";
-    private float SAMPLER_FREQUENCY_DEFAULT_VALUE = 0.1f;
-    private String SAMPLER_NUM_SAMPLES_KEY = "sampler.num.samples";
-    private int SAMPLER_NUM_SAMPLES_DEFAULT_VALUE = 100;
+    private final String OUTPUT_KEYS_FILE_NAME_KEY = "output.keys.file.name";
+    private final String OUTPUT_KEYS_FILE_NAME_DEFAULT_VALUE = "keys";
+    private final String SAMPLER_FREQUENCY_KEY = "sampler.frequency";
+    private final float SAMPLER_FREQUENCY_DEFAULT_VALUE = 0.1f;
+    private final String SAMPLER_NUM_SAMPLES_KEY = "sampler.num.samples";
+    private final int SAMPLER_NUM_SAMPLES_DEFAULT_VALUE = 100;
 
     @Override
     public void setConf(Configuration conf) {
