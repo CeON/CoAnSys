@@ -19,6 +19,7 @@ import pl.edu.icm.coansys.importers.models.DocumentDTO;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.MediaContainer;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentWrapper;
+import pl.edu.icm.coansys.importers.models.DocumentProtos.Media;
 import pl.edu.icm.coansys.importers.transformers.RowComposer;
 
 public class BwmetaToDocumentWraperSequenceFileWriter {
@@ -27,13 +28,16 @@ public class BwmetaToDocumentWraperSequenceFileWriter {
     private static String[] DEFAULT_ARGS = {
         "/home/akawa/bwndata/zips/",
         "cedram",
-        "/home/akawa/bwndata/cedram.sf",
-    };
+        "/home/akawa/bwndata/cedram.sf",};
+    
+    private static long metadataCount = 0;
+    private static long mediaCount = 0;
+    private static long mediaConteinerCount = 0;
 
     public static void main(String[] args) throws IOException {
 
         args = ((args == null || args.length == 0) ? DEFAULT_ARGS : args);
-        
+
         if (args.length != 3) {
             usage();
             System.exit(1);
@@ -45,7 +49,14 @@ public class BwmetaToDocumentWraperSequenceFileWriter {
 
         checkPaths(inputDir, collection, outputSequenceFile);
         generateSequenceFile(inputDir, collection, outputSequenceFile);
+        printStats();
 
+    }
+    
+    private static void printStats() {
+        LOGGER.info(metadataCount + " metadata records");
+        LOGGER.info(mediaConteinerCount + " mediaContainer records");
+        LOGGER.info(mediaCount + " media records");
     }
 
     private static void checkPaths(String inputDir, String collection, String outputSequenceFile) throws IOException {
@@ -104,19 +115,27 @@ public class BwmetaToDocumentWraperSequenceFileWriter {
         LOGGER.trace("Building: ");
         LOGGER.trace("\tKey = " + doc.getKey());
         LOGGER.trace("\tCollection = " + doc.getCollection());
-        LOGGER.trace("\tArchiveZip = " + doc.getArchiveZip());
-        LOGGER.trace("\tSourcePath = " + doc.getSourcePath());
 
         DocumentMetadata documentMetadata = doc.getDocumentMetadata();
         if (documentMetadata.getSerializedSize() > 0) {
-                dw.setDocumentMetadata(documentMetadata);
-                LOGGER.trace("\tDocumentMetadata size: " + documentMetadata.toByteArray().length);
+            dw.setDocumentMetadata(documentMetadata);
+            LOGGER.trace("\tArchiveZip = " + documentMetadata.getSourceArchive());
+            LOGGER.trace("\tSourcePath = " + documentMetadata.getSourcePath());
+            LOGGER.trace("\tDocumentMetadata size: " + documentMetadata.toByteArray().length);
+            metadataCount++;
         }
 
         MediaContainer mediaConteiner = doc.getMediaConteiner();
         if (mediaConteiner.getSerializedSize() > 0) {
-                dw.setMediaContainer(mediaConteiner);
-                LOGGER.info("\tMediaConteiner size: " + mediaConteiner.toByteArray().length);
+            dw.setMediaContainer(mediaConteiner);
+            LOGGER.info("\tMediaConteiner size: " + (mediaConteiner.toByteArray().length / 1024 / 1024) + " MB");
+            for (Media media : mediaConteiner.getMediaList()) {
+                LOGGER.info("\tArchiveZip = " + media.getSourceArchive());
+                LOGGER.info("\tSourcePath = " + media.getSourcePath());
+                LOGGER.info("\tSourcePathFilesize = " + (media.getSourcePathFilesize() / 1024 / 1024) + " MB");
+                mediaCount++;
+            }
+            mediaConteinerCount++;
         }
 
         return dw.build();
