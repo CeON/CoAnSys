@@ -59,7 +59,7 @@ message DocumentMetadata{
    	optional string issn = 13;
    	optional string issue = 14;
    	optional string journal = 15;
-   	repeated ExtId  extId = 16;
+   	repeated ExtId extId = 16;
    	repeated ClassifCode classifCode = 17;
    	optional string pages = 18;
 	optional string source = 19;
@@ -67,14 +67,25 @@ message DocumentMetadata{
 	optional string volume = 21;
 	optional string year = 22;
 	repeated Auxiliar auxiliarInfo = 23;
+        optional string sourcePath = 24;
+        optional string sourceArchive = 25;
 }
 
 message Media {
 	required string key = 1;
 	required string mediaType = 2;
 	required bytes content = 3;
+        optional string sourcePath = 4;
+        optional string sourceArchive = 5;
+        optional string destinationPath = 6;
 }
 
 message MediaContainer {
 	repeated Media media = 1;
+}
+
+message DocumentWrapper{
+	required string rowId = 1;
+	optional DocumentMetadata documentMetadata = 2;
+	optional MediaContainer mediaContainer = 3;
 }
