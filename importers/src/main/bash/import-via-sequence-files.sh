@@ -13,7 +13,7 @@ echo "truncate '${HBASE_TABLENAME}'" | hbase shell
 # create sequence file and move it to HDFS (single java application)
 if [ "${MODE}" = "sf" ] || [ "${MODE}" = "all" ]; then
 	rm -rf ${COLLECTION_SEQUENCE_FILE}
-	java -cp ${IMPORTERS_JAR} pl.edu.icm.coansys.importers.io.writers.tsv.WrapperSequenceFileWriter_Bwmeta ${COLLECTION_ZIPS_DIR} ${COLLECTION_NAME} ${COLLECTION_SEQUENCE_FILE}
+	java -cp ${IMPORTERS_JAR} pl.edu.icm.coansys.importers.io.writers.file.BwmetaToDocumentWraperSequenceFileWriter ${COLLECTION_ZIPS_DIR} ${COLLECTION_NAME} ${COLLECTION_SEQUENCE_FILE}
 	hadoop fs -rm -r ${COLLECTION_SEQUENCE_FILE_HDFS_DIR}
 	hadoop fs -moveFromLocal ${COLLECTION_SEQUENCE_FILE} ${COLLECTION_SEQUENCE_FILE_HDFS_DIR}
 fi
