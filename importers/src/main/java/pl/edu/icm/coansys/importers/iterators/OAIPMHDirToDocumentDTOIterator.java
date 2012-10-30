@@ -123,6 +123,7 @@ public class OAIPMHDirToDocumentDTOIterator implements Iterable<DocumentDTO> {
                     nextItem = new DocumentDTO();
                     nextItem.setKey(dm.getKey());
                     nextItem.setDocumentMetadata(dm);
+                    nextItem.setCollection(collection);
                 } else {
                     logger.error("There was exactly one record in input string; number of output items: " + docs.size()); 
                 }
