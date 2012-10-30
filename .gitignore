@@ -27,3 +27,8 @@
 /logs-analysis/target/
 /target/
 /integration/target/
+
+#pig temp files
+*.crc
+*part-r-00000
+_SUCCESS
