@@ -451,3 +451,201 @@
 48646 [main] INFO  pl.edu.icm.coansys.importers.io.writers.file.BwmetaToDocumentWraperSequenceFileWriter  - 0 media records
 49012 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 14:22:03 CET 2012	Proceeded 610. xml of 1236
 49403 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 14:22:03 CET 2012	Proceeded 620. xml of 1236
+0    [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - Processing 1. zip of 2
+5500 [main] DEBUG org.apache.hadoop.metrics2.lib.MutableMetricsFactory  - field org.apache.hadoop.metrics2.lib.MutableRate org.apache.hadoop.security.UserGroupInformation$UgiMetrics.loginSuccess with annotation @org.apache.hadoop.metrics2.annotation.Metric(valueName=Time, about=, value=[Rate of successful kerberos logins and latency (milliseconds)], always=false, type=DEFAULT, sampleName=Ops)
+5554 [main] DEBUG org.apache.hadoop.metrics2.lib.MutableMetricsFactory  - field org.apache.hadoop.metrics2.lib.MutableRate org.apache.hadoop.security.UserGroupInformation$UgiMetrics.loginFailure with annotation @org.apache.hadoop.metrics2.annotation.Metric(valueName=Time, about=, value=[Rate of failed kerberos logins and latency (milliseconds)], always=false, type=DEFAULT, sampleName=Ops)
+5556 [main] DEBUG org.apache.hadoop.metrics2.impl.MetricsSystemImpl  - UgiMetrics, User and group related metrics
+5603 [main] DEBUG org.apache.hadoop.security.authentication.util.KerberosName  - Kerberos krb5 configuration not found, setting default realm to empty
+5636 [main] DEBUG org.apache.hadoop.security.Groups  -  Creating new Groups object
+6063 [main] DEBUG org.apache.hadoop.security.Groups  - Group mapping impl=org.apache.hadoop.security.ShellBasedUnixGroupsMapping; cacheTimeout=300000
+6133 [main] DEBUG org.apache.hadoop.security.UserGroupInformation  - hadoop login
+6140 [main] DEBUG org.apache.hadoop.security.UserGroupInformation  - hadoop login commit
+6196 [main] DEBUG org.apache.hadoop.security.UserGroupInformation  - using local user:UnixPrincipal: akawa
+6212 [main] DEBUG org.apache.hadoop.security.UserGroupInformation  - UGI loginUser:akawa (auth:SIMPLE)
+8477 [main] DEBUG org.apache.hadoop.util.NativeCodeLoader  - Trying to load the custom-built native-hadoop library...
+8498 [main] DEBUG org.apache.hadoop.util.NativeCodeLoader  - Failed to load native-hadoop with error: java.lang.UnsatisfiedLinkError: no hadoop in java.library.path
+8499 [main] DEBUG org.apache.hadoop.util.NativeCodeLoader  - java.library.path=/usr/lib/jvm/j2sdk1.6-oracle/jre/lib/amd64/server:/usr/lib/jvm/j2sdk1.6-oracle/jre/lib/amd64:/usr/lib/jvm/j2sdk1.6-oracle/jre/../lib/amd64:/usr/java/packages/lib/amd64:/usr/lib64:/lib64:/lib:/usr/lib
+8501 [main] WARN  org.apache.hadoop.util.NativeCodeLoader  - Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+8698 [main] INFO  org.apache.hadoop.io.compress.CodecPool  - Got brand-new compressor [.deflate]
+12098 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:50:31 CET 2012	Proceeded 10. xml of 1236
+14034 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:50:33 CET 2012	Proceeded 20. xml of 1236
+16151 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:50:35 CET 2012	Proceeded 30. xml of 1236
+18302 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:50:37 CET 2012	Proceeded 40. xml of 1236
+19837 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:50:38 CET 2012	Proceeded 50. xml of 1236
+21041 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:50:40 CET 2012	Proceeded 60. xml of 1236
+22139 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:50:41 CET 2012	Proceeded 70. xml of 1236
+23544 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:50:42 CET 2012	Proceeded 80. xml of 1236
+24365 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:50:43 CET 2012	Proceeded 90. xml of 1236
+24960 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:50:43 CET 2012	Proceeded 100. xml of 1236
+25659 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:50:44 CET 2012	Proceeded 110. xml of 1236
+26683 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:50:45 CET 2012	Proceeded 120. xml of 1236
+27341 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:50:46 CET 2012	Proceeded 130. xml of 1236
+27795 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:50:46 CET 2012	Proceeded 140. xml of 1236
+28322 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:50:47 CET 2012	Proceeded 150. xml of 1236
+28805 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:50:47 CET 2012	Proceeded 160. xml of 1236
+29293 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:50:48 CET 2012	Proceeded 170. xml of 1236
+30086 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:50:49 CET 2012	Proceeded 180. xml of 1236
+30350 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:50:49 CET 2012	Proceeded 190. xml of 1236
+30724 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:50:49 CET 2012	Proceeded 200. xml of 1236
+31291 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:50:50 CET 2012	Proceeded 210. xml of 1236
+31619 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:50:50 CET 2012	Proceeded 220. xml of 1236
+32112 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:50:51 CET 2012	Proceeded 230. xml of 1236
+32607 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:50:51 CET 2012	Proceeded 240. xml of 1236
+33567 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:50:52 CET 2012	Proceeded 250. xml of 1236
+33867 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:50:52 CET 2012	Proceeded 260. xml of 1236
+34177 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:50:53 CET 2012	Proceeded 270. xml of 1236
+34727 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:50:53 CET 2012	Proceeded 280. xml of 1236
+35384 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:50:54 CET 2012	Proceeded 290. xml of 1236
+35937 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:50:54 CET 2012	Proceeded 300. xml of 1236
+36111 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:50:55 CET 2012	Proceeded 310. xml of 1236
+36455 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:50:55 CET 2012	Proceeded 320. xml of 1236
+36688 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:50:55 CET 2012	Proceeded 330. xml of 1236
+37115 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:50:56 CET 2012	Proceeded 340. xml of 1236
+37882 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:50:56 CET 2012	Proceeded 350. xml of 1236
+37990 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:50:57 CET 2012	Proceeded 360. xml of 1236
+38328 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:50:57 CET 2012	Proceeded 370. xml of 1236
+38644 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:50:57 CET 2012	Proceeded 380. xml of 1236
+38928 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:50:57 CET 2012	Proceeded 390. xml of 1236
+39180 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:50:58 CET 2012	Proceeded 400. xml of 1236
+39424 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:50:58 CET 2012	Proceeded 410. xml of 1236
+39535 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:50:58 CET 2012	Proceeded 420. xml of 1236
+39898 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:50:58 CET 2012	Proceeded 430. xml of 1236
+40103 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:50:59 CET 2012	Proceeded 440. xml of 1236
+40443 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:50:59 CET 2012	Proceeded 450. xml of 1236
+40700 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:50:59 CET 2012	Proceeded 460. xml of 1236
+40939 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:50:59 CET 2012	Proceeded 470. xml of 1236
+41132 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:00 CET 2012	Proceeded 480. xml of 1236
+41376 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:00 CET 2012	Proceeded 490. xml of 1236
+41653 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:00 CET 2012	Proceeded 500. xml of 1236
+42044 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:01 CET 2012	Proceeded 510. xml of 1236
+42237 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:01 CET 2012	Proceeded 520. xml of 1236
+42651 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:01 CET 2012	Proceeded 530. xml of 1236
+42872 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:01 CET 2012	Proceeded 540. xml of 1236
+43104 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:02 CET 2012	Proceeded 550. xml of 1236
+43240 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:02 CET 2012	Proceeded 560. xml of 1236
+43624 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:02 CET 2012	Proceeded 570. xml of 1236
+43770 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:02 CET 2012	Proceeded 580. xml of 1236
+43995 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:03 CET 2012	Proceeded 590. xml of 1236
+44159 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:03 CET 2012	Proceeded 600. xml of 1236
+44467 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:03 CET 2012	Proceeded 610. xml of 1236
+44776 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:03 CET 2012	Proceeded 620. xml of 1236
+44971 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:03 CET 2012	Proceeded 630. xml of 1236
+45254 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:04 CET 2012	Proceeded 640. xml of 1236
+45516 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:04 CET 2012	Proceeded 650. xml of 1236
+45702 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:04 CET 2012	Proceeded 660. xml of 1236
+45956 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:04 CET 2012	Proceeded 670. xml of 1236
+46141 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:05 CET 2012	Proceeded 680. xml of 1236
+46484 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:05 CET 2012	Proceeded 690. xml of 1236
+46885 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:05 CET 2012	Proceeded 700. xml of 1236
+47233 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:06 CET 2012	Proceeded 710. xml of 1236
+47574 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:06 CET 2012	Proceeded 720. xml of 1236
+48035 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:07 CET 2012	Proceeded 730. xml of 1236
+48226 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:07 CET 2012	Proceeded 740. xml of 1236
+48537 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:07 CET 2012	Proceeded 750. xml of 1236
+48780 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:07 CET 2012	Proceeded 760. xml of 1236
+49110 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:08 CET 2012	Proceeded 770. xml of 1236
+49382 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:08 CET 2012	Proceeded 780. xml of 1236
+49733 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:08 CET 2012	Proceeded 790. xml of 1236
+50005 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:09 CET 2012	Proceeded 800. xml of 1236
+50276 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:09 CET 2012	Proceeded 810. xml of 1236
+50449 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:09 CET 2012	Proceeded 820. xml of 1236
+50706 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:09 CET 2012	Proceeded 830. xml of 1236
+51093 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:10 CET 2012	Proceeded 840. xml of 1236
+51468 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:10 CET 2012	Proceeded 850. xml of 1236
+51834 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:10 CET 2012	Proceeded 860. xml of 1236
+52253 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:11 CET 2012	Proceeded 870. xml of 1236
+52612 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:11 CET 2012	Proceeded 880. xml of 1236
+53031 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:12 CET 2012	Proceeded 890. xml of 1236
+53424 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:12 CET 2012	Proceeded 900. xml of 1236
+53752 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:12 CET 2012	Proceeded 910. xml of 1236
+54059 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:13 CET 2012	Proceeded 920. xml of 1236
+54318 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:13 CET 2012	Proceeded 930. xml of 1236
+54816 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:13 CET 2012	Proceeded 940. xml of 1236
+55009 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:14 CET 2012	Proceeded 950. xml of 1236
+55264 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:14 CET 2012	Proceeded 960. xml of 1236
+55423 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:14 CET 2012	Proceeded 970. xml of 1236
+55728 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:14 CET 2012	Proceeded 980. xml of 1236
+55993 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:15 CET 2012	Proceeded 990. xml of 1236
+56178 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:15 CET 2012	Proceeded 1000. xml of 1236
+56422 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:15 CET 2012	Proceeded 1010. xml of 1236
+56613 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:15 CET 2012	Proceeded 1020. xml of 1236
+56777 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:15 CET 2012	Proceeded 1030. xml of 1236
+56992 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:16 CET 2012	Proceeded 1040. xml of 1236
+57266 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:16 CET 2012	Proceeded 1050. xml of 1236
+57509 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:16 CET 2012	Proceeded 1060. xml of 1236
+57857 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:16 CET 2012	Proceeded 1070. xml of 1236
+58073 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:17 CET 2012	Proceeded 1080. xml of 1236
+58286 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:17 CET 2012	Proceeded 1090. xml of 1236
+58577 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:17 CET 2012	Proceeded 1100. xml of 1236
+58813 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:17 CET 2012	Proceeded 1110. xml of 1236
+58982 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:18 CET 2012	Proceeded 1120. xml of 1236
+59154 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:18 CET 2012	Proceeded 1130. xml of 1236
+59347 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:18 CET 2012	Proceeded 1140. xml of 1236
+59618 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:18 CET 2012	Proceeded 1150. xml of 1236
+59816 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:18 CET 2012	Proceeded 1160. xml of 1236
+60184 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:19 CET 2012	Proceeded 1170. xml of 1236
+60507 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:19 CET 2012	Proceeded 1180. xml of 1236
+60788 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:19 CET 2012	Proceeded 1190. xml of 1236
+60953 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:19 CET 2012	Proceeded 1200. xml of 1236
+61110 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:20 CET 2012	Proceeded 1210. xml of 1236
+61410 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:20 CET 2012	Proceeded 1220. xml of 1236
+61698 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:20 CET 2012	Proceeded 1230. xml of 1236
+61775 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - Processing 2. zip of 2
+61807 [main] WARN  pl.edu.icm.coansys.importers.parsers.MetadataToProtoMetadataParser  - Invalid UUID string (document id): "09753079" -- random UUID will be generated
+61890 [main] WARN  pl.edu.icm.coansys.importers.parsers.MetadataToProtoMetadataParser  - Invalid UUID string (document id): "09762213" -- random UUID will be generated
+61903 [main] INFO  pl.edu.icm.coansys.importers.io.writers.file.BwmetaToDocumentWraperSequenceFileWriter  - 	MediaConteiner size: 0 MB
+61907 [main] INFO  pl.edu.icm.coansys.importers.io.writers.file.BwmetaToDocumentWraperSequenceFileWriter  - 	ArchiveZip = /home/akawa/bwndata/zips/GROTOAP-10.zip
+61907 [main] INFO  pl.edu.icm.coansys.importers.io.writers.file.BwmetaToDocumentWraperSequenceFileWriter  - 	SourcePath = archive/09753079/content/full-text/09753079.pdf
+61907 [main] INFO  pl.edu.icm.coansys.importers.io.writers.file.BwmetaToDocumentWraperSequenceFileWriter  - 	SourcePathFilesize = 0 MB
+61943 [main] WARN  pl.edu.icm.coansys.importers.parsers.MetadataToProtoMetadataParser  - Invalid UUID string (document id): "09752900" -- random UUID will be generated
+62038 [main] INFO  pl.edu.icm.coansys.importers.io.writers.file.BwmetaToDocumentWraperSequenceFileWriter  - 	MediaConteiner size: 0 MB
+62039 [main] INFO  pl.edu.icm.coansys.importers.io.writers.file.BwmetaToDocumentWraperSequenceFileWriter  - 	ArchiveZip = /home/akawa/bwndata/zips/GROTOAP-10.zip
+62039 [main] INFO  pl.edu.icm.coansys.importers.io.writers.file.BwmetaToDocumentWraperSequenceFileWriter  - 	SourcePath = archive/09762213/content/full-text/09762213.pdf
+62039 [main] INFO  pl.edu.icm.coansys.importers.io.writers.file.BwmetaToDocumentWraperSequenceFileWriter  - 	SourcePathFilesize = 0 MB
+62096 [main] WARN  pl.edu.icm.coansys.importers.parsers.MetadataToProtoMetadataParser  - Invalid UUID string (document id): "02786273" -- random UUID will be generated
+62340 [main] INFO  pl.edu.icm.coansys.importers.io.writers.file.BwmetaToDocumentWraperSequenceFileWriter  - 	MediaConteiner size: 0 MB
+62342 [main] INFO  pl.edu.icm.coansys.importers.io.writers.file.BwmetaToDocumentWraperSequenceFileWriter  - 	ArchiveZip = /home/akawa/bwndata/zips/GROTOAP-10.zip
+62344 [main] INFO  pl.edu.icm.coansys.importers.io.writers.file.BwmetaToDocumentWraperSequenceFileWriter  - 	SourcePath = archive/09752900/content/full-text/09752900.pdf
+62352 [main] INFO  pl.edu.icm.coansys.importers.io.writers.file.BwmetaToDocumentWraperSequenceFileWriter  - 	SourcePathFilesize = 0 MB
+62372 [main] WARN  pl.edu.icm.coansys.importers.parsers.MetadataToProtoMetadataParser  - Invalid UUID string (document id): "09753702" -- random UUID will be generated
+62385 [main] INFO  pl.edu.icm.coansys.importers.io.writers.file.BwmetaToDocumentWraperSequenceFileWriter  - 	MediaConteiner size: 7 MB
+62388 [main] INFO  pl.edu.icm.coansys.importers.io.writers.file.BwmetaToDocumentWraperSequenceFileWriter  - 	ArchiveZip = /home/akawa/bwndata/zips/GROTOAP-10.zip
+62390 [main] INFO  pl.edu.icm.coansys.importers.io.writers.file.BwmetaToDocumentWraperSequenceFileWriter  - 	SourcePath = archive/02786273/content/full-text/02786273.pdf
+62397 [main] INFO  pl.edu.icm.coansys.importers.io.writers.file.BwmetaToDocumentWraperSequenceFileWriter  - 	SourcePathFilesize = 7 MB
+63856 [main] WARN  pl.edu.icm.coansys.importers.parsers.MetadataToProtoMetadataParser  - Invalid UUID string (document id): "0927460X" -- random UUID will be generated
+63888 [main] INFO  pl.edu.icm.coansys.importers.io.writers.file.BwmetaToDocumentWraperSequenceFileWriter  - 	MediaConteiner size: 0 MB
+63890 [main] INFO  pl.edu.icm.coansys.importers.io.writers.file.BwmetaToDocumentWraperSequenceFileWriter  - 	ArchiveZip = /home/akawa/bwndata/zips/GROTOAP-10.zip
+63893 [main] INFO  pl.edu.icm.coansys.importers.io.writers.file.BwmetaToDocumentWraperSequenceFileWriter  - 	SourcePath = archive/09753702/content/full-text/09753702.pdf
+63893 [main] INFO  pl.edu.icm.coansys.importers.io.writers.file.BwmetaToDocumentWraperSequenceFileWriter  - 	SourcePathFilesize = 0 MB
+63919 [main] WARN  pl.edu.icm.coansys.importers.parsers.MetadataToProtoMetadataParser  - Invalid UUID string (document id): "02585200" -- random UUID will be generated
+63971 [main] INFO  pl.edu.icm.coansys.importers.io.writers.file.BwmetaToDocumentWraperSequenceFileWriter  - 	MediaConteiner size: 0 MB
+63975 [main] INFO  pl.edu.icm.coansys.importers.io.writers.file.BwmetaToDocumentWraperSequenceFileWriter  - 	ArchiveZip = /home/akawa/bwndata/zips/GROTOAP-10.zip
+63979 [main] INFO  pl.edu.icm.coansys.importers.io.writers.file.BwmetaToDocumentWraperSequenceFileWriter  - 	SourcePath = archive/0927460X/content/full-text/0927460X.pdf
+63993 [main] INFO  pl.edu.icm.coansys.importers.io.writers.file.BwmetaToDocumentWraperSequenceFileWriter  - 	SourcePathFilesize = 0 MB
+64126 [main] WARN  pl.edu.icm.coansys.importers.parsers.MetadataToProtoMetadataParser  - Invalid UUID string (document id): "09761527" -- random UUID will be generated
+64165 [main] INFO  pl.edu.icm.coansys.importers.io.writers.file.BwmetaToDocumentWraperSequenceFileWriter  - 	MediaConteiner size: 0 MB
+64168 [main] INFO  pl.edu.icm.coansys.importers.io.writers.file.BwmetaToDocumentWraperSequenceFileWriter  - 	ArchiveZip = /home/akawa/bwndata/zips/GROTOAP-10.zip
+64170 [main] INFO  pl.edu.icm.coansys.importers.io.writers.file.BwmetaToDocumentWraperSequenceFileWriter  - 	SourcePath = archive/02585200/content/full-text/02585200.pdf
+64170 [main] INFO  pl.edu.icm.coansys.importers.io.writers.file.BwmetaToDocumentWraperSequenceFileWriter  - 	SourcePathFilesize = 0 MB
+64277 [main] WARN  pl.edu.icm.coansys.importers.parsers.MetadataToProtoMetadataParser  - Invalid UUID string (document id): "09629351" -- random UUID will be generated
+64299 [main] INFO  pl.edu.icm.coansys.importers.io.writers.file.BwmetaToDocumentWraperSequenceFileWriter  - 	MediaConteiner size: 1 MB
+64299 [main] INFO  pl.edu.icm.coansys.importers.io.writers.file.BwmetaToDocumentWraperSequenceFileWriter  - 	ArchiveZip = /home/akawa/bwndata/zips/GROTOAP-10.zip
+64299 [main] INFO  pl.edu.icm.coansys.importers.io.writers.file.BwmetaToDocumentWraperSequenceFileWriter  - 	SourcePath = archive/09761527/content/full-text/09761527.pdf
+64299 [main] INFO  pl.edu.icm.coansys.importers.io.writers.file.BwmetaToDocumentWraperSequenceFileWriter  - 	SourcePathFilesize = 1 MB
+64472 [main] INFO  pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator  - 	Wed Oct 31 15:51:23 CET 2012	Proceeded 10. xml of 10
+64474 [main] WARN  pl.edu.icm.coansys.importers.parsers.MetadataToProtoMetadataParser  - Invalid UUID string (document id): "07930291" -- random UUID will be generated
+64499 [main] INFO  pl.edu.icm.coansys.importers.io.writers.file.BwmetaToDocumentWraperSequenceFileWriter  - 	MediaConteiner size: 1 MB
+64503 [main] INFO  pl.edu.icm.coansys.importers.io.writers.file.BwmetaToDocumentWraperSequenceFileWriter  - 	ArchiveZip = /home/akawa/bwndata/zips/GROTOAP-10.zip
+64506 [main] INFO  pl.edu.icm.coansys.importers.io.writers.file.BwmetaToDocumentWraperSequenceFileWriter  - 	SourcePath = archive/09629351/content/full-text/09629351.pdf
+64508 [main] INFO  pl.edu.icm.coansys.importers.io.writers.file.BwmetaToDocumentWraperSequenceFileWriter  - 	SourcePathFilesize = 1 MB
+64712 [main] INFO  pl.edu.icm.coansys.importers.io.writers.file.BwmetaToDocumentWraperSequenceFileWriter  - 	MediaConteiner size: 0 MB
+64718 [main] INFO  pl.edu.icm.coansys.importers.io.writers.file.BwmetaToDocumentWraperSequenceFileWriter  - 	ArchiveZip = /home/akawa/bwndata/zips/GROTOAP-10.zip
+64727 [main] INFO  pl.edu.icm.coansys.importers.io.writers.file.BwmetaToDocumentWraperSequenceFileWriter  - 	SourcePath = archive/07930291/content/full-text/07930291.pdf
+64728 [main] INFO  pl.edu.icm.coansys.importers.io.writers.file.BwmetaToDocumentWraperSequenceFileWriter  - 	SourcePathFilesize = 0 MB
+65097 [main] INFO  pl.edu.icm.coansys.importers.io.writers.file.BwmetaToDocumentWraperSequenceFileWriter  - 1246 document count
+65105 [main] INFO  pl.edu.icm.coansys.importers.io.writers.file.BwmetaToDocumentWraperSequenceFileWriter  - 1246 metadata records
+65109 [main] INFO  pl.edu.icm.coansys.importers.io.writers.file.BwmetaToDocumentWraperSequenceFileWriter  - 10 mediaContainer records
+65109 [main] INFO  pl.edu.icm.coansys.importers.io.writers.file.BwmetaToDocumentWraperSequenceFileWriter  - 10 media records
+65109 [main] INFO  pl.edu.icm.coansys.importers.io.writers.file.BwmetaToDocumentWraperSequenceFileWriter  - 0 MB = 7
+65109 [main] INFO  pl.edu.icm.coansys.importers.io.writers.file.BwmetaToDocumentWraperSequenceFileWriter  - 1 MB = 2
+65110 [main] INFO  pl.edu.icm.coansys.importers.io.writers.file.BwmetaToDocumentWraperSequenceFileWriter  - 7 MB = 1
