@@ -4,11 +4,11 @@
  */
 package pl.edu.icm.coansys.importers.transformers;
 
+import java.io.IOException;
 import org.apache.hadoop.hbase.client.Put;
 import pl.edu.icm.coansys.importers.constants.HBaseConstant;
-import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentWrapper;
-import pl.edu.icm.coansys.importers.models.DocumentProtos.MediaContainer;
+
 
 /**
  *
@@ -25,24 +25,16 @@ public class DocumentWrapper2HBasePut {
     }
 
     private static Put addContentFamily(Put put, DocumentWrapper documentWrapper) {
-        MediaContainer mediaContainer = documentWrapper.getMediaContainer();
-        if (mediaContainer != null) {
-            byte[] bytes = mediaContainer.toByteArray();
-            if (bytes != null && bytes.length > 0) {
-                put.add(HBaseConstant.FAMILY_CONTENT_BYTES, HBaseConstant.FAMILY_CONTENT_QUALIFIER_PROTO_BYTES, bytes);
-            }
-        }
+        byte[] bytes = documentWrapper.getMediaContainer().toByteArray();
+        put.add(HBaseConstant.FAMILY_CONTENT_BYTES, HBaseConstant.FAMILY_CONTENT_QUALIFIER_PROTO_BYTES, bytes);
         return put;
     }
 
     private static Put addMetadataFamily(Put put, DocumentWrapper documentWrapper) {
-        DocumentMetadata documentMetadata = documentWrapper.getDocumentMetadata();
-        if (documentMetadata != null) {
-            byte[] bytes = documentMetadata.toByteArray();
-            if (bytes != null && bytes.length > 0) {
-                put.add(HBaseConstant.FAMILY_METADATA_BYTES, HBaseConstant.FAMILY_METADATA_QUALIFIER_PROTO_BYTES, bytes);
-            }
-        }
+        byte[] bytes = documentWrapper.getDocumentMetadata().toByteArray();
+        put.add(HBaseConstant.FAMILY_METADATA_BYTES, HBaseConstant.FAMILY_METADATA_QUALIFIER_PROTO_BYTES, bytes);
         return put;
     }
+
+    
 }

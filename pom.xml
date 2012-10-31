@@ -176,9 +176,7 @@
     </profiles>
 
     <modules>
-<!--
         <module>citations</module>
--->
         <module>commons</module>
         <module>commons-scala</module>
         <module>disambiguation</module>
