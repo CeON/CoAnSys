@@ -1,7 +1,9 @@
 #!/bin/bash
 
 # example:
-# ./import-via-sequence-files.sh sf ../../../target/importers-1.0-SNAPSHOT-jar-with-dependencies.jar /mnt/tmp/bwndata/bazekon-20120228 bazekon /mnt/tmp/bazekon.sf bazekon.sh false null
+#./import-via-sequence-files.sh sf ../../../target/importers-1.0-SNAPSHOT-jar-with-dependencies.jar /mnt/tmp/bwndata/bazekon-20120228 bazekon /mnt/tmp/bazekon.sf
+#./import-via-sequence-files.sh sf ../../../target/importers-1.0-SNAPSHOT-jar-with-dependencies.jar /mnt/tmp/bwndata/medline-20100716 medline /mnt/tmp/medline.sf
+
 
 MODE=$1
 IMPORTERS_JAR=$2
