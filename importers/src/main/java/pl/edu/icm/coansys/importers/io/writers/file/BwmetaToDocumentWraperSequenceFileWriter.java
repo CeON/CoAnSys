@@ -151,6 +151,9 @@ public class BwmetaToDocumentWraperSequenceFileWriter {
                 LOGGER.info("\tSourcePathFilesize = " + size + "MB");
                 mediaCount++;
                 sizeMap.put(size, (sizeMap.get(size) != null ? sizeMap.get(size) + 1 : 1));
+                if (size >= 10) {
+                    LOGGER.info("\tBig media = " + size + "MB");
+                }
             }
             mediaConteinerCount++;
         }
