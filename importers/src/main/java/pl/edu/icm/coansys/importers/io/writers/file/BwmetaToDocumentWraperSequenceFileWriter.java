@@ -16,7 +16,7 @@ import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.io.Writable;
-import org.apache.log4j.Appender;
+import org.apache.hadoop.io.compress.SnappyCodec;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator;
@@ -42,7 +42,7 @@ public class BwmetaToDocumentWraperSequenceFileWriter {
 
     public static void main(String[] args) throws IOException {
         args = ((args == null || args.length == 0) ? DEFAULT_ARGS : args);
-
+        
         if (args.length < 3) {
             usage();
             System.exit(1);
@@ -52,12 +52,13 @@ public class BwmetaToDocumentWraperSequenceFileWriter {
         String collection = args[1];
         String outputSequenceFile = args[2];
 
-        if (args.length == 4) {
-            PropertyConfigurator.configure(args[3]);
+        boolean isSnappyCompressed = (args.length >= 4 ? Boolean.parseBoolean(args[3]) : true);
+        if (args.length >= 5) {
+            PropertyConfigurator.configure(args[4]);
         }
 
         checkPaths(inputDir, collection, outputSequenceFile);
-        generateSequenceFile(inputDir, collection, outputSequenceFile);
+        generateSequenceFile(inputDir, collection, outputSequenceFile, isSnappyCompressed);
         printStats();
     }
 
@@ -67,7 +68,7 @@ public class BwmetaToDocumentWraperSequenceFileWriter {
         LOGGER.info(mediaConteinerCount + " mediaContainer records");
         LOGGER.info(mediaCount + " media records");
         for (Entry<Long, Long> entry : sizeMap.entrySet()) {
-            LOGGER.info(entry.getKey() + " MB = " + entry.getValue());
+            LOGGER.info(entry.getKey() + "MB = " + entry.getValue());
         }
     }
 
@@ -91,7 +92,7 @@ public class BwmetaToDocumentWraperSequenceFileWriter {
         }
     }
 
-    private static void generateSequenceFile(String inputDir, String collection, String outputSequenceFile) throws IOException {
+    private static void generateSequenceFile(String inputDir, String collection, String outputSequenceFile, boolean isSnappyCompressed) throws IOException {
         ZipDirToDocumentDTOIterator zdtp = new ZipDirToDocumentDTOIterator(inputDir, collection);
         SequenceFile.Writer writer = null;
         try {
@@ -99,7 +100,7 @@ public class BwmetaToDocumentWraperSequenceFileWriter {
             BytesWritable documentWrapperBytesWritable = new BytesWritable();
             DocumentWrapper.Builder dw = DocumentWrapper.newBuilder();
 
-            writer = createSequenceFileWriter(outputSequenceFile, rowKeyBytesWritable, documentWrapperBytesWritable);
+            writer = createSequenceFileWriter(outputSequenceFile, rowKeyBytesWritable, documentWrapperBytesWritable, isSnappyCompressed);
             for (DocumentDTO doc : zdtp) {
                 DocumentWrapper docWrap = buildFrom(dw, doc);
 
@@ -142,12 +143,12 @@ public class BwmetaToDocumentWraperSequenceFileWriter {
         MediaContainer mediaConteiner = doc.getMediaConteiner();
         if (mediaConteiner.getSerializedSize() > 0) {
             dw.setMediaContainer(mediaConteiner);
-            LOGGER.info("\tMediaConteiner size: " + (mediaConteiner.toByteArray().length / 1024 / 1024) + " MB");
+            LOGGER.info("\tMediaConteiner size: " + (mediaConteiner.toByteArray().length / 1024 / 1024) + "MB");
             for (Media media : mediaConteiner.getMediaList()) {
                 long size = media.getSourcePathFilesize() / 1024 / 1024;
                 LOGGER.info("\tArchiveZip = " + media.getSourceArchive());
                 LOGGER.info("\tSourcePath = " + media.getSourcePath());
-                LOGGER.info("\tSourcePathFilesize = " + size + " MB");
+                LOGGER.info("\tSourcePathFilesize = " + size + "MB");
                 mediaCount++;
                 sizeMap.put(size, (sizeMap.get(size) != null ? sizeMap.get(size) + 1 : 1));
             }
@@ -157,11 +158,15 @@ public class BwmetaToDocumentWraperSequenceFileWriter {
         return dw.build();
     }
 
-    private static SequenceFile.Writer createSequenceFileWriter(String uri, Writable key, Object value) throws IOException {
+    private static SequenceFile.Writer createSequenceFileWriter(String uri, Writable key, Object value, boolean isSnappyCompressed) throws IOException {        
         Configuration conf = new Configuration();
         FileSystem fs = FileSystem.get(URI.create(uri), conf);
         Path path = new Path(uri);
-        SequenceFile.Writer writer = SequenceFile.createWriter(fs, conf, path, key.getClass(), value.getClass());
+        SequenceFile.Writer writer = (
+                isSnappyCompressed ? 
+                SequenceFile.createWriter(fs, conf, path, key.getClass(), value.getClass(), SequenceFile.CompressionType.BLOCK, new SnappyCodec())
+                : SequenceFile.createWriter(fs, conf, path, key.getClass(), value.getClass())
+                );
         return writer;
     }
 
@@ -169,7 +174,7 @@ public class BwmetaToDocumentWraperSequenceFileWriter {
         String usage = "Usage: \n"
                 + "java -cp importers-*-with-deps.jar "
                 + BwmetaToDocumentWraperSequenceFileWriter.class.getName()
-                + " <in_dir> <collectionName> <out_file> [<log4j.properties>]";
+                + " <in_dir> <collectionName> <out_file> [<is_compressed> = true] [<log4j.properties>]";
         System.out.println(usage);
     }
 }
