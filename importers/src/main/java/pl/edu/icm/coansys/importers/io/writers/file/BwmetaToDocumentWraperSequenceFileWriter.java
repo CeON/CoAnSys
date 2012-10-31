@@ -33,7 +33,7 @@ public class BwmetaToDocumentWraperSequenceFileWriter {
     private static String[] DEFAULT_ARGS = {
         "/home/akawa/bwndata/zips/",
         "cedram",
-        "/home/akawa/bwndata/cedram.sf",};
+        "/home/akawa/bwndata/cedram.sf"};
     private static long documentCount = 0;
     private static long metadataCount = 0;
     private static long mediaCount = 0;
@@ -41,13 +41,9 @@ public class BwmetaToDocumentWraperSequenceFileWriter {
     private static Map<Long, Long> sizeMap = new HashMap<Long, Long>();
 
     public static void main(String[] args) throws IOException {
-
-        System.out.println(new File(".").getAbsolutePath());
-        PropertyConfigurator.configure("src/main/bash/log4j.properties");
-
         args = ((args == null || args.length == 0) ? DEFAULT_ARGS : args);
 
-        if (args.length != 3) {
+        if (args.length < 3) {
             usage();
             System.exit(1);
         }
@@ -55,6 +51,10 @@ public class BwmetaToDocumentWraperSequenceFileWriter {
         String inputDir = args[0];
         String collection = args[1];
         String outputSequenceFile = args[2];
+
+        if (args.length == 4) {
+            PropertyConfigurator.configure(args[3]);
+        }
 
         checkPaths(inputDir, collection, outputSequenceFile);
         generateSequenceFile(inputDir, collection, outputSequenceFile);
@@ -120,7 +120,7 @@ public class BwmetaToDocumentWraperSequenceFileWriter {
             IOUtils.closeStream(writer);
         }
     }
-    
+
     private static DocumentWrapper buildFrom(DocumentWrapper.Builder dw, DocumentDTO doc) {
         String rowId = RowComposer.composeRow(doc);
         dw.setRowId(rowId);
@@ -169,7 +169,7 @@ public class BwmetaToDocumentWraperSequenceFileWriter {
         String usage = "Usage: \n"
                 + "java -cp importers-*-with-deps.jar "
                 + BwmetaToDocumentWraperSequenceFileWriter.class.getName()
-                + " <in_dir> <collectionName> <out_file>";
+                + " <in_dir> <collectionName> <out_file> [<log4j.properties>]";
         System.out.println(usage);
     }
 }
