@@ -16,7 +16,9 @@ import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.io.Writable;
+import org.apache.log4j.Appender;
 import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 import pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator;
 import pl.edu.icm.coansys.importers.models.DocumentDTO;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
@@ -39,6 +41,9 @@ public class BwmetaToDocumentWraperSequenceFileWriter {
     private static Map<Long, Long> sizeMap = new HashMap<Long, Long>();
 
     public static void main(String[] args) throws IOException {
+
+        System.out.println(new File(".").getAbsolutePath());
+        PropertyConfigurator.configure("src/main/bash/log4j.properties");
 
         args = ((args == null || args.length == 0) ? DEFAULT_ARGS : args);
 
