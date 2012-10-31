@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package pl.edu.icm.coansys.commons.hbase;
 
 import java.net.URI;
@@ -23,7 +19,8 @@ import org.apache.hadoop.util.ReflectionUtils;
  */
 public class SequenceFileSplitAlgorithm implements SplitAlgorithm {
 
-    public static final String SPLIT_KEY_FILE = "sf-split/keys";
+    private static final String SPLIT_KEY_FILENAME_PROPERTY_NAME = "split.region.keys.file.name";
+    public static final String SPLIT_KEY_FILE_DV = "keys";
 
     @Override
     public byte[] split(byte[] bytes, byte[] bytes1) {
@@ -35,16 +32,13 @@ public class SequenceFileSplitAlgorithm implements SplitAlgorithm {
 
         Configuration conf = new Configuration();
         SequenceFile.Reader reader = null;
-        Path path = new Path(SPLIT_KEY_FILE);
+        String splitKeysFile = System.getProperty(SPLIT_KEY_FILENAME_PROPERTY_NAME, SPLIT_KEY_FILE_DV);
         
-        System.out.println("Path name: " + path.getName());
-        
-        // the list of region keys
         List<byte[]> regions = new ArrayList<byte[]>();
         
         try {
-            FileSystem fs = FileSystem.get(URI.create(SPLIT_KEY_FILE), conf);
-            reader = new SequenceFile.Reader(fs, path, conf);
+            FileSystem fs = FileSystem.get(URI.create(splitKeysFile), conf);
+            reader = new SequenceFile.Reader(fs, new Path(splitKeysFile), conf);
             BytesWritable key = (BytesWritable) ReflectionUtils.newInstance(reader.getKeyClass(), conf);
             Writable value = (Writable) ReflectionUtils.newInstance(reader.getValueClass(), conf);
 
@@ -57,6 +51,7 @@ public class SequenceFileSplitAlgorithm implements SplitAlgorithm {
         } finally {
             IOUtils.closeStream(reader);
         }
+        
         return regions.toArray(new byte[0][]);
     }
 
