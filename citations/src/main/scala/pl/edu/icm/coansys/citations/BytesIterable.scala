@@ -1,0 +1,26 @@
+package pl.edu.icm.coansys.citations
+
+import java.io.DataInput
+import java.io.DataOutput
+import org.apache.hadoop.io.Writable
+
+class BytesIterable(var iterable: Iterable[Array[Byte]] = Nil) extends Writable {
+  def write(out: DataOutput) {
+    out.writeInt(iterable.size)
+    iterable foreach {
+      x =>
+        out.writeInt(x.length)
+        out.write(x, 0, x.length)
+    }
+  }
+
+  def readFields(in: DataInput) {
+    val size = in.readInt()
+    iterable = (1 to size).map { _ =>
+      val len = in.readInt()
+      val buff = new Array[Byte](len)
+      in.readFully(buff, 0, len)
+      buff
+    }
+  }
+}

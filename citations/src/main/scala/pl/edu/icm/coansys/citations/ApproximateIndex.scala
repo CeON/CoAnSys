@@ -1,5 +1,6 @@
 package pl.edu.icm.coansys.citations
 
+import scala.collection.JavaConversions._
 import pl.edu.icm.coansys.commons.scala.strings.rotations
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.Path
@@ -10,6 +11,7 @@ import com.nicta.scoobi.io.sequence.SeqSchema
 import com.nicta.scoobi.Persist.persist
 import com.nicta.scoobi.InputsOutputs.convertToSequenceFile
 import com.nicta.scoobi.application.ScoobiConfiguration
+import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata
 
 /**
  * A class helping in approximate index saved in MapFile usage.
@@ -83,12 +85,12 @@ object ApproximateIndex {
    * @param readDocs a procedure returning documents to be indexed
    * @param indexFile an URI of location where a MapFile representing an index will be saved
    */
-  def buildIndex(readDocs: () => DList[MockDocumentWrapper], indexFile: String)(implicit conf: ScoobiConfiguration) {
-    def indexEntries(allDocs: DList[MockDocumentWrapper]) = {
+  def buildAuthorIndex(readDocs: () => DList[DocumentMetadataWrapper], indexFile: String)(implicit conf: ScoobiConfiguration) {
+    def indexEntries(allDocs: DList[DocumentMetadataWrapper]) = {
       val tokensWithDocs =
         allDocs
           .flatMap(d => d.normalisedAuthorTokens zip Iterator.continually(d).toIterable)
-          .groupByKey[String, MockDocumentWrapper]
+          .groupByKey[String, DocumentMetadataWrapper]
 
       val rotationsWithDocs = tokensWithDocs.flatMap {
         case (token, docs) =>
@@ -101,14 +103,14 @@ object ApproximateIndex {
       rotationsWithDocs
     }
 
-    implicit object docsIterableSchema extends SeqSchema[Iterable[MockDocumentWrapper]] {
-      def toWritable(x: Iterable[MockDocumentWrapper]) = new MockDocumentWritableIterable(x)
+    implicit object docsIterableSchema extends SeqSchema[Iterable[DocumentMetadataWrapper]] {
+      def toWritable(x: Iterable[DocumentMetadataWrapper]) = new BytesIterable(x map (_.meta.toByteArray))
 
       def fromWritable(x: SeqType) =
-        x.iterable
+        x.iterable map (bs => new DocumentMetadataWrapper(DocumentMetadata.parseFrom(bs)))
 
-      type SeqType = MockDocumentWritableIterable
-      val mf = manifest[MockDocumentWritableIterable]
+      type SeqType = BytesIterable
+      val mf = manifest[BytesIterable]
     }
     persist(convertToSequenceFile(indexEntries(readDocs()), indexFile))
     hdfs.mergeSeqs(indexFile)

@@ -9,10 +9,10 @@ object IndexTester extends ScoobiApp {
   override def upload = false
 
   def testIndex(indexUri: String) {
-    val index = new ApproximateIndex[MockDocumentWritableIterable](indexUri)
-    index.get("aaa").flatMap(_.iterable).foreach(x => println(x.id))
+    val index = new AuthorIndex(indexUri)
+    index.getDocumentsByAuthor("aaa").foreach(x => println(x.id))
     println()
-    index.get("bbb").flatMap(_.iterable).foreach(x => println(x.id))
+    index.getDocumentsByAuthor("bbb").foreach(x => println(x.id))
 
   }
 
