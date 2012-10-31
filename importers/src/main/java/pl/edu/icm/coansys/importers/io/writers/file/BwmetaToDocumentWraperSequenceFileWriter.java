@@ -34,7 +34,7 @@ public class BwmetaToDocumentWraperSequenceFileWriter {
         "/home/akawa/bwndata/zips/",
         "cedram",
         "/home/akawa/bwndata/cedram.sf",};
-    
+    private static long documentCount = 0;
     private static long metadataCount = 0;
     private static long mediaCount = 0;
     private static long mediaConteinerCount = 0;
@@ -59,15 +59,15 @@ public class BwmetaToDocumentWraperSequenceFileWriter {
         checkPaths(inputDir, collection, outputSequenceFile);
         generateSequenceFile(inputDir, collection, outputSequenceFile);
         printStats();
-
     }
-    
+
     private static void printStats() {
+        LOGGER.info(documentCount + " document count");
         LOGGER.info(metadataCount + " metadata records");
         LOGGER.info(mediaConteinerCount + " mediaContainer records");
         LOGGER.info(mediaCount + " media records");
         for (Entry<Long, Long> entry : sizeMap.entrySet()) {
-          LOGGER.info(entry.getKey() + " = " + entry.getValue()); 
+            LOGGER.info(entry.getKey() + " MB = " + entry.getValue());
         }
     }
 
@@ -89,7 +89,6 @@ public class BwmetaToDocumentWraperSequenceFileWriter {
         if (!outf.getParentFile().exists()) {
             outf.getParentFile().mkdirs();
         }
-
     }
 
     private static void generateSequenceFile(String inputDir, String collection, String outputSequenceFile) throws IOException {
@@ -104,25 +103,28 @@ public class BwmetaToDocumentWraperSequenceFileWriter {
             for (DocumentDTO doc : zdtp) {
                 DocumentWrapper docWrap = buildFrom(dw, doc);
 
-                // specify key
+                // specify key and value
                 byte[] rowKey = docWrap.getRowId().getBytes();
                 rowKeyBytesWritable.set(rowKey, 0, rowKey.length);
-
-                // specify value
                 byte[] dwBytes = docWrap.toByteArray();
                 documentWrapperBytesWritable.set(dwBytes, 0, dwBytes.length);
 
                 // append to the sequence file
                 writer.append(rowKeyBytesWritable, documentWrapperBytesWritable);
+
+                if (documentCount % 10000 == 0) {
+                    printStats();
+                }
             }
         } finally {
             IOUtils.closeStream(writer);
         }
     }
-
+    
     private static DocumentWrapper buildFrom(DocumentWrapper.Builder dw, DocumentDTO doc) {
         String rowId = RowComposer.composeRow(doc);
         dw.setRowId(rowId);
+        documentCount++;
 
         LOGGER.trace("Building: ");
         LOGGER.trace("\tKey = " + doc.getKey());
