@@ -3,27 +3,37 @@
 --
 -- -----------------------------------------------------
 -- -----------------------------------------------------
+-- default section
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+%DEFAULT commonJarsPath 'lib/*.jar'
+
+%DEFAULT src /tmp/dataForDocClassif
+%DEFAULT fold 0
+-- -----------------------------------------------------
+-- -----------------------------------------------------
 -- register section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 REGISTER /usr/lib/hbase/lib/zookeeper.jar
 REGISTER /usr/lib/hbase/hbase-0.92.1-cdh4.0.1-security.jar 
 REGISTER /usr/lib/hbase/lib/guava-11.0.2.jar
-REGISTER '../lib/document-classification-1.0-SNAPSHOT.jar'
-REGISTER '../lib/document-classification-1.0-SNAPSHOT-only-dependencies.jar'
+
+REGISTER '$commonJarsPath'
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- default section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
-%DEFAULT DEF_SRC pdendek_springer_mo
-%DEFAULT DEF_DST /user/pdendek/parts/alg_mapping_rowid_docid
+%DECLARE TR _Tr_
+%declare TE _Te_
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- import section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
-IMPORT '../AUXIL/macros.def.pig';
+IMPORT 'AUXIL_docsim.macros.def.pig';
+IMPORT 'AUXIL_macros.def.pig';
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- code section
@@ -31,10 +41,10 @@ IMPORT '../AUXIL/macros.def.pig';
 -- -----------------------------------------------------
 set default_parallel 16
 
-A = getProtosFromHbase('$DEF_SRC'); 
-B = FOREACH A GENERATE 
-		$0 as key,
-		flatten(pl.edu.icm.coansys.classification.documents.pig.extractors.
-			EXTRACT_KEY($1)) as (docId:chararray);
 
-STORE B INTO '$DEF_DST';
+D = LOAD '$src';
+split D into
+	Te if $2 == $fold,
+	Tr if $2 != $fold;
+store Tr into '$src$TR$fold';
+store Te into '$src$TE$fold';

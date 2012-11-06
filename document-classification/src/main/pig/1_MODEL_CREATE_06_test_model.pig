@@ -3,29 +3,31 @@
 --
 -- -----------------------------------------------------
 -- -----------------------------------------------------
--- register section
--- -----------------------------------------------------
--- -----------------------------------------------------
-REGISTER /usr/lib/hbase/lib/zookeeper.jar
-REGISTER /usr/lib/hbase/hbase-0.92.1-cdh4.0.1-security.jar 
-REGISTER /usr/lib/hbase/lib/guava-11.0.2.jar
-REGISTER '../lib/document-classification-1.0-SNAPSHOT.jar'
-REGISTER '../lib/document-classification-1.0-SNAPSHOT-only-dependencies.jar'
--- -----------------------------------------------------
--- -----------------------------------------------------
 -- default section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
+%DEFAULT commonJarsPath 'lib/*.jar'
+
 %DEFAULT inEn /tmp/dataEnriched
 %DEFAULT inMo /tmp/dataModel
 %DEFAULT outLocal /tmp/dataTestEval
 %DEFAULT MODEL_CLSF_CLASS mlknnThresClassify
 -- -----------------------------------------------------
 -- -----------------------------------------------------
+-- register section
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+REGISTER /usr/lib/hbase/lib/zookeeper.jar
+REGISTER /usr/lib/hbase/hbase-0.92.1-cdh4.0.1-security.jar 
+REGISTER /usr/lib/hbase/lib/guava-11.0.2.jar
+
+REGISTER '$commonJarsPath'
+-- -----------------------------------------------------
+-- -----------------------------------------------------
 -- import section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
-IMPORT '../MODEL_BLD_CLASS/$MODEL_CLSF_CLASS.pig';
+IMPORT 'MODEL_BLD_CLASS_$MODEL_CLSF_CLASS.pig';
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- macro section

@@ -3,19 +3,11 @@
 --
 -- -----------------------------------------------------
 -- -----------------------------------------------------
--- register section
--- -----------------------------------------------------
--- -----------------------------------------------------
-REGISTER /usr/lib/hbase/lib/zookeeper.jar
-REGISTER /usr/lib/hbase/hbase-0.92.1-cdh4.0.1-security.jar 
-REGISTER /usr/lib/hbase/lib/guava-11.0.2.jar
-REGISTER '../lib/document-classification-1.0-SNAPSHOT.jar'
-REGISTER '../lib/document-classification-1.0-SNAPSHOT-only-dependencies.jar'
--- -----------------------------------------------------
--- -----------------------------------------------------
 -- default section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
+%DEFAULT commonJarsPath 'lib/*.jar'
+
 %DEFAULT dataNeight /tmp/dataNeight
 %DEFAULT dataForDocClassif /tmp/dataForDocClassif
 %DEFAULT DEF_FOLDS 5
@@ -24,6 +16,16 @@ REGISTER '../lib/document-classification-1.0-SNAPSHOT-only-dependencies.jar'
 --%DEFAULT filterMethod categsPresentInAllFolds 
 --%DEFAULT filterMethod distinctCategs
 --%DEFAULT filterMethod categsPresentInAllFoldsInGEQNumber 
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+-- register section
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+REGISTER /usr/lib/hbase/lib/zookeeper.jar
+REGISTER /usr/lib/hbase/hbase-0.92.1-cdh4.0.1-security.jar 
+REGISTER /usr/lib/hbase/lib/guava-11.0.2.jar
+
+REGISTER '$commonJarsPath'
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- define section

@@ -3,35 +3,37 @@
 --
 -- -----------------------------------------------------
 -- -----------------------------------------------------
--- register section
--- -----------------------------------------------------
--- -----------------------------------------------------
-REGISTER /usr/lib/hbase/lib/zookeeper.jar
-REGISTER /usr/lib/hbase/hbase-0.92.1-cdh4.0.1-security.jar 
-REGISTER /usr/lib/hbase/lib/guava-11.0.2.jar
-REGISTER '../lib/document-classification-1.0-SNAPSHOT.jar'
-REGISTER '../lib/document-classification-1.0-SNAPSHOT-only-dependencies.jar'
--- -----------------------------------------------------
--- -----------------------------------------------------
 -- default section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
+%DEFAULT commonJarsPath 'lib/*.jar'
+
 %DEFAULT DEF_SRC pdendek_springer_mo
 %DEFAULT inMo /user/pdendek/model
-%DEFAULT DEF_DST /user/pdendek/parts/alg_doc_classif
+%DEFAULT DEF_DST /user/pdendek/parts/parts/doc-classif/classification
 %DEFAULT DEF_LIM 1
 %DEFAULT featurevector tfidf
 %DEFAULT simmeth cosine
 %DEFAULT neigh 5
 -- -----------------------------------------------------
 -- -----------------------------------------------------
+-- register section
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+REGISTER /usr/lib/hbase/lib/zookeeper.jar
+REGISTER /usr/lib/hbase/hbase-0.92.1-cdh4.0.1-security.jar 
+REGISTER /usr/lib/hbase/lib/guava-11.0.2.jar
+
+REGISTER '$commonJarsPath'
+-- -----------------------------------------------------
+-- -----------------------------------------------------
 -- import section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
-IMPORT '../AUXIL/docsim.macros.def.pig';
-IMPORT '../AUXIL/macros.def.pig';
-IMPORT '../SIM/$simmeth.pig';
-IMPORT '../FV/$featurevector.pig';
+IMPORT 'AUXIL_docsim.macros.def.pig';
+IMPORT 'AUXIL_macros.def.pig';
+IMPORT 'SIM_$simmeth.pig';
+IMPORT 'FV_$featurevector.pig';
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- code section
@@ -44,7 +46,6 @@ B = FOREACH A GENERATE
 		$0 as key,
 		flatten(pl.edu.icm.coansys.classification.documents.pig.extractors.
 			EXTRACT_MAP_CATEGOCC($1,'$DEF_LIM')) as (data:map[],categocc:long);
-describe B;
 split B into
 	B1 if categocc > 0, --classified docs
 	B2 if categocc == 0; --unclassifed docs

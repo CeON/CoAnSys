@@ -3,19 +3,11 @@
 --
 -- -----------------------------------------------------
 -- -----------------------------------------------------
--- register section
--- -----------------------------------------------------
--- -----------------------------------------------------
-REGISTER /usr/lib/hbase/lib/zookeeper.jar
-REGISTER /usr/lib/hbase/hbase-0.92.1-cdh4.0.1-security.jar 
-REGISTER /usr/lib/hbase/lib/guava-11.0.2.jar
-REGISTER '../lib/document-classification-1.0-SNAPSHOT.jar'
-REGISTER '../lib/document-classification-1.0-SNAPSHOT-only-dependencies.jar'
--- -----------------------------------------------------
--- -----------------------------------------------------
 -- default section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
+%DEFAULT commonJarsPath 'lib/*.jar'
+
 %DEFAULT inLocal /tmp/dataEnriched
 %DEFAULT DEF_NEIGH 5
 %DEFAULT MODEL_BLD_CLASS mlknnThresBuild
@@ -24,12 +16,22 @@ REGISTER '../lib/document-classification-1.0-SNAPSHOT-only-dependencies.jar'
 %DEFAULT jupiter TMP2
 -- -----------------------------------------------------
 -- -----------------------------------------------------
+-- register section
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+REGISTER /usr/lib/hbase/lib/zookeeper.jar
+REGISTER /usr/lib/hbase/hbase-0.92.1-cdh4.0.1-security.jar 
+REGISTER /usr/lib/hbase/lib/guava-11.0.2.jar
+
+REGISTER '$commonJarsPath'
+-- -----------------------------------------------------
+-- -----------------------------------------------------
 -- import section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 
-IMPORT '../MODEL_BLD_CLASS/$MODEL_BLD_CLASS.pig';
-IMPORT '../AUXIL/macros.def.pig';
+IMPORT 'MODEL_BLD_CLASS_$MODEL_BLD_CLASS.pig';
+IMPORT 'AUXIL_macros.def.pig';
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- code section

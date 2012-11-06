@@ -1,4 +1,4 @@
-<workflow-app name='document-similarity' xmlns="uri:oozie:workflow:0.2">
+<workflow-app name='dc-classification' xmlns="uri:oozie:workflow:0.2">
     <start to='classify'/>
     <action name='classify'>
         <pig>
@@ -13,8 +13,7 @@
                     <value>${queueName}</value>
                 </property> 
             </configuration>
-            <script>${pigScriptsDir}/2_MODEL_USE/tfidf.pig</script>
-
+            <script>${pigScriptsDir}/2_MODEL_USE_classify.pig</script>
             <param>DEF_SRC=${dc_classification_InputHBase}</param>
             <param>inMo=${dc_modelcreation_ModelDir}</param>
             <param>DEF_DST=${dc_classification_OutputDir}</param>
@@ -22,10 +21,10 @@
             <param>featurevector=${dc_classification_fv}</param>
             <param>simmeth=${dc_classification_sim}</param>
             <param>neigh=${dc_classification_neigh}</param>
-            <file>${pigScriptsDir}/AUXIL/docsim.macros.def.pig</file> 
-            <file>${pigScriptsDir}/AUXIL/macros.def.pig</file> 
-            <file>${pigScriptsDir}/SIM/${dc_classification_sim}.pig</file> 
-            <file>${pigScriptsDir}/FV/${dc_classification_fv}.pig</file> 
+            <file>${pigScriptsDir}/AUXIL_docsim.macros.def.pig#AUXIL_docsim.macros.def.pig</file>
+            <file>${pigScriptsDir}/AUXIL_macros.def.pig#AUXIL_macros.def.pig</file>
+            <file>${pigScriptsDir}/SIM_${dc_classification_sim}.pig#SIM_${dc_classification_sim}.pig</file>
+            <file>${pigScriptsDir}/FV_${dc_classification_fv}.pig#FV_${dc_classification_fv}.pig</file>
         </pig>       
         <ok to='end'/>
         <error to='kill'/>

@@ -4,7 +4,7 @@
 # (C) 2010-2012 ICM UW. All rights reserved.
 #
 
-eval "cd ../pig/1_MODEL_CREATE"
+eval "cd ../pig"
 
 DEF_SRC=${1}
 DEF_LIM=${2}
@@ -19,14 +19,14 @@ DEF_NEIGH_NUM=${10}
 filterMethod=${11}
 
 echo "~~~~~~~~~~~~~~~~~~~~~~~!!!!!!!!!!!!!!!!!!!!!!~~~~~~~~~~~~~~~~~~~~~~~~~"
-
 <<PREDONE
-# OveralTime = 01_createNeigh + 02_assignFolds + fold * 03_splitIntoTrain/Test + 2*folds*fv*docsims*04_enrich + folds*fv*docsims*models*05_buildModel + folds*fv*docsims*models*06_testModel
+
+# OveralTime = 01_createNeigh=2m37.015s + 02_assignFolds=5m20.634s + fold=5 * train/test=2 * 03_splitIntoTrain/Test=1m18.935s + 2*folds*fv*docsims*04_enrich + folds*fv*docsims*models*05_buildModel + folds*fv*docsims*models*06_testModel
 # FOR fold=5, fv=simple_tfidf, docsims=cosine, models=mlknnThres OVERAL_TIME=x;
 #create neighbours: about {finishTime}-{12:01:17} 3min on springer metadataonly
 eval "hadoop dfs -rm -r -f ${dataNeigh}"
-echo "pig -p DEF_SRC=${DEF_SRC} -p DEF_DST=${dataNeigh} -p DEF_FOLDS=${DEF_FOLDS} -p DEF_LIM=1 01_docs2neig.pig"
-eval "pig -p DEF_SRC=${DEF_SRC} -p DEF_DST=${dataNeigh} -p DEF_FOLDS=${DEF_FOLDS} -p DEF_LIM=1 01_docs2neig.pig"
+echo "pig -p DEF_SRC=${DEF_SRC} -p DEF_DST=${dataNeigh} -p DEF_FOLDS=${DEF_FOLDS} -p DEF_LIM=1 1_MODEL_CREATE_01_docs2neig.pig"
+eval "time pig -p DEF_SRC=${DEF_SRC} -p DEF_DST=${dataNeigh} -p DEF_FOLDS=${DEF_FOLDS} -p DEF_LIM=1 1_MODEL_CREATE_01_docs2neig.pig"
 echo "-------------------------------------------------------------------------"
 echo "-------------------------------------------------------------------------"
 
@@ -34,8 +34,8 @@ echo "-------------------------------------------------------------------------"
 
 
 eval "hadoop dfs -rm -r -f ${dataForDocClassif}"
-echo "pig -p filterMethod=${filterMethod} -p dataNeigh=${dataNeigh} -p dataForDocClassif=${dataForDocClassif} -p DEF_LIM=${categOccLimits} -p DEF_FOLDS=${DEF_FOLDS} 02_assignAndCreateDocClassif.pig"
-eval "pig -p filterMethod=${filterMethod} -p dataNeigh=${dataNeigh} -p dataForDocClassif=${dataForDocClassif} -p DEF_LIM=${categOccLimits} -p DEF_FOLDS=${DEF_FOLDS} 02_assignAndCreateDocClassif.pig"
+echo "pig -p filterMethod=${filterMethod} -p dataNeigh=${dataNeigh} -p dataForDocClassif=${dataForDocClassif} -p DEF_LIM=${categOccLimits} -p DEF_FOLDS=${DEF_FOLDS} 1_MODEL_CREATE_02_assignAndCreateDocClassif.pig"
+eval "time pig -p filterMethod=${filterMethod} -p dataNeigh=${dataNeigh} -p dataForDocClassif=${dataForDocClassif} -p DEF_LIM=${categOccLimits} -p DEF_FOLDS=${DEF_FOLDS} 1_MODEL_CREATE_02_assignAndCreateDocClassif.pig"
 echo "-------------------------------------------------------------------------"
 echo "-------------------------------------------------------------------------"
 
@@ -53,8 +53,8 @@ do
 		echo "-------------------------------------------------------------------------"
 		eval "hadoop dfs -rm -r -f ${src}_Tr_${fold}"
 		eval "hadoop dfs -rm -r -f ${src}_Te_${fold}"
-		echo "pig -p src=${src} -p fold=${fold} 03_split.pig"
-		eval "pig -p src=${src} -p fold=${fold} 03_split.pig"
+		echo "pig -p src=${src} -p fold=${fold} 1_MODEL_CREATE_03_split.pig"
+		eval "time pig -p src=${src} -p fold=${fold} 1_MODEL_CREATE_03_split.pig"
 	done
 done
 
@@ -64,7 +64,7 @@ for lev in "Tr" "Te"
 do
 	for sim in "cosine"
 	do
-		for fv in "tfidf"
+		for fv in "tfidf" 
 		do
 			fold=${DEF_FOLDS}
 			while [ ! ${fold} -eq 0 ];
@@ -77,8 +77,8 @@ do
 				echo "-------------------------------------------------------------------------"
 				eval "hadoop dfs -rm -r -f ${outLocal}"
 				eval "hadoop dfs -rm -r -f ${outLocal}TMP"
-				echo "pig -p neigh=${DEF_NEIGH_NUM} -p inLocal=${inLocal} -p dataForDocClassif=${dataForDocClassif} -p outLocal=${outLocal} -p featureVector=${fv} -p simmeth=${sim} 04_enrich.pig"
-				eval "pig -p neigh=${DEF_NEIGH_NUM} -p inLocal=${inLocal} -p dataForDocClassif=${dataForDocClassif} -p outLocal=${outLocal} -p featureVector=${fv} -p simmeth=${sim} 04_enrich.pig"
+				echo "pig -p neigh=${DEF_NEIGH_NUM} -p inLocal=${inLocal} -p dataForDocClassif=${dataForDocClassif} -p outLocal=${outLocal} -p featureVector=${fv} -p simmeth=${sim} 1_MODEL_CREATE_04_enrich.pig"
+				eval "time pig -p neigh=${DEF_NEIGH_NUM} -p inLocal=${inLocal} -p dataForDocClassif=${dataForDocClassif} -p outLocal=${outLocal} -p featureVector=${fv} -p simmeth=${sim} 1_MODEL_CREATE_04_enrich.pig"
 			done
 		done
 	done
@@ -105,8 +105,8 @@ do
 					echo "-------------------------------------------------------------------------"
 					echo "-------------------------------------------------------------------------"
 					eval "hadoop dfs -rm -r -f ${outLocal}"
-					echo "pig  -p inLocal=${inLocal} -p outLocal=${outLocal} -p DEF_NEIGH=${DEF_NEIGH_NUM} -p MODEL_BLD_CLASS=${modelBLD} 05_build_model.pig"
-					eval "pig  -p inLocal=${inLocal} -p outLocal=${outLocal} -p DEF_NEIGH=${DEF_NEIGH_NUM} -p MODEL_BLD_CLASS=${modelBLD} 05_build_model.pig"
+					echo "pig  -p inLocal=${inLocal} -p outLocal=${outLocal} -p DEF_NEIGH=${DEF_NEIGH_NUM} -p MODEL_BLD_CLASS=${modelBLD} 1_MODEL_CREATE_05_build_model.pig"
+					eval "time pig  -p inLocal=${inLocal} -p outLocal=${outLocal} -p DEF_NEIGH=${DEF_NEIGH_NUM} -p MODEL_BLD_CLASS=${modelBLD} 1_MODEL_CREATE_05_build_model.pig"
 				done
 			done
 		done
@@ -131,8 +131,8 @@ do
 					echo "-------------------------------------------------------------------------"
 					echo "-------------------------------------------------------------------------"
 					eval "hadoop dfs -rm -r -f ${outLocal}"
-					echo "pig  -p inEn=${inEn} -p inMo=${inMo} -p outLocal=${outLocal} -p MODEL_CLSF_CLASS=${modelCLSF}  06_test_model.pig"
-					eval "pig  -p inEn=${inEn} -p inMo=${inMo} -p outLocal=${outLocal} -p MODEL_CLSF_CLASS=${modelCLSF}  06_test_model.pig"
+					echo "pig  -p inEn=${inEn} -p inMo=${inMo} -p outLocal=${outLocal} -p MODEL_CLSF_CLASS=${modelCLSF}  1_MODEL_CREATE_06_test_model.pig"
+					eval "time pig  -p inEn=${inEn} -p inMo=${inMo} -p outLocal=${outLocal} -p MODEL_CLSF_CLASS=${modelCLSF}  1_MODEL_CREATE_06_test_model.pig"
 				done
 			done
 		done
@@ -179,3 +179,4 @@ NOT_YET
 
 <<DONE
 DONE
+

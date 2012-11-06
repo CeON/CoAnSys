@@ -3,19 +3,11 @@
 --
 -- -----------------------------------------------------
 -- -----------------------------------------------------
--- register section
--- -----------------------------------------------------
--- -----------------------------------------------------
-REGISTER /usr/lib/hbase/lib/zookeeper.jar
-REGISTER /usr/lib/hbase/hbase-0.92.1-cdh4.0.1-security.jar 
-REGISTER /usr/lib/hbase/lib/guava-11.0.2.jar
-REGISTER '../lib/document-classification-1.0-SNAPSHOT.jar'
-REGISTER '../lib/document-classification-1.0-SNAPSHOT-only-dependencies.jar'
--- -----------------------------------------------------
--- -----------------------------------------------------
 -- default section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
+%DEFAULT commonJarsPath 'lib/*.jar'
+
 %DEFAULT inLocal /tmp/docNeigh
 %DEFAULT dataForDocClassif /tmp/dataForDocClassif
 %DEFAULT featurevector tfidf
@@ -25,13 +17,23 @@ REGISTER '../lib/document-classification-1.0-SNAPSHOT-only-dependencies.jar'
 %DEFAULT norbert TMP
 -- -----------------------------------------------------
 -- -----------------------------------------------------
+-- register section
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+REGISTER /usr/lib/hbase/lib/zookeeper.jar
+REGISTER /usr/lib/hbase/hbase-0.92.1-cdh4.0.1-security.jar 
+REGISTER /usr/lib/hbase/lib/guava-11.0.2.jar
+
+REGISTER '$commonJarsPath'
+-- -----------------------------------------------------
+-- -----------------------------------------------------
 -- import section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
-IMPORT '../AUXILdocsim.macros.def.pig';
-IMPORT '../AUXIL/macros.def.pig';
-IMPORT '../SIM/$simmeth.pig';
-IMPORT '../FV/$featurevector.pig';
+IMPORT 'AUXIL_docsim.macros.def.pig';
+IMPORT 'AUXIL_macros.def.pig';
+IMPORT 'SIM_$simmeth.pig';
+IMPORT 'FV_$featurevector.pig';
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- code section
