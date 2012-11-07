@@ -43,6 +43,20 @@ public class SortUsagesPart implements Tool {
             context.write(NullWritable.get(), new Text(valueStr));
         }
     }
+    
+    public static class SorterCombine extends Reducer<NullWritable, Text, NullWritable, Text> {
+
+        @Override
+        protected void reduce(NullWritable key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
+            Configuration conf = context.getConfiguration();
+            int nbOfRecords = Integer.parseInt(conf.get("NB_OF_RECORDS"));
+            for (AbstractMap.SimpleEntry<Long, String> entry: findMostPopular(values, nbOfRecords)) {
+                String valueStr = "" + entry.getKey() + ":" + entry.getValue();
+                context.write(NullWritable.get(), new Text(valueStr));
+            }
+        }
+        
+    }
 
     public static class SorterReduce extends Reducer<NullWritable, Text, NullWritable, BytesWritable> {
 
@@ -56,73 +70,91 @@ public class SortUsagesPart implements Tool {
                 timeInMilis = System.currentTimeMillis();
             }
 
-            SortedMap<Long, List<String>> buffer = new TreeMap<Long, List<String>>();
-
             int nbOfRecords = Integer.parseInt(conf.get("NB_OF_RECORDS"));
-            int counter = 0;
-            long minValue = Long.MAX_VALUE;
-
-            for (Text value : values) {
-                //value contains counter and resource_id
-                Pattern pattern = Pattern.compile("^(\\d+):(.*)$");
-                Matcher matcher = pattern.matcher(value.toString());
-                if (matcher.find()) {
-                    Long nb = Long.parseLong(matcher.group(1));
-                    String id = matcher.group(2);
-
-                    if (counter < nbOfRecords || nb > minValue) {
-                        
-                        if (nb < minValue) {
-                            minValue = nb;
-                        }
-
-                        List<String> listToAdd;
-                        if (!buffer.containsKey(nb)) {
-                            listToAdd = new ArrayList<String>();
-                            buffer.put(nb, listToAdd);
-                        } else {
-                            listToAdd = buffer.get(nb);
-                        }
-                        listToAdd.add(id);
-                        counter++;
-                        if (counter > nbOfRecords) {
-                            Long firstKey = buffer.firstKey();
-                            List<String> firstList = buffer.get(firstKey);
-                            if (firstList.size() == 1) {
-                                buffer.remove(firstKey);
-                                minValue = buffer.firstKey();
-                            } else {
-                                firstList.remove(0);
-                                minValue = firstKey;
-                            }
-                            counter--;
-                        }
-                    }
-
-                }
-            }
-            if (counter > 0) {
+            
+            List<AbstractMap.SimpleEntry<Long, String>> mostPopular = findMostPopular(values, nbOfRecords);
+            
+            if (mostPopular.size() > 0) {
                 MostPopularProtos.MostPopularStats.Builder statsBuilder = MostPopularProtos.MostPopularStats.newBuilder();
                 statsBuilder.setTimestamp(timeInMilis);
-                //revert order of usage counters using a stack
-                Stack<Long> countersStack = new Stack<Long>();
-                for (Long n : buffer.keySet()) {
-                    countersStack.push(n);
+                
+                
+                for (AbstractMap.SimpleEntry<Long, String> entry: mostPopular) {
+                    long n = entry.getKey();
+                    String resource = entry.getValue();
+                    MostPopularProtos.ResourceStat.Builder resStatBuilder = MostPopularProtos.ResourceStat.newBuilder();
+                    resStatBuilder.setResourceId(resource);
+                    resStatBuilder.setCounter(n);
+                    statsBuilder.addStat(resStatBuilder);
                 }
-                while (!countersStack.empty()) {
-                    long n = countersStack.pop();
-                    for (String resource : buffer.get(n)) {
-                        MostPopularProtos.ResourceStat.Builder resStatBuilder = MostPopularProtos.ResourceStat.newBuilder();
-                        resStatBuilder.setResourceId(resource);
-                        resStatBuilder.setCounter(n);
-                        statsBuilder.addStat(resStatBuilder);
-
-                    }
-                }
+                
                 BytesWritable bw = new BytesWritable(statsBuilder.build().toByteArray());
                 context.write(NullWritable.get(), bw);
             }
         }
+    }
+
+    private static List<AbstractMap.SimpleEntry<Long, String>> findMostPopular(Iterable<Text> values, int nbOfRecords) {
+        
+        List<AbstractMap.SimpleEntry<Long, String>> result = new ArrayList<AbstractMap.SimpleEntry<Long, String>>();
+        
+        SortedMap<Long, List<String>> buffer = new TreeMap<Long, List<String>>();
+        int counter = 0;
+        long minValue = Long.MAX_VALUE;
+
+        for (Text value : values) {
+            //value contains counter and resource_id
+            Pattern pattern = Pattern.compile("^(\\d+):(.*)$");
+            Matcher matcher = pattern.matcher(value.toString());
+            if (matcher.find()) {
+                Long nb = Long.parseLong(matcher.group(1));
+                String id = matcher.group(2);
+
+                if (counter < nbOfRecords || nb > minValue) {
+
+                    if (nb < minValue) {
+                        minValue = nb;
+                    }
+
+                    List<String> listToAdd;
+                    if (!buffer.containsKey(nb)) {
+                        listToAdd = new ArrayList<String>();
+                        buffer.put(nb, listToAdd);
+                    } else {
+                        listToAdd = buffer.get(nb);
+                    }
+                    listToAdd.add(id);
+                    counter++;
+                    if (counter > nbOfRecords) {
+                        Long firstKey = buffer.firstKey();
+                        List<String> firstList = buffer.get(firstKey);
+                        if (firstList.size() == 1) {
+                            buffer.remove(firstKey);
+                            minValue = buffer.firstKey();
+                        } else {
+                            firstList.remove(0);
+                            minValue = firstKey;
+                        }
+                        counter--;
+                    }
+                }
+
+            }
+        }
+        if (counter > 0) {
+            //reverse order of usage counters using a stack
+            Stack<Long> countersStack = new Stack<Long>();
+            for (Long n : buffer.keySet()) {
+                countersStack.push(n);
+            }
+            while (!countersStack.empty()) {
+                long n = countersStack.pop();
+                for (String resource : buffer.get(n)) {
+                    result.add(new AbstractMap.SimpleEntry<Long, String>(new Long(n), resource));
+                }
+            }
+        }
+        return result;
     }
 
     @Override
@@ -146,6 +178,7 @@ public class SortUsagesPart implements Tool {
         job.setMapperClass(SorterMap.class);
         job.setMapOutputKeyClass(NullWritable.class);
         job.setMapOutputValueClass(Text.class);
+        job.setCombinerClass(SorterCombine.class);
         job.setReducerClass(SorterReduce.class);
 
         /*

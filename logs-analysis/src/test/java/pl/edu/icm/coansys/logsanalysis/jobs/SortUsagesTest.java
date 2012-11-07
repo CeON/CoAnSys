@@ -35,8 +35,9 @@ public class SortUsagesTest {
     @BeforeClass
     public void beforeClass() {
         Mapper m = new SortUsagesPart.SorterMap();
+        Reducer c = new SortUsagesPart.SorterCombine();
         Reducer r = new SortUsagesPart.SorterReduce();
-        mapReduceDriver = new MapReduceDriver(m, r);
+        mapReduceDriver = new MapReduceDriver(m, r).withCombiner(c);
         Configuration conf = mapReduceDriver.getConfiguration();
         conf.set("NB_OF_RECORDS", RESULT_RECORDS);
         conf.set("RESULT_DATE", TEST_DATE);
