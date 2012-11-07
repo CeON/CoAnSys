@@ -1,6 +1,5 @@
 package pl.edu.icm.coansys.citations
 
-import scala.collection.JavaConversions._
 import pl.edu.icm.coansys.commons.scala.strings.rotations
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.Path
@@ -23,7 +22,7 @@ class ApproximateIndex[V <: Writable : Manifest](val indexFileUri: String) {
   val reader = new MapFile.Reader(new Path(indexFileUri), conf)
 
   def get(query: String): Iterable[V] = {
-    def isTooBig(query: String, key:String): Boolean =
+    def isTooBig(query: String, key: String): Boolean =
       !key.startsWith(query.substring(0, query.length - 1))
 
     def isMatching(query: String, key: String): Boolean =
@@ -47,21 +46,22 @@ class ApproximateIndex[V <: Writable : Manifest](val indexFileUri: String) {
     var v: V = manifest[V].erasure.newInstance().asInstanceOf[V]
     val tmpkey: Text = new Text()
 
-    rots foreach {rot =>
-      tmpkey.set(rot.substring(0, rot.length - 1))
-      val fstkey = reader.getClosest(tmpkey, v, true).asInstanceOf[Text]
-      if (fstkey != null) {
-        v = addIfMatches(rot, fstkey, v, buffer)
-      }
-
-      var exit = false
-      while(reader.next(k, v) && !exit) {
-        if (isTooBig(rot, k.toString)) {
-          exit = true
-        } else {
-          v = addIfMatches(rot, k, v, buffer)
+    rots foreach {
+      rot =>
+        tmpkey.set(rot.substring(0, rot.length - 1))
+        val fstkey = reader.getClosest(tmpkey, v, true).asInstanceOf[Text]
+        if (fstkey != null) {
+          v = addIfMatches(rot, fstkey, v, buffer)
         }
-      }
+
+        var exit = false
+        while (reader.next(k, v) && !exit) {
+          if (isTooBig(rot, k.toString)) {
+            exit = true
+          } else {
+            v = addIfMatches(rot, k, v, buffer)
+          }
+        }
     }
 
     buffer
@@ -82,10 +82,10 @@ object ApproximateIndex {
   /**
    * MR jobs building an approximate index.
    *
-   * @param readDocs a procedure returning documents to be indexed
+   * @param documents documents to be indexed
    * @param indexFile an URI of location where a MapFile representing an index will be saved
    */
-  def buildAuthorIndex(readDocs: () => DList[DocumentMetadataWrapper], indexFile: String)(implicit conf: ScoobiConfiguration) {
+  def buildAuthorIndex(documents: DList[DocumentMetadataWrapper], indexFile: String)(implicit conf: ScoobiConfiguration) {
     def indexEntries(allDocs: DList[DocumentMetadataWrapper]) = {
       val tokensWithDocs =
         allDocs
@@ -112,7 +112,7 @@ object ApproximateIndex {
       type SeqType = BytesIterable
       val mf = manifest[BytesIterable]
     }
-    persist(convertToSequenceFile(indexEntries(readDocs()), indexFile))
+    persist(convertToSequenceFile(indexEntries(documents), indexFile))
     hdfs.mergeSeqs(indexFile)
     hdfs.convertSeqToMap(indexFile)
   }

@@ -1,9 +1,11 @@
 package pl.edu.icm.coansys.citations
 
+import collection.JavaConversions._
 import com.nicta.scoobi.application.ScoobiApp
 import com.nicta.scoobi.core.DList
 import com.nicta.scoobi.Persist._
 import com.nicta.scoobi.InputsOutputs._
+import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -51,10 +53,15 @@ object Matcher extends ScoobiApp {
     }
   }
 
-  def readCitations(): DList[CitationWrapper] =
-    throw new RuntimeException("unimplemented")
+  def readCitationsFromSeqFiles(uris: List[String]): DList[CitationWrapper] = {
+    implicit val converter = new BytesConverter[DocumentMetadata](_.toByteArray, DocumentMetadata.parseFrom(_))
+    convertValueFromSequenceFile[DocumentMetadata](uris)
+      .flatMap(_.getReferenceList.toIterable)
+      .map(new CitationWrapper(_))
+  }
 
   def run() {
-    persist(convertToSequenceFile(matches(readCitations(), new AuthorIndex(args(0))), args(1)))
+    persist(
+      convertToSequenceFile(matches(readCitationsFromSeqFiles(List(args(0))), new AuthorIndex(args(0))), args(1)))
   }
 }
