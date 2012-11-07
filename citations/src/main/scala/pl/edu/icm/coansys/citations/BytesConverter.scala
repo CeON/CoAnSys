@@ -18,6 +18,7 @@ class BytesConverter[T](serializer: T => Array[Byte], deserializer: Array[Byte] 
   def fromWire(in: DataInput): T = {
     val size = in.readInt()
     val bytes = new Array[Byte](size)
+    in.readFully(bytes, 0, size)
     deserializer(bytes)
   }
 

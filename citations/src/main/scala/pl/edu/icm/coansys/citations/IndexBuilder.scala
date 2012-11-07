@@ -32,7 +32,10 @@ object IndexBuilder extends ScoobiApp {
   //    new MockDocumentWrapper("9", "aa bba")
   //  )
   def mockReadDocs(): DList[DocumentMetadataWrapper] = DList.apply[DocumentMetadataWrapper](
-    new DocumentMetadataWrapper(DocumentMetadata.getDefaultInstance)
+    DocumentMetadata.newBuilder().setKey("1").addAuthor(Author.newBuilder().setKey("1").setName("aaa bbb")).build(),
+    DocumentMetadata.newBuilder().setKey("2").addAuthor(Author.newBuilder().setKey("2").setName("bab ccc")).build(),
+    DocumentMetadata.newBuilder().setKey("3").addAuthor(Author.newBuilder().setKey("3").setName("cc ddd")).build(),
+    DocumentMetadata.newBuilder().setKey("4").addAuthor(Author.newBuilder().setKey("4").setName("ddd eee")).build()
   )
 
 
