@@ -49,7 +49,8 @@ public class THRES_FOR_CATEG extends EvalFunc<Tuple>{
 			Object o3 = input.get(3);
 			DataBag neg = o3==null ? new DefaultDataBag() : (DataBag) input.get(3);
 			
-			Integer neight_max = Integer.parseInt(input.get(4).toString());
+			//num of neighbours (1,2,3,...) + "null" neigh cell
+			Integer neight_max = Integer.parseInt(input.get(4).toString()) + 1;
 			
 			String categ = "".equals(categA)? categB : categA;
 			
@@ -60,15 +61,15 @@ public class THRES_FOR_CATEG extends EvalFunc<Tuple>{
 			
 			System.out.println("Start");
 			for(Tuple t : pos){
-				long t1 = (Long) t.get(1);
-				long t2 = (Long) t.get(2);
-				posc[(int)t1] = (int) t2;
+				long neigh = (Long) t.get(1);
+				long dococc = (Long) t.get(2);
+				posc[(int)neigh] = (int) dococc;
 			}
 			System.out.println("Constructed pos array");
 			for(Tuple t : neg){
-				long t1 = (Long) t.get(1);
-				long t2 = (Long) t.get(2);
-				negc[(int)t1] = (int) t2;
+				long neigh = (Long) t.get(1);
+				long dococc = (Long) t.get(2);
+				negc[(int)neigh] = (int) dococc;
 			}
 			System.out.println("Constructed neg array");
 			int thres = -1;
