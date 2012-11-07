@@ -36,10 +36,17 @@ IMPORT 'SIM_$simmeth.pig';
 IMPORT 'FV_$featurevector.pig';
 -- -----------------------------------------------------
 -- -----------------------------------------------------
--- code section
+-- set section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 set default_parallel 16
+set pig.tmpfilecompression true
+set pig.tmpfilecompression.codec gz
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+-- code section
+-- -----------------------------------------------------
+-- -----------------------------------------------------
 
 X1 = LOAD '$dataForDocClassif' as (key:chararray,categs:bag{(categ:chararray)}); --key,{categ}
 X2 = foreach X1 generate key;

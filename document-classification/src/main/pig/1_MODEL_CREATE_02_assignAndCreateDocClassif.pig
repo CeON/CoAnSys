@@ -75,10 +75,17 @@ DEFINE howmanyrecords(tab) returns ret{
 }
 -- -----------------------------------------------------
 -- -----------------------------------------------------
--- code section
+-- set section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 set default_parallel 16
+set pig.tmpfilecompression true
+set pig.tmpfilecompression.codec gz
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+-- code section
+-- -----------------------------------------------------
+-- -----------------------------------------------------
 
 A = load '$dataNeigh' as (key:chararray, data:map[], part:int); --key,map,part
 --A0 = foreach A generate key, data#'categories' as categs;

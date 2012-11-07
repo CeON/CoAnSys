@@ -52,10 +52,17 @@ DEFINE calcF1(in) RETURNS F1{
 };
 -- -----------------------------------------------------
 -- -----------------------------------------------------
--- code section
+-- set section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 set default_parallel 16
+set pig.tmpfilecompression true
+set pig.tmpfilecompression.codec gz
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+-- code section
+-- -----------------------------------------------------
+-- -----------------------------------------------------
 
 
 A = LOAD '$inEn' as (keyA:chararray,keyB:chararray,sim:double,categsA:bag{(categA:chararray)},categsB:bag{(categB:chararray)}); --keyA,keyB,sim,{categA},{categB}

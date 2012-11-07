@@ -31,10 +31,17 @@ IMPORT 'AUXIL_docsim.macros.def.pig';
 IMPORT 'AUXIL_macros.def.pig';
 -- -----------------------------------------------------
 -- -----------------------------------------------------
--- code section
+-- set section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 set default_parallel 16
+set pig.tmpfilecompression true
+set pig.tmpfilecompression.codec gz
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+-- code section
+-- -----------------------------------------------------
+-- -----------------------------------------------------
 
 raw = getProtosFromHbase('$DEF_SRC'); 
 extracted_X = FOREACH raw GENERATE 

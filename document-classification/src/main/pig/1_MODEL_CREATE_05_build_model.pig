@@ -29,17 +29,25 @@ REGISTER '$commonJarsPath'
 -- import section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
-
 IMPORT 'MODEL_BLD_CLASS_$MODEL_BLD_CLASS.pig';
 IMPORT 'AUXIL_macros.def.pig';
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+-- set section
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+set default_parallel 16
+set pig.tmpfilecompression true
+set pig.tmpfilecompression.codec gz
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- code section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
-set default_parallel 16
 
 A = LOAD '$inLocal'  as (keyA:chararray,keyB:chararray,sim:double,categsA:bag{(categA:chararray)},categsB:bag{(categB:chararray)});--keyA,keyB,sim,{categA},{categB}
+--A0 = sample A 0.0001;
+--A1 = foreach A0 generate flatten(categsA) as categ;
 A1 = foreach A generate flatten(categsA) as categ;
 A2 = distinct A1;
 A2X = group A2 all;
@@ -55,11 +63,11 @@ C = $MODEL_BLD_CLASS(B,$DEF_NEIGH);
 store C into '$outLocal';
 
 /***********************************************************
---/*
+--BEG_COMMENT
 C1 = group C all;
 C2 = foreach C1 generate 'korowody',COUNT(C);
 dump C2;
---/*
+--END_COMMENT
 --store B into '$outLocal$norbert';
 
 --B = LOAD '$outLocal$norbert'  as (keyA:chararray,keyB:chararray,sim:double,categsA:bag{(categA:chararray)},categsB:bag{(categB:chararray)},categQ:chararray);--keyA,keyB,sim,{categA},{categB},categQ
@@ -83,8 +91,8 @@ allX6 = join posX by $0 full outer,negX by $0; -- (group::posX::categ),pos::{(ca
 describe allX6;
 
 store allX6 into '$outLocal$jupiter';
---*/
---/*
+--END_COMMENT
+--BEG_COMMENT
 allX6 = LOAD '$outLocal$jupiter' as (posX::group: chararray,posX::pos: {(categQ: chararray,neigh: long,docsocc: long)},negX::group: chararray,negX::neg: {(categQ: chararray,neigh: long,docsocc: long)});
 --dump allX6;
  
@@ -95,5 +103,5 @@ C1 = group C all;
 C2 = foreach C1 generate 'korowody',COUNT(C);
 dump C2;
 --store C into '$outLocal'; -- categ:chararray,thres:int,f1:double
---*/
+--END_COMMENT
 ***********************************************************/

@@ -36,10 +36,17 @@ IMPORT 'SIM_$simmeth.pig';
 IMPORT 'FV_$featurevector.pig';
 -- -----------------------------------------------------
 -- -----------------------------------------------------
--- code section
+-- set section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 set default_parallel 16
+set pig.tmpfilecompression true
+set pig.tmpfilecompression.codec gz
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+-- code section
+-- -----------------------------------------------------
+-- -----------------------------------------------------
 
 A = getProtosFromHbase('$DEF_SRC'); 
 B = FOREACH A GENERATE 
@@ -49,7 +56,7 @@ B = FOREACH A GENERATE
 split B into
 	B1 if categocc > 0, --classified docs
 	B2 if categocc == 0; --unclassifed docs
-/***********************************************
+--BEG_COMMENT
 C1 = foreach B1 generate key as key, data as data;
 E1 = $featurevector(C1); --calc feature vector for classif
 
@@ -65,7 +72,12 @@ F2 = foreach F1{  --find the $neigh most similar documents to the given one
 	generate m;
 }
 F3 = foreach F2 generate flatten($0);
-G = foreach C1 generate key, pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_BAG_FROM_MAP(data,'categories') as categs; --get categories of classif docs
+
+
+
+CC1 = foreach B1 generate key as key, data as data;
+describe CC1;
+G = foreach CC1 generate key, pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_BAG_FROM_MAP(data,'categories') as categs; --get categories of classif docs
 H = join F3 by keyB, G by key; -- add categories to the closest neighbours; obtain: keyA,keyB,sim,key,{categ}
 I0 = foreach H generate keyA as keyA,flatten(categs) as categB;
 I1 = group I0 by (keyA, categB);
@@ -79,9 +91,10 @@ K1 = filter K0 by occ>=thres; -- retain categories which occured greater or equa
 K2 = group K1 by keyA;
 
 L = foreach K2 generate group as key, K1.categProp as categs; --this is the result
-***********************************************/
+STORE L INTO '$DEF_DST';
+--END_COMMENT
 
-/************ fake code for tests *************/
+/************ fake code for tests 
 C1 = foreach B1 generate key as key, data as data;
 describe C1;
 L = foreach C1 generate key, flatten(pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_BAG_FROM_MAP(data,'categories')) as categ;
@@ -89,4 +102,4 @@ L = foreach C1 generate key, flatten(pl.edu.icm.coansys.classification.documents
 L1 = foreach L generate (chararray)key,(chararray)categ;
 
 STORE L1 INTO '$DEF_DST';
-
+*************/

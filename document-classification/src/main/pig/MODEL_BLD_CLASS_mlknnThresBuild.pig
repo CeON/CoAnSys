@@ -7,6 +7,7 @@ DEFINE mlknnThresBuild(part,DEF_NEIGH) RETURNS ret{
                 documents.pig.proceeders.POS_NEG(keyA,keyB,categsA,categsB,categQ)) as (keyA, categQ, pos, neg);
 	B2 = group B1 by (keyA,categQ);
 	B3 = foreach B2 generate group.keyA as keyA, group.categQ as categQ, SUM(B1.pos) as pos, SUM(B1.neg) as neg;
+
 	split B3 into
         	B3pos if pos>0,
 	        B3neg if neg>0;
@@ -18,10 +19,12 @@ DEFINE mlknnThresBuild(part,DEF_NEIGH) RETURNS ret{
 	neg = foreach B4neg generate group.categQ as categQ, group.neg as neigh, COUNT(B3neg) as docsocc;
 	negX = group neg by categQ;
 
-	allX6 = join posX by $0 full outer,negX by $0; -- (group::posX::categ),pos::{(categ,count,docscount)}, (group::negX::categ),neg::{(categ,count,docscount)}?
-	$ret = foreach allX6 generate FLATTEN(pl.edu.icm.coansys.classification.
+	allX6 = join posX by $0 /*full outer*/,negX by $0; -- (group::posX::categ),pos::{(categ,count,docscount)}, (group::negX::categ),neg::{(categ,count,docscount)}?
+
+	retX = foreach allX6 generate FLATTEN(pl.edu.icm.coansys.classification.
                 documents.pig.proceeders.THRES_FOR_CATEG(*,'$DEF_NEIGH'))
                 as (categ:chararray, thres:int, f1:double);
+	$ret = filter retX by $0 is not null;
 };
 /*
 DEFINE mlknnThresBuild(part,DEF_NEIGH) RETURNS ret{
