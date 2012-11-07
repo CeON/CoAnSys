@@ -4,6 +4,8 @@
 # (C) 2010-2012 ICM UW. All rights reserved.
 #
 
+INSCRIPT_PATH=`echo -e "x=\"$0\"\nxl = x.rfind(\"/\")\ny=x[:xl]\nprint y" | python`
+cd $INSCRIPT_PATH
 eval "cd ../pig"
 
 DICTIONARY_HDFS=${1}
