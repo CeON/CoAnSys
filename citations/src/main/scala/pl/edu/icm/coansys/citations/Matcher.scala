@@ -6,6 +6,7 @@ import com.nicta.scoobi.core.DList
 import com.nicta.scoobi.Persist._
 import com.nicta.scoobi.InputsOutputs._
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata
+import pl.edu.icm.coansys.commons.scala.strings
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -39,8 +40,12 @@ object Matcher extends ScoobiApp {
     }.keys
   }
 
-  def similarity(citation: CitationWrapper, document: DocumentMetadataWrapper): Double =
-    throw new RuntimeException("unimplemented")
+  def similarity(citation: CitationWrapper, document: DocumentMetadataWrapper): Double = {
+    // that's just mock implementation
+    val lcsLen = strings.lcs(citation.meta.getTitle, document.meta.getTitle).length
+    val minLen = math.min(citation.meta.getTitle.length, document.meta.getTitle.length)
+    lcsLen.toDouble / minLen
+  }
 
   def matches(citations: DList[CitationWrapper], index: AuthorIndex) = {
     citations
