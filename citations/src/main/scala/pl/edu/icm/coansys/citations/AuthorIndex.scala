@@ -9,7 +9,7 @@ class AuthorIndex(val indexFileUri: String) {
   private val index = new ApproximateIndex[BytesIterable](indexFileUri)
 
   def getDocumentsByAuthor(author: String): Iterable[DocumentMetadataWrapper] = {
-    index.get(author).flatMap(_.iterable map (bs => new DocumentMetadataWrapper(DocumentMetadata.parseFrom(bs))))
+    index.get(author).flatMap(_.iterable map (bs => new DocumentMetadataWrapper(DocumentMetadata.parseFrom(bs)))).toSet
   }
 
 }

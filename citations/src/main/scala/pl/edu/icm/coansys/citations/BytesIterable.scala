@@ -4,7 +4,9 @@ import java.io.DataInput
 import java.io.DataOutput
 import org.apache.hadoop.io.Writable
 
-class BytesIterable(var iterable: Iterable[Array[Byte]] = Nil) extends Writable {
+class BytesIterable(var iterable: Iterable[Array[Byte]]) extends Writable {
+  def this() = this(Nil)
+
   def write(out: DataOutput) {
     out.writeInt(iterable.size)
     iterable foreach {
@@ -16,11 +18,12 @@ class BytesIterable(var iterable: Iterable[Array[Byte]] = Nil) extends Writable 
 
   def readFields(in: DataInput) {
     val size = in.readInt()
-    iterable = (1 to size).map { _ =>
-      val len = in.readInt()
-      val buff = new Array[Byte](len)
-      in.readFully(buff, 0, len)
-      buff
+    iterable = (1 to size).map {
+      _ =>
+        val len = in.readInt()
+        val buff = new Array[Byte](len)
+        in.readFully(buff, 0, len)
+        buff
     }
   }
 }
