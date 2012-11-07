@@ -6,16 +6,9 @@ package pl.edu.icm.coansys.importers.parsers;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
+import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import pl.edu.icm.coansys.importers.constants.ProtoConstants;
 import pl.edu.icm.coansys.importers.models.DocumentProtos;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.Author;
@@ -44,6 +37,9 @@ public class MetadataToProtoMetadataParser {
         BWMETA, OAI_DC, DMF
     }
     private static final Logger log = LoggerFactory.getLogger(MetadataToProtoMetadataParser.class);
+
+    private MetadataToProtoMetadataParser() {
+    }
 
     private static String convertStreamToString(InputStream is) throws IOException {
         InputStreamReader input = new InputStreamReader(is, "UTF-8");
@@ -312,7 +308,7 @@ public class MetadataToProtoMetadataParser {
                 docBuilder.setPages(pages.getPosition());
             }
         }
-        
+
         String content;
         if ((content = yElement.getId(YaddaIdConstants.IDENTIFIER_CLASS_DOI)) != null) {
             docBuilder.setDoi(content);

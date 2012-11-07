@@ -12,14 +12,30 @@ package pl.edu.icm.coansys.disambiguation.clustering;
  */
 
 public class ClusterElement implements Comparable<Object>{
-	public double sim;
-	public int index;
+	private double sim;
+	private int index;
 	
 	public ClusterElement(double sim, int index){
 		this.sim=sim;
 		this.index=index;
 	}
+        
+        public int getIndex() {
+            return index;
+        }
 	
+        public void setIndex(int index) {
+            this.index = index;
+        }
+        
+        public double getSim() {
+            return sim;
+        }
+
+        public void setSim(double sim) {
+            this.sim = sim;
+        }
+        
 	@Override
 	public int compareTo(Object o2) {
 		if(o2==null) return 1;

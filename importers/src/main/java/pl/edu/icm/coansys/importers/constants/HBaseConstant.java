@@ -11,6 +11,8 @@ import org.apache.hadoop.hbase.util.Bytes;
  *
  */
 public class HBaseConstant {
+    
+    private HBaseConstant() {}
 
     public static final String FAMILY_METADATA = "m";
     public static final String FAMILY_CONTENT = "c";

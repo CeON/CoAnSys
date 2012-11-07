@@ -16,11 +16,13 @@ import pl.edu.icm.coansys.commons.oozie.OozieWorkflowUtils;
  */
 public class HBaseTableUtils {
 
-    public static final String CMD_EXIST = "EXIST";
-    public static final String CMD_DROP = "DROP";
-    public static final String CMD_TRUNCATE = "TRUNCATE";
-    public static final String CMD_CREATE = "CREATE";
-    public static final String CMD_RECREATE = "DROPCREATE";
+    private static final String CMD_EXIST = "EXIST";
+    private static final String CMD_DROP = "DROP";
+    private static final String CMD_TRUNCATE = "TRUNCATE";
+    private static final String CMD_CREATE = "CREATE";
+    private static final String CMD_RECREATE = "DROPCREATE";
+    
+    private HBaseTableUtils() {}
 
     public static boolean isTableCreated(HBaseAdmin admin, String tableName) throws IOException {
         return admin.tableExists(tableName);

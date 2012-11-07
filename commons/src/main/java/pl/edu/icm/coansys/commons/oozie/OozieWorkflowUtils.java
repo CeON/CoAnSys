@@ -4,11 +4,7 @@
  */
 package pl.edu.icm.coansys.commons.oozie;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.Properties;
 
 /**
@@ -16,6 +12,8 @@ import java.util.Properties;
  * @author akawa
  */
 public class OozieWorkflowUtils {
+    
+    private OozieWorkflowUtils() {}
     
     public static void captureOutput(String... keyValuePairs) throws FileNotFoundException, IOException {
         Properties props = new Properties();

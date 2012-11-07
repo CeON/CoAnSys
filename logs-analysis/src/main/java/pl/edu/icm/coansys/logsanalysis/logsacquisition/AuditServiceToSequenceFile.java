@@ -25,6 +25,8 @@ public class AuditServiceToSequenceFile {
     @SynatServiceRef(serviceId = "AuditService")
     private AuditService auditService;
 
+    private AuditServiceToSequenceFile() {}
+    
     public static void main(final String[] args) throws IOException {
         
         if (args.length < 1) {

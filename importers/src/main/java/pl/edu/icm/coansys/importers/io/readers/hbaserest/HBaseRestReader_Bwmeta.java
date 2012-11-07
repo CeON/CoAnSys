@@ -27,6 +27,8 @@ import pl.edu.icm.coansys.importers.models.DocumentProtos.MediaContainer;
  *
  */
 public class HBaseRestReader_Bwmeta {
+    
+    private HBaseRestReader_Bwmeta(){}
 	
 	public static void main(String[] args) throws IOException{
 		HashMap<String, List<String>> rowAuthorsMap = readAuthorsFromDocumentMetadataHBase("localhost", 8080, "testProto");

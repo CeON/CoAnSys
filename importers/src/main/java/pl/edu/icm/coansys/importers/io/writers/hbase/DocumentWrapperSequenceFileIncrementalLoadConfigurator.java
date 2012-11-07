@@ -21,6 +21,9 @@ import org.apache.hadoop.mapreduce.Job;
  */
 public class DocumentWrapperSequenceFileIncrementalLoadConfigurator {
 
+    private DocumentWrapperSequenceFileIncrementalLoadConfigurator() {
+    }
+
     public static void main(String[] args) throws Exception {
 
         String tableName = args[0];
@@ -52,7 +55,6 @@ public class DocumentWrapperSequenceFileIncrementalLoadConfigurator {
     /*
      * private static void usage(String info) { System.out.println(info);
      * System.out.println("Exemplary command: "); String command = "";
-     * System.out.println(command);
-    }
+     * System.out.println(command); }
      */
 }

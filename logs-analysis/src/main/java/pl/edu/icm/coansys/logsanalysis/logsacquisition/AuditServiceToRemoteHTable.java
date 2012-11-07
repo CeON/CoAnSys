@@ -27,6 +27,8 @@ public class AuditServiceToRemoteHTable {
 
     @SynatServiceRef(serviceId = "AuditService")
     private AuditService auditService;
+    
+    private AuditServiceToRemoteHTable() {}
 
     public static void main(final String[] args) throws IOException {
 

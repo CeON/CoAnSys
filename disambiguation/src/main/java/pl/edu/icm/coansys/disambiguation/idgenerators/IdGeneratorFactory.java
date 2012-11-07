@@ -3,13 +3,13 @@
  */
 package pl.edu.icm.coansys.disambiguation.idgenerators;
 
+import com.sun.el.util.ReflectionUtil;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.sun.el.util.ReflectionUtil;
-
 /**
- * The factory returning {@link IdGenerator}s from package "pl.edu.icm.coansys.disambiguation.author.idgenerators" 
+ * The factory returning {@link IdGenerator}s from package
+ * "pl.edu.icm.coansys.disambiguation.author.idgenerators"
  *
  *
  * @author pdendek
@@ -19,6 +19,9 @@ import com.sun.el.util.ReflectionUtil;
 public class IdGeneratorFactory {
 
     private static final String THIS_PACKAGE = new IdGeneratorFactory().getClass().getPackage().getName();
+
+    private IdGeneratorFactory() {
+    }
 
     public static IdGenerator create(String name) {
         try {

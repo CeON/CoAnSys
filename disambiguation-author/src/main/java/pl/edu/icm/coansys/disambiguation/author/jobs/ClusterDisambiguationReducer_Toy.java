@@ -40,18 +40,16 @@ import pl.edu.icm.coansys.disambiguation.idgenerators.UuIdGenerator;
 public class ClusterDisambiguationReducer_Toy extends Reducer<Text, TextTextArrayMapWritable, ImmutableBytesWritable, Put> {
 
 	private static Logger logger = LoggerFactory.getLogger(LoggingInDisambiguation.class);
-	protected String reducerId = new Date().getTime() + "_" + new Random().nextFloat();
+	private String reducerId = new Date().getTime() + "_" + new Random().nextFloat();
 	
-	protected double threshold;
-	protected List<FeatureInfo> featureInfos;
-	protected Disambiguator[] features;
+	private double threshold;
+	private List<FeatureInfo> featureInfos;
+	private Disambiguator[] features;
     
-	protected List<TextTextArrayMapWritable> featuresMapsList = new ArrayList<TextTextArrayMapWritable>();
-	protected List<String> authorIds = new ArrayList<String>();
+	private List<TextTextArrayMapWritable> featuresMapsList = new ArrayList<TextTextArrayMapWritable>();
+	private List<String> authorIds = new ArrayList<String>();
 	
-	protected Map<Integer, Integer> setSizes = new HashMap<Integer, Integer>();
-	protected int sizeCountLimit;
-
+	private Map<Integer, Integer> setSizes = new HashMap<Integer, Integer>();
     
     @Override
     public void setup(Context context) throws IOException, InterruptedException {

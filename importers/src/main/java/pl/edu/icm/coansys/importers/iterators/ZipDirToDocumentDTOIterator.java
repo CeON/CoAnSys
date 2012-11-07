@@ -28,9 +28,9 @@ public class ZipDirToDocumentDTOIterator implements Iterable<DocumentDTO> {
      * The directory contains multiple zip files. Every zip file can contain
      * multiple xml files. Every xml file can contain multiple YExportable
      * objects. An iterator of this class walks through every zip file, then
-     * every xml file and every YExportable object. Output type
-     * DocumentDTO is a class carrying data about an input xml document enhanced 
-     * with its media (like pdf, tiff, etc.).  
+     * every xml file and every YExportable object. Output type DocumentDTO is a
+     * class carrying data about an input xml document enhanced with its media
+     * (like pdf, tiff, etc.).
      */
 
     private static final Logger logger = LoggerFactory.getLogger(ZipDirToDocumentDTOIterator.class);
@@ -45,16 +45,16 @@ public class ZipDirToDocumentDTOIterator implements Iterable<DocumentDTO> {
     private Iterator<YExportable> yExportableIterator = null;
     //An object which will be returned by next call of iterators next() method
     private DocumentDTO nextItem = null;
-	private YElementFromZip2DocumentDto yElementFromZip2DocumentDTO;
-	List<String> xmls = null;
-	int currentXml = 0;
+    private YElementFromZip2DocumentDto yElementFromZip2DocumentDTO;
+    private List<String> xmls = null;
+    private int currentXml = 0;
 
     public ZipDirToDocumentDTOIterator(String zipDirPath, String collection) {
         this.collection = collection;
         File zipDir = new File(zipDirPath);
-        
+
         yElementFromZip2DocumentDTO = new YElementFromZip2DocumentDto(collection);
-        
+
         if (zipDir.isDirectory()) {
             listZipFiles = zipDir.listFiles(new ZipFilter());
             zipIndex = 0;
@@ -98,12 +98,14 @@ public class ZipDirToDocumentDTOIterator implements Iterable<DocumentDTO> {
                     }
                     // here we have a new zip file
                     try {
-                    	System.out.println("Processing " + (zipIndex+1) + ". zip of " + listZipFiles.length);
+                        System.out.println("Processing " + (zipIndex + 1) + ". zip of " + listZipFiles.length);
                         currentZipArchive = new ZipArchive(listZipFiles[zipIndex].getPath());
                         xmls = currentZipArchive.filter(".*xml");
                         currentXml = 0;
                         xmlPathIterator = xmls.iterator();
-                    } catch (IOException ex) {logger.error(ex.toString());}
+                    } catch (IOException ex) {
+                        logger.error(ex.toString());
+                    }
                     zipIndex++;
                 }
                 // here we have a new xml path:
@@ -112,12 +114,18 @@ public class ZipDirToDocumentDTOIterator implements Iterable<DocumentDTO> {
                     InputStream xmlIS = currentZipArchive.getFileAsInputStream(xmlPath);
                     yExportableIterator = MetadataToProtoMetadataParser.streamToYExportable(xmlIS, MetadataToProtoMetadataParser.MetadataType.BWMETA).iterator();
                     currentXml++;
-                    if(currentXml % 10 == 0)System.out.println("\t"+new Date()+"\tProceeded " + currentXml + ". xml of " + xmls.size());
-                } catch (IOException ex) {logger.error(ex.toString());}
+                    if (currentXml % 10 == 0) {
+                        System.out.println("\t" + new Date() + "\tProceeded " + currentXml + ". xml of " + xmls.size());
+                    }
+                } catch (IOException ex) {
+                    logger.error(ex.toString());
+                }
             }
             // here we have an yExportable:
-            docDTO = yElementFromZip2DocumentDTO.transformYElement(yExportableIterator.next(),currentZipArchive);
-            if(docDTO != null) docDTO.setCollection(collection);
+            docDTO = yElementFromZip2DocumentDTO.transformYElement(yExportableIterator.next(), currentZipArchive);
+            if (docDTO != null) {
+                docDTO.setCollection(collection);
+            }
         }
         nextItem = docDTO;
     }

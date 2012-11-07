@@ -17,6 +17,8 @@ import org.xml.sax.SAXException;
  * @author akawa
  */
 public class TikaPDFExtractor {
+    
+    private TikaPDFExtractor() {}
 
     public static String getContent(InputStream inputStream) throws IOException, SAXException, TikaException {
 

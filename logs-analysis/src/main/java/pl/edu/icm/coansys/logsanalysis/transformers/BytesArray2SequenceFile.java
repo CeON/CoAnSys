@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
  */
 public class BytesArray2SequenceFile {
     
-    
+    private BytesArray2SequenceFile() {}
 
     private static Configuration createConf() {
         Configuration conf = new Configuration();

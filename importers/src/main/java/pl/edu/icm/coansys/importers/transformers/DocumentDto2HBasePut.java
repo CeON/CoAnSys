@@ -7,10 +7,8 @@ package pl.edu.icm.coansys.importers.transformers;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.util.Bytes;
-
 import pl.edu.icm.coansys.importers.constants.HBaseConstant;
 import pl.edu.icm.coansys.importers.models.DocumentDTO;
 
@@ -19,9 +17,7 @@ import pl.edu.icm.coansys.importers.models.DocumentDTO;
  */
 public class DocumentDto2HBasePut {
 	
-	public DocumentDto2HBasePut(){
-		
-	}
+	private DocumentDto2HBasePut() {}
 	
 	public static List<Put> translate(DocumentDTO docDTO) {
 		

@@ -24,7 +24,7 @@ import pl.edu.icm.coansys.disambiguation.auxil.TextTextArrayMapWritable;
 import pl.edu.icm.coansys.importers.constants.HBaseConstant;
 
 /**
- * 
+ *
  * @author pdendek
  * @version 1.0
  * @since 2012-08-07
@@ -32,53 +32,47 @@ import pl.edu.icm.coansys.importers.constants.HBaseConstant;
 public class DisambiguationJob_Toy implements Tool {
 
     /*
-     * 
+     *
      * Inner fields
-     * 
+     *
      */
-    
     private static Logger logger = LoggerFactory.getLogger(LoggingInDisambiguation.class);
     private Configuration conf;
-	
-	/*
-	 * 
-	 * Fields to be set
-	 * 
-	 */
-	
-	String INPUT_TABLE = null;
-	String OUTPUT_TABLE = null;
-    String FEATURES_DESCRIPTION = null;
-    
-    String NAME = null;
-	String THRESHOLD = null;
-	int REDUCER_NUM = 65;
-	
-	
-	/*
-	 * 
-	 * Getters and setters
-	 * 
-	 */
-	
-	public String getINPUT_TABLE() {
-		return INPUT_TABLE;
-	}
+    /*
+     *
+     * Fields to be set
+     *
+     */
+    private String INPUT_TABLE = null;
+    private String OUTPUT_TABLE = null;
+    private String FEATURES_DESCRIPTION = null;
+    private String NAME = null;
+    private String THRESHOLD = null;
+    private int REDUCER_NUM = 65;
 
-	public DisambiguationJob_Toy setINPUT_TABLE(String iNPUT_TABLE) {
-		INPUT_TABLE = iNPUT_TABLE;
-		return this;
-	}
+    /*
+     *
+     * Getters and setters
+     *
+     */
+    public String getINPUT_TABLE() {
+        return INPUT_TABLE;
+    }
 
-	public String getOUTPUT_TABLE() {
-		return OUTPUT_TABLE;
-	}
+    public DisambiguationJob_Toy setINPUT_TABLE(String iNPUT_TABLE) {
+        INPUT_TABLE = iNPUT_TABLE;
+        return this;
+    }
 
-	public DisambiguationJob_Toy setOUTPUT_TABLE(String oUTPUT_TABLE) {
-		OUTPUT_TABLE = oUTPUT_TABLE;
-		return this;
-	}
-    
+    public String getOUTPUT_TABLE() {
+        return OUTPUT_TABLE;
+    }
+
+    public DisambiguationJob_Toy setOUTPUT_TABLE(String oUTPUT_TABLE) {
+        OUTPUT_TABLE = oUTPUT_TABLE;
+        return this;
+    }
+
     public String getNAME() {
         return NAME;
     }
@@ -89,13 +83,13 @@ public class DisambiguationJob_Toy implements Tool {
     }
 
     public String getFEATURES_DESCRIPTION() {
-		return FEATURES_DESCRIPTION;
-	}
+        return FEATURES_DESCRIPTION;
+    }
 
-	public DisambiguationJob_Toy setFEATURES_DESCRIPTION(String fEATURES_DESCRIPTION) {
-		FEATURES_DESCRIPTION = fEATURES_DESCRIPTION;
-		return this;
-	}
+    public DisambiguationJob_Toy setFEATURES_DESCRIPTION(String fEATURES_DESCRIPTION) {
+        FEATURES_DESCRIPTION = fEATURES_DESCRIPTION;
+        return this;
+    }
 
     public DisambiguationJob_Toy setREDUCER_NUM(int rEDUCER_NUM) {
         REDUCER_NUM = rEDUCER_NUM;
@@ -106,12 +100,12 @@ public class DisambiguationJob_Toy implements Tool {
         THRESHOLD = tHRESHOLD;
         return this;
     }
-    
-    /*@SuppressWarnings("unused")
-    private static String gedPaddedNumber(int i) {
-        return String.format("%010d", i);
-    }*/
 
+    /*
+     * @SuppressWarnings("unused") private static String gedPaddedNumber(int i)
+     * { return String.format("%010d", i);
+    }
+     */
     @Override
     public void setConf(Configuration conf) {
         this.conf = conf;
@@ -122,35 +116,33 @@ public class DisambiguationJob_Toy implements Tool {
         return conf;
     }
 
-
-    
     private void parseArgs(String[] args) {
         if (args == null || args.length != 5) {
-    		logger.debug("# of parameters is not equal to 5");
-    		logger.debug("You need to provide:");
-    		logger.debug("* an input table name");
-    		logger.debug("* an output table name");
-    		logger.debug("* a feature description string, e.g. FeatureXName#FeatureXExtractorName#FeatureXWeight#FeaturXMaxValue[,FeatureYName#FeatureYExtractorName#FeatureYWeight#FeaturYMaxValue]    ");
-    		logger.debug("* a disambiguation threshold");
-    		logger.debug("* a job name");
-    		logger.debug("");
-    		logger.debug("Default values will be used:");
-    		logger.debug("* testProto");
-    		logger.debug("* disambigTest");
-    		logger.debug("* EmailDisambiguator#DocumentProto2EmailExtractor#0.81#1," +
-        		"KeywordDisambiguator#DocumentProto2KeyWordExtractor#0.13#33");
-    		logger.debug("* -0.846161134713438d");
-    		logger.debug("* DisambiguationJob_Toy");
-    		
-    		args = new String[5];
-    		args[0] = "testProto";
-    		args[1] = "disambigTest"; 
-    		args[2] = "EmailDisambiguator#DocumentProto2EmailExtractor#0.81#1," +
-        		"KeywordDisambiguator#DocumentProto2KeyWordExtractor#0.13#33";
-    		args[3] = "-0.846161134713438d";
-    		args[4] = "DisambiguationJob_Toy";
+            logger.debug("# of parameters is not equal to 5");
+            logger.debug("You need to provide:");
+            logger.debug("* an input table name");
+            logger.debug("* an output table name");
+            logger.debug("* a feature description string, e.g. FeatureXName#FeatureXExtractorName#FeatureXWeight#FeaturXMaxValue[,FeatureYName#FeatureYExtractorName#FeatureYWeight#FeaturYMaxValue]    ");
+            logger.debug("* a disambiguation threshold");
+            logger.debug("* a job name");
+            logger.debug("");
+            logger.debug("Default values will be used:");
+            logger.debug("* testProto");
+            logger.debug("* disambigTest");
+            logger.debug("* EmailDisambiguator#DocumentProto2EmailExtractor#0.81#1,"
+                    + "KeywordDisambiguator#DocumentProto2KeyWordExtractor#0.13#33");
+            logger.debug("* -0.846161134713438d");
+            logger.debug("* DisambiguationJob_Toy");
+
+            args = new String[5];
+            args[0] = "testProto";
+            args[1] = "disambigTest";
+            args[2] = "EmailDisambiguator#DocumentProto2EmailExtractor#0.81#1,"
+                    + "KeywordDisambiguator#DocumentProto2KeyWordExtractor#0.13#33";
+            args[3] = "-0.846161134713438d";
+            args[4] = "DisambiguationJob_Toy";
         }
-        	
+
         setINPUT_TABLE(args[0]);
         setOUTPUT_TABLE(args[1]);
         setFEATURES_DESCRIPTION(args[2]);
@@ -159,24 +151,23 @@ public class DisambiguationJob_Toy implements Tool {
     }
 
     /*
-     * 
+     *
      * Job configuration and ignition
-     * 
+     *
      */
-    
     @Override
-    public int run(String[] args) throws Exception {  	
-    	
+    public int run(String[] args) throws Exception {
+
         String[] otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();
         parseArgs(otherArgs);
-    	
-    	
+
+
         /*
          * First job configuration
          */
         conf.set("FEATURE_DESCRIPTION", FEATURES_DESCRIPTION);
         conf.set("THRESHOLD", THRESHOLD);
-        
+
         //setting input table
         conf.set(TableInputFormat.INPUT_TABLE, INPUT_TABLE);
         //setting output table        
@@ -188,7 +179,7 @@ public class DisambiguationJob_Toy implements Tool {
         //scan for relevant data
         Scan scan = new Scan();
         scan.addColumn(Bytes.toBytes(HBaseConstant.FAMILY_METADATA),
-        		Bytes.toBytes(HBaseConstant.FAMILY_METADATA_QUALIFIER_PROTO));
+                Bytes.toBytes(HBaseConstant.FAMILY_METADATA_QUALIFIER_PROTO));
         //scan additional parameters
         scan.setCaching(1000);
         scan.setCacheBlocks(false);
@@ -205,7 +196,7 @@ public class DisambiguationJob_Toy implements Tool {
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Put.class);
         job.setOutputFormatClass(TableOutputFormat.class);
-        
+
         /*
          * Launch job
          */
@@ -216,17 +207,16 @@ public class DisambiguationJob_Toy implements Tool {
         logger.info("=== Job1 Finished in " + duration + " seconds " + (success ? "(success)" : "(failure)"));
         return success ? 0 : 1;
     }
-    
+
     /*
-     * 
+     *
      * The Main method
-     * 
+     *
      */
-    
-    public static void main(String args[]) throws Exception{
+    public static void main(String args[]) throws Exception {
         Configuration conf = HBaseConfiguration.create();
         DisambiguationJob_Toy job = new DisambiguationJob_Toy();
-        int result = ToolRunner.run(conf, job , args);
+        int result = ToolRunner.run(conf, job, args);
         logger.debug("=== Job End ===");
         System.exit(result);
     }
