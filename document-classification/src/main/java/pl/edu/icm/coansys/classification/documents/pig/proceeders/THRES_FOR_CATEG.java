@@ -38,12 +38,14 @@ public class THRES_FOR_CATEG extends EvalFunc<Tuple>{
 			return null;
 		try{
 			Object o0 = input.get(0);
-			String categA = o0==null ? "" : (String) input.get(0); //categPOS
+			if(o0==null) return null;
+			String categA = (String) input.get(0); //categPOS
 			Object o1 = input.get(1);
 			DataBag pos = o1==null ? new DefaultDataBag() : (DataBag) input.get(1);
 
 			Object o2 = input.get(2);
-			String categB = o2==null ? "" : (String) input.get(2); //categPOS
+			if(o2==null) return null;
+			String categB = (String) input.get(2); //categPOS
 			Object o3 = input.get(3);
 			DataBag neg = o3==null ? new DefaultDataBag() : (DataBag) input.get(3);
 			
