@@ -17,4 +17,4 @@ echo "hadoop dfs -rm -r -f ${DST}"
 eval "hadoop dfs -rm -r -f ${DST}"
 
 echo "pig -x mapred -p DEF_SRC=${SRC} -p DEF_DST=${DST} 4_QEP_qep_doc_classif.pig"
-eval "pig -x mapred -p DEF_SRC=${SRC} -p DEF_DST=${DST} 4_QEP_qep_doc_classif.pig"
+eval "time pig -x mapred -p DEF_SRC=${SRC} -p DEF_DST=${DST} 4_QEP_qep_doc_classif.pig"

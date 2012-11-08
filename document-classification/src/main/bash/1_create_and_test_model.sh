@@ -8,21 +8,31 @@ INSCRIPT_PATH=`echo -e "x=\"$0\"\nxl = x.rfind(\"/\")\ny=x[:xl]\nprint y" | pyth
 cd $INSCRIPT_PATH
 eval "cd ../pig"
 
+PREFIX="${12}/"
+INFIX="${13}/"
+
+if [ "$INFIX" = "/" -o "$INFIX" = "./" -o "$INFIX" = "." ]; then
+	INFIX="`echo -e "import time\nprint time.time()" | python`/"
+fi
+
 DEF_SRC=${1}
 DEF_LIM=${2}
 DEF_FOLDS=${3}
-dataNeigh=${4}
-dataForDocClassif=${5}
-dataEnriched=${6}
-dataModel=${7}
-dataTestRes=${8}
+dataNeigh="${PREFIX}${INFIX}${4}/"
+dataForDocClassif="${PREFIX}${INFIX}${5}/"
+dataEnriched="${PREFIX}${INFIX}${6}/"
+dataModel="${PREFIX}${INFIX}${7}/"
+dataTestRes="${PREFIX}${INFIX}${8}/"
 categOccLimits=${9}
 DEF_NEIGH_NUM=${10}
 filterMethod=${11}
 
+
+
+
 echo "~~~~~~~~~~~~~~~~~~~~~~~!!!!!!!!!!!!!!!!!!!!!!~~~~~~~~~~~~~~~~~~~~~~~~~"
 <<PREDONE
-
+PREDONE
 # OveralTime = 01_createNeigh=2m37.015s + 02_assignFolds=5m20.634s + fold=5 * train/test=2 * 03_splitIntoTrain/Test=1m18.935s + 2*folds*fv*docsims*04_enrich + folds*fv*docsims*models*05_buildModel + folds*fv*docsims*models*06_testModel
 # FOR fold=5, fv=simple_tfidf, docsims=cosine, models=mlknnThres OVERAL_TIME=x;
 #create neighbours: about {finishTime}-{12:01:17} 3min on springer metadataonly
@@ -49,8 +59,8 @@ do
 	fold=${DEF_FOLDS}
 	while [ ! ${fold} -eq 0 ];
 		do
-		#let fold=fold-1
-		fold=0
+		let fold=fold-1
+		#fold=0
 		echo "-------------------------------------------------------------------------"
 		echo "-------------------------------------------------------------------------"
 		eval "hadoop dfs -rm -r -f ${src}_Tr_${fold}"
@@ -71,8 +81,8 @@ do
 			fold=${DEF_FOLDS}
 			while [ ! ${fold} -eq 0 ];
 			do
-				#let fold=fold-1
-				fold=0				
+				let fold=fold-1
+				#fold=0				
 				inLocal="${dataNeigh}_${lev}_${fold}"
 				outLocal="${dataEnriched}_${fv}_${sim}_${lev}_${fold}"
 				echo "-------------------------------------------------------------------------"
@@ -85,7 +95,7 @@ do
 		done
 	done
 done
-PREDONE
+
 
 #build model
 for mb in "mlknnThres"
@@ -97,8 +107,8 @@ do
 				fold=${DEF_FOLDS}
 				while [ ! ${fold} -eq 0 ];
 				do
-					#let fold=fold-1
-					fold=0
+					let fold=fold-1
+					#fold=0
 					inLocal="${dataEnriched}_${fv}_${sim}_Tr_${fold}";
 					outLocal="${dataModel}_${fv}_${sim}_${fold}_${mb}";
 					modelBLD="${mb}Build"
@@ -113,7 +123,8 @@ do
 			done
 		done
 done
-<<NOT_YET
+
+
 #test model
 for mb in "mlknnThres"
 do
@@ -124,8 +135,8 @@ do
 				fold=${DEF_FOLDS}
 				while [ ! ${fold} -eq 0 ];
 				do
-					#let fold=fold-1
-					fold=0
+					let fold=fold-1
+					#fold=0
 					inMo="${dataModel}_${fv}_${sim}_${fold}_${mb}";
 					inEn="${dataEnriched}_${fv}_${sim}_Te_${fold}";
 					outLocal="${dataTestRes}_${fv}_${sim}_${fold}_${mb}";
@@ -139,6 +150,7 @@ do
 			done
 		done
 done
+
 
 #compare 
 #eval "java Compare MB mlknnThres FV tfidf FOLDS 5 SIM cosine"
@@ -156,8 +168,8 @@ do
 				fold=${DEF_FOLDS}
 				while [ ! ${fold} -eq 0 ];
 				do
-					#let fold=fold-1
-					fold=0
+					let fold=fold-1
+					#fold=0
 					outLocal="${dataTestRes}_${fv}_${sim}_${fold}_${mb}"
 					#outLocal="${dataModel}_${fv}_${sim}_${fold}_${mb}";
 					echo "-------------------------------------------------------------------------"
@@ -169,13 +181,13 @@ do
 		done
 done
 
-eval "cd ../../bash/"
+eval "cd ../bash/"
 eval "cp concatResults.sh /mnt/tmp/pdendek_results/concatResults.sh"
 eval "cd /mnt/tmp/pdendek_results/"
 eval "./concatResults.sh"
 eval "cd ${HOME}"
 
-
+<<NOT_YET
 NOT_YET
 
 
