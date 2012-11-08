@@ -12,6 +12,7 @@ import org.apache.pig.data.*;
 import org.apache.pig.impl.logicalLayer.FrontendException;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
 
+import pl.edu.icm.coansys.classification.documents.auxil.StackTraceExtractor;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.ClassifCode;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
 
@@ -82,7 +83,8 @@ public class EXTRACT_KEY_CATEG extends EvalFunc<Tuple>{
 	        return t;
 			
 		}catch(Exception e){
-			throw new IOException("Caught exception processing input row ", e);
+            throw new IOException("Caught exception processing input row:\n"
+            		+ StackTraceExtractor.getStackTrace(e));
 		}
 	}
 }
