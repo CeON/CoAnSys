@@ -8,15 +8,16 @@ import com.nicta.scoobi.application.ScoobiApp
 object IndexTester extends ScoobiApp {
   override def upload = false
 
-  def testIndex(indexUri: String) {
+  def testIndex(indexUri: String, query: String) {
     val index = new AuthorIndex(indexUri)
-    index.getDocumentsByAuthor("aaa").foreach(x => println(x.id))
-    println()
-    index.getDocumentsByAuthor("bbb").foreach(x => println(x.id))
-
+    index.getDocumentsByAuthor(query).foreach(x => println(x.id))
   }
 
   def run() {
-    testIndex(args(0))
+    if (args.length != 2) {
+      println("Usage: IndexTester <index_path> <query>")
+    } else {
+      testIndex(args(0), args(1))
+    }
   }
 }
