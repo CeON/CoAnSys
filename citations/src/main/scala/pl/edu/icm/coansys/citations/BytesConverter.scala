@@ -26,7 +26,7 @@ class BytesConverter[T](serializer: T => Array[Byte], deserializer: Array[Byte] 
 
   def toWritable(x: T) = new BytesWritable(serializer(x))
 
-  def fromWritable(x: BytesWritable) = deserializer(x.getBytes)
+  def fromWritable(x: BytesWritable) = deserializer(x.copyBytes())
 
   val mf = manifest[BytesWritable]
 }
