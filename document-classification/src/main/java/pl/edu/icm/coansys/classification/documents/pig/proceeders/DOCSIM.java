@@ -87,7 +87,7 @@ public class DOCSIM extends EvalFunc<Tuple> {
                 return null;
             }
         } catch (Exception e) {
-            throw new IOException("Caught exception processing input row ", e);
+            throw new IOException("Caught exception processing input row "+ e);
         }
     }
 
