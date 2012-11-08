@@ -13,6 +13,11 @@ import pl.edu.icm.coansys.commons.scala.strings
  */
 object Matcher extends ScoobiApp {
   /**
+   * Minimal similarity between a citation and a document that is used to filter out weak matches.
+   */
+  val minimalSimilarity = 0.5
+
+  /**
    * A heuristics to retrieve documents that are most probable to be associated with a given citation.
    *
    * Algorithm:
@@ -53,8 +58,16 @@ object Matcher extends ScoobiApp {
       cit => Stream.continually(cit) zip approximatelyMatchingDocuments(cit, index)
     }
       .groupByKey[CitationWrapper, DocumentMetadataWrapper]
-      .map {
-      case (cit, docs) => (cit, docs.maxBy(similarity(cit, _)))
+      .flatMap {
+      case (cit, docs) =>
+        val best = docs.map {
+          doc => (doc, similarity(cit, doc))
+        }.maxBy(_._2)
+        //Return a match only if its certainty is greater than a limit
+        if (best._2 >= minimalSimilarity)
+          Some(cit, best._1)
+        else
+          None
     }
   }
 
