@@ -9,9 +9,6 @@ import collections._
 object strings {
   /**
    * Returns all rotations of a given string
-   *
-   * @param s
-   * @return
    */
   def rotations(s: String): IndexedSeq[String] = {
     for {
@@ -22,11 +19,6 @@ object strings {
 
   /**
    * Computes HCS (Heaviest Common Subsequence) of two strings using given weight function.
-   *
-   * @param s1
-   * @param s2
-   * @param weight
-   * @return
    */
   def hcs(s1: String, s2: String, weight: Char => Double) = {
     val hcsArray = tabulate[Double](s1.length + 1, s2.length + 1) {
@@ -64,49 +56,12 @@ object strings {
 
   /**
    * Computes LCS of two strings.
-   *
-   * @param s1
-   * @param s2
-   * @return
    */
-  def lcs(s1: String, s2: String) = {
-    val lcsArray = tabulate[Int](s1.length + 1, s2.length + 1) {
-      (lcs, i, j) =>
-        if (i == 0 || j == 0)
-          0
-        else
-        if (s1.charAt(i - 1) == s2.charAt(j - 1))
-          lcs(i - 1)(j - 1) + 1
-        else
-          math.max(lcs(i - 1)(j), lcs(i)(j - 1))
-    }
-
-    @tailrec
-    def extractLcs(i: Int, j: Int, acc: List[(Int, Int)] = Nil): List[(Int, Int)] = {
-      if (i > 0 && j > 0) {
-        if (s1.charAt(i - 1) == s2.charAt(j - 1)) {
-          extractLcs(i - 1, j - 1, (i - 1, j - 1) :: acc)
-        } else {
-          if (lcsArray(i - 1)(j) >= lcsArray(i)(j - 1))
-            extractLcs(i - 1, j, acc)
-          else
-            extractLcs(i, j - 1, acc)
-        }
-      }
-      else {
-        acc
-      }
-    }
-
-    extractLcs(s1.length, s2.length)
-  }
+  def lcs(s1: String, s2: String) =
+    hcs(s1, s2, (_ => 1))
 
   /**
    * Returns a subsequence of given string consisting of characters at specified positions.
-   *
-   * @param s
-   * @param indices
-   * @return
    */
   def subsequence(s: String, indices: TraversableOnce[Int]) = {
     indices map (s.charAt) mkString ("")
