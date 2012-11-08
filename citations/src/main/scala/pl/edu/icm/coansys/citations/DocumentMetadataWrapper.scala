@@ -16,9 +16,9 @@ class DocumentMetadataWrapper(val meta: DocumentMetadata) {
         List(
           author.getName,
           author.getForenames,
-          author.getSurname).flatMap(_.split( """\s+"""))
+          author.getSurname).flatMap(_.split( """[^\p{L}]+"""))
     }
-      .filterNot(_.isEmpty)
+      .filter(_.length > 1)
       .toSet
   }
 
