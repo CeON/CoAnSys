@@ -1,6 +1,5 @@
 package pl.edu.icm.coansys.citations
 
-import scala.collection.JavaConversions._
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata
 
 /**
@@ -9,18 +8,8 @@ import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata
 class DocumentMetadataWrapper(val meta: DocumentMetadata) {
   def id: String = meta.getKey
 
-  def normalisedAuthorTokens: Iterable[String] = {
-    meta.getAuthorList.toIterable
-      .flatMap {
-      author =>
-        List(
-          author.getName,
-          author.getForenames,
-          author.getSurname).flatMap(_.split( """[^\p{L}]+"""))
-    }
-      .filter(_.length > 1)
-      .toSet
-  }
+  def normalisedAuthorTokens: Iterable[String] =
+    util.normalizedAuthorTokensFromAuthorList(meta)
 
   override def equals(other: Any): Boolean = other match {
     case that: DocumentMetadataWrapper => id == that.id

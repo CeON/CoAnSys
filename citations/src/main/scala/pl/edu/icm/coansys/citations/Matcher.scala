@@ -13,6 +13,8 @@ import pl.edu.icm.coansys.importers.models.DocumentProtosWrapper.DocumentWrapper
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 object Matcher extends ScoobiApp {
+  override def upload = false
+
   /**
    * Minimal similarity between a citation and a document that is used to filter out weak matches.
    */
@@ -27,10 +29,11 @@ object Matcher extends ScoobiApp {
    * 3.	Filter out documents containing less than M-1 matching authors.
    *
    * @param citation a citation to process
-   * @param index an index to be used for document retrieval
+   * @param indexUri an index to be used for document retrieval
    * @return matching documents
    */
-  def approximatelyMatchingDocuments(citation: CitationWrapper, index: AuthorIndex) = {
+  def approximatelyMatchingDocuments(citation: CitationWrapper, indexUri: String) = {
+    val index = new AuthorIndex(indexUri)
     val documentsWithMatchNo =
       citation.normalisedAuthorTokens
         .flatMap {
@@ -40,7 +43,12 @@ object Matcher extends ScoobiApp {
         .map {
         case (doc, iterable) => (doc, iterable.size)
       }
-    val maxMatchNo = documentsWithMatchNo.values.max
+
+    val maxMatchNo =
+      if (!documentsWithMatchNo.isEmpty)
+        documentsWithMatchNo.values.max
+      else
+        0
     documentsWithMatchNo.filter {
       case (doc, matchNo) => matchNo >= maxMatchNo - 1
     }.keys
@@ -54,20 +62,23 @@ object Matcher extends ScoobiApp {
     lcsLen.toDouble / minLen
   }
 
-  def matches(citations: DList[CitationWrapper], index: AuthorIndex) = {
+  def matches(citations: DList[CitationWrapper], indexUri: String) = {
     citations
       .flatMap {
-      cit => Stream.continually(cit) zip approximatelyMatchingDocuments(cit, index)
+      cit => Stream.continually(cit) zip approximatelyMatchingDocuments(cit, indexUri)
     }
       .groupByKey[CitationWrapper, DocumentMetadataWrapper]
       .flatMap {
       case (cit, docs) =>
-        val best = docs.map {
-          doc => (doc, similarity(cit, doc))
-        }.maxBy(_._2)
-        //Return a match only if its certainty is greater than a limit
-        if (best._2 >= minimalSimilarity)
-          Some(cit, best._1)
+        val aboveThreshold =
+          docs
+            .map {
+            doc => (doc, similarity(cit, doc))
+          }
+            .filter(_._2 >= minimalSimilarity)
+
+        if (!aboveThreshold.isEmpty)
+          Some(cit, aboveThreshold.maxBy(_._2)._1)
         else
           None
     }
@@ -94,7 +105,7 @@ object Matcher extends ScoobiApp {
   }
 
   def run() {
-    persist(
-      convertToSequenceFile(matches(readCitationsFromDocumentsFromSeqFiles(List(args(1))), new AuthorIndex(args(0))), args(2)))
+    val myMatches = matches(readCitationsFromDocumentsFromSeqFiles(List(args(1))), args(0))
+    persist(convertToSequenceFile(myMatches, args(2)))
   }
 }

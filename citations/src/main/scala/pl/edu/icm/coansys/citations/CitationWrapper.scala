@@ -7,7 +7,12 @@ import com.nicta.scoobi.core.Grouping
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 class CitationWrapper(val meta: DocumentMetadata) {
-  def normalisedAuthorTokens: Iterable[String] = throw new RuntimeException("unimplemented")
+  def normalisedAuthorTokens: Iterable[String] = {
+    if (meta.getAuthorCount > 0)
+      util.normalizedAuthorTokensFromAuthorList(meta)
+    else
+      meta.getText.split( """[^\p{L}]+""").filter(_.length > 1).toSet
+  }
 }
 
 object CitationWrapper {
