@@ -7,6 +7,7 @@ import com.nicta.scoobi.Persist._
 import com.nicta.scoobi.InputsOutputs._
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata
 import pl.edu.icm.coansys.commons.scala.strings
+import pl.edu.icm.coansys.importers.models.DocumentProtosWrapper.DocumentWrapper
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -47,7 +48,8 @@ object Matcher extends ScoobiApp {
 
   def similarity(citation: CitationWrapper, document: DocumentMetadataWrapper): Double = {
     // that's just mock implementation
-    val lcsLen = strings.lcs(citation.meta.getTitle, document.meta.getTitle).length
+    val citationString = if (citation.meta.hasTitle) citation.meta.getTitle else citation.meta.getText
+    val lcsLen = strings.lcs(citationString, document.meta.getTitle).length
     val minLen = math.min(citation.meta.getTitle.length, document.meta.getTitle.length)
     lcsLen.toDouble / minLen
   }
@@ -69,6 +71,9 @@ object Matcher extends ScoobiApp {
         else
           None
     }
+      .map {
+      case (cit, doc) => (cit.meta.getSource, doc.meta.getKey)
+    }
   }
 
   def readCitationsFromSeqFiles(uris: List[String]): DList[CitationWrapper] = {
@@ -78,8 +83,18 @@ object Matcher extends ScoobiApp {
       .map(new CitationWrapper(_))
   }
 
+  def readCitationsFromDocumentsFromSeqFiles(uris: List[String]): DList[CitationWrapper] = {
+    implicit val documentConverter = new BytesConverter[DocumentMetadata](_.toByteArray, DocumentMetadata.parseFrom(_))
+    implicit val wrapperConverter = new BytesConverter[DocumentWrapper](_.toByteArray, DocumentWrapper.parseFrom(_))
+    convertValueFromSequenceFile[DocumentWrapper](uris)
+      .flatMap {
+      wrapper => DocumentMetadata.parseFrom(wrapper.getMproto).getReferenceList
+    }
+      .map(new CitationWrapper(_))
+  }
+
   def run() {
     persist(
-      convertToSequenceFile(matches(readCitationsFromSeqFiles(List(args(0))), new AuthorIndex(args(0))), args(1)))
+      convertToSequenceFile(matches(readCitationsFromDocumentsFromSeqFiles(List(args(1))), new AuthorIndex(args(0))), args(2)))
   }
 }
