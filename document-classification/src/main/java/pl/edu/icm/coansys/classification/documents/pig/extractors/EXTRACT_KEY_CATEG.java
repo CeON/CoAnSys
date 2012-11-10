@@ -83,6 +83,7 @@ public class EXTRACT_KEY_CATEG extends EvalFunc<Tuple>{
 	        return t;
 			
 		}catch(Exception e){
+			// Throwing an exception will cause the task to fail.
             throw new IOException("Caught exception processing input row:\n"
             		+ StackTraceExtractor.getStackTrace(e));
 		}

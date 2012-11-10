@@ -100,6 +100,7 @@ public class EXTRACT_KEY_CATEG_WHEN_LIM extends EvalFunc<Tuple>{
 	        }
 	        return null;
 		}catch(Exception e){
+			// Throwing an exception will cause the task to fail.
             throw new IOException("Caught exception processing input row:\n"
             		+ StackTraceExtractor.getStackTrace(e));
 		}
