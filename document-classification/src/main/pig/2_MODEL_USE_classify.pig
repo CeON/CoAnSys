@@ -40,8 +40,8 @@ IMPORT 'FV_$featurevector.pig';
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 set default_parallel 16
-set pig.tmpfilecompression true
-set pig.tmpfilecompression.codec gz
+--set pig.tmpfilecompression true
+--set pig.tmpfilecompression.codec gz
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- code section
@@ -53,7 +53,8 @@ B = FOREACH A GENERATE
 		$0 as key,
 		flatten(pl.edu.icm.coansys.classification.documents.pig.extractors.
 			EXTRACT_MAP_CATEGOCC($1,'$DEF_LIM')) as (data:map[],categocc:long);
-split B into
+B0 = sample B 0.001;
+split B0 into
 	B1 if categocc > 0, --classified docs
 	B2 if categocc == 0; --unclassifed docs
 --BEG_COMMENT
