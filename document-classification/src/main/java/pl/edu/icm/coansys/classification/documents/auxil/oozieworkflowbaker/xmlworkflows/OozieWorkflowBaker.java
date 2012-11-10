@@ -13,13 +13,8 @@ import pl.edu.icm.coansys.classification.documents.auxil.oozieworkflowbaker.xmlw
 
 public class OozieWorkflowBaker {
 	public static void main(String[] args) throws IOException{
-		if(args.length!=2){
-			System.out.println("Usage: java Creator input_xml_file_path output_xml_file_path");
-			System.exit(1);
-		}
-		
 		File in_file = new File(args[0]);
-		File out_file = new File(args[1]+"/"+System.nanoTime()+".xml");
+		File out_file = new File(args[0].replaceAll("\\.ingridient", ""));
 		
 		StringBuilder sb = readFileToStringBuilder(in_file);
 		
