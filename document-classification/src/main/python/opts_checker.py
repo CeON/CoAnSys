@@ -50,10 +50,12 @@ def persist(a_key,aa_value):
 	TMP=sys.argv[2]
 	f_key = open(TMP+'./tmp_key.txt','w')
 	pickle.dump(a_key,f_key)
+	f_key.flush()
 	f_key.close()
 	
 	f_val = open(TMP+'./tmp_val.txt','w')
 	pickle.dump(aa_value,f_val)
+	f_val.flush()
 	f_val.close()
 	
 	for a_value in aa_value:
