@@ -9,6 +9,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import pl.edu.icm.coansys.classification.documents.auxil.oozieworkflowbaker.xmlworkflows.transformations.ForkMerge;
+import pl.edu.icm.coansys.classification.documents.auxil.oozieworkflowbaker.xmlworkflows.transformations.FunctionSubstitution;
 
 
 public class OozieWorkflowBaker {
@@ -19,7 +20,8 @@ public class OozieWorkflowBaker {
 		StringBuilder sb = readFileToStringBuilder(in_file);
 		
 		sb = ForkMerge.substitute(sb);
-		
+		sb = FunctionSubstitution.substitute(sb);
+			
 		FileWriter fw = new FileWriter(out_file);
 		fw.write(sb.toString());
 		fw.flush();
