@@ -24,7 +24,6 @@ for line in in_file:
 	new=string.replace(line,param,val)
 	out_file.write(new)
 
-out_file.flush()
 out_file.close()
 in_file.close()
 

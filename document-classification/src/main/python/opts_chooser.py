@@ -6,7 +6,7 @@ import re;
 import collections;
 import pickle
 
-f_key = open(sys.argv[1],'rw')
+f_key = open(sys.argv[1],'r')
 a_key = pickle.load(f_key)
 f_key.close()
 
@@ -22,16 +22,19 @@ f_in = open(in_path,'r')
 f_out = open(out_path,'w')
 
 for line in f_in:
-	for i in range(1,len(a_key)):
+	written=0
+	for i in range(0,len(a_key)):
 		key=a_key[i]
 		if key in line:
-			newkey=string.replace(key,'@','')
-			f_out.write(newkey+'='+a_val[i])
-		else:
-			f_out.write(line)
+			newkey=string.replace(key,'@','').split(' ')[0]
+			ret = newkey+'='+a_val[i]+'\n'
+			f_out.write(ret)
+			written=1
+			break
+	if written == 0:
+		f_out.write(line)
 
 f_in.close()
-f_out.flush()
 f_out.close()
 
-print './'+out_path
+print out_path
