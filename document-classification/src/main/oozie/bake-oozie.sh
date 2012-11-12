@@ -47,6 +47,10 @@ do
 	rm ${CP2}
 	rm ${CP3}
 	mv ${CP4} `change "${CP4}" "ties.part4" "ties"`
+
+	chmod +x ./oozie_${TIME_INFIX}_OPTS_${i}/submit-to-oozie.sh
+	chmod +x ./oozie_${TIME_INFIX}_OPTS_${i}/copy-to-oozie.sh
+	rm ./oozie_${TIME_INFIX}_OPTS_${i}/bake-oozie.sh
 done
 
 rm -r -f oozie_${TIME_INFIX}
