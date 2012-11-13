@@ -8,9 +8,9 @@
 -- -----------------------------------------------------
 %DEFAULT commonJarsPath 'lib/*.jar'
 
-%DEFAULT inEn /tmp/dataEnriched
+%DEFAULT dc_m_hdfs_dataEnriched /tmp/dataEnriched
 %DEFAULT inMo /tmp/dataModel
-%DEFAULT outLocal /tmp/dataTestEval
+%DEFAULT dc_m_hdfs_modelEvaluation /tmp/dataTestEval
 %DEFAULT MODEL_CLSF_CLASS mlknnThresClassify
 -- -----------------------------------------------------
 -- -----------------------------------------------------
@@ -65,7 +65,7 @@ set pig.tmpfilecompression.codec gz
 -- -----------------------------------------------------
 
 
-A = LOAD '$inEn' as (keyA:chararray,keyB:chararray,sim:double,categsA:bag{(categA:chararray)},categsB:bag{(categB:chararray)}); --keyA,keyB,sim,{categA},{categB}
+A = LOAD '$dc_m_hdfs_dataEnriched' as (keyA:chararray,keyB:chararray,sim:double,categsA:bag{(categA:chararray)},categsB:bag{(categB:chararray)}); --keyA,keyB,sim,{categA},{categB}
 
 Z0 = foreach A generate keyA as keyA, flatten(categsB) as categB;
 Z1 = group Z0 by (keyA, categB);
@@ -114,5 +114,5 @@ W11 = foreach W10 generate SUM(W1.acc)/(double)COUNT(W1) as acc,
 W2 = join W111 by crosspoint, Q5 by crosspoint using 'replicated';
 W3 = foreach W2 generate acc, p,r,f1, hl/(double)categCount, zol;
 
-store W3 into '$outLocal';
+store W3 into '$dc_m_hdfs_modelEvaluation';
 

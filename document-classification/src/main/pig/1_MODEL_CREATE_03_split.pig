@@ -8,8 +8,8 @@
 -- -----------------------------------------------------
 %DEFAULT commonJarsPath 'lib/*.jar'
 
-%DEFAULT src /tmp/dataForDocClassif
-%DEFAULT fold 0
+%DEFAULT dc_m_hdfs_src /tmp/dataForDocClassif
+%DEFAULT dc_m_int_concreteInvestigatedFold 0
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- register section
@@ -22,7 +22,7 @@ REGISTER /usr/lib/hbase/lib/guava-11.0.2.jar
 REGISTER '$commonJarsPath'
 -- -----------------------------------------------------
 -- -----------------------------------------------------
--- default section
+-- declare section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 %DECLARE TR _Tr_
@@ -49,9 +49,9 @@ set pig.tmpfilecompression.codec gz
 -- -----------------------------------------------------
 
 
-D = LOAD '$src';
+D = LOAD '$dc_m_hdfs_docClassifMapping';
 split D into
-	Te if $2 == $fold,
-	Tr if $2 != $fold;
-store Tr into '$src$TR$fold';
-store Te into '$src$TE$fold';
+	Te if $2 == $dc_m_int_concreteInvestigatedFold,
+	Tr if $2 != $dc_m_int_concreteInvestigatedFold;
+store Tr into '$dc_m_hdfs_src$TR$dc_m_int_concreteInvestigatedFold';
+store Te into '$dc_m_hdfs_src$TE$dc_m_int_concreteInvestigatedFold';

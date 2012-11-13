@@ -8,10 +8,9 @@
 -- -----------------------------------------------------
 %DEFAULT commonJarsPath 'lib/*.jar'
 
-%DEFAULT DEF_SRC SpringerMetadataOnly
-%DEFAULT DEF_DST /tmp/docsim.pigout
-%DEFAULT DEF_LIM 1
-%DEFAULT DEF_FOLDS 5
+%DEFAULT dc_m_hbase_inputDocsData SpringerMetadataOnly
+%DEFAULT dc_m_hdfs_neighs /tmp/docsim.pigout
+%DEFAULT dc_m_int_folds 5
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- register section
@@ -43,12 +42,12 @@ set pig.tmpfilecompression.codec gz
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 
-raw = getProtosFromHbase('$DEF_SRC'); 
+raw = getProtosFromHbase('$dc_m_hbase_inputDocsData'); 
 extracted_X = FOREACH raw GENERATE 
 		$0 as key,
 		pl.edu.icm.coansys.classification.documents.pig.extractors.
-			EXTRACT_MAP_WHEN_CATEG_LIM($1,'$DEF_LIM') as data, --		
-		(int)(RANDOM()*$DEF_FOLDS) as part;
+			EXTRACT_MAP_WHEN_CATEG_LIM($1,'0') as data, --		
+		(int)(RANDOM()*$dc_m_int_folds) as part;
 
 neigh = filter extracted_X by $1 is not null;
 --neigh = SAMPLE neighX 0.01;
