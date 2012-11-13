@@ -4,10 +4,10 @@ TASK=$1
 USER=$2
 RM=$3
 
-if [ `hostname` = "hadoop" ]; then
-	WORKFLOW_HDFS_DIR="/user/${USER}/workflows/${TASK}"
+if [ `hostname` = "localhost" ]; then
+	WORKFLOW_HDFS_DIR="hdfs://localhost.localdomain:8020/user/${USER}/workflows/${TASK}/"
 else
-	WORKFLOW_HDFS_DIR="hdfs://localhost.localdomain:8020/user/${USER}/workflows/${TASK}"
+									WORKFLOW_HDFS_DIR="/user/${USER}/workflows/${TASK}/"	
 fi
 
 WORKFLOW_LOCAL_LIB_DIR=${TASK}/workflow/lib
@@ -30,7 +30,12 @@ fi
 echo "Copying required libaries to ${TASK}/lib"
 cp /usr/lib/pig/pig-0.9.2-cdh4.0.1.jar ${WORKFLOW_LOCAL_LIB_DIR}
 cp ../../../../document-classification/target/document-classification-1.0-SNAPSHOT.jar ${WORKFLOW_LOCAL_LIB_DIR}
-cp ../../../../document-classification/target/document-classification-1.0-SNAPSHOT-only-dependencies.jar ${WORKFLOW_LOCAL_LIB_DIR}
+cp ../../../../commons/target/commons-1.0-SNAPSHOT.jar  ${WORKFLOW_LOCAL_LIB_DIR}
+cp ../../../../importers/target/importers-1.0-SNAPSHOT.jar ${WORKFLOW_LOCAL_LIB_DIR}
+cp ../../../../disambiguation/target/disambiguation-1.0-SNAPSHOT.jar ${WORKFLOW_LOCAL_LIB_DIR}
+cp ../../../../document-similarity/target/document-similarity-1.0-SNAPSHOT.jar ${WORKFLOW_LOCAL_LIB_DIR}
+
+#cp ../../../../document-classification/target/document-classification-1.0-SNAPSHOT-only-dependencies.jar ${WORKFLOW_LOCAL_LIB_DIR}
 
 echo "Copying required pig scripts to ${TASK}"
 cp -r ../pig/*.pig ${WORKFLOW_LOCAL_PIG_DIR}
