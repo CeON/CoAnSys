@@ -1,0 +1,62 @@
+###################### OOZIE
+masterNode=hadoop-master
+nameNode=hdfs://${masterNode}:8020
+jobTracker=${masterNode}:8021
+hbaseZookeeperQuorum=${masterNode}
+queueName=default
+project=coansys
+subproject=dc-model-building
+###################### AUXIL 
+dc_time_infix=@TIME_INFIX@
+dc_opts_infix=@OPTS_INFIX@
+dc_join_infix=@TIME_INFIX@/@OPTS_INFIX@
+dc_general_prefix=${nameNode}/user/${user.name}/workflows/${subproject}/
+dc_general_prefix_join_infix=${dc_general_prefix}/@TIME_INFIX@/@OPTS_INFIX@/
+###################### OOZIE
+oozie.wf.application.path=${dc_general_prefix_join_infix}/workflow
+results=${dc_general_prefix_join_infix}/results/
+workflowPath=${oozie.wf.application.path}
+commonJarsPath=*.jar
+pigScriptsDir=pig
+
+####################### document-classification classification #########################
+######################################## INPUT # HBASE #################################
+dc_m_hbase_inputDocsData=pdendek_springer_mo
+######################################## INPUT # HDFS ##################################
+dc_m_hdfs_neighs=${results}/neighs
+dc_m_hdfs_docClassifMapping=${results}/doc_classif_mapping
+######################################## INPUT # INT ###################################
+dc_m_int_categBoundary=1
+dc_m_int_folds=5
+dc_m_int_numOfNeighbours=5
+##################################### INPUT # PIG_SCRIPT ###############################
+dc_m_pigScript_strategyOfNeigCandidatesFiltering=categsPresentGEQNumber
+dc_m_pigScript_featureVector=tfidf
+dc_m_pigScript_similarityMetric=cosine
+dc_m_pigScript_modelBuilderClass=mlknnThresBuild
+########################################################################################
+########################################################################################
+########################################################################################
+########################################################################################
+
+
+######################################### MIX ##########################################
+dc_m_hdfs_dataEnriched=${results}/dataEnrich
+######################################## OUTPUT ########################################
+
+
+
+### input model
+dc_c_modelcreation_ModelDir=${nameNode}/user/${user.name}/parts/doc-classif/model
+### input hbase table with documents
+ 
+### input featurevector creation method
+dc_c_classification_fv=tfidf
+### input similarity method
+dc_c_classification_sim=cosine
+### input number of neighbours
+dc_c_classification_neigh=3
+
+### output HDFS localzation for classification
+dc_c_classification_OutputDir=${nameNode}/user/${user.name}/parts/dc-classification/doc_classif/${dc_all_join_infix}
+

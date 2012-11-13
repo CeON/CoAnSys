@@ -5,7 +5,7 @@ import java.lang.reflect.Method;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class FunctionSubstitution {
+public class InterpretReplace {
 
 	public static StringBuilder substitute(StringBuilder sb) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 		Method[] methods = Substitutions.class.getDeclaredMethods();
@@ -26,9 +26,15 @@ public class FunctionSubstitution {
 			while(matcher.find()) {
 				int start = matcher.start()+diff;
 				int end = matcher.end()+diff;
-				int from = Integer.parseInt(matcher.group(0));
-				int to = Integer.parseInt(matcher.group(1));
-				int step = Integer.parseInt(matcher.group(2));
+				
+				String tmp;
+				
+				tmp = matcher.group(1);
+				int from = Integer.parseInt(tmp);
+				tmp = matcher.group(2);
+				int to = Integer.parseInt(tmp);
+				tmp = matcher.group(3);
+				int step = Integer.parseInt(tmp);
 				
 				StringBuilder sb_seq = new StringBuilder();
 				for(int i = from;i<to;i+=step){

@@ -12,14 +12,13 @@ import pl.edu.icm.coansys.classification.documents.auxil.oozieworkflowbaker.xmlw
 import pl.edu.icm.coansys.classification.documents.auxil.oozieworkflowbaker.xmlworkflows.auxiliar.WFList;
 
 
-public class ForkMerge {
+public class Action {
 
 	public static StringBuilder substitute(StringBuilder sb) throws IOException {
 		
-		
 		PresenceChecker pc = new PresenceChecker();
 		
-		List<String> samples = pc.extractSamples(sb,"FORK_MERGE");
+		List<String> samples = pc.extractSamples(sb,"ACTION");
 		List<String> substituted = substituteSamples(samples);
 		
 		if(substituted.size()!=samples.size()){
@@ -74,34 +73,20 @@ public class ForkMerge {
 		//build fork node
 		StringBuilder script = new StringBuilder("\n\n\n\n");
 		
-		script.append("    <fork name='"+params.get("node_name")+"'>\n");
-		for(int i=0;i<numOfForks;i++){
-			script.append("        <path start='"+params.get("node_name")+"_forked_node_"+i+"'/>\n");
-		}
-		script.append("    </fork>\n");
+	    ;
+		
+		script.append("	<action name='"+params.get("name")+"'>\n");
+		addScriptLines(script,sample);
+		script.append("		<ok to='"+params.get("ok")+"_join'/>\n");
+		script.append("		<error to='"+params.get("error")+"'/>\n");
+		script.append("	</action>\n");
 		script.append("\n\n");
-		//build each fork-child node
 		
-		ArrayList<ArrayList<WFList.WFElement>> alalwfelement = WFList.createCrossProduct(wflists);
-		
-		int fork_num = 0;
-		for(ArrayList<WFList.WFElement> elements : alalwfelement){
-			script.append("    <action name='"+params.get("node_name")+"_forked_node_"+fork_num+"'>\n");
-			addScriptLines(script,sample,elements);
-			script.append("        <ok to='"+params.get("node_name")+"_join'/>\n");
-			script.append("        <error to='"+params.get("node_error")+"'/>\n");
-			script.append("    </action>\n");
-			script.append("\n\n");
-			fork_num++;
-		}
-		script.append("\n\n\n");
-		script.append("    <join name='"+params.get("node_name")+"_join' to='"+params.get("node_after_join")+"'/>\n");
-		script.append("\n\n\n");
 		
 		return script;
 	}
 
-	private static void addScriptLines(StringBuilder script,String sample, ArrayList<WFList.WFElement> elements) throws IOException {
+	private static void addScriptLines(StringBuilder script,String sample) throws IOException {
 		BufferedReader br = new BufferedReader(new StringReader(sample));
 		for(String line = br.readLine();line!=null;line=br.readLine()){
 			//beg
@@ -112,17 +97,10 @@ public class ForkMerge {
 			else if(line.startsWith("@")) continue;
 			//script
 			else if(line.replaceAll("[ \t]*", "").length()>0){
-				script.append(addThem(script,line,elements));
+				script.append(line+"\n");
 			}
 		}
 		br.close();
-	}
-
-	private static String addThem(StringBuilder script,String line, ArrayList<WFList.WFElement> elements) {
-		for(WFList.WFElement element : elements){
-			line = OozieWorkflowBaker.revertDollarSing(line.replaceAll(element.name, OozieWorkflowBaker.escapeDollarSing(element.val)));
-		}
-		return line+"\n";
 	}
 
 	private static void getForkMergeDefinition(String sample, HashMap<String,String> params, ArrayList<WFList> wflists) throws IOException {
@@ -154,17 +132,10 @@ public class ForkMerge {
 		params.put(line.split("=")[0], line.split("=")[1]);
 	}
 
-	private static List<String> extractSamples(StringBuilder sb,
-			List<List<Integer>> startsEnds) {
-		ArrayList<String> ret = new ArrayList<String>(); 
-		
-		int numOfSamples = startsEnds.get(0).size();
-		for(int i=0;i<numOfSamples;i++){
-			int start = startsEnds.get(0).get(i);
-			int end = startsEnds.get(1).get(i);
-			ret.add(sb.substring(start,end));
-		}
-		return ret;
-	}
+
+
+	
+
+	
 
 }
