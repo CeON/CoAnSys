@@ -5,9 +5,9 @@ USER=$2
 RM=$3
 
 if [ `hostname` = "localhost" ]; then
-	WORKFLOW_HDFS_DIR="hdfs://localhost.localdomain:8020/user/${USER}/workflows/${TASK}/@TIME_INFIX@"
+	WORKFLOW_HDFS_DIR="hdfs://localhost.localdomain:8020/user/${USER}/workflows/${TASK}/@TIME_INFIX@/@OPTS_INFIX@"
 else
-									WORKFLOW_HDFS_DIR="/user/${USER}/workflows/${TASK}/@TIME_INFIX@"	
+									WORKFLOW_HDFS_DIR="/user/${USER}/workflows/${TASK}/@TIME_INFIX@/@OPTS_INFIX@"	
 fi
 
 WORKFLOW_LOCAL_LIB_DIR=${TASK}/workflow/lib
