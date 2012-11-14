@@ -7,24 +7,16 @@ package pl.edu.icm.coansys.similarity.pig.script;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.LinkedList;
-import org.apache.hadoop.fs.Path;
-import org.apache.pig.pigunit.Cluster;
-import org.apache.pig.pigunit.PigTest;
 import org.apache.pig.tools.parameters.ParseException;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import pl.edu.icm.coansys.similarity.test.utils.MacroExtractor;
 
 /**
  *
  * @author akawa
  */
-public class TestTFIDF {
+public class TestTFIDF extends AbstractPigUnitTest {
 
-    private PigTest test;
-    private static Cluster cluster;
-    private static final String PIG_SCRIPT_DIR = "src/main/pig/";
-    private static String[] params = {
+    private  String[] params = {
         "in_relation=in_relation",
         "id_field=docId",
         "token_field=term",
@@ -32,19 +24,14 @@ public class TestTFIDF {
         "parallel=1"
     };
 
-    @BeforeClass
-    public static void beforeClass() throws Exception {
-        cluster = PigTest.getCluster();
-
+    @Override
+    public String[] getScriptParams() {
+        return params;
     }
 
-    @AfterClass
-    public static void afterClass() throws Exception {
-        cluster.delete(new Path("pigunit-input-overriden.txt"));
-    }
-
-    private static String[] getScriptToTestTfIdfMacro() throws FileNotFoundException, IOException {
-        LinkedList<String> macro = MacroExtractor.extract(PIG_SCRIPT_DIR + "macros.pig", "tf_idf");
+    @Override
+    public String[] getScriptToTest() throws FileNotFoundException, IOException {
+        LinkedList<String> macro = MacroExtractor.extract(PIG_SCRIPT_DIR + "macros.pig", "calculate_tfidf");
         macro.addFirst("in_relation = LOAD 'ommited' AS (docId, term);");
         macro.addLast("tfidf_values = ORDER tfidf_values BY docId, term;");
         return macro.toArray(new String[]{});
@@ -53,8 +40,6 @@ public class TestTFIDF {
     @org.testng.annotations.Test(groups = {"fast"})
     public void testTfIdf() throws IOException, ParseException {
 
-        String[] script = getScriptToTestTfIdfMacro();
-        test = new PigTest(script, params);
         String[] input = {
             "d1\tt1",
             "d1\tt1",
@@ -73,8 +58,6 @@ public class TestTFIDF {
     @org.testng.annotations.Test(groups = {"medium"})
     public void testTfIdfMedium() throws IOException, ParseException {
 
-        String[] script = getScriptToTestTfIdfMacro();
-        test = new PigTest(script, params);
         String[] input = {
             "d1\tt1",
             "d1\tt1",
@@ -99,8 +82,6 @@ public class TestTFIDF {
     @org.testng.annotations.Test(groups = {"medium"})
     public void testTfIdfMedium2() throws IOException, ParseException {
 
-        String[] script = getScriptToTestTfIdfMacro();
-        test = new PigTest(script, params);
         String[] input = {
             "d1\tt1",
             "d1\tt1",
@@ -127,4 +108,6 @@ public class TestTFIDF {
 
         test.assertOutput("in_relation", input, "tfidf_values", tfidfOutput);
     }
+
+
 }
