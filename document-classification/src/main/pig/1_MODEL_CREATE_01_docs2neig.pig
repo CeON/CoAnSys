@@ -11,6 +11,7 @@
 %DEFAULT dc_m_hbase_inputDocsData SpringerMetadataOnly
 %DEFAULT dc_m_hdfs_neighs /tmp/docsim.pigout
 %DEFAULT dc_m_int_folds 5
+%DEFAULT dc_m_double_sample 0.001
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- register section
@@ -42,7 +43,9 @@ set pig.tmpfilecompression.codec gz
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 
-raw = getProtosFromHbase('$dc_m_hbase_inputDocsData'); 
+rawX = getProtosFromHbase('$dc_m_hbase_inputDocsData'); 
+raw = SAMPLE rawX $dc_m_double_sample;
+
 extracted_X = FOREACH raw GENERATE 
 		$0 as key,
 		pl.edu.icm.coansys.classification.documents.pig.extractors.
@@ -50,5 +53,5 @@ extracted_X = FOREACH raw GENERATE
 		(int)(RANDOM()*$dc_m_int_folds) as part;
 
 neigh = filter extracted_X by $1 is not null;
---neigh = SAMPLE neighX 0.01;
+--neigh = SAMPLE neighX $dc_m_double_sample;
 STORE neigh into '$dc_m_hdfs_neighs'; --key,map,part

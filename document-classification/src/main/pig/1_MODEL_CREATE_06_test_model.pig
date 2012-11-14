@@ -9,9 +9,10 @@
 %DEFAULT commonJarsPath 'lib/*.jar'
 
 %DEFAULT dc_m_hdfs_dataEnriched /tmp/dataEnriched
-%DEFAULT inMo /tmp/dataModel
+%DEFAULT dc_m_hdfs_model /tmp/dataModel
 %DEFAULT dc_m_hdfs_modelEvaluation /tmp/dataTestEval
-%DEFAULT MODEL_CLSF_CLASS mlknnThresClassify
+%DEFAULT dc_m_pigScript_modelUse mlknnThresClassify
+%DEFAULT PIG_ENDING .pig
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- register section
@@ -27,7 +28,7 @@ REGISTER '$commonJarsPath'
 -- import section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
-IMPORT 'MODEL_BLD_CLASS_$MODEL_CLSF_CLASS.pig';
+IMPORT 'MODEL_BLD_CLASS_$dc_m_pigScript_modelUse$PIG_ENDING';
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- macro section
@@ -85,7 +86,7 @@ Q2 = distinct Q1;
 Q3 = group Q2 all;
 Q5 = foreach Q3 generate COUNT(Q2) as categCount, 1 as crosspoint;
 
---C = $MODEL_CLSF_CLASS(M,A4);
+--C = $dc_m_pigScript_modelUse(M,A4);
 
 D = join A by keyA, C by key;
 

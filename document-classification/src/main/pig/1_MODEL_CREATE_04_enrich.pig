@@ -10,10 +10,11 @@
 
 %DEFAULT dc_m_hdfs_neighs /tmp/docNeigh
 %DEFAULT dc_m_hdfs_docClassifMapping /tmp/dataForDocClassif
-%DEFAULT dc_m_pigScript_featureVector tfidf
-%DEFAULT dc_m_pigScript_similarityMetric cosine
 %DEFAULT dc_m_hdfs_dataEnriched /tmp/dataEnriched
 %DEFAULT dc_m_int_numOfNeighbours 4
+
+%DEFAULT dc_m_pigScript_featureVector tfidf
+%DEFAULT dc_m_pigScript_similarityMetric cosine
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- register section
