@@ -15,6 +15,7 @@ dc_general_prefix_join_infix=${dc_general_prefix}/@TIME_INFIX@/@OPTS_INFIX@/
 ###################### OOZIE
 oozie.wf.application.path=${dc_general_prefix_join_infix}/workflow
 results=${dc_general_prefix_join_infix}/results/
+OLD_RESULTS=hdfs://hadoop-master:8020/user/pdendek/workflows/dc-train-model//1352919773.68/5//results//
 workflowPath=${oozie.wf.application.path}
 commonJarsPath=*.jar
 pigScriptsDir=pig
@@ -22,27 +23,22 @@ pigScriptsDir=pig
 ####################### document-classification classification #########################
 ######################################## INPUT # HBASE #################################
 dc_m_hbase_inputDocsData=pdendek_springer_mo
-######################################## INPUT # HDFS ##################################
-dc_m_hdfs_neighs=${results}/neighs
-dc_m_hdfs_docClassifMapping=${results}/doc_classif_mapping
+######################################## HDFS ##################################
+dc_m_hdfs_neighs=${OLD_RESULTS}/neighs
+dc_m_hdfs_docClassifMapping=${OLD_RESULTS}/doc_classif_mapping
+dc_m_hdfs_model=${OLD_RESULTS}/model
+dc_m_hdfs_dataEnriched=${OLD_RESULTS}/dataEnrich
+dc_m_hdfs_modelEvaluation=${OLD_RESULTS}/modelEval
 ######################################## INPUT # INT ###################################
+dc_m_double_sample=0.0001
 dc_m_int_categBoundary=1
-dc_m_int_folds=5
-@dc_m_int_numOfNeighbours@ 3 5 7
+@dc_m_int_folds@ 5
+dc_m_int_numOfNeighbours=5
 ##################################### INPUT # PIG_SCRIPT ###############################
 dc_m_pigScript_strategyOfNeigCandidatesFiltering=categsPresentGEQNumber
 dc_m_pigScript_featureVector=tfidf
 dc_m_pigScript_similarityMetric=cosine
 dc_m_pigScript_modelBuilderClass=mlknnThresBuild
+dc_m_pigScript_modelUse=mlknnThresClassify
 ########################################################################################
-########################################################################################
-########################################################################################
-########################################################################################
-
-
-######################################### MIX ##########################################
-dc_m_hdfs_dataEnriched=${results}/dataEnrich
-######################################## OUTPUT ########################################
-
-
 

@@ -1,6 +1,9 @@
+<!-- ============================================================================== -->
+<!-- ========================== OOZIE-GENERAL ===================================== -->
+<!-- ============================================================================== -->
 # BEG:REPLACE @OOZIE-START@
 <workflow-app name='dc-train-model' xmlns="uri:oozie:workflow:0.2">
-	<start to='docs2neigh_01'/>
+	<start to='buildModel_05'/>
 # END:REPLACE
 
 # BEG:REPLACE @OOZIE-END@
@@ -32,6 +35,9 @@
 # BEG:REPLACE @FOLDS@
 @fold@ seq(0,${dc_m_int_folds},1)
 # END:REPLACE
+<!-- ============================================================================== -->
+<!-- ============================= CONFIG ========================================= -->
+<!-- ============================================================================== -->
 # BEG:REPLACE @CONFIG-1@
 			<configuration>
 				<property>
@@ -58,13 +64,17 @@
 				</property>
 			</configuration>
 # END:REPLACE
-
+<!-- ============================================================================== -->
+<!-- ============================= AUXIL ========================================== -->
+<!-- ============================================================================== -->
 # BEG:REPLACE @AUXIL@
 			<param>commonJarsPath=${commonJarsPath}</param>
 			<file>${pigScriptsDir}/AUXIL_docsim.macros.def.pig#AUXIL_docsim.macros.def.pig</file>
 			<file>${pigScriptsDir}/AUXIL_macros.def.pig#AUXIL_macros.def.pig</file>
 # END:REPLACE
-
+<!-- ============================================================================== -->
+<!-- ============================= WF-1 =========================================== -->
+<!-- ============================================================================== -->
 # BEG:REPLACE @PR-1@
 			<prepare>
 				<delete path="${dc_m_hdfs_neighs}"/>
@@ -73,17 +83,21 @@
 # BEG:REPLACE @WF-1@
 
 			<script>${pigScriptsDir}/1_MODEL_CREATE_01_docs2neig.pig</script>
-
+			<param>dc_m_double_sample=${dc_m_double_sample}</param>
 			<param>dc_m_hbase_inputDocsData=${dc_m_hbase_inputDocsData}</param>
 			<param>dc_m_hdfs_neighs=${dc_m_hdfs_neighs}</param>
 			<param>dc_m_int_folds=${dc_m_int_folds}</param>
 			@AUXIL@
 # END:REPLACE
-
-# BEG:REPLACE @WF-2@
+<!-- ============================================================================== -->
+<!-- ============================= WF-2 =========================================== -->
+<!-- ============================================================================== -->
+# BEG:REPLACE @PR-2@
 			<prepare>
-				<delete path="${dataForDocClassif}"/>
+				<delete path="${dc_m_hdfs_docClassifMapping}"/>
 			</prepare>
+# END:REPLACE
+# BEG:REPLACE @WF-2@
 			<script>${pigScriptsDir}/1_MODEL_CREATE_02_assignAndCreateDocClassif.pig</script>
 			<param>dc_m_pigScript_strategyOfNeigCandidatesFiltering=${dc_m_pigScript_strategyOfNeigCandidatesFiltering}</param>
 			<param>dc_m_hdfs_neighs=${dc_m_hdfs_neighs}</param>
@@ -92,68 +106,104 @@
 			<param>dc_m_int_folds=${dc_m_int_folds}</param>
 			@AUXIL@
 # END:REPLACE
-
-# BEG:REPLACE @WF-3@
-
+<!-- ============================================================================== -->
+<!-- ============================= WF-3 =========================================== -->
+<!-- ============================================================================== -->
+# BEG:REPLACE @PR-3@
 			<prepare>
 				<delete path="@src@_Te_@fold@"/>
 				<delete path="@src@_Tr_@fold@"/>
 			</prepare>
+# END:REPLACE
+# BEG:REPLACE @WF-3@
+<!--
+@src@ ${dc_m_hdfs_neighs} ${dc_m_hdfs_docClassifMapping}
+@fold@ seq(0,${dc_m_int_folds},1)
+RETURNS: 
+@src@_Te_@fold@
+@src@_Tr_@fold@
+-->
 			<script>${pigScriptsDir}/1_MODEL_CREATE_03_split.pig</script>
 			<param>dc_m_hdfs_src=@src@</param>
 			<param>dc_m_int_concreteInvestigatedFold=@fold@</param>
 			@AUXIL@
 # END:REPLACE
-
-# BEG:REPLACE @WF-4@
-
+<!-- ============================================================================== -->
+<!-- ============================= WF-4 =========================================== -->
+<!-- ============================================================================== -->
+# BEG:REPLACE @PR-4@
 			<prepare>
-				<delete path="${dc_m_hdfs_dataEnriched}_@lev@_@fold@"/>
+				<delete path="${dc_m_hdfs_dataEnriched}_Tr_@fold@"/>
 			</prepare>
-			<script>${pigScriptsDir}/_TRAIN/04_enrich.pig</script>
-			<param>dc_m_int_numOfNeighbours=${dc_m_int_numOfNeighbours}</param>
-			<param>inLocal=${dataNeigh}_@lev@_${fold}</param>
-			<param>dc_m_hdfs_docClassifMapping=${dc_m_hdfs_docClassifMapping}</param>
-			<param>dc_m_hdfs_dataEnriched=${dc_m_hdfs_dataEnriched}_@lev@_@fold@</param>
-			<param>featureVector=${fv}</param>
-			<param>simmeth=${sim}</param>
-			@AUXIL@
-			<file>../SIM/${sim}.pig#${sim}.pig</file>
-			<file>../FV/${fv}.pig#${fv}.pig</file>
 # END:REPLACE
+# BEG:REPLACE @WF-4@
+<!--
+@fold@ seq(0,${dc_m_int_folds},1)
+-->
+			<script>${pigScriptsDir}/1_MODEL_CREATE_04_enrich.pig</script>
 
-# BEG:REPLACE @WF-5@
-			<prepare>
-				<delete path="${dataModel}_${fv}_${sim}_${@fold@}_${mb}"/>
-			</prepare>
-			<script>${pigScriptsDir}/_TRAIN/05_build_model.pig</script>
-			<param>inLocal=${dataEnriched}_${fv}_${sim}_Tr_${fold}</param>
-			<param>outLocal=${dataModel}_${fv}_${sim}_${@fold@}_${mb}</param>
-			<param>MODEL_BLD_CLASS=${mb}Build</param>
+			<param>dc_m_hdfs_neighs=${dc_m_hdfs_neighs}_@lev@_@fold@</param>
+			<param>dc_m_hdfs_docClassifMapping=${dc_m_hdfs_docClassifMapping}_@lev@_@fold@</param>
+			<param>dc_m_hdfs_dataEnriched=${dc_m_hdfs_dataEnriched}_Tr_@fold@</param>
+			<param>dc_m_int_numOfNeighbours=${dc_m_int_numOfNeighbours}</param>
+			<param>dc_m_pigScript_featureVector=${dc_m_pigScript_featureVector}</param>
+			<param>dc_m_pigScript_similarityMetric=${dc_m_pigScript_similarityMetric}</param>
+
 			@AUXIL@
-			<file>../MODEL_BLD_CLASS/${mb}Build.pig#${mb}Build.pig</file>
+			<file>${pigScriptsDir}/SIM_${dc_m_pigScript_similarityMetric}.pig#SIM_${dc_m_pigScript_similarityMetric}.pig</file>
+			<file>${pigScriptsDir}/FV_${dc_m_pigScript_featureVector}.pig#FV_${dc_m_pigScript_featureVector}.pig</file>
+# END:REPLACE
+<!-- ============================================================================== -->
+<!-- ============================= WF-5 =========================================== -->
+<!-- ============================================================================== -->
+# BEG:REPLACE @PR-5@
+			<prepare>
+				<delete path="${dc_m_hdfs_model}_@fold@"/>
+			</prepare>
+# END:REPLACE
+# BEG:REPLACE @WF-5@
+<!--
+@fold@ seq(0,${dc_m_int_folds},1)
+-->
+			<script>${pigScriptsDir}/1_MODEL_CREATE_05_build_model.pig</script>
+
+			<param>dc_m_hdfs_neighs=${dc_m_hdfs_neighs}</param>
+			<param>dc_m_int_numOfNeighbours=${dc_m_int_numOfNeighbours}</param>
+			<param>dc_m_pigScript_modelBuilderClass=${dc_m_pigScript_modelBuilderClass}</param>
+			<param>dc_m_hdfs_model=${dc_m_hdfs_model}_@fold@</param>
+
+			@AUXIL@
+			<file>${pigScriptsDir}/MODEL_BLD_CLASS_${dc_m_pigScript_modelBuilderClass}.pig#MODEL_BLD_CLASS_${dc_m_pigScript_modelBuilderClass}.pig</file>
+# END:REPLACE
+<!-- ============================================================================== -->
+<!-- ============================= WF-6 =========================================== -->
+<!-- ============================================================================== -->
+# BEG:REPLACE @PR-6@
+			<prepare>
+				<delete path="${dc_m_hdfs_modelEvaluation}_@fold@"/>
+			</prepare>
 # END:REPLACE
 # BEG:REPLACE @WF-6@
 <!--
 @fold@ seq(0,${dc_m_int_folds},1)
 -->
-			<prepare>
-				<delete path="${dataTestRes}_${fv}_${sim}_${@fold@}_${mb}"/>
-			</prepare>
-			<script>${pigScriptsDir}/_TRAIN/06_test_model.pig</script>
-			<param>inEn=${dataEnriched}_${fv}_${sim}_Te_${@fold@}</param>
-			<param>inMo=${dataModel}_${fv}_${sim}_${@fold@}_${mb}</param>
-			<param>outLocal=${dataTestRes}_${fv}_${sim}_${@fold@}_${mb}</param>
-			<param>MODEL_CLSF_CLASS=${mb}Classify</param>
+			<script>${pigScriptsDir}/1_MODEL_CREATE_06_test_model.pig</script>
+
+			<param>dc_m_hdfs_dataEnriched=${dc_m_hdfs_dataEnriched}_Te_@fold@</param>
+			<param>dc_m_hdfs_model=${dc_m_hdfs_model}_@fold@</param>
+			<param>dc_m_hdfs_modelEvaluation=${dc_m_hdfs_modelEvaluation}_@fold@</param>
+			<param>dc_m_pigScript_modelUse=${dc_m_pigScript_modelUse}</param>
+
 			@AUXIL@
-			<file>../MODEL_BLD_CLASS/${mb}Classify.pig#${mb}Classify.pig</file>
+			<file>${pigScriptsDir}/MODEL_BLD_CLASS_${dc_m_pigScript_modelUse}.pig#MODEL_BLD_CLASS_${dc_m_pigScript_modelUse}.pig</file>
 # END:REPLACE
 <!-- ============================================================================== -->
 <!-- ========================== NORMAL CODE SINCE HERE ============================ -->
 <!-- ============================================================================== -->
 # BEG:REMOVE_UP_TO_HERE
 @OOZIE-START@
-# BEG:ACTION name=docs2neigh_01 ok=end error=kill
+<!-- 
+# BEG:ACTION name=docs2neigh_01 ok=assignAndCreateDocClassif_02 error=kill
 		@PIG_START@
 			@PR-1@
 			@CONFIG-1@
@@ -161,9 +211,9 @@
 		@PIG_END@
 # END:ACTION
 
-<!-- 
-# BEG:ACTION name=02_assignAndCreateDocClassif ok=03_split error=kill
+# BEG:ACTION name=assignAndCreateDocClassif_02 ok=split_03 error=kill
 		@PIG_START@
+			@PR-2@
 			@CONFIG-1@
 			@WF-2@
 		@PIG_END@
@@ -171,45 +221,46 @@
 
 # BEG:FORK_MERGE 
 
-node_name=03_split 
-node_after_join=04_enrich 
+node_name=split_03
+node_after_join=enrich_04
 node_error=kill
 
 @SRC@
 @FOLDS@
 
 		@PIG_START@
+			@PR-3@
 			@CONFIG-1@
 			@WF-3@
 		@PIG_END@
 
 # END:FORK_MERGE
- 
+
 # BEG:FORK_MERGE 
 
-node_name=04_enrich 
-node_after_join=split_after 
+node_name=enrich_04
+node_after_join=buildModel_05
 node_error=kill
 
-@LEV@
-@SRC@
 @FOLDS@
 
 		@PIG_START@
+			@PR-4@
 			@CONFIG-1@
 			@WF-4@
 		@PIG_END@
 
 # END:FORK_MERGE
-
+ -->
 # BEG:FORK_MERGE 
 
-node_name=buildModel 
-node_after_join=testModel 
+node_name=buildModel_05
+node_after_join=testModel_06
 node_error=kill
 
 @FOLDS@
 		@PIG_START@
+			@PR-5@
 			@CONFIG-1@
 			@WF-5@
 		@PIG_END@
@@ -218,18 +269,20 @@ node_error=kill
 
 # BEG:FORK_MERGE 
 
-node_name=testModel 
+node_name=testModel_06
 node_after_join=end 
 node_error=kill
 
 @FOLDS@
 
 		@PIG_START@
+			@PR-6@
 			@CONFIG-1@
 			@WF-6@
 		@PIG_END@
 
 # END:FORK_MERGE
+<!-- 
 -->
 @OOZIE-END@
 
