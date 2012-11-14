@@ -25,8 +25,29 @@ public class Replace {
 			String[] nameVal = findNameVal(tmpSb, startStop);
 			
 			tmpSb.delete(startStop[0], startStop[1]);
-			tmpSb = new StringBuilder(OozieWorkflowBaker.revertDollarSing(tmpSb.toString().replaceAll(nameVal[0],OozieWorkflowBaker.escapeDollarSing(nameVal[1]))));
-			//System.out.println(tmpSb.toString());
+
+			try{
+//				if(tmpSb.toString().length()!=0 && 
+	//				tmpSb.toString().length()!=0 &&
+		//			tmpSb.toString().length()!=0)
+			//	{
+						tmpSb = new StringBuilder(tmpSb.toString().replace(
+							nameVal[0],nameVal[1]));
+				//}
+			}catch(NullPointerException e){
+				System.out.println(tmpSb.toString());
+				System.out.println("!!!!!!!!!!!!!!!!!!!!!!!=============================!!!!!!!!!!!!");
+				System.out.println(nameVal[0]);
+				System.out.println("!!!!!!!!!!!!!!!!!!!!!!!=============================!!!!!!!!!!!!");
+				System.out.println(nameVal[1]);
+				System.out.println("=============================");
+				System.out.println("=============================");
+				System.out.println("=============================");
+				System.out.println("=============================");
+				System.out.println("=============================");
+				System.out.println("=============================");
+			}
+
 		}
 		
 		return tmpSb;
