@@ -32,7 +32,7 @@ object Matcher extends ScoobiApp {
    * @param index an index to be used for document retrieval
    * @return matching documents
    */
-  def approximatelyMatchingDocuments(citation: CitationWrapper, index: AuthorIndex) = {
+  def approximatelyMatchingDocuments(citation: CitationWrapper, index: AuthorIndex): Iterable[DocumentMetadataWrapper] = {
     val documentsWithMatchNo =
       citation.normalisedAuthorTokens
         .flatMap {
@@ -53,7 +53,7 @@ object Matcher extends ScoobiApp {
     }.keys
   }
 
-  def approximatelyMatchingDocuments(citation: CitationWrapper, indexUri: String) = {
+  def approximatelyMatchingDocuments(citation: CitationWrapper, indexUri: String): Iterable[DocumentMetadataWrapper] = {
     approximatelyMatchingDocuments(citation, new AuthorIndex(indexUri))
   }
 
