@@ -51,4 +51,4 @@ extracted_X = FOREACH raw GENERATE
 
 neigh = filter extracted_X by $1 is not null;
 --neigh = SAMPLE neighX 0.01;
-STORE neigh into '$DEF_DST'; --key,map,part
+STORE neigh into '$dc_m_hdfs_neighs'; --key,map,part

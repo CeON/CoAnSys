@@ -1,9 +1,6 @@
-<!-- ============================================================================== -->
-<!-- ========================== OOZIE-GENERAL ===================================== -->
-<!-- ============================================================================== -->
 # BEG:REPLACE @OOZIE-START@
-<workflow-app name='document-classification-train' xmlns="uri:oozie:workflow:0.2">
-	<start to='01_docs2neigh'/>
+<workflow-app name='dc-train-model' xmlns="uri:oozie:workflow:0.2">
+	<start to='docs2neigh_01'/>
 # END:REPLACE
 
 # BEG:REPLACE @OOZIE-END@
@@ -35,9 +32,6 @@
 # BEG:REPLACE @FOLDS@
 @fold@ seq(0,${dc_m_int_folds},1)
 # END:REPLACE
-<!-- ============================================================================== -->
-<!-- ============================= CONFIG ========================================= -->
-<!-- ============================================================================== -->
 # BEG:REPLACE @CONFIG-1@
 			<configuration>
 				<property>
@@ -60,25 +54,24 @@
 				<!-- HBase Configuration -->
 				<property>
 					<name>hbase.mapreduce.inputtable</name>
-					<value>${dc_classification_InputHBase}</value>
+					<value>${dc_m_hbase_inputDocsData}</value>
 				</property>
 			</configuration>
 # END:REPLACE
-<!-- ============================================================================== -->
-<!-- ============================= AUXIL ========================================== -->
-<!-- ============================================================================== -->
+
 # BEG:REPLACE @AUXIL@
 			<param>commonJarsPath=${commonJarsPath}</param>
 			<file>${pigScriptsDir}/AUXIL_docsim.macros.def.pig#AUXIL_docsim.macros.def.pig</file>
 			<file>${pigScriptsDir}/AUXIL_macros.def.pig#AUXIL_macros.def.pig</file>
 # END:REPLACE
-<!-- ============================================================================== -->
-<!-- ============================= WF-1 =========================================== -->
-<!-- ============================================================================== -->
-# BEG:REPLACE @WF-1@
+
+# BEG:REPLACE @PR-1@
 			<prepare>
 				<delete path="${dc_m_hdfs_neighs}"/>
 			</prepare>
+# END:REPLACE
+# BEG:REPLACE @WF-1@
+
 			<script>${pigScriptsDir}/1_MODEL_CREATE_01_docs2neig.pig</script>
 
 			<param>dc_m_hbase_inputDocsData=${dc_m_hbase_inputDocsData}</param>
@@ -86,9 +79,7 @@
 			<param>dc_m_int_folds=${dc_m_int_folds}</param>
 			@AUXIL@
 # END:REPLACE
-<!-- ============================================================================== -->
-<!-- ============================= WF-2 =========================================== -->
-<!-- ============================================================================== -->
+
 # BEG:REPLACE @WF-2@
 			<prepare>
 				<delete path="${dataForDocClassif}"/>
@@ -101,17 +92,9 @@
 			<param>dc_m_int_folds=${dc_m_int_folds}</param>
 			@AUXIL@
 # END:REPLACE
-<!-- ============================================================================== -->
-<!-- ============================= WF-3 =========================================== -->
-<!-- ============================================================================== -->
+
 # BEG:REPLACE @WF-3@
-<!--
-@src@ ${dc_m_hdfs_neighs} ${dc_m_hdfs_docClassifMapping}
-@fold@ seq(0,${dc_m_int_folds},1)
-RETURNS: 
-@src@_Te_@fold@
-@src@_Tr_@fold@
--->
+
 			<prepare>
 				<delete path="@src@_Te_@fold@"/>
 				<delete path="@src@_Tr_@fold@"/>
@@ -121,15 +104,9 @@ RETURNS:
 			<param>dc_m_int_concreteInvestigatedFold=@fold@</param>
 			@AUXIL@
 # END:REPLACE
-<!-- ============================================================================== -->
-<!-- ============================= WF-4 =========================================== -->
-<!-- ============================================================================== -->
+
 # BEG:REPLACE @WF-4@
-<!--
-@lev@ Te Tr
-@src@ ${dc_m_hdfs_neighs} ${dc_m_hdfs_docClassifMapping}
-@fold@ seq(0,${dc_m_int_folds},1)
--->
+
 			<prepare>
 				<delete path="${dc_m_hdfs_dataEnriched}_@lev@_@fold@"/>
 			</prepare>
@@ -144,13 +121,8 @@ RETURNS:
 			<file>../SIM/${sim}.pig#${sim}.pig</file>
 			<file>../FV/${fv}.pig#${fv}.pig</file>
 # END:REPLACE
-<!-- ============================================================================== -->
-<!-- ============================= WF-5 =========================================== -->
-<!-- ============================================================================== -->
+
 # BEG:REPLACE @WF-5@
-<!--
-@fold@ seq(0,${dc_m_int_folds},1)
--->
 			<prepare>
 				<delete path="${dataModel}_${fv}_${sim}_${@fold@}_${mb}"/>
 			</prepare>
@@ -161,9 +133,6 @@ RETURNS:
 			@AUXIL@
 			<file>../MODEL_BLD_CLASS/${mb}Build.pig#${mb}Build.pig</file>
 # END:REPLACE
-<!-- ============================================================================== -->
-<!-- ============================= WF-6 =========================================== -->
-<!-- ============================================================================== -->
 # BEG:REPLACE @WF-6@
 <!--
 @fold@ seq(0,${dc_m_int_folds},1)
@@ -184,8 +153,9 @@ RETURNS:
 <!-- ============================================================================== -->
 # BEG:REMOVE_UP_TO_HERE
 @OOZIE-START@
-# BEG:ACTION name=01_docs2neigh ok=02_assignAndCreateDocClassif error=kill
+# BEG:ACTION name=docs2neigh_01 ok=end error=kill
 		@PIG_START@
+			@PR-1@
 			@CONFIG-1@
 			@WF-1@
 		@PIG_END@

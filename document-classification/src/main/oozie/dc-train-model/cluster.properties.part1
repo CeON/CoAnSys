@@ -5,7 +5,7 @@ jobTracker=${masterNode}:8021
 hbaseZookeeperQuorum=${masterNode}
 queueName=default
 project=coansys
-subproject=dc-model-building
+subproject=dc-train-model
 ###################### AUXIL 
 dc_time_infix=@TIME_INFIX@
 dc_opts_infix=@OPTS_INFIX@
@@ -28,7 +28,7 @@ dc_m_hdfs_docClassifMapping=${results}/doc_classif_mapping
 ######################################## INPUT # INT ###################################
 dc_m_int_categBoundary=1
 dc_m_int_folds=5
-dc_m_int_numOfNeighbours=5
+@dc_m_int_numOfNeighbours@ 3 5 7
 ##################################### INPUT # PIG_SCRIPT ###############################
 dc_m_pigScript_strategyOfNeigCandidatesFiltering=categsPresentGEQNumber
 dc_m_pigScript_featureVector=tfidf
@@ -45,18 +45,4 @@ dc_m_hdfs_dataEnriched=${results}/dataEnrich
 ######################################## OUTPUT ########################################
 
 
-
-### input model
-dc_c_modelcreation_ModelDir=${nameNode}/user/${user.name}/parts/doc-classif/model
-### input hbase table with documents
- 
-### input featurevector creation method
-dc_c_classification_fv=tfidf
-### input similarity method
-dc_c_classification_sim=cosine
-### input number of neighbours
-dc_c_classification_neigh=3
-
-### output HDFS localzation for classification
-dc_c_classification_OutputDir=${nameNode}/user/${user.name}/parts/dc-classification/doc_classif/${dc_all_join_infix}
 

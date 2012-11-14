@@ -30,7 +30,10 @@ fi
 echo "Copying required libaries to ${TASK}/lib"
 cp /usr/lib/pig/pig-0.9.2-cdh4.0.1.jar ${WORKFLOW_LOCAL_LIB_DIR}
 cp ../../../../document-classification/target/document-classification-1.0-SNAPSHOT.jar ${WORKFLOW_LOCAL_LIB_DIR}
-cp ../../../../document-classification/target/document-classification-1.0-SNAPSHOT-only-dependencies.jar ${WORKFLOW_LOCAL_LIB_DIR}
+cp ../../../../commons/target/commons-1.0-SNAPSHOT.jar ${WORKFLOW_LOCAL_LIB_DIR}
+cp ../../../../importers/target/importers-1.0-SNAPSHOT.jar ${WORKFLOW_LOCAL_LIB_DIR}
+cp ../../../../disambiguation/target/disambiguation-1.0-SNAPSHOT.jar ${WORKFLOW_LOCAL_LIB_DIR}
+cp ../../../../document-similarity/target/document-similarity-1.0-SNAPSHOT.jar ${WORKFLOW_LOCAL_LIB_DIR}
 
 echo "Copying required pig scripts to ${TASK}"
 cp -r ../pig/*.pig ${WORKFLOW_LOCAL_PIG_DIR}
