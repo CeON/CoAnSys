@@ -2,7 +2,7 @@ package pl.edu.icm.coansys.citations
 
 import collection.JavaConversions._
 import com.nicta.scoobi.application.ScoobiApp
-import com.nicta.scoobi.core.DList
+import com.nicta.scoobi.core.{Emitter, DoFn, DList}
 import com.nicta.scoobi.Persist._
 import com.nicta.scoobi.InputsOutputs._
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata
@@ -29,11 +29,10 @@ object Matcher extends ScoobiApp {
    * 3.	Filter out documents containing less than M-1 matching authors.
    *
    * @param citation a citation to process
-   * @param indexUri an index to be used for document retrieval
+   * @param index an index to be used for document retrieval
    * @return matching documents
    */
-  def approximatelyMatchingDocuments(citation: CitationWrapper, indexUri: String) = {
-    val index = new AuthorIndex(indexUri)
+  def approximatelyMatchingDocuments(citation: CitationWrapper, index: AuthorIndex) = {
     val documentsWithMatchNo =
       citation.normalisedAuthorTokens
         .flatMap {
@@ -54,6 +53,10 @@ object Matcher extends ScoobiApp {
     }.keys
   }
 
+  def approximatelyMatchingDocuments(citation: CitationWrapper, indexUri: String) = {
+    approximatelyMatchingDocuments(citation, new AuthorIndex(indexUri))
+  }
+
   def similarity(citation: CitationWrapper, document: DocumentMetadataWrapper): Double = {
     // that's just mock implementation
     val citationString = if (citation.meta.hasTitle) citation.meta.getTitle else citation.meta.getText
@@ -64,9 +67,17 @@ object Matcher extends ScoobiApp {
 
   def matches(citations: DList[CitationWrapper], indexUri: String) = {
     citations
-      .flatMap {
-      cit => Stream.continually(cit) zip approximatelyMatchingDocuments(cit, indexUri)
-    }
+      .parallelDo(new DoFn[CitationWrapper, (CitationWrapper, DocumentMetadataWrapper)] {
+      val index = new AuthorIndex(indexUri)
+
+      def setup() {}
+
+      def process(cit: CitationWrapper, emitter: Emitter[(CitationWrapper, DocumentMetadataWrapper)]) {
+        Stream.continually(cit) zip approximatelyMatchingDocuments(cit, index) foreach (emitter.emit(_))
+      }
+
+      def cleanup(emitter: Emitter[(CitationWrapper, DocumentMetadataWrapper)]) {}
+    })
       .groupByKey[CitationWrapper, DocumentMetadataWrapper]
       .flatMap {
       case (cit, docs) =>
