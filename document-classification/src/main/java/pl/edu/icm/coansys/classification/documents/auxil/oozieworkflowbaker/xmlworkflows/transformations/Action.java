@@ -77,7 +77,7 @@ public class Action {
 		
 		script.append("	<action name='"+params.get("name")+"'>\n");
 		addScriptLines(script,sample);
-		script.append("		<ok to='"+params.get("ok")+"_join'/>\n");
+		script.append("		<ok to='"+params.get("ok")+"'/>\n");
 		script.append("		<error to='"+params.get("error")+"'/>\n");
 		script.append("	</action>\n");
 		script.append("\n\n");
