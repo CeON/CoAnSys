@@ -6,6 +6,7 @@ function change() { #1: string to change #old string # new string
 
 TASK=$1
 PROPERTIES_INGRIDIENT=$2
+RM=$3
 
 TIME_INFIX=`echo -e "import time\nprint time.time()" | python`
 
@@ -56,15 +57,15 @@ done
 rm -r -f oozie_${TIME_INFIX}
 rm -r -f ./TMP${TIME_INFIX}/
 
-if [ ! -f ../../target/document-classification-1.0-SNAPSHOT.jar ] ; then
-	cd ../../
-	mvn install
-	cd ./src/main
+PWD=`pwd`
+if [ "${RM}" = "RM" -o ! -f ../../target/document-classification-1.0-SNAPSHOT.jar ] ; then
+	cd ../../..
+	mvn install -DskipTests
+	eval "cd ${PWD}"
 fi
-
 for i in ${OPTS_CROSS};
 do
-	java -cp ../../target/document-classification-1.0-SNAPSHOT.jar pl.edu.icm.coansys.classification.documents.auxil.oozieworkflowbaker.xmlworkflows.OozieWorkflowBaker  oozie_${TIME_INFIX}_OPTS_${i}/${TASK}/workflow/workflow.xml.part1 .xml.part1 .xml
-	rm oozie_${TIME_INFIX}_OPTS_${i}/${TASK}/workflow/workflow.xml.part1
+	java -cp ../../target/document-classification-1.0-SNAPSHOT.jar pl.edu.icm.coansys.classification.documents.auxil.oozieworkflowbaker.xmlworkflows.OozieWorkflowBaker  oozie_${TIME_INFIX}_OPTS_${i}/${TASK}/workflow/workflow.xml.part1 `change oozie_${TIME_INFIX}_OPTS_${i}/${PROPERTIES_INGRIDIENT} ies.part1 ies` .xml.part1 .xml
+	rm oozie_${TIME_INFIX}_OPTS_${i}/${TASK}/workflow/workflow.xml.part1 
 done
 
