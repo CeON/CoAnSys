@@ -68,9 +68,11 @@ object Matcher extends ScoobiApp {
   def matches(citations: DList[CitationWrapper], indexUri: String) = {
     citations
       .parallelDo(new DoFn[CitationWrapper, (CitationWrapper, DocumentMetadataWrapper)] {
-      val index = new AuthorIndex(indexUri)
+      var index: AuthorIndex = null
 
-      def setup() {}
+      def setup() {
+        index = new AuthorIndex(indexUri)
+      }
 
       def process(cit: CitationWrapper, emitter: Emitter[(CitationWrapper, DocumentMetadataWrapper)]) {
         Stream.continually(cit) zip approximatelyMatchingDocuments(cit, index) foreach (emitter.emit(_))
