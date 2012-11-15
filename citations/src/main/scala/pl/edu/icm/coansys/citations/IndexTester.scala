@@ -10,7 +10,7 @@ object IndexTester extends ScoobiApp {
 
   def testIndex(indexUri: String, query: String) {
     val index = new AuthorIndex(indexUri)
-    index.getDocumentsByAuthor(query).foreach(x => println(x.id))
+    index.getDocumentsByAuthor(query).foreach(println)
   }
 
   def run() {

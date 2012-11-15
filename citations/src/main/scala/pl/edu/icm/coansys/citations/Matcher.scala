@@ -32,7 +32,7 @@ object Matcher extends ScoobiApp {
    * @param index an index to be used for document retrieval
    * @return matching documents
    */
-  def approximatelyMatchingDocuments(citation: CitationWrapper, index: AuthorIndex): Iterable[DocumentMetadataWrapper] = {
+  def approximatelyMatchingDocuments(citation: CitationWrapper, index: AuthorIndex): Iterable[String] = {
     val documentsWithMatchNo =
       citation.normalisedAuthorTokens
         .flatMap {
@@ -53,7 +53,7 @@ object Matcher extends ScoobiApp {
     }.keys
   }
 
-  def approximatelyMatchingDocuments(citation: CitationWrapper, indexUri: String): Iterable[DocumentMetadataWrapper] = {
+  def approximatelyMatchingDocuments(citation: CitationWrapper, indexUri: String): Iterable[String] = {
     approximatelyMatchingDocuments(citation, new AuthorIndex(indexUri))
   }
 
@@ -67,42 +67,42 @@ object Matcher extends ScoobiApp {
 
   def citationsWithHeuristic(citations: DList[CitationWrapper], indexUri: String) =
     citations
-      .parallelDo(new DoFn[CitationWrapper, (CitationWrapper, DocumentMetadataWrapper)] {
+      .parallelDo(new DoFn[CitationWrapper, (CitationWrapper, String)] {
       var index: AuthorIndex = null
 
       def setup() {
         index = new AuthorIndex(indexUri)
       }
 
-      def process(cit: CitationWrapper, emitter: Emitter[(CitationWrapper, DocumentMetadataWrapper)]) {
+      def process(cit: CitationWrapper, emitter: Emitter[(CitationWrapper, String)]) {
         Stream.continually(cit) zip approximatelyMatchingDocuments(cit, index) foreach (emitter.emit(_))
       }
 
-      def cleanup(emitter: Emitter[(CitationWrapper, DocumentMetadataWrapper)]) {}
+      def cleanup(emitter: Emitter[(CitationWrapper, String)]) {}
     })
 
 
-  def matches(citations: DList[CitationWrapper], indexUri: String) = {
-    citationsWithHeuristic(citations, indexUri)
-      .groupByKey[CitationWrapper, DocumentMetadataWrapper]
-      .flatMap {
-      case (cit, docs) =>
-        val aboveThreshold =
-          docs
-            .map {
-            doc => (doc, similarity(cit, doc))
-          }
-            .filter(_._2 >= minimalSimilarity)
-
-        if (!aboveThreshold.isEmpty)
-          Some(cit, aboveThreshold.maxBy(_._2)._1)
-        else
-          None
-    }
-      .map {
-      case (cit, doc) => (cit.meta.getSource, doc.meta.getKey)
-    }
-  }
+  //  def matches(citations: DList[CitationWrapper], indexUri: String) = {
+  //    citationsWithHeuristic(citations, indexUri)
+  //      .groupByKey[CitationWrapper, DocumentMetadataWrapper]
+  //      .flatMap {
+  //      case (cit, docs) =>
+  //        val aboveThreshold =
+  //          docs
+  //            .map {
+  //            doc => (doc, similarity(cit, doc))
+  //          }
+  //            .filter(_._2 >= minimalSimilarity)
+  //
+  //        if (!aboveThreshold.isEmpty)
+  //          Some(cit, aboveThreshold.maxBy(_._2)._1)
+  //        else
+  //          None
+  //    }
+  //      .map {
+  //      case (cit, doc) => (cit.meta.getSource, doc.meta.getKey)
+  //    }
+  //  }
 
   def readCitationsFromSeqFiles(uris: List[String]): DList[CitationWrapper] = {
     implicit val converter = new BytesConverter[DocumentMetadata](_.toByteArray, DocumentMetadata.parseFrom(_))
@@ -122,7 +122,8 @@ object Matcher extends ScoobiApp {
   }
 
   def run() {
-    val myMatches = matches(readCitationsFromDocumentsFromSeqFiles(List(args(1))), args(0))
+    configuration.set("mapred.max.split.size", 500000)
+    val myMatches = citationsWithHeuristic(readCitationsFromDocumentsFromSeqFiles(List(args(1))), args(0))
     persist(convertToSequenceFile(myMatches, args(2)))
   }
 }

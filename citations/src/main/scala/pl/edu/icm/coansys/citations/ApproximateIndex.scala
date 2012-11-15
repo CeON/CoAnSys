@@ -10,7 +10,6 @@ import com.nicta.scoobi.io.sequence.SeqSchema
 import com.nicta.scoobi.Persist.persist
 import com.nicta.scoobi.InputsOutputs.convertToSequenceFile
 import com.nicta.scoobi.application.ScoobiConfiguration
-import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata
 
 /**
  * A class helping in approximate index saved in MapFile usage.
@@ -89,8 +88,8 @@ object ApproximateIndex {
     def indexEntries(allDocs: DList[DocumentMetadataWrapper]) = {
       val tokensWithDocs =
         allDocs
-          .flatMap(d => d.normalisedAuthorTokens zip Iterator.continually(d).toIterable)
-          .groupByKey[String, DocumentMetadataWrapper]
+          .flatMap(d => d.normalisedAuthorTokens zip Iterator.continually(d.meta.getKey).toIterable)
+          .groupByKey[String, String]
 
       val rotationsWithDocs = tokensWithDocs.flatMap {
         case (token, docs) =>
@@ -103,11 +102,12 @@ object ApproximateIndex {
       rotationsWithDocs
     }
 
-    implicit object docsIterableSchema extends SeqSchema[Iterable[DocumentMetadataWrapper]] {
-      def toWritable(x: Iterable[DocumentMetadataWrapper]) = new BytesIterable(x map (_.meta.toByteArray))
+    implicit object dockeysIterableSchema extends SeqSchema[Iterable[String]] {
+
+      def toWritable(x: Iterable[String]) = new BytesIterable(x map (Text.encode(_).array()))
 
       def fromWritable(x: SeqType) =
-        x.iterable map (bs => new DocumentMetadataWrapper(DocumentMetadata.parseFrom(bs)))
+        x.iterable map (Text.decode(_))
 
       type SeqType = BytesIterable
       val mf = manifest[BytesIterable]
