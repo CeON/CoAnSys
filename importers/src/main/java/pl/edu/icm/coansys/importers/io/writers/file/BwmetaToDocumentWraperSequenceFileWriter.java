@@ -52,7 +52,7 @@ public class BwmetaToDocumentWraperSequenceFileWriter {
         String collection = args[1];
         String outputSequenceFile = args[2];
 
-        boolean isSnappyCompressed = (args.length >= 4 ? Boolean.parseBoolean(args[3]) : true);
+        boolean isSnappyCompressed = (args.length >= 4 ? Boolean.parseBoolean(args[3]) : false);
         if (args.length >= 5) {
             PropertyConfigurator.configure(args[4]);
         }
@@ -132,18 +132,20 @@ public class BwmetaToDocumentWraperSequenceFileWriter {
         LOGGER.trace("\tCollection = " + doc.getCollection());
 
         DocumentMetadata documentMetadata = doc.getDocumentMetadata();
-        if (documentMetadata.getSerializedSize() > 0) {
+        byte[] documentMetadataBytes = documentMetadata.toByteArray();
+        if (documentMetadataBytes.length > 0) {
             dw.setDocumentMetadata(documentMetadata);
             LOGGER.trace("\tArchiveZip = " + documentMetadata.getSourceArchive());
             LOGGER.trace("\tSourcePath = " + documentMetadata.getSourcePath());
-            LOGGER.trace("\tDocumentMetadata size: " + documentMetadata.toByteArray().length);
+            LOGGER.trace("\tDocumentMetadata size: " + documentMetadataBytes.length);
             metadataCount++;
         }
 
         MediaContainer mediaConteiner = doc.getMediaConteiner();
-        if (mediaConteiner.getSerializedSize() > 0) {
+        byte[] mediaConteinerBytes = mediaConteiner.toByteArray();
+        if (mediaConteinerBytes.length > 0) {
             dw.setMediaContainer(mediaConteiner);
-            LOGGER.info("\tMediaConteiner size: " + (mediaConteiner.toByteArray().length / 1024 / 1024) + "MB");
+            LOGGER.info("\tMediaConteiner size: " + (mediaConteinerBytes.length / 1024 / 1024) + "MB");
             for (Media media : mediaConteiner.getMediaList()) {
                 long size = media.getSourcePathFilesize() / 1024 / 1024;
                 LOGGER.info("\tArchiveZip = " + media.getSourceArchive());

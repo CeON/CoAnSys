@@ -159,7 +159,7 @@ public class MetadataToProtoMetadataParser {
     private static Author.Builder yattributeToAuthorMetadata(YAttribute node) {
         Author.Builder author = DocumentProtos.Author.newBuilder();
         author.setKey(UUID.randomUUID().toString());
-//        author.setType(HBaseConstants.T_AUTHOR_COPY);
+//      author.setType(HBaseConstants.T_AUTHOR_COPY);
         String content;
         if ((content = node.getValue()) != null) {
             author.setName(content);

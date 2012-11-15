@@ -18,10 +18,8 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
-import org.apache.hadoop.util.GenericOptionsParser;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
-import static pl.edu.icm.coansys.importers.constants.HBaseConstant.*;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentWrapper;
 import pl.edu.icm.coansys.importers.transformers.DocumentWrapper2HBasePut;
 
@@ -31,9 +29,9 @@ import pl.edu.icm.coansys.importers.transformers.DocumentWrapper2HBasePut;
  */
 public class DocumentWrapperSequenceFileToHBase implements Tool {
 
-  
     private Configuration conf;
     final static String BULK_OUTPUT_CONF_KEY = "bulk.output";
+    private static String[] DEFAULT_ARGS = {"/home/akawa/bwndata/sf/cedram-noncompress.sf", "presplited"};
 
     @Override
     public void setConf(Configuration conf) {
@@ -46,6 +44,7 @@ public class DocumentWrapperSequenceFileToHBase implements Tool {
     }
 
     public static enum Counters {
+
         DPROTO, CPROTO, MPROTO, CPROTO_SKIPPED
     }
 
@@ -60,13 +59,18 @@ public class DocumentWrapperSequenceFileToHBase implements Tool {
             DocumentWrapper documentWrapper = DocumentWrapper.parseFrom(documentWrapperBytes.copyBytes());
             Put put = DocumentWrapper2HBasePut.translate(documentWrapper);
             docWrapRowKey.set(put.getRow());
-            
+
             context.write(docWrapRowKey, put);
         }
     }
 
     @Override
     public int run(String[] args) throws Exception {
+
+        if (args.length < 2) {
+            usage("Wrong number of arguments: " + args.length);
+            System.exit(-1);
+        }
 
         getOptimizedConfiguration(conf);
 
@@ -110,13 +114,11 @@ public class DocumentWrapperSequenceFileToHBase implements Tool {
     }
 
     public static void main(String[] args) throws Exception {
-        Configuration conf = HBaseConfiguration.create();
-        String[] otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();
-        if (otherArgs.length < 2) {
-            usage("Wrong number of arguments: " + otherArgs.length);
-            System.exit(-1);
+        if (args.length == 0) {
+            args = DEFAULT_ARGS;
         }
 
+        Configuration conf = HBaseConfiguration.create();
         int result = ToolRunner.run(conf, new DocumentWrapperSequenceFileToHBase(), args);
         System.exit(result);
     }
