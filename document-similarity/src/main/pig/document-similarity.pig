@@ -11,7 +11,7 @@
 %default tfidfTitleWeight 0.35
 %default tfidfAbstractWeight 0.15
 
-%default stopwordDocumentFrequencyTreshold 0.65
+%default stopwordDocumentFrequencyTreshold 0.40
 %default tfidfTopnTermPerDocument 20
 %default similarityTopnDocumentPerDocument 20
 %default tfidfMinValue 0.50
