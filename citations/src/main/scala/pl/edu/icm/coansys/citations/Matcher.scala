@@ -65,7 +65,7 @@ object Matcher extends ScoobiApp {
     lcsLen.toDouble / minLen
   }
 
-  def matches(citations: DList[CitationWrapper], indexUri: String) = {
+  def citationsWithHeuristic(citations: DList[CitationWrapper], indexUri: String) =
     citations
       .parallelDo(new DoFn[CitationWrapper, (CitationWrapper, DocumentMetadataWrapper)] {
       var index: AuthorIndex = null
@@ -80,6 +80,10 @@ object Matcher extends ScoobiApp {
 
       def cleanup(emitter: Emitter[(CitationWrapper, DocumentMetadataWrapper)]) {}
     })
+
+
+  def matches(citations: DList[CitationWrapper], indexUri: String) = {
+    citationsWithHeuristic(citations, indexUri)
       .groupByKey[CitationWrapper, DocumentMetadataWrapper]
       .flatMap {
       case (cit, docs) =>
