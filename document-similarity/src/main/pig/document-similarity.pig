@@ -91,12 +91,11 @@ STORE tfidf_weighted INTO '$outputPath$TFIDF_WEIGHTED_SUBDIR';
 -- calculate and store topn terms per document in weighted results
 tfidf_weighted_topn = get_topn_per_group(tfidf_weighted, docId, tfidf, 'desc', $tfidfTopnTermPerDocument);
 tfidf_weighted_topn_projected = FOREACH tfidf_weighted_topn GENERATE
-	top::docId AS docId, top::term AS term, top::tfidf AS tfidf;
+	(chararray)top::docId AS docId, (chararray)top::term AS term, (double)top::tfidf AS tfidf;
 STORE tfidf_weighted_topn_projected INTO '$outputPath$TFIDF_TOPN_WEIGHTED_SUBDIR';
 
 -- calculate and store document similarity for all documents
-tfidf_weighted_topn_loaded = LOAD '$outputPath$TFIDF_TOPN_WEIGHTED_SUBDIR' AS (docId, term, tfidf);
-document_similarity = calculate_pairwise_similarity(tfidf_weighted_topn_loaded, docId, term, tfidf, '::');
+document_similarity = calculate_pairwise_similarity(tfidf_weighted_topn_projected, docId, term, tfidf, '::');
 STORE document_similarity INTO '$outputPath$SIMILARITY_ALL_DOCS_SUBDIR';
 
 -- calculate and store topn similar documents for each document
