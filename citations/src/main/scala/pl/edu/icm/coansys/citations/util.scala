@@ -17,6 +17,7 @@ object util {
           author.getSurname).flatMap(_.split( """[^\p{L}]+"""))
     }
       .filter(_.length > 1)
+      .map(_.toLowerCase)
       .toSet
   }
 }
