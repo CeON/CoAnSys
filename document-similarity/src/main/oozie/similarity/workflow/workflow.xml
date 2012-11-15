@@ -5,7 +5,7 @@
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
             <prepare>
-                <delete path="${ds_tfidfOutputDir}"/>
+                <delete path="${ds_similarityOutputPath}"/>
             </prepare>
             <configuration>
                 <property>
@@ -13,97 +13,16 @@
                     <value>${queueName}</value>
                 </property> 
             </configuration>
-            <script>${pigScriptsDir}/tfidf.pig</script>
+            <script>${pigScriptsDir}/document-similarity.pig</script>
             <param>inputPath=${ds_bwndataMetadataInputPath}</param>
-            <param>outputPath=${ds_tfidfOutputDir}</param>
+            <param>outputPath=${ds_similarityOutputPath}</param>
             <param>commonJarsPath=${commonJarsPath}</param>
             <param>parallel=${ds_parallel}</param>
             <param>tmpCompressionCodec=${ds_tmpCompressionCodec}</param>
+            <param>sample=${ds_sample}</param>
+            <param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>            
             <file>${pigScriptsDir}/macros.pig#macros.pig</file> 
         </pig>       
-        <ok to='top-tfidf-per-document'/>
-        <error to='kill'/>
-    </action>
-    <action name='top-tfidf-per-document'>
-        <pig>
-            <job-tracker>${jobTracker}</job-tracker>
-            <name-node>${nameNode}</name-node>
-            <prepare>
-                <delete path="${ds_topTfidfOutputDir}"/>
-            </prepare>
-            <configuration>
-                <property>
-                    <name>mapred.job.queue.name</name>
-                    <value>${queueName}</value>
-                </property> 
-            </configuration>
-            <script>${pigScriptsDir}/topn_tfidf_per_document.pig</script>
-            <param>inputPath=${ds_tfidfOutputDir}/weighted</param>
-            <param>outputPath=${ds_topTfidfOutputDir}</param>
-            <param>commonJarsPath=${commonJarsPath}</param>
-            <param>parallel=${ds_parallel}</param>
-            <param>tmpCompressionCodec=${ds_tmpCompressionCodec}</param>
-            <file>${pigScriptsDir}/macros.pig#macros.pig</file> 
-        </pig>       
-        <ok to='choose-similarity-method'/>
-        <error to='kill'/>
-    </action>
-    <decision name="choose-similarity-method">
-        <switch>
-            <case to="pairwise-similarity">
-                ${ds_similarityAlgorithm == 'pairwiseSimilarity'}
-            </case>
-            <case to="allpairs-similarity">
-                ${ds_similarityAlgorithm == 'allpairsSimilarity'}
-            </case>
-            <default to="kill"/>
-        </switch>
-    </decision>
-    <action name='pairwise-similarity'>
-        <pig>
-            <job-tracker>${jobTracker}</job-tracker>
-            <name-node>${nameNode}</name-node>
-            <prepare>
-                <delete path="${ds_similarityOutputDir}"/>
-            </prepare>
-            <configuration>
-                <property>
-                    <name>mapred.job.queue.name</name>
-                    <value>${queueName}</value>
-                </property> 
-            </configuration>
-            <script>${pigScriptsDir}/pairwise_similarity.pig</script>
-            <param>inputPath=${ds_topTfidfOutputDir}</param>
-            <param>outputPath=${ds_similarityOutputDir}</param>
-            <param>commonJarsPath=${commonJarsPath}</param>
-            <param>parallel=${ds_parallel}</param>
-            <param>tmpCompressionCodec=${ds_tmpCompressionCodec}</param>
-            <file>${pigScriptsDir}/macros.pig#macros.pig</file>
-        </pig>
-        <ok to='end'/>
-        <error to='kill'/>
-    </action>
-    <action name='allpairs-similarity'>
-        <pig>
-            <job-tracker>${jobTracker}</job-tracker>
-            <name-node>${nameNode}</name-node>
-            <prepare>
-                <delete path="${ds_similarityOutputDir}"/>
-            </prepare>
-            <configuration>
-                <property>
-                    <name>mapred.job.queue.name</name>
-                    <value>${queueName}</value>
-                </property> 
-            </configuration>
-            <script>${pigScriptsDir}/allpairs_similarity.pig</script>
-            <param>inputPath=${ds_topTfidfOutputDir}</param>
-            <param>outputPath=${ds_similarityOutputDir}</param>
-            <param>commonJarsPath=${commonJarsPath}</param>
-            <param>parallel=${ds_parallel}</param>
-            <param>tmpCompressionCodec=${ds_tmpCompressionCodec}</param>
-            <file>${pigScriptsDir}/macros.pig#macros.pig</file>
-        </pig>
         <ok to='end'/>
         <error to='kill'/>
     </action>
