@@ -1,11 +1,11 @@
-%default TFIDF_KEYWORD_SUBDIR '/keyword'
-%default TFIDF_TITLE_SUBDIR '/title'
-%default TFIDF_ABSTRACT_SUBDIR '/abstract'
-%default TFIDF_WEIGHTED_SUBDIR '/weighted'
-%default TFIDF_NON_WEIGHTED_SUBDIR '/nonweighted'
+%default TFIDF_KEYWORD_SUBDIR '/tfidf/keyword'
+%default TFIDF_TITLE_SUBDIR '/tfidf/title'
+%default TFIDF_ABSTRACT_SUBDIR '/tfidf/abstract'
+%default TFIDF_WEIGHTED_SUBDIR '/tfidf/weighted'
+%default TFIDF_NON_WEIGHTED_SUBDIR '/tfidf/nonweighted'
 %default STOPWORDS_SUBDIR '/stopwords'
-%default SIMILARITY_ALL_DOCS_SUBDIR
-%default SIMILARITY_TOPN_DOCS_SUBDIR
+%default SIMILARITY_ALL_DOCS_SUBDIR '/similarity/alldocs'
+%default SIMILARITY_TOPN_DOCS_SUBDIR '/similarity/topn'
 
 %default tfidfKeywordWeight 0.50
 %default tfidfTitleWeight 0.35
@@ -21,14 +21,16 @@
 %default tmpCompressionCodec gz
 %default mapredChildJavaOpts -Xmx8000m
 
-%default inputPath 'hdfs://hadoop-master:8020/user/akawa/full/hbase-dump/mproto-m*'
-%default outputPath 'hdfs://hadoop-master:8020/user/akawa/full/similarity/tfidf-limited-20'
+%default inputPath 'full/hbase-dump/mproto-m*'
+%default outputPath 'document-similarity-output'
 %default commonJarsPath '../oozie/similarity/workflow/lib/*.jar'
 
 REGISTER '$commonJarsPath'
 
 DEFINE WeightedTFIDF pl.edu.icm.coansys.similarity.pig.udf.TFIDF('weighted');
 DEFINE StemmedPairs pl.edu.icm.coansys.similarity.pig.udf.StemmedPairs();
+DEFINE KeywordSimilarity pl.edu.icm.coansys.similarity.pig.udf.AvgSimilarity('dks');
+DEFINE DocsCombinedSimilarity pl.edu.icm.coansys.similarity.pig.udf.AvgSimilarity('dkcs');
 
 SET default_parallel $parallel
 SET mapred.child.java.opts $mapredChildJavaOpts
@@ -56,10 +58,10 @@ stopwords = find_stopwords(doc_all_distinct, docId, term, $stopwordDocumentFrequ
 STORE stopwords INTO '$outputPath$STOPWORDS_SUBDIR';
 
 -- remove stopwrods from terms
-doc_keyword = remove_stopwords(doc_keyword_all, stopwords, docId, term);
-doc_title = remove_stopwords(doc_title_all, stopwords, docId, term);
-doc_abstract = remove_stopwords(doc_abstract_all, stopwords, docId, term);
-doc_all = remove_stopwords(doc_all_distinct, stopwords, docId, term);
+doc_keyword = remove_stopwords(doc_keyword_all, stopwords, docId, term, '::');
+doc_title = remove_stopwords(doc_title_all, stopwords, docId, term, '::');
+doc_abstract = remove_stopwords(doc_abstract_all, stopwords, docId, term, '::');
+doc_all = remove_stopwords(doc_all_distinct, stopwords, docId, term, '::');
 
 -- calculate tf-idf for each group of terms
 tfidf_keyword = calculate_tfidf(doc_keyword, docId, term, $tfidfMinValue);
@@ -68,8 +70,8 @@ tfidf_title = calculate_tfidf(doc_title, docId, term, $tfidfMinValue);
 tfidf_all = calculate_tfidf(doc_all, docId, term, $tfidfMinValue);
 
 -- calculate weighted results
-tfidf_all_joined_A = FOREACH (JOIN doc_term_distinct BY (docId, term) LEFT OUTER, tfidf_abstract BY (docId, term))
-	GENERATE doc_term_distinct::docId AS docId, doc_term_distinct::term AS term, tfidf AS tfidfAbstract;
+tfidf_all_joined_A = FOREACH (JOIN doc_all_distinct BY (docId, term) LEFT OUTER, tfidf_abstract BY (docId, term))
+	GENERATE doc_all_distinct::docId AS docId, doc_all_distinct::term AS term, tfidf AS tfidfAbstract;
 tfidf_all_joined_AK = FOREACH (JOIN tfidf_all_joined_A BY (docId, term) LEFT OUTER, tfidf_keyword BY (docId, term))
 	GENERATE tfidf_all_joined_A::docId AS docId, tfidf_all_joined_A::term AS term, tfidfAbstract, tfidf AS tfidfKeyword;
 tfidf_all_joined_AKT = FOREACH (JOIN tfidf_all_joined_AK BY (docId, term) LEFT OUTER, tfidf_title BY (docId, term))
@@ -87,11 +89,13 @@ STORE tfidf_weighted INTO '$outputPath$TFIDF_WEIGHTED_SUBDIR';
 
 -- calculate topn terms per document in weighted results
 tfidf_weighted_topn = get_topn_per_group(tfidf_weighted, docId, tfidf, 'desc', $tfidfTopnTermPerDocument);
+tfidf_weighted_topn_projected = FOREACH tfidf_weighted_topn GENERATE
+	top::docId AS docId, top::term AS term, top::tfidf AS tfidf;
 
 -- calculate and store document similarity for all documents
-document_similarity = calculate_pairwise_similarity(tfidf_weighted_topn, docId, term, tfidf);
+document_similarity = calculate_pairwise_similarity(tfidf_weighted_topn_projected, docId, term, tfidf, '::');
 STORE document_similarity INTO '$outputPath$SIMILARITY_ALL_DOCS_SUBDIR';
 
 -- calculate and store topn similar documents for each document
 document_similarity_topn = get_topn_per_group(document_similarity, docId1, similarity, 'desc', $similarityTopnDocumentPerDocument);
-STORE document_similarity_topn INTO '$outputPath$SIMILARITY_TOP_DOCS_SUBDIR';
+STORE document_similarity_topn INTO '$outputPath$SIMILARITY_TOPN_DOCS_SUBDIR';
