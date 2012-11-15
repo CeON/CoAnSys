@@ -41,7 +41,7 @@ public class AvgSimilarity extends EvalFunc<Double> {
      */
     private Double getDocumentsKeywordSimilarity(Tuple input) {
         try {
-            String keyword = (String) input.get(0);
+            byte[] keyword = ((DataByteArray) input.get(0)).get();
             byte[] doc1Key = ((DataByteArray) input.get(1)).get();
             double doc1KeywordWeight = (Double) input.get(2);
             byte[] doc2Key = ((DataByteArray) input.get(3)).get();
