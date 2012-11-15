@@ -71,9 +71,8 @@ public class POS_NEG extends EvalFunc<Tuple>{
 			}
 			
 		}catch(Exception e){
-			// Throwing an exception will cause the task to fail.
-            throw new IOException("Caught exception processing input row:\n"
-            		+ StackTraceExtractor.getStackTrace(e));
+            throw new IOException("Caught exception processing input row:\t"
+            		+StackTraceExtractor.getStackTrace(e).replace("\n", "\t"));
 		}
 	}
 }
