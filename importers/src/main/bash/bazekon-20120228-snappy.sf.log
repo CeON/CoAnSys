@@ -1,0 +1,21 @@
+time ./import-via-sequence-files.sh sf ../../../target/importers-1.0-SNAPSHOT-jar-with-dependencies.jar /mnt/tmp/bwndata/bazekon-20120228 bazekon /mnt/tmp/bwndata-sf/bazekon-20120228-snappy.sf true
+
+12/10/31 18:31:17 INFO file.BwmetaToDocumentWraperSequenceFileWriter: 78162 document count
+12/10/31 18:31:17 INFO file.BwmetaToDocumentWraperSequenceFileWriter: 78162 metadata records
+12/10/31 18:31:17 INFO file.BwmetaToDocumentWraperSequenceFileWriter: 1057 mediaContainer records
+12/10/31 18:31:17 INFO file.BwmetaToDocumentWraperSequenceFileWriter: 1057 media records
+12/10/31 18:31:17 INFO file.BwmetaToDocumentWraperSequenceFileWriter: 0MB = 810
+12/10/31 18:31:17 INFO file.BwmetaToDocumentWraperSequenceFileWriter: 1MB = 70
+12/10/31 18:31:17 INFO file.BwmetaToDocumentWraperSequenceFileWriter: 2MB = 49
+12/10/31 18:31:17 INFO file.BwmetaToDocumentWraperSequenceFileWriter: 3MB = 45
+12/10/31 18:31:17 INFO file.BwmetaToDocumentWraperSequenceFileWriter: 4MB = 35
+12/10/31 18:31:17 INFO file.BwmetaToDocumentWraperSequenceFileWriter: 5MB = 22
+12/10/31 18:31:17 INFO file.BwmetaToDocumentWraperSequenceFileWriter: 6MB = 17
+12/10/31 18:31:17 INFO file.BwmetaToDocumentWraperSequenceFileWriter: 7MB = 3
+12/10/31 18:31:17 INFO file.BwmetaToDocumentWraperSequenceFileWriter: 8MB = 3
+12/10/31 18:31:17 INFO file.BwmetaToDocumentWraperSequenceFileWriter: 11MB = 2
+12/10/31 18:31:17 INFO file.BwmetaToDocumentWraperSequenceFileWriter: 12MB = 1
+
+real	135m58.460s
+user	19m47.254s
+sys	2m56.967s
