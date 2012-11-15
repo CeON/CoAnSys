@@ -24,16 +24,21 @@ pigScriptsDir=pig
 ######################################## INPUT # HBASE #################################
 dc_m_hbase_inputDocsData=pdendek_springer_mo
 ######################################## HDFS ##################################
-dc_m_hdfs_neighs=${OLD_RESULTS}/neighs
-dc_m_hdfs_docClassifMapping=${OLD_RESULTS}/doc_classif_mapping
-dc_m_hdfs_model=${OLD_RESULTS}/model
-dc_m_hdfs_dataEnriched=${OLD_RESULTS}/dataEnrich
-dc_m_hdfs_modelEvaluation=${OLD_RESULTS}/modelEval
+dc_m_hdfs_neighs=${results}/neighs
+dc_m_hdfs_docClassifMapping=${results}/doc_classif_mapping
+dc_m_hdfs_model=${results}/model
+dc_m_hdfs_dataEnriched=${results}/dataEnrich
+dc_m_hdfs_modelEvaluation=${results}/modelEval
 ######################################## INPUT # INT ###################################
-dc_m_double_sample=0.0001
+dc_m_double_sample=0.5
 dc_m_int_categBoundary=1
 @dc_m_int_folds@ 5
 dc_m_int_numOfNeighbours=5
+######################################## INPUT # SET-PARAMS ############################
+job_priority=normal
+#job_priority=high
+pig_tmpfilecompression_param=true
+pig_tmpfilecompression_codec_param=lzo
 ##################################### INPUT # PIG_SCRIPT ###############################
 dc_m_pigScript_strategyOfNeigCandidatesFiltering=categsPresentGEQNumber
 dc_m_pigScript_featureVector=tfidf

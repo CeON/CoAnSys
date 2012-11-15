@@ -3,7 +3,7 @@
 <!-- ============================================================================== -->
 # BEG:REPLACE @OOZIE-START@
 <workflow-app name='dc-train-model' xmlns="uri:oozie:workflow:0.2">
-	<start to='buildModel_05'/>
+	<start to='docs2neigh_01'/>
 # END:REPLACE
 
 # BEG:REPLACE @OOZIE-END@
@@ -68,6 +68,10 @@
 <!-- ============================= AUXIL ========================================== -->
 <!-- ============================================================================== -->
 # BEG:REPLACE @AUXIL@
+			<param>job_priority=${job_priority}</param>
+			<param>pig_tmpfilecompression_param=${pig_tmpfilecompression_param}</param>
+			<param>pig_tmpfilecompression_codec_param=${pig_tmpfilecompression_codec_param}</param>
+
 			<param>commonJarsPath=${commonJarsPath}</param>
 			<file>${pigScriptsDir}/AUXIL_docsim.macros.def.pig#AUXIL_docsim.macros.def.pig</file>
 			<file>${pigScriptsDir}/AUXIL_macros.def.pig#AUXIL_macros.def.pig</file>
@@ -139,12 +143,14 @@ RETURNS:
 # BEG:REPLACE @WF-4@
 <!--
 @fold@ seq(0,${dc_m_int_folds},1)
+@lev@ Te Tr
 -->
 			<script>${pigScriptsDir}/1_MODEL_CREATE_04_enrich.pig</script>
 
 			<param>dc_m_hdfs_neighs=${dc_m_hdfs_neighs}_@lev@_@fold@</param>
 			<param>dc_m_hdfs_docClassifMapping=${dc_m_hdfs_docClassifMapping}_@lev@_@fold@</param>
-			<param>dc_m_hdfs_dataEnriched=${dc_m_hdfs_dataEnriched}_Tr_@fold@</param>
+			<param>dc_m_hdfs_dataEnriched=${dc_m_hdfs_dataEnriched}_@lev@_@fold@</param>
+
 			<param>dc_m_int_numOfNeighbours=${dc_m_int_numOfNeighbours}</param>
 			<param>dc_m_pigScript_featureVector=${dc_m_pigScript_featureVector}</param>
 			<param>dc_m_pigScript_similarityMetric=${dc_m_pigScript_similarityMetric}</param>
@@ -167,10 +173,13 @@ RETURNS:
 -->
 			<script>${pigScriptsDir}/1_MODEL_CREATE_05_build_model.pig</script>
 
-			<param>dc_m_hdfs_neighs=${dc_m_hdfs_neighs}</param>
+			<param>dc_m_hdfs_neighs=${dc_m_hdfs_neighs}_Tr_@fold@</param>
+			<param>dc_m_hdfs_docClassifMapping=${dc_m_hdfs_docClassifMapping}_Tr_@fold@</param>
+			<param>dc_m_hdfs_dataEnriched=${dc_m_hdfs_dataEnriched}_Tr_@fold@</param>
+			<param>dc_m_hdfs_model=${dc_m_hdfs_model}_@fold@</param>
+
 			<param>dc_m_int_numOfNeighbours=${dc_m_int_numOfNeighbours}</param>
 			<param>dc_m_pigScript_modelBuilderClass=${dc_m_pigScript_modelBuilderClass}</param>
-			<param>dc_m_hdfs_model=${dc_m_hdfs_model}_@fold@</param>
 
 			@AUXIL@
 			<file>${pigScriptsDir}/MODEL_BLD_CLASS_${dc_m_pigScript_modelBuilderClass}.pig#MODEL_BLD_CLASS_${dc_m_pigScript_modelBuilderClass}.pig</file>
@@ -189,9 +198,12 @@ RETURNS:
 -->
 			<script>${pigScriptsDir}/1_MODEL_CREATE_06_test_model.pig</script>
 
+			<param>dc_m_hdfs_neighs=${dc_m_hdfs_neighs}_Te_@fold@</param>
+			<param>dc_m_hdfs_docClassifMapping=${dc_m_hdfs_docClassifMapping}_Te_@fold@</param>
 			<param>dc_m_hdfs_dataEnriched=${dc_m_hdfs_dataEnriched}_Te_@fold@</param>
 			<param>dc_m_hdfs_model=${dc_m_hdfs_model}_@fold@</param>
 			<param>dc_m_hdfs_modelEvaluation=${dc_m_hdfs_modelEvaluation}_@fold@</param>
+
 			<param>dc_m_pigScript_modelUse=${dc_m_pigScript_modelUse}</param>
 
 			@AUXIL@
@@ -203,6 +215,7 @@ RETURNS:
 # BEG:REMOVE_UP_TO_HERE
 @OOZIE-START@
 <!-- 
+ -->
 # BEG:ACTION name=docs2neigh_01 ok=assignAndCreateDocClassif_02 error=kill
 		@PIG_START@
 			@PR-1@
@@ -243,6 +256,7 @@ node_after_join=buildModel_05
 node_error=kill
 
 @FOLDS@
+@LEV@
 
 		@PIG_START@
 			@PR-4@
@@ -251,7 +265,7 @@ node_error=kill
 		@PIG_END@
 
 # END:FORK_MERGE
- -->
+
 # BEG:FORK_MERGE 
 
 node_name=buildModel_05
