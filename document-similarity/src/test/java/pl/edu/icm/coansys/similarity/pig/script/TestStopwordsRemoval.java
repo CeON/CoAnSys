@@ -20,6 +20,7 @@ public class TestStopwordsRemoval extends AbstractPigUnitTest {
         "doc_word=doc_word",
         "doc_field=docId",
         "term_field=term",
+        "stopword_field=term",
         "stopwords=stopwords",
         "non_stopwords=non_stopwords"
     };
