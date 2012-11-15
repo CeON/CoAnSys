@@ -15,7 +15,6 @@ import java.util.List;
 import org.apache.pig.EvalFunc;
 import org.apache.pig.backend.executionengine.ExecException;
 import org.apache.pig.data.DataBag;
-import org.apache.pig.data.DataByteArray;
 import org.apache.pig.data.Tuple;
 import pl.edu.icm.coansys.similarity.documents.function.AvgSimilarityFunction;
 import pl.edu.icm.coansys.similarity.documents.function.SimilarityFunction;
@@ -41,10 +40,10 @@ public class AvgSimilarity extends EvalFunc<Double> {
      */
     private Double getDocumentsKeywordSimilarity(Tuple input) {
         try {
-            byte[] keyword = ((DataByteArray) input.get(0)).get();
-            byte[] doc1Key = ((DataByteArray) input.get(1)).get();
+            String keyword = (String) input.get(0);
+            String doc1Key = (String) input.get(1);
             double doc1KeywordWeight = (Double) input.get(2);
-            byte[] doc2Key = ((DataByteArray) input.get(3)).get();
+            String doc2Key = (String) input.get(3);
             double doc2KeywordWeight = (Double) input.get(4);
 
             return simFunct.getDocumentsKeywordSimilarity(keyword, doc1Key, doc1KeywordWeight, doc2Key, doc2KeywordWeight);
@@ -59,9 +58,9 @@ public class AvgSimilarity extends EvalFunc<Double> {
     private Double getDocumentsKeywordsCombinedSimilarity(Tuple input) {
         try {
             DataBag bag1 = (DataBag) input.get(0);
-            byte[] doc1Key = ((DataByteArray) bag1.iterator().next().get(0)).get();
+            String doc1Key = (String) bag1.iterator().next().get(0);
             DataBag bag2 = (DataBag) input.get(1);
-            byte[] doc2Key = ((DataByteArray) bag2.iterator().next().get(0)).get();
+            String doc2Key = (String) bag2.iterator().next().get(0);
 
             DataBag bag = (DataBag) input.get(2);
             Iterator<Tuple> iterator = bag.iterator();

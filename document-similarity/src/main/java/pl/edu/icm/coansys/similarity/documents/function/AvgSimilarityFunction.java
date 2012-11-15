@@ -11,12 +11,12 @@ public class AvgSimilarityFunction implements SimilarityFunction {
     private static final double EMPTY_VALUE = 0d;
 
     @Override
-    public double getDocumentsKeywordSimilarity(byte[] keyword, byte[] doc1key, double doc1keywordWeight, byte[] doc2key, double doc2keywordWeight) {
+    public double getDocumentsKeywordSimilarity(String keyword, String doc1key, double doc1keywordWeight, String doc2key, double doc2keywordWeight) {
         return doc1keywordWeight * doc2keywordWeight;
     }
 
     @Override
-    public double getDocumentsTotalSimilarity(byte[] doc1key, byte[] doc2key, List<Double> keywordsSimilarities) {
+    public double getDocumentsTotalSimilarity(String doc1key, String doc2key, List<Double> keywordsSimilarities) {
         if (keywordsSimilarities == null || keywordsSimilarities.isEmpty()) {
             return EMPTY_VALUE;
         }
