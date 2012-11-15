@@ -144,7 +144,7 @@ DEFINE calculate_tfidf(in_relation, id_field, token_field, tfidfMinValue) RETURN
       			tf_idf as tfidf;
   	};
 	-- get only important terms
-	$tfidf_values = FILTER tfidf_all BY tfidf >= tfidfMinValue;
+	$tfidf_values = FILTER tfidf_all BY tfidf >= $tfidfMinValue;
 };
 
 
