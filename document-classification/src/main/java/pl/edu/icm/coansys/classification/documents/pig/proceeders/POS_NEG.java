@@ -45,6 +45,14 @@ public class POS_NEG extends EvalFunc<Tuple>{
 			DataBag categsB = (DataBag) input.get(3);
 			String categQ = (String) input.get(4);
 			
+			if(
+					keyA == null ||
+					keyB == null ||
+					categsA == null ||
+					categsB == null ||
+					categQ == null
+			) return null;
+			
 			boolean inA = false;
 			boolean inB = false;
 			
