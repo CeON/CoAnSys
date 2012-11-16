@@ -2,7 +2,8 @@ package pl.edu.icm.coansys.citations
 
 import pl.edu.icm.coansys.commons.scala.strings.rotations
 import org.apache.hadoop.conf.Configuration
-import org.apache.hadoop.fs.LocalFileSystem
+import org.apache.hadoop.filecache.DistributedCache
+import org.apache.hadoop.fs.Path
 import org.apache.hadoop.io.{Writable, Text, MapFile}
 import collection.mutable.ListBuffer
 import com.nicta.scoobi.core.DList
@@ -18,7 +19,7 @@ import com.nicta.scoobi.application.ScoobiConfiguration
  */
 class ApproximateIndex[V <: Writable : Manifest](val indexFileUri: String) {
   val conf = new Configuration()
-  val reader = new MapFile.Reader(new LocalFileSystem(), indexFileUri, conf)
+  val reader = new MapFile.Reader(DistributedCache.getLocalCacheFiles(conf)(0), conf)
 
   def get(query: String): Iterable[V] = {
     def isTooBig(query: String, key: String): Boolean =
