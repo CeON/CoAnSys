@@ -1,7 +1,7 @@
 package pl.edu.icm.coansys.citations
 
 import collection.JavaConversions._
-import com.nicta.scoobi.application.ScoobiApp
+import com.nicta.scoobi.application.{ScoobiConfiguration, ScoobiApp}
 import com.nicta.scoobi.core.{Emitter, DoFn, DList}
 import com.nicta.scoobi.Persist._
 import com.nicta.scoobi.InputsOutputs._
@@ -53,9 +53,9 @@ object Matcher extends ScoobiApp {
     }.keys
   }
 
-  def approximatelyMatchingDocuments(citation: CitationWrapper, indexUri: String): Iterable[String] = {
-    approximatelyMatchingDocuments(citation, new AuthorIndex(indexUri))
-  }
+  //  def approximatelyMatchingDocuments(citation: CitationWrapper, indexUri: String): Iterable[String] = {
+  //    approximatelyMatchingDocuments(citation, new AuthorIndex(indexUri))
+  //  }
 
   def similarity(citation: CitationWrapper, document: DocumentMetadataWrapper): Double = {
     // that's just mock implementation
@@ -71,7 +71,7 @@ object Matcher extends ScoobiApp {
       var index: AuthorIndex = null
 
       def setup() {
-        index = new AuthorIndex(indexUri)
+        index = new AuthorIndex(indexUri, implicitly[ScoobiConfiguration])
       }
 
       def process(cit: CitationWrapper, emitter: Emitter[(CitationWrapper, String)]) {
