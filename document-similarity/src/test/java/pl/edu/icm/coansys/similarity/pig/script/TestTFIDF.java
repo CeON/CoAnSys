@@ -16,12 +16,14 @@ import pl.edu.icm.coansys.similarity.test.utils.MacroExtractor;
  */
 public class TestTFIDF extends AbstractPigUnitTest {
 
-    private  String[] params = {
+    private String[] params = {
         "in_relation=in_relation",
         "id_field=docId",
         "token_field=term",
         "tfidf_values=tfidf_values",
-        "parallel=1"
+        "tfidfMinValue=0.0",
+        "parallel=1",
+        "CC=::"
     };
 
     @Override
@@ -108,6 +110,4 @@ public class TestTFIDF extends AbstractPigUnitTest {
 
         test.assertOutput("in_relation", input, "tfidf_values", tfidfOutput);
     }
-
-
 }
