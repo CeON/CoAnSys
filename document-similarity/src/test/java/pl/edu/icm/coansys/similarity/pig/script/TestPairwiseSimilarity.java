@@ -67,6 +67,7 @@ public class TestPairwiseSimilarity extends AbstractPigUnitTest {
             "(t1,d1,d2,5.0,4.0,20.0)",
             "(t2,d1,d2,2.0,8.0,16.0)"
         };
+        
         test.assertOutput("in_relation", input, "term_doc_similarity", termDocSimilarity);
 
         String[] docsSimilarity = {

@@ -20,23 +20,14 @@ import org.testng.annotations.BeforeClass;
 public abstract class AbstractPigUnitTest {
 
     public PigTest test;
-    public static Cluster cluster;
+    public Cluster cluster;
     
     public final String PIG_SCRIPT_DIR = "src/main/pig/";
     public String[] script;
 
-    @BeforeClass
-    public static void beforeClass() throws Exception {
-        cluster = PigTest.getCluster();
-    }
-
-    @AfterClass
-    public static void afterClass() throws Exception {
-        cluster.delete(new Path("pigunit-input-overriden.txt"));
-    }
-
     @BeforeTest
     public void init() throws FileNotFoundException, IOException {
+        cluster = PigTest.getCluster();
         script = getScriptToTest();
         test = new PigTest(script, getScriptParams());
     }
