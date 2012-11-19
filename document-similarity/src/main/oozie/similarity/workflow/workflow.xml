@@ -13,7 +13,7 @@
                     <value>${queueName}</value>
                 </property> 
             </configuration>
-            <script>${pigScriptsDir}/document-similarity.pig</script>
+            <script>${pigScriptsDir}/document-similarity-tiny.pig</script>
             <param>inputPath=${ds_bwndataMetadataInputPath}</param>
             <param>outputPath=${ds_similarityOutputPath}</param>
             <param>commonJarsPath=${commonJarsPath}</param>
