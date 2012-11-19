@@ -15,7 +15,9 @@ import java.util.List;
 import org.apache.pig.EvalFunc;
 import org.apache.pig.backend.executionengine.ExecException;
 import org.apache.pig.data.DataBag;
+import org.apache.pig.data.DataType;
 import org.apache.pig.data.Tuple;
+import org.apache.pig.impl.logicalLayer.schema.Schema;
 import pl.edu.icm.coansys.similarity.documents.function.AvgSimilarityFunction;
 import pl.edu.icm.coansys.similarity.documents.function.SimilarityFunction;
 
@@ -87,5 +89,15 @@ public class AvgSimilarity extends EvalFunc<Double> {
             return getDocumentsKeywordsCombinedSimilarity(input);
         }
         throw new RuntimeException("Unsupported type: " + type);
+    }
+    
+    @Override
+    public Schema outputSchema(Schema input) {
+        try{
+            Schema doubleSchema = new Schema();
+            return new Schema(new Schema.FieldSchema(getSchemaName(this.getClass().getName().toLowerCase(), input),doubleSchema, DataType.DOUBLE));
+        }catch (Exception e){
+                return null;
+        }
     }
 }
