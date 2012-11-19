@@ -54,6 +54,8 @@ doc_abstract_all = stem_words(doc, 'abstract');
 doc_all_union = UNION doc_keyword_all, doc_title_all, doc_abstract_all;
 doc_all_distinct = DISTINCT doc_all_union;
 
+-- comment lines bellow if you do not want to run some experimental algorithm to run stopwords detection
+/*
 -- find and store stopwords
 stopwords = find_stopwords(doc_all_distinct, docId, term, $stopwordDocumentFrequencyTreshold);
 STORE stopwords INTO '$outputPath$STOPWORDS_SUBDIR';
@@ -63,6 +65,13 @@ doc_keyword = remove_stopwords(doc_keyword_all, stopwords, docId, term, '::');
 doc_title = remove_stopwords(doc_title_all, stopwords, docId, term, '::');
 doc_abstract = remove_stopwords(doc_abstract_all, stopwords, docId, term, '::');
 doc_all = remove_stopwords(doc_all_distinct, stopwords, docId, term, '::');
+*/
+
+-- use this, if stopwords are not removed by lines above
+doc_keyword = get_copy(doc_keyword_all);
+doc_title = get_copy(doc_title_all);
+doc_abstract = get_copy(doc_abstract_all);
+doc_all = get_copy(doc_all_distinct);
 
 -- calculate tf-idf for each group of terms
 tfidf_keyword = calculate_tfidf(doc_keyword, docId, term, $tfidfMinValue);

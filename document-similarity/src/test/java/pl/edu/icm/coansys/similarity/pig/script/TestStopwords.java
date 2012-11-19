@@ -23,7 +23,8 @@ public class TestStopwords extends AbstractPigUnitTest {
         "doc_field=docId",
         "term_field=term",
         "percentage=0.9",
-        "stopwords=stopwords"
+        "stopwords=stopwords",
+        "CC=::"
     };
 
     @Override
