@@ -9,10 +9,10 @@
 
 %default tfidfTopnTermPerDocument 20
 %default similarityTopnDocumentPerDocument 20
-%default tfidfMinValue 0.50
+%default tfidfMinValue 0.05
 
 %default sample 0.5
-%default parallel 32
+%default parallel 10
 %default tmpCompressionCodec gz
 %default mapredChildJavaOpts -Xmx8000m
 
