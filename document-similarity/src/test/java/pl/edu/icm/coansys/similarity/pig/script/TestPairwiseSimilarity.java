@@ -18,7 +18,8 @@ public class TestPairwiseSimilarity extends AbstractPigUnitTest {
         "term_field=term",
         "tfidf_field=tfidf",
         "out_relation=out_relation",
-        "outputPath=null"
+        "outputPath=null",
+         "CC=::"
     };
 
     @org.testng.annotations.Test(groups = {"fast"})
@@ -82,7 +83,7 @@ public class TestPairwiseSimilarity extends AbstractPigUnitTest {
                 + "REGISTER target/document-similarity-1.0-SNAPSHOT.jar;"
                 + "DEFINE KeywordSimilarity pl.edu.icm.coansys.similarity.pig.udf.AvgSimilarity('dks');"
                 + "DEFINE DocsCombinedSimilarity pl.edu.icm.coansys.similarity.pig.udf.AvgSimilarity('dkcs');"
-                + "in_relation = LOAD 'ommited' AS (docId, term, tfidf: double);");
+                + "in_relation = LOAD 'ommited' AS (docId: chararray, term: chararray, tfidf: double);");
         macro.addLast("similarity = ORDER out_relation BY docId1, docId2, similarity;");
         return macro.toArray(new String[]{});
     }

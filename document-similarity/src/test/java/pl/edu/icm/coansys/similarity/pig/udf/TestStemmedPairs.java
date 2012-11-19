@@ -35,7 +35,7 @@ public class TestStemmedPairs {
 
     @org.testng.annotations.Test(groups = {"fast"})
     public void testStemmingAbstract() throws IOException, ParseException {
-        List<String[]> strings = sp.getStemmedPairs("Orientation: Stress is a social reality which does not exist in isolation, but in many social situations,\n"
+        List<String> strings = sp.getStemmedPairs("Orientation: Stress is a social reality which does not exist in isolation, but in many social situations,\n"
                 + "especially work-related environments. Police officers in particular suffer from highly negative stress\n"
                 + "related outcomes.\n"
                 + "Research purpose: The purpose of the study was to determine how Moos's hypothesised stress and\n"
@@ -63,77 +63,75 @@ public class TestStemmedPairs {
 
     @org.testng.annotations.Test(groups = {"fast"})
     public void testStemmingTitle() throws IOException, ParseException {
-        List<String[]> strings = sp.getStemmedPairs("An evAluAtion of A psychosociAl stress And coping model in the police work context");
+        List<String> strings = sp.getStemmedPairs("An evAluAtion of A psychosociAl stress And coping model in the police work context");
         println(strings);
     }
 
     @org.testng.annotations.Test(groups = {"fast"})
     public void testStemmingKeywords() throws IOException, ParseException {
-        List<String[]> strings = sp.getStemmedPairs("police stress_coping strategies_vigour_burnout_resources");
+        List<String> strings = sp.getStemmedPairs("police stress_coping strategies_vigour_burnout_resources");
         println(strings);
     }
 
     @org.testng.annotations.Test(groups = {"fast"})
     public void testStemmingKeywords2() throws IOException, ParseException {
-        List<String[]> strings = sp.getStemmedPairs("Carbohydrate metabolism_Pyruvate_SDH_MDH_Cestode parasites_Gallus gallus domesticus,contributorNames#Waghmare S.B._Chavan R.J.");
+        List<String> strings = sp.getStemmedPairs("Carbohydrate metabolism_Pyruvate_SDH_MDH_Cestode parasites_Gallus gallus domesticus,contributorNames#Waghmare S.B._Chavan R.J.");
         println(strings);
     }
 
     @org.testng.annotations.Test(groups = {"fast"})
     public void testStemmingKeywords3() throws IOException, ParseException {
-        List<String[]> strings = sp.getStemmedPairs("RFID (radio frequency identification) technology_Bar Coding_Retailing_Security_Inventory Control_Business Intelligence");
+        List<String> strings = sp.getStemmedPairs("RFID (radio frequency identification) technology_Bar Coding_Retailing_Security_Inventory Control_Business Intelligence");
         println(strings);
     }
 
     @org.testng.annotations.Test(groups = {"fast"})
     public void testStemming() throws IOException, ParseException {
-        List<String[]> strings = sp.getStemmedPairs("The big fat cat, said 'your funniest guy i know' to the kangaroo... ¿Escribiste la carta esta mañana?");
+        List<String> strings = sp.getStemmedPairs("The big fat cat, said 'your funniest guy i know' to the kangaroo... ¿Escribiste la carta esta mañana?");
         println(strings);
     }
 
     @org.testng.annotations.Test(groups = {"fast"})
     public void testStemming2() throws IOException, ParseException {
-        List<String[]> strings = sp.getStemmedPairs("The two-year old child when to the shop in Łódź to buy some beer");
+        List<String> strings = sp.getStemmedPairs("The two-year old child when to the shop in Łódź to buy some beer");
         println(strings);
     }
 
     @org.testng.annotations.Test(groups = {"fast"})
     public void testStemming3() throws IOException, ParseException {
-        List<String[]> strings = sp.getStemmedPairs("WHere to GO to buy some cool stuff?");
+        List<String> strings = sp.getStemmedPairs("WHere to GO to buy some cool stuff?");
         println(strings);
     }
 
     @org.testng.annotations.Test(groups = {"fast"})
     public void testStemming4() throws IOException, ParseException {
-        List<String[]> strings = sp.getStemmedPairs("Poland failed to quaily to 1/4-final in Euro2012");
+        List<String> strings = sp.getStemmedPairs("Poland failed to quaily to 1/4-final in Euro2012");
         println(strings);
     }
 
     @org.testng.annotations.Test(groups = {"fast"})
     public void testStemming5() throws IOException, ParseException {
-        List<String[]> strings = sp.getStemmedPairs("Guns N' Roses and rock 'n' roll");
+        List<String> strings = sp.getStemmedPairs("Guns N' Roses and rock 'n' roll");
         println(strings);
     }
 
     @org.testng.annotations.Test(groups = {"fast"})
     public void testStemmingPL1() throws IOException, ParseException {
-        List<String[]> strings = sp.getStemmedPairs("Poszła Ola do przedszkola, zapomniała parasola! A parasol był zepsuty, połamane wszystkie druty");
+        List<String> strings = sp.getStemmedPairs("Poszła Ola do przedszkola, zapomniała parasola! A parasol był zepsuty, połamane wszystkie druty");
         println(strings);
     }
 
     @org.testng.annotations.Test(groups = {"fast"})
     public void testStemmingPL2() throws IOException, ParseException {
-        List<String[]> strings = sp.getStemmedPairs("Z tego co wiem, to wiem, że nic nie wiem o tym i tamtym i owantym.");
+        List<String> strings = sp.getStemmedPairs("Z tego co wiem, to wiem, że nic nie wiem o tym i tamtym i owantym.");
         println(strings);
     }
 
-    private void println(List<String[]> strings) {
+    private void println(List<String> strings) {
         System.out.println("Stemmer output:");
-        for (String[] sa : strings) {
-            for (String s : sa) {
-                System.out.println(s);
-            }
-            System.out.println("---");
+        for (String s : strings) {
+            System.out.println(s);
         }
+        System.out.println("---");
     }
 }

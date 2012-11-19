@@ -22,7 +22,8 @@ public class TestStopwordsRemoval extends AbstractPigUnitTest {
         "term_field=term",
         "stopword_field=term",
         "stopwords=stopwords",
-        "non_stopwords=non_stopwords"
+        "non_stopwords=non_stopwords",
+        "CC=::"
     };
 
     @Override
