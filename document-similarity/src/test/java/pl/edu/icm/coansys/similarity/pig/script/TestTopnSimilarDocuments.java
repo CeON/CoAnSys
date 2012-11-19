@@ -22,7 +22,8 @@ public class TestTopnSimilarDocuments extends AbstractPigUnitTest {
         "order_field=tfidf",
         "order_direction=desc",
         "topn=2",
-        "out_relation=out_relation"
+        "out_relation=out_relation",
+            "CC=::"
     };
 
     @Override
@@ -40,7 +41,7 @@ public class TestTopnSimilarDocuments extends AbstractPigUnitTest {
     }
 
     @org.testng.annotations.Test(groups = {"fast"})
-    public void testStopwordsRemoval() throws IOException, ParseException {
+    public void testTopN() throws IOException, ParseException {
         String[] input = {
             "d1\td2\t4",
             "d1\td3\t3",
