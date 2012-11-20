@@ -6,4 +6,4 @@ JARS=../../../../integration/src/main/oozie/full/workflow/lib/*.jar
 
 hadoop fs -rm -r ${OUTPUT_PATH}
 
-pig -p tfidfMinValue=0.0 -p tmpCompressionCodec=lzo -p sample=0.1 -p similarityTopnDocumentPerDocument=20 -p commonJarsPath=${JARS} -p parallel=10 -p inputPath=full/hbase-dump/mproto-m*1 -p outputPath=${OUTPUT_PATH} -p mapredChildJavaOpts=-Xmx8000m -f ${SCRIPT}
+pig -p tfidfMinValue=0.5 -p tmpCompressionCodec=gz -p sample=0.1 -p similarityTopnDocumentPerDocument=20 -p commonJarsPath=${JARS} -p parallel=20 -p inputPath=full/hbase-dump/mproto-m*1 -p outputPath=${OUTPUT_PATH} -p mapredChildJavaOpts=-Xmx10000m -f ${SCRIPT}
