@@ -61,7 +61,7 @@ PWD=`pwd`
 if [ "${RM}" = "RM" -o ! -f ../../target/document-classification-1.0-SNAPSHOT.jar ] ; then
 	cd ../../..
 	mvn install -DskipTests
-	eval "cd ${PWD}"
+	cd ${PWD}
 fi
 for i in ${OPTS_CROSS};
 do

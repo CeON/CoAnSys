@@ -1,35 +1,45 @@
+###################### OOZIE
 masterNode=hadoop-master
 nameNode=hdfs://${masterNode}:8020
 jobTracker=${masterNode}:8021
 queueName=default
 project=coansys
 subproject=dc-classification
-
+###################### AUXIL 
+dc_time_infix=@TIME_INFIX@
+dc_opts_infix=@OPTS_INFIX@
+dc_join_infix=@TIME_INFIX@/@OPTS_INFIX@
+dc_general_prefix=${nameNode}/user/${user.name}/workflows/${subproject}/
+dc_general_prefix_join_infix=${dc_general_prefix}/@TIME_INFIX@/@OPTS_INFIX@/
+###################### OOZIE
 oozie.wf.application.path=${nameNode}/user/${user.name}/workflows/${subproject}/@TIME_INFIX@/@OPTS_INFIX@/workflow
+results=${dc_general_prefix_join_infix}/results/
+OLD_RESULTS=hdfs://hadoop-master:8020/user/pdendek/workflows/dc-train-model//1352919773.68/5//results//
 workflowPath=${oozie.wf.application.path}
 commonJarsPath=*.jar
 pigScriptsDir=pig
 
-########################################################################################
 ####################### document-classification classification #########################
 ###################################### INPUT ###########################################
-### TIME_INFIX
-dc_time_infix=@TIME_INFIX@
-### OPTS_INFIX
-dc_opts_infix=@OPTS_INFIX@
-### JOIN_INFIX
-dc_join_infix=@TIME_INFIX@/@OPTS_INFIX@
-### input model
-dc_modelcreation_ModelDir=${nameNode}/user/${user.name}/parts/doc-classif/model
-### input hbase table with documents
-dc_classification_InputHBase=pdendek_springer_mo 
-### input featurevector creation method
-@dc_classification_fv@ tfidf
-### input similarity method
-@dc_classification_sim@ cosine
-### input number of neighbours
-@dc_classification_neigh@ 3 5 7
-######################################## OUTPUT ########################################
-### output HDFS localzation for classification
-dc_classification_OutputDir=${nameNode}/user/${user.name}/parts/dc-classification/doc_classif/${dc_join_infix}
-########################################################################################
+######################################## INPUT # HBASE #################################
+dc_c_hbase_inputDocsData=pdendek_springer_mo
+######################################## HDFS ##################################
+dc_c_hdfs_neighs=${results}/neighs
+dc_c_hdfs_toClassif=${results}/to_classif
+dc_c_hdfs_model=${nameNode}/user/${user.name}/SACRED_MODEL
+dc_c_hdfs_classified=${results}/classified
+######################################## INPUT # SET-PARAMS ############################
+job_priority=normal
+#job_priority=high
+pig_tmpfilecompression_param=true
+@pig_tmpfilecompression_codec_param@ lzo 
+@parallel_param@ 10
+######################################## INPUT # INT ###################################
+@dc_c_double_sample@  0.1
+@dc_c_int_categBoundary@ 1
+@dc_c_int_numOfNeighbours@ 3 
+##################################### INPUT # PIG_SCRIPT ###############################
+@dc_c_pigScript_featureVector@ tfidf
+@dc_c_pigScript_similarityMetric@ cosine
+dc_c_pigScript_modelBuilderClass=mlknnThresBuild
+dc_c_pigScript_modelUse=mlknnThresClassify
