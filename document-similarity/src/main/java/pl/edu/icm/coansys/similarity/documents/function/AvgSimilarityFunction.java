@@ -12,7 +12,7 @@ public class AvgSimilarityFunction implements SimilarityFunction {
 
     @Override
     public double getDocumentsKeywordSimilarity(String keyword, String doc1key, double doc1keywordWeight, String doc2key, double doc2keywordWeight) {
-        return doc1keywordWeight * doc2keywordWeight;
+        return (doc1keywordWeight + doc2keywordWeight) / 2;
     }
 
     @Override
@@ -23,7 +23,7 @@ public class AvgSimilarityFunction implements SimilarityFunction {
         
         double similarity = 1d;
         for (int i = 0; i < keywordsSimilarities.size(); ++i) {
-            similarity *= keywordsSimilarities.get(i);
+            similarity += keywordsSimilarities.get(i);
         }
         
         similarity /= (double) keywordsSimilarities.size();
