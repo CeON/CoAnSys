@@ -1,13 +1,14 @@
 package pl.edu.icm.coansys.citations
 
 import collection.JavaConversions._
-import com.nicta.scoobi.application.{ScoobiConfiguration, ScoobiApp}
+import com.nicta.scoobi.application.ScoobiApp
 import com.nicta.scoobi.core.{Emitter, DoFn, DList}
 import com.nicta.scoobi.Persist._
 import com.nicta.scoobi.InputsOutputs._
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata
 import pl.edu.icm.coansys.commons.scala.strings
 import pl.edu.icm.coansys.importers.models.DocumentProtosWrapper.DocumentWrapper
+import org.apache.hadoop.io.{Text, BytesWritable}
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -71,7 +72,7 @@ object Matcher extends ScoobiApp {
       var index: AuthorIndex = null
 
       def setup() {
-        index = new AuthorIndex(indexUri, implicitly[ScoobiConfiguration])
+        index = new AuthorIndex(indexUri)
       }
 
       def process(cit: CitationWrapper, emitter: Emitter[(CitationWrapper, String)]) {
@@ -82,27 +83,46 @@ object Matcher extends ScoobiApp {
     })
 
 
-  //  def matches(citations: DList[CitationWrapper], indexUri: String) = {
-  //    citationsWithHeuristic(citations, indexUri)
-  //      .groupByKey[CitationWrapper, DocumentMetadataWrapper]
-  //      .flatMap {
-  //      case (cit, docs) =>
-  //        val aboveThreshold =
-  //          docs
-  //            .map {
-  //            doc => (doc, similarity(cit, doc))
-  //          }
-  //            .filter(_._2 >= minimalSimilarity)
-  //
-  //        if (!aboveThreshold.isEmpty)
-  //          Some(cit, aboveThreshold.maxBy(_._2)._1)
-  //        else
-  //          None
-  //    }
-  //      .map {
-  //      case (cit, doc) => (cit.meta.getSource, doc.meta.getKey)
-  //    }
-  //  }
+  def matches(citations: DList[CitationWrapper], keyIndexUri: String, authorIndexUri: String) = {
+    citationsWithHeuristic(citations, authorIndexUri)
+      .parallelDo(new DoFn[(CitationWrapper, String), (CitationWrapper, DocumentMetadataWrapper)] {
+      var index: SimpleIndex[Text, BytesWritable] = null
+      val text: Text = new Text()
+
+      def setup() {
+        index = new SimpleIndex[Text, BytesWritable](keyIndexUri)
+      }
+
+      def process(input: (CitationWrapper, String), emitter: Emitter[(CitationWrapper, DocumentMetadataWrapper)]) {
+        text.set(input._2)
+        index.get(text) match {
+          case Some(bytes) =>
+            emitter.emit((input._1, DocumentMetadata.parseFrom(bytes.getBytes)))
+          case _ => //intentionally left blank
+        }
+      }
+
+      def cleanup(emitter: Emitter[(CitationWrapper, DocumentMetadataWrapper)]) {}
+    })
+      .groupByKey[CitationWrapper, DocumentMetadataWrapper]
+      .flatMap {
+      case (cit, docs) =>
+        val aboveThreshold =
+          docs
+            .map {
+            doc => (doc, similarity(cit, doc))
+          }
+            .filter(_._2 >= minimalSimilarity)
+
+        if (!aboveThreshold.isEmpty)
+          Some(cit, aboveThreshold.maxBy(_._2)._1)
+        else
+          None
+    }
+      .map {
+      case (cit, doc) => (cit.meta.getSource, doc.meta.getKey)
+    }
+  }
 
   def readCitationsFromSeqFiles(uris: List[String]): DList[CitationWrapper] = {
     implicit val converter = new BytesConverter[DocumentMetadata](_.toByteArray, DocumentMetadata.parseFrom(_))
@@ -123,7 +143,7 @@ object Matcher extends ScoobiApp {
 
   def run() {
     configuration.set("mapred.max.split.size", 500000)
-    val myMatches = citationsWithHeuristic(readCitationsFromDocumentsFromSeqFiles(List(args(1))), args(0))
-    persist(convertToSequenceFile(myMatches, args(2)))
+    val myMatches = matches(readCitationsFromDocumentsFromSeqFiles(List(args(2))), args(0), args(1))
+    persist(convertToSequenceFile(myMatches, args(3)))
   }
 }

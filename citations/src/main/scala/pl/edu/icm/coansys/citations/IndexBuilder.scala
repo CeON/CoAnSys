@@ -28,10 +28,16 @@ object IndexBuilder extends ScoobiApp {
 
   def run() {
     if (args.length != 2) {
-      println("Usage: IndexBuilder <input_seqfile> <output_index_path>")
+      println("Usage: IndexBuilder [-key|-author] <input_seqfile> <output_index_path>")
     } else {
-      ApproximateIndex.buildAuthorIndex(readDocsFromSeqFiles(List(args(0))), args(1))
-      //ApproximateIndex.buildAuthorIndex(mockReadDocs(), args(0))
+      args(0) match {
+        case "-key" =>
+          SimpleIndex.buildKeyIndex(readDocsFromSeqFiles(List(args(0))), args(1))
+        case "-author" =>
+          ApproximateIndex.buildAuthorIndex(readDocsFromSeqFiles(List(args(0))), args(1))
+        case _ =>
+          println("Usage: IndexBuilder [-key|-author] <input_seqfile> <output_index_path>")
+      }
     }
   }
 }

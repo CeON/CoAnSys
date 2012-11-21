@@ -1,8 +1,7 @@
 package pl.edu.icm.coansys.citations
 
 import pl.edu.icm.coansys.commons.scala.strings.rotations
-import org.apache.hadoop.conf.Configuration
-import org.apache.hadoop.io.{Writable, Text, MapFile}
+import org.apache.hadoop.io.{Writable, Text}
 import collection.mutable.ListBuffer
 import com.nicta.scoobi.core.DList
 import com.nicta.scoobi.io.sequence.SeqSchema
@@ -15,10 +14,8 @@ import com.nicta.scoobi.application.ScoobiConfiguration
  *
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
-class ApproximateIndex[V <: Writable : Manifest](val indexFileUri: String, conf: Configuration) {
-  val reader = new MapFile.Reader(org.apache.hadoop.filecache.DistributedCache.getLocalCacheFiles(conf)(0), conf)
-
-  def get(query: String): Iterable[V] = {
+class ApproximateIndex[V <: Writable : Manifest](override val indexFileUri: String) extends SimpleIndex[Text, V](indexFileUri) {
+  def getApproximate(query: String): Iterable[V] = {
     def isTooBig(query: String, key: String): Boolean =
       !key.startsWith(query.substring(0, query.length - 1))
 
@@ -62,11 +59,6 @@ class ApproximateIndex[V <: Writable : Manifest](val indexFileUri: String, conf:
     }
 
     buffer
-  }
-
-  def close() {
-    if (reader != null)
-      reader.close()
   }
 }
 

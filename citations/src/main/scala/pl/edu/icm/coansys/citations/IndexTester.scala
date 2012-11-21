@@ -1,7 +1,6 @@
 package pl.edu.icm.coansys.citations
 
 import com.nicta.scoobi.application.ScoobiApp
-import org.apache.hadoop.conf.Configuration
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -10,7 +9,7 @@ object IndexTester extends ScoobiApp {
   override def upload = false
 
   def testIndex(indexUri: String, query: String) {
-    val index = new AuthorIndex(indexUri, new Configuration())
+    val index = new AuthorIndex(indexUri)
     index.getDocumentsByAuthor(query).foreach(println)
   }
 
