@@ -34,6 +34,7 @@ public class OAIPMHDirToDocumentDTOIterator implements Iterable<DocumentDTO> {
 
     private static final Logger logger = LoggerFactory.getLogger(OAIPMHDirToDocumentDTOIterator.class);
     private String collection = "unset";
+    private boolean collectionFromFilename;
     private Iterator<File> filesIterator;
     private NodeList nodeList = null;
     private int nodeListIndex;
@@ -41,12 +42,23 @@ public class OAIPMHDirToDocumentDTOIterator implements Iterable<DocumentDTO> {
 
     public OAIPMHDirToDocumentDTOIterator(String oaipmhDirPath, String collection) {
         this.collection = collection;
+        this.collectionFromFilename = false;
+        init(oaipmhDirPath);
+    }
+
+    public OAIPMHDirToDocumentDTOIterator(String oaipmhDirPath) {
+        this.collectionFromFilename = true;
+        init(oaipmhDirPath);
+    }
+    
+    private void init(String oaipmhDirPath) {
         File thisFile = new File(oaipmhDirPath);
         if (thisFile.isDirectory()) {
             filesIterator = FileUtils.listFiles(thisFile, TrueFileFilter.TRUE, TrueFileFilter.TRUE).iterator();
         }
         moveToNextItem();
     }
+
 
     @Override
     public Iterator<DocumentDTO> iterator() {
@@ -104,6 +116,10 @@ public class OAIPMHDirToDocumentDTOIterator implements Iterable<DocumentDTO> {
                         logger.warn("There's no records in " + nextFile.getPath());
                         continue;
                     }
+                    if (collectionFromFilename) {
+                        this.collection = nextFile.getName().replaceFirst("listRecords_", "oai-")
+                                .replaceFirst("\\.xml$", "").replaceAll("[^a-zA-Z0-9]", "-").replaceFirst("-$", "");
+                    }
                     nodeListIndex = 0;
                 } catch (Exception ex) {
                     logger.error("Error: " + ex);
@@ -115,6 +131,8 @@ public class OAIPMHDirToDocumentDTOIterator implements Iterable<DocumentDTO> {
             String str;
             try {
                 item.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
+                item.setAttribute("xmlns:dc", "http://purl.org/dc/elements/1.1/");
+                item.setAttribute("xmlns:oai_dc", "http://www.openarchives.org/OAI/2.0/oai_dc/");
                 str = nodeToXmlString(item);
                 List<DocumentMetadata> docs = MetadataToProtoMetadataParser.parseStream(new ByteArrayInputStream(str.getBytes("UTF-8")),
                         MetadataToProtoMetadataParser.MetadataType.OAI_DC, collection);
