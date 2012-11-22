@@ -94,10 +94,10 @@ object ApproximateIndex {
 
     implicit object dockeysIterableSchema extends SeqSchema[Iterable[String]] {
 
-      def toWritable(x: Iterable[String]) = new BytesIterable(x map (Text.encode(_).array()))
+      def toWritable(x: Iterable[String]) = new BytesIterable(x map util.uuidEncode)
 
       def fromWritable(x: SeqType) =
-        x.iterable map (Text.decode(_))
+        x.iterable map util.uuidDecode
 
       type SeqType = BytesIterable
       val mf = manifest[BytesIterable]

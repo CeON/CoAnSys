@@ -20,4 +20,12 @@ object util {
       .map(_.toLowerCase)
       .toSet
   }
+
+  private val uuidCharset = "US-ASCII"
+
+  def uuidEncode(uuid: String): Array[Byte] =
+    uuid.getBytes(uuidCharset)
+
+  def uuidDecode(bytes: Array[Byte]): String =
+    new String(bytes, uuidCharset)
 }
