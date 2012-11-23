@@ -19,7 +19,7 @@ object Matcher extends ScoobiApp {
   /**
    * Minimal similarity between a citation and a document that is used to filter out weak matches.
    */
-  val minimalSimilarity = 0.5
+  val minimalSimilarity = 0.8
 
   /**
    * A heuristics to retrieve documents that are most probable to be associated with a given citation.
@@ -97,8 +97,9 @@ object Matcher extends ScoobiApp {
         text.set(input._2)
         index.get(text) match {
           case Some(bytes) =>
-            emitter.emit((input._1, DocumentMetadata.parseFrom(bytes.getBytes)))
-          case _ => //intentionally left blank
+            emitter.emit((input._1, DocumentMetadata.parseFrom(bytes.copyBytes)))
+          case _ => 
+            throw new Exception("No index entry for ---" + input._2 + "---")
         }
       }
 
@@ -143,6 +144,7 @@ object Matcher extends ScoobiApp {
 
   def run() {
     configuration.set("mapred.max.split.size", 500000)
+    configuration.setMinReducers(48)
     val myMatches = matches(readCitationsFromDocumentsFromSeqFiles(List(args(2))), args(0), args(1))
     persist(convertToSequenceFile(myMatches, args(3)))
   }
