@@ -16,6 +16,7 @@ object MockOutputCreator extends ScoobiApp {
     val in = args(0)
     val out = args(1)
     implicit val wrapperConverter = new BytesConverter[DocumentWrapper](_.toByteArray, DocumentWrapper.parseFrom(_))
+    implicit val picOutConverter = new BytesConverter[PICProtos.PicOut](_.toByteArray, PICProtos.PicOut.parseFrom(_))
     val result = convertValueFromSequenceFile[DocumentWrapper](List(in))
       .map {
       wrapper =>
