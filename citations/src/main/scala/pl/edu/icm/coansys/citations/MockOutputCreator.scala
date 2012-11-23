@@ -12,6 +12,8 @@ import pl.edu.icm.coansys.importers.models.PICProtos
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 object MockOutputCreator extends ScoobiApp {
+  override def upload = false
+
   def run() {
     val in = args(0)
     val out = args(1)
@@ -24,7 +26,7 @@ object MockOutputCreator extends ScoobiApp {
         val outBuilder = PICProtos.PicOut.newBuilder()
         outBuilder.setDocId(doc.getExtId(0).getValue)
         for (ref <- doc.getReferenceList.toIterable) {
-          outBuilder.addRefs(PICProtos.References.newBuilder().setDocId(ref.getExtId(0).getValue).setRefNum(ref.getBibRefPosition))
+          outBuilder.addRefs(PICProtos.References.newBuilder().setDocId(doc.getExtId(0).getValue).setRefNum(ref.getBibRefPosition))
         }
 
         (doc.getKey, outBuilder.build())
