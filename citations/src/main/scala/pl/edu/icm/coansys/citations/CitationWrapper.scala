@@ -13,6 +13,13 @@ class CitationWrapper(val meta: DocumentMetadata) {
     else
       meta.getText.split( """[^\p{L}]+""").filter(_.length > 1).toSet
   }
+
+  override def equals(other: Any): Boolean = other match {
+    case that: DocumentMetadataWrapper => meta.getKey == that.meta.getKey
+    case _ => false
+  }
+
+  override def hashCode = meta.getKey.hashCode
 }
 
 object CitationWrapper {
