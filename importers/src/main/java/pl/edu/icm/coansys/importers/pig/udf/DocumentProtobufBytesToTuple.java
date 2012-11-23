@@ -11,7 +11,7 @@ import pl.edu.icm.coansys.importers.models.DocumentProtos.MediaContainer;
  *
  * @author akawa
  */
-public class DocumentProtobufBytesToTuple extends ToDocumentProtobufTuple {
+public class DocumentProtobufBytesToTuple extends DocumentProtobufToTupleBase {
 
     @Override
     public DocumentMetadata getDocumentMetadata(Tuple input) throws ExecException, InvalidProtocolBufferException {
@@ -27,7 +27,6 @@ public class DocumentProtobufBytesToTuple extends ToDocumentProtobufTuple {
             DataByteArray protoMedia = (DataByteArray) input.get(1);
             media = MediaContainer.parseFrom(protoMedia.get());
         }
-
         return media;
     }
 }

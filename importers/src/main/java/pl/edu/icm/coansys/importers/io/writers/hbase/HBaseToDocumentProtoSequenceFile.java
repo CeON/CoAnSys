@@ -16,6 +16,7 @@ import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
 import org.apache.hadoop.hbase.mapreduce.TableMapReduceUtil;
 import org.apache.hadoop.hbase.mapreduce.TableMapper;
+import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper.Context;
@@ -28,7 +29,10 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.pig.backend.executionengine.ExecException;
 import static pl.edu.icm.coansys.importers.constants.HBaseConstant.*;
-import pl.edu.icm.coansys.importers.models.DocumentProtosWrapper.DocumentWrapper;
+import pl.edu.icm.coansys.importers.models.DocumentProtos;
+import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
+import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentWrapper;
+import pl.edu.icm.coansys.importers.models.DocumentProtos.MediaContainer;
 
 /**
  *
@@ -50,7 +54,6 @@ public class HBaseToDocumentProtoSequenceFile implements Tool {
     }
 
     public static enum Counters {
-
         DPROTO, CPROTO, MPROTO, DPROTO_SKIPPED
     }
 
@@ -71,48 +74,27 @@ public class HBaseToDocumentProtoSequenceFile implements Tool {
         @Override
         public void map(ImmutableBytesWritable row, Result values, Context context) throws IOException, InterruptedException {
             converter.set(values, dw);
-            if (logger.isDebugEnabled()) {
-                logger.debug("reading data from HBase");
-            }
-
+            
             byte[] rowId = converter.getRowId();
             byte[] mproto = converter.getDocumentMetadata();
             byte[] cproto = converter.getDocumentMedia();
-
-            if (logger.isDebugEnabled()) {
-                logger.debug("converting raw bytes to protocol buffers");
-            }
 
             DocumentWrapper documentWrapper = converter.toDocumentWrapper(rowId, mproto, cproto);
             byte[] dproto = documentWrapper.toByteArray();
 
             key.set(rowId, 0, rowId.length);
 
-            if (logger.isDebugEnabled()) {
-                logger.debug("writing dproto to output");
-            }
-
             if (dproto != null) {
                 documentProto.set(dproto, 0, dproto.length);
                 mos.write("dproto", key, documentProto);
                 context.getCounter(Counters.DPROTO).increment(1);
             }
-
-            if (logger.isDebugEnabled()) {
-                logger.debug("writing mproto to output");
-            }
-
+            
             if (mproto != null) {
                 metatdataProto.set(mproto, 0, mproto.length);
                 mos.write(FAMILY_METADATA_QUALIFIER_PROTO, key, metatdataProto);
                 context.getCounter(Counters.MPROTO).increment(1);
             }
-
-            /*
-             * if (cproto != null) { mediaProto.set(cproto, 0, cproto.length);
-             * mos.write(FAMILY_CONTENT_QUALIFIER_PROTO, key, mediaProto);
-             * context.getCounter(Counters.CPROTO).increment(1); }
-             */
         }
 
         @Override
@@ -148,15 +130,17 @@ public class HBaseToDocumentProtoSequenceFile implements Tool {
         }
 
         public DocumentWrapper toDocumentWrapper(byte[] rowid, byte[] mproto, byte[] cproto) throws ExecException, InvalidProtocolBufferException {
-            dw.setRowId(ByteString.copyFrom(rowid));
+            dw.setRowId(Bytes.toString(rowid));
+            
             if (mproto != null) {
-                dw.setMproto(ByteString.copyFrom(mproto));
+                dw.setDocumentMetadata(DocumentMetadata.parseFrom(mproto));
             }
+            
             if (cproto != null) {
-                dw.setCproto(ByteString.copyFrom(cproto));
+                dw.setMediaContainer(MediaContainer.parseFrom(cproto));
             }
-            DocumentWrapper build = dw.build();
-            return build;
+            
+            return dw.build();
         }
 
         public byte[] getDocumentMetadata() throws ExecException, InvalidProtocolBufferException {

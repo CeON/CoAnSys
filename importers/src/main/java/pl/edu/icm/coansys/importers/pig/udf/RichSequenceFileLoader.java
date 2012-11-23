@@ -51,6 +51,7 @@ public class RichSequenceFileLoader extends FileInputLoadFunc {
     private SerializationFactory serializationFactory;
     private byte keyType = DataType.UNKNOWN;
     private byte valType = DataType.UNKNOWN;
+    private DataByteArray dataByteArray = new DataByteArray();
 
     public RichSequenceFileLoader() {
         mProtoTuple = new ArrayList<Object>(2);
@@ -116,9 +117,9 @@ public class RichSequenceFileLoader extends FileInputLoadFunc {
             case DataType.BYTE:
                 return ((ByteWritable) w).get();
             case BYTES_WRITABLE:
-                return (new DataByteArray(((BytesWritable) w).copyBytes())).get();
+                dataByteArray.set(((BytesWritable) w).copyBytes());
+                return dataByteArray.get();
         }
-
         return null;
     }
 

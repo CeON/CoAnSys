@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.edu.icm.coansys.importers.ZipArchive;
 import pl.edu.icm.coansys.importers.constants.ProtoConstants;
 import pl.edu.icm.coansys.importers.models.DocumentProtos;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.Author;
@@ -31,16 +32,16 @@ import pl.edu.icm.synat.application.model.general.MetadataTransformers;
  * @author acz
  */
 public class MetadataToProtoMetadataParser {
-
+    
     public enum MetadataType {
-
+        
         BWMETA, OAI_DC, DMF
     }
     private static final Logger log = LoggerFactory.getLogger(MetadataToProtoMetadataParser.class);
-
+    
     private MetadataToProtoMetadataParser() {
     }
-
+    
     private static String convertStreamToString(InputStream is) throws IOException {
         InputStreamReader input = new InputStreamReader(is, "UTF-8");
         final int CHARS_PER_PAGE = 50000; //counting spaces
@@ -54,27 +55,27 @@ public class MetadataToProtoMetadataParser {
             }
         } catch (IOException ignore) {
         }
-
+        
         return output.toString();
     }
-
+    
     private static Map<String, MetadataFormat> getSupportedBwmetaTypes() {
         // Supported bwmeta formats
         Map<String, MetadataFormat> result = new HashMap<String, MetadataFormat>();
         result.put("http://yadda.icm.edu.pl/bwmeta-1.2.0.xsd", BwmetaTransformerConstants.BWMETA_1_2);
         result.put("http://yadda.icm.edu.pl/bwmeta-2.0.0.xsd", BwmetaTransformerConstants.BWMETA_2_0);
         result.put("http://yadda.icm.edu.pl/bwmeta-2.1.0.xsd", BwmetaTransformerConstants.BWMETA_2_1);
-
+        
         return result;
     }
-
+    
     public static List<YExportable> streamToYExportable(InputStream stream, MetadataType type) throws TransformationException, IOException {
         return stringToYExportable(convertStreamToString(stream), type);
     }
-
+    
     private static List<YExportable> stringToYExportable(String data, MetadataType type) throws TransformationException, IOException {
         List<YExportable> result = null;
-
+        
         switch (type) {
             case BWMETA:
                 for (Map.Entry<String, MetadataFormat> bwtype : getSupportedBwmetaTypes().entrySet()) {
@@ -92,23 +93,23 @@ public class MetadataToProtoMetadataParser {
             case DMF:
                 result = stringToYExportable(data, BwmetaTransformerConstants.DMF);
                 break;
-
+            
         }
-
+        
         return result;
     }
-
+    
     private static List<YExportable> stringToYExportable(String data, MetadataFormat format) throws TransformationException {
         MetadataReader<YExportable> reader = MetadataTransformers.BTF.getReader(format,
                 BwmetaTransformerConstants.Y);
         List<YExportable> inputElements = reader.read(data);
         return inputElements;
-
+        
     }
-
+    
     private static Author.Builder ycontributorToAuthorMetadata(YContributor yContributor) {
         Author.Builder authorBuilder = DocumentProtos.Author.newBuilder();
-
+        
         List<YName> names = yContributor.getNames();
         for (YName yName : names) {
             String type = yName.getType();
@@ -120,7 +121,7 @@ public class MetadataToProtoMetadataParser {
                 authorBuilder.setSurname(yName.getText());
             }
         }
-
+        
         List<YAttribute> attrs = yContributor.getAttributes();
         for (YAttribute yAttribute : attrs) {
             String key = yAttribute.getKey();
@@ -154,11 +155,11 @@ public class MetadataToProtoMetadataParser {
 //        authorBuilder.setType(HBaseConstants.T_AUTHOR_COPY);
         return authorBuilder;
     }
-
+    
     private static Author.Builder yattributeToAuthorMetadata(YAttribute node) {
         Author.Builder author = DocumentProtos.Author.newBuilder();
         author.setKey(UUID.randomUUID().toString());
-//        author.setType(HBaseConstants.T_AUTHOR_COPY);
+//      author.setType(HBaseConstants.T_AUTHOR_COPY);
         String content;
         if ((content = node.getValue()) != null) {
             author.setName(content);
@@ -177,15 +178,15 @@ public class MetadataToProtoMetadataParser {
         }
         return author;
     }
-
+    
     private static DocumentMetadata.Builder yrelationToDocumentMetadata(YRelation item) {
         DocumentMetadata.Builder doc = DocumentProtos.DocumentMetadata.newBuilder();
-
+        
         Auxiliar.Builder aux = Auxiliar.newBuilder();
         aux.setType(ProtoConstants.documentAuxiliaryTypeOfDocument);
         aux.setValue(ProtoConstants.documentAuxiliaryTypeOfDocument_Reference);
         doc.addAuxiliarInfo(aux);
-
+        
         doc.setKey(UUID.randomUUID().toString());
 //        docBuilder.setType(HBaseConstants.T_REFERENCE);
 
@@ -203,9 +204,9 @@ public class MetadataToProtoMetadataParser {
                 doc.setBibRefPosition(intRefPos);
             }
         }
-
+        
         doc.setText(item.getOneAttributeSimpleValue("reference-text"));
-
+        
         List<YAttribute> refAuthorsNodes = item.getAttributes("reference-parsed-author");
         for (int i = 0; i < refAuthorsNodes.size(); i++) {
             Author.Builder refAuthor = yattributeToAuthorMetadata(refAuthorsNodes.get(i));
@@ -213,7 +214,7 @@ public class MetadataToProtoMetadataParser {
             refAuthor.setPositionNumber(i);
             doc.addAuthor(refAuthor);
         }
-
+        
         String content = null;
         //References may not contain a title or any other then bibreftext filed
         if ((content = item.getOneAttributeSimpleValue("reference-parsed-title")) != null) {
@@ -237,58 +238,62 @@ public class MetadataToProtoMetadataParser {
         if (refMscCodesNodes.size() > 0) {
             ClassifCode.Builder ccb = ClassifCode.newBuilder();
             ccb.setSource(ProtoConstants.documentClassifCodeMsc);
-
+            
             for (int i = 0; i < refMscCodesNodes.size(); i++) {
                 ccb.addValue(refMscCodesNodes.get(i).getValue());
             }
-
+            
             doc.addClassifCode(ccb.build());
         }
-
-
+        
+        
         List<YAttribute> refPacsCodesNodes = item.getAttributes(YaddaIdConstants.CATEGORY_CLASS_PACS);
-
+        
         if (refPacsCodesNodes.size() > 0) {
             ClassifCode.Builder ccb = ClassifCode.newBuilder();
             ccb.setSource(ProtoConstants.documentClassifCodePacs);
-
+            
             for (int i = 0; i < refPacsCodesNodes.size(); i++) {
                 ccb.addValue(refPacsCodesNodes.get(i).getValue());
             }
-
+            
             doc.addClassifCode(ccb.build());
         }
-
+        
         return doc;
     }
-
-    public static DocumentMetadata yelementToDocumentMetadata(YElement yElement, String collection) {
+    
+    public static DocumentMetadata yelementToDocumentMetadata(YElement yElement, ZipArchive zipArchive, String currentXmlPath, String collection) {
         YStructure struct = yElement.getStructure(YaddaIdConstants.ID_HIERARACHY_JOURNAL);
         if (struct != null && !YaddaIdConstants.ID_LEVEL_JOURNAL_ARTICLE.equals(struct.getCurrent().getLevel())) {
             return null;
         }
-
+        
         DocumentMetadata.Builder docBuilder = DocumentProtos.DocumentMetadata.newBuilder();
-
+        
+        docBuilder.setSourcePath(currentXmlPath);
+        if (zipArchive != null) {
+            docBuilder.setSourceArchive(zipArchive.getZipFilePath());
+        }
 
         Auxiliar.Builder aux = Auxiliar.newBuilder();
         aux.setType(ProtoConstants.documentAuxiliaryTypeOfDocument);
         aux.setValue(ProtoConstants.documentAuxiliaryTypeOfDocument_Document);
         docBuilder.addAuxiliarInfo(aux);
-
+        
         List<String> keywords = Collections.emptyList();
         YTagList tagList = yElement.getTagList("keyword");
         if (tagList != null) {
             keywords = tagList.getValues();
         }
         docBuilder.addAllKeyword(keywords);
-
-
+        
+        
         List<YDescription> abst = yElement.getDescriptions();
         if (abst != null && abst.size() > 0 && abst.get(0) != null) {
             docBuilder.setAbstrakt(abst.get(0).getText());
         }
-
+        
         if (struct != null) {
             YAncestor issue = struct.getAncestor("bwmeta1.level.hierarchy_Journal_Issue");
             if (issue != null && issue.getOneName() != null) {
@@ -302,13 +307,13 @@ public class MetadataToProtoMetadataParser {
             if (journal != null) {
                 docBuilder.setJournal(journal.getOneName().getText());
             }
-
+            
             YAncestor pages = struct.getAncestor(YaddaIdConstants.ID_LEVEL_JOURNAL_ARTICLE);
             if (pages != null) {
                 docBuilder.setPages(pages.getPosition());
             }
         }
-
+        
         String content;
         if ((content = yElement.getId(YaddaIdConstants.IDENTIFIER_CLASS_DOI)) != null) {
             docBuilder.setDoi(content);
@@ -343,18 +348,18 @@ public class MetadataToProtoMetadataParser {
             eib.setValue(content);
             docBuilder.addExtId(eib.build());
         }
-
+        
         List<YCategoryRef> catRefs = yElement.getCategoryRefs();
 
         //TODO czesc kodow MSC mylnie trafia do kwordow - mozna je stamtad wyciagnac porownujac z wzorcem kodu
         if (catRefs != null && catRefs.size() > 0) {
-
+            
             ClassifCode.Builder ccodeMSC = ClassifCode.newBuilder();
             ccodeMSC.setSource(ProtoConstants.documentClassifCodeMsc);
-
+            
             ClassifCode.Builder ccodePACS = ClassifCode.newBuilder();
             ccodePACS.setSource(ProtoConstants.documentClassifCodePacs);
-
+            
             for (YCategoryRef yCategoryRef : catRefs) {
                 if (yCategoryRef != null && yCategoryRef.getClassification().equals(YaddaIdConstants.CATEGORY_CLASS_MSC)) {
                     ccodeMSC.addValue(yCategoryRef.getCode());
@@ -369,14 +374,14 @@ public class MetadataToProtoMetadataParser {
                 docBuilder.addClassifCode(ccodePACS.build());
             }
         }
-
+        
         UUID uuId;
-
+        
         String uuIdStr = yElement.getId();
         if (uuIdStr.length() >= 36) {
             uuIdStr = uuIdStr.substring(uuIdStr.length() - 36);
         }
-
+        
         try {
             uuId = UUID.fromString(uuIdStr);
         } catch (IllegalArgumentException e) {
@@ -389,7 +394,7 @@ public class MetadataToProtoMetadataParser {
         if (oneName != null) {
             docBuilder.setTitle(yElement.getOneName().getText());
         }
-
+        
         List<YContributor> authorNodeList = yElement.getContributors();
         List<Author> authors = new ArrayList<Author>();
         for (int i = 0; i < authorNodeList.size(); i++) {
@@ -402,7 +407,7 @@ public class MetadataToProtoMetadataParser {
             }
         }
         docBuilder.addAllAuthor(authors);
-
+        
         List<YRelation> refNodes = yElement.getRelations("reference-to");
         List<DocumentMetadata> references = new ArrayList<DocumentMetadata>();
         if (refNodes != null && refNodes.size() > 0) {
@@ -416,23 +421,23 @@ public class MetadataToProtoMetadataParser {
                 }
             }
         }
-
+        
         docBuilder.addAllReference(references);
-
+        
         docBuilder.setCollection(collection);
-
+        
         return docBuilder.build();
     }
-
+    
     public static List<DocumentMetadata> parseStream(InputStream stream, MetadataType type, String collection) {
         List<DocumentMetadata> results = new ArrayList<DocumentMetadata>();
-
+        
         try {
             List<YExportable> elem = MetadataToProtoMetadataParser.streamToYExportable(stream, type);
             if (elem != null) {
                 for (YExportable yExportable : elem) {
                     if (yExportable instanceof YElement) {
-                        DocumentMetadata doc = yelementToDocumentMetadata((YElement) yExportable, collection);
+                        DocumentMetadata doc = yelementToDocumentMetadata((YElement) yExportable, null, null, collection);
                         if (doc != null) {
                             results.add(doc);
                         }
@@ -441,13 +446,13 @@ public class MetadataToProtoMetadataParser {
             } else {
                 log.error("Cannot parse bwmeta");
             }
-
+            
         } catch (TransformationException e) {
             log.error("Cannot configure parser");
         } catch (IOException e) {
             log.warn("Cannot process record");
         }
-
+        
         return results;
     }
 }
