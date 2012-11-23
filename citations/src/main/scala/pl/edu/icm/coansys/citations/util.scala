@@ -21,7 +21,7 @@ object util {
       .toSet
   }
 
-  private val uuidCharset = "US-ASCII"
+  private val uuidCharset = "UTF-8"
 
   def uuidEncode(uuid: String): Array[Byte] =
     uuid.getBytes(uuidCharset)
