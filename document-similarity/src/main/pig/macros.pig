@@ -66,6 +66,18 @@ DEFINE drop_nulls(A, column) RETURNS B {
 	$B = FILTER $A BY $A.$column IS NOT NULL;
 };
 
+DEFINE drop_nulls(A, column1, column2) RETURNS B {
+	$B =  FILTER $A BY $A.$column1 IS NOT NULL AND $A.column2 IS NOT NULL;
+};
+
+DEFINE drop_nulls(A, column1, column2, column3) RETURNS B {
+	$B =  FILTER $A BY $A.$column1 IS NOT NULL AND $A.column2 IS NOT NULL AND $A.column3 IS NOT NULL;
+};
+
+DEFINE drop_nulls(A, column1, column2, column3, column4) RETURNS B {
+	$B =  FILTER $A BY $A.$column1 IS NOT NULL AND $A.column2 IS NOT NULL AND $A.column3 IS NOT NULL AND $A.column4 IS NOT NULL;
+};
+
 -------------------------------------------------------
 -- distinct 
 -------------------------------------------------------
@@ -168,7 +180,7 @@ DEFINE get_topn_per_group(in_relation, group_field, order_field, order_direction
 -------------------------------------------------------
 DEFINE calculate_pairwise_similarity(in_relation, doc_field, term_field, tfidf_field, CC) RETURNS out_relation {
 	in_relation2 = FOREACH $in_relation GENERATE *;
-	joined = JOIN $in_relation BY $term_field, in_relation2 BY $term_field;-- USING 'merge';
+	joined = JOIN $in_relation BY $term_field, in_relation2 BY $term_field USING 'skewed';
 	projected = FOREACH joined GENERATE 
 		$in_relation$CC$term_field AS term,
         	$in_relation$CC$doc_field AS docId1, in_relation2$CC$doc_field As docId2,
