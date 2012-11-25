@@ -121,7 +121,7 @@ DEFINE calculate_tfidf(in_relation, id_field, token_field, tfidfMinValue) RETURN
 	doc_word_group = group $in_relation by ($id_field, $token_field);
   	doc_word_totals = foreach doc_word_group generate 
     		FLATTEN(group) as ($id_field, token), 
-		COUNT_STAR($in_relation) as doc_total;
+		COUNT($in_relation) as doc_total;
 
   	-- Calculate the document size
 	pre_term_group = group doc_word_totals by $id_field;
@@ -139,21 +139,26 @@ DEFINE calculate_tfidf(in_relation, id_field, token_field, tfidfMinValue) RETURN
 	token_usages_group = group term_freqs by token;
   	token_usages = foreach token_usages_group generate
     		FLATTEN(term_freqs) as ($id_field, token, term_freq),
-    		COUNT_STAR(term_freqs) as num_docs_with_token;
- 
+    		COUNT(term_freqs) as num_docs_with_token;
+
   	-- Get document count
   	just_ids = foreach $in_relation generate $id_field;
 	just_unique_ids = distinct just_ids;
 	ndocs_group = group just_unique_ids all;
-  	ndocs = foreach ndocs_group generate COUNT_STAR(just_unique_ids) as total_docs;
+  	ndocs = foreach ndocs_group generate 
+		COUNT(just_unique_ids) as total_docs;
  
+
   	-- Note the use of Pig Scalars to calculate idf
   	tfidf_all = foreach token_usages {
     		idf    = LOG((double)ndocs.total_docs/(double)num_docs_with_token);
     		tf_idf = (double)term_freq * idf;
     		generate $id_field as $id_field,
       			token as $token_field,
-      			tf_idf as tfidf;
+      			tf_idf as tfidf,
+			idf,
+			ndocs.total_docs,
+			num_docs_with_token;
   	};
 	-- get only important terms
 	$tfidf_values = FILTER tfidf_all BY tfidf >= $tfidfMinValue;
