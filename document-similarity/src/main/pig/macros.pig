@@ -66,15 +66,15 @@ DEFINE drop_nulls(A, column) RETURNS B {
 	$B = FILTER $A BY $A.$column IS NOT NULL;
 };
 
-DEFINE drop_nulls(A, column1, column2) RETURNS B {
+DEFINE drop_nulls2(A, column1, column2) RETURNS B {
 	$B =  FILTER $A BY $A.$column1 IS NOT NULL AND $A.column2 IS NOT NULL;
 };
 
-DEFINE drop_nulls(A, column1, column2, column3) RETURNS B {
+DEFINE drop_nulls3(A, column1, column2, column3) RETURNS B {
 	$B =  FILTER $A BY $A.$column1 IS NOT NULL AND $A.column2 IS NOT NULL AND $A.column3 IS NOT NULL;
 };
 
-DEFINE drop_nulls(A, column1, column2, column3, column4) RETURNS B {
+DEFINE drop_nulls4(A, column1, column2, column3, column4) RETURNS B {
 	$B =  FILTER $A BY $A.$column1 IS NOT NULL AND $A.column2 IS NOT NULL AND $A.column3 IS NOT NULL AND $A.column4 IS NOT NULL;
 };
 
