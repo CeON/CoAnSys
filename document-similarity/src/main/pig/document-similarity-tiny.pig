@@ -38,9 +38,8 @@ IMPORT 'macros.pig';
 -- business code section
 -------------------------------------------------------
 doc = load_bwndata_metadata_hdfs('$inputPath', $sample);
--- read interesting parts
 doc_raw = foreach doc generate rowkey AS docId, document.title as title, document.abstract as abstract;
--- speparated as FLATTEN does a hidden CROSS
+-- speparated line as FLATTEN w a hidden CROSS
 doc_keyword_raw = foreach doc generate rowkey AS docId, FLATTEN(document.keywords) AS keywords;
 DESCRIBE doc_keyword_raw;
 
