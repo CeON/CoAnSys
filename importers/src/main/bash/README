@@ -1,0 +1,3 @@
+Exemplary run
+
+time ./run-all.sh /mnt/tmp/bwndata/bazekon-20120228-subset bazekon /mnt/tmp/bwndata-sf/bazekon-20120228-snappy.sf2 bazekon_test 40
