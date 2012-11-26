@@ -10,7 +10,6 @@ HBASE_TABLENAME=$5
 # create hfile (mapreduce job)
 if [ "${MODE}" = "hfile" ] || [ "${MODE}" = "all" ]; then
         echo "truncate '${HBASE_TABLENAME}'" | hbase shell
-        hadoop fs -rm -r ${HDFS_SEQUENCE_FILE_INPUT_DIR}
         hadoop fs -rm -r ${HDFS_BULK_HFILE_OUTPUT_DIR}
         hadoop jar ${IMPORTERS_JAR} pl.edu.icm.coansys.importers.io.writers.hbase.DocumentWrapperSequenceFileToHBase -Dbulk.output=${HDFS_BULK_HFILE_OUTPUT_DIR} ${HDFS_SEQUENCE_FILE_INPUT_DIR} ${HBASE_TABLENAME}
         hadoop fs -chmod -R 777 ${HDFS_BULK_HFILE_OUTPUT_DIR}
