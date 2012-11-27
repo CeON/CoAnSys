@@ -54,7 +54,6 @@ import org.apache.pig.impl.util.UDFContext;
 public class RichSequenceFileLoader extends FileInputLoadFunc implements StoreFuncInterface {
 
     private static final Log LOG = LogFactory.getLog(RichSequenceFileLoader.class);
-    public static final byte BYTES_WRITABLE = 70;
     private SequenceFileRecordReader<Writable, Writable> reader;
     private RecordWriter<Writable, Writable> writer;
     private Writable key;
@@ -115,7 +114,7 @@ public class RichSequenceFileLoader extends FileInputLoadFunc implements StoreFu
         } else if (t == ByteWritable.class) {
             return DataType.BYTE;
         } else if (t == BytesWritable.class) {
-            return BYTES_WRITABLE;
+            return DataType.BYTEARRAY;
         } else {
             return DataType.ERROR;
         }
@@ -126,7 +125,12 @@ public class RichSequenceFileLoader extends FileInputLoadFunc implements StoreFu
             case DataType.CHARARRAY:
                 return ((Text) w).toString();
             case DataType.BYTEARRAY:
-                return ((DataByteArray) w).get();
+                if (w instanceof BytesWritable) {
+                    dataByteArray.set(((BytesWritable) w).copyBytes());
+                    return dataByteArray.get();
+                } else {
+                    return ((DataByteArray) w).get();
+                }
             case DataType.INTEGER:
                 return ((IntWritable) w).get();
             case DataType.LONG:
@@ -137,9 +141,6 @@ public class RichSequenceFileLoader extends FileInputLoadFunc implements StoreFu
                 return ((DoubleWritable) w).get();
             case DataType.BYTE:
                 return ((ByteWritable) w).get();
-            case BYTES_WRITABLE:
-                dataByteArray.set(((BytesWritable) w).copyBytes());
-                return dataByteArray.get();
         }
         return null;
     }
@@ -153,7 +154,6 @@ public class RichSequenceFileLoader extends FileInputLoadFunc implements StoreFu
                 ((Text) writable).set(dataValue.toString());
                 break;
             case DataType.BYTEARRAY:
-            case BYTES_WRITABLE:
                 byte[] data = ((DataByteArray) dataValue).get();
                 ((BytesWritable) writable).set(data, 0, data.length);
                 break;
