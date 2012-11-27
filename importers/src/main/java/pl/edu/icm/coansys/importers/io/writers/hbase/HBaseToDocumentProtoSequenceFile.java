@@ -4,7 +4,6 @@
  */
 package pl.edu.icm.coansys.importers.io.writers.hbase;
 
-import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 import java.io.IOException;
 import java.util.Date;
@@ -29,7 +28,6 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.pig.backend.executionengine.ExecException;
 import static pl.edu.icm.coansys.importers.constants.HBaseConstant.*;
-import pl.edu.icm.coansys.importers.models.DocumentProtos;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentWrapper;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.MediaContainer;
@@ -54,7 +52,8 @@ public class HBaseToDocumentProtoSequenceFile implements Tool {
     }
 
     public static enum Counters {
-        DPROTO, CPROTO, MPROTO, DPROTO_SKIPPED
+
+        DPROTO, CPROTO, MPROTO, DPROTO_SKIPPED, MPROTO_SKIPPED
     }
 
     public static class RowToDocumentProtoMapper extends TableMapper<BytesWritable, BytesWritable> {
@@ -74,7 +73,7 @@ public class HBaseToDocumentProtoSequenceFile implements Tool {
         @Override
         public void map(ImmutableBytesWritable row, Result values, Context context) throws IOException, InterruptedException {
             converter.set(values, dw);
-            
+
             byte[] rowId = converter.getRowId();
             byte[] mproto = converter.getDocumentMetadata();
             byte[] cproto = converter.getDocumentMedia();
@@ -88,12 +87,16 @@ public class HBaseToDocumentProtoSequenceFile implements Tool {
                 documentProto.set(dproto, 0, dproto.length);
                 mos.write("dproto", key, documentProto);
                 context.getCounter(Counters.DPROTO).increment(1);
+            } else {
+                context.getCounter(Counters.DPROTO_SKIPPED).increment(1);
             }
-            
+
             if (mproto != null) {
                 metatdataProto.set(mproto, 0, mproto.length);
                 mos.write(FAMILY_METADATA_QUALIFIER_PROTO, key, metatdataProto);
                 context.getCounter(Counters.MPROTO).increment(1);
+            } else {
+                context.getCounter(Counters.MPROTO_SKIPPED).increment(1);
             }
         }
 
@@ -131,15 +134,15 @@ public class HBaseToDocumentProtoSequenceFile implements Tool {
 
         public DocumentWrapper toDocumentWrapper(byte[] rowid, byte[] mproto, byte[] cproto) throws ExecException, InvalidProtocolBufferException {
             dw.setRowId(Bytes.toString(rowid));
-            
+
             if (mproto != null) {
                 dw.setDocumentMetadata(DocumentMetadata.parseFrom(mproto));
             }
-            
+
             if (cproto != null) {
                 dw.setMediaContainer(MediaContainer.parseFrom(cproto));
             }
-            
+
             return dw.build();
         }
 
@@ -154,6 +157,16 @@ public class HBaseToDocumentProtoSequenceFile implements Tool {
 
     @Override
     public int run(String[] args) throws Exception {
+
+                if ("DEBUG".equals(conf.get("job.logging"))) {
+            logger.setLevel(Level.DEBUG);
+            logger.debug("** Log Level set to DEBUG **");
+        }
+        
+        if (args.length < 2) {
+            usage("Wrong number of arguments: " + args.length);
+            System.exit(-1);
+        }
 
         String tableName = args[0];
         String outputDir = args[1];
@@ -189,14 +202,13 @@ public class HBaseToDocumentProtoSequenceFile implements Tool {
     }
 
     private void getOptimizedConfiguration(Configuration conf) {
-        conf.set("mapred.child.java.opts", "-Xmx2000m");
-        conf.set("io.sort.mb", "500");
+        conf.set("mapred.child.java.opts", "-Xmx8000m");
+        conf.set("io.sort.mb", "1024");
         conf.set("io.sort.spill.percent", "0.90");
         conf.set("io.sort.record.percent", "0.15");
     }
 
     public static void main(String[] args) throws Exception {
-        logger.setLevel(Level.ALL);
 
         if (args == null || args.length == 0) {
             args = new String[2];
@@ -204,22 +216,15 @@ public class HBaseToDocumentProtoSequenceFile implements Tool {
             args[1] = args[0] + "_dump_" + (new Date()).getTime();
         }
 
-        Configuration conf = HBaseConfiguration.create();
-        String[] otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();
-        if (otherArgs.length < 2) {
-            usage("Wrong number of arguments: " + otherArgs.length);
-            System.exit(-1);
-        }
-
-        int result = ToolRunner.run(conf, new HBaseToDocumentProtoSequenceFile(), args);
+        int result = ToolRunner.run(HBaseConfiguration.create(), new HBaseToDocumentProtoSequenceFile(), args);
         System.exit(result);
     }
 
     private static void usage(String info) {
-        System.out.println(info);
-        System.out.println("Exemplary command: ");
+        logger.warn(info);
+        logger.warn("Exemplary command: ");
         String command = "hadoop jar target/importers-1.0-SNAPSHOT-jar-with-dependencies.jar"
                 + " " + HBaseToDocumentProtoSequenceFile.class.getName() + " <table> <directory>";
-        System.out.println(command);
+        logger.warn(command);
     }
 }
