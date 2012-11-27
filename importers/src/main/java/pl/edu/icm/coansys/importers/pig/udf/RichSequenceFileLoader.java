@@ -6,7 +6,8 @@ import java.util.ArrayList;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.hadoop.hbase.client.Result;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.BooleanWritable;
 import org.apache.hadoop.io.ByteWritable;
 import org.apache.hadoop.io.BytesWritable;
@@ -16,20 +17,33 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.Writable;
-import org.apache.hadoop.io.serializer.SerializationFactory;
 import org.apache.hadoop.mapreduce.InputFormat;
 import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.OutputFormat;
 import org.apache.hadoop.mapreduce.RecordReader;
+import org.apache.hadoop.mapreduce.RecordWriter;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.SequenceFileRecordReader;
+import org.apache.hadoop.io.compress.CompressionCodec;
+import org.apache.hadoop.io.compress.CompressionCodecFactory;
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
 import org.apache.pig.FileInputLoadFunc;
+import org.apache.pig.LoadFunc;
+import org.apache.pig.ResourceSchema;
+import org.apache.pig.StoreFunc;
+import org.apache.pig.StoreFuncInterface;
 import org.apache.pig.backend.BackendException;
+import org.apache.pig.backend.executionengine.ExecException;
 import org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.PigSplit;
+import org.apache.pig.backend.hadoop.executionengine.util.MapRedUtil;
 import org.apache.pig.data.DataByteArray;
 import org.apache.pig.data.DataType;
 import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
+import org.apache.pig.impl.PigContext;
+import org.apache.pig.impl.util.UDFContext;
 
 /**
  * A Loader for Hadoop-Standard SequenceFiles. able to work with the following
@@ -37,24 +51,34 @@ import org.apache.pig.data.TupleFactory;
  * DoubleWritable, BooleanWritable, ByteWritable
  *
  */
-public class RichSequenceFileLoader extends FileInputLoadFunc {
+public class RichSequenceFileLoader extends FileInputLoadFunc implements StoreFuncInterface {
 
+    private static final Log LOG = LogFactory.getLog(RichSequenceFileLoader.class);
     public static final byte BYTES_WRITABLE = 70;
-    public static final byte RESULT = 80;
-    
     private SequenceFileRecordReader<Writable, Writable> reader;
+    private RecordWriter<Writable, Writable> writer;
     private Writable key;
     private Writable value;
     private ArrayList<Object> mProtoTuple = null;
-    private static final Log LOG = LogFactory.getLog(RichSequenceFileLoader.class);
     private TupleFactory mTupleFactory = TupleFactory.getInstance();
-    private SerializationFactory serializationFactory;
     private byte keyType = DataType.UNKNOWN;
     private byte valType = DataType.UNKNOWN;
     private DataByteArray dataByteArray = new DataByteArray();
+    private Configuration config = new Configuration();
+    private Class<?> keyClass;
+    private Class<?> valueClass;
 
     public RichSequenceFileLoader() {
         mProtoTuple = new ArrayList<Object>(2);
+    }
+
+    public RichSequenceFileLoader(String keyClassName, String valueClassName) throws ClassNotFoundException, IOException, InstantiationException, IllegalAccessException {
+        this();
+        keyClass = config.getClassByName(keyClassName);
+        valueClass = config.getClassByName(valueClassName);
+
+        key = (Writable) keyClass.newInstance();
+        value = (Writable) valueClass.newInstance();
     }
 
     protected void setKeyType(Class<?> keyClass) throws BackendException {
@@ -92,10 +116,7 @@ public class RichSequenceFileLoader extends FileInputLoadFunc {
             return DataType.BYTE;
         } else if (t == BytesWritable.class) {
             return BYTES_WRITABLE;
-        } else if (t == Result.class) {
-            return RESULT;
-        } // not doing maps or other complex types for now
-        else {
+        } else {
             return DataType.ERROR;
         }
     }
@@ -121,6 +142,37 @@ public class RichSequenceFileLoader extends FileInputLoadFunc {
                 return dataByteArray.get();
         }
         return null;
+    }
+
+    protected void translatePigDataTypeToWritable(Tuple t, int fieldNum, Writable writable) throws ExecException {
+        byte dataType = t.getType(fieldNum);
+        Object dataValue = t.get(fieldNum);
+
+        switch (dataType) {
+            case DataType.CHARARRAY:
+                ((Text) writable).set(dataValue.toString());
+                break;
+            case DataType.BYTEARRAY:
+            case BYTES_WRITABLE:
+                byte[] data = ((DataByteArray) dataValue).get();
+                ((BytesWritable) writable).set(data, 0, data.length);
+                break;
+            case DataType.INTEGER:
+                ((IntWritable) writable).set(((Integer) dataValue).intValue());
+                break;
+            case DataType.LONG:
+                ((LongWritable) writable).set(((Long) dataValue).longValue());
+                break;
+            case DataType.FLOAT:
+                ((FloatWritable) writable).set(((Float) dataValue).floatValue());
+                break;
+            case DataType.DOUBLE:
+                ((DoubleWritable) writable).set(((Double) dataValue).doubleValue());
+                break;
+            case DataType.BYTE:
+                ((ByteWritable) writable).set(((Byte) dataValue).byteValue());
+                break;
+        }
     }
 
     @Override
@@ -169,5 +221,89 @@ public class RichSequenceFileLoader extends FileInputLoadFunc {
     @Override
     public void setLocation(String location, Job job) throws IOException {
         FileInputFormat.setInputPaths(job, location);
+    }
+
+    @Override
+    public String relToAbsPathForStoreLocation(String location, Path curDir) throws IOException {
+        return LoadFunc.getAbsolutePath(location, curDir);
+    }
+
+    @Override
+    public OutputFormat getOutputFormat() throws IOException {
+        return new SequenceFileOutputFormat<Writable, Writable>();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void setStoreLocation(String location, Job job) throws IOException {
+        ensureUDFContext(job.getConfiguration());
+        job.setOutputKeyClass(keyClass);
+        job.setOutputValueClass(valueClass);
+        FileOutputFormat.setOutputPath(job, new Path(location));
+        if ("true".equals(job.getConfiguration().get("output.compression.enabled"))) {
+            FileOutputFormat.setCompressOutput(job, true);
+            String codec = job.getConfiguration().get("output.compression.codec");
+            FileOutputFormat.setOutputCompressorClass(job,
+                    PigContext.resolveClassName(codec).asSubclass(CompressionCodec.class));
+        } else {
+            // This makes it so that storing to a directory ending with ".gz" or ".bz2" works.
+            setCompression(new Path(location), job);
+        }
+    }
+
+    private void ensureUDFContext(Configuration conf) throws IOException {
+        if (UDFContext.getUDFContext().isUDFConfEmpty()
+                && conf.get("pig.udf.context") != null) {
+            MapRedUtil.setupUDFContext(conf);
+        }
+    }
+
+    /**
+     * @param path
+     * @param job
+     */
+    private void setCompression(Path path, Job job) {
+        CompressionCodecFactory codecFactory = new CompressionCodecFactory(job.getConfiguration());
+        CompressionCodec codec = codecFactory.getCodec(path);
+        if (codec != null) {
+            FileOutputFormat.setCompressOutput(job, true);
+            FileOutputFormat.setOutputCompressorClass(job, codec.getClass());
+        } else {
+            FileOutputFormat.setCompressOutput(job, false);
+        }
+    }
+
+    @Override
+    public void checkSchema(ResourceSchema s) throws IOException {
+    }
+
+    @Override
+    public void prepareToWrite(RecordWriter writer) throws IOException {
+        this.writer = writer;
+    }
+
+    @Override
+    public void putNext(Tuple t) throws ExecException, IOException {
+        try {
+
+            translatePigDataTypeToWritable(t, 0, key);
+            translatePigDataTypeToWritable(t, 1, value);
+            writer.write(key, value);
+
+        } catch (Exception ex) {
+            String message = "Unable to write key/value pair to output, key: " + key.getClass() + ", value: " + value.getClass()
+                    + ", writer " + writer + " ex " + ex;
+            LOG.warn(message);
+            throw new BackendException(message);
+        }
+    }
+
+    @Override
+    public void setStoreFuncUDFContextSignature(String signature) {
+    }
+
+    @Override
+    public void cleanupOnFailure(String location, Job job) throws IOException {
+        StoreFunc.cleanupOnFailureImpl(location, job);
     }
 }
