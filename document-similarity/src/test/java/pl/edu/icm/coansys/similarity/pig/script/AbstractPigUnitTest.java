@@ -6,12 +6,9 @@ package pl.edu.icm.coansys.similarity.pig.script;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import org.apache.hadoop.fs.Path;
 import org.apache.pig.pigunit.Cluster;
 import org.apache.pig.pigunit.PigTest;
 import org.testng.annotations.BeforeTest;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 
 /**
  *
