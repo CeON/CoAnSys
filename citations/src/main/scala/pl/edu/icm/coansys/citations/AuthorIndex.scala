@@ -11,4 +11,8 @@ class AuthorIndex(val indexFileUri: String) {
     index.getApproximate(author).flatMap(_.iterable map util.uuidDecode).toSet
   }
 
+  def close() {
+    index.close()
+  }
+
 }

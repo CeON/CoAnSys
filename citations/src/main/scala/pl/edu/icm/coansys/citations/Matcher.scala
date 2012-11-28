@@ -6,9 +6,10 @@ import com.nicta.scoobi.core.{Emitter, DoFn, DList}
 import com.nicta.scoobi.Persist._
 import com.nicta.scoobi.InputsOutputs._
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata
-import pl.edu.icm.coansys.commons.scala.strings
+import pl.edu.icm.coansys.importers.models.PICProtos
 import pl.edu.icm.coansys.importers.models.DocumentProtosWrapper.DocumentWrapper
 import org.apache.hadoop.io.{Text, BytesWritable}
+import pl.edu.icm.coansys.importers.models.PICProtos.PicOut
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -20,6 +21,9 @@ object Matcher extends ScoobiApp {
    * Minimal similarity between a citation and a document that is used to filter out weak matches.
    */
   val minimalSimilarity = 0.8
+
+  private implicit val picOutConverter =
+    new BytesConverter[PICProtos.PicOut](_.toByteArray, PICProtos.PicOut.parseFrom(_))
 
   /**
    * A heuristics to retrieve documents that are most probable to be associated with a given citation.
@@ -60,10 +64,23 @@ object Matcher extends ScoobiApp {
 
   def similarity(citation: CitationWrapper, document: DocumentMetadataWrapper): Double = {
     // that's just mock implementation
+    type BagOfChars = Map[Char, Int]
+    def bagOfChars(s: String): BagOfChars =
+      s.filterNot(_.isWhitespace).groupBy(identity).mapValues(_.length)
+    def commonCharsCount(b1: BagOfChars, b2: BagOfChars) =
+      (b1.keySet intersect b2.keySet).map(c => math.min(b1(c), b2(c))).sum
+    def charsCount(b: BagOfChars) =
+      b.map(_._2).sum
+
     val citationString = if (citation.meta.hasTitle) citation.meta.getTitle else citation.meta.getText
-    val lcsLen = strings.lcs(citationString, document.meta.getTitle).length
-    val minLen = math.min(citation.meta.getTitle.length, document.meta.getTitle.length)
-    lcsLen.toDouble / minLen
+    //val lcsLen = strings.lcs(citationString, document.meta.getTitle).length
+    //val minLen = math.min(citation.meta.getTitle.length, document.meta.getTitle.length)
+    //lcsLen.toDouble / minLen
+    val citationChars = bagOfChars(citationString)
+    val articleTitleChars = bagOfChars(document.meta.getTitle)
+
+    2 * commonCharsCount(citationChars, articleTitleChars).toDouble /
+      (charsCount(citationChars) + charsCount(articleTitleChars))
   }
 
   def citationsWithHeuristic(citations: DList[CitationWrapper], indexUri: String) =
@@ -79,7 +96,9 @@ object Matcher extends ScoobiApp {
         Stream.continually(cit) zip approximatelyMatchingDocuments(cit, index) foreach (emitter.emit(_))
       }
 
-      def cleanup(emitter: Emitter[(CitationWrapper, String)]) {}
+      def cleanup(emitter: Emitter[(CitationWrapper, String)]) {
+        index.close()
+      }
     })
 
 
@@ -98,12 +117,14 @@ object Matcher extends ScoobiApp {
         index.get(text) match {
           case Some(bytes) =>
             emitter.emit((input._1, DocumentMetadata.parseFrom(bytes.copyBytes)))
-          case _ => 
+          case _ =>
             throw new Exception("No index entry for ---" + input._2 + "---")
         }
       }
 
-      def cleanup(emitter: Emitter[(CitationWrapper, DocumentMetadataWrapper)]) {}
+      def cleanup(emitter: Emitter[(CitationWrapper, DocumentMetadataWrapper)]) {
+        index.close()
+      }
     })
       .groupByKey[CitationWrapper, DocumentMetadataWrapper]
       .flatMap {
@@ -115,14 +136,48 @@ object Matcher extends ScoobiApp {
           }
             .filter(_._2 >= minimalSimilarity)
 
-        if (!aboveThreshold.isEmpty)
-          Some(cit, aboveThreshold.maxBy(_._2)._1)
+        if (!aboveThreshold.isEmpty) {
+          val target = aboveThreshold.maxBy(_._2)._1
+          val sourceUuid = cit.meta.getSource
+          val position = cit.meta.getBibRefPosition
+          val targetExtId = target.meta.getExtId(0).getValue
+          Some(sourceUuid, (position, targetExtId))
+        }
         else
           None
     }
-      .map {
-      case (cit, doc) => (cit.meta.getSource, doc.meta.getKey)
-    }
+      .groupByKey[String, (Int, String)]
+      .parallelDo(new DoFn[(String, Iterable[(Int, String)]), (String, PICProtos.PicOut)] {
+      var index: SimpleIndex[Text, BytesWritable] = null
+      val text: Text = new Text()
+
+      def setup() {
+        index = new SimpleIndex[Text, BytesWritable](keyIndexUri)
+      }
+
+      def process(input: (String, Iterable[(Int, String)]), emitter: Emitter[(String, PicOut)]) {
+        val (sourceUuid, refs) = input
+        text.set(sourceUuid)
+        index.get(text) match {
+          case Some(bytes) =>
+            val sourceDoc = DocumentMetadata.parseFrom(bytes.copyBytes())
+
+            val outBuilder = PICProtos.PicOut.newBuilder()
+            outBuilder.setDocId(sourceDoc.getExtId(0).getValue)
+            for ((position, targetExtId) <- refs) {
+              outBuilder.addRefs(PICProtos.References.newBuilder().setDocId(targetExtId).setRefNum(position))
+            }
+
+            emitter.emit((sourceUuid, outBuilder.build()))
+          case _ =>
+            throw new Exception("No index entry for ---" + input._2 + "---")
+        }
+      }
+
+      def cleanup(emitter: Emitter[(String, PicOut)]) {
+        index.close()
+      }
+    })
   }
 
   def readCitationsFromSeqFiles(uris: List[String]): DList[CitationWrapper] = {
@@ -145,7 +200,10 @@ object Matcher extends ScoobiApp {
   def run() {
     configuration.set("mapred.max.split.size", 500000)
     configuration.setMinReducers(48)
+
     val myMatches = matches(readCitationsFromDocumentsFromSeqFiles(List(args(2))), args(0), args(1))
+
+
     persist(convertToSequenceFile(myMatches, args(3)))
   }
 }
