@@ -87,30 +87,22 @@ object Matcher extends ScoobiApp {
 
   def matches(citations: DList[CitationWrapper], keyIndexUri: String, authorIndexUri: String) = {
     citationsWithHeuristic(citations, authorIndexUri)
-      .mapWithResource(new SimpleTextIndex[BytesWritable](keyIndexUri)) {
-      case (index, input) =>
-        index.get(input._2) match {
-          case Some(bytes) =>
-            (input._1, DocumentMetadata.parseFrom(bytes.copyBytes))
-          case _ =>
-            throw new Exception("No index entry for ---" + input._2 + "---")
-        }
-    }
-      .groupByKey[CitationWrapper, DocumentMetadataWrapper]
-      .flatMap {
-      case (cit, docs) =>
+      .groupByKey[CitationWrapper, String]
+      .flatMapWithResource(new SimpleTextIndex[BytesWritable](keyIndexUri)) {
+      case (index, (cit, docIds)) =>
         val aboveThreshold =
-          docs
+          docIds
             .map {
-            doc => (doc, similarity(cit, doc))
+            docId =>
+              val doc = DocumentMetadata.parseFrom(index.get(docId).copyBytes)
+              (doc, similarity(cit, doc))
           }
             .filter(_._2 >= minimalSimilarity)
-
         if (!aboveThreshold.isEmpty) {
           val target = aboveThreshold.maxBy(_._2)._1
           val sourceUuid = cit.meta.getSource
           val position = cit.meta.getBibRefPosition
-          val targetExtId = target.meta.getExtId(0).getValue
+          val targetExtId = target.getExtId(0).getValue
           Some(sourceUuid, (position, targetExtId))
         }
         else
@@ -119,20 +111,15 @@ object Matcher extends ScoobiApp {
       .groupByKey[String, (Int, String)]
       .mapWithResource(new SimpleTextIndex[BytesWritable](keyIndexUri)) {
       case (index, (sourceUuid, refs)) =>
-        index.get(sourceUuid) match {
-          case Some(bytes) =>
-            val sourceDoc = DocumentMetadata.parseFrom(bytes.copyBytes())
+        val sourceDoc = DocumentMetadata.parseFrom(index.get(sourceUuid).copyBytes())
 
-            val outBuilder = PICProtos.PicOut.newBuilder()
-            outBuilder.setDocId(sourceDoc.getExtId(0).getValue)
-            for ((position, targetExtId) <- refs) {
-              outBuilder.addRefs(PICProtos.References.newBuilder().setDocId(targetExtId).setRefNum(position))
-            }
-
-            (sourceUuid, outBuilder.build())
-          case _ =>
-            throw new Exception("No index entry for ---" + sourceUuid + "---")
+        val outBuilder = PICProtos.PicOut.newBuilder()
+        outBuilder.setDocId(sourceDoc.getExtId(0).getValue)
+        for ((position, targetExtId) <- refs) {
+          outBuilder.addRefs(PICProtos.References.newBuilder().setDocId(targetExtId).setRefNum(position))
         }
+
+        (sourceUuid, outBuilder.build())
     }
   }
 

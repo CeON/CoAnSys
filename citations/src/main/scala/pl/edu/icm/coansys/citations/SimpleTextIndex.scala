@@ -11,9 +11,14 @@ class SimpleTextIndex[V <: org.apache.hadoop.io.Writable : Manifest](override va
   extends SimpleIndex[Text, V](indexFileUri) {
   val text = new Text()
 
-  def get(s: String) = {
+  def get(s: String): V = {
     text.set(s)
-    super.get(text)
+    super.get(text) match {
+      case Some(bytes) =>
+        bytes
+      case _ =>
+        throw new Exception("No index entry for ---" + s + "---")
+    }
   }
 
 }
