@@ -2,14 +2,14 @@ package pl.edu.icm.coansys.citations
 
 import collection.JavaConversions._
 import com.nicta.scoobi.application.ScoobiApp
-import com.nicta.scoobi.core.{Emitter, DoFn, DList}
+import com.nicta.scoobi.core.DList
 import com.nicta.scoobi.Persist._
 import com.nicta.scoobi.InputsOutputs._
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata
 import pl.edu.icm.coansys.importers.models.PICProtos
 import pl.edu.icm.coansys.importers.models.DocumentProtosWrapper.DocumentWrapper
-import org.apache.hadoop.io.{Text, BytesWritable}
-import pl.edu.icm.coansys.importers.models.PICProtos.PicOut
+import org.apache.hadoop.io.BytesWritable
+import pl.edu.icm.coansys.citations.AugmentedDList.augmentDList
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -58,10 +58,6 @@ object Matcher extends ScoobiApp {
     }.keys
   }
 
-  //  def approximatelyMatchingDocuments(citation: CitationWrapper, indexUri: String): Iterable[String] = {
-  //    approximatelyMatchingDocuments(citation, new AuthorIndex(indexUri))
-  //  }
-
   def similarity(citation: CitationWrapper, document: DocumentMetadataWrapper): Double = {
     // that's just mock implementation
     type BagOfChars = Map[Char, Int]
@@ -85,47 +81,21 @@ object Matcher extends ScoobiApp {
 
   def citationsWithHeuristic(citations: DList[CitationWrapper], indexUri: String) =
     citations
-      .parallelDo(new DoFn[CitationWrapper, (CitationWrapper, String)] {
-      var index: AuthorIndex = null
-
-      def setup() {
-        index = new AuthorIndex(indexUri)
-      }
-
-      def process(cit: CitationWrapper, emitter: Emitter[(CitationWrapper, String)]) {
-        Stream.continually(cit) zip approximatelyMatchingDocuments(cit, index) foreach (emitter.emit(_))
-      }
-
-      def cleanup(emitter: Emitter[(CitationWrapper, String)]) {
-        index.close()
-      }
-    })
-
+      .flatMapWithResource(new AuthorIndex(indexUri)) {
+      case (index, cit) => Stream.continually(cit) zip approximatelyMatchingDocuments(cit, index)
+    }
 
   def matches(citations: DList[CitationWrapper], keyIndexUri: String, authorIndexUri: String) = {
     citationsWithHeuristic(citations, authorIndexUri)
-      .parallelDo(new DoFn[(CitationWrapper, String), (CitationWrapper, DocumentMetadataWrapper)] {
-      var index: SimpleIndex[Text, BytesWritable] = null
-      val text: Text = new Text()
-
-      def setup() {
-        index = new SimpleIndex[Text, BytesWritable](keyIndexUri)
-      }
-
-      def process(input: (CitationWrapper, String), emitter: Emitter[(CitationWrapper, DocumentMetadataWrapper)]) {
-        text.set(input._2)
-        index.get(text) match {
+      .mapWithResource(new SimpleTextIndex[BytesWritable](keyIndexUri)) {
+      case (index, input) =>
+        index.get(input._2) match {
           case Some(bytes) =>
-            emitter.emit((input._1, DocumentMetadata.parseFrom(bytes.copyBytes)))
+            (input._1, DocumentMetadata.parseFrom(bytes.copyBytes))
           case _ =>
             throw new Exception("No index entry for ---" + input._2 + "---")
         }
-      }
-
-      def cleanup(emitter: Emitter[(CitationWrapper, DocumentMetadataWrapper)]) {
-        index.close()
-      }
-    })
+    }
       .groupByKey[CitationWrapper, DocumentMetadataWrapper]
       .flatMap {
       case (cit, docs) =>
@@ -147,18 +117,9 @@ object Matcher extends ScoobiApp {
           None
     }
       .groupByKey[String, (Int, String)]
-      .parallelDo(new DoFn[(String, Iterable[(Int, String)]), (String, PICProtos.PicOut)] {
-      var index: SimpleIndex[Text, BytesWritable] = null
-      val text: Text = new Text()
-
-      def setup() {
-        index = new SimpleIndex[Text, BytesWritable](keyIndexUri)
-      }
-
-      def process(input: (String, Iterable[(Int, String)]), emitter: Emitter[(String, PicOut)]) {
-        val (sourceUuid, refs) = input
-        text.set(sourceUuid)
-        index.get(text) match {
+      .mapWithResource(new SimpleTextIndex[BytesWritable](keyIndexUri)) {
+      case (index, (sourceUuid, refs)) =>
+        index.get(sourceUuid) match {
           case Some(bytes) =>
             val sourceDoc = DocumentMetadata.parseFrom(bytes.copyBytes())
 
@@ -168,16 +129,11 @@ object Matcher extends ScoobiApp {
               outBuilder.addRefs(PICProtos.References.newBuilder().setDocId(targetExtId).setRefNum(position))
             }
 
-            emitter.emit((sourceUuid, outBuilder.build()))
+            (sourceUuid, outBuilder.build())
           case _ =>
-            throw new Exception("No index entry for ---" + input._2 + "---")
+            throw new Exception("No index entry for ---" + sourceUuid + "---")
         }
-      }
-
-      def cleanup(emitter: Emitter[(String, PicOut)]) {
-        index.close()
-      }
-    })
+    }
   }
 
   def readCitationsFromSeqFiles(uris: List[String]): DList[CitationWrapper] = {
