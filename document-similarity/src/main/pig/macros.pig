@@ -183,8 +183,8 @@ DEFINE get_topn_per_group(in_relation, group_field, order_field, order_direction
 -- that compares only those document that have at least
 -- one common words
 -------------------------------------------------------
-DEFINE calculate_pairwise_similarity(in_relation, in_relation2, doc_field, term_field, tfidf_field, CC) RETURNS out_relation {
-	joined = JOIN $in_relation BY $term_field, $in_relation2 BY $term_field USING 'merge';
+DEFINE calculate_pairwise_similarity(in_relation, in_relation2, doc_field, term_field, tfidf_field, CC, joinParallel) RETURNS out_relation {
+	joined = JOIN $in_relation BY $term_field, $in_relation2 BY $term_field USING 'merge' PARALLEL $joinParallel;
 	projected = FOREACH joined GENERATE 
 		$in_relation$CC$term_field AS term,
         	$in_relation$CC$doc_field AS docId1, $in_relation2$CC$doc_field As docId2,

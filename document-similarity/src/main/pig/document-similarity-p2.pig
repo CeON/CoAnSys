@@ -19,8 +19,8 @@ DEFINE DocsCombinedSimilarity pl.edu.icm.coansys.similarity.pig.udf.AvgSimilarit
 
 SET default_parallel $parallel
 SET mapred.child.java.opts $mapredChildJavaOpts
-SET pig.tmpfilecompression true
-SET pig.tmpfilecompression.codec $tmpCompressionCodec
+--SET pig.tmpfilecompression true
+--SET pig.tmpfilecompression.codec $tmpCompressionCodec
 
 IMPORT 'macros.pig';
 
@@ -32,7 +32,7 @@ doc_tfidf = LOAD '$inputPath' AS (docId: chararray, term: chararray, tfidf: doub
 doc_tfidf2 = LOAD '$inputPath' AS (docId: chararray, term: chararray, tfidf: double);
 
 -- calculate and store document similarity for all documents
-document_similarity = calculate_pairwise_similarity(doc_tfidf, doc_tfidf2, docId, term, tfidf, '::');
+document_similarity = calculate_pairwise_similarity(doc_tfidf, doc_tfidf2, docId, term, tfidf, '::', 190);
 DESCRIBE document_similarity;
 STORE document_similarity INTO '$outputPath$SIMILARITY_ALL_DOCS_SUBDIR';
 
