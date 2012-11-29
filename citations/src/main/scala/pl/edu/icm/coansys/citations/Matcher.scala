@@ -142,11 +142,12 @@ object Matcher extends ScoobiApp {
 
   def run() {
     configuration.set("mapred.max.split.size", 500000)
-    configuration.setMinReducers(48)
+    configuration.setMinReducers(4)
 
     val myMatches = matches(readCitationsFromDocumentsFromSeqFiles(List(args(2))), args(0), args(1))
 
-
+    implicit val stringConverter = new BytesConverter[String](util.uuidEncode, util.uuidDecode)
+    implicit val picOutConverter = new BytesConverter[PICProtos.PicOut](_.toByteArray, PICProtos.PicOut.parseFrom(_))
     persist(convertToSequenceFile(myMatches, args(3)))
   }
 }
