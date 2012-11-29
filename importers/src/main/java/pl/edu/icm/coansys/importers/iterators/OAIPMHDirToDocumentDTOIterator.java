@@ -50,7 +50,7 @@ public class OAIPMHDirToDocumentDTOIterator implements Iterable<DocumentDTO> {
         this.collectionFromFilename = true;
         init(oaipmhDirPath);
     }
-    
+
     private void init(String oaipmhDirPath) {
         File thisFile = new File(oaipmhDirPath);
         if (thisFile.isDirectory()) {
@@ -118,7 +118,7 @@ public class OAIPMHDirToDocumentDTOIterator implements Iterable<DocumentDTO> {
                     }
                     if (collectionFromFilename) {
                         this.collection = nextFile.getName().replaceFirst("listRecords_", "oai-")
-                                .replaceFirst("\\.xml$", "").replaceAll("[^a-zA-Z0-9]", "-").replaceFirst("-$", "");
+                                .replaceFirst("\\.xml$", "").replaceAll("[^a-zA-Z0-9]", "-").replaceFirst("-[0-9]*$", "");
                     }
                     nodeListIndex = 0;
                 } catch (Exception ex) {
@@ -143,7 +143,7 @@ public class OAIPMHDirToDocumentDTOIterator implements Iterable<DocumentDTO> {
                     nextItem.setDocumentMetadata(dm);
                     nextItem.setCollection(collection);
                 } else {
-                    logger.error("There was exactly one record in input string; number of output items: " + docs.size()); 
+                    logger.error("There was exactly one record in input string; number of output items: " + docs.size());
                 }
             } catch (Exception ex) {
                 logger.error("Error: " + ex);
