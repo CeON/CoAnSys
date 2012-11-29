@@ -157,6 +157,7 @@ public class BwmetaToDocumentWraperSequenceFileWriter {
                     LOGGER.info("\tBig media = " + size + "MB");
                 }
             }
+            
             mediaConteinerCount++;
         }
 

@@ -7,6 +7,7 @@ package pl.edu.icm.coansys.importers.io.writers.hbase;
 import java.io.IOException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.client.HTable;
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
@@ -86,7 +87,8 @@ public class DocumentWrapperSequenceFileToHBase implements Tool {
              System.exit(-1);
         }
 
-        int result = ToolRunner.run(new DocumentWrapperSequenceFileToHBase(), args);
+        Configuration conf = HBaseConfiguration.create();
+        int result = ToolRunner.run(conf, new DocumentWrapperSequenceFileToHBase(), args);
         System.exit(result);
     }
 
