@@ -6,7 +6,7 @@
 %default TFIDF_TOPN_ALL_SUBDIR '/tfidf/all-topn'
 %default TFIDF_TF_ALL_SUBDIR '/tfidf/tf-all-topn'
 
-%default tfidfTopnTermPerDocument 20
+%default tfidfTopnTermPerDocument 50
 %default tfidfMinValue 0.4
 
 %default sample 0.5
@@ -25,8 +25,8 @@ DEFINE StemmedPairs pl.edu.icm.coansys.similarity.pig.udf.StemmedPairs();
 
 SET default_parallel $parallel
 SET mapred.child.java.opts $mapredChildJavaOpts
-SET pig.tmpfilecompression true
-SET pig.tmpfilecompression.codec $tmpCompressionCodec
+--SET pig.tmpfilecompression true
+--SET pig.tmpfilecompression.codec $tmpCompressionCodec
 
 IMPORT 'macros.pig';
 
