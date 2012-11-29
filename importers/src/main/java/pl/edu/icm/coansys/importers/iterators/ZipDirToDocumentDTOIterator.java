@@ -16,7 +16,7 @@ import pl.edu.icm.coansys.importers.ZipArchive;
 import pl.edu.icm.coansys.importers.models.DocumentDTO;
 import pl.edu.icm.coansys.importers.parsers.MetadataToProtoMetadataParser;
 import pl.edu.icm.coansys.importers.transformers.YElementFromZip2DocumentDto;
-import pl.edu.icm.synat.application.model.bwmeta.YExportable;
+import pl.edu.icm.model.bwmeta.YExportable;
 
 /**
  *
