@@ -1,6 +1,7 @@
-package pl.edu.icm.coansys.citations
+package pl.edu.icm.coansys.citations.jobs
 
 import com.nicta.scoobi.application.ScoobiApp
+import pl.edu.icm.coansys.citations.indices.AuthorIndex
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)

@@ -1,8 +1,9 @@
-package pl.edu.icm.coansys.citations
+package pl.edu.icm.coansys.citations.jobs
 
 import com.nicta.scoobi.application.ScoobiApp
 import org.apache.hadoop.fs.Path
 import org.apache.hadoop.io.{Text, MapFile}
+import pl.edu.icm.coansys.citations.util.BytesIterable
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)

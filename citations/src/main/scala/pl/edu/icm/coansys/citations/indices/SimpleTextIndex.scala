@@ -1,4 +1,4 @@
-package pl.edu.icm.coansys.citations
+package pl.edu.icm.coansys.citations.indices
 
 import org.apache.hadoop.io.Text
 

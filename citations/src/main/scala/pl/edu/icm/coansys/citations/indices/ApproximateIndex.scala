@@ -1,4 +1,4 @@
-package pl.edu.icm.coansys.citations
+package pl.edu.icm.coansys.citations.indices
 
 import pl.edu.icm.coansys.commons.scala.strings.rotations
 import org.apache.hadoop.io.{Writable, Text}
@@ -8,6 +8,8 @@ import com.nicta.scoobi.io.sequence.SeqSchema
 import com.nicta.scoobi.Persist.persist
 import com.nicta.scoobi.InputsOutputs.convertToSequenceFile
 import com.nicta.scoobi.application.ScoobiConfiguration
+import pl.edu.icm.coansys.citations.data.DocumentMetadataWrapper
+import pl.edu.icm.coansys.citations.util.{hdfs, BytesIterable, misc}
 
 /**
  * A class helping in approximate index saved in MapFile usage.
@@ -94,10 +96,10 @@ object ApproximateIndex {
 
     implicit object dockeysIterableSchema extends SeqSchema[Iterable[String]] {
 
-      def toWritable(x: Iterable[String]) = new BytesIterable(x map util.uuidEncode)
+      def toWritable(x: Iterable[String]) = new BytesIterable(x map misc.uuidEncode)
 
       def fromWritable(x: SeqType) =
-        x.iterable map util.uuidDecode
+        x.iterable map misc.uuidDecode
 
       type SeqType = BytesIterable
       val mf = manifest[BytesIterable]

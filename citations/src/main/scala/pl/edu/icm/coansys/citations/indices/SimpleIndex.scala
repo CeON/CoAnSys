@@ -1,4 +1,4 @@
-package pl.edu.icm.coansys.citations
+package pl.edu.icm.coansys.citations.indices
 
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.io.{WritableComparable, Writable, MapFile}
@@ -8,6 +8,8 @@ import com.nicta.scoobi.application.ScoobiConfiguration
 import com.nicta.scoobi.Persist._
 import com.nicta.scoobi.InputsOutputs._
 import scala.Some
+import pl.edu.icm.coansys.citations.data.DocumentMetadataWrapper
+import pl.edu.icm.coansys.citations.util.hdfs
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)

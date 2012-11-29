@@ -1,4 +1,4 @@
-package pl.edu.icm.coansys.citations
+package pl.edu.icm.coansys.citations.util
 
 import java.io.DataInput
 import java.io.DataOutput

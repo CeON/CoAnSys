@@ -1,10 +1,13 @@
-package pl.edu.icm.coansys.citations
+package pl.edu.icm.coansys.citations.jobs
 
 import com.nicta.scoobi.application.ScoobiApp
 import com.nicta.scoobi.core.DList
 import pl.edu.icm.coansys.importers.models.DocumentProtos._
 import pl.edu.icm.coansys.importers.models.DocumentProtosWrapper._
 import com.nicta.scoobi.InputsOutputs.convertValueFromSequenceFile
+import pl.edu.icm.coansys.citations.util.BytesConverter
+import pl.edu.icm.coansys.citations.data.DocumentMetadataWrapper
+import pl.edu.icm.coansys.citations.indices.{SimpleIndex, ApproximateIndex}
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)

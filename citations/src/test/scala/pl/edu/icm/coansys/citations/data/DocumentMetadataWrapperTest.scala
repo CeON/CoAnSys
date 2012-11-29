@@ -1,4 +1,4 @@
-package pl.edu.icm.coansys.citations
+package pl.edu.icm.coansys.citations.data
 
 import org.testng.Assert._
 import org.testng.annotations.Test

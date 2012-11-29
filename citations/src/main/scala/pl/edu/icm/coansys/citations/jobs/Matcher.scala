@@ -1,4 +1,4 @@
-package pl.edu.icm.coansys.citations
+package pl.edu.icm.coansys.citations.jobs
 
 import collection.JavaConversions._
 import com.nicta.scoobi.application.ScoobiApp
@@ -9,7 +9,10 @@ import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata
 import pl.edu.icm.coansys.importers.models.PICProtos
 import pl.edu.icm.coansys.importers.models.DocumentProtosWrapper.DocumentWrapper
 import org.apache.hadoop.io.BytesWritable
-import pl.edu.icm.coansys.citations.AugmentedDList.augmentDList
+import pl.edu.icm.coansys.citations.util.AugmentedDList.augmentDList
+import pl.edu.icm.coansys.citations.indices.{SimpleTextIndex, AuthorIndex}
+import pl.edu.icm.coansys.citations.util.{misc, BytesConverter}
+import pl.edu.icm.coansys.citations.data.{DocumentMetadataWrapper, CitationWrapper}
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -146,7 +149,7 @@ object Matcher extends ScoobiApp {
 
     val myMatches = matches(readCitationsFromDocumentsFromSeqFiles(List(args(2))), args(0), args(1))
 
-    implicit val stringConverter = new BytesConverter[String](util.uuidEncode, util.uuidDecode)
+    implicit val stringConverter = new BytesConverter[String](misc.uuidEncode, misc.uuidDecode)
     implicit val picOutConverter = new BytesConverter[PICProtos.PicOut](_.toByteArray, PICProtos.PicOut.parseFrom(_))
     persist(convertToSequenceFile(myMatches, args(3)))
   }

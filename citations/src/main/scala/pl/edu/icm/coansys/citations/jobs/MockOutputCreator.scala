@@ -1,4 +1,4 @@
-package pl.edu.icm.coansys.citations
+package pl.edu.icm.coansys.citations.jobs
 
 import scala.collection.JavaConversions._
 import com.nicta.scoobi.application.ScoobiApp
@@ -7,6 +7,7 @@ import com.nicta.scoobi.Persist._
 import pl.edu.icm.coansys.importers.models.DocumentProtosWrapper.DocumentWrapper
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata
 import pl.edu.icm.coansys.importers.models.PICProtos
+import pl.edu.icm.coansys.citations.util.{misc, BytesConverter}
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -19,7 +20,7 @@ object MockOutputCreator extends ScoobiApp {
     val out = args(1)
     implicit val wrapperConverter = new BytesConverter[DocumentWrapper](_.toByteArray, DocumentWrapper.parseFrom(_))
     implicit val picOutConverter = new BytesConverter[PICProtos.PicOut](_.toByteArray, PICProtos.PicOut.parseFrom(_))
-    implicit val stringConverter = new BytesConverter[String](util.uuidEncode, util.uuidDecode)
+    implicit val stringConverter = new BytesConverter[String](misc.uuidEncode, misc.uuidDecode)
     val result = convertValueFromSequenceFile[DocumentWrapper](List(in))
       .map {
       wrapper =>

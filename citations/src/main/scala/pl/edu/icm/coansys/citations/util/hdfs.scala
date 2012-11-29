@@ -1,4 +1,4 @@
-package pl.edu.icm.coansys.citations
+package pl.edu.icm.coansys.citations.util
 
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.{Path, FileSystem}
@@ -14,7 +14,6 @@ import org.apache.hadoop.io.SequenceFile.Sorter
 object hdfs {
   /**
    * Reads from a SequenceFile its key and value types
-   * @param uri
    * @return a pair of key and value type
    */
   def extractSeqTypes(uri: String): (Class[_], Class[_]) = {
@@ -31,7 +30,6 @@ object hdfs {
 
   /**
    * Converts SequenceFile to a MapFile. Assumes that Sequence file path is Path(uri, MapFile.DATA_FILE_NAME)
-   * @param uri
    */
   def convertSeqToMap(uri: String) {
     val conf = new Configuration()
@@ -44,7 +42,6 @@ object hdfs {
 
   /**
    * Merges and sorts all SequenceFiles in given directory and saves as Path(uri, MapFile.DATA_FILE_NAME)
-   * @param uri
    */
   def mergeSeqs(uri: String) {
     val conf = new Configuration()

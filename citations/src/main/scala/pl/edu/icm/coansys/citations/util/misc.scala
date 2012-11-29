@@ -1,4 +1,4 @@
-package pl.edu.icm.coansys.citations
+package pl.edu.icm.coansys.citations.util
 
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata
 import scala.collection.JavaConversions._
@@ -6,7 +6,7 @@ import scala.collection.JavaConversions._
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
-object util {
+object misc {
   def normalizedAuthorTokensFromAuthorList(meta: DocumentMetadata) = {
     meta.getAuthorList.toIterable
       .flatMap {

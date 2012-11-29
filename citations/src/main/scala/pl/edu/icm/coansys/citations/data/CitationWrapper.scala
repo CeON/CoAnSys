@@ -1,7 +1,8 @@
-package pl.edu.icm.coansys.citations
+package pl.edu.icm.coansys.citations.data
 
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata
 import com.nicta.scoobi.core.Grouping
+import pl.edu.icm.coansys.citations.util.{misc, BytesConverter}
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -9,7 +10,7 @@ import com.nicta.scoobi.core.Grouping
 class CitationWrapper(val meta: DocumentMetadata) {
   def normalisedAuthorTokens: Iterable[String] = {
     if (meta.getAuthorCount > 0)
-      util.normalizedAuthorTokensFromAuthorList(meta)
+      misc.normalizedAuthorTokensFromAuthorList(meta)
     else
       meta.getText.split( """[^\p{L}]+""").filter(_.length > 1).toSet
   }

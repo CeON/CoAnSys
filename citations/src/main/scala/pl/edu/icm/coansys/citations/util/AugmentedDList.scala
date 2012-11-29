@@ -1,4 +1,4 @@
-package pl.edu.icm.coansys.citations
+package pl.edu.icm.coansys.citations.util
 
 import com.nicta.scoobi.core.{WireFormat, Emitter, DoFn, DList}
 
