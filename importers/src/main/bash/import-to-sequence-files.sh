@@ -18,6 +18,5 @@ IS_SNAPPY_COMPRESSED=$5
 LOG_FILE=report.log
 
 # create sequence file and move it to HDFS (single java application)
-rm -rf ${LOG_FILE}
 rm -rf ${BWNDATA_OUTPUT_SEQUENCE_FILE}
 java -cp ${IMPORTERS_JAR} pl.edu.icm.coansys.importers.io.writers.file.BwmetaToDocumentWraperSequenceFileWriter ${BWNDATA_ZIPS_INPUT_DIR} ${BWNDATA_COLLECTION_NAME} ${BWNDATA_OUTPUT_SEQUENCE_FILE} ${IS_SNAPPY_COMPRESSED}
