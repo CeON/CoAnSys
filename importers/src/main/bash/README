@@ -1,3 +1,4 @@
 Exemplary run
 
+# ./run-all.sh <bwndata-collection-zips-local-input-dir> <bwndata-collection-name> <bwndata-collection-local-output-sequence-file> <hbase-target-table-name> <hbase-target-table-region-count>
 time ./run-all.sh /mnt/tmp/bwndata/bazekon-20120228-subset bazekon /mnt/tmp/bwndata-sf/bazekon-20120228-snappy.sf2 bazekon_test 40
