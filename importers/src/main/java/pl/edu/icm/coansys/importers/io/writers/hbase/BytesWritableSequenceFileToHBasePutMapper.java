@@ -17,7 +17,7 @@ import org.apache.hadoop.mapreduce.Mapper.Context;
  *
  * @author akawa
  */
-public class BytesWritableSeqFileToHBasePutMapper extends Mapper<BytesWritable, BytesWritable, ImmutableBytesWritable, Put> {
+public class BytesWritableSequenceFileToHBasePutMapper extends Mapper<BytesWritable, BytesWritable, ImmutableBytesWritable, Put> {
 
     private byte[] columnFamily;
     private byte[] columnQualifier;

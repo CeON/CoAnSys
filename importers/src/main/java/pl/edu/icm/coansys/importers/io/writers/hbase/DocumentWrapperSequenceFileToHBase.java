@@ -97,7 +97,9 @@ public class DocumentWrapperSequenceFileToHBase implements Tool {
                 + " " + DocumentWrapperSequenceFileToHBase.class.getName()
                 + " -D mapreduce.map.class=<mapper.class>"
                 + " -D " + BULK_OUTPUT_CONF_KEY + "=<bulkoutputfile>"
-                + " <directory> <table>";
+                + " <directory> <table>"
+                + "\n"
+                + "You may consider generic BytesWritableSeqFileToHBasePutMapper.class (with hbase.table.full.column.name)";
 
         System.out.println(command);
     }
