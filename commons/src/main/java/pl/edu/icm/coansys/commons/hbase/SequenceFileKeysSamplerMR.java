@@ -12,6 +12,7 @@ import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.io.BooleanWritable;
 import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.NullWritable;
+import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Mapper.Context;
@@ -19,6 +20,7 @@ import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
+import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
@@ -32,7 +34,7 @@ public class SequenceFileKeysSamplerMR implements Tool {
     private static final String SAMPLE_SAMPLES_TOTAL_COUNT = "sampler.samples.region.count";
     private static final int SAMPLE_SAMPLES_TOTAL_COUNT_DV = 20;
     private static final String SAMPLE_SAMPLES_PER_SPLIT = "sampler.samples.per.split";
-    private static final int SAMPLE_SAMPLES_PER_SPLIT_DV = 10000;
+    private static final int SAMPLE_SAMPLES_PER_SPLIT_DV = 100;
     private static String[] DEFAULT_ARGS = {"/home/akawa/bwndata/sf/", "output-keys"};
 
     @Override
@@ -73,10 +75,10 @@ public class SequenceFileKeysSamplerMR implements Tool {
         }
     }
 
-    public static class Reduce extends Reducer<BooleanWritable, BytesWritable, BytesWritable, NullWritable> {
+    public static class Reduce extends Reducer<BooleanWritable, BytesWritable, Text, NullWritable> {
 
         private int samplesLimit = SAMPLE_SAMPLES_TOTAL_COUNT_DV;
-        private BytesWritable rangeKey = new BytesWritable();
+        private Text rangeKey = new Text();
         private static final NullWritable NULL = NullWritable.get();
 
         @Override
@@ -95,8 +97,7 @@ public class SequenceFileKeysSamplerMR implements Tool {
             List<String> intervaleSamples = getIntervalSamples(samplesString, stepSize, samplesLimit);
 
             for (String regionKey : intervaleSamples) {
-                byte[] bytes = Bytes.toBytes(regionKey);
-                rangeKey.set(bytes, 0, bytes.length);
+                rangeKey.set(regionKey);
                 context.write(rangeKey, NULL);
             }
         }
@@ -144,7 +145,7 @@ public class SequenceFileKeysSamplerMR implements Tool {
 
         sampler.setNumReduceTasks(1);
         sampler.setInputFormatClass(SequenceFileInputFormat.class);
-        sampler.setOutputFormatClass(SequenceFileOutputFormat.class);
+        sampler.setOutputFormatClass(TextOutputFormat.class);
         
         sampler.setMapOutputKeyClass(BooleanWritable.class);
         sampler.setMapOutputValueClass(BytesWritable.class);
