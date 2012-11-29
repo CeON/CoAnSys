@@ -16,13 +16,13 @@ import pl.edu.icm.coansys.importers.models.DocumentProtos.Auxiliar;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.ClassifCode;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.ExtId;
-import pl.edu.icm.synat.application.commons.transformers.MetadataFormat;
-import pl.edu.icm.synat.application.commons.transformers.MetadataReader;
-import pl.edu.icm.synat.application.commons.transformers.TransformationException;
-import pl.edu.icm.synat.application.model.bwmeta.*;
-import pl.edu.icm.synat.application.model.bwmeta.constants.YaddaIdConstants;
-import pl.edu.icm.synat.application.model.bwmeta.transformers.BwmetaTransformerConstants;
-import pl.edu.icm.synat.application.model.general.MetadataTransformers;
+import pl.edu.icm.model.bwmeta.*;
+import pl.edu.icm.model.bwmeta.constants.YaddaIdConstants;
+import pl.edu.icm.model.bwmeta.transformers.BwmetaTransformerConstants;
+import pl.edu.icm.model.general.MetadataTransformers;
+import pl.edu.icm.model.transformers.MetadataFormat;
+import pl.edu.icm.model.transformers.MetadataReader;
+import pl.edu.icm.model.transformers.TransformationException;
 
 /**
  *
