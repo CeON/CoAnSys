@@ -32,9 +32,7 @@ public class ZipArchive {
 
     public ZipArchive(String zipFilePath) throws IOException {
         zipFile = new ZipFile(zipFilePath);
-
         entries = zipFile.entries();
-
         while (entries.hasMoreElements()) {
             ZipEntry entry = entries.nextElement();
             if (!entry.isDirectory()) {
@@ -65,5 +63,9 @@ public class ZipArchive {
             return zipFile.getInputStream(entry);
         }
         return null;
+    }
+    
+    public String getZipFilePath() {
+        return (zipFile != null ? zipFile.getName() : null);
     }
 }

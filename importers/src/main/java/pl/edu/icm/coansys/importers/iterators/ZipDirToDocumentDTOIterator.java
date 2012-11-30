@@ -48,6 +48,9 @@ public class ZipDirToDocumentDTOIterator implements Iterable<DocumentDTO> {
     private YElementFromZip2DocumentDto yElementFromZip2DocumentDTO;
     private List<String> xmls = null;
     private int currentXml = 0;
+    // Current xml path
+    private String currentXmlPath;
+    private String currentZipArichvePath;
 
     public ZipDirToDocumentDTOIterator(String zipDirPath, String collection) {
         this.collection = collection;
@@ -98,8 +101,9 @@ public class ZipDirToDocumentDTOIterator implements Iterable<DocumentDTO> {
                     }
                     // here we have a new zip file
                     try {
-                        System.out.println("Processing " + (zipIndex + 1) + ". zip of " + listZipFiles.length);
-                        currentZipArchive = new ZipArchive(listZipFiles[zipIndex].getPath());
+                        logger.info("Processing " + (zipIndex + 1) + ". zip of " + listZipFiles.length);
+                        currentZipArichvePath = listZipFiles[zipIndex].getPath();
+                        currentZipArchive = new ZipArchive(currentZipArichvePath);
                         xmls = currentZipArchive.filter(".*xml");
                         currentXml = 0;
                         xmlPathIterator = xmls.iterator();
@@ -109,20 +113,20 @@ public class ZipDirToDocumentDTOIterator implements Iterable<DocumentDTO> {
                     zipIndex++;
                 }
                 // here we have a new xml path:
-                String xmlPath = xmlPathIterator.next();
+                currentXmlPath = xmlPathIterator.next();
                 try {
-                    InputStream xmlIS = currentZipArchive.getFileAsInputStream(xmlPath);
+                    InputStream xmlIS = currentZipArchive.getFileAsInputStream(currentXmlPath);
                     yExportableIterator = MetadataToProtoMetadataParser.streamToYExportable(xmlIS, MetadataToProtoMetadataParser.MetadataType.BWMETA).iterator();
                     currentXml++;
                     if (currentXml % 10 == 0) {
-                        System.out.println("\t" + new Date() + "\tProceeded " + currentXml + ". xml of " + xmls.size());
+                        logger.info("\t" + new Date() + "\tProceeded " + currentXml + ". xml of " + xmls.size());
                     }
                 } catch (IOException ex) {
                     logger.error(ex.toString());
                 }
             }
             // here we have an yExportable:
-            docDTO = yElementFromZip2DocumentDTO.transformYElement(yExportableIterator.next(), currentZipArchive);
+            docDTO = yElementFromZip2DocumentDTO.transformYElement(yExportableIterator.next(), currentZipArchive, currentXmlPath);
             if (docDTO != null) {
                 docDTO.setCollection(collection);
             }
