@@ -20,5 +20,11 @@
             <artifactId>commons</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>pl.edu.icm.synat</groupId>
+            <artifactId>synat-application-commons</artifactId>
+            <version>1.8-SNAPSHOT</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
 </project>
