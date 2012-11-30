@@ -1,3 +1,7 @@
+/*
+ * (C) 2010-2012 ICM UW. All rights reserved.
+ */
+
 package pl.edu.icm.coansys.citations.util
 
 import com.nicta.scoobi.core.WireFormat
