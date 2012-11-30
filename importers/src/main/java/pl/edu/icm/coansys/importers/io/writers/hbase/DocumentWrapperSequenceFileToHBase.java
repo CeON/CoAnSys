@@ -13,16 +13,11 @@ import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
 import org.apache.hadoop.hbase.mapreduce.HFileOutputFormat;
 import org.apache.hadoop.hbase.mapreduce.TableMapReduceUtil;
-import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.mapreduce.Job;
-import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
-import org.apache.hadoop.util.GenericOptionsParser;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
-import static pl.edu.icm.coansys.importers.constants.HBaseConstant.*;
-import pl.edu.icm.coansys.importers.models.DocumentProtosWrapper.DocumentWrapper;
 
 /**
  *
@@ -30,10 +25,9 @@ import pl.edu.icm.coansys.importers.models.DocumentProtosWrapper.DocumentWrapper
  */
 public class DocumentWrapperSequenceFileToHBase implements Tool {
 
-  
     private Configuration conf;
     final static String BULK_OUTPUT_CONF_KEY = "bulk.output";
-
+  
     @Override
     public void setConf(Configuration conf) {
         this.conf = conf;
@@ -44,48 +38,18 @@ public class DocumentWrapperSequenceFileToHBase implements Tool {
         return conf;
     }
 
-    public static enum Counters {
-        DPROTO, CPROTO, MPROTO, CPROTO_SKIPPED
-    }
-
-    public static class DocumentWrapperToHBasePutMapper extends Mapper<BytesWritable, BytesWritable, ImmutableBytesWritable, Put> {
-
-        private ImmutableBytesWritable docWrapRowKey = new ImmutableBytesWritable();
-        private final int MAX_CPROTO_SIZE = 1000000;
-
-        @Override
-        protected void map(BytesWritable rowKey, BytesWritable documentWrapper, Context context)
-                throws IOException, InterruptedException {
-
-            DocumentWrapper docWrap = DocumentWrapper.parseFrom(documentWrapper.copyBytes());
-            docWrapRowKey.set(docWrap.getRowId().toByteArray());
-
-            Put put = new Put(docWrap.getRowId().toByteArray());
-            put.add(FAMILY_METADATA_BYTES, FAMILY_METADATA_QUALIFIER_PROTO_BYTES, docWrap.getMproto().toByteArray());
-            byte[] cproto = docWrap.getCproto().toByteArray();
-            if (cproto.length < MAX_CPROTO_SIZE) {
-                put.add(FAMILY_CONTENT_BYTES, FAMILY_CONTENT_QUALIFIER_PROTO_BYTES, cproto);
-            } else {
-                context.getCounter(Counters.CPROTO_SKIPPED).increment(1);
-            }
-            
-            context.write(docWrapRowKey, put);
-        }
-    }
-
     @Override
     public int run(String[] args) throws Exception {
 
-        getOptimizedConfiguration(conf);
+        String tableName = args[1];
+        
+        setOptimizedConfiguration(conf);
 
         Job job = new Job(conf, DocumentWrapperSequenceFileToHBase.class.getSimpleName());
         job.setJarByClass(DocumentWrapperSequenceFileToHBase.class);
-
-        job.setMapperClass(DocumentWrapperToHBasePutMapper.class);
+        
         job.setInputFormatClass(SequenceFileInputFormat.class);
         SequenceFileInputFormat.addInputPath(job, new Path(args[0]));
-
-        String tableName = args[1];
 
         String hfileOutPath = conf.get(BULK_OUTPUT_CONF_KEY);
         if (hfileOutPath != null) {
@@ -110,21 +74,20 @@ public class DocumentWrapperSequenceFileToHBase implements Tool {
         return 0;
     }
 
-    private void getOptimizedConfiguration(Configuration conf) {
-        conf.set("mapred.child.java.opts", "-Xmx4000m");
-        conf.set("io.sort.mb", "500");
+    private void setOptimizedConfiguration(Configuration conf) {
+        conf.set("mapred.child.java.opts", "-Xmx2000m");
+        conf.set("io.sort.mb", "1000");
         conf.set("io.sort.spill.percent", "0.90");
         conf.set("io.sort.record.percent", "0.15");
     }
 
     public static void main(String[] args) throws Exception {
-        Configuration conf = HBaseConfiguration.create();
-        String[] otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();
-        if (otherArgs.length < 2) {
-            usage("Wrong number of arguments: " + otherArgs.length);
-            System.exit(-1);
+        if (args.length < 2) {
+             usage("Wrong number of arguments: " + args.length);
+             System.exit(-1);
         }
 
+        Configuration conf = HBaseConfiguration.create();
         int result = ToolRunner.run(conf, new DocumentWrapperSequenceFileToHBase(), args);
         System.exit(result);
     }
@@ -134,8 +97,11 @@ public class DocumentWrapperSequenceFileToHBase implements Tool {
         System.out.println("Exemplary command: ");
         String command = "hadoop jar target/importers-1.0-SNAPSHOT-jar-with-dependencies.jar"
                 + " " + DocumentWrapperSequenceFileToHBase.class.getName()
-                + " -D" + BULK_OUTPUT_CONF_KEY + "=bulkoutputfile"
-                + " <directory> <table>";
+                + " -D mapreduce.map.class=<mapper.class>"
+                + " -D " + BULK_OUTPUT_CONF_KEY + "=<bulkoutputfile>"
+                + " <directory> <table>"
+                + "\n"
+                + "You may consider generic BytesWritableSeqFileToHBasePutMapper.class (with hbase.table.full.column.name)";
 
         System.out.println(command);
     }

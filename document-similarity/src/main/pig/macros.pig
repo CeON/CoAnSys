@@ -5,8 +5,8 @@ DEFINE load_bwndata_hdfs(inputPath, sampling) RETURNS doc {
 	raw_bytes = LOAD '$inputPath' USING pl.edu.icm.coansys.importers.pig.udf.RichSequenceFileLoader();	
 	raw_bytes_sample = SAMPLE raw_bytes $sampling;
 	raw_doc = FOREACH raw_bytes_sample GENERATE 
-			pl.edu.icm.coansys.importers.pig.udf.BytesToDataByteArray($0) AS rowkey, 
-			FLATTEN(pl.edu.icm.coansys.importers.pig.udf.DocumentComponentsProtoTupler($1)) AS (docId, mproto, cproto);
+			pl.edu.icm.coansys.importers.pig.udf.BytesToCharArray($0) AS rowkey, 
+			FLATTEN(pl.edu.icm.coansys.importers.pig.udf.DocumentProtoPartsTupler($1)) AS (docId, mproto, cproto);
 	
 	$doc = FOREACH raw_doc GENERATE rowkey, pl.edu.icm.coansys.importers.pig.udf.DocumentProtobufBytesToTuple(mproto, cproto) AS document;
 };
@@ -18,7 +18,7 @@ DEFINE load_bwndata_metadata_hdfs(inputPath, sampling) RETURNS meta {
 	raw_bytes = LOAD '$inputPath' USING pl.edu.icm.coansys.importers.pig.udf.RichSequenceFileLoader();
 	raw_bytes_sample = SAMPLE raw_bytes $sampling;
 	raw_meta = FOREACH raw_bytes_sample GENERATE 
-			pl.edu.icm.coansys.importers.pig.udf.BytesToDataByteArray($0) AS rowkey,
+			pl.edu.icm.coansys.importers.pig.udf.BytesToCharArray($0) AS rowkey,
 			pl.edu.icm.coansys.importers.pig.udf.BytesToDataByteArray($1) AS mproto;
 
 	$meta = FOREACH raw_meta
@@ -31,7 +31,7 @@ DEFINE load_bwndata_metadata_hdfs(inputPath, sampling) RETURNS meta {
 DEFINE load_bwndata(tableName) RETURNS doc {
 	raw_doc = LOAD 'hbase://$tableName' 
 		USING org.apache.pig.backend.hadoop.hbase.HBaseStorage('m:mproto, c:cproto', '-loadKey true -caching 50 -limit 100')
-		AS (rowkey: bytearray, mproto: bytearray, cproto: bytearray);
+		AS (rowkey: chararray, mproto: bytearray, cproto: bytearray);
 	
 	$doc = FOREACH raw_doc 
                 GENERATE rowkey, pl.edu.icm.coansys.importers.pig.udf.DocumentProtobufBytesToTuple(mproto, cproto) AS document;
@@ -43,19 +43,20 @@ DEFINE load_bwndata(tableName) RETURNS doc {
 DEFINE load_bwndata_metadata(tableName) RETURNS doc {
 	raw_doc = LOAD 'hbase://$tableName' 
 		USING org.apache.pig.backend.hadoop.hbase.HBaseStorage('m:mproto', '-loadKey true -caching 1000')
-		AS (rowkey: bytearray, mproto: bytearray);
+		AS (rowkey: chararray, mproto: bytearray);
 	
 	$doc = FOREACH raw_doc 
                 GENERATE rowkey, pl.edu.icm.coansys.importers.pig.udf.DocumentProtobufBytesToTuple(mproto) AS document;
 };
 
+
 -------------------------------------------------------
 -- clean and drop nulls
 -------------------------------------------------------
-DEFINE stem_and_filter_out(docterms, type) RETURNS dt {
-	doc_keyword_stemmed = FOREACH $docterms GENERATE rowkey AS docId, FLATTEN(StemmedPairs(document#'$type')) AS term;
-	doc_keyword_filtered = FILTER doc_keyword_stemmed BY term IS NOT NULL AND term != '' AND StopWordFilter(term);
-	$dt = FOREACH doc_keyword_filtered GENERATE docId, (chararray) term;
+DEFINE stem_words(docterms, id, type) RETURNS dt {
+	doc_keyword_stemmed = FOREACH $docterms GENERATE $id, FLATTEN(StemmedPairs((chararray)$type)) AS term;
+	doc_keyword_filtered = FILTER doc_keyword_stemmed BY term IS NOT NULL AND (chararray)term != '';
+	$dt = FOREACH doc_keyword_filtered GENERATE $id, (chararray) term;
 };
 
 -------------------------------------------------------
@@ -63,6 +64,18 @@ DEFINE stem_and_filter_out(docterms, type) RETURNS dt {
 -------------------------------------------------------
 DEFINE drop_nulls(A, column) RETURNS B {
 	$B = FILTER $A BY $A.$column IS NOT NULL;
+};
+
+DEFINE drop_nulls2(A, column1, column2) RETURNS B {
+	$B =  FILTER $A BY $A.$column1 IS NOT NULL AND $A.column2 IS NOT NULL;
+};
+
+DEFINE drop_nulls3(A, column1, column2, column3) RETURNS B {
+	$B =  FILTER $A BY $A.$column1 IS NOT NULL AND $A.column2 IS NOT NULL AND $A.column3 IS NOT NULL;
+};
+
+DEFINE drop_nulls4(A, column1, column2, column3, column4) RETURNS B {
+	$B =  FILTER $A BY $A.$column1 IS NOT NULL AND $A.column2 IS NOT NULL AND $A.column3 IS NOT NULL AND $A.column4 IS NOT NULL;
 };
 
 -------------------------------------------------------
@@ -81,65 +94,34 @@ DEFINE get_copy(A) RETURNS B {
 };
 
 -------------------------------------------------------
--- calculate tfidf
+-- find stopwords
 -------------------------------------------------------
-DEFINE calculate_tf_idf(docTerm) RETURNS tfidf {
-	-- term count in a given document
-	A1 = GROUP $docTerm BY (docId, term);
-	A = FOREACH A1 GENERATE FLATTEN(group), COUNT($docTerm) as tc;
-		
-	-- total terms count in a given document
-	B1 = GROUP A BY docId;
-	B = FOREACH B1 GENERATE FLATTEN(A) AS (docId, term, tc), SUM(A.tc) AS ttc;
-	
-	-- total number of documents in the corpus
-	C1 = GROUP B BY docId;
-	C2 = GROUP C1 all;
-	C = FOREACH C2 GENERATE FLATTEN(C1), COUNT(C1) AS dc;
-	D = FOREACH C GENERATE FLATTEN(B) AS (docId, term, tc, ttc), dc;
-	
-	-- total number of documents that a given word occurs in
-	E1 = GROUP D BY term;
-	E = FOREACH E1 GENERATE FLATTEN(D) AS (docId, term, tc, ttc, dc), COUNT(D) AS ttdc;
-	
-	$tfidf = FOREACH E GENERATE docId, term, ((double) tc / (double) ttc) * LOG((double) dc / (double) ttdc) AS tfidf;
+DEFINE find_stopwords(doc_word, doc_field, term_field, percentage) RETURNS stopwords {
+	doc_word_grouped = GROUP $doc_word BY $term_field;
+	doc_word_counted = FOREACH doc_word_grouped GENERATE group AS $term_field, COUNT_STAR($doc_word) AS count;
+	doc_unique = DISTINCT (FOREACH $doc_word GENERATE $doc_field);
+	ndocs = FOREACH (GROUP doc_unique ALL) GENERATE COUNT_STAR(doc_unique) AS total_count;
+	$stopwords = FOREACH (FILTER doc_word_counted BY count >= ($percentage * (double)ndocs.total_count)) GENERATE term;
 };
 
-
 -------------------------------------------------------
--- calculate tfidf 2
+-- remove stowords
 -------------------------------------------------------
-DEFINE calculate_tf_idf2(docTerm) RETURNS tfidf {
-	-- term count in a given document
-	A1 = GROUP $docTerm BY (docId, term);
-	A = FOREACH A1 GENERATE FLATTEN(group), COUNT($docTerm) as tc;
-		
-	-- total terms count in a given document
-	B1 = GROUP A BY docId;
-	B = FOREACH B1 GENERATE FLATTEN(A) AS (docId, term, tc), SUM(A.tc) AS ttc;
-	
-	-- total number of documents in the corpus
-	CA1 = GROUP B BY docId;
-	CA2 = FOREACH CA1 GENERATE group AS docId;
-        CA3 = GROUP CA2 all;
-        CA4 = FOREACH CA3 GENERATE COUNT(CA2) AS dc;
-	C = CROSS B, CA4;	
-
-	D = FOREACH C GENERATE docId, term, tc, ttc, dc;
-	
-	-- total number of documents that a given word occurs in
-	E1 = GROUP D BY term;
-	E = FOREACH E1 GENERATE FLATTEN(D) AS (docId, term, tc, ttc, dc), COUNT(D) AS ttdc;
-	
-	$tfidf = FOREACH E GENERATE docId, term, ((double) tc / (double) ttc) * LOG( (double) dc / (double) ttdc) AS tfidf;
+DEFINE remove_stopwords(doc_word, stopwords, doc_field, term_field, CC) RETURNS non_stopwords {	
+	doc_word_joined = JOIN $doc_word BY $term_field LEFT OUTER, $stopwords BY $term_field USING 'replicated';
+	doc_word_non_stop = FILTER doc_word_joined BY $stopwords$CC$term_field IS NULL;
+	$non_stopwords = FOREACH doc_word_non_stop GENERATE $doc_word$CC$doc_field AS docId, $doc_word$CC$term_field AS term;
 };
 
-DEFINE tf_idf(in_relation, id_field, token_field, minTfidf) RETURNS tfidf_values { 
+-------------------------------------------------------
+-- calculate tf-idf
+-------------------------------------------------------
+DEFINE calculate_tfidf(in_relation, id_field, token_field, tfidfMinValue) RETURNS tfidf_values { 
   	-- Calculate the term count per document
 	doc_word_group = group $in_relation by ($id_field, $token_field);
   	doc_word_totals = foreach doc_word_group generate 
     		FLATTEN(group) as ($id_field, token), 
-		COUNT_STAR($in_relation) as doc_total;
+		COUNT($in_relation) as doc_total;
 
   	-- Calculate the document size
 	pre_term_group = group doc_word_totals by $id_field;
@@ -157,30 +139,67 @@ DEFINE tf_idf(in_relation, id_field, token_field, minTfidf) RETURNS tfidf_values
 	token_usages_group = group term_freqs by token;
   	token_usages = foreach token_usages_group generate
     		FLATTEN(term_freqs) as ($id_field, token, term_freq),
-    		COUNT_STAR(term_freqs) as num_docs_with_token;
- 
+    		COUNT(term_freqs) as num_docs_with_token;
+
   	-- Get document count
   	just_ids = foreach $in_relation generate $id_field;
 	just_unique_ids = distinct just_ids;
 	ndocs_group = group just_unique_ids all;
-  	ndocs = foreach ndocs_group generate COUNT_STAR(just_unique_ids) as total_docs;
+  	ndocs = foreach ndocs_group generate 
+		COUNT(just_unique_ids) as total_docs;
  
+
   	-- Note the use of Pig Scalars to calculate idf
-  	$tfidf_values = foreach token_usages {
+  	tfidf_all = foreach token_usages {
     		idf    = LOG((double)ndocs.total_docs/(double)num_docs_with_token);
     		tf_idf = (double)term_freq * idf;
     		generate $id_field as $id_field,
       			token as $token_field,
-      			tf_idf as tfidf;
+      			tf_idf as tfidf,
+			idf,
+			ndocs.total_docs,
+			num_docs_with_token;
   	};
+	-- get only important terms
+	$tfidf_values = FILTER tfidf_all BY tfidf >= $tfidfMinValue;
 };
 
 
-DEFINE top_n_per_group(in_relation, group_field, order_field, order_direction, topn, paral) RETURNS out_relation { 
+-------------------------------------------------------
+-- find N most importants group_field
+-------------------------------------------------------
+DEFINE get_topn_per_group(in_relation, group_field, order_field, order_direction, topn) RETURNS out_relation { 
 	grouped = GROUP $in_relation BY $group_field;
-	$out_relation = FOREACH in_relation {
+	$out_relation = FOREACH grouped {
            sorted = ORDER $in_relation BY $order_field $order_direction;
            top = LIMIT sorted $topn;
            GENERATE flatten(top);
 	};
+};
+
+
+-------------------------------------------------------
+-- calculate similarity using pairwise similarity method
+-- that compares only those document that have at least
+-- one common words
+-------------------------------------------------------
+DEFINE calculate_pairwise_similarity(in_relation, in_relation2, doc_field, term_field, tfidf_field, CC, joinParallel) RETURNS out_relation {
+	joined = JOIN $in_relation BY $term_field, $in_relation2 BY $term_field USING 'merge' PARALLEL $joinParallel;
+	projected = FOREACH joined GENERATE 
+		$in_relation$CC$term_field AS term,
+        	$in_relation$CC$doc_field AS docId1, $in_relation2$CC$doc_field As docId2,
+        	$in_relation$CC$tfidf_field AS tfidf1, $in_relation2$CC$tfidf_field As tfidf2;
+
+	filtered = FILTER projected BY docId1 < docId2;
+	term_doc_similarity = FOREACH filtered GENERATE term, docId1, docId2, tfidf1, tfidf2,
+        	KeywordSimilarity(term, docId1, tfidf1, docId2, tfidf2) AS similarity;
+
+	docs_terms_group = GROUP term_doc_similarity BY (docId1, docId2);
+	docs_terms_similarity = FOREACH docs_terms_group GENERATE FLATTEN(group) AS (docId1, docId2),
+        	DocsCombinedSimilarity(term_doc_similarity.docId1, term_doc_similarity.docId2, term_doc_similarity.similarity) AS similarity;
+
+	docs_similarity = FOREACH docs_terms_similarity GENERATE docId1, docId2, similarity;
+	docs_similarity2 = FOREACH docs_similarity GENERATE docId2 AS docId1, docId1 AS docId2, similarity;
+	docs_similarity_union = UNION docs_similarity, docs_similarity2;
+	$out_relation = FOREACH docs_similarity_union GENERATE *;
 };
