@@ -8,8 +8,7 @@ import scala.collection.JavaConversions._
 import com.nicta.scoobi.application.ScoobiApp
 import com.nicta.scoobi.InputsOutputs._
 import com.nicta.scoobi.Persist._
-import pl.edu.icm.coansys.importers.models.DocumentProtosWrapper.DocumentWrapper
-import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata
+import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentWrapper
 import pl.edu.icm.coansys.importers.models.PICProtos
 import pl.edu.icm.coansys.citations.util.{misc, BytesConverter}
 
@@ -28,7 +27,7 @@ object MockOutputCreator extends ScoobiApp {
     val result = convertValueFromSequenceFile[DocumentWrapper](List(in))
       .map {
       wrapper =>
-        val doc = DocumentMetadata.parseFrom(wrapper.getMproto)
+        val doc = wrapper.getDocumentMetadata
         val outBuilder = PICProtos.PicOut.newBuilder()
         outBuilder.setDocId(doc.getExtId(0).getValue)
         for (ref <- doc.getReferenceList.toIterable) {
