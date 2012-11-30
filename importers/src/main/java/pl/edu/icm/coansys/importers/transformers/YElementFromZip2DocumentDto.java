@@ -18,13 +18,13 @@ import pl.edu.icm.coansys.importers.models.DocumentDTO;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.Media;
 import pl.edu.icm.coansys.importers.parsers.MetadataToProtoMetadataParser;
-import pl.edu.icm.synat.application.model.bwmeta.YContentEntry;
-import pl.edu.icm.synat.application.model.bwmeta.YContentFile;
-import pl.edu.icm.synat.application.model.bwmeta.YElement;
-import pl.edu.icm.synat.application.model.bwmeta.YExportable;
 
 import com.google.protobuf.ByteString;
 import java.io.File;
+import pl.edu.icm.model.bwmeta.YContentEntry;
+import pl.edu.icm.model.bwmeta.YContentFile;
+import pl.edu.icm.model.bwmeta.YElement;
+import pl.edu.icm.model.bwmeta.YExportable;
 
 /**
  *

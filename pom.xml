@@ -19,7 +19,7 @@
         <protobuf.java.version>2.4.1</protobuf.java.version>
         <testng.version>6.5.2</testng.version>
         <maven.surefire.plugin.version>2.12.3</maven.surefire.plugin.version>
-        <synat.version>1.7-SNAPSHOT</synat.version>
+        <synat.version>1.8-SNAPSHOT</synat.version>
     </properties>
 
     <build>
@@ -199,6 +199,12 @@
         <dependency>
             <groupId>pl.edu.icm.synat</groupId>
             <artifactId>synat-core-services-api</artifactId>
+            <version>${synat.version}</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>pl.edu.icm.synat</groupId>
+            <artifactId>bwmeta</artifactId>
             <version>${synat.version}</version>
             <type>jar</type>
         </dependency>
