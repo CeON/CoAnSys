@@ -9,7 +9,7 @@ import org.apache.hadoop.hbase.rest.client.Cluster;
 import org.apache.hadoop.hbase.rest.client.RemoteHTable;
 import pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator;
 import pl.edu.icm.coansys.importers.models.DocumentDTO;
-import pl.edu.icm.coansys.importers.transformers.DocumentDto2HBasePut;
+import pl.edu.icm.coansys.importers.transformers.DocumentDTO2HBasePut;
 
 /**
  *
@@ -62,7 +62,7 @@ public class HBaseRestWriter_Bwmeta {
         ZipDirToDocumentDTOIterator zdtp = new ZipDirToDocumentDTOIterator(zipDirPath, collectionName);
         for (DocumentDTO doc : zdtp) {
             try {
-                table.put(DocumentDto2HBasePut.translate(doc));
+                table.put(DocumentDTO2HBasePut.translate(doc));
             } catch (IOException e) {
                 e.printStackTrace();
             }

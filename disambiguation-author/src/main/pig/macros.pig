@@ -5,7 +5,7 @@ DEFINE load_bwndata_hdfs(inputPath) RETURNS doc {
         raw_bytes = LOAD '$inputPath' USING pl.edu.icm.coansys.importers.pig.udf.RichSequenceFileLoader();
         raw_doc = FOREACH raw_bytes GENERATE
                         pl.edu.icm.coansys.importers.pig.udf.BytesToDataByteArray($0) AS rowkey,
-                        FLATTEN(pl.edu.icm.coansys.importers.pig.udf.DocumentComponentsProtoTupler($1)) AS (docId, mproto, cproto);
+                        FLATTEN(pl.edu.icm.coansys.importers.pig.udf.DocumentProtoPartsTupler($1)) AS (docId, mproto, cproto);
 
         $doc = FOREACH raw_doc GENERATE rowkey, pl.edu.icm.coansys.importers.pig.udf.DocumentProtobufBytesToTuple(mproto, cproto) AS document;
 };

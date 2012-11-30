@@ -1,9 +1,11 @@
 package pl.edu.icm.coansys.commons.hbase;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.apache.commons.io.FileUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hbase.util.Bytes;
@@ -17,8 +19,8 @@ import org.apache.hadoop.mapreduce.Mapper.Context;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
-import org.apache.hadoop.util.GenericOptionsParser;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
@@ -29,10 +31,11 @@ import org.apache.hadoop.util.ToolRunner;
 public class SequenceFileKeysSamplerMR implements Tool {
 
     private Configuration conf;
-    private static final String SAMPLE_SAMPLES_TOTAL_COUNT = "sampler.samples.total.count";
+    private static final String SAMPLE_SAMPLES_TOTAL_COUNT = "sampler.samples.region.count";
     private static final int SAMPLE_SAMPLES_TOTAL_COUNT_DV = 20;
     private static final String SAMPLE_SAMPLES_PER_SPLIT = "sampler.samples.per.split";
-    private static final int SAMPLE_SAMPLES_PER_SPLIT_DV = 3;
+    private static final int SAMPLE_SAMPLES_PER_SPLIT_DV = 100;
+    private static String[] DEFAULT_ARGS = {"/home/akawa/bwndata/sf/", "output-keys"};
 
     @Override
     public void setConf(Configuration conf) {
@@ -87,29 +90,51 @@ public class SequenceFileKeysSamplerMR implements Tool {
         @Override
         public void reduce(BooleanWritable key, Iterable<BytesWritable> samples, Context context) throws IOException, InterruptedException {
 
-            List<String> stringSamples = new ArrayList<String>();
-            for (BytesWritable val : samples) {
-                stringSamples.add(Bytes.toString(val.copyBytes()));
+            List<String> samplesString = getStringList(samples);
+            Collections.sort(samplesString);
+
+            float stepSize = samplesString.size() / (float) samplesLimit;
+            List<String> intervaleSamples = getIntervalSamples(samplesString, stepSize, samplesLimit);
+
+            for (String regionKey : intervaleSamples) {
+                rangeKey.set(regionKey);
+                context.write(rangeKey, NULL);
             }
-            Collections.sort(stringSamples);
-            
-            float stepSize = stringSamples.size() / (float) samplesLimit;
+        }
+        
+        public List<String> getStringList(Iterable<BytesWritable> samples) {
+             List<String> samplesString = new ArrayList<String>();
+            for (BytesWritable val : samples) {
+                samplesString.add(Bytes.toString(val.copyBytes()));
+            }
+            return samplesString;
+        }
+
+        public List<String> getIntervalSamples(List<String> longerList, float stepSize, int sampleLimit) {
+            List<String> sampledList = new ArrayList<String>();
             int last = -1;
-            for (int i = 1; i < samplesLimit; ++i) {
+            for (int i = 1; i < Math.min(sampleLimit, longerList.size()); ++i) {
                 int k = Math.round(stepSize * i);
-                while (last >= k && stringSamples.get(last).equals(stringSamples.get(k))) {
+                while (last >= k && longerList.get(last).equals(longerList.get(k))) {
                     ++k;
                 }
-
-                rangeKey.set(stringSamples.get(i));
-                context.write(rangeKey, NULL);
+                sampledList.add(longerList.get(k));
                 last = k;
             }
+
+            return sampledList;
         }
     }
 
     @Override
     public int run(String[] args) throws Exception {
+
+        if (args.length < 2) {
+            usage("Wrong number of arguments: " + args.length);
+            ToolRunner.printGenericCommandUsage(System.err);
+            System.exit(-1);
+        }
+
         int result = createParitionFile(args[0], args[1]);
         return result;
     }
@@ -121,14 +146,16 @@ public class SequenceFileKeysSamplerMR implements Tool {
         sampler.setNumReduceTasks(1);
         sampler.setInputFormatClass(SequenceFileInputFormat.class);
         sampler.setOutputFormatClass(TextOutputFormat.class);
+        
         sampler.setMapOutputKeyClass(BooleanWritable.class);
         sampler.setMapOutputValueClass(BytesWritable.class);
-        sampler.setOutputKeyClass(Text.class);
+        sampler.setOutputKeyClass(BytesWritable.class);
         sampler.setOutputValueClass(NullWritable.class);
 
         sampler.setMapperClass(Map.class);
         sampler.setReducerClass(Reduce.class);
         SequenceFileInputFormat.addInputPath(sampler, input);
+        
         FileOutputFormat.setOutputPath(sampler, new Path(outputPath));
 
         sampler.waitForCompletion(true);
@@ -137,23 +164,17 @@ public class SequenceFileKeysSamplerMR implements Tool {
     }
 
     public static void main(String[] args) throws Exception {
-        Configuration conf = new Configuration();
-        String[] otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();
-        if (otherArgs.length < 2) {
-            usage("Wrong number of arguments: " + otherArgs.length);
-            System.exit(-1);
+        if (args.length == 0) {
+            args = DEFAULT_ARGS;
+            FileUtils.deleteDirectory(new File(DEFAULT_ARGS[1]));
         }
-
-        int result = ToolRunner.run(conf, new SequenceFileKeysSamplerMR(), otherArgs);
+        int result = ToolRunner.run(new SequenceFileKeysSamplerMR(), args);
         System.exit(result);
     }
 
     private static void usage(String info) {
-        System.out.println(info);
-        System.out.println("Two parameters needed: <sequence-file-input> <output-path>");
-        System.out.println("Example: hadoop jar target/commons-1.0-SNAPSHOT.jar " + SequenceFileKeysSamplerMR.class.getName() + " bazekon-20120228.sf 20 sf-split");
+        System.err.println(info);
+        System.err.println("Two parameters needed: <sequence-file-input> <output-path>");
+        System.err.println("Example: hadoop jar target/commons-1.0-SNAPSHOT.jar " + SequenceFileKeysSamplerMR.class.getName() + " bazekon-20120228.sf sf-split");
     }
 }
-// hadoop jar target/commons-1.0-SNAPSHOT.jar pl.edu.icm.coansys.commons.hbase.SequenceFileKeysSamplerMR bazekon-20120228.sf 20 sf-split
-// export HBASE_CLASSPATH=target/commons-1.0-SNAPSHOT.jar
-// hbase org.apache.hadoop.hbase.util.RegionSplitter -D split.algorithm=pl.edu.icm.coansys.commons.hbase.SequenceFileSplitAlgorithm -c 2 -f c:m test_table1

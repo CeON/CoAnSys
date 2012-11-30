@@ -21,31 +21,33 @@ public class HBaseTableUtils {
     private static final String CMD_TRUNCATE = "TRUNCATE";
     private static final String CMD_CREATE = "CREATE";
     private static final String CMD_RECREATE = "DROPCREATE";
-    
-    private HBaseTableUtils() {}
+
+    private HBaseTableUtils() {
+    }
 
     public static boolean isTableCreated(HBaseAdmin admin, String tableName) throws IOException {
         return admin.tableExists(tableName);
     }
 
     public static boolean dropTable(HBaseAdmin admin, String tableName) throws IOException {
-        if (admin.isTableEnabled(tableName)) {
-            admin.disableTable(tableName);
+        if (isTableCreated(admin, tableName)) {
+            if (admin.isTableEnabled(tableName)) {
+                admin.disableTable(tableName);
+            }
+            admin.deleteTable(tableName);
         }
-        admin.deleteTable(tableName);
         return true;
     }
 
     public static boolean truncateTable(HBaseAdmin admin, String tableName) throws IOException {
-        HTableDescriptor htableDescriptor = admin.getTableDescriptor(Bytes.toBytes(tableName));
-
-        // Disable the table
-        if (admin.isTableEnabled(tableName)) {
-            admin.disableTable(tableName);
+        HTableDescriptor htableDescriptor;
+        if (isTableCreated(admin, tableName)) {
+            htableDescriptor = admin.getTableDescriptor(Bytes.toBytes(tableName));
+            dropTable(admin, tableName);
+        } else {
+            htableDescriptor = new HTableDescriptor(Bytes.toBytes(tableName));
         }
-        // Delete the table
-        admin.deleteTable(tableName);
-
+        
         // Recreate the talbe
         admin.createTable(htableDescriptor);
         return true;
@@ -93,7 +95,7 @@ public class HBaseTableUtils {
         boolean isOutputCaptured = Boolean.parseBoolean(args[0]);
         String command = args[1];
         String tableName = args[2];
-        
+
         boolean success = false;
         if (command.equals(CMD_EXIST)) {
             success = isTableCreated(admin, tableName);
@@ -113,6 +115,4 @@ public class HBaseTableUtils {
             OozieWorkflowUtils.captureOutput("exit.value", Boolean.toString(success));
         }
     }
-
-    
 }
