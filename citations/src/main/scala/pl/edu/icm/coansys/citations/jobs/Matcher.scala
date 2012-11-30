@@ -11,7 +11,7 @@ import com.nicta.scoobi.Persist._
 import com.nicta.scoobi.InputsOutputs._
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata
 import pl.edu.icm.coansys.importers.models.PICProtos
-import pl.edu.icm.coansys.importers.models.DocumentProtosWrapper.DocumentWrapper
+import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentWrapper
 import org.apache.hadoop.io.BytesWritable
 import pl.edu.icm.coansys.citations.util.AugmentedDList.augmentDList
 import pl.edu.icm.coansys.citations.indices.{SimpleTextIndex, AuthorIndex}
@@ -141,9 +141,7 @@ object Matcher extends ScoobiApp {
     implicit val documentConverter = new BytesConverter[DocumentMetadata](_.toByteArray, DocumentMetadata.parseFrom(_))
     implicit val wrapperConverter = new BytesConverter[DocumentWrapper](_.toByteArray, DocumentWrapper.parseFrom(_))
     convertValueFromSequenceFile[DocumentWrapper](uris)
-      .flatMap {
-      wrapper => DocumentMetadata.parseFrom(wrapper.getMproto).getReferenceList
-    }
+      .flatMap(_.getDocumentMetadata.getReferenceList)
       .map(new CitationWrapper(_))
   }
 

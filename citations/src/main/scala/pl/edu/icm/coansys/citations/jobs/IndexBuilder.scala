@@ -7,7 +7,6 @@ package pl.edu.icm.coansys.citations.jobs
 import com.nicta.scoobi.application.ScoobiApp
 import com.nicta.scoobi.core.DList
 import pl.edu.icm.coansys.importers.models.DocumentProtos._
-import pl.edu.icm.coansys.importers.models.DocumentProtosWrapper._
 import com.nicta.scoobi.InputsOutputs.convertValueFromSequenceFile
 import pl.edu.icm.coansys.citations.util.BytesConverter
 import pl.edu.icm.coansys.citations.data.DocumentMetadataWrapper
@@ -28,9 +27,7 @@ object IndexBuilder extends ScoobiApp {
 
   def readDocsFromSeqFiles(uris: List[String]): DList[DocumentMetadataWrapper] = {
     implicit val converter = new BytesConverter[DocumentWrapper](_.toByteArray, DocumentWrapper.parseFrom(_))
-    convertValueFromSequenceFile[DocumentWrapper](uris).map {
-      wrapper => DocumentMetadata.parseFrom(wrapper.getMproto)
-    }
+    convertValueFromSequenceFile[DocumentWrapper](uris).map(_.getDocumentMetadata)
   }
 
   def run() {
