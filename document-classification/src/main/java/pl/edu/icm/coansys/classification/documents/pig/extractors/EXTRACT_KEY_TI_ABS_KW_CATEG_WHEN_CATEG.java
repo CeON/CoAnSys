@@ -10,6 +10,8 @@ import org.apache.pig.EvalFunc;
 import org.apache.pig.data.*;
 import org.apache.pig.impl.logicalLayer.FrontendException;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
+
+import pl.edu.icm.coansys.classification.documents.auxil.StackTraceExtractor;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.ClassifCode;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
 
@@ -86,7 +88,9 @@ public class EXTRACT_KEY_TI_ABS_KW_CATEG_WHEN_CATEG extends EvalFunc<Tuple> {
             return null;
 
         } catch (Exception e) {
-            throw new IOException("Caught exception processing input row ", e);
+        	// Throwing an exception will cause the task to fail.
+            throw new IOException("Caught exception processing input row:\n"
+            		+ StackTraceExtractor.getStackTrace(e));
         }
     }
 }
