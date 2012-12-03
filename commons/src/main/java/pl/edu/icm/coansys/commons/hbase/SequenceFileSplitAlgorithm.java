@@ -1,21 +1,12 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package pl.edu.icm.coansys.commons.hbase;
 
-import java.net.URI;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.hbase.util.RegionSplitter.SplitAlgorithm;
-import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.IOUtils;
-import org.apache.hadoop.io.SequenceFile;
-import org.apache.hadoop.io.Writable;
-import org.apache.hadoop.util.ReflectionUtils;
 
 /**
  *
@@ -23,7 +14,8 @@ import org.apache.hadoop.util.ReflectionUtils;
  */
 public class SequenceFileSplitAlgorithm implements SplitAlgorithm {
 
-    public static final String SPLIT_KEY_FILE = "sf-split/keys";
+    private static final String SPLIT_KEY_FILENAME_PROPERTY_NAME = "split.region.keys.file.name";
+    public static final String SPLIT_KEY_FILE_DV = "keys";
 
     @Override
     public byte[] split(byte[] bytes, byte[] bytes1) {
@@ -33,30 +25,21 @@ public class SequenceFileSplitAlgorithm implements SplitAlgorithm {
     @Override
     public byte[][] split(int numRegions) {
 
-        Configuration conf = new Configuration();
-        SequenceFile.Reader reader = null;
-        Path path = new Path(SPLIT_KEY_FILE);
-        
-        System.out.println("Path name: " + path.getName());
-        
-        // the list of region keys
+        String splitKeysFile = System.getProperty(SPLIT_KEY_FILENAME_PROPERTY_NAME, SPLIT_KEY_FILE_DV);
         List<byte[]> regions = new ArrayList<byte[]>();
-        
+
+        BufferedReader input = null;
         try {
-            FileSystem fs = FileSystem.get(URI.create(SPLIT_KEY_FILE), conf);
-            reader = new SequenceFile.Reader(fs, path, conf);
-            BytesWritable key = (BytesWritable) ReflectionUtils.newInstance(reader.getKeyClass(), conf);
-            Writable value = (Writable) ReflectionUtils.newInstance(reader.getValueClass(), conf);
-
-            while (reader.next(key, value)) {
-                regions.add(key.copyBytes());
+            input = new BufferedReader(new FileReader(splitKeysFile));
+            String line;
+            while ((line = input.readLine()) != null) {
+                regions.add(Bytes.toBytes(line));
             }
-
         } catch (Exception ex) {
-            System.out.println("Be silent like a ninja: " + ex);
         } finally {
-            IOUtils.closeStream(reader);
+            IOUtils.closeStream(input);
         }
+
         return regions.toArray(new byte[0][]);
     }
 

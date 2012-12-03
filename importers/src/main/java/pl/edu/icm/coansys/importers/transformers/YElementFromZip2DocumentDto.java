@@ -18,12 +18,13 @@ import pl.edu.icm.coansys.importers.models.DocumentDTO;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.Media;
 import pl.edu.icm.coansys.importers.parsers.MetadataToProtoMetadataParser;
-import pl.edu.icm.synat.application.model.bwmeta.YContentEntry;
-import pl.edu.icm.synat.application.model.bwmeta.YContentFile;
-import pl.edu.icm.synat.application.model.bwmeta.YElement;
-import pl.edu.icm.synat.application.model.bwmeta.YExportable;
 
 import com.google.protobuf.ByteString;
+import java.io.File;
+import pl.edu.icm.model.bwmeta.YContentEntry;
+import pl.edu.icm.model.bwmeta.YContentFile;
+import pl.edu.icm.model.bwmeta.YElement;
+import pl.edu.icm.model.bwmeta.YExportable;
 
 /**
  *
@@ -43,19 +44,19 @@ public class YElementFromZip2DocumentDto {
         this.collection = collection;
     }
 
-    public DocumentDTO transformYElement(
-            YExportable yExportable, ZipArchive currentZipArchive) {
+    public DocumentDTO transformYElement(YExportable yExportable, ZipArchive currentZipArchive, String currentXmlPath) {
 
         DocumentDTO productObject = null;
-
+        
         if (yExportable instanceof YElement) {
             YElement yElement = (YElement) yExportable;
 
-            DocumentMetadata docMetadata = MetadataToProtoMetadataParser.yelementToDocumentMetadata(yElement, collection);
+            DocumentMetadata docMetadata = MetadataToProtoMetadataParser.yelementToDocumentMetadata(yElement, currentZipArchive, currentXmlPath, collection);
 
             if (docMetadata != null) {
                 productObject = new DocumentDTO();
-                productObject.setKey(docMetadata.getKey()); //Document and DocumentMetadata should have the same key?
+                productObject.setKey(docMetadata.getKey()); 
+                //Document and DocumentMetadata should have the same key?
                 productObject.setDocumentMetadata(docMetadata);
 
                 List<YContentEntry> contents = yElement.getContents();
@@ -71,9 +72,7 @@ public class YElementFromZip2DocumentDto {
     private void handleContent(DocumentDTO docDTO, YContentEntry content,
             ZipArchive currentZipArchive) {
         if (content.isFile()) {
-
             YContentFile yFile = (YContentFile) content;
-
             if (BWMetaConstants.mimePdfListExtension.contains(yFile.getFormat())) {
                 handlePDFContent(docDTO, yFile, currentZipArchive);
             }
@@ -92,16 +91,24 @@ public class YElementFromZip2DocumentDto {
                 //foundPaths should contain 1 item
                 if (foundPaths.size() > 0) {
                     try {
-                        InputStream pdfIS = currentZipArchive.getFileAsInputStream(foundPaths.get(0));
+                        String foundPath = foundPaths.get(0);
+                        InputStream pdfIS = currentZipArchive.getFileAsInputStream(foundPath);
                         // ... do something with pdfIS
                         Media.Builder mediaBuilder = Media.newBuilder();
-                        mediaBuilder.setKey(docDTO.getKey()); //Media and Document should have the same key?
-
+                        mediaBuilder.setKey(docDTO.getKey()); 
+                        //Media and Document should have the same key?
                         String type = ProtoConstants.mediaTypePdf;
                         mediaBuilder.setMediaType(type);
-                        mediaBuilder.setContent(ByteString.copyFrom(IOUtils.toByteArray(pdfIS)));
+                        byte[] content = IOUtils.toByteArray(pdfIS);
+                        mediaBuilder.setContent(ByteString.copyFrom(content));
+                        mediaBuilder.setSourcePath(foundPath);
+                        mediaBuilder.setSourceArchive(currentZipArchive.getZipFilePath());
+                        mediaBuilder.setSourcePathFilesize(content.length);
+                        
                         docDTO.addMedia(mediaBuilder.build());
                         docDTO.addMediaType(type);
+                        pdfIS.close();
+
                     } catch (IOException ex) {
                         logger.error(ex.toString());
                     }
