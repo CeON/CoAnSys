@@ -15,6 +15,8 @@ import org.apache.pig.data.TupleFactory;
 import org.apache.pig.impl.logicalLayer.FrontendException;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
 
+import pl.edu.icm.coansys.classification.documents.auxil.StackTraceExtractor;
+
 /**
 *
 * @author pdendek
@@ -64,20 +66,12 @@ public class DOCSIM extends EvalFunc<Tuple> {
             hsA.retainAll(hsB);
 
             double numerator = 0;
-//			System.out.print(keyA+" :: "+keyB+"\t");
+            
             for (String s : hsA) {
-//				System.out.print(" "+s);
                 numerator += hmA.get(s) * hmB.get(s);
             }
-//			System.out.println("");
-
+            
             double denominator = Math.sqrt(denominatorA) * Math.sqrt(denominatorB);
-//			if(numerator>0){
-//				System.out.println("Numerator: "+numerator);
-//				System.out.println("Denominator: "+denominator);
-//			}
-
-
             double retVal = numerator / denominator;
 
             if (retVal > 0) {
@@ -87,7 +81,9 @@ public class DOCSIM extends EvalFunc<Tuple> {
                 return null;
             }
         } catch (Exception e) {
-            throw new IOException("Caught exception processing input row ", e);
+        	// Throwing an exception will cause the task to fail.
+            throw new IOException("Caught exception processing input row:\n"
+            		+ StackTraceExtractor.getStackTrace(e));
         }
     }
 

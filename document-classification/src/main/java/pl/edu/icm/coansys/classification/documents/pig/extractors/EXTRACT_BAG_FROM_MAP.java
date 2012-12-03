@@ -12,6 +12,8 @@ import org.apache.pig.data.DefaultDataBag;
 import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
 
+import pl.edu.icm.coansys.classification.documents.auxil.StackTraceExtractor;
+
 /**
  *
  * @author pdendek
@@ -66,7 +68,8 @@ public class EXTRACT_BAG_FROM_MAP extends EvalFunc<DataBag> {
             return null;
         } catch (Exception e) {
             // Throwing an exception will cause the task to fail.
-            throw new RuntimeException("Error while parsing DocumentMetadata" + e);
+            throw new IOException("Caught exception processing input row:\n"
+            		+ StackTraceExtractor.getStackTrace(e));
         }
     }
 }

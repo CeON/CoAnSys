@@ -2,9 +2,9 @@
 # (C) 2010-2012 ICM UW. All rights reserved.
 #
 
-./1_create_and_test_model.sh pdendek_springer_mo  4 5 /user/pdendek/docSimFWEval2/docNeigh /user/pdendek/docSimFWEval2/dataForDocClassif /user/pdendek/docSimFWEval2/dataEnriched /user/pdendek/docSimFWEval2/dataModel /user/pdendek/docSimFWEval2/dataTeResults 30 5 categsPresentGEQNumber
+nohup ./1_create_and_test_model.sh pdendek_springer_mo  4 5 /docNeigh /dataForDocClassif /dataEnriched /dataModel /dataTeResults 30 5 categsPresentGEQNumber /user/pdendek/DOC_CLASSIF/BASH_PROTOTYPE/_1_ &
 
-./2_classify_documents.sh pdendek_springer_mo /user/pdendek/model /user/pdendek/parts/alg_doc_classif tfidf cosine 5
+nohup ./2_classify_documents.sh pdendek_springer_mo /SACRED_MODEL /parts/dc-classification/doc_classif tfidf cosine 5 /user/pdendek/DOC_CLASSIF/BASH_PROTOTYPE/_2_  &
 
 ./3_create_mapping.sh pdendek_springer_mo /user/pdendek/parts/alg_mapping_rowid_docid
 
