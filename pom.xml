@@ -186,7 +186,8 @@
         <module>importers</module>
         <module>integration</module>
         <module>logs-analysis</module>
-  </modules>
+        <module>keywords-extraction</module>
+    </modules>
 
     <dependencies>
         <dependency>
