@@ -2,3 +2,5 @@ target
 
 # Inner use java files #
 CheckIfCopyrightExists.java
+# Apache Pig log files
+pig_*.log

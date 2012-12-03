@@ -17,6 +17,8 @@ import org.apache.pig.data.TupleFactory;
 import org.apache.pig.impl.logicalLayer.FrontendException;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
 
+import pl.edu.icm.coansys.classification.documents.auxil.StackTraceExtractor;
+
 /**
 *
 * @author pdendek
@@ -38,16 +40,19 @@ public class THRES_FOR_CATEG extends EvalFunc<Tuple>{
 			return null;
 		try{
 			Object o0 = input.get(0);
-			String categA = o0==null ? "" : (String) input.get(0); //categPOS
+			if(o0==null) return null;
+			String categA = (String) input.get(0); //categPOS
 			Object o1 = input.get(1);
 			DataBag pos = o1==null ? new DefaultDataBag() : (DataBag) input.get(1);
 
 			Object o2 = input.get(2);
-			String categB = o2==null ? "" : (String) input.get(2); //categPOS
+			if(o2==null) return null;
+			String categB = (String) input.get(2); //categPOS
 			Object o3 = input.get(3);
 			DataBag neg = o3==null ? new DefaultDataBag() : (DataBag) input.get(3);
 			
-			Integer neight_max = Integer.parseInt(input.get(4).toString());
+			//num of neighbours (1,2,3,...) + "null" neigh cell
+			Integer neight_max = Integer.parseInt(input.get(4).toString()) + 1;
 			
 			String categ = "".equals(categA)? categB : categA;
 			
@@ -58,15 +63,15 @@ public class THRES_FOR_CATEG extends EvalFunc<Tuple>{
 			
 			System.out.println("Start");
 			for(Tuple t : pos){
-				long t1 = (Long) t.get(1);
-				long t2 = (Long) t.get(2);
-				posc[(int)t1] = (int) t2;
+				long neigh = (Long) t.get(1);
+				long dococc = (Long) t.get(2);
+				posc[(int)neigh] = (int) dococc;
 			}
 			System.out.println("Constructed pos array");
 			for(Tuple t : neg){
-				long t1 = (Long) t.get(1);
-				long t2 = (Long) t.get(2);
-				negc[(int)t1] = (int) t2;
+				long neigh = (Long) t.get(1);
+				long dococc = (Long) t.get(2);
+				negc[(int)neigh] = (int) dococc;
 			}
 			System.out.println("Constructed neg array");
 			int thres = -1;
@@ -92,7 +97,9 @@ public class THRES_FOR_CATEG extends EvalFunc<Tuple>{
 				return null;
 			}
 		}catch(Exception e){
-			throw new IOException("Caught exception processing input row "+e);
+			// Throwing an exception will cause the task to fail.
+            throw new IOException("Caught exception processing input row:\n"
+            		+ StackTraceExtractor.getStackTrace(e));
 		}
 	}
 

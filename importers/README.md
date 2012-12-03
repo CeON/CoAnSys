@@ -23,7 +23,7 @@ cd CoAnSys/importers
 # package instalation  
 ## if you are not providing hadoop libraries, please modify pom.xml by removing texts "<scope>provided</scope>"
 mvn install
-mvn assembly:single
+mvn assembly:single -P full
 ```
 
 ### Example data acquisition
@@ -36,7 +36,7 @@ mvn assembly:single
 cd ~
 mkdir HBASE_IMPORT
 cd HBASE_IMPORT
-wget 'LOCALIZATION_FROM_THE_LINK'
+wget --no-check-certificate 'LOCALIZATION_FROM_THE_LINK'
 ```
 
 ### HBase output table creation

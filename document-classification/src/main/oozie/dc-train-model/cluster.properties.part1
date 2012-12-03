@@ -1,0 +1,50 @@
+###################### OOZIE
+masterNode=hadoop-master
+nameNode=hdfs://${masterNode}:8020
+jobTracker=${masterNode}:8021
+hbaseZookeeperQuorum=${masterNode}
+queueName=default
+project=coansys
+subproject=dc-train-model
+###################### AUXIL 
+dc_time_infix=@TIME_INFIX@
+dc_opts_infix=@OPTS_INFIX@
+dc_join_infix=@TIME_INFIX@/@OPTS_INFIX@
+dc_general_prefix=${nameNode}/user/${user.name}/workflows/${subproject}/
+dc_general_prefix_join_infix=${dc_general_prefix}/@TIME_INFIX@/@OPTS_INFIX@/
+###################### OOZIE
+oozie.wf.application.path=${dc_general_prefix_join_infix}/workflow
+results=${dc_general_prefix_join_infix}/results/
+OLD_RESULTS=hdfs://hadoop-master:8020/user/pdendek/workflows/dc-train-model//1352919773.68/5//results//
+workflowPath=${oozie.wf.application.path}
+commonJarsPath=*.jar
+pigScriptsDir=pig
+
+####################### document-classification classification #########################
+######################################## INPUT # HBASE #################################
+dc_m_hbase_inputDocsData=pdendek_springer_mo
+######################################## HDFS ##################################
+dc_m_hdfs_neighs=${results}/neighs
+dc_m_hdfs_docClassifMapping=${results}/doc_classif_mapping
+dc_m_hdfs_model=${results}/model
+dc_m_hdfs_dataEnriched=${results}/dataEnrich
+dc_m_hdfs_modelEvaluation=${results}/modelEval
+######################################## INPUT # INT ###################################
+@dc_m_double_sample@  0.1
+@dc_m_int_categBoundary@ 1
+@dc_m_int_folds@ 5
+@dc_m_int_numOfNeighbours@ 3 
+######################################## INPUT # SET-PARAMS ############################
+job_priority=normal
+#job_priority=high
+pig_tmpfilecompression_param=true
+@pig_tmpfilecompression_codec_param@ lzo 
+@parallel_param@ 10
+##################################### INPUT # PIG_SCRIPT ###############################
+dc_m_pigScript_strategyOfNeigCandidatesFiltering=categsPresentGEQNumber
+dc_m_pigScript_featureVector=tfidf
+dc_m_pigScript_similarityMetric=cosine
+dc_m_pigScript_modelBuilderClass=mlknnThresBuild
+dc_m_pigScript_modelUse=mlknnThresClassify
+########################################################################################
+

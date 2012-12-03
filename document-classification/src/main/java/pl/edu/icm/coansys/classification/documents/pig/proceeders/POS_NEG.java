@@ -17,6 +17,8 @@ import org.apache.pig.data.TupleFactory;
 import org.apache.pig.impl.logicalLayer.FrontendException;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
 
+import pl.edu.icm.coansys.classification.documents.auxil.StackTraceExtractor;
+
 /**
 *
 * @author pdendek
@@ -42,6 +44,14 @@ public class POS_NEG extends EvalFunc<Tuple>{
 			DataBag categsA = (DataBag) input.get(2);
 			DataBag categsB = (DataBag) input.get(3);
 			String categQ = (String) input.get(4);
+			
+			if(
+					keyA == null ||
+					keyB == null ||
+					categsA == null ||
+					categsB == null ||
+					categQ == null
+			) return null;
 			
 			boolean inA = false;
 			boolean inB = false;
@@ -69,7 +79,8 @@ public class POS_NEG extends EvalFunc<Tuple>{
 			}
 			
 		}catch(Exception e){
-			throw new IOException("Caught exception processing input row "+e);
+            throw new IOException("Caught exception processing input row:\t"
+            		+StackTraceExtractor.getStackTrace(e).replace("\n", "\t"));
 		}
 	}
 }
