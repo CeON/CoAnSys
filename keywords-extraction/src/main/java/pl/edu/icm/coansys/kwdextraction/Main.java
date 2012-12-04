@@ -26,8 +26,8 @@ public class Main {
     private static void setOptions(String[] args) {
         OptionParser parser = new OptionParser();
         parser.accepts("stop").withRequiredArg();
-        parser.accepts("d").withRequiredArg();
-        parser.accepts("o").withRequiredArg();
+        parser.accepts("d").withRequiredArg().required();
+        parser.accepts("o").withRequiredArg().required();
         parser.accepts("s");
         parser.accepts("r");
         parser.accepts("l").withRequiredArg().ofType(Integer.class);
