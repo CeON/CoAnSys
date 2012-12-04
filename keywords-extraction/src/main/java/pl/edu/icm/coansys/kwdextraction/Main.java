@@ -61,9 +61,9 @@ public class Main {
      * -l "length of keyword" <br> maximum length of keyword (length = how many
      * words it consists of), the default is 3 <p>
      *
-     * -d "path to input directory" <br> the default is "in/" <p>
+     * -d "path to input directory", required <p>
      *
-     * -o "path to output directory" <br> the default is "keywords/"
+     * -o "path to output directory", required <p>
      *
      * @throws IOException
      */
