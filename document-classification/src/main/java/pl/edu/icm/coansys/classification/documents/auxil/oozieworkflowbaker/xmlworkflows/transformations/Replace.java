@@ -6,8 +6,6 @@ import java.io.StringReader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import pl.edu.icm.coansys.classification.documents.auxil.oozieworkflowbaker.xmlworkflows.OozieWorkflowBaker;
-
 public class Replace {
 
 	public static StringBuilder substitute(StringBuilder sb) throws IOException {

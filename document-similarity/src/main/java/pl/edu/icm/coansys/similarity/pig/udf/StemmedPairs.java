@@ -5,10 +5,9 @@ package pl.edu.icm.coansys.similarity.pig.udf;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import org.apache.commons.lang.StringUtils;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.pig.EvalFunc;
 import org.apache.pig.data.DataBag;
 import org.apache.pig.data.DataType;
@@ -17,8 +16,8 @@ import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
 
-import pl.edu.icm.coansys.similarity.documents.auxil.PorterStemmer;
 import pl.edu.icm.coansys.disambiguation.auxil.DiacriticsRemover;
+import pl.edu.icm.coansys.similarity.documents.auxil.PorterStemmer;
 import pl.edu.icm.coansys.similarity.documents.auxil.StopWordsRemover;
 
 public class StemmedPairs extends EvalFunc<DataBag> {

@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
 import org.apache.hadoop.hbase.mapreduce.TableMapper;
@@ -14,6 +15,7 @@ import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.io.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.ExtractorFactory;
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.AuthorBased;
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DocumentBased;

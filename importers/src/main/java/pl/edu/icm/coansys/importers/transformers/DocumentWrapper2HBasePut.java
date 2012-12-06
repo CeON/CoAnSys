@@ -4,9 +4,9 @@
  */
 package pl.edu.icm.coansys.importers.transformers;
 
-import java.io.IOException;
-import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.hbase.client.Put;
+import org.apache.hadoop.hbase.util.Bytes;
+
 import pl.edu.icm.coansys.importers.constants.HBaseConstant;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentWrapper;
 

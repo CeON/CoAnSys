@@ -5,10 +5,9 @@
 
 package pl.edu.icm.coansys.importers.transformers;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.util.Bytes;
+
 import pl.edu.icm.coansys.importers.constants.HBaseConstant;
 import pl.edu.icm.coansys.importers.models.DocumentDTO;
 
@@ -27,15 +26,15 @@ public class DocumentDTO2HBasePut {
     }
 
     private static Put addContentFamily(Put put, DocumentDTO docDTO) {
-        put.add(HBaseConstant.FAMILY_CONTENT_BYTES, 
-                HBaseConstant.FAMILY_CONTENT_QUALIFIER_PROTO_BYTES, 
+        put.add(Bytes.toBytes(HBaseConstant.FAMILY_CONTENT), 
+        		Bytes.toBytes(HBaseConstant.FAMILY_CONTENT_QUALIFIER_PROTO), 
                 docDTO.getMediaConteiner().toByteArray());
         return put;
     }
 
     private static Put addMetadataFamily(Put put, DocumentDTO docDTO) {
-        put.add(HBaseConstant.FAMILY_METADATA_BYTES, 
-                HBaseConstant.FAMILY_METADATA_QUALIFIER_PROTO_BYTES,
+        put.add(Bytes.toBytes(HBaseConstant.FAMILY_METADATA), 
+        		Bytes.toBytes(HBaseConstant.FAMILY_METADATA_QUALIFIER_PROTO),
                 docDTO.getDocumentMetadata().toByteArray());
         return put;
     }
