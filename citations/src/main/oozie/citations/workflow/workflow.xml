@@ -1,0 +1,87 @@
+<!--
+  ~ (C) 2010-2012 ICM UW. All rights reserved.
+  -->
+
+<workflow-app xmlns="uri:oozie:workflow:0.1" name="citation-matching-wf">
+    <start to="generate-indices"/>
+    <!--<start to="import"/>-->
+    <!--<action name="import">-->
+    <!--<java>-->
+    <!--<job-tracker>${jobTracker}</job-tracker>-->
+    <!--<name-node>${nameNode}</name-node>-->
+
+
+    <!--</java>-->
+    <!--<ok to="generate-indices" />-->
+    <!--<error to="fail" />-->
+    <!--</action>-->
+    <fork name="generate-indices">
+        <path start="generate-key-index"/>
+        <path start="generate-author-index"/>
+    </fork>
+    <action name="generate-key-index">
+        <java>
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <main-class>pl.edu.icm.coansys.citations.jobs.IndexBuilder</main-class>
+            <arg>-key</arg>
+            <arg>${cit_inputSeqFile}</arg>
+            <arg>${cit_keyIndexFullPath}</arg>
+        </java>
+
+        <ok to="generated-key-index"/>
+        <error to="fail"/>
+    </action>
+    <join name="generated-key-index" to="do-matching"/>
+    <action name="generate-author-index">
+        <java>
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <main-class>pl.edu.icm.coansys.citations.jobs.IndexBuilder</main-class>
+            <arg>-author</arg>
+            <arg>${cit_inputSeqFile}</arg>
+            <arg>${cit_authorIndexFullPath}</arg>
+        </java>
+
+        <ok to="generated-author-index"/>
+        <error to="fail"/>
+    </action>
+    <join name="generated-author-index" to="do-matching"/>
+    <action name="do-matching">
+        <java>
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <main-class>pl.edu.icm.coansys.citations.jobs.Matcher</main-class>
+            <arg>-files</arg>
+            <arg>
+                ${cit_keyIndexFullPath}/data#key-data,${cit_keyIndexFullPath}/index#key-index,${cit_authorIndexFullPath}/data#author-data,${cit_keyIndexFullPath}/index#author-index
+            </arg>
+            <arg>${cit_keyIndex}</arg>
+            <arg>${cit_authorIndex}</arg>
+            <arg>${cit_inputSeqFile}</arg>
+            <arg>${cit_outputSeqFile}</arg>
+        </java>
+
+        <ok to="export"/>
+        <error to="fail"/>
+    </action>
+    <action name="export">
+        <shell xmlns="uri:oozie:shell-action:0.1">
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <exec>./bash/bulkload-sequence-file.sh</exec>
+            <argument>lib/citations-1.0-SNAPSHOT-jar-with-dependencies.jar</argument>
+            <argument>bulk</argument>
+            <argument>${cit_outputSeqFile}</argument>
+            <argument>${cit_hbaseOutTable}</argument>
+            <argument>pl.edu.icm.coansys.importers.io.writers.hbase.BytesWritableSequenceFileToHBasePutMapper</argument>
+            <argument>${cit_hbaseOutColumn}</argument>
+        </shell>
+        <ok to="end"/>
+        <error to="fail"/>
+    </action>
+    <kill name="fail">
+        <message>Workflow failed</message>
+    </kill>
+    <end name="end"/>
+</workflow-app>
