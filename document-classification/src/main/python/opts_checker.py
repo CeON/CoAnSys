@@ -1,5 +1,7 @@
 #!/usr/bin/python
-
+'''
+ (C) 2010-2012 ICM UW. All rights reserved.
+'''
 import string;
 import sys;
 import re;

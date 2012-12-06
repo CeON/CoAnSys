@@ -1,5 +1,9 @@
 #!/bin/bash
 
+#
+# (C) 2010-2012 ICM UW. All rights reserved.
+#
+
 function change() { #1: string to change #old string # new string
 	echo `eval "echo ${1} | sed \"s/${2}/${3}/\""`
 }
