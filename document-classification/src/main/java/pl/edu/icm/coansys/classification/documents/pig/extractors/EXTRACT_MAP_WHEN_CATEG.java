@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import org.apache.pig.EvalFunc;
 import org.apache.pig.data.*;
+
+import pl.edu.icm.coansys.classification.documents.auxil.StackTraceExtractor;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.ClassifCode;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
 
@@ -38,8 +40,9 @@ public class EXTRACT_MAP_WHEN_CATEG extends EvalFunc<Map> {
             return null;
 
         } catch (Exception e) {
-            // Throwing an exception will cause the task to fail.
-            throw new RuntimeException("Error while parsing DocumentMetadata", e);
+        	// Throwing an exception will cause the task to fail.
+            throw new IOException("Caught exception processing input row:\n"
+            		+ StackTraceExtractor.getStackTrace(e));
         }
     }
 

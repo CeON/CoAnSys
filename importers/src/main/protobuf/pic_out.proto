@@ -1,6 +1,7 @@
 //
 // (C) 2010-2012 ICM UW. All rights reserved.
 //
+package pl.edu.icm.coansys.importers.hbaseRest.model_toy;
 
 option java_package = "pl.edu.icm.coansys.importers.models";
 option java_outer_classname = "PICProtos";

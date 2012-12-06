@@ -11,6 +11,8 @@ import org.apache.pig.EvalFunc;
 import org.apache.pig.data.DataBag;
 import org.apache.pig.data.Tuple;
 
+import pl.edu.icm.coansys.classification.documents.auxil.StackTraceExtractor;
+
 /**
 *
 * @author pdendek
@@ -32,8 +34,9 @@ public class REPLACE_FIELD extends EvalFunc<Map> {
            return map;
            
        } catch (Exception e) {
-           // Throwing an exception will cause the task to fail.
-           throw new RuntimeException("Error while parsing DocumentMetadata", e);
+    	// Throwing an exception will cause the task to fail.
+           throw new IOException("Caught exception processing input row:\n"
+           		+ StackTraceExtractor.getStackTrace(e));
        }
    }
 }

@@ -106,6 +106,8 @@
             </build>
         </profile>
         <profile>
+			<!-- used in project CoAnSys/document-classification -->
+			<!-- requires the file $PROJECT/src/main/resources/assemblies/only-deps.xml -->
             <id>sep</id>
             <build>
                 <plugins>
@@ -123,7 +125,7 @@
                         <artifactId>maven-assembly-plugin</artifactId>
                         <configuration>
                             <descriptors>
-                                <descriptor>${project.artifactId}/src/main/resources/assemblies/only-deps.xml</descriptor>
+                                <descriptor>src/main/resources/assemblies/only-deps.xml</descriptor>
                             </descriptors>
                         </configuration>
                         <executions>
@@ -186,7 +188,8 @@
         <module>importers</module>
         <module>integration</module>
         <module>logs-analysis</module>
-  </modules>
+        <module>keywords-extraction</module>
+    </modules>
 
     <dependencies>
         <dependency>

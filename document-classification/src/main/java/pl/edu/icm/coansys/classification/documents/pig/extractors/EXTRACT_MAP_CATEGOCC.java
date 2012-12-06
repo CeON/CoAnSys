@@ -12,6 +12,8 @@ import org.apache.pig.EvalFunc;
 import org.apache.pig.data.*;
 import org.apache.pig.impl.logicalLayer.FrontendException;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
+
+import pl.edu.icm.coansys.classification.documents.auxil.StackTraceExtractor;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.ClassifCode;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
 
@@ -51,8 +53,9 @@ public class EXTRACT_MAP_CATEGOCC extends EvalFunc<Tuple> {
             Tuple t = TupleFactory.getInstance().newTuple(Arrays.asList(to));
             return t;
         } catch (Exception e) {
-            // Throwing an exception will cause the task to fail.
-            throw new RuntimeException("Error while parsing DocumentMetadata", e);
+        	// Throwing an exception will cause the task to fail.
+            throw new IOException("Caught exception processing input row:\n"
+            		+ StackTraceExtractor.getStackTrace(e));
         }
     }
 
