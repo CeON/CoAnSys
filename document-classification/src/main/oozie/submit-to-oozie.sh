@@ -1,5 +1,9 @@
 #!/bin/bash
 
+#
+# (C) 2010-2012 ICM UW. All rights reserved.
+#
+
 TASK=$1
 USER=$2
 OOZIE_SERVER=$3

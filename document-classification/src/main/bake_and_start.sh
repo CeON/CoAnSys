@@ -1,5 +1,8 @@
 #!/bin/bash
 
+#
+# (C) 2010-2012 ICM UW. All rights reserved.
+#
 HOW="$1"
 NUM="$2"
 RM="$3"
