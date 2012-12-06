@@ -3,7 +3,7 @@
   -->
 
 <workflow-app xmlns="uri:oozie:workflow:0.1" name="citation-matching-wf">
-    <start to="generate-indices"/>
+    <start to="prelude"/>
     <!--<start to="import"/>-->
     <!--<action name="import">-->
     <!--<java>-->
@@ -15,6 +15,15 @@
     <!--<ok to="generate-indices" />-->
     <!--<error to="fail" />-->
     <!--</action>-->
+    <action name="prelude">
+        <fs>
+            <delete path="${cit_keyIndexFullPath}"/>
+            <delete path="${cit_authorIndexFullPath}"/>
+            <delete path="${cit_outputSeqFile}"/>
+        </fs>
+        <ok to="generate-indices"/>
+        <error to="fail"/>
+    </action>
     <fork name="generate-indices">
         <path start="generate-key-index"/>
         <path start="generate-author-index"/>
