@@ -1,4 +1,7 @@
 <workflow-app name='dc-classification' xmlns="uri:oozie:workflow:0.2">
+<!--
+ (C) 2010-2012 ICM UW. All rights reserved.
+-->
     <start to='classify'/>
     <action name='classify'>
         <pig>
