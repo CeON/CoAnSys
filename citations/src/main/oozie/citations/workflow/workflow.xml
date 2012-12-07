@@ -80,7 +80,6 @@
         <java>
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
-            <main-class>pl.edu.icm.coansys.importers.io.writers.hbase.DocumentWrapperSequenceFileToHBase</main-class>
             <configuration>
                 <property>
                     <name>hbase.table.full.column.name</name>
@@ -88,14 +87,14 @@
                 </property>
                 <property>
                     <name>mapreduce.map.class</name>
-                    <value>pl.edu.icm.coansys.importers.io.writers.hbase.BytesWritableSequenceFileToHBasePutMapper
-                    </value>
+                    <value>pl.edu.icm.coansys.importers.io.writers.hbase.BytesWritableSequenceFileToHBasePutMapper</value>
                 </property>
                 <property>
                     <name>bulk.output</name>
                     <value>${cit_bulkloadTmpDir}</value>
                 </property>
             </configuration>
+            <main-class>pl.edu.icm.coansys.importers.io.writers.hbase.DocumentWrapperSequenceFileToHBase</main-class>
             <arg>${cit_outputSeqFile}</arg>
             <arg>${cit_hbaseOutTable}</arg>
         </java>
