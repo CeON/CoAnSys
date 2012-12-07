@@ -4,9 +4,14 @@
  */
 package pl.edu.icm.coansys.importers.io.writers.hbase;
 
-import com.google.protobuf.InvalidProtocolBufferException;
+import static pl.edu.icm.coansys.importers.constants.HBaseConstant.FAMILY_CONTENT;
+import static pl.edu.icm.coansys.importers.constants.HBaseConstant.FAMILY_CONTENT_QUALIFIER_PROTO;
+import static pl.edu.icm.coansys.importers.constants.HBaseConstant.FAMILY_METADATA;
+import static pl.edu.icm.coansys.importers.constants.HBaseConstant.FAMILY_METADATA_QUALIFIER_PROTO;
+
 import java.io.IOException;
 import java.util.Date;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hbase.HBaseConfiguration;
@@ -18,19 +23,19 @@ import org.apache.hadoop.hbase.mapreduce.TableMapper;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.mapreduce.Job;
-import org.apache.hadoop.mapreduce.Mapper.Context;
 import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
 import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
-import org.apache.hadoop.util.GenericOptionsParser;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.pig.backend.executionengine.ExecException;
-import static pl.edu.icm.coansys.importers.constants.HBaseConstant.*;
+
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentWrapper;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.MediaContainer;
+
+import com.google.protobuf.InvalidProtocolBufferException;
 
 /**
  *
@@ -147,11 +152,11 @@ public class HBaseToDocumentProtoSequenceFile implements Tool {
         }
 
         public byte[] getDocumentMetadata() throws ExecException, InvalidProtocolBufferException {
-            return result.getValue(FAMILY_METADATA_BYTES, FAMILY_METADATA_QUALIFIER_PROTO_BYTES);
+            return result.getValue(Bytes.toBytes(FAMILY_METADATA), Bytes.toBytes(FAMILY_METADATA_QUALIFIER_PROTO));
         }
 
         public byte[] getDocumentMedia() throws ExecException, InvalidProtocolBufferException {
-            return result.getValue(FAMILY_CONTENT_BYTES, FAMILY_CONTENT_QUALIFIER_PROTO_BYTES);
+            return result.getValue(Bytes.toBytes(FAMILY_CONTENT), Bytes.toBytes(FAMILY_CONTENT_QUALIFIER_PROTO));
         }
     }
 

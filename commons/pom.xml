@@ -15,6 +15,11 @@
     <url>http://maven.apache.org</url>
 
     <dependencies>
+		<dependency>
+	    	<groupId>pl.edu.icm.coansys</groupId>
+	    	<version>1.0-SNAPSHOT</version>
+	    	<artifactId>models</artifactId>
+		</dependency>    
         <dependency>
             <groupId>org.apache.tika</groupId>
             <artifactId>tika-core</artifactId>

@@ -14,7 +14,7 @@
     <url>http://maven.apache.org</url>
 
     <dependencies>
-                <dependency>
+		<dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>commons</artifactId>
             <version>${project.version}</version>

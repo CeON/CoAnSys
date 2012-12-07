@@ -4,6 +4,7 @@
 package pl.edu.icm.coansys.importers.io.readers.hbaserest;
 
 import java.io.IOException;
+
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.client.ResultScanner;
 import org.apache.hadoop.hbase.client.Scan;
@@ -11,6 +12,7 @@ import org.apache.hadoop.hbase.rest.client.Client;
 import org.apache.hadoop.hbase.rest.client.Cluster;
 import org.apache.hadoop.hbase.rest.client.RemoteHTable;
 import org.apache.hadoop.hbase.util.Bytes;
+
 import pl.edu.icm.coansys.importers.models.AddressBookProtos.Person;
 
 /**
