@@ -1,27 +1,28 @@
-package pl.edu.icm.coansys.citations
+/*
+ * (C) 2010-2012 ICM UW. All rights reserved.
+ */
+
+package pl.edu.icm.coansys.citations.indices
 
 import pl.edu.icm.coansys.commons.scala.strings.rotations
-import org.apache.hadoop.conf.Configuration
-import org.apache.hadoop.fs.Path
-import org.apache.hadoop.io.{Writable, Text, MapFile}
+import org.apache.hadoop.io.{Writable, Text}
 import collection.mutable.ListBuffer
 import com.nicta.scoobi.core.DList
 import com.nicta.scoobi.io.sequence.SeqSchema
 import com.nicta.scoobi.Persist.persist
 import com.nicta.scoobi.InputsOutputs.convertToSequenceFile
 import com.nicta.scoobi.application.ScoobiConfiguration
+import pl.edu.icm.coansys.citations.data.DocumentMetadataWrapper
+import pl.edu.icm.coansys.citations.util.{hdfs, BytesIterable, misc}
 
 /**
  * A class helping in approximate index saved in MapFile usage.
  *
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
-class ApproximateIndex[V <: Writable : Manifest](val indexFileUri: String) {
-  val conf = new Configuration()
-  val reader = new MapFile.Reader(new Path(indexFileUri), conf)
-
-  def get(query: String): Iterable[V] = {
-    def isTooBig(query: String, key:String): Boolean =
+class ApproximateIndex[V <: Writable : Manifest](override val indexFileUri: String) extends SimpleIndex[Text, V](indexFileUri) {
+  def getApproximate(query: String): Iterable[V] = {
+    def isTooBig(query: String, key: String): Boolean =
       !key.startsWith(query.substring(0, query.length - 1))
 
     def isMatching(query: String, key: String): Boolean =
@@ -45,29 +46,25 @@ class ApproximateIndex[V <: Writable : Manifest](val indexFileUri: String) {
     var v: V = manifest[V].erasure.newInstance().asInstanceOf[V]
     val tmpkey: Text = new Text()
 
-    rots foreach {rot =>
-      tmpkey.set(rot.substring(0, rot.length - 1))
-      val fstkey = reader.getClosest(tmpkey, v, true).asInstanceOf[Text]
-      if (fstkey != null) {
-        v = addIfMatches(rot, fstkey, v, buffer)
-      }
-
-      var exit = false
-      while(reader.next(k, v) && !exit) {
-        if (isTooBig(rot, k.toString)) {
-          exit = true
-        } else {
-          v = addIfMatches(rot, k, v, buffer)
+    rots foreach {
+      rot =>
+        tmpkey.set(rot.substring(0, rot.length - 1))
+        val fstkey = reader.getClosest(tmpkey, v, true).asInstanceOf[Text]
+        if (fstkey != null) {
+          v = addIfMatches(rot, fstkey, v, buffer)
         }
-      }
+
+        var exit = false
+        while (reader.next(k, v) && !exit) {
+          if (isTooBig(rot, k.toString)) {
+            exit = true
+          } else {
+            v = addIfMatches(rot, k, v, buffer)
+          }
+        }
     }
 
     buffer
-  }
-
-  def close() {
-    if (reader != null)
-      reader.close()
   }
 }
 
@@ -80,15 +77,15 @@ object ApproximateIndex {
   /**
    * MR jobs building an approximate index.
    *
-   * @param readDocs a procedure returning documents to be indexed
+   * @param documents documents to be indexed
    * @param indexFile an URI of location where a MapFile representing an index will be saved
    */
-  def buildIndex(readDocs: () => DList[MockDocumentWrapper], indexFile: String)(implicit conf: ScoobiConfiguration) {
-    def indexEntries(allDocs: DList[MockDocumentWrapper]) = {
+  def buildAuthorIndex(documents: DList[DocumentMetadataWrapper], indexFile: String)(implicit conf: ScoobiConfiguration) {
+    def indexEntries(allDocs: DList[DocumentMetadataWrapper]) = {
       val tokensWithDocs =
         allDocs
-          .flatMap(d => d.normalisedAuthorTokens zip Iterator.continually(d).toIterable)
-          .groupByKey[String, MockDocumentWrapper]
+          .flatMap(d => d.normalisedAuthorTokens zip Iterator.continually(d.meta.getKey).toIterable)
+          .groupByKey[String, String]
 
       val rotationsWithDocs = tokensWithDocs.flatMap {
         case (token, docs) =>
@@ -101,16 +98,17 @@ object ApproximateIndex {
       rotationsWithDocs
     }
 
-    implicit object docsIterableSchema extends SeqSchema[Iterable[MockDocumentWrapper]] {
-      def toWritable(x: Iterable[MockDocumentWrapper]) = new MockDocumentWritableIterable(x)
+    implicit object dockeysIterableSchema extends SeqSchema[Iterable[String]] {
+
+      def toWritable(x: Iterable[String]) = new BytesIterable(x map misc.uuidEncode)
 
       def fromWritable(x: SeqType) =
-        x.iterable
+        x.iterable map misc.uuidDecode
 
-      type SeqType = MockDocumentWritableIterable
-      val mf = manifest[MockDocumentWritableIterable]
+      type SeqType = BytesIterable
+      val mf = manifest[BytesIterable]
     }
-    persist(convertToSequenceFile(indexEntries(readDocs()), indexFile))
+    persist(convertToSequenceFile(indexEntries(documents), indexFile))
     hdfs.mergeSeqs(indexFile)
     hdfs.convertSeqToMap(indexFile)
   }
