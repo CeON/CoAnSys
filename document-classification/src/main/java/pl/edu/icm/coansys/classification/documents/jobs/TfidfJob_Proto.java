@@ -6,6 +6,7 @@ package pl.edu.icm.coansys.classification.documents.jobs;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.util.Random;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hbase.HBaseConfiguration;
@@ -24,6 +25,7 @@ import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import pl.edu.icm.coansys.classification.documents.auxil.LoggingInClassification;
 import pl.edu.icm.coansys.classification.documents.auxil.StringListIntListWritable;
 import pl.edu.icm.coansys.disambiguation.auxil.TextArrayWritable;

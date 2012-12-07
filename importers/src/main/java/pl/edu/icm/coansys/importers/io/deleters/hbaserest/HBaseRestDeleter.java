@@ -6,6 +6,7 @@ package pl.edu.icm.coansys.importers.io.deleters.hbaserest;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.hadoop.hbase.client.Delete;
 import org.apache.hadoop.hbase.rest.client.Client;
 import org.apache.hadoop.hbase.rest.client.Cluster;

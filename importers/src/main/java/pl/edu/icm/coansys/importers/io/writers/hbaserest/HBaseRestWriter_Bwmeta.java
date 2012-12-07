@@ -4,9 +4,11 @@
 package pl.edu.icm.coansys.importers.io.writers.hbaserest;
 
 import java.io.IOException;
+
 import org.apache.hadoop.hbase.rest.client.Client;
 import org.apache.hadoop.hbase.rest.client.Cluster;
 import org.apache.hadoop.hbase.rest.client.RemoteHTable;
+
 import pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator;
 import pl.edu.icm.coansys.importers.models.DocumentDTO;
 import pl.edu.icm.coansys.importers.transformers.DocumentDTO2HBasePut;

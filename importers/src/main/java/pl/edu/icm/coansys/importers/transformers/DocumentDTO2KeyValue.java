@@ -7,8 +7,10 @@ package pl.edu.icm.coansys.importers.transformers;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.hadoop.hbase.KeyValue;
 import org.apache.hadoop.hbase.util.Bytes;
+
 import pl.edu.icm.coansys.importers.constants.HBaseConstant;
 import pl.edu.icm.coansys.importers.models.DocumentDTO;
 

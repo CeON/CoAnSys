@@ -7,8 +7,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import org.apache.poi.extractor.ExtractorFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import pl.edu.icm.coansys.disambiguation.auxil.LoggingInDisambiguation;
 /**
  * {@link FeatureInfo} is an information container binding data about associated {@link Extractor} and {@link Disambiguator}.

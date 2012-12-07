@@ -5,10 +5,12 @@ package pl.edu.icm.coansys.classification.documents.jobs;
 
 import java.io.IOException;
 import java.util.Iterator;
+
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import pl.edu.icm.coansys.disambiguation.auxil.LoggingInDisambiguation;
 import pl.edu.icm.coansys.disambiguation.auxil.TextArrayWritable;
 
