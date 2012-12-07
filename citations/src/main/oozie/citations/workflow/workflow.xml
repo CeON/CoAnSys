@@ -17,17 +17,18 @@
     <!--</action>-->
     <action name="prelude">
         <fs>
-            <delete path="${cit_keyIndexFullPath}"/>
-            <delete path="${cit_authorIndexFullPath}"/>
-            <delete path="${cit_outputSeqFile}"/>
+            <delete path="${cit_workDir}"/>
+            <mkdir path="${cit_workDir}"/>
         </fs>
-        <ok to="generate-indices"/>
+        <ok to="generate-key-index"/>
         <error to="fail"/>
     </action>
+    <!--
     <fork name="generate-indices">
         <path start="generate-key-index"/>
         <path start="generate-author-index"/>
     </fork>
+    -->
     <action name="generate-key-index">
         <java>
             <job-tracker>${jobTracker}</job-tracker>
@@ -38,10 +39,9 @@
             <arg>${cit_keyIndexFullPath}</arg>
         </java>
 
-        <ok to="generated-key-index"/>
+        <ok to="generate-author-index"/>
         <error to="fail"/>
     </action>
-    <join name="generated-key-index" to="do-matching"/>
     <action name="generate-author-index">
         <java>
             <job-tracker>${jobTracker}</job-tracker>
@@ -52,10 +52,12 @@
             <arg>${cit_authorIndexFullPath}</arg>
         </java>
 
-        <ok to="generated-author-index"/>
+        <ok to="do-matching"/>
         <error to="fail"/>
     </action>
-    <join name="generated-author-index" to="do-matching"/>
+    <!--
+    <join name="generated-indices" to="do-matching"/>
+    -->
     <action name="do-matching">
         <java>
             <job-tracker>${jobTracker}</job-tracker>
@@ -63,7 +65,7 @@
             <main-class>pl.edu.icm.coansys.citations.jobs.Matcher</main-class>
             <arg>-files</arg>
             <arg>
-                ${cit_keyIndexFullPath}/data#key-data,${cit_keyIndexFullPath}/index#key-index,${cit_authorIndexFullPath}/data#author-data,${cit_keyIndexFullPath}/index#author-index
+                ${cit_keyIndexFullPath}/data#key-data,${cit_keyIndexFullPath}/index#key-index,${cit_authorIndexFullPath}/data#author-data,${cit_authorIndexFullPath}/index#author-index
             </arg>
             <arg>${cit_keyIndex}</arg>
             <arg>${cit_authorIndex}</arg>
@@ -78,13 +80,16 @@
         <shell xmlns="uri:oozie:shell-action:0.1">
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
-            <exec>./bash/bulkload-sequence-file.sh</exec>
-            <argument>lib/citations-1.0-SNAPSHOT-jar-with-dependencies.jar</argument>
+            <exec>./bulkload-sequence-file.sh</exec>
+            <argument>citations-1.0-SNAPSHOT-jar-with-dependencies.jar</argument>
             <argument>bulk</argument>
             <argument>${cit_outputSeqFile}</argument>
             <argument>${cit_hbaseOutTable}</argument>
             <argument>pl.edu.icm.coansys.importers.io.writers.hbase.BytesWritableSequenceFileToHBasePutMapper</argument>
             <argument>${cit_hbaseOutColumn}</argument>
+            <argument>${cit_workDir}/tmp-bulkload</argument>
+            <file>./bash/bulkload-sequence-file.sh#bulkload-sequence-file.sh</file>
+            <file>./lib/citations-1.0-SNAPSHOT-jar-with-dependencies.jar#citations-1.0-SNAPSHOT-jar-with-dependencies.jar</file>
         </shell>
         <ok to="end"/>
         <error to="fail"/>

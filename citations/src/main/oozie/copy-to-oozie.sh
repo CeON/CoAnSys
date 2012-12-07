@@ -15,7 +15,7 @@ if [ ! -d "$WORKFLOW_LOCAL_BASH_DIR" ]; then
     mkdir ${WORKFLOW_LOCAL_BASH_DIR}
 fi
 
-echo "Copying required scripts to ${TASK}/bash"
+echo "Copying required scripts to ${TASK}"
 cp ../../../../importers/src/main/bash/bulkload-sequence-file.sh ${WORKFLOW_LOCAL_BASH_DIR}
 
 echo "Copying required libaries to ${TASK}/lib"
