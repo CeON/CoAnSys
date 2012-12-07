@@ -73,24 +73,47 @@
             <arg>${cit_outputSeqFile}</arg>
         </java>
 
-        <ok to="export"/>
+        <ok to="create-hfile"/>
         <error to="fail"/>
     </action>
-    <action name="export">
-        <shell xmlns="uri:oozie:shell-action:0.1">
+    <action name="create-hfile">
+        <java>
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
-            <exec>./bulkload-sequence-file.sh</exec>
-            <argument>citations-1.0-SNAPSHOT-jar-with-dependencies.jar</argument>
-            <argument>bulk</argument>
-            <argument>${cit_outputSeqFile}</argument>
-            <argument>${cit_hbaseOutTable}</argument>
-            <argument>pl.edu.icm.coansys.importers.io.writers.hbase.BytesWritableSequenceFileToHBasePutMapper</argument>
-            <argument>${cit_hbaseOutColumn}</argument>
-            <argument>${cit_workDir}/tmp-bulkload</argument>
-            <file>./bash/bulkload-sequence-file.sh#bulkload-sequence-file.sh</file>
-            <file>./lib/citations-1.0-SNAPSHOT-jar-with-dependencies.jar#citations-1.0-SNAPSHOT-jar-with-dependencies.jar</file>
-        </shell>
+            <main-class>pl.edu.icm.coansys.importers.io.writers.hbase.DocumentWrapperSequenceFileToHBase</main-class>
+            <configuration>
+                <property>
+                    <name>hbase.table.full.column.name</name>
+                    <value>${cit_hbaseOutColumn}</value>
+                </property>
+                <property>
+                    <name>mapreduce.map.class</name>
+                    <value>pl.edu.icm.coansys.importers.io.writers.hbase.BytesWritableSequenceFileToHBasePutMapper
+                    </value>
+                </property>
+                <property>
+                    <name>bulk.output</name>
+                    <value>${cit_bulkloadTmpDir}</value>
+                </property>
+            </configuration>
+            <arg>${cit_outputSeqFile}</arg>
+            <arg>${cit_hbaseOutTable}</arg>
+        </java>
+
+        <ok to="bulkload"/>
+        <error to="fail"/>
+    </action>
+
+    <action name="bulkload">
+        <java>
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <main-class>completebulkload</main-class>
+            <arg>${cit_bulkloadTmpDir}</arg>
+            <arg>${cit_hbaseOutTable}</arg>
+            <archive>/usr/lib/hbase/hbase-0.92.1-cdh4.0.1-security.jar</archive>
+        </java>
+
         <ok to="end"/>
         <error to="fail"/>
     </action>
