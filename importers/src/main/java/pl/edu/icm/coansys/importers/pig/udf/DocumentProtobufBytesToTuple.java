@@ -1,11 +1,13 @@
 package pl.edu.icm.coansys.importers.pig.udf;
 
-import com.google.protobuf.InvalidProtocolBufferException;
 import org.apache.pig.backend.executionengine.ExecException;
 import org.apache.pig.data.DataByteArray;
 import org.apache.pig.data.Tuple;
+
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.MediaContainer;
+
+import com.google.protobuf.InvalidProtocolBufferException;
 
 /**
  *

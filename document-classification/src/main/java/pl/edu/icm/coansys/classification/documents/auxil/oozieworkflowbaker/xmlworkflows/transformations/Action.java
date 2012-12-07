@@ -5,10 +5,7 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import pl.edu.icm.coansys.classification.documents.auxil.oozieworkflowbaker.xmlworkflows.OozieWorkflowBaker;
 import pl.edu.icm.coansys.classification.documents.auxil.oozieworkflowbaker.xmlworkflows.auxiliar.WFList;
 
 

@@ -6,6 +6,7 @@ package pl.edu.icm.coansys.importers.models;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.Media;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.MediaContainer;

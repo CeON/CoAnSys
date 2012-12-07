@@ -123,7 +123,7 @@ object Matcher extends ScoobiApp {
         val outBuilder = PICProtos.PicOut.newBuilder()
         outBuilder.setDocId(sourceDoc.getExtId(0).getValue)
         for ((position, targetExtId) <- refs) {
-          outBuilder.addRefs(PICProtos.References.newBuilder().setDocId(targetExtId).setRefNum(position))
+          outBuilder.addRefs(PICProtos.Reference.newBuilder().setDocId(targetExtId).setRefNum(position))
         }
 
         (sourceUuid, outBuilder.build())

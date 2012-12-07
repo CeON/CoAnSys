@@ -6,8 +6,8 @@ package pl.edu.icm.coansys.similarity.pig.udf;
 import java.io.IOException;
 
 import org.apache.pig.EvalFunc;
-import org.apache.pig.data.Tuple;
 import org.apache.pig.backend.executionengine.ExecException;
+import org.apache.pig.data.Tuple;
 
 public class TFIDF extends EvalFunc<Double> {
 
