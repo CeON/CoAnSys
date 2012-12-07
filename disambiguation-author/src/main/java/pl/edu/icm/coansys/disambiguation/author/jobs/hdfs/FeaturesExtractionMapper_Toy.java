@@ -7,10 +7,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.log4j.Logger;
+
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.ExtractorFactory;
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.AuthorBased;
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DocumentBased;

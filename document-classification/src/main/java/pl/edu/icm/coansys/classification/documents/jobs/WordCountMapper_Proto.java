@@ -11,6 +11,8 @@ import org.apache.hadoop.hbase.mapreduce.TableMapper;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.classification.documents.auxil.PorterStemmer;
 import pl.edu.icm.coansys.disambiguation.auxil.DiacriticsRemover;
@@ -21,8 +23,6 @@ import pl.edu.icm.coansys.importers.constants.HBaseConstant;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
 
 import com.google.common.base.Joiner;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *

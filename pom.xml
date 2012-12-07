@@ -189,6 +189,7 @@
         <module>integration</module>
         <module>logs-analysis</module>
         <module>keywords-extraction</module>
+        <module>models</module>        
     </modules>
 
     <dependencies>

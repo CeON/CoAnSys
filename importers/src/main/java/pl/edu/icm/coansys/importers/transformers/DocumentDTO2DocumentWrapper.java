@@ -4,8 +4,8 @@
  */
 package pl.edu.icm.coansys.importers.transformers;
 
-import com.google.protobuf.ByteString;
 import java.io.IOException;
+
 import pl.edu.icm.coansys.importers.models.DocumentDTO;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentWrapper;
 

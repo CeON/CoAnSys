@@ -4,6 +4,7 @@
 package pl.edu.icm.coansys.disambiguation.author.jobs.hdfs;
 
 import java.lang.management.ManagementFactory;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
@@ -16,6 +17,7 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 import org.apache.log4j.Logger;
+
 import pl.edu.icm.coansys.disambiguation.auxil.LoggingInDisambiguation;
 import pl.edu.icm.coansys.disambiguation.auxil.TextTextArrayMapWritable;
 

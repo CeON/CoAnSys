@@ -1,6 +1,7 @@
 package pl.edu.icm.coansys.importers.pig.udf;
 
 import java.io.IOException;
+
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.pig.EvalFunc;
 import org.apache.pig.data.Tuple;

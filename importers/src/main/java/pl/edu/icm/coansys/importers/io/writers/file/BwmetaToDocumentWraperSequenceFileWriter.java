@@ -9,6 +9,7 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -19,12 +20,13 @@ import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.io.compress.SnappyCodec;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
+
 import pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator;
 import pl.edu.icm.coansys.importers.models.DocumentDTO;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
-import pl.edu.icm.coansys.importers.models.DocumentProtos.MediaContainer;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentWrapper;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.Media;
+import pl.edu.icm.coansys.importers.models.DocumentProtos.MediaContainer;
 import pl.edu.icm.coansys.importers.transformers.RowComposer;
 
 public class BwmetaToDocumentWraperSequenceFileWriter {
