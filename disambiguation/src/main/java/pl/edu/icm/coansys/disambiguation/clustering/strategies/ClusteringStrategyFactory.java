@@ -3,9 +3,10 @@
  */
 package pl.edu.icm.coansys.disambiguation.clustering.strategies;
 
-import com.sun.el.util.ReflectionUtil;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import com.sun.el.util.ReflectionUtil;
 
 /**
  *

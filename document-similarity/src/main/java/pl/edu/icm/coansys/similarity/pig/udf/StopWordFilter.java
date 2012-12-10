@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import org.apache.pig.EvalFunc;
 import org.apache.pig.data.Tuple;
+
 import pl.edu.icm.coansys.similarity.documents.auxil.StopWordsRemover;
 
 public class StopWordFilter extends EvalFunc<Boolean> {

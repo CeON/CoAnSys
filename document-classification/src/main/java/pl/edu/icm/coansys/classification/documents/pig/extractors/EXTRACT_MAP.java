@@ -7,8 +7,13 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.pig.EvalFunc;
-import org.apache.pig.data.*;
+import org.apache.pig.data.DataBag;
+import org.apache.pig.data.DataByteArray;
+import org.apache.pig.data.DefaultDataBag;
+import org.apache.pig.data.Tuple;
+import org.apache.pig.data.TupleFactory;
 
 import pl.edu.icm.coansys.classification.documents.auxil.StackTraceExtractor;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.ClassifCode;
