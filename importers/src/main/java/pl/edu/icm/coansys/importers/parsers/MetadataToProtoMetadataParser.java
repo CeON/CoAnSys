@@ -37,10 +37,10 @@ import pl.edu.icm.model.bwmeta.YStructure;
 import pl.edu.icm.model.bwmeta.YTagList;
 import pl.edu.icm.model.bwmeta.constants.YaddaIdConstants;
 import pl.edu.icm.model.bwmeta.transformers.BwmetaTransformerConstants;
+import pl.edu.icm.model.general.MetadataTransformers;
 import pl.edu.icm.model.transformers.MetadataFormat;
 import pl.edu.icm.model.transformers.MetadataReader;
 import pl.edu.icm.model.transformers.TransformationException;
-import pl.edu.icm.synat.application.model.bwmeta.transformers.SynatMetadataTransformers;
 
 /**
  *
@@ -117,7 +117,7 @@ public class MetadataToProtoMetadataParser {
     }
     
     private static List<YExportable> stringToYExportable(String data, MetadataFormat format) throws TransformationException {
-        MetadataReader<YExportable> reader = SynatMetadataTransformers.BTF.getReader(format,
+        MetadataReader<YExportable> reader = MetadataTransformers.BTF.getReader(format,
                 BwmetaTransformerConstants.Y);
         List<YExportable> inputElements = reader.read(data);
         return inputElements;
