@@ -26,8 +26,8 @@ public class Main {
     private static void setOptions(String[] args) {
         OptionParser parser = new OptionParser();
         parser.accepts("stop").withRequiredArg();
-        parser.accepts("d").withRequiredArg();
-        parser.accepts("o").withRequiredArg();
+        parser.accepts("d").withRequiredArg().required();
+        parser.accepts("o").withRequiredArg().required();
         parser.accepts("s");
         parser.accepts("r");
         parser.accepts("l").withRequiredArg().ofType(Integer.class);
@@ -61,9 +61,9 @@ public class Main {
      * -l "length of keyword" <br> maximum length of keyword (length = how many
      * words it consists of), the default is 3 <p>
      *
-     * -d "path to input directory" <br> the default is "in/" <p>
+     * -d "path to input directory", required <p>
      *
-     * -o "path to output directory" <br> the default is "keywords/"
+     * -o "path to output directory", required <p>
      *
      * @throws IOException
      */
