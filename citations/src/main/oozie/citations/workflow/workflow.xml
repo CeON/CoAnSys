@@ -81,10 +81,9 @@
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
             <main-class>pl.edu.icm.coansys.importers.io.writers.hbase.DocumentWrapperSequenceFileToHBase</main-class>
-            <java-opts>-D hbase.table.full.column.name ${cit_hbaseOutColumn} -D mapreduce.map.class
-                pl.edu.icm.coansys.importers.io.writers.hbase.BytesWritableSequenceFileToHBasePutMapper -D bulk.output
-                ${cit_bulkloadTmpDir}
-            </java-opts>
+            <arg>-D</arg><arg>hbase.table.full.column.name=${cit_hbaseOutColumn}</arg>
+            <arg>-D</arg><arg>mapreduce.map.class=pl.edu.icm.coansys.importers.io.writers.hbase.BytesWritableSequenceFileToHBasePutMapper</arg> 
+            <arg>-D</arg><arg>bulk.output=${cit_bulkloadTmpDir}</arg>
             <arg>${cit_outputSeqFile}</arg>
             <arg>${cit_hbaseOutTable}</arg>
         </java>
@@ -97,10 +96,9 @@
         <java>
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
-            <main-class>completebulkload</main-class>
+            <main-class>org.apache.hadoop.hbase.mapreduce.LoadIncrementalHFiles</main-class>
             <arg>${cit_bulkloadTmpDir}</arg>
             <arg>${cit_hbaseOutTable}</arg>
-            <archive>/usr/lib/hbase/hbase-0.92.1-cdh4.0.1-security.jar</archive>
         </java>
 
         <ok to="end"/>

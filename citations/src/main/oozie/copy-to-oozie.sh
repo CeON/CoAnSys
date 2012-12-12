@@ -19,7 +19,8 @@ echo "Copying required scripts to ${TASK}"
 cp ../../../../importers/src/main/bash/bulkload-sequence-file.sh ${WORKFLOW_LOCAL_BASH_DIR}
 
 echo "Copying required libaries to ${TASK}/lib"
-cp ../../../target/citations-1.0-SNAPSHOT-jar-with-dependencies.jar  ${WORKFLOW_LOCAL_LIB_DIR}
+cp ../../../target/citations-1.0-SNAPSHOT-jar-with-dependencies.jar ${WORKFLOW_LOCAL_LIB_DIR}
+cp /usr/lib/hbase/hbase-0.92.1-cdh4.0.1-security.jar ${WORKFLOW_LOCAL_LIB_DIR}
 
 echo "Recreating workflow data in HDFS"
 hadoop fs -rm -r ${WORKFLOW_HDFS_DIR}
