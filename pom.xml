@@ -206,16 +206,37 @@
             <artifactId>synat-core-services-api</artifactId>
             <version>${synat.version}</version>
             <type>jar</type>
+            <exclusions>
+                <!-- workaround to problem with spring-core version -->
+                <exclusion>
+                    <artifactId>spring-core</artifactId>
+                    <groupId>org.springframework</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>pl.edu.icm.bwmeta</groupId>
             <artifactId>bwmeta</artifactId>
             <version>${bwmeta.version}</version>
+            <exclusions>
+                <!-- workaround to problem with spring-core version -->
+                <exclusion>
+                    <artifactId>spring-core</artifactId>
+                    <groupId>org.springframework</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>pl.edu.icm.synat</groupId>
             <artifactId>synat-platform-connector</artifactId>
             <version>${synat.version}</version>
+            <exclusions>
+                <!-- workaround to problem with spring-core version -->
+                <exclusion>
+                    <artifactId>spring-core</artifactId>
+                    <groupId>org.springframework</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.hadoop</groupId>
