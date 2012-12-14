@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
@@ -6,7 +7,7 @@
 
     <groupId>pl.edu.icm.coansys</groupId>
     <artifactId>models</artifactId>
-    <version>1.1-SNAPSHOT</version> 
+    <version>1.0-SNAPSHOT</version> 
 
     <properties>
         <protobuf.java.version>2.4.1</protobuf.java.version>
@@ -21,11 +22,21 @@
     </dependencies>
 
     <scm>
-        <connection>scm:git:git://github.com/pdendek/CoAnSys.git</connection>
-        <developerConnection>scm:git:git@github.com:pdendek/CoAnSys.git</developerConnection>
-        <url>https://github.com/pdendek/CoAnSys</url>
-      <tag>models-1.0</tag>
-  </scm>
+        <connection>scm:git:git://github.com/CeON/CoAnSys.git</connection>
+        <developerConnection>scm:git:git@github.com:CeON/CoAnSys.git</developerConnection>
+        <url>https://github.com/CeON/CoAnSys</url>
+	</scm>
+
+    <distributionManagement>
+        <repository>
+            <id>kdd-releases</id>
+            <url>http://maven.icm.edu.pl/artifactory/kdd-releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>kdd-snapshots</id>
+            <url>http://maven.icm.edu.pl/artifactory/kdd-snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
 
     <build>
         <plugins>
@@ -38,17 +49,19 @@
                     <target>1.6</target>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>2.3.2</version>
-                <configuration>
-                    <tagBase>https://svn.apache.org/repos/asf/maven/components/releases</tagBase>
-                </configuration>
-            </plugin>
+			<plugin>
+      			<artifactId>maven-release-plugin</artifactId>
+      			<version>2.3.2</version>
+      			<configuration>
+        			<suppressCommitBeforeBranch>true</suppressCommitBeforeBranch>
+        			<suppressCommitBeforeTag>true</suppressCommitBeforeTag>
+        			<remoteTagging>false</remoteTagging>
+        			<autoVersionSubmodules>true</autoVersionSubmodules>
+      			</configuration>
+    		</plugin>
         </plugins>
     </build>
-    
+
     <repositories>
         <repository>
             <id>yadda</id>
