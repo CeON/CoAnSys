@@ -1,13 +1,12 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
     <name>Models</name>
     <description>Models used in CoAnSys</description>
 
     <groupId>pl.edu.icm.coansys</groupId>
-    <version>1.0-SNAPSHOT</version>
     <artifactId>models</artifactId>
+    <version>1.0-SNAPSHOT</version> 
 
     <properties>
         <protobuf.java.version>2.4.1</protobuf.java.version>
@@ -21,6 +20,13 @@
         </dependency>
     </dependencies>
 
+    <scm>
+        <connection>scm:git:git://github.com/pdendek/CoAnSys.git</connection>
+        <developerConnection>scm:git:git@github.com:pdendek/CoAnSys.git</developerConnection>
+        <url>https://github.com/pdendek/CoAnSys</url>
+      <tag>models-1.0</tag>
+  </scm>
+
     <build>
         <plugins>
             <plugin>
@@ -30,6 +36,14 @@
                 <configuration>
                     <source>1.6</source>
                     <target>1.6</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <tagBase>https://svn.apache.org/repos/asf/maven/components/releases</tagBase>
                 </configuration>
             </plugin>
         </plugins>
