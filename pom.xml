@@ -20,6 +20,7 @@
         <testng.version>6.5.2</testng.version>
         <maven.surefire.plugin.version>2.12.3</maven.surefire.plugin.version>
         <synat.version>1.8-SNAPSHOT</synat.version>
+        <bwmeta.version>2.0</bwmeta.version>
     </properties>
 
     <build>
@@ -56,7 +57,7 @@
             <id>slowTests</id>
             <build>
                 <plugins>
-                     <plugin>
+                    <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-compiler-plugin</artifactId>
                         <version>2.3.2</version>
@@ -205,17 +206,37 @@
             <artifactId>synat-core-services-api</artifactId>
             <version>${synat.version}</version>
             <type>jar</type>
+            <exclusions>
+                <!-- workaround to problem with spring-core version -->
+                <exclusion>
+                    <artifactId>spring-core</artifactId>
+                    <groupId>org.springframework</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
-            <groupId>pl.edu.icm.synat</groupId>
+            <groupId>pl.edu.icm.bwmeta</groupId>
             <artifactId>bwmeta</artifactId>
-            <version>${synat.version}</version>
-            <type>jar</type>
+            <version>${bwmeta.version}</version>
+            <exclusions>
+                <!-- workaround to problem with spring-core version -->
+                <exclusion>
+                    <artifactId>spring-core</artifactId>
+                    <groupId>org.springframework</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>pl.edu.icm.synat</groupId>
             <artifactId>synat-platform-connector</artifactId>
             <version>${synat.version}</version>
+            <exclusions>
+                <!-- workaround to problem with spring-core version -->
+                <exclusion>
+                    <artifactId>spring-core</artifactId>
+                    <groupId>org.springframework</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.hadoop</groupId>
@@ -233,7 +254,7 @@
             <artifactId>hadoop-core</artifactId>
             <version>${hadoop.version}</version>
         </dependency> 
-            <dependency>
+        <dependency>
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-core</artifactId>
             <version>${hadoop.version}</version>
@@ -244,7 +265,7 @@
             <artifactId>hadoop-common</artifactId>
             <version>${hadoop.common.version}</version>
         </dependency>
-               <dependency>
+        <dependency>
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-common</artifactId>
             <version>${hadoop.common.version}</version>
@@ -266,7 +287,7 @@
             <artifactId>pig</artifactId>
             <version>${pig.version}</version>
         </dependency>
-          <dependency>
+        <dependency>
             <groupId>org.apache.pig</groupId>
             <artifactId>pig</artifactId>
             <version>${pig.version}</version>
