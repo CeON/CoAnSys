@@ -152,7 +152,7 @@ object Matcher extends ScoobiApp {
     val myMatches = matches(readCitationsFromDocumentsFromSeqFiles(List(args(2))), args(0), args(1))
 
     implicit val stringConverter = new BytesConverter[String](misc.uuidEncode, misc.uuidDecode)
-    implicit val picOutConverter = new BytesConverter[PICProtos.PicOut](_.toByteArray, PICProtos.PicOut.parseFrom(_))
+    implicit val picOutConverter = new BytesConverter[PICProtos.PicOut](_.toByteString.toByteArray, PICProtos.PicOut.parseFrom(_))
     persist(convertToSequenceFile(myMatches, args(3)))
   }
 }
