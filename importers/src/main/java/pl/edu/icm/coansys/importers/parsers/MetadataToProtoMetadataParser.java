@@ -6,12 +6,7 @@ package pl.edu.icm.coansys.importers.parsers;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -126,7 +121,7 @@ public class MetadataToProtoMetadataParser {
 
     private static Author.Builder ycontributorToAuthorMetadata(YContributor yContributor) {
         Author.Builder authorBuilder = DocumentProtos.Author.newBuilder();
-
+        
         List<YName> names = yContributor.getNames();
         for (YName yName : names) {
             String type = yName.getType();
@@ -155,19 +150,13 @@ public class MetadataToProtoMetadataParser {
                 }
             } else if (key.equals("identity")) {
                 String authorIdentity = yAttribute.getValue();
-                if (authorIdentity.length() >= 36) {
-                    authorIdentity = authorIdentity.substring(authorIdentity.length() - 36);
-                }
-                try {
-                    authorBuilder.setKey(UUID.fromString(authorIdentity).toString());
-                } catch (IllegalArgumentException e) {
-                    log.warn("Invalid UUID string (author id): \"{}\" -- Random UUID will be generated", authorIdentity);
-                    authorBuilder.setKey(UUID.randomUUID().toString());
+                if (authorIdentity != null && !authorIdentity.trim().isEmpty()) {
+                    ExtId.Builder extId = ExtId.newBuilder();
+                    extId.setSource(ProtoConstants.authorExtIdBwmeta);
+                    extId.setValue(authorIdentity);
+                    authorBuilder.addExtId(extId);
                 }
             }
-        }
-        if (authorBuilder.getKey() == null || authorBuilder.getKey().length() == 0) {
-            authorBuilder.setKey(UUID.randomUUID().toString());
         }
 //        authorBuilder.setType(HBaseConstants.T_AUTHOR_COPY);
         return authorBuilder;
@@ -175,7 +164,6 @@ public class MetadataToProtoMetadataParser {
 
     private static Author.Builder yattributeToAuthorMetadata(YAttribute node) {
         Author.Builder author = DocumentProtos.Author.newBuilder();
-        author.setKey(UUID.randomUUID().toString());
 //      author.setType(HBaseConstants.T_AUTHOR_COPY);
         String content;
         if ((content = node.getValue()) != null) {
@@ -204,7 +192,6 @@ public class MetadataToProtoMetadataParser {
         aux.setValue(ProtoConstants.documentAuxiliaryTypeOfDocument_Reference);
         doc.addAuxiliarInfo(aux);
 
-        doc.setKey(UUID.randomUUID().toString());
 //        docBuilder.setType(HBaseConstants.T_REFERENCE);
 
         String attr = item.getOneAttributeSimpleValue("reference-number");
@@ -223,14 +210,6 @@ public class MetadataToProtoMetadataParser {
         }
 
         doc.setText(item.getOneAttributeSimpleValue("reference-text"));
-
-        List<YAttribute> refAuthorsNodes = item.getAttributes("reference-parsed-author");
-        for (int i = 0; i < refAuthorsNodes.size(); i++) {
-            Author.Builder refAuthor = yattributeToAuthorMetadata(refAuthorsNodes.get(i));
-            refAuthor.setDocId(doc.getKey().toString());
-            refAuthor.setPositionNumber(i);
-            doc.addAuthor(refAuthor);
-        }
 
         String content = null;
         //References may not contain a title or any other then bibreftext filed
@@ -275,6 +254,28 @@ public class MetadataToProtoMetadataParser {
             }
 
             doc.addClassifCode(ccb.build());
+        }
+
+
+        List<YAttribute> refAuthorsNodes = item.getAttributes("reference-parsed-author");
+
+        List<Author.Builder> authorBuilders = new ArrayList<Author.Builder>(refAuthorsNodes.size());
+
+        for (int i = 0; i < refAuthorsNodes.size(); i++) {
+            Author.Builder refAuthor = yattributeToAuthorMetadata(refAuthorsNodes.get(i));
+            refAuthor.setDocId(doc.getKey().toString());
+            refAuthor.setPositionNumber(i);
+            authorBuilders.add(refAuthor);
+        }
+
+        Collections.sort(authorBuilders, new AuthorBuilderComparator());
+
+        String docKey = setDocKey(doc, authorBuilders);
+
+        for (int i = 0; i < authorBuilders.size(); i++) {
+            setAuthorKey(authorBuilders.get(i), i + 1, docKey);
+            authorBuilders.get(i).setDocId(docKey);
+            doc.addAuthor(authorBuilders.get(i));
         }
 
         return doc;
@@ -394,45 +395,43 @@ public class MetadataToProtoMetadataParser {
             }
         }
 
-        UUID uuId;
-
-        String uuIdStr = yElement.getId();
-        if (uuIdStr.length() >= 36) {
-            uuIdStr = uuIdStr.substring(uuIdStr.length() - 36);
-        }
-
-        try {
-            uuId = UUID.fromString(uuIdStr);
-        } catch (IllegalArgumentException e) {
-            log.warn("Invalid UUID string (document id): \"{}\" -- random UUID will be generated", uuIdStr);
-            uuId = UUID.randomUUID();
-        }
-        docBuilder.setKey(uuId.toString());
         //        docBuilder.setType(HBaseConstants.T_DOCUMENT_COPY);
         YName oneName = yElement.getOneName();
         if (oneName != null) {
             docBuilder.setTitle(yElement.getOneName().getText());
         }
 
+
+        docBuilder.setCollection(collection);
+
+
         List<YContributor> authorNodeList = yElement.getContributors();
-        List<Author> authors = new ArrayList<Author>();
+        List<Author.Builder> authorBuilders = new ArrayList<Author.Builder>();
         for (int i = 0; i < authorNodeList.size(); i++) {
             YContributor currentNode = authorNodeList.get(i);
             if (currentNode != null && currentNode.isPerson() && "author".equals(currentNode.getRole())) {
                 Author.Builder author = MetadataToProtoMetadataParser.ycontributorToAuthorMetadata(currentNode);
-                author.setDocId(uuId.toString());
                 author.setPositionNumber(i);
-                authors.add(author.build());
+                authorBuilders.add(author);
             }
         }
-        docBuilder.addAllAuthor(authors);
 
+        Collections.sort(authorBuilders, new AuthorBuilderComparator());
+
+        String docKey = setDocKey(docBuilder, authorBuilders);
+
+        for (int i = 0; i < authorBuilders.size(); i++) {
+            setAuthorKey(authorBuilders.get(i), i + 1, docKey);
+            authorBuilders.get(i).setDocId(docKey);
+            docBuilder.addAuthor(authorBuilders.get(i));
+        }
+        
         List<YRelation> refNodes = yElement.getRelations("reference-to");
         List<DocumentMetadata> references = new ArrayList<DocumentMetadata>();
         if (refNodes != null && refNodes.size() > 0) {
             for (int i = 0; i < refNodes.size(); i++) {
                 DocumentMetadata.Builder refMetadata = MetadataToProtoMetadataParser.yrelationToDocumentMetadata(refNodes.get(i));
-                refMetadata.setSource(uuId.toString());
+                refMetadata.setSource(docKey);
                 if (refMetadata != null) {
                     // quick dirty fix
                     refMetadata.setBibRefPosition(i);
@@ -442,10 +441,51 @@ public class MetadataToProtoMetadataParser {
         }
 
         docBuilder.addAllReference(references);
-
-        docBuilder.setCollection(collection);
+        
 
         return docBuilder.build();
+    }
+
+    private static String setDocKey(DocumentMetadata.Builder docBuilder, List<Author.Builder> authorBuilders) {
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(docBuilder.getTitle()).append("#");
+        for (Author.Builder authorBuilder : authorBuilders) {
+            sb.append(authorBuilder.getSurname()).append(" ").append(authorBuilder.getForenames()).append("#");
+        }
+        sb.append(docBuilder.getYear()).append("#")
+                .append(docBuilder.getAbstrakt()).append("#")
+                .append(docBuilder.getDoi()).append("#")
+                .append(docBuilder.getIssn()).append("#")
+                .append(docBuilder.getIsbn()).append("#")
+                .append(docBuilder.getIssue()).append("#")
+                .append(docBuilder.getJournal()).append("#")
+                .append(docBuilder.getPages()).append("#")
+                .append(docBuilder.getVolume()).append("#");
+
+        String key = UUID.nameUUIDFromBytes(sb.toString().getBytes()).toString();
+        docBuilder.setKey(key);
+        return key;
+    }
+
+    private static void setAuthorKey(Author.Builder authorBuilder, int order, String docId) {
+        authorBuilder.setKey(docId + "#c" + order);
+    }
+
+    private static class AuthorBuilderComparator implements Comparator<Author.Builder> {
+
+        @Override
+        public int compare(Author.Builder o1, Author.Builder o2) {
+
+            int compareSurnames = o1.getSurname().compareTo(o2.getSurname());
+            int compareForenames = o1.getForenames().compareTo(o2.getForenames());
+
+            if (compareSurnames != 0) {
+                return compareSurnames;
+            } else {
+                return compareForenames;
+            }
+        }
     }
 
     public static List<DocumentMetadata> parseStream(InputStream stream, MetadataType type, String collection) {
