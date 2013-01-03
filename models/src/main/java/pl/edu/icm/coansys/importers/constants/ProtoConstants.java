@@ -12,6 +12,7 @@ public class ProtoConstants {
     }
     
     public static final String authorExtIdZbl = "author.extid.zbl";
+    public static final String authorExtIdBwmeta = "author.extid.bwmeta";
     public static final String documentClassifCodeMsc = "document.classifcode.msc";
     public static final String documentClassifCodePacs = "document.classifcode.pacs";
     public static final String documentExtIdMr = "document.extid.mr";
