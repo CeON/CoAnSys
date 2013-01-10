@@ -12,7 +12,7 @@ import annotation.tailrec
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 object author_matching {
-  def roughMatching(exactMatches: Set[(Int, Int)]) = {
+  def nonOverlappingMatching(exactMatches: Set[(Int, Int)]) = {
     val len1 = exactMatches.toIterable.unzip._1.max
     val len2 = exactMatches.toIterable.unzip._2.max
     val roughMatchingVal = collections.tabulate[Int](len1 + 1, len2 + 1) {
@@ -46,7 +46,12 @@ object author_matching {
     extract(len1 + 1, len2 + 1)
   }
 
-  def matchingTokens(tokens1: List[String], tokens2: List[String]) = for {
+  /**
+   * Returns a list of matching tokens indices. Exact match is used.
+   *
+   * @return pairs of matching tokens indices
+   */
+  def exactMatchingTokens(tokens1: List[String], tokens2: List[String]) = for {
     (w, i) <- tokens1.zipWithIndex
     (v, j) <- tokens2.zipWithIndex
     if w == v
@@ -56,18 +61,31 @@ object author_matching {
   def matchFactor(tokens1: List[String], tokens2: List[String]) = {
     val len1 = tokens1.length
     val len2 = tokens2.length
-    val extendedMatchingTokens =
-      matchingTokens(tokens1, tokens2).map {
+
+    //Add begin and end tokens (they always match)
+    val extendedExactMatchingTokens =
+      exactMatchingTokens(tokens1, tokens2).map {
         case (x, y) => (x + 1, y + 1)
       }.toSet + ((0, 0)) + ((len1 + 1, len2 + 1))
-    val rough = roughMatching(extendedMatchingTokens)
 
-    val boundaries = rough.map {
+    // Its a matching whose match edges don't overlap
+    val nonOverlapping = nonOverlappingMatching(extendedExactMatchingTokens)
+
+    // Average positions of matching tokens
+    val boundaries = nonOverlapping.map {
       case (i, j) => (i.toDouble / (len1 + 1) + j.toDouble / (len2 + 1)) / 2
     }
-    val alignment = new Alignment(rough.unzip._1, rough.unzip._2, boundaries)
+
+    val alignment = new Alignment(nonOverlapping.unzip._1, nonOverlapping.unzip._2, boundaries)
 
     val dists = Array.tabulate(len1, len2)(alignment.distance)
+
+    val importance1 = Array.tabulate(len1) {
+      i => val v = tokens1(i).length.toDouble / tokens1.mkString("").length; v
+    }
+    val importance2 = Array.tabulate(len2) {
+      i => val v = tokens2(i).length.toDouble / tokens2.mkString("").length; v
+    }
 
     val editDists = Array.tabulate(len1, len2) {
       (i, j) =>
@@ -81,15 +99,51 @@ object author_matching {
     }
 
     val maxLen = math.max(len1, len2)
-    val distTransform: Double => Double = SigmoidFunction.gen(0.01, 8.0 / ((len1 + len2) / 2.0))
-    val editDistTransform: Int => Double = ((i: Int) => i.toDouble) andThen SigmoidFunction.gen(0.01, 4)
+    val distTransform: Double => Double = SigmoidFunction.genBetter(0.01, 6.0 / ((len1 + len2) / 2.0))
+    val editDistTransform: Int => Double = ((i: Int) => i.toDouble) andThen SigmoidFunction.genBetter(0.01, 4)
     val weights = Array.tabulate(maxLen, maxLen) {
       case (i, j) if i < len1 && j < len2 =>
-        distTransform(dists(i)(j)) * editDistTransform(editDists(i)(j))
-      case _ => 0
+        distTransform(dists(i)(j)) * editDistTransform(editDists(i)(j)) * (importance1(i) + importance2(j))
+      case _ => 0.0
+    }
+    val maxWeight = weights.flatten.max
+    val aleredWeights = Array.tabulate(maxLen, maxLen) {
+      (i, j) => maxWeight - weights(i)(j)
     }
 
+    val matching = new HungarianAlgorithm(aleredWeights).execute()
 
+    (matching.zipWithIndex.map {
+      case (j, i) => weights(i)(j)
+    }.sum) / (importance1.sum + importance2.sum)
   }
 
+  def main(args: Array[String]) {
+    val cases = List(
+      ("ala ma kota", "kot ma ale"),
+      ("Jan Kowalski", "Jan Kowalski"),
+      ("J Kowalski", "Jan Kowalski"),
+      ("Kowalski", "Jan Kowalski"),
+      ("Jan Kowalski", "Kowalski Jan"),
+      ("Jan Kowalski", "Józef Kowalski"),
+      ("Jan Kowalski", "J Kowalski"),
+      ("Jan Kowalski", "Kowalski J"),
+      ("Jan Kowalski", "Jan A Kowalski"),
+      ("Jan Kowalski", "Kowalski J A"),
+      ("Jan Kowalski", "Jan A Kowalski"),
+      ("Andrzej Nowak", "Kowalski J A"),
+      ("Jan Kowalski Andrzej Nowak", "Kowalski J A Nowak A S"),
+      ("Jan Kowalski Andrzej Nowak Krzysztof Tyszkiewicz", "Kowalski J A Nowak A S Tyszkiewicz K J"),
+      ("Jan Kowalski Andrzej Nowak Krzysztof Tyszkiewicz", "Kowalski J A Nowak A S Tyszkiewicz K J Banasiak M"),
+      ("Jan Kowalski Andrzej Nowak Krzysztof Tyszkiewicz", "Kowalski J A Banasiak M Nowak A S Tyszkiewicz K J"),
+      ("Jan Kowalski Andrzej Nowak", "Jan A Kowalski"),
+      ("Jan Kowalski Andrzej Kowalski", "Jan A Kowalski"),
+      ("Jan Kowalski Andrzej Nowak", "Jan W Kowalski"),
+      ("Jan Kowalski Andrzej Kowalski", "Jan W Kowalski"),
+      ("Jan Kowalski Andrzej Nowak", "Andrzej Nowak Jan Kowalski"))
+    for ((s1, s2) <- cases) {
+      print("---%s--- ---%s--- ".format(s1, s2))
+      println(matchFactor(s1.split(" ").toList, s2.split(" ").toList))
+    }
+  }
 }

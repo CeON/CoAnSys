@@ -14,13 +14,13 @@ import author_matching._
 class author_matchingTest {
   @Test(groups = Array("fast"))
   def matchingTokensTest() {
-    assertEquals(matchingTokens("ala ma kota".split(" ").toList, "kot ma ale".split(" ").toList), List((1, 1)))
-    assertEquals(matchingTokens("ala ma kota".split(" ").toList, "kota ala ma".split(" ").toList), List((0, 1), (1, 2), (2, 0)))
+    assertEquals(exactMatchingTokens("ala ma kota".split(" ").toList, "kot ma ale".split(" ").toList), List((1, 1)))
+    assertEquals(exactMatchingTokens("ala ma kota".split(" ").toList, "kota ala ma".split(" ").toList), List((0, 1), (1, 2), (2, 0)))
   }
 
   @Test(groups = Array("fast"))
   def roughMatchingTest() {
-    assertEquals(roughMatching(Set((0, 0), (1, 1))), List((0, 0), (1, 1)))
-    assertEquals(roughMatching(Set((0, 0), (1, 4), (2, 2), (3, 3), (5, 5))), List((0, 0), (2, 2), (3, 3), (5, 5)))
+    assertEquals(nonOverlappingMatching(Set((0, 0), (1, 1))), List((0, 0), (1, 1)))
+    assertEquals(nonOverlappingMatching(Set((0, 0), (1, 4), (2, 2), (3, 3), (5, 5))), List((0, 0), (2, 2), (3, 3), (5, 5)))
   }
 }

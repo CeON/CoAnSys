@@ -7,6 +7,8 @@ package pl.edu.icm.coansys.citations.util
 import collection.SortedMap
 
 /**
+ * There are some indices with specified position. Others position is defined in respect to adjacent defined indices.
+ *
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 class PositionMap(map: SortedMap[Int, Double]) {

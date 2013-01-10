@@ -23,6 +23,20 @@ class SigmoidFunctionTest {
       assertEquals(f(0), 1 - th, 0.000001)
       assertEquals(f(s), th, 0.000001)
     }
+  }
+
+  @Test(groups = Array("fast"))
+  def genBetterTest() {
+    val threshold = List(0.05, 0.001)
+    val span = List(10.0, 40.0)
+    for (
+      th <- threshold;
+      s <- span
+    ) {
+      val f = SigmoidFunction.genBetter(th, s)
+      assertEquals(f(0), 1, 0.000001)
+      assertEquals(f(s), th, 0.000001)
+    }
 
 
   }
