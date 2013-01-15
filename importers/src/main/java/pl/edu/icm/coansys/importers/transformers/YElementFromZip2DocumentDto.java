@@ -100,9 +100,8 @@ public class YElementFromZip2DocumentDto {
                         mediaBuilder.setMediaType(type);
                         byte[] content = IOUtils.toByteArray(pdfIS);
                         mediaBuilder.setContent(ByteString.copyFrom(content));
-                        mediaBuilder.setSourcePath(foundPath);
-                        mediaBuilder.setSourceArchive(currentZipArchive.getZipFilePath());
-                        mediaBuilder.setSourcePathFilesize(content.length);
+                        mediaBuilder.setSourcePath(currentZipArchive.getZipFilePath() + "#" + foundPath);
+                        mediaBuilder.setSourceFilesize(content.length);
                         
                         docDTO.addMedia(mediaBuilder.build());
                         docDTO.addMediaType(type);

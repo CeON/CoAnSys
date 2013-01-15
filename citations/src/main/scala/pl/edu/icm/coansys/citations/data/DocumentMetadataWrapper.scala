@@ -14,7 +14,7 @@ class DocumentMetadataWrapper(val meta: DocumentMetadata) {
   def id: String = meta.getKey
 
   def normalisedAuthorTokens: Iterable[String] =
-    misc.normalizedAuthorTokensFromAuthorList(meta)
+    misc.normalizedAuthorTokensFromAuthorList(meta.getBasicMetadata)
 
   override def equals(other: Any): Boolean = other match {
     case that: DocumentMetadataWrapper => id == that.id

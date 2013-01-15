@@ -137,7 +137,6 @@ public class BwmetaToDocumentWraperSequenceFileWriter {
         byte[] documentMetadataBytes = documentMetadata.toByteArray();
         if (documentMetadataBytes.length > 0) {
             dw.setDocumentMetadata(documentMetadata);
-            LOGGER.trace("\tArchiveZip = " + documentMetadata.getSourceArchive());
             LOGGER.trace("\tSourcePath = " + documentMetadata.getSourcePath());
             LOGGER.trace("\tDocumentMetadata size: " + documentMetadataBytes.length);
             metadataCount++;
@@ -149,8 +148,7 @@ public class BwmetaToDocumentWraperSequenceFileWriter {
             dw.setMediaContainer(mediaConteiner);
             LOGGER.info("\tMediaConteiner size: " + (mediaConteinerBytes.length / 1024 / 1024) + "MB");
             for (Media media : mediaConteiner.getMediaList()) {
-                long size = media.getSourcePathFilesize() / 1024 / 1024;
-                LOGGER.info("\tArchiveZip = " + media.getSourceArchive());
+                long size = media.getSourceFilesize() / 1024 / 1024;
                 LOGGER.info("\tSourcePath = " + media.getSourcePath());
                 LOGGER.info("\tSourcePathFilesize = " + size + "MB");
                 mediaCount++;

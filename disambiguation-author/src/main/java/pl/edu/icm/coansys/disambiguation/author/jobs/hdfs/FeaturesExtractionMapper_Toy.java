@@ -85,7 +85,7 @@ public class FeaturesExtractionMapper_Toy extends Mapper<BytesWritable, BytesWri
         //[which will be passes to the object authorId2FeatureMap] 
         createDocumentBasedFeatureMap(docBasedFeature, dm);
         //(2) for each of authors ...
-        for (Author a : dm.getAuthorList()) {
+        for (Author a : dm.getBasicMetadata().getAuthorList()) {
             String authId = a.getKey();
             TextTextArrayMapWritable featureName2FeatureValuesMap =
                     new TextTextArrayMapWritable();

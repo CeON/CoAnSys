@@ -90,7 +90,7 @@ public class FeaturesExtractionMapper_Toy extends TableMapper<Text, TextTextArra
         //[which will be passes to the object authorId2FeatureMap] 
         createDocumentBasedFeatureMap(docBasedFeature, dm);
         //(2) for each of authors ...
-        for (Author a : dm.getAuthorList()) {
+        for (Author a : dm.getBasicMetadata().getAuthorList()) {
             String authId = a.getKey();
             TextTextArrayMapWritable featureName2FeatureValuesMap =
                     new TextTextArrayMapWritable();
@@ -136,7 +136,7 @@ public class FeaturesExtractionMapper_Toy extends TableMapper<Text, TextTextArra
             firstIndex++;
             if (fe instanceof DocumentBased) {
                 docBasedFeature.put(featureInfos.get(firstIndex).getDisambiguatorName(),
-                        fe.extract(dm, null));
+                        fe.extract(dm));
             }
         }
     }
