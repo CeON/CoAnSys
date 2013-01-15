@@ -75,7 +75,7 @@ public class EXTRACT_KEY_MSCCATEG extends EvalFunc<Tuple>{
 	        String key = dm.getKey();
 	        DataBag db = new DefaultDataBag();
 	        
-	        for(ClassifCode code : dm.getClassifCodeList())
+	        for(ClassifCode code : dm.getBasicMetadata().getClassifCodeList())
 	        	if(ProtoConstants.documentClassifCodeMsc.equals(code.getSource()))
 	        		db.add(TupleFactory.getInstance().newTuple(code.getValueList()));
 	        
