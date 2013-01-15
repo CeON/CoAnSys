@@ -9,9 +9,8 @@ import com.nicta.scoobi.application.ScoobiApp
 import com.nicta.scoobi.core.DList
 import com.nicta.scoobi.Persist._
 import com.nicta.scoobi.InputsOutputs._
-import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata
+import pl.edu.icm.coansys.importers.models.DocumentProtos.{ReferenceMetadata, BasicMetadata, DocumentMetadata, DocumentWrapper}
 import pl.edu.icm.coansys.importers.models.PICProtos
-import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentWrapper
 import org.apache.hadoop.io.BytesWritable
 import pl.edu.icm.coansys.citations.util.AugmentedDList.augmentDList
 import pl.edu.icm.coansys.citations.indices.{SimpleTextIndex, AuthorIndex}
@@ -74,13 +73,19 @@ object Matcher extends ScoobiApp {
       (b1.keySet intersect b2.keySet).map(c => math.min(b1(c), b2(c))).sum
     def charsCount(b: BagOfChars) =
       b.map(_._2).sum
+    def extractedTitle(basicMeta: BasicMetadata) =
+      basicMeta.getTitleList.toIterable.map(_.getText).mkString(" ")
 
-    val citationString = if (citation.meta.hasTitle) citation.meta.getTitle else citation.meta.getText
+    val citationString =
+      if (citation.meta.getBasicMetadata.getTitleCount > 0)
+        extractedTitle(citation.meta.getBasicMetadata)
+      else
+        citation.meta.getRawCitationText
     //val lcsLen = strings.lcs(citationString, document.meta.getTitle).length
     //val minLen = math.min(citation.meta.getTitle.length, document.meta.getTitle.length)
     //lcsLen.toDouble / minLen
     val citationChars = bagOfChars(citationString)
-    val articleTitleChars = bagOfChars(document.meta.getTitle)
+    val articleTitleChars = bagOfChars(extractedTitle(document.meta.getBasicMetadata))
 
     2 * commonCharsCount(citationChars, articleTitleChars).toDouble /
       (charsCount(citationChars) + charsCount(articleTitleChars))
@@ -107,8 +112,8 @@ object Matcher extends ScoobiApp {
             .filter(_._2 >= minimalSimilarity)
         if (!aboveThreshold.isEmpty) {
           val target = aboveThreshold.maxBy(_._2)._1
-          val sourceUuid = cit.meta.getSource
-          val position = cit.meta.getBibRefPosition
+          val sourceUuid = cit.meta.getSourceDocKey
+          val position = cit.meta.getPosition
           val targetExtId = target.getExtId(0).getValue
           Some(sourceUuid, (position, targetExtId))
         }
@@ -131,7 +136,8 @@ object Matcher extends ScoobiApp {
   }
 
   def readCitationsFromSeqFiles(uris: List[String]): DList[CitationWrapper] = {
-    implicit val converter = new BytesConverter[DocumentMetadata](_.toByteArray, DocumentMetadata.parseFrom(_))
+    implicit val documentConverter = new BytesConverter[DocumentMetadata](_.toByteArray, DocumentMetadata.parseFrom(_))
+    implicit val referenceConverter = new BytesConverter[ReferenceMetadata](_.toByteArray, ReferenceMetadata.parseFrom(_))
     convertValueFromSequenceFile[DocumentMetadata](uris)
       .flatMap(_.getReferenceList.toIterable)
       .map(new CitationWrapper(_))
@@ -139,6 +145,7 @@ object Matcher extends ScoobiApp {
 
   def readCitationsFromDocumentsFromSeqFiles(uris: List[String]): DList[CitationWrapper] = {
     implicit val documentConverter = new BytesConverter[DocumentMetadata](_.toByteArray, DocumentMetadata.parseFrom(_))
+    implicit val referenceConverter = new BytesConverter[ReferenceMetadata](_.toByteArray, ReferenceMetadata.parseFrom(_))
     implicit val wrapperConverter = new BytesConverter[DocumentWrapper](_.toByteArray, DocumentWrapper.parseFrom(_))
     convertValueFromSequenceFile[DocumentWrapper](uris)
       .flatMap(_.getDocumentMetadata.getReferenceList)
