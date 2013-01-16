@@ -96,7 +96,7 @@ public class HBaseRestReader_Bwmeta {
             	
             	if(scannerResult.getValue(Bytes.toBytes(HBaseConstant.FAMILY_METADATA), Bytes.toBytes(HBaseConstant.FAMILY_METADATA_QUALIFIER_PROTO)) != null) {
             		DocumentMetadata dm = DocumentMetadata.parseFrom(scannerResult.value());
-            		for(Author a : dm.getAuthorList()){
+            		for(Author a : dm.getBasicMetadata().getAuthorList()){
             			names.add(a.getForenames() + " " + a.getSurname());
             		}
             		rowAuthorsMap.put(rowId, names);

@@ -7,29 +7,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.*;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import pl.edu.icm.coansys.importers.ZipArchive;
 import pl.edu.icm.coansys.importers.constants.ProtoConstants;
-import pl.edu.icm.coansys.importers.models.DocumentProtos;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.Author;
-import pl.edu.icm.coansys.importers.models.DocumentProtos.Auxiliar;
+import pl.edu.icm.coansys.importers.models.DocumentProtos.BasicMetadata;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.ClassifCode;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
-import pl.edu.icm.coansys.importers.models.DocumentProtos.ExtId;
-import pl.edu.icm.model.bwmeta.YAncestor;
-import pl.edu.icm.model.bwmeta.YAttribute;
-import pl.edu.icm.model.bwmeta.YCategoryRef;
-import pl.edu.icm.model.bwmeta.YContributor;
-import pl.edu.icm.model.bwmeta.YDescription;
-import pl.edu.icm.model.bwmeta.YElement;
-import pl.edu.icm.model.bwmeta.YExportable;
-import pl.edu.icm.model.bwmeta.YName;
-import pl.edu.icm.model.bwmeta.YRelation;
-import pl.edu.icm.model.bwmeta.YStructure;
-import pl.edu.icm.model.bwmeta.YTagList;
+import pl.edu.icm.coansys.importers.models.DocumentProtos.KeyValue;
+import pl.edu.icm.coansys.importers.models.DocumentProtos.ReferenceMetadata;
+import pl.edu.icm.coansys.importers.models.DocumentProtos.TextWithLanguage;
+import pl.edu.icm.model.bwmeta.*;
+import pl.edu.icm.model.bwmeta.constants.YConstants;
 import pl.edu.icm.model.bwmeta.constants.YaddaIdConstants;
 import pl.edu.icm.model.bwmeta.transformers.BwmetaTransformerConstants;
 import pl.edu.icm.model.general.MetadataTransformers;
@@ -119,9 +109,24 @@ public class MetadataToProtoMetadataParser {
 
     }
 
+    /**
+     * Converts the YContributor object coming from a YElement
+     *
+     * @param yContributor from YElement
+     * @return protocol buffers builder for Author
+     */
     private static Author.Builder ycontributorToAuthorMetadata(YContributor yContributor) {
-        Author.Builder authorBuilder = DocumentProtos.Author.newBuilder();
-        
+        Author.Builder authorBuilder = Author.newBuilder();
+
+        //identifier of relating YPerson object
+        String identity = yContributor.getIdentity();
+        if (identity != null && !identity.trim().isEmpty()) {
+            KeyValue.Builder extId = KeyValue.newBuilder();
+            extId.setKey(ProtoConstants.authorExtIdBwmeta);
+            extId.setValue(identity);
+            authorBuilder.addExtId(extId);
+        }
+
         List<YName> names = yContributor.getNames();
         for (YName yName : names) {
             String type = yName.getType();
@@ -131,30 +136,37 @@ public class MetadataToProtoMetadataParser {
                 authorBuilder.setForenames(yName.getText());
             } else if ("surname".equals(type)) {
                 authorBuilder.setSurname(yName.getText());
+            } else { //type not set
+                authorBuilder.setName(yName.getText());
             }
         }
 
+        /*
+         * Contributors' attributes could be contact informations like e-mail,
+         * phone number etc, identifiers from external databases...
+         */
         List<YAttribute> attrs = yContributor.getAttributes();
         for (YAttribute yAttribute : attrs) {
             String key = yAttribute.getKey();
-            if (key.equals("contact-email")) {
+            if (key.equals(YConstants.AT_CONTACT_EMAIL)) {
                 if (yAttribute.getValue() != null) {
                     authorBuilder.setEmail(yAttribute.getValue());
                 }
-            } else if (key.equals("zbl.author-fingerprint")) {
+            } else if (key.equals(YConstants.AT_ZBL_AUTHOR_FINGERPRINT)) {
                 if (yAttribute.getValue() != null) {
-                    ExtId.Builder extId = ExtId.newBuilder();
-                    extId.setSource(ProtoConstants.authorExtIdZbl);
+                    KeyValue.Builder extId = KeyValue.newBuilder();
+                    extId.setKey(ProtoConstants.authorExtIdZbl);
                     extId.setValue(yAttribute.getValue());
                     authorBuilder.addExtId(extId.build());
                 }
-            } else if (key.equals("identity")) {
+                // else if ... are there another external identifiers?
+            } else {
                 String authorIdentity = yAttribute.getValue();
                 if (authorIdentity != null && !authorIdentity.trim().isEmpty()) {
-                    ExtId.Builder extId = ExtId.newBuilder();
-                    extId.setSource(ProtoConstants.authorExtIdBwmeta);
-                    extId.setValue(authorIdentity);
-                    authorBuilder.addExtId(extId);
+                    KeyValue.Builder aux = KeyValue.newBuilder();
+                    aux.setKey(key);
+                    aux.setValue(authorIdentity);
+                    authorBuilder.addAuxiliarInfo(aux);
                 }
             }
         }
@@ -162,209 +174,220 @@ public class MetadataToProtoMetadataParser {
         return authorBuilder;
     }
 
-    private static Author.Builder yattributeToAuthorMetadata(YAttribute node) {
-        Author.Builder author = DocumentProtos.Author.newBuilder();
+    /**
+     * Author from parsed reference
+     *
+     * @param yAttribute coming from parsed reference
+     * @return protocol buffers builder for Author
+     */
+    private static Author.Builder yattributeToAuthorMetadata(YAttribute yAttribute) {
+        Author.Builder author = Author.newBuilder();
 //      author.setType(HBaseConstants.T_AUTHOR_COPY);
         String content;
-        if ((content = node.getValue()) != null) {
+        if ((content = yAttribute.getValue()) != null) {
             author.setName(content);
         }
-        if ((content = node.getOneAttributeSimpleValue("reference-parsed-author-forenames")) != null) {
+        if ((content = yAttribute.getOneAttributeSimpleValue("reference-parsed-author-forenames")) != null) {
             author.setForenames(content);
         }
-        if ((content = node.getOneAttributeSimpleValue("reference-parsed-author-surname")) != null) {
+        if ((content = yAttribute.getOneAttributeSimpleValue("reference-parsed-author-surname")) != null) {
             author.setSurname(content);
         }
-        if ((content = node.getOneAttributeSimpleValue("zbl.author-fingerprint")) != null) {
-            ExtId.Builder extId = ExtId.newBuilder();
-            extId.setSource(ProtoConstants.authorExtIdZbl);
+        if ((content = yAttribute.getOneAttributeSimpleValue("zbl.author-fingerprint")) != null) {
+            KeyValue.Builder extId = KeyValue.newBuilder();
+            extId.setKey(ProtoConstants.authorExtIdZbl);
             extId.setValue(content);
             author.addExtId(extId.build());
         }
         return author;
     }
 
-    private static DocumentMetadata.Builder yrelationToDocumentMetadata(YRelation item) {
-        DocumentMetadata.Builder doc = DocumentProtos.DocumentMetadata.newBuilder();
+    /**
+     * ReferenceMetadata from YRelation
+     *
+     * @param item
+     * @return protocol buffers builder for ReferenceMetadata
+     */
+    private static ReferenceMetadata.Builder yrelationToReferenceMetadata(YRelation item) {
+        ReferenceMetadata.Builder reference = ReferenceMetadata.newBuilder();
+        BasicMetadata.Builder basicMetadata = BasicMetadata.newBuilder();
 
-        Auxiliar.Builder aux = Auxiliar.newBuilder();
-        aux.setType(ProtoConstants.documentAuxiliaryTypeOfDocument);
-        aux.setValue(ProtoConstants.documentAuxiliaryTypeOfDocument_Reference);
-        doc.addAuxiliarInfo(aux);
+        ////// Parse YAttributes
 
-//        docBuilder.setType(HBaseConstants.T_REFERENCE);
+        //pareparation -- initialisation of some objects to be filled while parsing YAttributes:
+        List<Author.Builder> authorBuilders = new ArrayList<Author.Builder>();
+        int authorNumber = 0;
+        ClassifCode.Builder mscCodes = ClassifCode.newBuilder();
+        mscCodes.setSource(ProtoConstants.documentClassifCodeMsc);
+        ClassifCode.Builder pacsCodes = ClassifCode.newBuilder();
+        pacsCodes.setSource(ProtoConstants.documentClassifCodePacs);
 
-        String attr = item.getOneAttributeSimpleValue("reference-number");
-        if (attr != null) {
-            Double refPos;
-            try {
-                refPos = Double.parseDouble(attr);
-            } catch (NumberFormatException ex) {
-                refPos = null;
+        //parsing:
+        for (YAttribute yAttr : item.getAttributes()) {
+            if (yAttr != null) {
+                if (yAttr.getKey().equals("reference-text")) {
+                    reference.setRawCitationText(yAttr.getValue());
+                } else if (yAttr.getKey().equals("reference-number")) {
+                    Double refPos;
+                    try {
+                        refPos = Double.parseDouble(yAttr.getValue());
+                        reference.setPosition((int) (double) refPos);
+                    } catch (NumberFormatException ex) {
+                        //don't set anything
+                    }
+                } else if (yAttr.getKey().equals("reference-parsed-title")) {
+                    TextWithLanguage.Builder title = TextWithLanguage.newBuilder();
+                    title.setText(yAttr.getValue());
+                    basicMetadata.addTitle(title);
+                } else if (yAttr.getKey().equals("reference-parsed-journal")) {
+                    basicMetadata.setJournal(yAttr.getValue());
+                } else if (yAttr.getKey().equals("reference-parsed-volume")) {
+                    basicMetadata.setVolume(yAttr.getValue());
+                } else if (yAttr.getKey().equals("reference-parsed-issue")) {
+                    basicMetadata.setIssue(yAttr.getValue());
+                } else if (yAttr.getKey().equals("reference-parsed-pages")) {
+                    basicMetadata.setPages(yAttr.getValue());
+                } else if (yAttr.getKey().equals(YaddaIdConstants.CATEGORY_CLASS_MSC)) {
+                    mscCodes.addValue(yAttr.getValue());
+                    //TODO czesc kodow MSC mylnie trafia do kwordow - mozna je stamtad wyciagnac porownujac z wzorcem kodu
+                } else if (yAttr.getKey().equals(YaddaIdConstants.CATEGORY_CLASS_PACS)) {
+                    pacsCodes.addValue(yAttr.getValue());
+                } else if (yAttr.getKey().equals("reference-parsed-author")) {
+                    Author.Builder refAuthor = yattributeToAuthorMetadata(yAttr);
+                    refAuthor.setPositionNumber(++authorNumber);
+                    authorBuilders.add(refAuthor);
+                }
             }
-            if (refPos != null) {
-                double doubleRefPos = refPos;
-                int intRefPos = (int) doubleRefPos;
-                doc.setBibRefPosition(intRefPos);
-            }
         }
 
-        doc.setText(item.getOneAttributeSimpleValue("reference-text"));
-
-        String content = null;
-        //References may not contain a title or any other then bibreftext filed
-        if ((content = item.getOneAttributeSimpleValue("reference-parsed-title")) != null) {
-            doc.setTitle(content);
+        //finishing
+        if (mscCodes.getValueCount() > 0) {
+            basicMetadata.addClassifCode(mscCodes);
         }
-        if ((content = item.getOneAttributeSimpleValue("reference-parsed-journal")) != null) {
-            doc.setJournal(content);
-        }
-        if ((content = item.getOneAttributeSimpleValue("reference-parsed-volume")) != null) {
-            doc.setVolume(content);
-        }
-        if ((content = item.getOneAttributeSimpleValue("reference-parsed-issue")) != null) {
-            doc.setIssue(content);
-        }
-        if ((content = item.getOneAttributeSimpleValue("reference-parsed-pages")) != null) {
-            doc.setPages(content);
+        if (pacsCodes.getValueCount() > 0) {
+            basicMetadata.addClassifCode(pacsCodes);
         }
 
-        //TODO czesc kodow MSC mylnie trafia do kwordow - mozna je stamtad wyciagnac porownujac z wzorcem kodu
-        List<YAttribute> refMscCodesNodes = item.getAttributes(YaddaIdConstants.CATEGORY_CLASS_MSC);
-        if (refMscCodesNodes.size() > 0) {
-            ClassifCode.Builder ccb = ClassifCode.newBuilder();
-            ccb.setSource(ProtoConstants.documentClassifCodeMsc);
+        //docKey depends on authors sorted by name
+        Collections.sort(authorBuilders, new AuthorsComparatorByName());
+        String docKey = calculateDocKey(basicMetadata, authorBuilders, null);
+        //In BasicMetadata authors are sorted by position, so re-sorting...
+        Collections.sort(authorBuilders, new AuthorsComparatorByPosition());
 
-            for (int i = 0; i < refMscCodesNodes.size(); i++) {
-                ccb.addValue(refMscCodesNodes.get(i).getValue());
-            }
-
-            doc.addClassifCode(ccb.build());
-        }
-
-
-        List<YAttribute> refPacsCodesNodes = item.getAttributes(YaddaIdConstants.CATEGORY_CLASS_PACS);
-
-        if (refPacsCodesNodes.size() > 0) {
-            ClassifCode.Builder ccb = ClassifCode.newBuilder();
-            ccb.setSource(ProtoConstants.documentClassifCodePacs);
-
-            for (int i = 0; i < refPacsCodesNodes.size(); i++) {
-                ccb.addValue(refPacsCodesNodes.get(i).getValue());
-            }
-
-            doc.addClassifCode(ccb.build());
-        }
-
-
-        List<YAttribute> refAuthorsNodes = item.getAttributes("reference-parsed-author");
-
-        List<Author.Builder> authorBuilders = new ArrayList<Author.Builder>(refAuthorsNodes.size());
-
-        for (int i = 0; i < refAuthorsNodes.size(); i++) {
-            Author.Builder refAuthor = yattributeToAuthorMetadata(refAuthorsNodes.get(i));
-            refAuthor.setDocId(doc.getKey().toString());
-            refAuthor.setPositionNumber(i);
-            authorBuilders.add(refAuthor);
-        }
-
-        Collections.sort(authorBuilders, new AuthorBuilderComparator());
-
-        String docKey = setDocKey(doc, authorBuilders);
-
+        //some data in authorBuilders depends on docKey...
         for (int i = 0; i < authorBuilders.size(); i++) {
-            setAuthorKey(authorBuilders.get(i), i + 1, docKey);
-            authorBuilders.get(i).setDocId(docKey);
-            doc.addAuthor(authorBuilders.get(i));
+            Author.Builder authorBuilder = authorBuilders.get(i);
+            authorBuilder.setDocId(docKey);
+            setAuthorKey(authorBuilder);
+
+            basicMetadata.addAuthor(authorBuilder);
         }
 
-        return doc;
+        reference.setBasicMetadata(basicMetadata);
+        return reference;
     }
 
-    public static DocumentMetadata yelementToDocumentMetadata(YElement yElement, ZipArchive zipArchive, String currentXmlPath, String collection) {
+    /**
+     * DocumentMetadata from YElement
+     *
+     * @param yElement
+     * @param zipArchive
+     * @param currentXmlPath
+     * @param collection
+     * @return
+     */
+    public static DocumentMetadata yelementToDocumentMetadata(YElement yElement, ZipArchive zipArchive, String sourcePath, String collection) {
         YStructure struct = yElement.getStructure(YaddaIdConstants.ID_HIERARACHY_JOURNAL);
         if (struct != null && !YaddaIdConstants.ID_LEVEL_JOURNAL_ARTICLE.equals(struct.getCurrent().getLevel())) {
             return null;
         }
 
-        DocumentMetadata.Builder docBuilder = DocumentProtos.DocumentMetadata.newBuilder();
+        DocumentMetadata.Builder docBuilder = DocumentMetadata.newBuilder();
+        BasicMetadata.Builder basicMetadataBuilder = BasicMetadata.newBuilder();
 
-        if (currentXmlPath != null) {
-            docBuilder.setSourcePath(currentXmlPath);
-        }
-        if (zipArchive != null) {
-            docBuilder.setSourceArchive(zipArchive.getZipFilePath());
+        if (sourcePath != null && !sourcePath.isEmpty()) {
+            docBuilder.setSourcePath(sourcePath);
         }
 
-        Auxiliar.Builder aux = Auxiliar.newBuilder();
-        aux.setType(ProtoConstants.documentAuxiliaryTypeOfDocument);
-        aux.setValue(ProtoConstants.documentAuxiliaryTypeOfDocument_Document);
-        docBuilder.addAuxiliarInfo(aux);
-
-        List<String> keywords = Collections.emptyList();
-        YTagList tagList = yElement.getTagList("keyword");
-        if (tagList != null) {
-            keywords = tagList.getValues();
+        //Keywords in YElement are grupped by language;
+        //in protobuf message they are stored in pairs <keyword, language>
+        for (YTagList tagList : yElement.getTagLists()) {
+            String lang = yLangAsString(tagList.getLanguage());
+            for (String keyword : tagList.getValues()) {
+                TextWithLanguage.Builder kwdBuilder = TextWithLanguage.newBuilder();
+                kwdBuilder.setText(keyword);
+                if (lang != null) {
+                    kwdBuilder.setLanguage(lang);
+                }
+                docBuilder.addKeyword(kwdBuilder);
+            }
         }
-        docBuilder.addAllKeyword(keywords);
 
-
-        List<YDescription> abst = yElement.getDescriptions();
-        if (abst != null && abst.size() > 0 && abst.get(0) != null) {
-            docBuilder.setAbstrakt(abst.get(0).getText());
+        // Documents' abstracts
+        List<YDescription> yDescriptions = yElement.getDescriptions();
+        for (YDescription abs : yDescriptions) {
+            if (abs != null) {
+                TextWithLanguage.Builder docAbstract = TextWithLanguage.newBuilder();
+                docAbstract.setText(abs.getText());
+                String lang = yLangAsString(abs.getLanguage());
+                if (lang != null) {
+                    docAbstract.setLanguage(lang);
+                }
+                docBuilder.addDocumentAbstract(docAbstract);
+            }
         }
 
         if (struct != null) {
             YAncestor issue = struct.getAncestor("bwmeta1.level.hierarchy_Journal_Issue");
             if (issue != null && issue.getOneName() != null) {
-                docBuilder.setIssue(issue.getOneName().getText());
+                basicMetadataBuilder.setIssue(issue.getOneName().getText());
             }
             YAncestor volume = struct.getAncestor(YaddaIdConstants.ID_LEVEL_JOURNAL_VOLUME);
             if (volume != null) {
-                docBuilder.setVolume(volume.getOneName().getText());
+                basicMetadataBuilder.setVolume(volume.getOneName().getText());
             }
             YAncestor journal = struct.getAncestor(YaddaIdConstants.ID_LEVEL_JOURNAL_JOURNAL);
             if (journal != null) {
-                docBuilder.setJournal(journal.getOneName().getText());
+                basicMetadataBuilder.setJournal(journal.getOneName().getText());
             }
 
             YAncestor pages = struct.getAncestor(YaddaIdConstants.ID_LEVEL_JOURNAL_ARTICLE);
             if (pages != null) {
-                docBuilder.setPages(pages.getPosition());
+                basicMetadataBuilder.setPages(pages.getPosition());
             }
         }
 
         String content;
         if ((content = yElement.getId(YaddaIdConstants.IDENTIFIER_CLASS_DOI)) != null) {
-            docBuilder.setDoi(content);
+            basicMetadataBuilder.setDoi(content);
         }
         if ((content = yElement.getId(YaddaIdConstants.IDENTIFIER_CLASS_ISSN)) != null) {
-            docBuilder.setIssn(content);
+            basicMetadataBuilder.setIssn(content);
         }
         if ((content = yElement.getId(YaddaIdConstants.IDENTIFIER_CLASS_ISBN)) != null) {
-            docBuilder.setIsbn(content);
+            basicMetadataBuilder.setIsbn(content);
         }
         if ((content = yElement.getId("bwmeta1.id-class.MR")) != null) {
-            ExtId.Builder eib = ExtId.newBuilder();
-            eib.setSource(ProtoConstants.documentExtIdMr);
-            eib.setValue(content);
-            docBuilder.addExtId(eib.build());
+            KeyValue.Builder extId = KeyValue.newBuilder();
+            extId.setKey(ProtoConstants.documentExtIdMr);
+            extId.setValue(content);
+            docBuilder.addExtId(extId);
         }
         if ((content = yElement.getId("oai")) != null) {
-            ExtId.Builder eib = ExtId.newBuilder();
-            eib.setSource(ProtoConstants.documentExtIdOai);
-            eib.setValue(content);
-            docBuilder.addExtId(eib);
+            KeyValue.Builder extId = KeyValue.newBuilder();
+            extId.setKey(ProtoConstants.documentExtIdOai);
+            extId.setValue(content);
+            docBuilder.addExtId(extId);
         }
         if ((content = yElement.getId()) != null) {
-            ExtId.Builder eib = ExtId.newBuilder();
-            eib.setSource(ProtoConstants.documentExtIdBwmeta);
-            eib.setValue(content);
-            docBuilder.addExtId(eib.build());
+            KeyValue.Builder extId = KeyValue.newBuilder();
+            extId.setKey(ProtoConstants.documentExtIdBwmeta);
+            extId.setValue(content);
+            docBuilder.addExtId(extId);
         }
         if ((content = yElement.getId("bwmeta1.id-class.Zbl")) != null) {
-            ExtId.Builder eib = ExtId.newBuilder();
-            eib.setSource(ProtoConstants.documentExtIdZbl);
+            KeyValue.Builder eib = KeyValue.newBuilder();
+            eib.setKey(ProtoConstants.documentExtIdZbl);
             eib.setValue(content);
             docBuilder.addExtId(eib.build());
         }
@@ -388,22 +411,27 @@ public class MetadataToProtoMetadataParser {
                 }
             }
             if (ccodeMSC.getValueCount() > 0) {
-                docBuilder.addClassifCode(ccodeMSC.build());
+                basicMetadataBuilder.addClassifCode(ccodeMSC.build());
             }
             if (ccodePACS.getValueCount() > 0) {
-                docBuilder.addClassifCode(ccodePACS.build());
+                basicMetadataBuilder.addClassifCode(ccodePACS.build());
             }
         }
 
         //        docBuilder.setType(HBaseConstants.T_DOCUMENT_COPY);
-        YName oneName = yElement.getOneName();
-        if (oneName != null) {
-            docBuilder.setTitle(yElement.getOneName().getText());
+
+        //Documents' titles
+        for (YName yName : yElement.getNames()) {
+            TextWithLanguage.Builder title = TextWithLanguage.newBuilder();
+            String lang = yLangAsString(yName.getLanguage());
+            if (lang != null) {
+                title.setLanguage(lang);
+            }
+            title.setText(yName.getText());
+            basicMetadataBuilder.addTitle(title);
         }
 
-
         docBuilder.setCollection(collection);
-
 
         List<YContributor> authorNodeList = yElement.getContributors();
         List<Author.Builder> authorBuilders = new ArrayList<Author.Builder>();
@@ -411,68 +439,90 @@ public class MetadataToProtoMetadataParser {
             YContributor currentNode = authorNodeList.get(i);
             if (currentNode != null && currentNode.isPerson() && "author".equals(currentNode.getRole())) {
                 Author.Builder author = MetadataToProtoMetadataParser.ycontributorToAuthorMetadata(currentNode);
-                author.setPositionNumber(i);
+                author.setPositionNumber(i + 1);
                 authorBuilders.add(author);
             }
         }
 
-        Collections.sort(authorBuilders, new AuthorBuilderComparator());
+        //docKey depends on authors sorted by name
+        Collections.sort(authorBuilders, new AuthorsComparatorByName());
+        String docKey = calculateDocKey(basicMetadataBuilder, authorBuilders, docBuilder.getDocumentAbstractList());
+        docBuilder.setKey(docKey);
+        //In DocumentMetadata authors are sorted by position
+        Collections.sort(authorBuilders, new AuthorsComparatorByPosition());
 
-        String docKey = setDocKey(docBuilder, authorBuilders);
-
+        //some data in authors metadata depend on docKey
         for (int i = 0; i < authorBuilders.size(); i++) {
-            setAuthorKey(authorBuilders.get(i), i + 1, docKey);
-            authorBuilders.get(i).setDocId(docKey);
-            docBuilder.addAuthor(authorBuilders.get(i));
+            Author.Builder authorBuilder = authorBuilders.get(i);
+            authorBuilder.setDocId(docKey);
+            setAuthorKey(authorBuilder);
+            basicMetadataBuilder.addAuthor(authorBuilder);
         }
-        
+
         List<YRelation> refNodes = yElement.getRelations("reference-to");
-        List<DocumentMetadata> references = new ArrayList<DocumentMetadata>();
+        List<ReferenceMetadata> references = new ArrayList<ReferenceMetadata>();
         if (refNodes != null && refNodes.size() > 0) {
             for (int i = 0; i < refNodes.size(); i++) {
-                DocumentMetadata.Builder refMetadata = MetadataToProtoMetadataParser.yrelationToDocumentMetadata(refNodes.get(i));
-                refMetadata.setSource(docKey);
+                ReferenceMetadata.Builder refMetadata = yrelationToReferenceMetadata(refNodes.get(i));
+                refMetadata.setSourceDocKey(docKey);
                 if (refMetadata != null) {
                     // quick dirty fix
-                    refMetadata.setBibRefPosition(i);
+                    refMetadata.setPosition(i);
                     references.add(refMetadata.build());
                 }
             }
         }
-
         docBuilder.addAllReference(references);
-        
 
+        docBuilder.setBasicMetadata(basicMetadataBuilder);
         return docBuilder.build();
     }
 
-    private static String setDocKey(DocumentMetadata.Builder docBuilder, List<Author.Builder> authorBuilders) {
+    /**
+     * Generates an unique key in the UUID format, which is a hash from some
+     * subset of document's metadata
+     *
+     * @param docBuilder
+     * @param authors
+     * @return document's key in the UUID format
+     */
+    private static String calculateDocKey(BasicMetadata.Builder basicMetadata, List<Author.Builder> authors, List<TextWithLanguage> documentAbstracts) {
 
         StringBuilder sb = new StringBuilder();
-        sb.append(docBuilder.getTitle()).append("#");
-        for (Author.Builder authorBuilder : authorBuilders) {
+        for (TextWithLanguage title : basicMetadata.getTitleList()) {
+            sb.append(title.getText()).append("#");
+        }
+        for (Author.Builder authorBuilder : authors) {
             sb.append(authorBuilder.getSurname()).append(" ").append(authorBuilder.getForenames()).append("#");
         }
-        sb.append(docBuilder.getYear()).append("#")
-                .append(docBuilder.getAbstrakt()).append("#")
-                .append(docBuilder.getDoi()).append("#")
-                .append(docBuilder.getIssn()).append("#")
-                .append(docBuilder.getIsbn()).append("#")
-                .append(docBuilder.getIssue()).append("#")
-                .append(docBuilder.getJournal()).append("#")
-                .append(docBuilder.getPages()).append("#")
-                .append(docBuilder.getVolume()).append("#");
+        sb.append(basicMetadata.getYear()).append("#");
+        if (documentAbstracts != null) {
+            for (TextWithLanguage abs : documentAbstracts) {
+                sb.append(abs.getText()).append("#");
+            }
+        }
+        sb.append(basicMetadata.getDoi()).append("#").append(basicMetadata.getIssn()).append("#");
+        sb.append(basicMetadata.getIsbn()).append("#").append(basicMetadata.getIssue()).append("#");
+        sb.append(basicMetadata.getJournal()).append("#").append(basicMetadata.getPages()).append("#");
+        sb.append(basicMetadata.getVolume()).append("#");
 
         String key = UUID.nameUUIDFromBytes(sb.toString().getBytes()).toString();
-        docBuilder.setKey(key);
         return key;
     }
 
-    private static void setAuthorKey(Author.Builder authorBuilder, int order, String docId) {
-        authorBuilder.setKey(docId + "#c" + order);
+    /**
+     * Sets key in Author.Builder protobuf message, constructed from document id
+     * and author's position on authors' list
+     *
+     * @param authorBuilder
+     */
+    private static void setAuthorKey(Author.Builder authorBuilder) {
+        // docId + "#c" + positionNumber
+        authorBuilder.setKey(authorBuilder.getDocId() + "#c"
+                + authorBuilder.getPositionNumber());
     }
 
-    private static class AuthorBuilderComparator implements Comparator<Author.Builder> {
+    private static class AuthorsComparatorByName implements Comparator<Author.Builder> {
 
         @Override
         public int compare(Author.Builder o1, Author.Builder o2) {
@@ -486,6 +536,35 @@ public class MetadataToProtoMetadataParser {
                 return compareForenames;
             }
         }
+    }
+
+    private static class AuthorsComparatorByPosition implements Comparator<Author.Builder> {
+
+        @Override
+        public int compare(Author.Builder o1, Author.Builder o2) {
+            Integer pos1 = o1.getPositionNumber();
+            Integer pos2 = o2.getPositionNumber();
+            return pos1.compareTo(pos2);
+        }
+    }
+
+    /**
+     * Returns a 2-letters language code (like 'en', 'pl' etc.). For some
+     * languages this code isn't defined, in this case the method returns a
+     * bibliographic code, usually a little bit longer.
+     *
+     * @param yLang
+     * @return Short code of language
+     */
+    private static String yLangAsString(YLanguage yLang) {
+        if (yLang == null || yLang.equals(YLanguage.Undetermined)) {
+            return null;
+        }
+        String lang = yLang.getShortCode();
+        if (lang != null && !lang.isEmpty()) {
+            return lang;
+        }
+        return yLang.getBibliographicCode();
     }
 
     public static List<DocumentMetadata> parseStream(InputStream stream, MetadataType type, String collection) {

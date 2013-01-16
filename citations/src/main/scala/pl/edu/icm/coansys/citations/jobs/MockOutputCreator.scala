@@ -31,7 +31,7 @@ object MockOutputCreator extends ScoobiApp {
         val outBuilder = PICProtos.PicOut.newBuilder()
         outBuilder.setDocId(doc.getExtId(0).getValue)
         for (ref <- doc.getReferenceList.toIterable) {
-          outBuilder.addRefs(PICProtos.Reference.newBuilder().setDocId(doc.getExtId(0).getValue).setRefNum(ref.getBibRefPosition))
+          outBuilder.addRefs(PICProtos.Reference.newBuilder().setDocId(doc.getExtId(0).getValue).setRefNum(ref.getPosition))
         }
 
         (doc.getKey, outBuilder.build())

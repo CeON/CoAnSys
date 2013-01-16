@@ -19,10 +19,14 @@ object IndexBuilder extends ScoobiApp {
   override def upload = false
 
   def mockReadDocs(): DList[DocumentMetadataWrapper] = DList.apply[DocumentMetadataWrapper](
-    DocumentMetadata.newBuilder().setKey("1").addAuthor(Author.newBuilder().setKey("1").setName("aaa bbb")).build(),
-    DocumentMetadata.newBuilder().setKey("2").addAuthor(Author.newBuilder().setKey("2").setName("bab ccc")).build(),
-    DocumentMetadata.newBuilder().setKey("3").addAuthor(Author.newBuilder().setKey("3").setName("cc ddd")).build(),
-    DocumentMetadata.newBuilder().setKey("4").addAuthor(Author.newBuilder().setKey("4").setName("ddd eee")).build()
+    DocumentMetadata.newBuilder().setKey("1").setBasicMetadata(
+      BasicMetadata.newBuilder().addAuthor(Author.newBuilder().setKey("1").setName("aaa bbb"))).build(),
+    DocumentMetadata.newBuilder().setKey("2").setBasicMetadata(
+      BasicMetadata.newBuilder().addAuthor(Author.newBuilder().setKey("2").setName("bab ccc"))).build(),
+    DocumentMetadata.newBuilder().setKey("3").setBasicMetadata(
+      BasicMetadata.newBuilder().addAuthor(Author.newBuilder().setKey("3").setName("cc ddd"))).build(),
+    DocumentMetadata.newBuilder().setKey("4").setBasicMetadata(
+      BasicMetadata.newBuilder().addAuthor(Author.newBuilder().setKey("4").setName("ddd eee"))).build()
   )
 
   def readDocsFromSeqFiles(uris: List[String]): DList[DocumentMetadataWrapper] = {

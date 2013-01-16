@@ -35,7 +35,7 @@ public class DocumentProto2EmailExtractor implements Extractor<DocumentMetadata>
         
         DocumentMetadata dm = (DocumentMetadata) input;
         ArrayList<String> ret = new ArrayList<String>();
-        for (Author a : dm.getAuthorList()) {
+        for (Author a : dm.getBasicMetadata().getAuthorList()) {
             if (a.getKey().equals(authId)) {
                 ret.add(a.getEmail());
                 break;

@@ -21,6 +21,9 @@ import pl.edu.icm.coansys.importers.models.DocumentProtos.ClassifCode;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
 
 import com.google.common.base.Joiner;
+import java.util.ArrayList;
+import java.util.List;
+import pl.edu.icm.coansys.importers.models.DocumentProtos.TextWithLanguage;
 
 /**
  *
@@ -79,7 +82,7 @@ public class EXTRACT_KEY_TI_ABS_KW_CATEG_WHEN_CATEG extends EvalFunc<Tuple> {
             DataBag db = new DefaultDataBag();
             int bagsize = 0;
 //	        System.out.print(key+":");
-            for (ClassifCode code : dm.getClassifCodeList()) {
+            for (ClassifCode code : dm.getBasicMetadata().getClassifCodeList()) {
                 for (String co_str : code.getValueList()) {
                     bagsize++;
 //	        		System.out.print(" "+co_str);
@@ -88,16 +91,32 @@ public class EXTRACT_KEY_TI_ABS_KW_CATEG_WHEN_CATEG extends EvalFunc<Tuple> {
             }
 //	        System.out.println("");
             if (bagsize > 0) {
-                Object[] to = new Object[]{key, dm.getTitle(), dm.getAbstrakt(), Joiner.on(" ").join(dm.getKeywordList()), db, bagsize};
+                
+                String titles;
+                String abstracts;
+
+                List<String> titleList = new ArrayList<String>();
+                for (TextWithLanguage title : dm.getBasicMetadata().getTitleList()) {
+                    titleList.add(title.getText());
+                }
+                titles = Joiner.on(" ").join(titleList);
+
+                List<String> abstractsList = new ArrayList<String>();
+                for (TextWithLanguage documentAbstract : dm.getBasicMetadata().getTitleList()) {
+                    abstractsList.add(documentAbstract.getText());
+                }
+                abstracts = Joiner.on(" ").join(abstractsList);
+                
+                Object[] to = new Object[]{key, titles, abstracts, Joiner.on(" ").join(dm.getKeywordList()), db, bagsize};
                 Tuple t = TupleFactory.getInstance().newTuple(Arrays.asList(to));
                 return t;
             }
             return null;
 
         } catch (Exception e) {
-        	// Throwing an exception will cause the task to fail.
+            // Throwing an exception will cause the task to fail.
             throw new IOException("Caught exception processing input row:\n"
-            		+ StackTraceExtractor.getStackTrace(e));
+                    + StackTraceExtractor.getStackTrace(e));
         }
     }
 }

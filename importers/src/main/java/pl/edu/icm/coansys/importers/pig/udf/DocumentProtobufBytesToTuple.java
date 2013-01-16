@@ -25,7 +25,7 @@ public class DocumentProtobufBytesToTuple extends DocumentProtobufToTupleBase {
     @Override
     public MediaContainer getDocumentMedia(Tuple input) throws ExecException, InvalidProtocolBufferException {
         MediaContainer media = null;
-        if (input.size() >= 1) {
+        if (input.size() > 1) {
             DataByteArray protoMedia = (DataByteArray) input.get(1);
             media = MediaContainer.parseFrom(protoMedia.get());
         }
