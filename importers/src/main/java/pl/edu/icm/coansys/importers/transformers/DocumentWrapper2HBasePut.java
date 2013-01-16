@@ -1,6 +1,5 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * (C) 2010-2012 ICM UW. All rights reserved.
  */
 package pl.edu.icm.coansys.importers.transformers;
 
