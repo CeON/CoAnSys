@@ -9,12 +9,13 @@ import com.nicta.scoobi.application.ScoobiApp
 import com.nicta.scoobi.core.DList
 import com.nicta.scoobi.Persist._
 import com.nicta.scoobi.InputsOutputs._
-import pl.edu.icm.coansys.importers.models.DocumentProtos.{ReferenceMetadata, BasicMetadata, DocumentMetadata, DocumentWrapper}
+import pl.edu.icm.coansys.importers.models.DocumentProtos.{BasicMetadata, DocumentMetadata}
 import pl.edu.icm.coansys.importers.models.PICProtos
 import org.apache.hadoop.io.BytesWritable
 import pl.edu.icm.coansys.citations.util.AugmentedDList.augmentDList
 import pl.edu.icm.coansys.citations.indices.{SimpleTextIndex, AuthorIndex}
 import pl.edu.icm.coansys.citations.util.{misc, BytesConverter}
+import pl.edu.icm.coansys.citations.util.misc.readCitationsFromDocumentsFromSeqFiles
 import pl.edu.icm.coansys.citations.data.{DocumentMetadataWrapper, CitationWrapper}
 
 /**
@@ -133,23 +134,6 @@ object Matcher extends ScoobiApp {
 
         (sourceUuid, outBuilder.build())
     }
-  }
-
-  def readCitationsFromSeqFiles(uris: List[String]): DList[CitationWrapper] = {
-    implicit val documentConverter = new BytesConverter[DocumentMetadata](_.toByteArray, DocumentMetadata.parseFrom(_))
-    implicit val referenceConverter = new BytesConverter[ReferenceMetadata](_.toByteArray, ReferenceMetadata.parseFrom(_))
-    convertValueFromSequenceFile[DocumentMetadata](uris)
-      .flatMap(_.getReferenceList.toIterable)
-      .map(new CitationWrapper(_))
-  }
-
-  def readCitationsFromDocumentsFromSeqFiles(uris: List[String]): DList[CitationWrapper] = {
-    implicit val documentConverter = new BytesConverter[DocumentMetadata](_.toByteArray, DocumentMetadata.parseFrom(_))
-    implicit val referenceConverter = new BytesConverter[ReferenceMetadata](_.toByteArray, ReferenceMetadata.parseFrom(_))
-    implicit val wrapperConverter = new BytesConverter[DocumentWrapper](_.toByteArray, DocumentWrapper.parseFrom(_))
-    convertValueFromSequenceFile[DocumentWrapper](uris)
-      .flatMap(_.getDocumentMetadata.getReferenceList)
-      .map(new CitationWrapper(_))
   }
 
   def run() {
