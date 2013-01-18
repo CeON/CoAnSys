@@ -7,13 +7,13 @@ package pl.edu.icm.coansys.citations.jobs
 import com.nicta.scoobi.Scoobi._
 import pl.edu.icm.coansys.citations.util.misc._
 import pl.edu.icm.coansys.citations.util.AugmentedDList._
-import pl.edu.icm.cermine.bibref.HMMBibReferenceParser
+import pl.edu.icm.cermine.bibref.{CRFBibReferenceParser, HMMBibReferenceParser}
 import pl.edu.icm.cermine.bibref.parsing.tools.CitationUtils
 import pl.edu.icm.coansys.citations.util.NoOpClose
 import org.jdom.output.XMLOutputter
 import java.lang.String
 import pl.edu.icm.cermine.tools.classification.hmm.{HMMServiceImpl, HMMService}
-import java.io.InputStream
+import java.io.{FileInputStream, InputStream}
 import com.thoughtworks.xstream.XStream
 import java.util.Arrays
 import pl.edu.icm.cermine.bibref.parsing.features._
@@ -25,6 +25,10 @@ import pl.edu.icm.cermine.tools.classification.features.{FeatureCalculator, Feat
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 object Parser extends ScoobiApp {
+
+  class MyCrfParser {
+
+  }
 
   class HMMParser {
     protected final val hmmProbabilitiesFile: String = "/pl/edu/icm/cermine/bibref/hmmCitationProbabilities.xml"
@@ -53,12 +57,13 @@ object Parser extends ScoobiApp {
     configuration.set("mapred.max.split.size", 500000)
     configuration.setMinReducers(4)
 
-    val modelFile = "/pl/edu/icm/cermine/bibref/acrf-small.ser.gz"
+    //val modelFile = "/pl/edu/icm/cermine/bibref/acrf-small.ser.gz"
 
     val citations = readCitationsFromDocumentsFromSeqFiles(List(args(0)))
     val parsedCitations = citations.
-      //      mapWithResource(new CRFBibReferenceParser(this.getClass.getResourceAsStream(modelFile)) with NoOpClose) {
-      mapWithResource(new HMMParser with NoOpClose) {
+      //mapWithResource(new CRFBibReferenceParser(this.getClass.getResourceAsStream(modelFile)) with NoOpClose) {
+      //mapWithResource(new HMMParser with NoOpClose) {
+      mapWithResource(new CRFBibReferenceParser(new FileInputStream(args(0))) with NoOpClose) {
       case (parser, citation) =>
         val parsed = parser.parseBibReference(citation.meta.getRawCitationText)
         val nlm = CitationUtils.bibEntryToNLM(parsed)
