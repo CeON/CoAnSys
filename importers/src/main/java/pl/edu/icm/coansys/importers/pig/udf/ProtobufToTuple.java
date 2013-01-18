@@ -20,26 +20,51 @@ import org.apache.pig.impl.logicalLayer.schema.Schema;
 import org.apache.pig.impl.logicalLayer.schema.Schema.FieldSchema;
 
 /**
- * A subclass have to define the non-argument constructor which calls super(protobufClass),
- * because we want to set a protocol buffers message class, and pig cannot call 
- * a constructor with argument.
- * 
+ * Pig UDF converting protocol buffers messages to pig tuple.
+ *
  * @author acz
  */
-public abstract class ProtobufToTuple extends EvalFunc<Tuple>  {
-    
+public class ProtobufToTuple extends EvalFunc<Tuple> {
+
     private Class protobufClass;
-    
+    private Schema schema;
+
+    /**
+     * This constructor cannot be called directly in pig latin scripts, but it
+     * can be used in default constructor of a subclass.
+     *
+     * @param protobufClass
+     */
     public ProtobufToTuple(Class protobufClass) {
-        super();
+        if (!Message.class.isAssignableFrom(protobufClass)) {
+            throw new IllegalArgumentException("Argument must be a subclass of com.google.protobuf.Message");
+        }
         this.protobufClass = protobufClass;
     }
-    
-    @Override
-    public Schema outputSchema(Schema input) {
-        return ProtobufToTuple.protobufToSchema(protobufClass, getSchemaName(this.getClass().getName().toLowerCase(), input));
+
+    /**
+     * Constructor with a protobuf class name. It can be called directly from
+     * pig latin scripts, i.e.: <p> define myUDF
+     * pl.edu.icm.coansys.importers.pig.udf.ProtobufToTuple("protobufClassName");
+     * <p> FOREACH data GENERATE myUDF($0);
+     *
+     * @param protobufClassName
+     * @throws ClassNotFoundException
+     */
+    public ProtobufToTuple(String protobufClassName) throws ClassNotFoundException {
+        this(Class.forName(protobufClassName));
     }
 
+    private ProtobufToTuple() {
+    }
+
+    @Override
+    public Schema outputSchema(Schema input) {
+        if (schema == null) {
+            schema = ProtobufToTuple.protobufToSchema(protobufClass, getSchemaName(this.getClass().getName().toLowerCase(), input));
+        }
+        return schema;
+    }
 
     @Override
     public Tuple exec(Tuple input) throws IOException, ExecException {
@@ -47,7 +72,7 @@ public abstract class ProtobufToTuple extends EvalFunc<Tuple>  {
         try {
             DataByteArray protoMetadata = (DataByteArray) input.get(0);
             Message metadata = (Message) protobufClass.getMethod("parseFrom", byte[].class).invoke(null, protoMetadata.get());
-            
+
             return ProtobufToTuple.messageToTuple(metadata);
         } catch (Exception ex) {
             throw new ExecException(ex);
@@ -134,7 +159,7 @@ public abstract class ProtobufToTuple extends EvalFunc<Tuple>  {
      * @param message a protocol buffers message
      * @return pig tuple generated from protocol buffers message
      * @throws NoSuchMethodException
-     * @throws IllegalAccessException    @Override
+     * @throws IllegalAccessException @Override
      * @throws IllegalArgumentException
      * @throws InvocationTargetException
      * @throws NotSupportedException
