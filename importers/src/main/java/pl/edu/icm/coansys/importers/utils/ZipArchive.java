@@ -1,7 +1,7 @@
 /*
  * (C) 2010-2012 ICM UW. All rights reserved.
  */
-package pl.edu.icm.coansys.importers;
+package pl.edu.icm.coansys.importers.utils;
 
 import java.io.IOException;
 import java.io.InputStream;

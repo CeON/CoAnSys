@@ -3,27 +3,24 @@
  */
 package pl.edu.icm.coansys.importers.transformers;
 
+import com.google.protobuf.ByteString;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import pl.edu.icm.coansys.importers.ZipArchive;
 import pl.edu.icm.coansys.importers.constants.BWMetaConstants;
 import pl.edu.icm.coansys.importers.constants.ProtoConstants;
 import pl.edu.icm.coansys.importers.models.DocumentDTO;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.Media;
 import pl.edu.icm.coansys.importers.parsers.MetadataToProtoMetadataParser;
+import pl.edu.icm.coansys.importers.utils.ZipArchive;
 import pl.edu.icm.model.bwmeta.YContentEntry;
 import pl.edu.icm.model.bwmeta.YContentFile;
 import pl.edu.icm.model.bwmeta.YElement;
 import pl.edu.icm.model.bwmeta.YExportable;
-
-import com.google.protobuf.ByteString;
 
 /**
  *
