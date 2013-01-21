@@ -58,17 +58,18 @@ object Parser extends ScoobiApp {
     configuration.setMinReducers(4)
 
     //val modelFile = "/pl/edu/icm/cermine/bibref/acrf-small.ser.gz"
+    val modelFile = args(0)
 
-    val citations = readCitationsFromDocumentsFromSeqFiles(List(args(0)))
+    val citations = readCitationsFromDocumentsFromSeqFiles(List(args(1)))
     val parsedCitations = citations.
       //mapWithResource(new CRFBibReferenceParser(this.getClass.getResourceAsStream(modelFile)) with NoOpClose) {
       //mapWithResource(new HMMParser with NoOpClose) {
-      mapWithResource(new CRFBibReferenceParser(new FileInputStream(args(0))) with NoOpClose) {
+      mapWithResource(new CRFBibReferenceParser(new FileInputStream(modelFile)) with NoOpClose) {
       case (parser, citation) =>
         val parsed = parser.parseBibReference(citation.meta.getRawCitationText)
         val nlm = CitationUtils.bibEntryToNLM(parsed)
         new XMLOutputter().outputString(nlm)
     }
-    persist(toTextFile(parsedCitations, args(1), overwrite = true))
+    persist(toTextFile(parsedCitations, args(2), overwrite = true))
   }
 }
