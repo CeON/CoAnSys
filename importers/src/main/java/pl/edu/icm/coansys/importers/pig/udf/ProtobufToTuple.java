@@ -5,6 +5,7 @@ package pl.edu.icm.coansys.importers.pig.udf;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.Descriptors.Descriptor;
+import com.google.protobuf.Descriptors.EnumValueDescriptor;
 import com.google.protobuf.Descriptors.FieldDescriptor;
 import com.google.protobuf.Descriptors.FieldDescriptor.Type;
 import com.google.protobuf.Message;
@@ -49,6 +50,7 @@ public class ProtobufToTuple extends EvalFunc<Tuple> {
         typesMap.put(Type.FLOAT, DataType.FLOAT);
         typesMap.put(Type.DOUBLE, DataType.DOUBLE);
         typesMap.put(Type.BOOL, DataType.BOOLEAN);
+        typesMap.put(Type.ENUM, DataType.CHARARRAY);
         typesMap.put(Type.MESSAGE, DataType.TUPLE);
         typesMap.put(Type.BYTES, DataType.BYTEARRAY);
     }
@@ -246,6 +248,8 @@ public class ProtobufToTuple extends EvalFunc<Tuple> {
             Object retObject = null;
             if (type.equals(Type.BYTES)) {
                 retObject = new DataByteArray(((ByteString) messageField).toByteArray());
+            } else if (type.equals(Type.ENUM)) {
+                retObject = ((EnumValueDescriptor) messageField).getName();
             } else if (typesMap.containsKey(type)) {
                 retObject = messageField;
             }
