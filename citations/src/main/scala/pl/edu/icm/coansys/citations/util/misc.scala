@@ -32,4 +32,15 @@ object misc {
 
   def uuidDecode(bytes: Array[Byte]): String =
     new String(bytes, uuidCharset)
+
+  def extractYear(s: String): Option[String] = {
+    val baseYear = 2000
+    val candidates = """(?<=(^|\D))(\d{4})(?=($|\D))""".r.findAllIn(s).matchData.map(_.group(2).toInt).toList
+
+    if (candidates.isEmpty)
+      None
+    else
+      Some(candidates.minBy(x => math.abs(x - baseYear)).toString)
+
+  }
 }
