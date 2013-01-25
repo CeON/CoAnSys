@@ -31,6 +31,16 @@ class miscTest {
   }
 
   @Test(groups = Array("fast"))
+  def extractNumbersTest() {
+    assertEquals(extractNumbers(""), Nil, "Empty string")
+    assertEquals(extractNumbers("320"), List("320"), "One number")
+    assertEquals(extractNumbers("1999r."), List("1999"), "Number with some chars afterwards")
+    assertEquals(extractNumbers("14 1992"), List("14", "1992"), "Two numbers")
+    assertEquals(extractNumbers("10-11"), List("10", "11"), "Two numbers separated by dash")
+    assertEquals(extractNumbers("pp.10-11."), List("10", "11"), "Two numbers separated by dash and some rubbish")
+  }
+
+  @Test(groups = Array("fast"))
   def extractYearTest() {
     assertEquals(extractYear(""), None, "Empty string")
     assertEquals(extractYear("320"), None, "Too short numeral")
