@@ -244,9 +244,33 @@ public class MetadataToProtoMetadataParser {
                 } else if (yAttr.getKey().equals("reference-parsed-volume")) {
                     basicMetadata.setVolume(yAttr.getValue());
                 } else if (yAttr.getKey().equals("reference-parsed-issue")) {
-                    basicMetadata.setIssue(yAttr.getValue());
+                    //"reference-parsed-issue" attribute can contain a subtree 
+                    //with attributes related to journal
+                    String value = yAttr.getValue();
+                    if (value != null && !value.isEmpty()) {
+                        basicMetadata.setIssue(yAttr.getValue());
+                    }
+                    for (YAttribute subAttr : flattenYAttributes(yAttr.getAttributes())) {
+                        if (subAttr != null) {
+                            String subValue = subAttr.getValue();
+                            String subKey = subAttr.getKey();
+                            if (subValue != null && !subValue.isEmpty()) {
+                                if (subKey.equals("reference-parsed-number")) {
+                                    basicMetadata.setIssue(subValue);
+                                } else if (subKey.equals("reference-parsed-journal") || subKey.equals("reference-parsed-title")) {
+                                    basicMetadata.setJournal(subValue);
+                                } else if (subKey.equals("reference-parsed-date")) {
+                                    basicMetadata.setYear(subValue); //whole date as a year?
+                                } else if (subKey.equals("reference-parsed-pages")) {
+                                    basicMetadata.setPages(subValue);
+                                }
+                            }
+                        }
+                    }
                 } else if (yAttr.getKey().equals("reference-parsed-pages")) {
                     basicMetadata.setPages(yAttr.getValue());
+                } else if (yAttr.getKey().equals("reference-parsed-date")) {
+                    basicMetadata.setYear(yAttr.getValue());
                 } else if (yAttr.getKey().equals(YaddaIdConstants.CATEGORY_CLASS_MSC)) {
                     mscCodes.addValue(yAttr.getValue());
                     //TODO czesc kodow MSC mylnie trafia do kwordow - mozna je stamtad wyciagnac porownujac z wzorcem kodu
@@ -285,6 +309,15 @@ public class MetadataToProtoMetadataParser {
 
         reference.setBasicMetadata(basicMetadata);
         return reference;
+    }
+
+    private static List<YAttribute> flattenYAttributes(List<YAttribute> attributes) {
+        List<YAttribute> result = new ArrayList<YAttribute>();
+        for (YAttribute yattr : attributes) {
+            result.add(yattr);
+            result.addAll(flattenYAttributes(yattr.getAttributes()));
+        }
+        return result;
     }
 
     /**
