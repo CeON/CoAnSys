@@ -32,7 +32,7 @@ import org.apache.pig.impl.logicalLayer.schema.Schema.FieldSchema;
  */
 public class ProtobufToTuple extends EvalFunc<Tuple> {
 
-    private Class protobufClass;
+    private Class<? extends Message> protobufClass;
     private Schema schema;
     
     /**
@@ -61,10 +61,7 @@ public class ProtobufToTuple extends EvalFunc<Tuple> {
      *
      * @param protobufClass a class of protocol buffers messages
      */
-    public ProtobufToTuple(Class protobufClass) {
-        if (!Message.class.isAssignableFrom(protobufClass)) {
-            throw new IllegalArgumentException("Argument must be a subclass of com.google.protobuf.Message");
-        }
+    public ProtobufToTuple(Class<? extends Message> protobufClass) {
         this.protobufClass = protobufClass;
     }
 
@@ -78,7 +75,7 @@ public class ProtobufToTuple extends EvalFunc<Tuple> {
      * @throws ClassNotFoundException
      */
     public ProtobufToTuple(String protobufClassName) throws ClassNotFoundException {
-        this(Class.forName(protobufClassName));
+        this((Class<? extends Message>) Class.forName(protobufClassName));
     }
 
     private ProtobufToTuple() {
@@ -120,7 +117,7 @@ public class ProtobufToTuple extends EvalFunc<Tuple> {
      * @param tupleName name for returned tuple
      * @return pig schema generated from protocol buffers message class
      */
-    private static Schema protobufToSchema(Class messageClass, String tupleName) {
+    private static Schema protobufToSchema(Class<? extends Message> messageClass, String tupleName) {
         try {
             Descriptor descr = (Descriptor) messageClass.getMethod("getDescriptor").invoke(null);
             String fieldName = tupleName.toLowerCase(Locale.ENGLISH);
