@@ -32,13 +32,13 @@ class miscTest {
 
   @Test(groups = Array("fast"))
   def extractYearTest() {
-    assertEquals(extractYear(""), None)
-    assertEquals(extractYear("320"), None)
-    assertEquals(extractYear("1999"), Some("1999"))
-    assertEquals(extractYear("1999r."), Some("1999"))
-    assertEquals(extractYear("19992"), None)
-    assertEquals(extractYear("14 1992"), Some("1992"))
-    assertEquals(extractYear("9999 1992"), Some("1992"))
-    assertEquals(extractYear("1000 1992"), Some("1992"))
+    assertEquals(extractYear(""), None, "Empty string")
+    assertEquals(extractYear("320"), None, "Too short numeral")
+    assertEquals(extractYear("1999"), Some("1999"), "Only a year")
+    assertEquals(extractYear("1999r."), Some("1999"), "Year with some chars afterwards")
+    assertEquals(extractYear("19992"), None, "Too long to be year")
+    assertEquals(extractYear("14 1992"), Some("1992"), "Two numerals, only one is year")
+    assertEquals(extractYear("9999 1992"), Some("1992"), "Two four-digit numerals, one is year")
+    assertEquals(extractYear("1000 1992"), Some("1992"), "Two four-digit numerals, one more likely to be year")
   }
 }
