@@ -5,6 +5,7 @@ package pl.edu.icm.coansys.importers.pig.udf;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.Descriptors.Descriptor;
+import com.google.protobuf.Descriptors.EnumValueDescriptor;
 import com.google.protobuf.Descriptors.FieldDescriptor;
 import com.google.protobuf.Descriptors.FieldDescriptor.Type;
 import com.google.protobuf.Message;
@@ -31,7 +32,7 @@ import org.apache.pig.impl.logicalLayer.schema.Schema.FieldSchema;
  */
 public class ProtobufToTuple extends EvalFunc<Tuple> {
 
-    private Class protobufClass;
+    private Class<? extends Message> protobufClass;
     private Schema schema;
     
     /**
@@ -49,6 +50,7 @@ public class ProtobufToTuple extends EvalFunc<Tuple> {
         typesMap.put(Type.FLOAT, DataType.FLOAT);
         typesMap.put(Type.DOUBLE, DataType.DOUBLE);
         typesMap.put(Type.BOOL, DataType.BOOLEAN);
+        typesMap.put(Type.ENUM, DataType.CHARARRAY);
         typesMap.put(Type.MESSAGE, DataType.TUPLE);
         typesMap.put(Type.BYTES, DataType.BYTEARRAY);
     }
@@ -59,10 +61,7 @@ public class ProtobufToTuple extends EvalFunc<Tuple> {
      *
      * @param protobufClass a class of protocol buffers messages
      */
-    public ProtobufToTuple(Class protobufClass) {
-        if (!Message.class.isAssignableFrom(protobufClass)) {
-            throw new IllegalArgumentException("Argument must be a subclass of com.google.protobuf.Message");
-        }
+    public ProtobufToTuple(Class<? extends Message> protobufClass) {
         this.protobufClass = protobufClass;
     }
 
@@ -76,7 +75,7 @@ public class ProtobufToTuple extends EvalFunc<Tuple> {
      * @throws ClassNotFoundException
      */
     public ProtobufToTuple(String protobufClassName) throws ClassNotFoundException {
-        this(Class.forName(protobufClassName));
+        this((Class<? extends Message>) Class.forName(protobufClassName));
     }
 
     private ProtobufToTuple() {
@@ -118,7 +117,7 @@ public class ProtobufToTuple extends EvalFunc<Tuple> {
      * @param tupleName name for returned tuple
      * @return pig schema generated from protocol buffers message class
      */
-    private static Schema protobufToSchema(Class messageClass, String tupleName) {
+    private static Schema protobufToSchema(Class<? extends Message> messageClass, String tupleName) {
         try {
             Descriptor descr = (Descriptor) messageClass.getMethod("getDescriptor").invoke(null);
             String fieldName = tupleName.toLowerCase(Locale.ENGLISH);
@@ -246,6 +245,8 @@ public class ProtobufToTuple extends EvalFunc<Tuple> {
             Object retObject = null;
             if (type.equals(Type.BYTES)) {
                 retObject = new DataByteArray(((ByteString) messageField).toByteArray());
+            } else if (type.equals(Type.ENUM)) {
+                retObject = ((EnumValueDescriptor) messageField).getName();
             } else if (typesMap.containsKey(type)) {
                 retObject = messageField;
             }
