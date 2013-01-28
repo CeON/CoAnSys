@@ -162,7 +162,7 @@ public class TupleToProtobuf extends EvalFunc<DataByteArray> {
                         builder.addRepeatedField(protobufField, recursiveConvert(tpl, subbuilder));
                     } else { //scalar type
                         Object tplObj = tpl.get(0);
-                        if (!protobufToJavaTypes.get(protobufType).equals(tplObj.getClass())) {
+                        if (!protobufToJavaTypes.get(protobufType).isAssignableFrom(tplObj.getClass())) {
                             throw new ExecException("Data type not compatible: " + protobufType + ", " + tplObj.getClass().getName());
                         }
                         if (protobufType.equals(Type.ENUM)) {
@@ -176,7 +176,7 @@ public class TupleToProtobuf extends EvalFunc<DataByteArray> {
                 }
             } else {
                 //not repeated
-                if (!protobufToJavaTypes.get(protobufType).equals(tupleField.getClass())) {
+                if (!protobufToJavaTypes.get(protobufType).isAssignableFrom(tupleField.getClass())) {
                     throw new ExecException("Data type not compatible: " + protobufType + ", " + tupleField.getClass().getName());
                 }
 
