@@ -35,6 +35,8 @@ public class DocumentMetadataToTupleTest {
     public void basicTest() throws MasterNotRunningException, ZooKeeperConnectionException, IOException {
 
         //prepare some test data
+        DocumentMetadata inputDM;
+        
         DocumentMetadata.Builder dmBuilder = DocumentMetadata.newBuilder();
         dmBuilder.setKey("key123");
         BasicMetadata.Builder basic = BasicMetadata.newBuilder();
@@ -48,11 +50,13 @@ public class DocumentMetadataToTupleTest {
         }
 
         dmBuilder.setBasicMetadata(basic);
+        
+        inputDM = dmBuilder.build();
 
         //convert by DocumentMetadataToTuple UDF
         //  UDF input argument must be a Tuple, so we have to prepare a tuple with 
         //  one field of type bytearray
-        DataByteArray dbarr = new DataByteArray(dmBuilder.build().toByteArray());
+        DataByteArray dbarr = new DataByteArray(inputDM.toByteArray());
         Tuple metadataTuple = TupleFactory.getInstance().newTuple(dbarr);
         //  instantiate a UDF and convert
         DocumentMetadataToTuple dm2tpl = new DocumentMetadataToTuple();
@@ -75,7 +79,7 @@ public class DocumentMetadataToTupleTest {
                 assertTrue(pigTuple.getType(i) == fieldSchema.type);
                 if (fieldSchema.alias.equals("key")) {
                     assertEquals(fieldSchema.type, DataType.CHARARRAY);
-                    assertEquals((String) pigTuple.get(i), dmBuilder.getKey());
+                    assertEquals((String) pigTuple.get(i), inputDM.getKey());
                     keyFound = true;
                 } else if (fieldSchema.alias.equals("basicmetadata")) {
                     assertEquals(fieldSchema.type, DataType.TUPLE);
@@ -86,6 +90,13 @@ public class DocumentMetadataToTupleTest {
             }
         }
         assertTrue(keyFound, "Key not found in tuple");
+        
+        //convert to DocumentMetadata by TupleToProtobuf UDF
+        TupleToProtobuf tpl2dm = new TupleToProtobuf(DocumentMetadata.class);
+        DataByteArray finalDMdba = tpl2dm.exec(pigTuple);
+        DocumentMetadata finalDM = DocumentMetadata.parseFrom(finalDMdba.get());
+        
+        assertEquals(finalDM, inputDM);
     }
 
     private void checkBasicMetadata(Tuple bmTuple, Schema bmSchema) throws FrontendException, ExecException {
