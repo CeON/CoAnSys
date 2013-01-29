@@ -58,7 +58,13 @@ object author_matching {
   } yield (i, j)
 
 
-  def matchFactor(tokens1: List[String], tokens2: List[String]) = {
+  def matchFactor(tokens1: List[String], tokens2: List[String]) =
+    if (!tokens1.isEmpty && !tokens2.isEmpty)
+      matchFactorOnNonEmpty(tokens1, tokens2)
+    else
+    if (tokens1 == tokens2) 1.0 else 0.0
+
+  def matchFactorOnNonEmpty(tokens1: List[String], tokens2: List[String]) = {
     val len1 = tokens1.length
     val len2 = tokens2.length
 
@@ -106,7 +112,7 @@ object author_matching {
         distTransform(dists(i)(j)) * editDistTransform(editDists(i)(j)) * (importance1(i) + importance2(j))
       case _ => 0.0
     }
-    val maxWeight = weights.flatten.max
+    val maxWeight = weights.flatten.foldLeft(0.0)(_ max _)
     val aleredWeights = Array.tabulate(maxLen, maxLen) {
       (i, j) => maxWeight - weights(i)(j)
     }
