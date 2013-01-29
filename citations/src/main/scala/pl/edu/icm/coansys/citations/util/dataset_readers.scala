@@ -103,45 +103,46 @@ object dataset_readers {
     entry.setText(textBuffer.toString)
   }
 
-  def importBibEntriesFromCiteseerFile(path: String): List[BibEntry] = {
-    val mapping: Map[String, String] = Map(
-      "author" -> BibEntry.FIELD_AUTHOR,
-      "title" -> BibEntry.FIELD_TITLE,
-      "journal" -> BibEntry.FIELD_JOURNAL,
-      "booktitle" -> BibEntry.FIELD_JOURNAL,
-      "tech" -> BibEntry.FIELD_JOURNAL,
-      //      "location" -> BibEntry.FIELD_LOCATION,
-      //      "volume" -> BibEntry.FIELD_VOLUME,
-      "pages" -> BibEntry.FIELD_PAGES,
-      //      "publisher" -> BibEntry.FIELD_PUBLISHER,
-      //      "institution" -> BibEntry.FIELD_PUBLISHER,
-      "date" -> BibEntry.FIELD_YEAR
-    )
+  val citeseerTagMapping: Map[String, String] = Map(
+    "author" -> BibEntry.FIELD_AUTHOR,
+    "title" -> BibEntry.FIELD_TITLE,
+    "journal" -> BibEntry.FIELD_JOURNAL,
+    "booktitle" -> BibEntry.FIELD_JOURNAL,
+    "tech" -> BibEntry.FIELD_JOURNAL,
+    //      "location" -> BibEntry.FIELD_LOCATION,
+    //      "volume" -> BibEntry.FIELD_VOLUME,
+    "pages" -> BibEntry.FIELD_PAGES,
+    //      "publisher" -> BibEntry.FIELD_PUBLISHER,
+    //      "institution" -> BibEntry.FIELD_PUBLISHER,
+    "date" -> BibEntry.FIELD_YEAR
+  )
 
-    getTaggedReferenceListFromCiteseerSource(Source.fromFile(path)).unzip._2.map(taggedReferenceToBibEntry(_, mapping))
-  }
+  def importBibEntriesFromCiteseerFile(path: String): List[BibEntry] =
+    getTaggedReferenceListFromCiteseerSource(Source.fromFile(path))
+      .unzip._2.map(taggedReferenceToBibEntry(_, citeseerTagMapping))
+
+  val corarefTagMapping: Map[String, String] = Map(
+    //      "address" -> BibEntry.FIELD_ADDRESS,
+    "author" -> BibEntry.FIELD_AUTHOR,
+    "booktitle" -> BibEntry.FIELD_JOURNAL,
+    "date" -> BibEntry.FIELD_YEAR,
+    //      "editor" -> BibEntry.FIELD_EDITOR,
+    //      "institution" -> BibEntry.FIELD_INSTITUTION,
+    "journal" -> BibEntry.FIELD_JOURNAL,
+    //      "month" -> BibEntry.FIELD_MONTH,
+    //      "note" -> BibEntry.FIELD_NOTE,
+    "pages" -> BibEntry.FIELD_PAGES,
+    //      "publisher" -> BibEntry.FIELD_PUBLISHER,
+    "tech" -> BibEntry.FIELD_JOURNAL,
+    "title" -> BibEntry.FIELD_TITLE,
+    "type" -> BibEntry.FIELD_JOURNAL,
+    //      "volume" -> BibEntry.FIELD_VOLUME,
+    "year" -> BibEntry.FIELD_YEAR
+  )
 
   def importBibEntriesFromCorarefFile(path: String): List[BibEntry] = {
-    val mapping: Map[String, String] = Map(
-      //      "address" -> BibEntry.FIELD_ADDRESS,
-      "author" -> BibEntry.FIELD_AUTHOR,
-      "booktitle" -> BibEntry.FIELD_JOURNAL,
-      "date" -> BibEntry.FIELD_YEAR,
-      //      "editor" -> BibEntry.FIELD_EDITOR,
-      //      "institution" -> BibEntry.FIELD_INSTITUTION,
-      "journal" -> BibEntry.FIELD_JOURNAL,
-      //      "month" -> BibEntry.FIELD_MONTH,
-      //      "note" -> BibEntry.FIELD_NOTE,
-      "pages" -> BibEntry.FIELD_PAGES,
-      //      "publisher" -> BibEntry.FIELD_PUBLISHER,
-      "tech" -> BibEntry.FIELD_JOURNAL,
-      "title" -> BibEntry.FIELD_TITLE,
-      "type" -> BibEntry.FIELD_JOURNAL,
-      //      "volume" -> BibEntry.FIELD_VOLUME,
-      "year" -> BibEntry.FIELD_YEAR
-    )
-
-    getTaggedReferenceListFromCorarefSource(Source.fromFile(path)(io.Codec.ISO8859)).unzip._2.map(taggedReferenceToBibEntry(_, mapping))
+    getTaggedReferenceListFromCorarefSource(Source.fromFile(path)(io.Codec.ISO8859))
+      .unzip._2.map(taggedReferenceToBibEntry(_, corarefTagMapping))
   }
 
   /**
