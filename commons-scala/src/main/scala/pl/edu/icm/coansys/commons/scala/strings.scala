@@ -6,6 +6,7 @@ package pl.edu.icm.coansys.commons.scala
 
 import annotation.tailrec
 import collections._
+import util.matching.Regex
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -69,5 +70,19 @@ object strings {
    */
   def subsequence(s: String, indices: TraversableOnce[Int]) = {
     indices map (s.charAt) mkString ("")
+  }
+
+  /**
+   * Splits a given strings on regex matches without removing matched text, e.g.
+   * splitOnRegex(" ".r, "ala ma kota") == List("ala", " ", "ma", " ", "kota")
+   */
+  def splitOnRegex(regex: Regex, s: String): List[String] = {
+    val groupBoundaries = (Iterator(0) ++ regex.findAllIn(s).matchData.flatMap {
+      case m => List(m.start, m.end)
+    } ++ Iterator(s.length)).toList
+    val groupBoundariesPairs = groupBoundaries zip groupBoundaries.drop(1)
+    groupBoundariesPairs flatMap {
+      case (b, e) => if (b < e) Some(s.substring(b, e)) else None
+    }
   }
 }
