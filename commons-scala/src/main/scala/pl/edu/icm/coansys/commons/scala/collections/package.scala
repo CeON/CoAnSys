@@ -9,7 +9,7 @@ import annotation.tailrec
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
-object collections {
+package object collections {
   /**
    * Similar to Array.tabulate, but here tabulated function gets partially filled array as parameter.
    *
