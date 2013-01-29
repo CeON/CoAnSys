@@ -5,7 +5,6 @@
 package pl.edu.icm.coansys.commons.scala
 
 import annotation.tailrec
-import collections._
 import util.matching.Regex
 
 /**
@@ -26,26 +25,28 @@ object strings {
    * Computes HCS (Heaviest Common Subsequence) of two strings using given weight function.
    */
   def hcs(s1: String, s2: String, weight: Char => Double) = {
-    val hcsArray = tabulate[Double](s1.length + 1, s2.length + 1) {
-      (hcs, i, j) =>
+    val sndDim = s2.length + 1
+    val hcsArray = Array.ofDim[Double]((s1.length + 1) * (s2.length + 1))
+    for (i <- 0 to s1.length) {
+      for (j <- 0 to s2.length)
         if (i == 0 || j == 0) {
-          0
+          hcsArray(i * sndDim + j) = 0
         } else {
           val eqBonus = if (s1.charAt(i - 1) == s2.charAt(j - 1)) weight(s1.charAt(i - 1)) else 0
-          List(hcs(i - 1)(j - 1) + eqBonus, hcs(i - 1)(j), hcs(i)(j - 1)).max
+          hcsArray(i * sndDim + j) = List(hcsArray((i - 1) * sndDim + (j - 1)) + eqBonus, hcsArray((i - 1) * sndDim + (j)), hcsArray(i * sndDim + j - 1)).max
         }
     }
 
     @tailrec
     def extractHcs(i: Int, j: Int, acc: List[(Int, Int)] = Nil): List[(Int, Int)] = {
       if (i > 0 && j > 0) {
-        if (hcsArray(i - 1)(j - 1) >= math.max(hcsArray(i - 1)(j), hcsArray(i)(j - 1))) {
+        if (hcsArray((i - 1) * sndDim + (j - 1)) >= math.max(hcsArray((i - 1) * sndDim + (j)), hcsArray((i) * sndDim + (j - 1)))) {
           if (s1.charAt(i - 1) == s2.charAt(j - 1))
             extractHcs(i - 1, j - 1, (i - 1, j - 1) :: acc)
           else
             extractHcs(i - 1, j - 1, acc)
         } else {
-          if (hcsArray(i - 1)(j) >= hcsArray(i)(j - 1))
+          if (hcsArray((i - 1) * sndDim + (j)) >= hcsArray((i) * sndDim + (j - 1)))
             extractHcs(i - 1, j, acc)
           else
             extractHcs(i, j - 1, acc)
