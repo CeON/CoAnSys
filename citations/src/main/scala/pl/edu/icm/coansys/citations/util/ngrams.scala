@@ -16,8 +16,14 @@ object ngrams {
     val c1 = ngramCounts(s1, n)
     val c2 = ngramCounts(s2, n)
     val all = c1.values.sum + c2.values.sum
-    val common = (c1.keySet & c2.keySet).map(k => c1.getOrElse(k, 0) min c2.getOrElse(k, 0)).sum
+    val common = (c1.keySet | c2.keySet).toIterator.map(k => c1.getOrElse(k, 0) min c2.getOrElse(k, 0)).sum
 
-    2 * common.toDouble / all
+    if (all > 0)
+      2 * common.toDouble / all
+    else
+    if (s1 == s2)
+      1.0
+    else
+      0.0
   }
 }
