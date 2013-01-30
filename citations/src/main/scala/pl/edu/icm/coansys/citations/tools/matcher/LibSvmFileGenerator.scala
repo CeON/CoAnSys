@@ -40,8 +40,10 @@ object LibSvmFileGenerator {
       if (misc.extractYear(getField(parsed1, BibEntry.FIELD_YEAR)) ==
         misc.extractYear(getField(parsed2, BibEntry.FIELD_YEAR)))
         1.0
-      else
+      else {
+        //println(misc.extractYear(getField(parsed1, BibEntry.FIELD_YEAR)) + " != " + misc.extractYear(getField(parsed2, BibEntry.FIELD_YEAR)))
         0.0
+      }
     val pagesMatchFactor = {
       val pages1 = misc.extractNumbers(getField(parsed1, BibEntry.FIELD_PAGES))
       val pages2 = misc.extractNumbers(getField(parsed2, BibEntry.FIELD_PAGES))
@@ -65,8 +67,22 @@ object LibSvmFileGenerator {
       else
         0.0
     }
+    val overallMatchFactor =
+      trigramSimilarity(parsed1.getText, parsed2.getText)
 
-    List(authorMatchFactor, yearMatchFactor, pagesMatchFactor, titleMatchFactor, sourceMatchFactor)
+    def lettersOnly(s: String) =
+      s.map(x => if (x.isLetter) x else ' ').split("\\W+").mkString(" ")
+    def digitsOnly(s: String) =
+      s.map(x => if (x.isDigit) x else ' ').split("\\W+").mkString(" ")
+
+    val lettersMatchFactor =
+      trigramSimilarity(lettersOnly(parsed1.getText), lettersOnly(parsed2.getText))
+
+    val digitsMatchFactor =
+      trigramSimilarity(digitsOnly(parsed1.getText), digitsOnly(parsed2.getText))
+
+    List(authorMatchFactor, yearMatchFactor, pagesMatchFactor, titleMatchFactor, sourceMatchFactor, overallMatchFactor,
+      lettersMatchFactor, digitsMatchFactor)
   }
 
   def svmLightLineFromFeatures(target: Int, featureList: Iterable[Double]): String = {
@@ -83,6 +99,7 @@ object LibSvmFileGenerator {
     val citationsFile = new File(args(1))
     val modelFile = new File(args(0))
     val outFile = new File(args(2))
+    val outMapFile = new File(outFile.getCanonicalPath + ".map")
 
     val citations =
       Source.fromFile(citationsFile).getLines().map {
@@ -91,7 +108,7 @@ object LibSvmFileGenerator {
     val citationPairs = for {
       i <- 0 until citations.length
       j <- 0 until i
-    } yield (citations(i)._1 == citations(j)._1, citations(i)._2, citations(j)._2)
+    } yield (citations(i)._1 == citations(j)._1, (i, j), citations(i)._2, citations(j)._2)
 
     //val (matching, nonMatching) = citationPairs.partition(_._1)
     val myFeatures = features(new CRFBibReferenceParser(new FileInputStream(modelFile)) {
@@ -101,13 +118,20 @@ object LibSvmFileGenerator {
         cache.getOrElseUpdate(text, super.parseBibReference(text))
     }) _
     val lines = citationPairs map {
-      case (matches, cit1, cit2) =>
+      case (matches, ids, cit1, cit2) =>
         svmLightLineFromFeatures(if (matches) 1 else 0, myFeatures(cit1, cit2))
     }
 
     using(new FileWriter(outFile)) {
       writer =>
         lines.foreach(x => writer.write(x + "\n"))
+    }
+
+    using(new FileWriter(outMapFile)) {
+      writer =>
+        citationPairs.foreach {
+          case (_, (i, j), _, _) => writer.write(i + " " + j + "\n")
+        }
     }
 
   }
