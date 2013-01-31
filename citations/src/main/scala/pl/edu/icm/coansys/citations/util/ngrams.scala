@@ -8,22 +8,31 @@ package pl.edu.icm.coansys.citations.util
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 object ngrams {
-  def ngramCounts(s: String, n: Int): Map[String, Int] =
-    s.sliding(n).toIterable.groupBy(identity).mapValues(_.size)
+
+  case class NgramStatistics(counter: Map[String, Int], overall: Int) {
+    def similarityTo(other: NgramStatistics): Double = {
+      val c1 = counter
+      val c2 = other.counter
+      val all = overall + other.overall
+      val common = (c1.keySet & c2.keySet).toIterator.map(k => c1(k) min c2(k)).sum
+
+      if (all > 0)
+        2 * common.toDouble / all
+      else
+        1.0
+    }
+  }
+
+  object NgramStatistics {
+    def fromString(s: String, n: Int): NgramStatistics = {
+      val counter = s.sliding(n).toIterable.groupBy(identity).mapValues(_.size)
+      val overall = counter.values.sum
+      NgramStatistics(counter, overall)
+    }
+  }
 
   def trigramSimilarity(s1: String, s2: String): Double = {
     val n = 3
-    val c1 = ngramCounts(s1, n)
-    val c2 = ngramCounts(s2, n)
-    val all = c1.values.sum + c2.values.sum
-    val common = (c1.keySet | c2.keySet).toIterator.map(k => c1.getOrElse(k, 0) min c2.getOrElse(k, 0)).sum
-
-    if (all > 0)
-      2 * common.toDouble / all
-    else
-    if (s1 == s2)
-      1.0
-    else
-      0.0
+    NgramStatistics.fromString(s1, n) similarityTo NgramStatistics.fromString(s2, n)
   }
 }

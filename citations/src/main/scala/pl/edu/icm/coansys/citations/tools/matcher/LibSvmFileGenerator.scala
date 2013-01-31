@@ -13,6 +13,7 @@ import pl.edu.icm.coansys.citations.util.author_matching
 import pl.edu.icm.coansys.citations.util.misc
 import pl.edu.icm.cermine.bibref.parsing.tools.CitationUtils
 import pl.edu.icm.coansys.citations.util.ngrams.trigramSimilarity
+import pl.edu.icm.coansys.citations.util.ngrams.NgramStatistics
 import pl.edu.icm.coansys.commons.scala.strings
 import pl.edu.icm.coansys.commons.scala.automatic_resource_management._
 import collection.mutable
@@ -24,13 +25,28 @@ object LibSvmFileGenerator {
   private def tokensFromCermine(s: String): List[String] =
     CitationUtils.stringToCitation(s).getTokens.map(_.getText).toList
 
+  case class CachedData(bibEntry: BibEntry, ngrams: NgramStatistics, letterNgrams: NgramStatistics, digitNgrams: NgramStatistics)
+
+  private val cache = new mutable.HashMap[String, CachedData]()
 
   def features(parser: BibReferenceParser[BibEntry])(cit1: String, cit2: String) = {
     def getField(bibEntry: BibEntry, key: String): String =
       bibEntry.getAllFieldValues(key).mkString(" ")
+    def lettersOnly(s: String) =
+      s.map(x => if (x.isLetter) x else ' ').split("\\W+").mkString(" ")
+    def digitsOnly(s: String) =
+      s.map(x => if (x.isDigit) x else ' ').split("\\W+").mkString(" ")
+    val trigramCounts: String => NgramStatistics = NgramStatistics.fromString(_, 3)
 
-    val parsed1 = parser.parseBibReference(cit1)
-    val parsed2 = parser.parseBibReference(cit2)
+    val CachedData(parsed1, nc1, ncLetters1, ncDigits1) =
+      cache.getOrElseUpdate(cit1, CachedData(parser.parseBibReference(cit1), trigramCounts(cit1),
+        trigramCounts(lettersOnly(cit1)), trigramCounts(digitsOnly(cit1))))
+    val CachedData(parsed2, nc2, ncLetters2, ncDigits2) =
+      cache.getOrElseUpdate(cit2, CachedData(parser.parseBibReference(cit2), trigramCounts(cit2),
+        trigramCounts(lettersOnly(cit2)), trigramCounts(digitsOnly(cit2))))
+
+    //    val parsed1 = parser.parseBibReference(cit1)
+    //    val parsed2 = parser.parseBibReference(cit2)
 
     val authorMatchFactor = author_matching.matchFactor(
       tokensFromCermine(getField(parsed1, BibEntry.FIELD_AUTHOR)),
@@ -40,10 +56,8 @@ object LibSvmFileGenerator {
       if (misc.extractYear(getField(parsed1, BibEntry.FIELD_YEAR)) ==
         misc.extractYear(getField(parsed2, BibEntry.FIELD_YEAR)))
         1.0
-      else {
-        //println(misc.extractYear(getField(parsed1, BibEntry.FIELD_YEAR)) + " != " + misc.extractYear(getField(parsed2, BibEntry.FIELD_YEAR)))
+      else
         0.0
-      }
     val pagesMatchFactor = {
       val pages1 = misc.extractNumbers(getField(parsed1, BibEntry.FIELD_PAGES))
       val pages2 = misc.extractNumbers(getField(parsed2, BibEntry.FIELD_PAGES))
@@ -67,19 +81,9 @@ object LibSvmFileGenerator {
       else
         0.0
     }
-    val overallMatchFactor =
-      trigramSimilarity(parsed1.getText, parsed2.getText)
-
-    def lettersOnly(s: String) =
-      s.map(x => if (x.isLetter) x else ' ').split("\\W+").mkString(" ")
-    def digitsOnly(s: String) =
-      s.map(x => if (x.isDigit) x else ' ').split("\\W+").mkString(" ")
-
-    val lettersMatchFactor =
-      trigramSimilarity(lettersOnly(parsed1.getText), lettersOnly(parsed2.getText))
-
-    val digitsMatchFactor =
-      trigramSimilarity(digitsOnly(parsed1.getText), digitsOnly(parsed2.getText))
+    val overallMatchFactor = nc1 similarityTo nc2
+    val lettersMatchFactor = ncLetters1 similarityTo ncLetters2
+    val digitsMatchFactor = ncDigits1 similarityTo ncDigits2
 
     List(authorMatchFactor, yearMatchFactor, pagesMatchFactor, titleMatchFactor, sourceMatchFactor, overallMatchFactor,
       lettersMatchFactor, digitsMatchFactor)
@@ -111,12 +115,7 @@ object LibSvmFileGenerator {
     } yield (citations(i)._1 == citations(j)._1, (i, j), citations(i)._2, citations(j)._2)
 
     //val (matching, nonMatching) = citationPairs.partition(_._1)
-    val myFeatures = features(new CRFBibReferenceParser(new FileInputStream(modelFile)) {
-      val cache = new mutable.HashMap[String, BibEntry]()
-
-      override def parseBibReference(text: String): BibEntry =
-        cache.getOrElseUpdate(text, super.parseBibReference(text))
-    }) _
+    val myFeatures = features(new CRFBibReferenceParser(new FileInputStream(modelFile))) _
     val lines = citationPairs map {
       case (matches, ids, cit1, cit2) =>
         svmLightLineFromFeatures(if (matches) 1 else 0, myFeatures(cit1, cit2))

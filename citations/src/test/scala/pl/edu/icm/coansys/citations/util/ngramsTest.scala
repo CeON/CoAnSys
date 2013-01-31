@@ -14,7 +14,7 @@ import org.testng.Assert._
 class ngramsTest {
   @Test(groups = Array("fast"))
   def ngramCountsTest() {
-    val counts = ngramCounts("ala ma kota a kot ma ale", 3)
+    val NgramStatistics(counts, _) = NgramStatistics.fromString("ala ma kota a kot ma ale", 3)
     assertEquals(counts("ala"), 1)
     assertEquals(counts("kot"), 2)
     assertEquals(counts(" a "), 1)
