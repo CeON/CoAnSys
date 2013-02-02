@@ -6,6 +6,7 @@ package pl.edu.icm.coansys.citations.tools.matcher
 
 import io.{Codec, Source}
 import pl.edu.icm.coansys.citations.util.dataset_readers
+import pl.edu.icm.coansys.citations.tools.cermine.util.writeCitationsToXml
 import java.io._
 import util.Random
 import org.jdom.output.XMLOutputter
@@ -19,31 +20,20 @@ import pl.edu.icm.coansys.commons.scala.xml
 object FirstTestSetGenerator {
   def main(args: Array[String]) {
     val inputDir = new File("C:\\Users\\matfed\\data\\cora-ref")
-    val parserTrainingFile = new File("C:\\Users\\matfed\\Desktop\\matcher-test\\parserTraining.xml")
-    val matcherTrainingFile = new File("C:\\Users\\matfed\\Desktop\\matcher-test\\matcherTraining.txt")
-    val matcherTestFile = new File("C:\\Users\\matfed\\Desktop\\matcher-test\\matcherTesting.txt")
+    val outputDir = new File("C:\\Users\\matfed\\Desktop\\matcher-test")
+    val parserTrainingFileName = "parserTraining.xml"
+    val matcherTrainingFileName = "matcherTraining.txt"
+    val matcherTestFileName = "matcherTesting.txt"
+    val foldsCount = 3
+
     val citations =
       inputDir.listFiles(new FilenameFilter {
         def accept(dir: File, name: String) = name.endsWith("labeled")
       })
         .flatMap(f => dataset_readers.getTaggedReferenceListFromCorarefSource(Source.fromFile(f)(Codec.ISO8859)))
     val clusters = citations.groupBy(_._1)
-    val folds = Random.shuffle(clusters).zipWithIndex.groupBy(_._2 % 3).mapValues {
+    val folds = Random.shuffle(clusters).zipWithIndex.groupBy(_._2 % foldsCount).mapValues {
       _.map(_._1).flatMap(_._2)
-    }
-
-    val parserTrainingSet =
-      folds(0).map(_._2) // remove cluster ids
-    val parserTrainingBibEntries =
-      parserTrainingSet.map(dataset_readers.taggedReferenceToBibEntry(_, dataset_readers.corarefTagMapping))
-    val mixedCitations = parserTrainingBibEntries.map(entry => new XMLOutputter().outputString({
-      val elem = CitationUtils.bibEntryToNLM(entry)
-      dataset_readers.findAndCollapseStringName(elem)
-      elem
-    }))
-    using(new BufferedWriter(new FileWriter(parserTrainingFile))) {
-      writer =>
-        mixedCitations foreach (l => writer.write(l + "\n"))
     }
 
     def removeTagsAndWrite(cits: TraversableOnce[(String, String)], outFile: File) {
@@ -59,7 +49,22 @@ object FirstTestSetGenerator {
       }
     }
 
-    removeTagsAndWrite(folds(1), matcherTrainingFile)
-    removeTagsAndWrite(folds(2), matcherTestFile)
+    for (i <- 0 until foldsCount) {
+      val foldDir = new File(outputDir, "fold" + i)
+      foldDir.mkdirs()
+      val parserTrainingSet =
+        folds(i).map(_._2) // remove cluster ids
+      val parserTrainingBibEntries =
+        parserTrainingSet.map(dataset_readers.taggedReferenceToBibEntry(_, dataset_readers.corarefTagMapping))
+      val mixedCitations = parserTrainingBibEntries.map(entry => new XMLOutputter().outputString({
+        val elem = CitationUtils.bibEntryToNLM(entry)
+        dataset_readers.findAndCollapseStringName(elem)
+        elem
+      }))
+
+      writeCitationsToXml(new File(foldDir, parserTrainingFileName), mixedCitations)
+      removeTagsAndWrite(folds((i + 1) % foldsCount), new File(foldDir, matcherTrainingFileName))
+      removeTagsAndWrite(folds((i + 2) % foldsCount), new File(foldDir, matcherTestFileName))
+    }
   }
 }

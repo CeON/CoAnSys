@@ -103,7 +103,8 @@ object Evaluator {
       println("Didn't found " + cluster)
       println("Its elements are in the following clusters:")
       cluster.map(elementMap).foreach(c => {
-        println(c); inspectCluster(c, probabilities)
+        println(c);
+        inspectCluster(c, probabilities)
       })
       println()
     })
@@ -111,9 +112,9 @@ object Evaluator {
 
   def main(args: Array[String]) {
     //    val citeMapPath = """C:\temp\cora2-lcs\sample-cora2-idmap.txt"""
-    val mappingPath = """C:\Users\matfed\Desktop\matcher-test\matcherTestingSvm.txt.map"""
-    val correctPath = """C:\Users\matfed\Desktop\matcher-test\matcherTestingSvm.txt"""
-    val actualPath = """C:\Users\matfed\Desktop\matcher-test\out"""
+    val mappingPath = """C:\Users\matfed\Desktop\matcher-test\fold2\matcherTestingSvmWOAuthor.txt.map"""
+    val correctPath = """C:\Users\matfed\Desktop\matcher-test\fold2\matcherTestingSvmWOAuthor.txt"""
+    val actualPath = """C:\Users\matfed\Desktop\matcher-test\fold2\outWOAuthor"""
     //    val citeMapping = Source.fromFile(citeMapPath).getLines().toSeq.map{s => val parts = s.split(" ", 2); (parts(0).toInt -> parts(1))}.toMap
     val mapping = Source.fromFile(mappingPath).getLines().toSeq map {
       s => val parts = s.split( """\s+"""); (parts(0).toInt, parts(1).toInt)

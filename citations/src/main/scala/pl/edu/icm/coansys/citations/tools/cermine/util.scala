@@ -10,7 +10,6 @@ import org.jdom.{Document, Element}
 import org.jdom.input.SAXBuilder
 import org.jdom.filter.Filter
 import pl.edu.icm.coansys.commons.scala.automatic_resource_management._
-import org.jdom.output.XMLOutputter
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -31,7 +30,7 @@ object util {
     citations
   }
 
-  def writeCitationsToXml(outFile: File, citations: TraversableOnce[Element]) {
+  def writeCitationsToXml(outFile: File, citations: TraversableOnce[String]) {
     val xmlHeader =
       """<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
         |<citations>
@@ -41,7 +40,7 @@ object util {
     using(new FileWriter(outFile)) {
       writer =>
         writer.write(xmlHeader + "\n")
-        citations.foreach(x => writer.write(new XMLOutputter().outputString(x) + "\n"))
+        citations.foreach(x => writer.write(x + "\n"))
         writer.write(xmlFooter + "\n")
     }
   }
