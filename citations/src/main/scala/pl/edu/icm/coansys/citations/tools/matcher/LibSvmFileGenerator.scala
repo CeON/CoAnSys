@@ -51,6 +51,20 @@ object LibSvmFileGenerator {
     val authorMatchFactor = author_matching.matchFactor(
       tokensFromCermine(getField(parsed1, BibEntry.FIELD_AUTHOR)),
       tokensFromCermine(getField(parsed2, BibEntry.FIELD_AUTHOR)))
+    val authorTrigramMatchFactor =
+      trigramSimilarity(getField(parsed1, BibEntry.FIELD_AUTHOR), getField(parsed2, BibEntry.FIELD_AUTHOR))
+    val authorTokenMatchFactor = {
+      val tokens1 = tokensFromCermine(getField(parsed1, BibEntry.FIELD_AUTHOR))
+      val tokens2 = tokensFromCermine(getField(parsed2, BibEntry.FIELD_AUTHOR))
+      val counts1 = tokens1.map(_.toLowerCase).groupBy(identity).mapValues(_.length)
+      val counts2 = tokens2.map(_.toLowerCase).groupBy(identity).mapValues(_.length)
+      val common = (counts1.keySet & counts2.keySet).toIterator.map(k => counts1(k) min counts2(k)).sum
+      val all = tokens1.length + tokens2.length
+      if (all > 0)
+        common.toDouble / all
+      else
+        1.0
+    }
 
     val yearMatchFactor =
       if (misc.extractYear(getField(parsed1, BibEntry.FIELD_YEAR)) ==
@@ -85,8 +99,8 @@ object LibSvmFileGenerator {
     val lettersMatchFactor = ncLetters1 similarityTo ncLetters2
     val digitsMatchFactor = ncDigits1 similarityTo ncDigits2
 
-    List(authorMatchFactor, yearMatchFactor, pagesMatchFactor, titleMatchFactor, sourceMatchFactor, overallMatchFactor,
-      lettersMatchFactor, digitsMatchFactor)
+    List(authorMatchFactor, authorTrigramMatchFactor, authorTokenMatchFactor, yearMatchFactor, pagesMatchFactor,
+      titleMatchFactor, sourceMatchFactor, overallMatchFactor, lettersMatchFactor, digitsMatchFactor)
   }
 
   def svmLightLineFromFeatures(target: Int, featureList: Iterable[Double]): String = {
