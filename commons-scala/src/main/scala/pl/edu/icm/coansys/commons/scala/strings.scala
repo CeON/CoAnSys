@@ -86,4 +86,16 @@ object strings {
       case (b, e) => if (b < e) Some(s.substring(b, e)) else None
     }
   }
+
+  /**
+   * All characters except letters replaced by spaces. Continuous whitespaces merged.
+   */
+  def lettersOnly(s: String) =
+    s.map(x => if (x.isLetter) x else ' ').split("\\W+").mkString(" ")
+
+  /**
+   * All characters except digits replaced by spaces. Continuous whitespaces merged.
+   */
+  def digitsOnly(s: String) =
+    s.map(x => if (x.isDigit) x else ' ').split("\\W+").mkString(" ")
 }
