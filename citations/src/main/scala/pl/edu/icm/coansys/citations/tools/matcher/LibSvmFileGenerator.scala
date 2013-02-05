@@ -11,10 +11,10 @@ import pl.edu.icm.cermine.bibref.{CRFBibReferenceParser, BibReferenceParser}
 import pl.edu.icm.cermine.bibref.model.BibEntry
 import pl.edu.icm.coansys.citations.util.author_matching
 import pl.edu.icm.coansys.citations.util.misc
-import pl.edu.icm.cermine.bibref.parsing.tools.CitationUtils
+import pl.edu.icm.coansys.citations.util.misc.tokensFromCermine
 import pl.edu.icm.coansys.citations.util.ngrams.trigramSimilarity
 import pl.edu.icm.coansys.citations.util.ngrams.NgramStatistics
-import pl.edu.icm.coansys.commons.scala.strings
+import pl.edu.icm.coansys.commons.scala.strings._
 import pl.edu.icm.coansys.commons.scala.automatic_resource_management._
 import collection.mutable
 
@@ -22,8 +22,6 @@ import collection.mutable
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 object LibSvmFileGenerator {
-  private def tokensFromCermine(s: String): List[String] =
-    CitationUtils.stringToCitation(s).getTokens.map(_.getText).toList
 
   case class CachedData(bibEntry: BibEntry, ngrams: NgramStatistics, letterNgrams: NgramStatistics, digitNgrams: NgramStatistics)
 
@@ -32,10 +30,6 @@ object LibSvmFileGenerator {
   def features(parser: BibReferenceParser[BibEntry])(cit1: String, cit2: String) = {
     def getField(bibEntry: BibEntry, key: String): String =
       bibEntry.getAllFieldValues(key).mkString(" ")
-    def lettersOnly(s: String) =
-      s.map(x => if (x.isLetter) x else ' ').split("\\W+").mkString(" ")
-    def digitsOnly(s: String) =
-      s.map(x => if (x.isDigit) x else ' ').split("\\W+").mkString(" ")
     val trigramCounts: String => NgramStatistics = NgramStatistics.fromString(_, 3)
 
     val CachedData(parsed1, nc1, ncLetters1, ncDigits1) =
@@ -87,7 +81,7 @@ object LibSvmFileGenerator {
       val source2 = getField(parsed2, BibEntry.FIELD_JOURNAL)
       val minLen = math.min(source1.length, source2.length)
       if (minLen > 0) {
-        strings.lcs(source1, source2).length.toDouble / minLen
+        lcs(source1, source2).length.toDouble / minLen
       }
       else
       if (source1.length == source2.length)

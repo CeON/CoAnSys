@@ -7,8 +7,9 @@ package pl.edu.icm.coansys.citations.util
 import pl.edu.icm.coansys.importers.models.DocumentProtos.{DocumentWrapper, ReferenceMetadata, BasicMetadata}
 import scala.collection.JavaConversions._
 import com.nicta.scoobi.core.DList
-import pl.edu.icm.coansys.citations.data.CitationWrapper
+import pl.edu.icm.coansys.citations.data.CitationEntity
 import com.nicta.scoobi.InputsOutputs._
+import pl.edu.icm.cermine.bibref.parsing.tools.CitationUtils
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -28,13 +29,13 @@ object misc {
       .toSet
   }
 
-  def readCitationsFromDocumentsFromSeqFiles(uris: List[String]): DList[CitationWrapper] = {
+  def readCitationsFromDocumentsFromSeqFiles(uris: List[String]): DList[CitationEntity] = {
     //implicit val documentConverter = new BytesConverter[DocumentMetadata](_.toByteArray, DocumentMetadata.parseFrom(_))
     implicit val referenceConverter = new BytesConverter[ReferenceMetadata](_.toByteArray, ReferenceMetadata.parseFrom(_))
     implicit val wrapperConverter = new BytesConverter[DocumentWrapper](_.toByteArray, DocumentWrapper.parseFrom(_))
     convertValueFromSequenceFile[DocumentWrapper](uris)
       .flatMap(_.getDocumentMetadata.getReferenceList)
-      .map(new CitationWrapper(_))
+      .map(CitationEntity.fromReferenceMetadata(_))
   }
 
   private val uuidCharset = "UTF-8"
@@ -59,4 +60,7 @@ object misc {
       Some(candidates.minBy(x => math.abs(x - baseYear)).toString)
 
   }
+
+  def tokensFromCermine(s: String): List[String] =
+    CitationUtils.stringToCitation(s).getTokens.map(_.getText).toList
 }
