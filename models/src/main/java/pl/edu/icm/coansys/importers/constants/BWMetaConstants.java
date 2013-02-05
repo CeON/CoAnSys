@@ -27,4 +27,11 @@ public class BWMetaConstants {
         mimePdfListExtension.add(BWMetaConstants.mimePdfOneTextPdf);
         mimePdfListExtension.add(BWMetaConstants.mimePdfOneTextXPdf);
     }
+    
+    public static final String mimeTextPlain = "text/plain";
+    public static final ArrayList<String> mimeTxtListExtension = new ArrayList<String>();
+    
+    static {
+        mimeTxtListExtension.add(BWMetaConstants.mimeTextPlain);
+    }
 }
