@@ -4,9 +4,9 @@
 
 package pl.edu.icm.coansys.classification.documents.pig.extractors;
 
-import com.google.common.base.Joiner;
 import java.io.IOException;
 import java.util.Arrays;
+
 import org.apache.pig.EvalFunc;
 import org.apache.pig.data.DataByteArray;
 import org.apache.pig.data.DataType;
@@ -17,6 +17,11 @@ import org.apache.pig.impl.logicalLayer.schema.Schema;
 
 import pl.edu.icm.coansys.classification.documents.auxil.StackTraceExtractor;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
+
+import com.google.common.base.Joiner;
+import java.util.ArrayList;
+import java.util.List;
+import pl.edu.icm.coansys.importers.models.DocumentProtos.TextWithLanguage;
 
 /**
 *
@@ -70,7 +75,23 @@ public class EXTRACT_KEY_TI_ABS_KW extends EvalFunc<Tuple>{
 			 
 	        String key = dm.getKey();
 //	        String[] to = new String[]{key,dm.getTitle(),"",""};
-	        String[] to = new String[]{key,dm.getTitle(),dm.getAbstrakt(),Joiner.on(" ").join(dm.getKeywordList())};
+                
+                String titles;
+                String abstracts;
+                
+                List<String> titleList = new ArrayList<String>();
+                for (TextWithLanguage title : dm.getBasicMetadata().getTitleList()) {
+                    titleList.add(title.getText());
+                }
+                titles = Joiner.on(" ").join(titleList);
+                
+                List<String> abstractsList = new ArrayList<String>();
+                for (TextWithLanguage documentAbstract : dm.getBasicMetadata().getTitleList()) {
+                    abstractsList.add(documentAbstract.getText());
+                }
+                abstracts = Joiner.on(" ").join(abstractsList);
+                
+	        String[] to = new String[]{key,titles,abstracts,Joiner.on(" ").join(dm.getKeywordList())};
 	        Tuple t = TupleFactory.getInstance().newTuple(Arrays.asList(to));
 			
 			return t;

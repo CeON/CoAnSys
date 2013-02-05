@@ -6,7 +6,6 @@ package pl.edu.icm.coansys.disambiguation.author.features.extractors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import pl.edu.icm.coansys.disambiguation.features.Disambiguator;
 import pl.edu.icm.coansys.disambiguation.features.Extractor;
 import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
 

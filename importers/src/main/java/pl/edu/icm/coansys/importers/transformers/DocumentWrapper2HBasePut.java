@@ -1,11 +1,11 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * (C) 2010-2012 ICM UW. All rights reserved.
  */
 package pl.edu.icm.coansys.importers.transformers;
 
-import java.io.IOException;
 import org.apache.hadoop.hbase.client.Put;
+import org.apache.hadoop.hbase.util.Bytes;
+
 import pl.edu.icm.coansys.importers.constants.HBaseConstant;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentWrapper;
 
@@ -26,13 +26,13 @@ public class DocumentWrapper2HBasePut {
 
     private static Put addContentFamily(Put put, DocumentWrapper documentWrapper) {
         byte[] bytes = documentWrapper.getMediaContainer().toByteArray();
-        put.add(HBaseConstant.FAMILY_CONTENT_BYTES, HBaseConstant.FAMILY_CONTENT_QUALIFIER_PROTO_BYTES, bytes);
+        put.add(Bytes.toBytes(HBaseConstant.FAMILY_CONTENT), Bytes.toBytes(HBaseConstant.FAMILY_CONTENT_QUALIFIER_PROTO), bytes);
         return put;
     }
 
     private static Put addMetadataFamily(Put put, DocumentWrapper documentWrapper) {
         byte[] bytes = documentWrapper.getDocumentMetadata().toByteArray();
-        put.add(HBaseConstant.FAMILY_METADATA_BYTES, HBaseConstant.FAMILY_METADATA_QUALIFIER_PROTO_BYTES, bytes);
+        put.add(Bytes.toBytes(HBaseConstant.FAMILY_METADATA), Bytes.toBytes(HBaseConstant.FAMILY_METADATA_QUALIFIER_PROTO), bytes);
         return put;
     }
 

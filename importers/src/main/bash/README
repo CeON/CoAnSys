@@ -1,0 +1,8 @@
+Exemplary run
+
+# import to sequence file
+time ./import-to-sequence-files.sh ../../../target/importers-1.0-SNAPSHOT-jar-with-dependencies.jar /mnt/tmp/bwndata/flatten_springer-20120419-06 springer /mnt/tmp/bwndata-sf/springer-20120419-06.sf.snappy true &
+time ./import-to-sequence-files.sh ../../../target/importers-1.0-SNAPSHOT-jar-with-dependencies.jar /mnt/tmp/bwndata/bazekon-20120228 bazekon /mnt/tmp/bwndata-sf/bazekon-20120228.sf.snappy true &
+
+# create hbase table (presplitting with 2 regions) based on data from sequence files from hdfs
+time ./create-presplited-table.sh ../../../target/importers-1.0-SNAPSHOT-jar-with-dependencies.jar pic-bytes-out pig-samples pic_out m 2

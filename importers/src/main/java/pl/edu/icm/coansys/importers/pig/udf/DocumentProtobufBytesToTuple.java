@@ -1,11 +1,16 @@
+/*
+ * (C) 2010-2012 ICM UW. All rights reserved.
+ */
 package pl.edu.icm.coansys.importers.pig.udf;
 
-import com.google.protobuf.InvalidProtocolBufferException;
 import org.apache.pig.backend.executionengine.ExecException;
 import org.apache.pig.data.DataByteArray;
 import org.apache.pig.data.Tuple;
+
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.MediaContainer;
+
+import com.google.protobuf.InvalidProtocolBufferException;
 
 /**
  *
@@ -23,7 +28,7 @@ public class DocumentProtobufBytesToTuple extends DocumentProtobufToTupleBase {
     @Override
     public MediaContainer getDocumentMedia(Tuple input) throws ExecException, InvalidProtocolBufferException {
         MediaContainer media = null;
-        if (input.size() >= 1) {
+        if (input.size() > 1) {
             DataByteArray protoMedia = (DataByteArray) input.get(1);
             media = MediaContainer.parseFrom(protoMedia.get());
         }

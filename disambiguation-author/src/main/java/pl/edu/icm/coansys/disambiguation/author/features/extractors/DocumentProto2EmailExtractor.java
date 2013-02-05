@@ -5,6 +5,7 @@ package pl.edu.icm.coansys.disambiguation.author.features.extractors;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +35,7 @@ public class DocumentProto2EmailExtractor implements Extractor<DocumentMetadata>
         
         DocumentMetadata dm = (DocumentMetadata) input;
         ArrayList<String> ret = new ArrayList<String>();
-        for (Author a : dm.getAuthorList()) {
+        for (Author a : dm.getBasicMetadata().getAuthorList()) {
             if (a.getKey().equals(authId)) {
                 ret.add(a.getEmail());
                 break;

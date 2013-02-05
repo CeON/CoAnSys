@@ -3,19 +3,24 @@
  */
 package pl.edu.icm.coansys.classification.documents.pig.extractors;
 
+import com.google.common.base.Joiner;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 import org.apache.pig.EvalFunc;
-import org.apache.pig.data.*;
+import org.apache.pig.data.DataBag;
+import org.apache.pig.data.DataByteArray;
+import org.apache.pig.data.DataType;
+import org.apache.pig.data.DefaultDataBag;
+import org.apache.pig.data.Tuple;
+import org.apache.pig.data.TupleFactory;
 import org.apache.pig.impl.logicalLayer.FrontendException;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
 
 import pl.edu.icm.coansys.classification.documents.auxil.StackTraceExtractor;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.ClassifCode;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
+import pl.edu.icm.coansys.importers.models.DocumentProtos.TextWithLanguage;
 
 /**
  *
@@ -39,13 +44,28 @@ public class EXTRACT_MAP_CATEGOCC extends EvalFunc<Tuple> {
         try {
             DataByteArray protoMetadata = (DataByteArray) input.get(0);
             DocumentMetadata metadata = DocumentMetadata.parseFrom(protoMetadata.get());
+            
+            String titles;
+            String abstracts;
+
+            List<String> titleList = new ArrayList<String>();
+            for (TextWithLanguage title : metadata.getBasicMetadata().getTitleList()) {
+                titleList.add(title.getText());
+            }
+            titles = Joiner.on(" ").join(titleList);
+
+            List<String> abstractsList = new ArrayList<String>();
+            for (TextWithLanguage documentAbstract : metadata.getBasicMetadata().getTitleList()) {
+                abstractsList.add(documentAbstract.getText());
+            }
+            abstracts = Joiner.on(" ").join(abstractsList);
 
             Map<String, Object> map = new HashMap<String, Object>();
             map.put("key", metadata.getKey());
-            map.put("title", metadata.getTitle());
+            map.put("title", titles);
             map.put("keywords", getConcatenated(metadata.getKeywordList()));
-            map.put("abstract", metadata.getAbstrakt());
-            DataBag db = getCategories(metadata.getClassifCodeList());
+            map.put("abstract", abstracts);
+            DataBag db = getCategories(metadata.getBasicMetadata().getClassifCodeList());
             map.put("categories", db);
             long num = db.size();
 
@@ -70,14 +90,14 @@ public class EXTRACT_MAP_CATEGOCC extends EvalFunc<Tuple> {
         return db;
     }
 
-    private String getConcatenated(List<String> list) {
+    private String getConcatenated(List<TextWithLanguage> list) {
         if (list == null || list.isEmpty()) {
             return null;
         }
         StringBuilder sb = new StringBuilder(list.size());
         sb.append(list.get(0));
         for (int i = 1; i < list.size(); i++) {
-            sb.append(" ").append(list.get(i));
+            sb.append(" ").append(list.get(i).getText());
         }
         return sb.toString();
     }

@@ -6,6 +6,7 @@ package pl.edu.icm.coansys.classification.documents.pig.extractors;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
+
 import org.apache.pig.EvalFunc;
 import org.apache.pig.data.DataBag;
 import org.apache.pig.data.DefaultDataBag;

@@ -8,7 +8,12 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import org.apache.pig.EvalFunc;
-import org.apache.pig.data.*;
+import org.apache.pig.data.DataBag;
+import org.apache.pig.data.DataByteArray;
+import org.apache.pig.data.DataType;
+import org.apache.pig.data.DefaultDataBag;
+import org.apache.pig.data.Tuple;
+import org.apache.pig.data.TupleFactory;
 import org.apache.pig.impl.logicalLayer.FrontendException;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
 
@@ -70,7 +75,7 @@ public class EXTRACT_KEY_CATEG extends EvalFunc<Tuple>{
 	        DataBag db = new DefaultDataBag();
 	        int bagsize = 0;
 //	        System.out.print(key+":");
-	        for(ClassifCode code : dm.getClassifCodeList())
+	        for(ClassifCode code : dm.getBasicMetadata().getClassifCodeList())
 	        	for(String co_str : code.getValueList()){
 	        		bagsize++;
 //	        		System.out.print(" "+co_str);

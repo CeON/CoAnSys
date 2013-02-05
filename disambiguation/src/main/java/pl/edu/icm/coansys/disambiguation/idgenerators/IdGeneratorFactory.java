@@ -3,9 +3,10 @@
  */
 package pl.edu.icm.coansys.disambiguation.idgenerators;
 
-import com.sun.el.util.ReflectionUtil;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import com.sun.el.util.ReflectionUtil;
 
 /**
  * The factory returning {@link IdGenerator}s from package

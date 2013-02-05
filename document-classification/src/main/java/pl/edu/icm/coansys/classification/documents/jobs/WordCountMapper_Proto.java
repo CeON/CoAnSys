@@ -11,6 +11,8 @@ import org.apache.hadoop.hbase.mapreduce.TableMapper;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.classification.documents.auxil.PorterStemmer;
 import pl.edu.icm.coansys.disambiguation.auxil.DiacriticsRemover;
@@ -21,8 +23,9 @@ import pl.edu.icm.coansys.importers.constants.HBaseConstant;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
 
 import com.google.common.base.Joiner;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.ArrayList;
+import java.util.List;
+import pl.edu.icm.coansys.importers.models.DocumentProtos.TextWithLanguage;
 
 /**
  *
@@ -52,9 +55,16 @@ public class WordCountMapper_Proto extends TableMapper<TextArrayWritable, IntWri
         key = new Text(dm.getKey());
         
         StringBuilder in_sb = new StringBuilder();
-        in_sb.append(dm.getAbstrakt()+" ");
-        in_sb.append(Joiner.on(" ").join(dm.getKeywordList())+" ");
-        in_sb.append(dm.getTitle());        
+        for(TextWithLanguage docAbstract : dm.getDocumentAbstractList()) {
+            in_sb.append(docAbstract.getText()).append(" ");
+        }
+        in_sb.append(Joiner.on(" ").join(dm.getKeywordList())).append(" ");
+        
+        List<String> titles = new ArrayList<String>();
+        for (TextWithLanguage title : dm.getBasicMetadata().getTitleList()) {
+            titles.add(title.getText());
+        }
+        in_sb.append(Joiner.on(" ").join(titles));
         
         PorterStemmer stemmer = new PorterStemmer();
         for(String s : DiacriticsRemover.removeDiacritics(in_sb.toString())

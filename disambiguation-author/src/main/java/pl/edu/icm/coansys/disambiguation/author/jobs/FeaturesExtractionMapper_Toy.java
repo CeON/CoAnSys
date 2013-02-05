@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
 import org.apache.hadoop.hbase.mapreduce.TableMapper;
@@ -14,6 +15,7 @@ import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.io.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.ExtractorFactory;
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.AuthorBased;
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DocumentBased;
@@ -88,7 +90,7 @@ public class FeaturesExtractionMapper_Toy extends TableMapper<Text, TextTextArra
         //[which will be passes to the object authorId2FeatureMap] 
         createDocumentBasedFeatureMap(docBasedFeature, dm);
         //(2) for each of authors ...
-        for (Author a : dm.getAuthorList()) {
+        for (Author a : dm.getBasicMetadata().getAuthorList()) {
             String authId = a.getKey();
             TextTextArrayMapWritable featureName2FeatureValuesMap =
                     new TextTextArrayMapWritable();
@@ -134,7 +136,7 @@ public class FeaturesExtractionMapper_Toy extends TableMapper<Text, TextTextArra
             firstIndex++;
             if (fe instanceof DocumentBased) {
                 docBasedFeature.put(featureInfos.get(firstIndex).getDisambiguatorName(),
-                        fe.extract(dm, null));
+                        fe.extract(dm));
             }
         }
     }

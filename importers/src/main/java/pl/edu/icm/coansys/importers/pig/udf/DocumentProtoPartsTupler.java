@@ -1,16 +1,17 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * (C) 2010-2012 ICM UW. All rights reserved.
  */
 package pl.edu.icm.coansys.importers.pig.udf;
 
 import java.io.IOException;
+
 import org.apache.pig.EvalFunc;
 import org.apache.pig.data.DataByteArray;
 import org.apache.pig.data.DataType;
 import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
+
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentWrapper;
 
 /**

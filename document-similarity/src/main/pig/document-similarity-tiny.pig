@@ -39,9 +39,8 @@ IMPORT 'macros.pig';
 -- business code section
 -------------------------------------------------------
 doc = load_bwndata_metadata_hdfs('$inputPath', $sample);
--- read interesting parts
 doc_raw = foreach doc generate rowkey AS docId, document.title as title, document.abstract as abstract;
--- speparated as FLATTEN does a hidden CROSS
+-- speparated line as FLATTEN w a hidden CROSS
 doc_keyword_raw = foreach doc generate rowkey AS docId, FLATTEN(document.keywords) AS keywords;
 DESCRIBE doc_keyword_raw;
 
@@ -70,8 +69,9 @@ tfidf_all_topn = get_topn_per_group(tfidf_all, docId, tfidf, 'desc', $tfidfTopnT
 tfidf_all_topn_projected = FOREACH tfidf_all_topn GENERATE top::docId AS docId, top::term AS term, top::tfidf AS tfidf;
 STORE tfidf_all_topn_projected INTO '$outputPath$TFIDF_TOPN_ALL_SUBDIR';
 
+tfidf_all_topn_projected_loaded = LOAD '$outputPath$TFIDF_TOPN_ALL_SUBDIR' AS (docId: chararray, term: chararray, tfidf: double);
 -- calculate and store document similarity for all documents
-document_similarity = calculate_pairwise_similarity(tfidf_all_topn_projected, docId, term, tfidf, '::');
+document_similarity = calculate_pairwise_similarity(tfidf_all_topn_projected_loaded, docId, term, tfidf, '::');
 DESCRIBE document_similarity;
 STORE document_similarity INTO '$outputPath$SIMILARITY_ALL_DOCS_SUBDIR';
 

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <name>Models</name>
+    <description>Models used in CoAnSys</description>
+
+    <groupId>pl.edu.icm.coansys</groupId>
+    <artifactId>models</artifactId>
+    <version>1.0-SNAPSHOT</version> 
+
+    <properties>
+        <protobuf.java.version>2.4.1</protobuf.java.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>${protobuf.java.version}</version>
+        </dependency>
+    </dependencies>
+    
+    <scm>
+        <connection>scm:git:git://github.com/CeON/CoAnSys.git</connection>
+        <developerConnection>scm:git:git@github.com:CeON/CoAnSys.git</developerConnection>
+        <url>https://github.com/CeON/CoAnSys</url>
+    </scm>
+
+    <distributionManagement>
+        <repository>
+            <id>kdd-releases</id>
+            <url>http://maven.icm.edu.pl/artifactory/kdd-releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>kdd-snapshots</id>
+            <url>http://maven.icm.edu.pl/artifactory/kdd-snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+			<plugin>
+      			<artifactId>maven-release-plugin</artifactId>
+      			<version>2.3.2</version>
+    		</plugin>
+        </plugins>
+    </build>
+
+    <repositories>
+        <repository>
+            <id>yadda</id>
+            <name>YADDA project repository</name>
+            <url>http://maven.icm.edu.pl/artifactory/repo</url>
+        </repository>
+        <repository>
+            <id>cloudera</id>
+            <name>Cloudera hadoop repository</name>
+            <url>https://repository.cloudera.com/artifactory/cloudera-repos/</url>
+        </repository>
+        <repository>
+            <id>sonatype</id>
+            <name>Sonatype</name>
+            <url>https://oss.sonatype.org/content/repositories/releases/</url>
+        </repository>
+        <repository>
+            <id>nicta-scoobi</id>
+            <name>Scoobi repository</name>
+            <url>http://nicta.github.com/scoobi/releases/</url>
+        </repository>
+    </repositories>    
+</project>

@@ -1,3 +1,7 @@
+/*
+ * (C) 2010-2012 ICM UW. All rights reserved.
+ */
+
 package pl.edu.icm.coansys.commons.scala
 
 /**
@@ -8,7 +12,7 @@ package pl.edu.icm.coansys.commons.scala
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 object automatic_resource_management {
-  def using[T <: { def close() }, R](resource: => T)(block: T => R): R = {
+  def using[T <: {def close()}, R](resource: => T)(block: T => R): R = {
     var actualResource: T = null.asInstanceOf[T]
     try {
       actualResource = resource
