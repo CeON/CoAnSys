@@ -19,5 +19,6 @@ public class ProtoConstants {
     public static final String documentExtIdZbl = "document.extid.zbl";
     public static final String documentExtIdOai = "document.extid.dc";
     public static final String mediaTypePdf = "media.type.pdf";
+    public static final String mediaTypeTxt = "media.type.txt";
     public static final String documentExtIdBwmeta = "document.extid.bwmeta";
 }
