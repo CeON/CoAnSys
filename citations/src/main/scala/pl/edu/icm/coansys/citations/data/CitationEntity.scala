@@ -58,8 +58,8 @@ object CitationEntity {
 
     val basicMetadata = BasicMetadata.newBuilder
     basicMetadata.clearAuthor()
-    for (author <- bibEntry.getAllFieldValues(BibEntry.FIELD_AUTHOR)) {
-      basicMetadata.addAuthor(Author.newBuilder.setName(author))
+    for ((author, key) <- bibEntry.getAllFieldValues(BibEntry.FIELD_AUTHOR).toIterable.zipWithIndex) {
+      basicMetadata.addAuthor(Author.newBuilder.setName(author).setKey(key.toString))
     }
     basicMetadata.setJournal(getField(bibEntry, BibEntry.FIELD_JOURNAL))
     basicMetadata.setPages(getField(bibEntry, BibEntry.FIELD_PAGES))
