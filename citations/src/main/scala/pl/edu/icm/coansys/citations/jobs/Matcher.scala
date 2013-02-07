@@ -45,9 +45,7 @@ object Matcher extends ScoobiApp {
   def approximatelyMatchingDocuments(citation: CitationEntity, index: AuthorIndex): Iterable[EntityId] = {
     val documentsWithMatchNo =
       citation.normalisedAuthorTokens
-        .flatMap {
-        tok => index.getDocumentsByAuthor(tok)
-      }
+        .flatMap(tok => index.getDocumentsByAuthor(tok).filterNot(_ == citation.entityId))
         .groupBy(identity)
         .map {
         case (doc, iterable) => (doc, iterable.size)
