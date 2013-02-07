@@ -9,6 +9,9 @@ import pl.edu.icm.coansys.commons.scala.strings._
 import pl.edu.icm.coansys.citations.util.ngrams._
 import pl.edu.icm.coansys.importers.models.DocumentProtos.{TextWithLanguage, Author, BasicMetadata, ReferenceMetadata}
 import pl.edu.icm.cermine.bibref.model.BibEntry
+import pl.edu.icm.coansys.citations.util.BytesConverter
+import com.nicta.scoobi.core.Grouping
+import pl.edu.icm.cermine.bibref.BibReferenceParser
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -40,11 +43,17 @@ trait CitationEntity extends Entity {
 }
 
 object CitationEntity {
-  def fromReferenceMetadata(meta: ReferenceMetadata): CitationEntity = {
+  def fromBytes(bytes: Array[Byte]) =
+    fromReferenceMetadata(ReferenceMetadata.parseFrom(bytes))
+
+  def fromReferenceMetadata(meta: ReferenceMetadata): CitationEntity =
+    new CitationEntityImpl(meta)
+
+  def fromUnparsedReferenceMetadata(bibReferenceParser: BibReferenceParser[BibEntry], meta: ReferenceMetadata): CitationEntity = {
     def getField(bibEntry: BibEntry, key: String): String =
       bibEntry.getAllFieldValues(key).mkString(" ")
 
-    val bibEntry = Context.bibReferenceParser.parseBibReference(meta.getRawCitationText)
+    val bibEntry = bibReferenceParser.parseBibReference(meta.getRawCitationText)
     val builder = ReferenceMetadata.newBuilder(meta)
 
     val basicMetadata = BasicMetadata.newBuilder
@@ -59,5 +68,14 @@ object CitationEntity {
     builder.setBasicMetadata(basicMetadata)
 
     new CitationEntityImpl(builder.build())
+  }
+
+  implicit val converter =
+    new BytesConverter[CitationEntity](
+      (_.toTypedBytes),
+      (Entity.fromTypedBytes(_).asInstanceOf[CitationEntity]))
+
+  implicit val grouping = new Grouping[CitationEntity] {
+    def groupCompare(x: CitationEntity, y: CitationEntity) = x.entityId compareTo y.entityId
   }
 }

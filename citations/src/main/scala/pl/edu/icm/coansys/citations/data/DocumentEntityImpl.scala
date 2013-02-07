@@ -23,4 +23,6 @@ class DocumentEntityImpl(meta: DocumentMetadata) extends DocumentEntity {
   def year = meta.getBasicMetadata.getYear
 
   def extId = meta.getExtId(0).getValue
+
+  def toBytes = meta.toByteArray
 }

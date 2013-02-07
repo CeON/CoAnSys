@@ -51,4 +51,9 @@ class miscTest {
     assertEquals(extractYear("9999 1992"), Some("1992"), "Two four-digit numerals, one is year")
     assertEquals(extractYear("1000 1992"), Some("1992"), "Two four-digit numerals, one more likely to be year")
   }
+
+  @Test(groups = Array("fast"))
+  def normalizedAuthorTokensFromAuthorListTest() {
+
+  }
 }

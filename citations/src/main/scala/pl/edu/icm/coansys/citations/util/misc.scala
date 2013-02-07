@@ -10,6 +10,8 @@ import com.nicta.scoobi.core.DList
 import pl.edu.icm.coansys.citations.data.CitationEntity
 import com.nicta.scoobi.InputsOutputs._
 import pl.edu.icm.cermine.bibref.parsing.tools.CitationUtils
+import pl.edu.icm.coansys.citations.util.AugmentedDList.augmentDList
+import pl.edu.icm.cermine.bibref.CRFBibReferenceParser
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -29,13 +31,18 @@ object misc {
       .toSet
   }
 
-  def readCitationsFromDocumentsFromSeqFiles(uris: List[String]): DList[CitationEntity] = {
+  def readCitationsFromDocumentsFromSeqFiles(uris: List[String], parserModel: String): DList[CitationEntity] = {
     //implicit val documentConverter = new BytesConverter[DocumentMetadata](_.toByteArray, DocumentMetadata.parseFrom(_))
     implicit val referenceConverter = new BytesConverter[ReferenceMetadata](_.toByteArray, ReferenceMetadata.parseFrom(_))
     implicit val wrapperConverter = new BytesConverter[DocumentWrapper](_.toByteArray, DocumentWrapper.parseFrom(_))
-    convertValueFromSequenceFile[DocumentWrapper](uris)
+    val refmeta = convertValueFromSequenceFile[DocumentWrapper](uris)
       .flatMap(_.getDocumentMetadata.getReferenceList)
-      .map(CitationEntity.fromReferenceMetadata(_))
+    if (parserModel != null)
+      refmeta.mapWithResource(new CRFBibReferenceParser(parserModel) with NoOpClose) {
+        case (parser, meta) => CitationEntity.fromUnparsedReferenceMetadata(parser, meta)
+      }
+    else
+      refmeta.map(CitationEntity.fromReferenceMetadata(_))
   }
 
   private val uuidCharset = "UTF-8"

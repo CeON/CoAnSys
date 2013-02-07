@@ -12,7 +12,7 @@ import com.nicta.scoobi.application.ScoobiConfiguration
 import com.nicta.scoobi.Persist._
 import com.nicta.scoobi.InputsOutputs._
 import scala.Some
-import pl.edu.icm.coansys.citations.data.DocumentMetadataWrapper
+import pl.edu.icm.coansys.citations.data.Entity
 import pl.edu.icm.coansys.citations.util.hdfs
 
 /**
@@ -45,8 +45,8 @@ class SimpleIndex[K <: WritableComparable[_] : Manifest, V <: Writable : Manifes
 }
 
 object SimpleIndex {
-  def buildKeyIndex(documents: DList[DocumentMetadataWrapper], indexFile: String)(implicit conf: ScoobiConfiguration) {
-    persist(convertToSequenceFile(documents.map(doc => (doc.meta.getKey, doc)), indexFile))
+  def buildKeyIndex(documents: DList[Entity], indexFile: String)(implicit conf: ScoobiConfiguration) {
+    persist(convertToSequenceFile(documents.map(doc => (doc.entityId, doc)), indexFile))
     hdfs.mergeSeqs(indexFile)
     hdfs.convertSeqToMap(indexFile)
   }

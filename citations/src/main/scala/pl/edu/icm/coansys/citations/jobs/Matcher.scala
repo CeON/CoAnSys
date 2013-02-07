@@ -12,7 +12,7 @@ import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata
 import pl.edu.icm.coansys.importers.models.PICProtos
 import org.apache.hadoop.io.BytesWritable
 import pl.edu.icm.coansys.citations.util.AugmentedDList.augmentDList
-import pl.edu.icm.coansys.citations.indices.{SimpleTextIndex, AuthorIndex}
+import pl.edu.icm.coansys.citations.indices.{EntityIndex, SimpleTextIndex, AuthorIndex}
 import pl.edu.icm.coansys.citations.util.{misc, BytesConverter}
 import pl.edu.icm.coansys.citations.util.misc.readCitationsFromDocumentsFromSeqFiles
 import pl.edu.icm.coansys.citations.data._
@@ -44,7 +44,7 @@ object Matcher extends ScoobiApp {
    * @param index an index to be used for document retrieval
    * @return matching documents
    */
-  def approximatelyMatchingDocuments(citation: CitationEntity, index: AuthorIndex): Iterable[String] = {
+  def approximatelyMatchingDocuments(citation: CitationEntity, index: AuthorIndex): Iterable[EntityId] = {
     val documentsWithMatchNo =
       citation.normalisedAuthorTokens
         .flatMap {
@@ -73,10 +73,10 @@ object Matcher extends ScoobiApp {
       case (index, cit) => Stream.continually(cit) zip approximatelyMatchingDocuments(cit, index)
     }
 
-  def extractGoodMatches(citationsWithEntityIds: DList[(CitationEntity, EntityId)], keyIndexUri: String): DList[(CitationEntity, (EntityId, Double))] =
-    citationsWithEntityIds.flatMapWithResource(new SimpleTextIndex[BytesWritable](keyIndexUri)) {
+  def extractGoodMatches(citationsWithEntityIds: DList[(CitationEntity, EntityId)], entityIndexUri: String): DList[(CitationEntity, (EntityId, Double))] =
+    citationsWithEntityIds.flatMapWithResource(new EntityIndex(entityIndexUri)) {
       case (index, (cit, entityId)) =>
-        val entity = Context.getEntityById(entityId) // DocumentMetadata.parseFrom(index.get(docId).copyBytes)
+        val entity = index.getEntityById(entityId) // DocumentMetadata.parseFrom(index.get(docId).copyBytes)
         val similarity = cit.similarityTo(entity)
         if (similarity >= minimalSimilarity)
           Some(cit, (entityId, similarity))
@@ -91,17 +91,16 @@ object Matcher extends ScoobiApp {
         (cit, best)
     }
 
-  def extractBestMatches(citationsWithEntityIds: DList[(CitationEntity, EntityId)], keyIndexUri: String) =
+  def extractBestMatches(citationsWithEntityIds: DList[(CitationEntity, EntityId)], entityIndexUri: String) =
     citationsWithEntityIds
       .groupByKey[CitationEntity, EntityId]
-      .flatMapWithResource(new SimpleTextIndex[BytesWritable](keyIndexUri)) {
+      .flatMapWithResource(new EntityIndex(entityIndexUri)) {
       case (index, (cit, entityIds)) =>
         val aboveThreshold =
           entityIds
             .map {
             entityId =>
-            //here goes entity retrieval from index
-              val entity = Context.getEntityById(entityId) // DocumentMetadata.parseFrom(index.get(docId).copyBytes)
+              val entity = index.getEntityById(entityId) // DocumentMetadata.parseFrom(index.get(docId).copyBytes)
               (entity, cit.similarityTo(entity))
           }
             .filter(_._2 >= minimalSimilarity)
@@ -140,10 +139,16 @@ object Matcher extends ScoobiApp {
     configuration.set("mapred.max.split.size", 500000)
     configuration.setMinReducers(4)
 
-    val myMatches = matches(readCitationsFromDocumentsFromSeqFiles(List(args(2))), args(0), args(1))
+    val parserModelUri = args(0)
+    val keyIndexUri = args(1)
+    val authorIndexUri = args(2)
+    val documentsUri = args(3)
+    val outUri = args(4)
+
+    val myMatches = matches(readCitationsFromDocumentsFromSeqFiles(List(documentsUri), parserModelUri), keyIndexUri, authorIndexUri)
 
     implicit val stringConverter = new BytesConverter[String](misc.uuidEncode, misc.uuidDecode)
     implicit val picOutConverter = new BytesConverter[PICProtos.PicOut](_.toByteString.toByteArray, PICProtos.PicOut.parseFrom(_))
-    persist(convertToSequenceFile(myMatches, args(3)))
+    persist(convertToSequenceFile(myMatches, outUri))
   }
 }

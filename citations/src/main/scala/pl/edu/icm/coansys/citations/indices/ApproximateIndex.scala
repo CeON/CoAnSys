@@ -12,7 +12,7 @@ import com.nicta.scoobi.io.sequence.SeqSchema
 import com.nicta.scoobi.Persist.persist
 import com.nicta.scoobi.InputsOutputs.convertToSequenceFile
 import com.nicta.scoobi.application.ScoobiConfiguration
-import pl.edu.icm.coansys.citations.data.DocumentMetadataWrapper
+import pl.edu.icm.coansys.citations.data.Entity
 import pl.edu.icm.coansys.citations.util.{hdfs, BytesIterable, misc}
 
 /**
@@ -80,11 +80,11 @@ object ApproximateIndex {
    * @param documents documents to be indexed
    * @param indexFile an URI of location where a MapFile representing an index will be saved
    */
-  def buildAuthorIndex(documents: DList[DocumentMetadataWrapper], indexFile: String)(implicit conf: ScoobiConfiguration) {
-    def indexEntries(allDocs: DList[DocumentMetadataWrapper]) = {
+  def buildAuthorIndex(documents: DList[Entity], indexFile: String)(implicit conf: ScoobiConfiguration) {
+    def indexEntries(allDocs: DList[Entity]) = {
       val tokensWithDocs =
         allDocs
-          .flatMap(d => d.normalisedAuthorTokens zip Iterator.continually(d.meta.getKey).toIterable)
+          .flatMap(d => d.normalisedAuthorTokens zip Iterator.continually(d.entityId).toIterable)
           .groupByKey[String, String]
 
       val rotationsWithDocs = tokensWithDocs.flatMap {

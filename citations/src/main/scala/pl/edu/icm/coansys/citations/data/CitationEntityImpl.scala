@@ -26,4 +26,6 @@ class CitationEntityImpl(meta: ReferenceMetadata) extends CitationEntity {
   def sourceDocKey = meta.getSourceDocKey
 
   def position = meta.getPosition
+
+  def toBytes = meta.toByteArray
 }
