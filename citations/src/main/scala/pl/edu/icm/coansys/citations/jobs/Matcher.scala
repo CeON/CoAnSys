@@ -119,7 +119,7 @@ object Matcher extends ScoobiApp {
     matches.groupByKey[String, (Int, String)]
       .mapWithResource(new SimpleTextIndex[BytesWritable](keyIndexUri)) {
       case (index, (sourceUuid, refs)) =>
-        val sourceDoc = DocumentMetadata.parseFrom(index.get(sourceUuid).copyBytes())
+        val sourceDoc = DocumentMetadata.parseFrom(index.get("doc-" + sourceUuid).copyBytes())
 
         val outBuilder = PICProtos.PicOut.newBuilder()
         outBuilder.setDocId(sourceDoc.getExtId(0).getValue)

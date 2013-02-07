@@ -10,7 +10,9 @@ import pl.edu.icm.coansys.importers.models.DocumentProtos._
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 trait DocumentEntity extends Entity {
-  def entityId: String = "doc-" + extId
+  def entityId: String = "doc-" + docId
+
+  def docId: String
 
   def extId: String
 }

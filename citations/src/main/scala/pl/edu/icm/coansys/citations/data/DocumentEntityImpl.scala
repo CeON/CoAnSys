@@ -24,5 +24,7 @@ class DocumentEntityImpl(meta: DocumentMetadata) extends DocumentEntity {
 
   def extId = meta.getExtId(0).getValue
 
+  def docId = meta.getKey
+
   def toBytes = meta.toByteArray
 }
