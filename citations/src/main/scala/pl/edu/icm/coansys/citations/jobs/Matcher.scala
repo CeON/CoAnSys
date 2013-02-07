@@ -8,11 +8,9 @@ import com.nicta.scoobi.application.ScoobiApp
 import com.nicta.scoobi.core.DList
 import com.nicta.scoobi.Persist._
 import com.nicta.scoobi.InputsOutputs._
-import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata
 import pl.edu.icm.coansys.importers.models.PICProtos
-import org.apache.hadoop.io.BytesWritable
 import pl.edu.icm.coansys.citations.util.AugmentedDList.augmentDList
-import pl.edu.icm.coansys.citations.indices.{EntityIndex, SimpleTextIndex, AuthorIndex}
+import pl.edu.icm.coansys.citations.indices.{EntityIndex, AuthorIndex}
 import pl.edu.icm.coansys.citations.util.{misc, BytesConverter}
 import pl.edu.icm.coansys.citations.util.misc.readCitationsFromDocumentsFromSeqFiles
 import pl.edu.icm.coansys.citations.data._
@@ -117,12 +115,12 @@ object Matcher extends ScoobiApp {
 
   def reformatToPicOut(matches: DList[(String, (Int, String))], keyIndexUri: String) =
     matches.groupByKey[String, (Int, String)]
-      .mapWithResource(new SimpleTextIndex[BytesWritable](keyIndexUri)) {
+      .mapWithResource(new EntityIndex(keyIndexUri)) {
       case (index, (sourceUuid, refs)) =>
-        val sourceDoc = DocumentMetadata.parseFrom(index.get("doc-" + sourceUuid).copyBytes())
+        val sourceEntity = index.getEntityById("doc-" + sourceUuid).asInstanceOf[DocumentEntity]
 
         val outBuilder = PICProtos.PicOut.newBuilder()
-        outBuilder.setDocId(sourceDoc.getExtId(0).getValue)
+        outBuilder.setDocId(sourceEntity.extId)
         for ((position, targetExtId) <- refs) {
           outBuilder.addRefs(PICProtos.Reference.newBuilder().setDocId(targetExtId).setRefNum(position))
         }
