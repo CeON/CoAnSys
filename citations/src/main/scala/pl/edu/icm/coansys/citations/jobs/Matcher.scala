@@ -22,11 +22,6 @@ import scala.Some
 object Matcher extends ScoobiApp {
   override def upload = false
 
-  /**
-   * Minimal similarity between a citation and a document that is used to filter out weak matches.
-   */
-  val minimalSimilarity = 0.8
-
   private implicit val picOutConverter =
     new BytesConverter[PICProtos.PicOut](_.toByteArray, PICProtos.PicOut.parseFrom(_))
 
@@ -72,6 +67,7 @@ object Matcher extends ScoobiApp {
   def extractGoodMatches(citationsWithEntityIds: DList[(CitationEntity, EntityId)], entityIndexUri: String): DList[(CitationEntity, (EntityId, Double))] =
     citationsWithEntityIds.flatMapWithResource(new EntityIndex(entityIndexUri)) {
       case (index, (cit, entityId)) =>
+        val minimalSimilarity = 0.5
         val entity = index.getEntityById(entityId) // DocumentMetadata.parseFrom(index.get(docId).copyBytes)
         val similarity = cit.similarityTo(entity)
         if (similarity >= minimalSimilarity)
@@ -92,6 +88,7 @@ object Matcher extends ScoobiApp {
       .groupByKey[CitationEntity, EntityId]
       .flatMapWithResource(new EntityIndex(entityIndexUri)) {
       case (index, (cit, entityIds)) =>
+        val minimalSimilarity = 0.5
         val aboveThreshold =
           entityIds
             .map {
