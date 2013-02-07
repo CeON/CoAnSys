@@ -128,7 +128,13 @@ object Matcher extends ScoobiApp {
 
   def matches(citations: DList[CitationEntity], keyIndexUri: String, authorIndexUri: String) = {
     reformatToPicOut(extractBestMatches(addHeuristic(citations, authorIndexUri), keyIndexUri), keyIndexUri)
+  }
 
+  def matchesDebug(citations: DList[CitationEntity], keyIndexUri: String, authorIndexUri: String) = {
+    extractGoodMatches(addHeuristic(citations, authorIndexUri), keyIndexUri).mapWithResource(new EntityIndex(keyIndexUri)) {
+      case (index, (citation, (entityId, similarity))) =>
+        (citation.toReferenceString, similarity + ": " + index.getEntityById(entityId).toReferenceString)
+    }
   }
 
   def run() {
@@ -141,7 +147,7 @@ object Matcher extends ScoobiApp {
     val documentsUri = args(3)
     val outUri = args(4)
 
-    val myMatches = matches(readCitationsFromDocumentsFromSeqFiles(List(documentsUri), parserModelUri), keyIndexUri, authorIndexUri)
+    val myMatches = matchesDebug(readCitationsFromDocumentsFromSeqFiles(List(documentsUri), parserModelUri), keyIndexUri, authorIndexUri)
 
     implicit val stringConverter = new BytesConverter[String](misc.uuidEncode, misc.uuidDecode)
     implicit val picOutConverter = new BytesConverter[PICProtos.PicOut](_.toByteString.toByteArray, PICProtos.PicOut.parseFrom(_))

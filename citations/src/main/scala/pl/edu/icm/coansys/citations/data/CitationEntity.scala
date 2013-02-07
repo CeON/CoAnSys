@@ -25,6 +25,8 @@ trait CitationEntity extends Entity {
 
   def rawText: String
 
+  override def toReferenceString: String = rawText
+
   override def similarityFeaturesWith(other: Entity): List[Double] = {
     val base = super.similarityFeaturesWith(other)
     if (other.isInstanceOf[CitationEntity]) {

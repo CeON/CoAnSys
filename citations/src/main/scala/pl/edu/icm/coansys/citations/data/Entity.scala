@@ -28,6 +28,8 @@ trait Entity {
 
   def toBytes: Array[Byte]
 
+  def toReferenceString: String = List(author, title, source, pages, year).mkString("; ")
+
   def normalisedAuthorTokens: Iterable[String] =
     tokensFromCermine(strings.lettersOnly(author.toLowerCase))
       .filter(_.length > 1)
