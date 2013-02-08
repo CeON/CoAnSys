@@ -43,6 +43,11 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>pl.edu.icm.coansys</groupId>
+            <artifactId>disambiguation</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>pl.edu.icm.cermine</groupId>
             <artifactId>cermine-impl</artifactId>
             <version>1.0-SNAPSHOT</version>

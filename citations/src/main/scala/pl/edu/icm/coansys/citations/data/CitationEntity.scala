@@ -10,8 +10,10 @@ import pl.edu.icm.coansys.citations.util.ngrams._
 import pl.edu.icm.coansys.importers.models.DocumentProtos.{TextWithLanguage, Author, BasicMetadata, ReferenceMetadata}
 import pl.edu.icm.cermine.bibref.model.BibEntry
 import pl.edu.icm.coansys.citations.util.BytesConverter
+import pl.edu.icm.coansys.disambiguation.auxil.DiacriticsRemover.removeDiacritics
 import com.nicta.scoobi.core.Grouping
 import pl.edu.icm.cermine.bibref.BibReferenceParser
+
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -55,7 +57,7 @@ object CitationEntity {
     def getField(bibEntry: BibEntry, key: String): String =
       bibEntry.getAllFieldValues(key).mkString(" ")
 
-    val bibEntry = bibReferenceParser.parseBibReference(meta.getRawCitationText)
+    val bibEntry = bibReferenceParser.parseBibReference(removeDiacritics(meta.getRawCitationText))
     val builder = ReferenceMetadata.newBuilder(meta)
 
     val basicMetadata = BasicMetadata.newBuilder

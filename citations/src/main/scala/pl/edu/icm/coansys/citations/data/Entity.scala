@@ -9,6 +9,7 @@ import pl.edu.icm.coansys.citations.util.{BytesConverter, misc, author_matching}
 import pl.edu.icm.coansys.citations.util.misc.tokensFromCermine
 import pl.edu.icm.coansys.commons.scala.strings
 import java.io.{DataInputStream, ByteArrayInputStream, DataOutputStream, ByteArrayOutputStream}
+import pl.edu.icm.coansys.disambiguation.auxil.DiacriticsRemover.removeDiacritics
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -31,7 +32,7 @@ trait Entity {
   def toReferenceString: String = List(author, title, source, pages, year).mkString("; ")
 
   def normalisedAuthorTokens: Iterable[String] =
-    tokensFromCermine(strings.lettersOnly(author.toLowerCase))
+    tokensFromCermine(strings.lettersOnly(removeDiacritics(author.toLowerCase)))
       .filter(_.length > 1)
       .map(_.toLowerCase)
       .toSet
