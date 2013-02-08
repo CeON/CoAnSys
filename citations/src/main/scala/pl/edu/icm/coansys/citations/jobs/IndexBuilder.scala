@@ -39,7 +39,7 @@ object IndexBuilder extends ScoobiApp {
   }
 
   def run() {
-    if (args.length != 3) {
+    if (!(3 to 4 contains args.length)) {
       println("Usage: IndexBuilder [-key|-key-ref|-author|-author-ref] <input_seqfile> <output_index_path>")
     } else {
       args(0) match {
@@ -52,7 +52,7 @@ object IndexBuilder extends ScoobiApp {
         case "-author-ref" =>
           ApproximateIndex.buildAuthorIndex(readReferencesFromSeqFiles(List(args(2)), args(1)), args(3))
         case _ =>
-          println("Usage: IndexBuilder [-key|-author] <input_seqfile> <output_index_path>")
+          println("Usage: IndexBuilder [-key|-key-ref|-author|-author-ref] <input_seqfile> <output_index_path>")
       }
     }
   }
