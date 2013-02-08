@@ -134,6 +134,13 @@ object Matcher extends ScoobiApp {
     }
   }
 
+  def heuristicStats(citations: DList[CitationEntity], keyIndexUri: String, authorIndexUri: String) = {
+    citations.mapWithResource(new AuthorIndex(authorIndexUri)) {
+      case (index, cit) =>
+        approximatelyMatchingDocuments(cit, index).size
+    }
+  }
+
   def run() {
     configuration.set("mapred.max.split.size", 500000)
     configuration.setMinReducers(4)
@@ -144,10 +151,11 @@ object Matcher extends ScoobiApp {
     val documentsUri = args(3)
     val outUri = args(4)
 
-    val myMatches = matchesDebug(readCitationsFromDocumentsFromSeqFiles(List(documentsUri), parserModelUri), keyIndexUri, authorIndexUri)
+    //val myMatches = matchesDebug(readCitationsFromDocumentsFromSeqFiles(List(documentsUri), parserModelUri), keyIndexUri, authorIndexUri)
 
     implicit val stringConverter = new BytesConverter[String](misc.uuidEncode, misc.uuidDecode)
     implicit val picOutConverter = new BytesConverter[PICProtos.PicOut](_.toByteString.toByteArray, PICProtos.PicOut.parseFrom(_))
-    persist(convertToSequenceFile(myMatches, outUri))
+    //persist(convertToSequenceFile(myMatches, outUri))
+    persist(toTextFile(heuristicStats(readCitationsFromDocumentsFromSeqFiles(List(documentsUri), parserModelUri), keyIndexUri, authorIndexUri), outUri, overwrite = true))
   }
 }
