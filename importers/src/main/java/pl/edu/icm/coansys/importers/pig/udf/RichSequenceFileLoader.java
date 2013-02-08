@@ -6,6 +6,7 @@ package pl.edu.icm.coansys.importers.pig.udf;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -65,11 +66,11 @@ public class RichSequenceFileLoader extends FileInputLoadFunc implements StoreFu
     private TupleFactory mTupleFactory = TupleFactory.getInstance();
     private byte keyType = DataType.UNKNOWN;
     private byte valType = DataType.UNKNOWN;
-    private DataByteArray dataByteArray = new DataByteArray();
+//    private DataByteArray dataByteArray = new DataByteArray();
     private Configuration config = new Configuration();
     private Class<?> keyClass;
     private Class<?> valueClass;
-
+	private int counter = 0;
     public RichSequenceFileLoader() {
         mProtoTuple = new ArrayList<Object>(2);
     }
@@ -84,7 +85,7 @@ public class RichSequenceFileLoader extends FileInputLoadFunc implements StoreFu
     }
 
     protected void setKeyType(Class<?> keyClass) throws BackendException {
-        this.keyType |= inferPigDataType(keyClass);
+        this.keyType = inferPigDataType(keyClass);
         if (keyType == DataType.ERROR) {
             LOG.warn("Unable to translate key " + key.getClass() + " to a Pig datatype");
             throw new BackendException("Unable to translate " + key.getClass() + " to a Pig datatype");
@@ -92,10 +93,10 @@ public class RichSequenceFileLoader extends FileInputLoadFunc implements StoreFu
     }
 
     protected void setValueType(Class<?> valueClass) throws BackendException {
-        this.valType |= inferPigDataType(valueClass);
-        if (keyType == DataType.ERROR) {
-            LOG.warn("Unable to translate key " + key.getClass() + " to a Pig datatype");
-            throw new BackendException("Unable to translate " + key.getClass() + " to a Pig datatype");
+        this.valType = inferPigDataType(valueClass);
+        if (valType == DataType.ERROR) {
+            LOG.warn("Unable to translate value " + value.getClass() + " to a Pig datatype");
+            throw new BackendException("Unable to translate " + value.getClass() + " to a Pig datatype");
         }
     }
 
@@ -129,10 +130,11 @@ public class RichSequenceFileLoader extends FileInputLoadFunc implements StoreFu
                 return ((Text) w).toString();
             case DataType.BYTEARRAY:
                 if (w instanceof BytesWritable) {
-                    dataByteArray.set(((BytesWritable) w).copyBytes());
-                    return dataByteArray.get();
+					dataByteArray = new DataByteArray();
+                	dba.set(((BytesWritable) w).copyBytes());
+                    return dba;
                 } else {
-                    return ((DataByteArray) w).get();
+                    return ((DataByteArray) w);
                 }
             case DataType.INTEGER:
                 return ((IntWritable) w).get();
@@ -190,7 +192,6 @@ public class RichSequenceFileLoader extends FileInputLoadFunc implements StoreFu
         if (!next) {
             return null;
         }
-
         key = reader.getCurrentKey();
         value = reader.getCurrentValue();
 
@@ -200,7 +201,6 @@ public class RichSequenceFileLoader extends FileInputLoadFunc implements StoreFu
         if (valType == DataType.UNKNOWN && value != null) {
             setValueType(value.getClass());
         }
-
         mProtoTuple.add(translateWritableToPigDataType(key, keyType));
         mProtoTuple.add(translateWritableToPigDataType(value, valType));
         Tuple t = mTupleFactory.newTuple(mProtoTuple);
