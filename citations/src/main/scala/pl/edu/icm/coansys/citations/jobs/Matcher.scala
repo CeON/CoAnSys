@@ -56,6 +56,27 @@ object Matcher extends ScoobiApp {
     }.keys
   }
 
+  def approximatelyMatchingDocumentsStats(citation: CitationEntity, index: AuthorIndex) = {
+    val documentsWithMatchNo =
+      citation.normalisedAuthorTokens
+        .flatMap(tok => index.getDocumentsByAuthor(tok).filterNot(_ == citation.entityId))
+        .groupBy(identity)
+        .map {
+        case (doc, iterable) => (doc, iterable.size)
+      }
+
+    val maxMatchNo =
+      if (!documentsWithMatchNo.isEmpty)
+        documentsWithMatchNo.values.max
+      else
+        0
+    val docs = documentsWithMatchNo.filter {
+      case (doc, matchNo) => matchNo >= maxMatchNo - 1
+    }.keys
+
+    (citation.normalisedAuthorTokens.mkString(" "), docs.size, maxMatchNo)
+  }
+
   type EntityId = String
 
   def addHeuristic(citations: DList[CitationEntity], indexUri: String): DList[(CitationEntity, EntityId)] =
@@ -137,7 +158,7 @@ object Matcher extends ScoobiApp {
   def heuristicStats(citations: DList[CitationEntity], keyIndexUri: String, authorIndexUri: String) = {
     citations.mapWithResource(new AuthorIndex(authorIndexUri)) {
       case (index, cit) =>
-        approximatelyMatchingDocuments(cit, index).size
+        approximatelyMatchingDocumentsStats(cit, index)
     }
   }
 
