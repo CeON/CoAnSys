@@ -33,6 +33,7 @@ import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.SequenceFileRecordReader;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
+import org.apache.hadoop.util.ReflectionUtils;
 import org.apache.pig.FileInputLoadFunc;
 import org.apache.pig.LoadFunc;
 import org.apache.pig.ResourceSchema;
@@ -79,13 +80,15 @@ public class RichSequenceFileLoader extends FileInputLoadFunc implements StoreFu
         this();
         keyClass = config.getClassByName(keyClassName);
         valueClass = config.getClassByName(valueClassName);
-
-        key = (Writable) keyClass.newInstance();
-        value = (Writable) valueClass.newInstance();
+        
+        //key = (Writable) keyClass.newInstance();
+        key = (Writable) ReflectionUtils.newInstance(keyClass, new Configuration());
+        //value = (Writable) valueClass.newInstance();
+        value = (Writable) ReflectionUtils.newInstance(valueClass, new Configuration());
     }
 
     protected void setKeyType(Class<?> keyClass) throws BackendException {
-        this.keyType = inferPigDataType(keyClass);
+        this.keyType |= inferPigDataType(keyClass);
         if (keyType == DataType.ERROR) {
             LOG.warn("Unable to translate key " + key.getClass() + " to a Pig datatype");
             throw new BackendException("Unable to translate " + key.getClass() + " to a Pig datatype");
@@ -93,7 +96,7 @@ public class RichSequenceFileLoader extends FileInputLoadFunc implements StoreFu
     }
 
     protected void setValueType(Class<?> valueClass) throws BackendException {
-        this.valType = inferPigDataType(valueClass);
+        this.valType |= inferPigDataType(valueClass);
         if (valType == DataType.ERROR) {
             LOG.warn("Unable to translate value " + value.getClass() + " to a Pig datatype");
             throw new BackendException("Unable to translate " + value.getClass() + " to a Pig datatype");
@@ -130,8 +133,8 @@ public class RichSequenceFileLoader extends FileInputLoadFunc implements StoreFu
                 return ((Text) w).toString();
             case DataType.BYTEARRAY:
                 if (w instanceof BytesWritable) {
-					dataByteArray = new DataByteArray();
-                	dba.set(((BytesWritable) w).copyBytes());
+		    DataByteArray dba = new DataByteArray();
+		    dba.set(((BytesWritable) w).copyBytes());
                     return dba;
                 } else {
                     return ((DataByteArray) w);
