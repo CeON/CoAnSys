@@ -70,8 +70,9 @@ object Matcher extends ScoobiApp {
         documentsWithMatchNo.values.max
       else
         0
+    val minMatchNo = math.max(maxMatchNo, citation.normalisedAuthorTokens.size.toDouble * 2 / 3)
     val docs = documentsWithMatchNo.filter {
-      case (doc, matchNo) => matchNo >= maxMatchNo - 1
+      case (doc, matchNo) => matchNo >= minMatchNo
     }.keys
 
     (citation.normalisedAuthorTokens.mkString(" "), docs.size, maxMatchNo)
