@@ -75,7 +75,7 @@ object Matcher extends ScoobiApp {
       case (doc, matchNo) => matchNo >= minMatchNo
     }.keys
 
-    (citation.normalisedAuthorTokens.mkString(" "), docs.size, maxMatchNo)
+    ('"'+citation.rawText.filterNot(_=='"')+'"',citation.normalisedAuthorTokens.mkString(" "), docs.size, maxMatchNo)
   }
 
   type EntityId = String
