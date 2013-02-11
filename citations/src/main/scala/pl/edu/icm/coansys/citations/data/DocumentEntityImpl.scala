@@ -7,16 +7,22 @@ package pl.edu.icm.coansys.citations.data
 import collection.JavaConversions._
 
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata
+import pl.edu.icm.coansys.disambiguation.auxil.DiacriticsRemover.removeDiacritics
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 class DocumentEntityImpl(meta: DocumentMetadata) extends DocumentEntity {
-  def author = meta.getBasicMetadata.getAuthorList.map(a => if (a.hasName) a.getName else a.getForenames + " " + a.getSurname).mkString(", ")
+  def author = {
+    val authors = meta.getBasicMetadata.getAuthorList
+    val authorsNames = authors.map(a => if (a.hasName) a.getName else a.getForenames + " " + a.getSurname)
 
-  def source = meta.getBasicMetadata.getJournal
+    removeDiacritics(authorsNames.mkString(", "))
+  }
 
-  def title = meta.getBasicMetadata.getTitleList.map(_.getText).mkString(" ")
+  def source = removeDiacritics(meta.getBasicMetadata.getJournal)
+
+  def title = removeDiacritics(meta.getBasicMetadata.getTitleList.map(_.getText).mkString(" "))
 
   def pages = meta.getBasicMetadata.getPages
 
