@@ -51,8 +51,9 @@ object Matcher extends ScoobiApp {
         documentsWithMatchNo.values.max
       else
         0
+    val minMatchNo = math.max(maxMatchNo - 1, citation.normalisedAuthorTokens.size.toDouble * 2 / 3)
     documentsWithMatchNo.filter {
-      case (doc, matchNo) => matchNo >= maxMatchNo - 1
+      case (doc, matchNo) => matchNo >= minMatchNo
     }.keys
   }
 
@@ -70,12 +71,12 @@ object Matcher extends ScoobiApp {
         documentsWithMatchNo.values.max
       else
         0
-    val minMatchNo = math.max(maxMatchNo, citation.normalisedAuthorTokens.size.toDouble * 2 / 3)
+    val minMatchNo = math.max(maxMatchNo - 1, citation.normalisedAuthorTokens.size.toDouble * 2 / 3)
     val docs = documentsWithMatchNo.filter {
       case (doc, matchNo) => matchNo >= minMatchNo
     }.keys
 
-    ('"'+citation.rawText.filterNot(_=='"')+'"',citation.normalisedAuthorTokens.mkString(" "), docs.size, maxMatchNo)
+    ('"' + citation.rawText.filterNot(_ == '"') + '"', citation.normalisedAuthorTokens.mkString(" "), docs.size, maxMatchNo)
   }
 
   type EntityId = String
