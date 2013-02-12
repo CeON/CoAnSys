@@ -38,8 +38,8 @@ public class SequenceFileStoreFunc extends StoreFunc {
 
 	@Override
 	public void putNext(Tuple t) throws IOException {
-		if(t.size() != 4) {
-			throw new ExecException("Output tuple has wrong size: is " + t.size() + ", should be 4");
+		if(t.size() != 2) {
+			throw new ExecException("Output tuple has wrong size: is " + t.size() + ", should be 2");
 		}
 		String keyString = (String) t.get(0);
 		DataByteArray valueBytes = (DataByteArray) t.get(1);
