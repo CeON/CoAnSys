@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.BytesWritable;
+import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.OutputFormat;
 import org.apache.hadoop.mapreduce.RecordWriter;
@@ -41,17 +42,20 @@ public class SequenceFileStoreFunc extends StoreFunc {
 			throw new ExecException("Output tuple has wrong size: is " + t.size() + ", should be 4");
 		}
 		String keyString = (String) t.get(0);
-		DataByteArray nlmBytes = (DataByteArray) t.get(1);
+		DataByteArray valueBytes = (DataByteArray) t.get(1);
 		
-		if (keyString == null || nlmBytes == null) {
+		if (keyString == null || valueBytes == null) {
 			throw new ExecException("Output tuple contains null");
 		}
 		
- 		BytesWritable keyWritable = new BytesWritable(keyString.getBytes());
- 		BytesWritable valueWritable = new BytesWritable(nlmBytes.get());
+	    BytesWritable key = new BytesWritable();
+	    BytesWritable val = new BytesWritable();
+	    
+		key.set(keyString.getBytes(), 0, keyString.length());
+		val.set(valueBytes.get(), 0, valueBytes.get().length);
  		
 		try {
-			writer.write(keyWritable, valueWritable);
+			writer.write(key, val);
 		} catch (InterruptedException e) {
 			throw new IOException(e);
 		}
