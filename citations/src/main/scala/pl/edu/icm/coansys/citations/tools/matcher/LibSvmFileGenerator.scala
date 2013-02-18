@@ -55,7 +55,7 @@ object LibSvmFileGenerator {
       val common = (counts1.keySet & counts2.keySet).toIterator.map(k => counts1(k) min counts2(k)).sum
       val all = tokens1.length + tokens2.length
       if (all > 0)
-        common.toDouble / all
+        2 * common.toDouble / all
       else
         1.0
     }
@@ -93,8 +93,8 @@ object LibSvmFileGenerator {
     val lettersMatchFactor = ncLetters1 similarityTo ncLetters2
     val digitsMatchFactor = ncDigits1 similarityTo ncDigits2
 
-    List(authorMatchFactor, authorTrigramMatchFactor, authorTokenMatchFactor, yearMatchFactor, pagesMatchFactor,
-      titleMatchFactor, sourceMatchFactor, overallMatchFactor, lettersMatchFactor, digitsMatchFactor)
+    List(authorTrigramMatchFactor, authorTokenMatchFactor, yearMatchFactor, pagesMatchFactor,
+      titleMatchFactor, sourceMatchFactor)
   }
 
   def svmLightLineFromFeatures(target: Int, featureList: Iterable[Double]): String = {

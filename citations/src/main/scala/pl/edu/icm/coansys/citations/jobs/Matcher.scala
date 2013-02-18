@@ -88,11 +88,18 @@ object Matcher extends ScoobiApp {
     }
 
   def extractGoodMatches(citationsWithEntityIds: DList[(CitationEntity, EntityId)], entityIndexUri: String): DList[(CitationEntity, (EntityId, Double))] =
-    citationsWithEntityIds.flatMapWithResource(new EntityIndex(entityIndexUri)) {
-      case (index, (cit, entityId)) =>
+    citationsWithEntityIds.flatMapWithResource(new ScalaObject {
+      val index = new EntityIndex(entityIndexUri)
+      val similarityMeasurer = new SimilarityMeasurer
+
+      def close() {
+        index.close()
+      }
+    }) {
+      case (res, (cit, entityId)) =>
         val minimalSimilarity = 0.5
-        val entity = index.getEntityById(entityId) // DocumentMetadata.parseFrom(index.get(docId).copyBytes)
-        val similarity = cit.similarityTo(entity)
+        val entity = res.index.getEntityById(entityId) // DocumentMetadata.parseFrom(index.get(docId).copyBytes)
+        val similarity = res.similarityMeasurer.similarity(cit, entity)
         if (similarity >= minimalSimilarity)
           Some(cit, (entityId, similarity))
         else
