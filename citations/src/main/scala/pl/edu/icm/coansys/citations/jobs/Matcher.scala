@@ -14,7 +14,10 @@ import pl.edu.icm.coansys.citations.indices.{EntityIndex, AuthorIndex}
 import pl.edu.icm.coansys.citations.util.{misc, BytesConverter}
 import pl.edu.icm.coansys.citations.util.misc.readCitationsFromDocumentsFromSeqFiles
 import pl.edu.icm.coansys.citations.data._
+import feature_calculators._
+import pl.edu.icm.cermine.tools.classification.features.FeatureVectorBuilder
 import scala.Some
+import collection.JavaConversions._
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -160,7 +163,17 @@ object Matcher extends ScoobiApp {
   def matchesDebug(citations: DList[CitationEntity], keyIndexUri: String, authorIndexUri: String) = {
     extractGoodMatches(addHeuristic(citations, authorIndexUri), keyIndexUri).mapWithResource(new EntityIndex(keyIndexUri)) {
       case (index, (citation, (entityId, similarity))) =>
-        (citation.toReferenceString, similarity + ": " + index.getEntityById(entityId).toReferenceString)
+        val entity = index.getEntityById(entityId)
+        val featureVectorBuilder = new FeatureVectorBuilder[Entity, Entity]
+        featureVectorBuilder.setFeatureCalculators(List(
+          AuthorTrigramMatchFactor,
+          AuthorTokenMatchFactor,
+          PagesMatchFactor,
+          SourceMatchFactor,
+          TitleMatchFactor,
+          YearMatchFactor))
+        val fv = featureVectorBuilder.getFeatureVector(citation, entity)
+        (citation.toReferenceString + " : " + entity.toReferenceString + " : " + similarity + " : " + fv.dump() + "\n")
     }
   }
 
@@ -181,11 +194,11 @@ object Matcher extends ScoobiApp {
     val documentsUri = args(3)
     val outUri = args(4)
 
-    //val myMatches = matchesDebug(readCitationsFromDocumentsFromSeqFiles(List(documentsUri), parserModelUri), keyIndexUri, authorIndexUri)
+    val myMatchesDebug = matchesDebug(readCitationsFromDocumentsFromSeqFiles(List(documentsUri), parserModelUri), keyIndexUri, authorIndexUri)
 
     implicit val stringConverter = new BytesConverter[String](misc.uuidEncode, misc.uuidDecode)
     implicit val picOutConverter = new BytesConverter[PICProtos.PicOut](_.toByteString.toByteArray, PICProtos.PicOut.parseFrom(_))
-    //persist(convertToSequenceFile(myMatches, outUri))
+    persist(toTextFile(myMatchesDebug, outUri, overwrite = true))
     persist(toTextFile(heuristicStats(readCitationsFromDocumentsFromSeqFiles(List(documentsUri), parserModelUri), keyIndexUri, authorIndexUri), outUri, overwrite = true))
   }
 }
