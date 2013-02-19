@@ -18,6 +18,6 @@ object PagesMatchFactor extends FeatureCalculator[Entity, Entity] {
     if (pages1.size + pages2.size > 0)
       2 * (pages1.toSet & pages2.toSet).size.toDouble / (pages1.size + pages2.size)
     else
-      1.0
+      0.0
   }
 }

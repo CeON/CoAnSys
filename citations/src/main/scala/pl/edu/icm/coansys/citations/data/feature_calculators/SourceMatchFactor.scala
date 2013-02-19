@@ -19,9 +19,6 @@ object SourceMatchFactor extends FeatureCalculator[Entity, Entity] {
       lcs.length.toDouble / minLen
     }
     else
-    if (e1.source.length == e2.source.length)
-      1.0
-    else
       0.0
   }
 

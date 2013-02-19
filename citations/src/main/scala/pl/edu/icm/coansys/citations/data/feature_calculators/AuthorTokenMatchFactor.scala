@@ -22,6 +22,6 @@ object AuthorTokenMatchFactor extends FeatureCalculator[Entity, Entity] {
     if (all > 0)
       2 * common.toDouble / all
     else
-      1.0
+      0.0
   }
 }
