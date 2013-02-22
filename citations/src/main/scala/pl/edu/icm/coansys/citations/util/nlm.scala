@@ -15,10 +15,10 @@ import org.w3c.dom.{Node, NodeList}
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 object nlm {
-  def pubmedNlmToProtoBuf(f: File): DocumentMetadata =
+  def pubmedNlmToProtoBuf(f: File): DocumentWrapper =
     pubmedNlmToProtoBuf(new FileInputStream(f))
 
-  def pubmedNlmToProtoBuf(is: InputStream): DocumentMetadata = {
+  def pubmedNlmToProtoBuf(is: InputStream): DocumentWrapper = {
     class XPathEvaluator(private val obj: Any) extends (String => String) {
 
       private val evaluator = XPathFactory.newInstance().newXPath()
@@ -122,6 +122,10 @@ object nlm {
     }
 
     meta.setKey(basicMeta.getDoi)
-    meta.build()
+
+    val wrapper = DocumentWrapper.newBuilder()
+    wrapper.setRowId(meta.getKey)
+    wrapper.setDocumentMetadata(meta)
+    wrapper.build()
   }
 }

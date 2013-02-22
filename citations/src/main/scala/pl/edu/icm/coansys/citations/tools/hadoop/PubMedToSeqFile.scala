@@ -8,9 +8,8 @@ import java.io.File
 import org.apache.hadoop.io.{BytesWritable, SequenceFile}
 import pl.edu.icm.coansys.citations.util.misc
 import pl.edu.icm.coansys.citations.util.nlm.pubmedNlmToProtoBuf
-import org.apache.hadoop.fs.{FileSystem, Path}
+import org.apache.hadoop.fs.Path
 import org.apache.hadoop.conf.Configuration
-import java.net.URI
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -36,10 +35,10 @@ object PubMedToSeqFile {
   object EncapsulatedSequenceFileWriter {
     def fromLocal(uri: String): EncapsulatedSequenceFileWriter = {
       val conf: Configuration = new Configuration
-      val fs: FileSystem = FileSystem.get(URI.create(uri), conf)
       val path: Path = new Path(uri)
 
-      val writer = new SequenceFile.Writer(fs, conf, path, classOf[Array[Byte]], classOf[Array[Byte]])
+      val writer = SequenceFile.createWriter(conf, SequenceFile.Writer.file(path),
+        SequenceFile.Writer.keyClass(classOf[BytesWritable]), SequenceFile.Writer.valueClass(classOf[BytesWritable]))
       new EncapsulatedSequenceFileWriter(writer)
     }
   }
@@ -65,7 +64,10 @@ object PubMedToSeqFile {
     val extension = "nxml"
     val nlms = retrieveFilesByExtension(new File(workDir), extension)
     val writeToSeqFile = EncapsulatedSequenceFileWriter.fromLocal(outFile)
-    nlms.par.map(pubmedNlmToProtoBuf).map(meta => (misc.uuidEncode(meta.getKey), meta.toByteArray)).foreach(writeToSeqFile)
+    nlms.par
+      .map(pubmedNlmToProtoBuf)
+      .map(meta => (misc.uuidEncode(meta.getRowId), meta.toByteArray))
+      .foreach(writeToSeqFile)
     writeToSeqFile.close()
   }
 }

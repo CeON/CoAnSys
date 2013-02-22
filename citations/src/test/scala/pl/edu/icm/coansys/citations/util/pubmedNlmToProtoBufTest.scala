@@ -18,6 +18,7 @@ class pubmedNlmToProtoBufTest {
   @BeforeClass
   def setUp() {
     doc = pubmedNlmToProtoBuf(this.getClass.getResourceAsStream("/pl/edu/icm/coansys/citations/sample.nxml"))
+      .getDocumentMetadata
   }
 
   @Test(groups = Array("fast"))
