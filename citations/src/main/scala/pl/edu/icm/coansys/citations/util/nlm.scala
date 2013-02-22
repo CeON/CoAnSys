@@ -106,6 +106,7 @@ object nlm {
     basicMeta.setVolume(eval( """/article/front/article-meta/volume"""))
     basicMeta.setIssue(eval( """/article/front/article-meta/issue"""))
     basicMeta.setJournal(eval( """/article/front/journal-meta/journal-title-group/journal-title"""))
+    basicMeta.setYear(eval( """/article/front/article-meta/pub-date/year"""))
     basicMeta.addTitle(TextWithLanguage.newBuilder().setText(eval( """/article/front/article-meta/title-group/article-title""")))
 
     for (authorNode <- eval.asNodes( """/article/front/article-meta/contrib-group/contrib[@contrib-type='author']""")) {

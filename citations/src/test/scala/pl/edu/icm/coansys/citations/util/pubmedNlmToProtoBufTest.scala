@@ -68,6 +68,11 @@ class pubmedNlmToProtoBufTest {
   }
 
   @Test(groups = Array("fast"))
+  def yearTest() {
+    assertEquals(doc.getBasicMetadata.getYear, "2008")
+  }
+
+  @Test(groups = Array("fast"))
   def journalTest() {
     assertEquals(doc.getBasicMetadata.getJournal, "The AAPS Journal")
   }
