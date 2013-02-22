@@ -64,10 +64,11 @@ object PubMedToSeqFile {
     val extension = "nxml"
     val nlms = retrieveFilesByExtension(new File(workDir), extension)
     val writeToSeqFile = EncapsulatedSequenceFileWriter.fromLocal(outFile)
-    nlms.par
-      .map(pubmedNlmToProtoBuf)
-      .map(meta => (misc.uuidEncode(meta.getRowId), meta.toByteArray))
-      .foreach(writeToSeqFile)
+    nlms.par.foreach {
+      nlm =>
+        val meta = pubmedNlmToProtoBuf(nlm)
+        writeToSeqFile((misc.uuidEncode(meta.getRowId), meta.toByteArray))
+    }
     writeToSeqFile.close()
   }
 }
