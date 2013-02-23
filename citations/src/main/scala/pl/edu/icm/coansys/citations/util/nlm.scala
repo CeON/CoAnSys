@@ -59,7 +59,6 @@ object nlm {
     def referenceMetadataBuilderFromNode(node: Node): ReferenceMetadata.Builder = {
       val refEval = new XPathEvaluator(node)
       val refBuilder = ReferenceMetadata.newBuilder()
-      refEval.asNode(".")
       refBuilder.setRawCitationText(refEval("."))
       val basicMeta = BasicMetadata.newBuilder()
       basicMeta.addTitle(TextWithLanguage.newBuilder().setText(refEval( """./mixed-citation/article-title""")))
@@ -111,7 +110,9 @@ object nlm {
 
     for (authorNode <- eval.asNodes( """/article/front/article-meta/contrib-group/contrib[@contrib-type='author']""")) {
       val authorEval = new XPathEvaluator(authorNode)
-      basicMeta.addAuthor(authorBuilderFromNameNode(authorEval.asNode("./name")))
+      val nameNode = authorEval.asNode("./name")
+      if (nameNode != null)
+        basicMeta.addAuthor(authorBuilderFromNameNode(nameNode))
     }
     meta.setBasicMetadata(basicMeta)
 

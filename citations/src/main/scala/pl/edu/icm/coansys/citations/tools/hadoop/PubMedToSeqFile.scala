@@ -62,7 +62,6 @@ object PubMedToSeqFile {
   }
 
   def main(args: Array[String]) {
-    logger.debug("Just testing")
     val workDir = args(0)
     val outFile = args(1)
     val extension = "nxml"
