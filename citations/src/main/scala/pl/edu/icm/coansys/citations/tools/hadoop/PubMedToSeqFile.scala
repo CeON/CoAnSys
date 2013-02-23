@@ -10,11 +10,14 @@ import pl.edu.icm.coansys.citations.util.misc
 import pl.edu.icm.coansys.citations.util.nlm.pubmedNlmToProtoBuf
 import org.apache.hadoop.fs.Path
 import org.apache.hadoop.conf.Configuration
+import org.slf4j.LoggerFactory
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 object PubMedToSeqFile {
+
+  val logger = LoggerFactory.getLogger(PubMedToSeqFile.getClass)
 
   class EncapsulatedSequenceFileWriter(val writer: SequenceFile.Writer) extends (((Array[Byte], Array[Byte])) => Unit) {
     private val keyWritable = new BytesWritable()
@@ -59,15 +62,24 @@ object PubMedToSeqFile {
   }
 
   def main(args: Array[String]) {
+    logger.debug("Just testing")
     val workDir = args(0)
     val outFile = args(1)
     val extension = "nxml"
     val nlms = retrieveFilesByExtension(new File(workDir), extension)
     val writeToSeqFile = EncapsulatedSequenceFileWriter.fromLocal(outFile)
     nlms.par.foreach {
-      nlm =>
+      nlm => try {
         val meta = pubmedNlmToProtoBuf(nlm)
-        writeToSeqFile((misc.uuidEncode(meta.getRowId), meta.toByteArray))
+        val key = misc.uuidEncode(meta.getRowId)
+        val value = meta.toByteArray
+        writeToSeqFile.synchronized {
+          writeToSeqFile((key, value))
+        }
+      } catch {
+        case ex: Throwable =>
+          logger.error("Error while processing " + nlm.getCanonicalPath, ex)
+      }
     }
     writeToSeqFile.close()
   }
