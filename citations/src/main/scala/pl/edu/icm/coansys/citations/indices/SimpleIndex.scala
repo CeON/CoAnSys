@@ -8,12 +8,11 @@ import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.io.{WritableComparable, Writable, MapFile}
 import org.apache.hadoop.fs.Path
 import com.nicta.scoobi.core.DList
-import com.nicta.scoobi.application.ScoobiConfiguration
-import com.nicta.scoobi.Persist._
-import com.nicta.scoobi.InputsOutputs._
-import scala.Some
 import pl.edu.icm.coansys.citations.data.Entity
 import pl.edu.icm.coansys.citations.util.hdfs
+import pl.edu.icm.coansys.citations.util.basic_jobs.sort
+import com.nicta.scoobi.Scoobi._
+import scala.Some
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -47,7 +46,7 @@ class SimpleIndex[K <: WritableComparable[_] : Manifest, V <: Writable : Manifes
 object SimpleIndex {
   def buildKeyIndex(documents: DList[Entity], indexFile: String)(implicit conf: ScoobiConfiguration) {
     persist(convertToSequenceFile(documents.map(doc => (doc.entityId, doc)), indexFile))
-    hdfs.mergeSeqs(indexFile)
+    sort[String, Entity](indexFile)
     hdfs.convertSeqToMap(indexFile)
   }
 }
