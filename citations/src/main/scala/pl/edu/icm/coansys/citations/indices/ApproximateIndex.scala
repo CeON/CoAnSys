@@ -13,7 +13,7 @@ import com.nicta.scoobi.Persist.persist
 import com.nicta.scoobi.InputsOutputs.convertToSequenceFile
 import com.nicta.scoobi.application.ScoobiConfiguration
 import pl.edu.icm.coansys.citations.data.Entity
-import pl.edu.icm.coansys.citations.util.{hdfs, BytesIterable, misc, basic_jobs}
+import pl.edu.icm.coansys.citations.util.{hdfs, BytesIterable, misc}
 
 /**
  * A class helping in approximate index saved in MapFile usage.
@@ -109,7 +109,7 @@ object ApproximateIndex {
       val mf = manifest[BytesIterable]
     }
     persist(convertToSequenceFile(indexEntries(documents), indexFile))
-    basic_jobs.sort[String, Iterable[String]](indexFile)
+    hdfs.mergeSeqs(indexFile)
     hdfs.convertSeqToMap(indexFile)
   }
 }
