@@ -27,5 +27,6 @@ object basic_jobs {
     val entities = convertFromSequenceFile[K, V](tmp)
     persist(convertToSequenceFile[K, V](entities.groupBy(_ => 0).values.flatten, indexFile))
     conf.setMaxReducers(maxRed)
+    fs.delete(new Path(tmp), true)
   }
 }
