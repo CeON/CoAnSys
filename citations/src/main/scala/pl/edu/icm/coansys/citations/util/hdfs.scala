@@ -39,7 +39,9 @@ object hdfs {
     val conf = new Configuration()
     val fs = FileSystem.get(URI.create(uri), conf)
     val map = new Path(uri)
+    val mapContents = fs.listStatus(map).head.getPath
     val mapData = new Path(map, MapFile.DATA_FILE_NAME)
+    fs.rename(mapContents, mapData)
     val (keyClass, valueClass) = extractSeqTypes(mapData.toUri.toString)
     MapFile.fix(fs, map, keyClass.asInstanceOf[Class[_ <: Writable]], valueClass.asInstanceOf[Class[_ <: Writable]], false, conf)
   }

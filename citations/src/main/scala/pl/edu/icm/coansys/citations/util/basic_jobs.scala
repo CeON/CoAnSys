@@ -24,7 +24,7 @@ object basic_jobs {
     fs.rename(new Path(indexFile), new Path(tmp))
     val maxRed = conf.getMaxReducers
     conf.setMaxReducers(1)
-    val entities = convertFromSequenceFile[K, V](tmpFile)
+    val entities = convertFromSequenceFile[K, V](tmp)
     persist(convertToSequenceFile[K, V](entities.groupBy(_ => 0).values.flatten, indexFile))
     conf.setMaxReducers(maxRed)
   }
