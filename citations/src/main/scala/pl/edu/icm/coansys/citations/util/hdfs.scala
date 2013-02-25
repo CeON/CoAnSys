@@ -33,7 +33,7 @@ object hdfs {
   }
 
   /**
-   * Converts SequenceFile to a MapFile. Assumes that Sequence file path is Path(uri, MapFile.DATA_FILE_NAME)
+   * Converts SequenceFile to a MapFile.
    */
   def convertSeqToMap(uri: String) {
     val conf = new Configuration()
@@ -47,7 +47,7 @@ object hdfs {
   }
 
   /**
-   * Merges and sorts all SequenceFiles in given directory and saves as Path(uri, MapFile.DATA_FILE_NAME)
+   * Merges and sorts all SequenceFiles in given directory.
    */
   def mergeSeqs(uri: String) {
     val conf = new Configuration()
