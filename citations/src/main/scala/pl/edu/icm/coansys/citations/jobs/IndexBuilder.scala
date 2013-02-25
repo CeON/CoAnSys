@@ -32,9 +32,11 @@ object IndexBuilder extends ScoobiApp {
     implicit val rmConverter = new BytesConverter[ReferenceMetadata](_.toByteArray, ReferenceMetadata.parseFrom(_))
     convertValueFromSequenceFile[DocumentWrapper](uris)
       .flatMap[ReferenceMetadata](b => b.getDocumentMetadata.getReferenceList.toIterable)
-      .mapWithResource(new CRFBibReferenceParser(parserModel) with NoOpClose) {
-      case (parser, meta) =>
-        CitationEntity.fromUnparsedReferenceMetadata(parser, meta)
+      .flatMapWithResource(new CRFBibReferenceParser(parserModel) with NoOpClose) {
+      case (parser, meta) if !meta.getRawCitationText.isEmpty =>
+        Some(CitationEntity.fromUnparsedReferenceMetadata(parser, meta))
+      case _ =>
+        None
     }
   }
 

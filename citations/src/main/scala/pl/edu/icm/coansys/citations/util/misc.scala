@@ -38,8 +38,11 @@ object misc {
     val refmeta = convertValueFromSequenceFile[DocumentWrapper](uris)
       .flatMap(_.getDocumentMetadata.getReferenceList)
     if (parserModel != null)
-      refmeta.mapWithResource(new CRFBibReferenceParser(parserModel) with NoOpClose) {
-        case (parser, meta) => CitationEntity.fromUnparsedReferenceMetadata(parser, meta)
+      refmeta.flatMapWithResource(new CRFBibReferenceParser(parserModel) with NoOpClose) {
+        case (parser, meta) if !meta.getRawCitationText.isEmpty =>
+          Some(CitationEntity.fromUnparsedReferenceMetadata(parser, meta))
+        case _ =>
+          None
       }
     else
       refmeta.map(CitationEntity.fromReferenceMetadata(_))
