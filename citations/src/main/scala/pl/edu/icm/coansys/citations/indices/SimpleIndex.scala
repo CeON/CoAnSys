@@ -10,7 +10,6 @@ import org.apache.hadoop.fs.Path
 import com.nicta.scoobi.core.DList
 import pl.edu.icm.coansys.citations.data.Entity
 import pl.edu.icm.coansys.citations.util.hdfs
-import pl.edu.icm.coansys.citations.util.basic_jobs.sort
 import com.nicta.scoobi.Scoobi._
 import scala.Some
 
@@ -46,7 +45,7 @@ class SimpleIndex[K <: WritableComparable[_] : Manifest, V <: Writable : Manifes
 object SimpleIndex {
   def buildKeyIndex(documents: DList[Entity], indexFile: String)(implicit conf: ScoobiConfiguration) {
     persist(convertToSequenceFile(documents.map(doc => (doc.entityId, doc)), indexFile))
-    sort[String, Entity](indexFile)
+    hdfs.mergeSeqs(indexFile)
     hdfs.convertSeqToMap(indexFile)
   }
 }
