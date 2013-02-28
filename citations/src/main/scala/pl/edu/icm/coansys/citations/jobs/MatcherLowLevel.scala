@@ -13,8 +13,8 @@ import pl.edu.icm.coansys.citations.indices.{EntityIndex, AuthorIndex}
 import org.apache.hadoop.conf.Configured
 import org.apache.hadoop.util.{ToolRunner, Tool}
 import org.apache.hadoop.fs.Path
-import org.apache.hadoop.mapreduce.lib.input.FileInputFormat
-import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat
+import org.apache.hadoop.mapreduce.lib.input.{SequenceFileInputFormat, FileInputFormat}
+import org.apache.hadoop.mapreduce.lib.output.{SequenceFileOutputFormat, FileOutputFormat}
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -89,6 +89,7 @@ object MatcherLowLevel extends Configured with Tool {
     val documentsUri = args(0)
     val outUri = args(1)
     val job = new Job(getConf, "References extractor")
+    job.setJarByClass(getClass)
 
     FileInputFormat.addInputPath(job, new Path(documentsUri))
     FileOutputFormat.setOutputPath(job, new Path(outUri))
@@ -97,6 +98,8 @@ object MatcherLowLevel extends Configured with Tool {
     job.setNumReduceTasks(0)
     job.setOutputKeyClass(classOf[BytesWritable])
     job.setOutputValueClass(classOf[BytesWritable])
+    job.setInputFormatClass(classOf[SequenceFileInputFormat[BytesWritable, BytesWritable]])
+    job.setOutputFormatClass(classOf[SequenceFileOutputFormat[BytesWritable, BytesWritable]])
 
     if (job.waitForCompletion(true))
       0
