@@ -40,9 +40,4 @@
         </dependency>
     </dependencies>
     
-    <scm>
-        <connection>scm:git:git://github.com/CeON/CoAnSys.git</connection>
-        <developerConnection>scm:git:git@github.com:CeON/CoAnSys.git</developerConnection>
-    </scm>
-    
 </project>
