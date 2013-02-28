@@ -88,6 +88,8 @@ object Matcher extends ScoobiApp {
     citations
       .flatMapWithResource(new AuthorIndex(indexUri)) {
       case (index, cit) => Stream.continually(cit) zip approximatelyMatchingDocuments(cit, index)
+    }.groupByKey[CitationEntity, EntityId].flatMap {
+      case (cit, ents) => Stream.continually(cit) zip ents
     }
 
   def extractGoodMatches(citationsWithEntityIds: DList[(CitationEntity, EntityId)], entityIndexUri: String): DList[(CitationEntity, (EntityId, Double))] =
