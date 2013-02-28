@@ -15,6 +15,8 @@ import org.apache.hadoop.util.{ToolRunner, Tool}
 import org.apache.hadoop.fs.Path
 import org.apache.hadoop.mapreduce.lib.input.{SequenceFileInputFormat, FileInputFormat}
 import org.apache.hadoop.mapreduce.lib.output.{SequenceFileOutputFormat, FileOutputFormat}
+import pl.edu.icm.cermine.bibref.{CRFBibReferenceParser, BibReferenceParser}
+import pl.edu.icm.cermine.bibref.model.BibEntry
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -24,10 +26,16 @@ object MatcherLowLevel extends Configured with Tool {
   class CitationExtractor extends Mapper[Writable, BytesWritable, BytesWritable, BytesWritable] {
     type Context = Mapper[Writable, BytesWritable, BytesWritable, BytesWritable]#Context
     val writable = new BytesWritable()
+    var parser: BibReferenceParser[BibEntry] = null
+
+    override def setup(context: Context) {
+      val parserModelUri = context.getConfiguration.get("bibref.parser.model")
+      parser = new CRFBibReferenceParser(parserModelUri)
+    }
 
     override def map(key: Writable, value: BytesWritable, context: Context) {
       val wrapper = DocumentWrapper.parseFrom(value.copyBytes())
-      wrapper.getDocumentMetadata.getReferenceList.map(CitationEntity.fromReferenceMetadata).foreach {
+      wrapper.getDocumentMetadata.getReferenceList.map(CitationEntity.fromUnparsedReferenceMetadata(parser, _)).foreach {
         case ent =>
           val bytes = ent.toTypedBytes
           writable.set(bytes, 0, bytes.length)
@@ -83,25 +91,27 @@ object MatcherLowLevel extends Configured with Tool {
   }
 
   def run(args: Array[String]) = {
-    //    val parserModelUri = args(0)
+    val parserModelUri = args(0)
     //    val keyIndexUri = args(1)
     //    val authorIndexUri = args(2)
-    val documentsUri = args(0)
-    val outUri = args(1)
-    val job = new Job(getConf, "References extractor")
-    job.setJarByClass(getClass)
+    val documentsUri = args(1)
+    val outUri = args(2)
+    val conf = getConf
+    conf.set("bibref.parser.model", parserModelUri)
+    val extractionJob = new Job(conf, "References extractor")
+    extractionJob.setJarByClass(getClass)
 
-    FileInputFormat.addInputPath(job, new Path(documentsUri))
-    FileOutputFormat.setOutputPath(job, new Path(outUri))
+    FileInputFormat.addInputPath(extractionJob, new Path(documentsUri))
+    FileOutputFormat.setOutputPath(extractionJob, new Path(outUri))
 
-    job.setMapperClass(classOf[CitationExtractor])
-    job.setNumReduceTasks(0)
-    job.setOutputKeyClass(classOf[BytesWritable])
-    job.setOutputValueClass(classOf[BytesWritable])
-    job.setInputFormatClass(classOf[SequenceFileInputFormat[BytesWritable, BytesWritable]])
-    job.setOutputFormatClass(classOf[SequenceFileOutputFormat[BytesWritable, BytesWritable]])
+    extractionJob.setMapperClass(classOf[CitationExtractor])
+    extractionJob.setNumReduceTasks(0)
+    extractionJob.setOutputKeyClass(classOf[BytesWritable])
+    extractionJob.setOutputValueClass(classOf[BytesWritable])
+    extractionJob.setInputFormatClass(classOf[SequenceFileInputFormat[BytesWritable, BytesWritable]])
+    extractionJob.setOutputFormatClass(classOf[SequenceFileOutputFormat[BytesWritable, BytesWritable]])
 
-    if (job.waitForCompletion(true))
+    if (extractionJob.waitForCompletion(true))
       0
     else
       1
