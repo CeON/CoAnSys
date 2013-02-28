@@ -26,6 +26,7 @@ object MatcherLowLevel extends Configured with Tool {
   class CitationExtractor extends Mapper[Writable, BytesWritable, BytesWritable, BytesWritable] {
     type Context = Mapper[Writable, BytesWritable, BytesWritable, BytesWritable]#Context
     val writable = new BytesWritable()
+    val emptyWritable = new BytesWritable()
     var parser: BibReferenceParser[BibEntry] = null
 
     override def setup(context: Context) {
@@ -39,7 +40,7 @@ object MatcherLowLevel extends Configured with Tool {
         case ent =>
           val bytes = ent.toTypedBytes
           writable.set(bytes, 0, bytes.length)
-          context.write(writable, writable)
+          context.write(writable, emptyWritable)
       }
     }
   }
@@ -48,7 +49,12 @@ object MatcherLowLevel extends Configured with Tool {
     type Context = Mapper[BytesWritable, BytesWritable, BytesWritable, Text]#Context
     val keyWritable = new BytesWritable()
     val valueWritable = new Text()
-    val index: AuthorIndex = null
+    var index: AuthorIndex = null
+
+    override def setup(context: Context) {
+      val authorIndexUri = context.getConfiguration.get("index.author")
+      index = new AuthorIndex(authorIndexUri)
+    }
 
     override def map(key: BytesWritable, value: BytesWritable, context: Context) {
       val cit = Entity.fromTypedBytes(key.copyBytes()).asInstanceOf[CitationEntity]
@@ -62,7 +68,8 @@ object MatcherLowLevel extends Configured with Tool {
     }
 
     override def cleanup(context: Context) {
-      index.close()
+      if (index != null)
+        index.close()
     }
   }
 
@@ -70,8 +77,13 @@ object MatcherLowLevel extends Configured with Tool {
     type Context = Mapper[BytesWritable, Text, Text, Text]#Context
     val keyWritable = new Text()
     val valueWritable = new Text()
-    val index: EntityIndex = null
     val similarityMeasurer = new SimilarityMeasurer
+    var index: EntityIndex = null
+
+    override def setup(context: Context) {
+      val keyIndexUri = context.getConfiguration.get("index.key")
+      index = new EntityIndex(keyIndexUri)
+    }
 
     override def map(key: BytesWritable, value: Text, context: Context) {
       val minimalSimilarity = 0.5
@@ -86,23 +98,27 @@ object MatcherLowLevel extends Configured with Tool {
     }
 
     override def cleanup(context: Context) {
-      index.close()
+      if (index != null)
+        index.close()
     }
   }
 
-  def run(args: Array[String]) = {
+  def run(args: Array[String]): Int = {
     val parserModelUri = args(0)
-    //    val keyIndexUri = args(1)
-    //    val authorIndexUri = args(2)
-    val documentsUri = args(1)
-    val outUri = args(2)
+    val keyIndexUri = args(1)
+    val authorIndexUri = args(2)
+    val documentsUri = args(3)
+    val outUri = args(4)
     val conf = getConf
+    val intermediateRes = outUri + "_tmp"
     conf.set("bibref.parser.model", parserModelUri)
+    conf.set("index.key", keyIndexUri)
+    conf.set("index.author", authorIndexUri)
     val extractionJob = new Job(conf, "References extractor")
     extractionJob.setJarByClass(getClass)
 
     FileInputFormat.addInputPath(extractionJob, new Path(documentsUri))
-    FileOutputFormat.setOutputPath(extractionJob, new Path(outUri))
+    FileOutputFormat.setOutputPath(extractionJob, new Path(intermediateRes))
 
     extractionJob.setMapperClass(classOf[CitationExtractor])
     extractionJob.setNumReduceTasks(0)
@@ -111,10 +127,26 @@ object MatcherLowLevel extends Configured with Tool {
     extractionJob.setInputFormatClass(classOf[SequenceFileInputFormat[BytesWritable, BytesWritable]])
     extractionJob.setOutputFormatClass(classOf[SequenceFileOutputFormat[BytesWritable, BytesWritable]])
 
-    if (extractionJob.waitForCompletion(true))
-      0
+    if (!extractionJob.waitForCompletion(true))
+      return 1
+
+    val heuristicJob = new Job(conf, "References extractor")
+    heuristicJob.setJarByClass(getClass)
+
+    FileInputFormat.addInputPath(heuristicJob, new Path(intermediateRes))
+    FileOutputFormat.setOutputPath(heuristicJob, new Path(outUri))
+
+    heuristicJob.setMapperClass(classOf[HeuristicAdder])
+    heuristicJob.setNumReduceTasks(0)
+    heuristicJob.setOutputKeyClass(classOf[BytesWritable])
+    heuristicJob.setOutputValueClass(classOf[Text])
+    heuristicJob.setInputFormatClass(classOf[SequenceFileInputFormat[BytesWritable, BytesWritable]])
+    heuristicJob.setOutputFormatClass(classOf[SequenceFileOutputFormat[BytesWritable, Text]])
+
+    if (!heuristicJob.waitForCompletion(true))
+      return 1
     else
-      1
+      return 0
   }
 
   def main(args: Array[String]) {
