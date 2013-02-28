@@ -25,10 +25,12 @@
             <artifactId>commons</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>pl.edu.icm.synat</groupId>
-            <artifactId>synat-application-commons</artifactId>
-            <version>1.8-SNAPSHOT</version>
-        </dependency>
     </dependencies>
+    
+    <scm>
+        <connection>scm:git:git://github.com/CeON/CoAnSys.git</connection>
+        <developerConnection>scm:git:git@github.com:CeON/CoAnSys.git</developerConnection>
+        <url>https://github.com/CeON/CoAnSys</url>
+    </scm>
+    
 </project>
