@@ -36,7 +36,8 @@ object MatcherLowLevel extends Configured with Tool {
 
     override def map(key: Writable, value: BytesWritable, context: Context) {
       val wrapper = DocumentWrapper.parseFrom(value.copyBytes())
-      wrapper.getDocumentMetadata.getReferenceList.map(CitationEntity.fromUnparsedReferenceMetadata(parser, _)).foreach {
+      wrapper.getDocumentMetadata.getReferenceList.filterNot(_.getRawCitationText.isEmpty)
+        .map(CitationEntity.fromUnparsedReferenceMetadata(parser, _)).foreach {
         case ent =>
           val bytes = ent.toTypedBytes
           writable.set(bytes, 0, bytes.length)
