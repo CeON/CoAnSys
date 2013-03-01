@@ -7,7 +7,7 @@ package pl.edu.icm.coansys.citations.jobs
 import scala.collection.JavaConversions._
 import org.apache.hadoop.mapreduce.{Job, Mapper}
 import org.apache.hadoop.io.{Writable, Text, BytesWritable}
-import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentWrapper
+import pl.edu.icm.coansys.importers.models.DocumentProtos.{ReferenceMetadata, DocumentWrapper}
 import pl.edu.icm.coansys.citations.data.{SimilarityMeasurer, Entity, CitationEntity}
 import pl.edu.icm.coansys.citations.indices.{EntityIndex, AuthorIndex}
 import org.apache.hadoop.conf.Configured
@@ -27,19 +27,12 @@ object MatcherLowLevel extends Configured with Tool {
     type Context = Mapper[Writable, BytesWritable, BytesWritable, BytesWritable]#Context
     val writable = new BytesWritable()
     val emptyWritable = new BytesWritable()
-    var parser: BibReferenceParser[BibEntry] = null
-
-    override def setup(context: Context) {
-      val parserModelUri = context.getConfiguration.get("bibref.parser.model")
-      parser = new CRFBibReferenceParser(parserModelUri)
-    }
 
     override def map(key: Writable, value: BytesWritable, context: Context) {
       val wrapper = DocumentWrapper.parseFrom(value.copyBytes())
-      wrapper.getDocumentMetadata.getReferenceList.filterNot(_.getRawCitationText.isEmpty)
-        .map(CitationEntity.fromUnparsedReferenceMetadata(parser, _)).foreach {
-        case ent =>
-          val bytes = ent.toTypedBytes
+      wrapper.getDocumentMetadata.getReferenceList.filterNot(_.getRawCitationText.isEmpty).foreach {
+        case ref =>
+          val bytes = ref.toByteArray
           writable.set(bytes, 0, bytes.length)
           context.write(writable, emptyWritable)
       }
@@ -50,19 +43,24 @@ object MatcherLowLevel extends Configured with Tool {
     type Context = Mapper[BytesWritable, BytesWritable, BytesWritable, Text]#Context
     val keyWritable = new BytesWritable()
     val valueWritable = new Text()
+    var parser: BibReferenceParser[BibEntry] = null
     var index: AuthorIndex = null
 
     override def setup(context: Context) {
+      val parserModelUri = context.getConfiguration.get("bibref.parser.model")
+      parser = new CRFBibReferenceParser(parserModelUri)
+
       val authorIndexUri = context.getConfiguration.get("index.author")
       index = new AuthorIndex(authorIndexUri)
     }
 
     override def map(key: BytesWritable, value: BytesWritable, context: Context) {
-      val cit = Entity.fromTypedBytes(key.copyBytes()).asInstanceOf[CitationEntity]
+      val meta = ReferenceMetadata.parseFrom(key.copyBytes())
+      val cit = CitationEntity.fromUnparsedReferenceMetadata(parser, meta)
+      val bytes = cit.toTypedBytes
+      keyWritable.set(bytes, 0, bytes.length)
       Matcher.approximatelyMatchingDocuments(cit, index).foreach {
         case (entityId) =>
-          val bytes = cit.toTypedBytes
-          keyWritable.set(bytes, 0, bytes.length)
           valueWritable.set(entityId)
           context.write(keyWritable, valueWritable)
       }
