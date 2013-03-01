@@ -12,9 +12,9 @@ import pl.edu.icm.coansys.citations.data.{SimilarityMeasurer, Entity, CitationEn
 import pl.edu.icm.coansys.citations.indices.{EntityIndex, AuthorIndex}
 import org.apache.hadoop.conf.Configured
 import org.apache.hadoop.util.{ToolRunner, Tool}
-import org.apache.hadoop.fs.Path
+import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.hadoop.mapreduce.lib.input.{SequenceFileInputFormat, FileInputFormat}
-import org.apache.hadoop.mapreduce.lib.output.{SequenceFileOutputFormat, FileOutputFormat}
+import org.apache.hadoop.mapreduce.lib.output.{TextOutputFormat, SequenceFileOutputFormat, FileOutputFormat}
 import pl.edu.icm.cermine.bibref.{CRFBibReferenceParser, BibReferenceParser}
 import pl.edu.icm.cermine.bibref.model.BibEntry
 
@@ -73,10 +73,8 @@ object MatcherLowLevel extends Configured with Tool {
     }
   }
 
-  class ExactMatcher extends Mapper[BytesWritable, Text, Text, Text] {
-    type Context = Mapper[BytesWritable, Text, Text, Text]#Context
-    val keyWritable = new Text()
-    val valueWritable = new Text()
+  class ExactMatcher extends Mapper[BytesWritable, Text, String, String] {
+    type Context = Mapper[BytesWritable, Text, String, String]#Context
     val similarityMeasurer = new SimilarityMeasurer
     var index: EntityIndex = null
 
@@ -91,9 +89,7 @@ object MatcherLowLevel extends Configured with Tool {
       val entity = index.getEntityById(value.toString)
       val similarity = similarityMeasurer.similarity(cit, entity)
       if (similarity >= minimalSimilarity) {
-        keyWritable.set(cit.entityId)
-        valueWritable.set(entity.entityId)
-        context.write(keyWritable, valueWritable)
+        context.write(cit.toReferenceString, entity.toReferenceString)
       }
     }
 
@@ -110,15 +106,18 @@ object MatcherLowLevel extends Configured with Tool {
     val documentsUri = args(3)
     val outUri = args(4)
     val conf = getConf
-    val intermediateRes = outUri + "_tmp"
+    val extractedRefsUri = outUri + "_refs"
+    val refsHeuristicUri = outUri + "_heur"
     conf.set("bibref.parser.model", parserModelUri)
     conf.set("index.key", keyIndexUri)
     conf.set("index.author", authorIndexUri)
+    val fs = FileSystem.get(conf)
+
     val extractionJob = new Job(conf, "References extractor")
     extractionJob.setJarByClass(getClass)
 
     FileInputFormat.addInputPath(extractionJob, new Path(documentsUri))
-    FileOutputFormat.setOutputPath(extractionJob, new Path(intermediateRes))
+    FileOutputFormat.setOutputPath(extractionJob, new Path(extractedRefsUri))
 
     extractionJob.setMapperClass(classOf[CitationExtractor])
     extractionJob.setNumReduceTasks(0)
@@ -130,11 +129,11 @@ object MatcherLowLevel extends Configured with Tool {
     if (!extractionJob.waitForCompletion(true))
       return 1
 
-    val heuristicJob = new Job(conf, "References extractor")
+    val heuristicJob = new Job(conf, "Heuristic adder")
     heuristicJob.setJarByClass(getClass)
 
-    FileInputFormat.addInputPath(heuristicJob, new Path(intermediateRes))
-    FileOutputFormat.setOutputPath(heuristicJob, new Path(outUri))
+    FileInputFormat.addInputPath(heuristicJob, new Path(extractedRefsUri))
+    FileOutputFormat.setOutputPath(heuristicJob, new Path(refsHeuristicUri))
 
     heuristicJob.setMapperClass(classOf[HeuristicAdder])
     heuristicJob.setNumReduceTasks(0)
@@ -143,7 +142,27 @@ object MatcherLowLevel extends Configured with Tool {
     heuristicJob.setInputFormatClass(classOf[SequenceFileInputFormat[BytesWritable, BytesWritable]])
     heuristicJob.setOutputFormatClass(classOf[SequenceFileOutputFormat[BytesWritable, Text]])
 
+    fs.deleteOnExit(new Path(extractedRefsUri))
+
     if (!heuristicJob.waitForCompletion(true))
+      return 1
+
+    val assessorJob = new Job(conf, "Similarity assessor")
+    assessorJob.setJarByClass(getClass)
+
+    FileInputFormat.addInputPath(assessorJob, new Path(refsHeuristicUri))
+    FileOutputFormat.setOutputPath(assessorJob, new Path(outUri))
+
+    assessorJob.setMapperClass(classOf[ExactMatcher])
+    assessorJob.setNumReduceTasks(0)
+    assessorJob.setOutputKeyClass(classOf[BytesWritable])
+    assessorJob.setOutputValueClass(classOf[Text])
+    assessorJob.setInputFormatClass(classOf[SequenceFileInputFormat[BytesWritable, BytesWritable]])
+    assessorJob.setOutputFormatClass(classOf[TextOutputFormat[String, String]])
+
+    fs.deleteOnExit(new Path(refsHeuristicUri))
+
+    if (!assessorJob.waitForCompletion(true))
       return 1
     else
       return 0
