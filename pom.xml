@@ -284,10 +284,21 @@
     </dependencies>
     
     <scm>
-        <connection>scm:git:git://github.com/CeON/CoAnSys.git</connection>
-        <developerConnection>scm:git:git@github.com:CeON/CoAnSys.git</developerConnection>
+        <connection>scm:git:ssh://git@github.com:CeON/CoAnSys.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com:CeON/CoAnSys.git</developerConnection>
         <url>https://github.com/CeON/CoAnSys</url>
     </scm>
+
+    <distributionManagement>
+        <repository>
+            <id>kdd-releases</id>
+            <url>http://maven.ceon.pl/artifactory/kdd-releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>kdd-snapshots</id>
+            <url>http://maven.ceon.pl/artifactory/kdd-snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
     
     <repositories>
         <repository>
