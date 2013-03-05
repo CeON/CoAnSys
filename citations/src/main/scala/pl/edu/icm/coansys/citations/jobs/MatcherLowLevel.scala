@@ -10,7 +10,7 @@ import org.apache.hadoop.io.{Writable, Text, BytesWritable}
 import pl.edu.icm.coansys.importers.models.DocumentProtos.{ReferenceMetadata, DocumentWrapper}
 import pl.edu.icm.coansys.citations.data.{SimilarityMeasurer, Entity, CitationEntity}
 import pl.edu.icm.coansys.citations.indices.{EntityIndex, AuthorIndex}
-import org.apache.hadoop.conf.Configured
+import org.apache.hadoop.conf.{Configuration, Configured}
 import org.apache.hadoop.util.{ToolRunner, Tool}
 import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.hadoop.mapreduce.lib.input.{SequenceFileInputFormat, FileInputFormat}
@@ -128,7 +128,9 @@ object MatcherLowLevel extends Configured with Tool {
     if (!extractionJob.waitForCompletion(true))
       return 1
 
-    val heuristicJob = new Job(conf, "Heuristic adder")
+    val heuristicConf = new Configuration(conf)
+    heuristicConf.setInt("mapred.max.split.size", 5 * 1000 * 1000)
+    val heuristicJob = new Job(heuristicConf, "Heuristic adder")
     heuristicJob.setJarByClass(getClass)
 
     FileInputFormat.addInputPath(heuristicJob, new Path(extractedRefsUri))
