@@ -284,8 +284,8 @@
     </dependencies>
     
     <scm>
-        <connection>scm:git:ssh://git@github.com:CeON/CoAnSys.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com:CeON/CoAnSys.git</developerConnection>
+        <connection>scm:git:ssh://git@github.com/CeON/CoAnSys.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/CeON/CoAnSys.git</developerConnection>
         <url>https://github.com/CeON/CoAnSys</url>
     </scm>
 
