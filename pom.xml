@@ -5,7 +5,7 @@
     <groupId>pl.edu.icm.coansys</groupId>
     <artifactId>coansys</artifactId>
     <name>Content Analysis Systems</name>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <properties>
@@ -19,7 +19,7 @@
         <protobuf.java.version>2.4.1</protobuf.java.version>
         <testng.version>6.5.2</testng.version>
         <maven.surefire.plugin.version>2.12.3</maven.surefire.plugin.version>
-        <synat.version>1.8-SNAPSHOT</synat.version>
+        <synat.version>1.8.1</synat.version>
         <bwmeta.version>2.0</bwmeta.version>
     </properties>
 
@@ -189,7 +189,7 @@
         <module>importers</module>
         <module>integration</module>
         <module>logs-analysis</module>
-        <module>keywords-extraction</module>
+        <!-- module>keywords-extraction</module -->
         <module>models</module>        
     </modules>
 
@@ -202,20 +202,9 @@
             <type>jar</type>
         </dependency>
         <dependency>
-            <groupId>pl.edu.icm.synat</groupId>
-            <artifactId>synat-core-services-api</artifactId>
-            <version>${synat.version}</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
             <groupId>pl.edu.icm.bwmeta</groupId>
             <artifactId>bwmeta</artifactId>
             <version>${bwmeta.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>pl.edu.icm.synat</groupId>
-            <artifactId>synat-platform-connector</artifactId>
-            <version>${synat.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.hadoop</groupId>
@@ -293,6 +282,24 @@
             <version>${protobuf.java.version}</version>
         </dependency>
     </dependencies>
+    
+    <scm>
+        <connection>scm:git:ssh://git@github.com/CeON/CoAnSys.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/CeON/CoAnSys.git</developerConnection>
+        <url>https://github.com/CeON/CoAnSys</url>
+    </scm>
+
+    <distributionManagement>
+        <repository>
+            <id>kdd-releases</id>
+            <url>http://maven.ceon.pl/artifactory/kdd-releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>kdd-snapshots</id>
+            <url>http://maven.ceon.pl/artifactory/kdd-snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
+    
     <repositories>
         <repository>
             <id>yadda</id>

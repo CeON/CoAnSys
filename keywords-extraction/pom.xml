@@ -5,7 +5,7 @@
     <parent>
         <groupId>pl.edu.icm.coansys</groupId>
         <artifactId>coansys</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.1-SNAPSHOT</version>
     </parent>
     
     <artifactId>keywords-extraction</artifactId>
@@ -21,8 +21,18 @@
         </dependency>
         <dependency>
 	    	<groupId>pl.edu.icm.coansys</groupId>
-	    	<version>1.0-SNAPSHOT</version>
+	    	<version>1.1-SNAPSHOT</version>
 	    	<artifactId>models</artifactId>
 		</dependency>
+        <dependency>
+            <groupId>pl.edu.icm.cermine</groupId>
+            <artifactId>cermine-api</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>pl.edu.icm.cermine</groupId>
+            <artifactId>cermine-impl</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 </project>

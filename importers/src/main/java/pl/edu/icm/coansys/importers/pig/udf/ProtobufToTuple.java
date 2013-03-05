@@ -16,7 +16,6 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import javax.transaction.NotSupportedException;
 import org.apache.pig.EvalFunc;
 import org.apache.pig.PigException;
 import org.apache.pig.backend.executionengine.ExecException;
@@ -177,7 +176,7 @@ public class ProtobufToTuple extends EvalFunc<Tuple> {
      * @throws FrontendException
      */
     private static void addFieldToSchema(Schema schema, FieldDescriptor fd) throws FrontendException, 
-            NotSupportedException {
+            IllegalArgumentException {
         
         Type protobufType = fd.getType();
         String fieldName = fd.getName().toLowerCase(Locale.ENGLISH);
@@ -185,7 +184,7 @@ public class ProtobufToTuple extends EvalFunc<Tuple> {
         if (typesMap.containsKey(protobufType)) {
             pigType = typesMap.get(protobufType);
         } else {
-            throw new NotSupportedException();
+            throw new IllegalArgumentException();
         }
         
         if (protobufType.equals(Type.MESSAGE)) {
@@ -210,7 +209,7 @@ public class ProtobufToTuple extends EvalFunc<Tuple> {
      */
     private static Tuple messageToTuple(MessageOrBuilder message) 
             throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, 
-            NotSupportedException, ExecException {
+            ExecException {
         
         Descriptor descriptor = (Descriptor) message.getClass().getMethod("getDescriptor").invoke(null);
         int fieldsCount = descriptor.getFields().size();
@@ -237,7 +236,7 @@ public class ProtobufToTuple extends EvalFunc<Tuple> {
 
     private static Object messageFieldToTupleField(Object messageField, Type type, boolean enforceTuple) 
             throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, 
-            NotSupportedException, ExecException {
+            ExecException {
 
         if (type.equals(Type.MESSAGE)) {
             return messageToTuple((Message) messageField);
