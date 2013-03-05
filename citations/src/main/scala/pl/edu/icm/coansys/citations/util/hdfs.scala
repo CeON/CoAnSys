@@ -57,6 +57,7 @@ object hdfs {
     val mapData = new Path(dir, MapFile.DATA_FILE_NAME)
     val (keyClass, valueClass) = extractSeqTypes(paths(0).toUri.toString)
     val sorter = new Sorter(fs, keyClass.asInstanceOf[Class[_ <: WritableComparable[_]]], valueClass, conf)
+    sorter.setMemory(128 * 1000 * 1000)
     sorter.sort(paths, mapData, true)
   }
 

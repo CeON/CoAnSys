@@ -62,9 +62,9 @@ trait Entity {
   }
 
   def similarityFeaturesWith(other: Entity): List[Double] = {
-    val authorMatchFactor = author_matching.matchFactor(
-      tokensFromCermine(author),
-      tokensFromCermine(other.author))
+//    val authorMatchFactor = author_matching.matchFactor(
+//      tokensFromCermine(author),
+//      tokensFromCermine(other.author))
     val authorTrigramMatchFactor =
       trigramSimilarity(author, other.author)
     val authorTokenMatchFactor = {
@@ -109,7 +109,7 @@ trait Entity {
     }
 
 
-    List(authorMatchFactor, authorTrigramMatchFactor, authorTokenMatchFactor, yearMatchFactor, pagesMatchFactor,
+    List(/*authorMatchFactor,*/ authorTrigramMatchFactor, authorTokenMatchFactor, yearMatchFactor, pagesMatchFactor,
       titleMatchFactor, sourceMatchFactor)
   }
 }
