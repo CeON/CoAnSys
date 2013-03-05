@@ -188,6 +188,7 @@ object Matcher extends ScoobiApp {
 
   def run() {
     configuration.set("mapred.max.split.size", 500000)
+//    configuration.set("mapred.task.timeout", 4 * 60 * 60 * 1000)
     configuration.setMinReducers(4)
 
     val parserModelUri = args(0)
@@ -201,6 +202,6 @@ object Matcher extends ScoobiApp {
     implicit val stringConverter = new BytesConverter[String](misc.uuidEncode, misc.uuidDecode)
     implicit val picOutConverter = new BytesConverter[PICProtos.PicOut](_.toByteString.toByteArray, PICProtos.PicOut.parseFrom(_))
     persist(toTextFile(myMatchesDebug, outUri, overwrite = true))
-    persist(toTextFile(heuristicStats(readCitationsFromDocumentsFromSeqFiles(List(documentsUri), parserModelUri), keyIndexUri, authorIndexUri), outUri, overwrite = true))
+//    persist(toTextFile(heuristicStats(readCitationsFromDocumentsFromSeqFiles(List(documentsUri), parserModelUri), keyIndexUri, authorIndexUri), outUri, overwrite = true))
   }
 }
