@@ -4,6 +4,7 @@
 package pl.edu.icm.coansys.importers.constants;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author pdendek
@@ -18,7 +19,7 @@ public class BWMetaConstants {
     public static final String mimePdfOneApplicationXPdf = "application/x-pdf";
     public static final String mimePdfOneTextPdf = "text/pdf";
     public static final String mimePdfOneTextXPdf = "text/x-pdf";
-    public static final ArrayList<String> mimePdfListExtension = new ArrayList<String>();
+    public static final List<String> mimePdfListExtension = new ArrayList<String>();
 
     static {
         mimePdfListExtension.add(BWMetaConstants.mimePdfOneApplicationAcrobat);
@@ -29,7 +30,7 @@ public class BWMetaConstants {
     }
     
     public static final String mimeTextPlain = "text/plain";
-    public static final ArrayList<String> mimeTxtListExtension = new ArrayList<String>();
+    public static final List<String> mimeTxtListExtension = new ArrayList<String>();
     
     static {
         mimeTxtListExtension.add(BWMetaConstants.mimeTextPlain);

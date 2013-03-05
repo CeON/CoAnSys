@@ -4,6 +4,8 @@
 package pl.edu.icm.coansys.importers;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.hadoop.hbase.KeyValue;
 import pl.edu.icm.coansys.importers.iterators.ZipDirToDocumentDTOIterator;
 import pl.edu.icm.coansys.importers.models.DocumentDTO;
@@ -16,19 +18,12 @@ import pl.edu.icm.coansys.importers.transformers.DocumentDTO2KeyValue;
  */
 public class ZipDirToHFileTest {
 
-//    @Test
     public void readZipDirTest() {
         String zipDirPath = this.getClass().getClassLoader().getResource("zipdir").getPath();
         ZipDirToDocumentDTOIterator zdtp = new ZipDirToDocumentDTOIterator(zipDirPath, "TEST_COLLECTION");
-//        long start = System.nanoTime();
-//        int counter = 0;
-
-        ArrayList<KeyValue> kvs = new ArrayList<KeyValue>();
-
+        List<KeyValue> kvs = new ArrayList<KeyValue>();
         for (DocumentDTO doc : zdtp) {
             kvs.addAll(DocumentDTO2KeyValue.translate(doc));
         }
-
-//        HFile.Writer hfw = new HFile.Writer(Fs);
     }
 }

@@ -21,7 +21,7 @@ public class DocumentDTO {
     private DocumentMetadata docMetadata;
     private String key;
     private MediaContainer.Builder medias = MediaContainer.newBuilder();
-    private ArrayList<String> mediaTypes = new ArrayList<String>();
+    private List<String> mediaTypes = new ArrayList<String>();
 
     public String getCollection() {
         return collection;
