@@ -30,22 +30,14 @@ public class TfidfMapper extends Mapper<TextArrayWritable, StringListIntListWrit
      * (IN) accepts key-value pairs containing K:docId + word, V: the number of word occurences in the document + no. of all words in doc
      * (OUT) emit key-value pairs containing K:word, V: docId + number of word occurences in the document + no. of all words in doc  
      */
-    protected void map(TextArrayWritable docIdAndWord, StringListIntListWritable wcAndDocWc, Context context) { 
+    protected void map(TextArrayWritable docIdAndWord, StringListIntListWritable wcAndDocWc, Context context) throws IOException, InterruptedException { 
         
     	StringListIntListWritable slilw = new StringListIntListWritable();
     	slilw.addAllInt(wcAndDocWc.getIntList());
     	slilw.addString(docIdAndWord.toStringList().get(0));
     	
-    	try {
-			context.write(new Text(docIdAndWord.toStringList().get(1)), 
-					slilw);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		context.write(new Text(docIdAndWord.toStringList().get(1)),slilw);
+
     }
     
     
