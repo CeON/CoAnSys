@@ -33,8 +33,6 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>disambiguation-author</artifactId>
             <version>${project.version}</version>
-        </dependency>
-             
+        </dependency>             
     </dependencies>
-
 </project>
