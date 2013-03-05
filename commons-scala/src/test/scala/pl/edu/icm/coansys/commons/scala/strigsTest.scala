@@ -56,4 +56,12 @@ class strigsTest {
     assertEquals("abc", subsequence("ab c", hcs("ab c", "a bc", avoidSpaceWeight).unzip._1))
     assertEquals("abc", subsequence("a bc", hcs("ab c", "a bc", avoidSpaceWeight).unzip._2))
   }
+
+  @Test(groups = Array("fast"))
+  def splitOnRegexTest() {
+    assertEquals(splitOnRegex(" ".r, "ala ma kota").length, 5)
+    assertEquals(splitOnRegex(" ".r, "ala ma kota").mkString(""), "ala ma kota")
+    assertEquals(splitOnRegex(" ".r, "ala  ma  kota").length, 7)
+    assertEquals(splitOnRegex(" ".r, "ala  ma  kota").mkString(""), "ala  ma  kota")
+  }
 }

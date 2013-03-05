@@ -9,6 +9,7 @@ import pl.edu.icm.cermine.bibref.CRFBibReferenceParser
 import pl.edu.icm.coansys.citations.tools.cermine.util._
 import pl.edu.icm.coansys.citations.util.dataset_readers.findAndCollapseStringName
 import pl.edu.icm.cermine.bibref.parsing.tools.CitationUtils
+import org.jdom.output.XMLOutputter
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -30,6 +31,6 @@ object CermineParserExecutor {
         elem
     }
 
-    writeCitationsToXml(new File(outFile), parsedCitations)
+    writeCitationsToXml(new File(outFile), parsedCitations.map(new XMLOutputter().outputString))
   }
 }

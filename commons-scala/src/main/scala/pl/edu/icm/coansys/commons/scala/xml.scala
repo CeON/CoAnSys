@@ -46,4 +46,13 @@ object xml {
         part
     reversed.reverse
   }
+
+  //  def removeTags(s: String):String =
+  //    removeTags(s, "")
+
+  def removeTags(s: String, joiner: String = ""): String = {
+    val elems = strings.splitOnRegex(tagRegex, s)
+    val removedTags = elems filterNot (tagRegex.pattern.matcher(_).matches)
+    removedTags.mkString(joiner)
+  }
 }

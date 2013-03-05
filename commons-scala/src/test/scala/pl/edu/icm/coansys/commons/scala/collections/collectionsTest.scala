@@ -2,11 +2,10 @@
  * (C) 2010-2012 ICM UW. All rights reserved.
  */
 
-package pl.edu.icm.coansys.commons.scala
+package pl.edu.icm.coansys.commons.scala.collections
 
 import org.testng.Assert._
 import org.testng.annotations.Test
-import collections._
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)

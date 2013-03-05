@@ -7,6 +7,7 @@ package pl.edu.icm.coansys.citations.tools.cermine
 import pl.edu.icm.coansys.citations.tools.cermine.util._
 import java.io.File
 import scala.util.Random
+import org.jdom.output.XMLOutputter
 
 /**
  * Generates Mallet files for n-fold x-validation from XML-s containing mixed citations.
@@ -27,8 +28,8 @@ object CermineTestGenerator {
       testDir.mkdirs()
       trainDir.mkdirs()
 
-      writeCitationsToXml(new File(testDir, "mixed-citations.xml"), test.unzip._1)
-      writeCitationsToXml(new File(trainDir, "mixed-citations.xml"), train.unzip._1)
+      writeCitationsToXml(new File(testDir, "mixed-citations.xml"), test.unzip._1.map(new XMLOutputter().outputString))
+      writeCitationsToXml(new File(trainDir, "mixed-citations.xml"), train.unzip._1.map(new XMLOutputter().outputString))
     }
 
   }
