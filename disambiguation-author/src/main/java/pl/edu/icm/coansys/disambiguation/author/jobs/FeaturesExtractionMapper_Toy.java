@@ -51,7 +51,7 @@ public class FeaturesExtractionMapper_Toy extends TableMapper<Text, TextTextArra
     }
 
     private List<Extractor> getFeatureExtractor(List<FeatureInfo> inputfeatureInfos) {
-        ArrayList<Extractor> featureExtractors = new ArrayList<Extractor>();
+        List<Extractor> featureExtractors = new ArrayList<Extractor>();
         ExtractorFactory fe = new ExtractorFactory();
 
         for (FeatureInfo fi : inputfeatureInfos) {
@@ -59,26 +59,6 @@ public class FeaturesExtractionMapper_Toy extends TableMapper<Text, TextTextArra
         }
         return featureExtractors;
     }
-
-    /*private static List<FeatureInfo> getFeaturesInfos(String feature) {
-        ArrayList<FeatureInfo> ret = new ArrayList<FeatureInfo>();
-        String[] finfos = feature.split(",");
-        for (String finfo : finfos) {
-            String[] details = finfo.split("#");
-            if (details.length != 4) {
-                logger.error("Feature info does not contains enought data. "
-                        + "It should follow the pattern featureName#FeatureExtractorName"
-                        + "#Weight#MaxValue");
-                logger.error("FeatureInfo contains: " + finfo);
-                continue;
-            } else {
-                ret.add(new FeatureInfo(details[0], details[1],
-                        Double.parseDouble(details[2]),
-                        Integer.parseInt(details[3])));
-            }
-        }
-        return ret;
-    }*/
 
     @Override
     protected void map(ImmutableBytesWritable rowId, Result documentMetadataColumn, Context context) throws IOException, InterruptedException {

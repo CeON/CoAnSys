@@ -6,6 +6,7 @@ package pl.edu.icm.coansys.classification.documents.pig.proceeders;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.apache.pig.EvalFunc;
 import org.apache.pig.data.DataBag;
@@ -44,8 +45,8 @@ public class ACC_PREC_RECALL_F1_HL_ZOL extends EvalFunc<Tuple> {
             DataBag categReal = (DataBag) input.get(0);
             DataBag categClassif = (DataBag) input.get(1);
 
-            ArrayList<String> real = new ArrayList<String>();
-            ArrayList<String> classif = new ArrayList<String>();
+            List<String> real = new ArrayList<String>();
+            List<String> classif = new ArrayList<String>();
 
             for (Tuple t : categReal) {
                 real.add((String) t.get(0));
@@ -73,26 +74,26 @@ public class ACC_PREC_RECALL_F1_HL_ZOL extends EvalFunc<Tuple> {
         }
     }
 
-    private int intersectSize(ArrayList<String> X, ArrayList<String> Y) {
-        ArrayList<String> local = cloneArrayList(X);
+    private int intersectSize(List<String> X, List<String> Y) {
+        List<String> local = cloneArrayList(X);
         local.retainAll(Y);
         return local.size();
     }
 
-    private int sumSize(ArrayList<String> X, ArrayList<String> Y) {
-        ArrayList<String> local = cloneArrayList(X);
+    private int sumSize(List<String> X, List<String> Y) {
+        List<String> local = cloneArrayList(X);
         local.addAll(Y);
         return local.size();
     }
 
-    private ArrayList<String> subs(ArrayList<String> X, ArrayList<String> Y) {
-        ArrayList<String> local = cloneArrayList(X);
+    private List<String> subs(List<String> X, List<String> Y) {
+        List<String> local = cloneArrayList(X);
         local.removeAll(Y);
         return local;
     }
 
-    private ArrayList<String> cloneArrayList(ArrayList<String> in) {
-        ArrayList<String> ret = new ArrayList<String>();
+    private List<String> cloneArrayList(List<String> in) {
+        List<String> ret = new ArrayList<String>();
         for (String s : in) {
             ret.add(s);
         }

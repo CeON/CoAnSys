@@ -8,6 +8,7 @@ package pl.edu.icm.coansys.classification.documents.pig.proceeders;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.apache.pig.EvalFunc;
 import org.apache.pig.data.DataBag;
@@ -43,12 +44,12 @@ public class CHECK_CLASSIF extends EvalFunc<Tuple>{
 			DataBag categNeigh = (DataBag) input.get(1);
 			DataBag categClassif = (DataBag) input.get(2);
 			
-			ArrayList<String> T = new ArrayList<String>();
-			ArrayList<String> P = new ArrayList<String>();
-			ArrayList<String> toChoose = new ArrayList<String>();
+			List<String> T = new ArrayList<String>();
+			List<String> P = new ArrayList<String>();
+			List<String> toChoose = new ArrayList<String>();
 			
-			ArrayList<String> F = null;
-			ArrayList<String> N = null;
+			List<String> F = null;
+			List<String> N = null;
 			int tp,tn,fp,fn;
 
 			for(Tuple t : categReal) T.add((String) t.get(0));
@@ -77,14 +78,14 @@ public class CHECK_CLASSIF extends EvalFunc<Tuple>{
 		}
 	}
 
-	private int intersectSize(ArrayList<String> X, ArrayList<String> Y) {
-		ArrayList<String> local = cloneArrayList(X);
+	private int intersectSize(List<String> X, List<String> Y) {
+		List<String> local = cloneArrayList(X);
 		local.retainAll(Y);
 		return local.size();
 	}
 
-	private ArrayList<String> cloneArrayList(ArrayList<String> in){
-		ArrayList<String> ret = new ArrayList<String>();
+	private List<String> cloneArrayList(List<String> in){
+		List<String> ret = new ArrayList<String>();
 		for(String s : in) ret.add(s);
 		return ret;
 	}

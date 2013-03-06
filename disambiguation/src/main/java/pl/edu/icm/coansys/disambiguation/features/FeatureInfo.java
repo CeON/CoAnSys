@@ -62,7 +62,7 @@ public class FeatureInfo {
 	 * @return A list of {@link FeatureInfo} objects, sorted by the "weight" field in a descending manner.  
 	 */
 	public static List<FeatureInfo> parseFeatureInfoString(String info){
-		ArrayList<FeatureInfo> ret = new ArrayList<FeatureInfo>(); 
+		List<FeatureInfo> ret = new ArrayList<FeatureInfo>(); 
     	String[] finfos = info.split(",");
     	for(String finfo : finfos){
     		String[] details = finfo.split("#");
