@@ -5,8 +5,8 @@ package pl.edu.icm.coansys.importers.parsers;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.*;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.edu.icm.coansys.importers.constants.ProtoConstants;
@@ -44,23 +44,6 @@ public class MetadataToProtoMetadataParser {
     private MetadataToProtoMetadataParser() {
     }
 
-    private static String convertStreamToString(InputStream is) throws IOException {
-        InputStreamReader input = new InputStreamReader(is, "UTF-8");
-        final int CHARS_PER_PAGE = 50000; //counting spaces
-        final char[] buffer = new char[CHARS_PER_PAGE];
-        StringBuilder output = new StringBuilder(CHARS_PER_PAGE);
-        try {
-            for (int read = input.read(buffer, 0, buffer.length);
-                    read != -1;
-                    read = input.read(buffer, 0, buffer.length)) {
-                output.append(buffer, 0, read);
-            }
-        } catch (IOException ignore) {
-        }
-
-        return output.toString();
-    }
-
     private static Map<String, MetadataFormat> getSupportedBwmetaTypes() {
         // Supported bwmeta formats
         Map<String, MetadataFormat> result = new HashMap<String, MetadataFormat>();
@@ -72,7 +55,7 @@ public class MetadataToProtoMetadataParser {
     }
 
     public static List<YExportable> streamToYExportable(InputStream stream, MetadataType type) throws TransformationException, IOException {
-        return stringToYExportable(convertStreamToString(stream), type);
+        return stringToYExportable(IOUtils.toString(stream), type);
     }
 
     private static List<YExportable> stringToYExportable(String data, MetadataType type) throws TransformationException, IOException {
