@@ -54,23 +54,22 @@ public class WordCountMapper_Proto extends TableMapper<TextArrayWritable, IntWri
 
         key = new Text(dm.getKey());
         
-        StringBuilder in_sb = new StringBuilder();
+        StringBuilder inputDataStringBuilder = new StringBuilder();
         for(TextWithLanguage docAbstract : dm.getDocumentAbstractList()) {
-            in_sb.append(docAbstract.getText()).append(" ");
+            inputDataStringBuilder.append(docAbstract.getText()).append(" ");
         }
-        in_sb.append(Joiner.on(" ").join(dm.getKeywordList())).append(" ");
+        inputDataStringBuilder.append(Joiner.on(" ").join(dm.getKeywordList())).append(" ");
         
         List<String> titles = new ArrayList<String>();
         for (TextWithLanguage title : dm.getBasicMetadata().getTitleList()) {
             titles.add(title.getText());
         }
-        in_sb.append(Joiner.on(" ").join(titles));
+        inputDataStringBuilder.append(Joiner.on(" ").join(titles));
         
         PorterStemmer stemmer = new PorterStemmer();
-        for(String s : DiacriticsRemover.removeDiacritics(in_sb.toString())
-        											.toLowerCase().split(" ")){
-        	s.toCharArray();
-        	stemmer.add(s.toCharArray(), 0);
+        for(String string : DiacriticsRemover.removeDiacritics(inputDataStringBuilder.toString())
+        											.toLowerCase().split(" ")){ 
+        	stemmer.add(string.toCharArray(), 0);
         	stemmer.stem();
 
         	context.write(new TextArrayWritable(new Text[]{key, new Text(stemmer.toString())}),

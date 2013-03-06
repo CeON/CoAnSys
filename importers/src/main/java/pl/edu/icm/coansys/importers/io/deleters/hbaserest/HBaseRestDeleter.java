@@ -43,7 +43,7 @@ public class HBaseRestDeleter {
                 new Client(
                 new Cluster().add(remoteHost, remotePort)), remoteTable);
 
-        ArrayList<byte[]> rowBytes = new ArrayList<byte[]>();
+        List<byte[]> rowBytes = new ArrayList<byte[]>();
         for (String s : rowsToDelete) {
             rowBytes.add(Bytes.toBytes(s));
         }

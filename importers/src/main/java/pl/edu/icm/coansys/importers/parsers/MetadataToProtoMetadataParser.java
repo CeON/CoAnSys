@@ -130,11 +130,11 @@ public class MetadataToProtoMetadataParser {
         List<YName> names = yContributor.getNames();
         for (YName yName : names) {
             String type = yName.getType();
-            if ("canonical".equals(type)) {
+            if (YConstants.NM_CANONICAL.equals(type)) {
                 authorBuilder.setName(yName.getText());
-            } else if ("forenames".equals(type)) {
+            } else if (YConstants.NM_FORENAMES.equals(type)) {
                 authorBuilder.setForenames(yName.getText());
-            } else if ("surname".equals(type)) {
+            } else if (YConstants.NM_SURNAME.equals(type)) {
                 authorBuilder.setSurname(yName.getText());
             } else { //type not set
                 authorBuilder.setName(yName.getText());

@@ -32,7 +32,7 @@ public class DocumentProto2KeyPhraseExtractor implements Extractor<DocumentMetad
     @Override
     public List<String> extract(DocumentMetadata input, String... auxil) {
         DocumentMetadata dm = (DocumentMetadata) input;
-        ArrayList<String> ret = new ArrayList<String>();
+        List<String> ret = new ArrayList<String>();
         for (TextWithLanguage kw : dm.getKeywordList()) {
             ret.add(kw.getText());
         }

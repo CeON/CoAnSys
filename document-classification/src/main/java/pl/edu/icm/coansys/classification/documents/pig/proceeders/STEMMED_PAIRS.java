@@ -8,6 +8,7 @@ package pl.edu.icm.coansys.classification.documents.pig.proceeders;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.apache.pig.EvalFunc;
 import org.apache.pig.PigServer;
@@ -59,7 +60,7 @@ public class STEMMED_PAIRS extends EvalFunc<DataBag>{
 			vals_str = vals_str.replaceAll("[^a-z ]", "");
 			
 			PorterStemmer ps = new PorterStemmer();
-			ArrayList<Tuple> alt = new ArrayList<Tuple>(); 
+			List<Tuple> alt = new ArrayList<Tuple>(); 
 			for(String s : vals_str.split(" ")){
 				if(StopWordsRemover.isAnEnglishStopWords(s)) continue;
 

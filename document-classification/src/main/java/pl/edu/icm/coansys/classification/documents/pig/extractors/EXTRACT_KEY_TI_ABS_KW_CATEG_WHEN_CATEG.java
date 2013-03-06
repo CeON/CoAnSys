@@ -48,24 +48,15 @@ public class EXTRACT_KEY_TI_ABS_KW_CATEG_WHEN_CATEG extends EvalFunc<Tuple> {
         }
         try {
             Object obj = null;
-            try {
-                obj = (DataByteArray) input.get(1);
-            } catch (Exception e) {
-                System.out.println("Trying to read field rowId");
+            
+            obj = input.get(1);
+            if(!(obj instanceof DataByteArray)){
+            	System.out.println("Trying to cast Object (" + input.getType(1) + ") to DataByteArray");
                 System.out.println("Failure!");
-                e.printStackTrace();
-                throw e;
+            	return null;
             }
+            DataByteArray dba = (DataByteArray) obj;
 
-            DataByteArray dba = null;
-            try {
-                dba = (DataByteArray) obj;
-            } catch (Exception e) {
-                System.out.println("Trying to cast Object (" + input.getType(1) + ") to DataByteArray");
-                System.out.println("Failure!");
-                e.printStackTrace();
-                throw e;
-            }
 
             DocumentMetadata dm = null;
             try {
@@ -81,15 +72,12 @@ public class EXTRACT_KEY_TI_ABS_KW_CATEG_WHEN_CATEG extends EvalFunc<Tuple> {
 
             DataBag db = new DefaultDataBag();
             int bagsize = 0;
-//	        System.out.print(key+":");
-            for (ClassifCode code : dm.getBasicMetadata().getClassifCodeList()) {
+            for (ClassifCode code : dm.getBasicMetadata().getClassifCodeList())
                 for (String co_str : code.getValueList()) {
                     bagsize++;
-//	        		System.out.print(" "+co_str);
                     db.add(TupleFactory.getInstance().newTuple(co_str));
                 }
-            }
-//	        System.out.println("");
+            
             if (bagsize > 0) {
                 
                 String titles;
