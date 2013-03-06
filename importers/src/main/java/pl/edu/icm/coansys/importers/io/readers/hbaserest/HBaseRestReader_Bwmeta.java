@@ -59,7 +59,7 @@ public class HBaseRestReader_Bwmeta {
         try {
             for (Result scannerResult : scanner) {
             	String rowId = new String(scannerResult.getRow());
-            	ArrayList<String> names = new ArrayList<String>();
+            	List<String> names = new ArrayList<String>();
             	
             	if(scannerResult.getValue(Bytes.toBytes(HBaseConstant.FAMILY_CONTENT), Bytes.toBytes(HBaseConstant.FAMILY_CONTENT_QUALIFIER_PROTO)) != null) {
             		MediaContainer mc = MediaContainer.parseFrom(scannerResult.value());
@@ -92,7 +92,7 @@ public class HBaseRestReader_Bwmeta {
         try {
             for (Result scannerResult : scanner) {
             	String rowId = new String(scannerResult.getRow());
-            	ArrayList<String> names = new ArrayList<String>();
+            	List<String> names = new ArrayList<String>();
             	
             	if(scannerResult.getValue(Bytes.toBytes(HBaseConstant.FAMILY_METADATA), Bytes.toBytes(HBaseConstant.FAMILY_METADATA_QUALIFIER_PROTO)) != null) {
             		DocumentMetadata dm = DocumentMetadata.parseFrom(scannerResult.value());

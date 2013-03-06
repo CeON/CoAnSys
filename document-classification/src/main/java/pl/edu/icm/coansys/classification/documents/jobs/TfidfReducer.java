@@ -42,7 +42,7 @@ public class TfidfReducer extends Reducer<Text, StringListIntListWritable, TextA
      * occurrences in the document + no. of all words in doc (OUT) emit
      * key-value pairs containing K:docId + word, V: tfidf
      */
-    public void reduce(Text key, Iterable<StringListIntListWritable> values, Context context) {
+    public void reduce(Text key, Iterable<StringListIntListWritable> values, Context context) throws IOException, InterruptedException {
 
     	int docsWithTerm = 0;
         for (Iterator<StringListIntListWritable> it = values.iterator(); it.hasNext();) {
@@ -53,17 +53,7 @@ public class TfidfReducer extends Reducer<Text, StringListIntListWritable, TextA
 
         for (final StringListIntListWritable v : values) {
             double tf = (double) (v.getIntList().get(0)) / (double) (v.getIntList().get(1));
-            try {
-                context.write(new TextArrayWritable(new Text[]{new Text(v.getStringList().get(0)),
-                            key}),
-                        new DoubleWritable(tf * idf));
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
+            context.write(new TextArrayWritable(new Text[]{new Text(v.getStringList().get(0)),key}),new DoubleWritable(tf * idf));
         }
     }
 }

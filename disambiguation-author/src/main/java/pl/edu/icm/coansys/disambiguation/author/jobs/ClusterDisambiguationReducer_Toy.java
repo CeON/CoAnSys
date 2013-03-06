@@ -99,7 +99,7 @@ public class ClusterDisambiguationReducer_Toy extends Reducer<Text, TextTextArra
         if(featuresMapsList.size()==1){
         	String contribId = authorIds.get(0);
         	
-        	ArrayList<String> one = new ArrayList<String>(); 
+        	List<String> one = new ArrayList<String>(); 
         	one.add(contribId);
         	String clusterId = new UuIdGenerator().genetareId(one);
         	String clusterRowId = HBaseConstants.T_CONTRIBUTIONS_CLUSTER + HBaseConstants.INTRASEPARATOR + clusterId;

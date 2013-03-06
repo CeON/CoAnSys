@@ -23,7 +23,7 @@ public class DocumentDTO2KeyValue {
 	
 	public static List<KeyValue> translate(DocumentDTO docDTO) {
 		
-		ArrayList<KeyValue> kvs = new ArrayList<KeyValue>();
+		List<KeyValue> kvs = new ArrayList<KeyValue>();
 		
 		byte[] row = composeRow(docDTO);
 		

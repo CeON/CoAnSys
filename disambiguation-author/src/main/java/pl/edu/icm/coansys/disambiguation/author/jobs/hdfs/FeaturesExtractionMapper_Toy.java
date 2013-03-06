@@ -47,7 +47,7 @@ public class FeaturesExtractionMapper_Toy extends Mapper<BytesWritable, BytesWri
     }
 
     private List<Extractor> getFeatureExtractor(List<FeatureInfo> inputfeatureInfos) {
-        ArrayList<Extractor> extractors = new ArrayList<Extractor>();
+        List<Extractor> extractors = new ArrayList<Extractor>();
         ExtractorFactory fe = new ExtractorFactory();
 
         for (FeatureInfo fi : inputfeatureInfos) {
@@ -57,7 +57,7 @@ public class FeaturesExtractionMapper_Toy extends Mapper<BytesWritable, BytesWri
     }
 
     private static List<FeatureInfo> getFeaturesInfos(String feature) {
-        ArrayList<FeatureInfo> ret = new ArrayList<FeatureInfo>();
+        List<FeatureInfo> ret = new ArrayList<FeatureInfo>();
         String[] finfos = feature.split(",");
         for (String finfo : finfos) {
             String[] details = finfo.split("#");
