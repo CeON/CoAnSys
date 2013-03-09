@@ -5,28 +5,29 @@
 package pl.edu.icm.coansys.citations.tools.hadoop
 
 import java.io.File
-import org.apache.hadoop.io.{Text, SequenceFile}
+import org.apache.hadoop.io.{BytesWritable, SequenceFile}
+import pl.edu.icm.coansys.citations.util.misc
+import pl.edu.icm.coansys.citations.util.nlm.pubmedNlmToProtoBuf
 import org.apache.hadoop.fs.Path
 import org.apache.hadoop.conf.Configuration
 import org.slf4j.LoggerFactory
-import io.Source
 import pl.edu.icm.coansys.commons.scala.files
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
-object PubMedToSeqFile {
+object PubMedToProtoBufSeqFile {
 
   val logger = LoggerFactory.getLogger(PubMedToSeqFile.getClass)
 
-  class EncapsulatedSequenceFileWriter(val writer: SequenceFile.Writer) extends (((String, String)) => Unit) {
-    private val keyWritable = new Text()
-    private val valueWritable = new Text()
+  class EncapsulatedSequenceFileWriter(val writer: SequenceFile.Writer) extends (((Array[Byte], Array[Byte])) => Unit) {
+    private val keyWritable = new BytesWritable()
+    private val valueWritable = new BytesWritable()
 
-    def apply(arg: (String, String)) {
+    def apply(arg: (Array[Byte], Array[Byte])) {
       val (key, value) = arg
-      keyWritable.set(key)
-      valueWritable.set(value)
+      keyWritable.set(key, 0, key.length)
+      valueWritable.set(value, 0, value.length)
       writer.append(keyWritable, valueWritable)
     }
 
@@ -41,7 +42,7 @@ object PubMedToSeqFile {
       val path: Path = new Path(uri)
 
       val writer = SequenceFile.createWriter(conf, SequenceFile.Writer.file(path),
-        SequenceFile.Writer.keyClass(classOf[Text]), SequenceFile.Writer.valueClass(classOf[Text]))
+        SequenceFile.Writer.keyClass(classOf[BytesWritable]), SequenceFile.Writer.valueClass(classOf[BytesWritable]))
       new EncapsulatedSequenceFileWriter(writer)
     }
   }
@@ -52,11 +53,11 @@ object PubMedToSeqFile {
     val extension = "nxml"
     val nlms = files.retrieveFilesByExtension(new File(workDir), extension)
     val writeToSeqFile = EncapsulatedSequenceFileWriter.fromLocal(outFile)
-    val prefixLength = new File(workDir).getAbsolutePath.length
     nlms.par.foreach {
       nlm => try {
-        val key = nlm.getAbsolutePath.substring(prefixLength)
-        val value = Source.fromFile(nlm).mkString
+        val meta = pubmedNlmToProtoBuf(nlm)
+        val key = misc.uuidEncode(meta.getRowId)
+        val value = meta.toByteArray
         writeToSeqFile.synchronized {
           writeToSeqFile((key, value))
         }
