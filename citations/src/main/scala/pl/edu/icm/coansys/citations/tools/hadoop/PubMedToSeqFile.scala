@@ -30,7 +30,7 @@ object PubMedToSeqFile {
       }
     }
     val writeToSeqFile = EncapsulatedSequenceFileWriter.fromLocal[Text, Text, String, String](outFile)
-    val prefixLength = new File(workDir).getAbsolutePath.length
+    val prefixLength = new File(workDir).getAbsolutePath.length + 1
     nlms.par.foreach {
       nlm => try {
         val key = nlm.getAbsolutePath.substring(prefixLength)
