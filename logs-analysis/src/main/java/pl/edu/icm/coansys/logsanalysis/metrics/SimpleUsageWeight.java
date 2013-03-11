@@ -3,6 +3,7 @@
  */
 package pl.edu.icm.coansys.logsanalysis.metrics;
 
+import pl.edu.icm.coansys.logsanalysis.constants.ServicesEventsWeights;
 import pl.edu.icm.synat.api.services.audit.model.AuditEntry;
 
 /**
@@ -14,7 +15,10 @@ public class SimpleUsageWeight implements UsageWeight {
     @Override
     public long getWeight(AuditEntry entry) {
         String eventType = entry.getEventType();
-        if ("SAVE_TO_DISK".equals(eventType)) {
+        String serviceId = entry.getServiceId();
+        
+        if (ServicesEventsWeights.FETCH_CONTENT.getEventType().equals(eventType) &&
+                ServicesEventsWeights.FETCH_CONTENT.getServiceId().equals(serviceId)) {
             return 1;
         } else {
             return 0;

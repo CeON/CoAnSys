@@ -10,6 +10,7 @@ import java.net.MalformedURLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import pl.edu.icm.coansys.logsanalysis.constants.ParamNames;
 import pl.edu.icm.coansys.logsanalysis.models.AuditEntryHelper;
 import pl.edu.icm.coansys.logsanalysis.transformers.AuditEntry2Protos;
 import pl.edu.icm.coansys.logsanalysis.transformers.BytesArray2SequenceFile;
@@ -24,18 +25,10 @@ import pl.edu.icm.synat.api.services.audit.model.AuditEntry;
  */
 public final class GenerateDummyLogs {
 
-    private GenerateDummyLogs() {
-    }
-
-    private static class AuditEntryComparator implements Comparator<AuditEntry>, Serializable {
-
-        @Override
-        public int compare(AuditEntry o1, AuditEntry o2) {
-            return o1.getTimestamp().compareTo(o2.getTimestamp());
-        }
-    }
     private static final int SESSIONMIN = 5;
     private static final int SESSIONMAX = 40;
+    
+    // dummy param values
     private static String startLogs = "2012-01-01";
     private static String endLogs = "2012-08-01";
     private static final String[] EVENTTYPES = {"SAVE_TO_DISK"};
@@ -47,7 +40,19 @@ public final class GenerateDummyLogs {
     private static final String[] RESOURCES = {"resource1", "resource2", "resource3", "resource4", "resource5",
         "resource6", "resource7", "resource8", "resource9", "resource10",
         "resource11", "resource12", "resource13", "resource15", "resource16"};
+    
     private static final Random random = new Random(System.currentTimeMillis());
+
+    private GenerateDummyLogs() {
+    }
+
+    private static class AuditEntryComparator implements Comparator<AuditEntry>, Serializable {
+
+        @Override
+        public int compare(AuditEntry o1, AuditEntry o2) {
+            return o1.getTimestamp().compareTo(o2.getTimestamp());
+        }
+    }
 
     private static String generateRandomId() {
         return new BigInteger(70, random).toString(32);
@@ -94,16 +99,15 @@ public final class GenerateDummyLogs {
                 long time = sessionStart + (long) (randomFloat * (sessionEnd - sessionStart));
                 String eventType = EVENTTYPES[random.nextInt(EVENTTYPES.length)];
 
-                AuditEntry newLog;
-                if (eventType.equals("SAVE_TO_DISK")) {
-                    newLog = AuditEntryHelper.getAuditEntry(generateRandomId(), AuditEntry.Level.INFO, new Date(time), "PORTAL", eventType,
-                            IPADDRESSES[random.nextInt(IPADDRESSES.length)], URLS[random.nextInt(URLS.length)], URLS[random.nextInt(URLS.length)],
-                            sessionId, user, RESOURCES[random.nextInt(RESOURCES.length)]);
-                } else {
-                    newLog = AuditEntryHelper.getAuditEntry(generateRandomId(), AuditEntry.Level.INFO, new Date(time), "PORTAL", eventType,
-                            IPADDRESSES[random.nextInt(IPADDRESSES.length)], URLS[random.nextInt(URLS.length)], URLS[random.nextInt(URLS.length)],
-                            sessionId, user);
-                }
+                Map<String, String> args = new HashMap<String, String>();
+                args.put(ParamNames.RESOURCE_ID_PARAM, RESOURCES[random.nextInt(RESOURCES.length)]);
+                args.put(ParamNames.SESSION_ID_PARAM, sessionId);
+                args.put(ParamNames.IP_PARAM, IPADDRESSES[random.nextInt(IPADDRESSES.length)]);
+                args.put(ParamNames.URL_PARAM, URLS[random.nextInt(URLS.length)]);
+                args.put(ParamNames.REFERER_PARAM, URLS[random.nextInt(URLS.length)]);
+                args.put(ParamNames.USER_ID_PARAM, user);
+
+                AuditEntry newLog = AuditEntryHelper.getAuditEntry(eventType, AuditEntry.Level.INFO, new Date(time), "PORTAL", eventType, args);
                 result.add(newLog);
             }
         }
