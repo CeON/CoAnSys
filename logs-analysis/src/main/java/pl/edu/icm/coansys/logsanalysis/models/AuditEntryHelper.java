@@ -4,6 +4,9 @@
 package pl.edu.icm.coansys.logsanalysis.models;
 
 import java.util.Date;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import pl.edu.icm.synat.api.services.audit.model.AuditEntry;
 
 /**
@@ -14,51 +17,33 @@ public final class AuditEntryHelper {
 
     private AuditEntryHelper() {
     }
-    
-    public static AuditEntry getAuditEntry(final String eventId, final AuditEntry.Level level, 
-            final Date timestamp, final String serviceId, final String eventType, 
-            final String ipAddress, final String url, final String httpReferrer, final String sessionId, final String userId,
-            final String... otherArgs) {
-        /* usually, otherArgs[0] is a resource id */
         
-        String[] args;
+    public static AuditEntry getAuditEntry(final String eventId, final AuditEntry.Level level,
+            final Date timestamp, final String serviceId, final String eventType,
+            final Map<String, String> argsMap) {
         
-        if (otherArgs != null) {
-            args = new String[5 + otherArgs.length];
-            System.arraycopy(otherArgs, 0, args, 5, otherArgs.length);
-        } else {
-            args = new String[5];
+        String[] args = new String[argsMap.size()];
+        
+        int i = 0;
+        for (String argKey : argsMap.keySet()) {
+            args[i] = "[" + argKey + "=" + argsMap.get(argKey) + "]";
+            i++;
         }
-        args[0] = ipAddress;
-        args[1] = url;
-        args[2] = httpReferrer;
-        args[3] = sessionId;
-        args[4] = userId;
-
+        
         return new AuditEntry(eventId, level, timestamp, serviceId, eventType, args);
     }
-
-    public static String getIpAddress(final AuditEntry auditEntry) {
-        return auditEntry.getArgs()[0];
-    }
-
-    public static String getUrl(final AuditEntry auditEntry) {
-        return auditEntry.getArgs()[1];
-    }
-
-    public static String getHttpReferrer(final AuditEntry auditEntry) {
-        return auditEntry.getArgs()[2];
-    }
-
-    public static String getSessionId(final AuditEntry auditEntry) {
-        return auditEntry.getArgs()[3];
-    }
-
-    public static String getUserId(final AuditEntry auditEntry) {
-        return auditEntry.getArgs()[4];
-    }
-
-     public static String getResourceId(final AuditEntry auditEntry) {
-        return auditEntry.getArgs()[5];
+    
+    public static String getArg(final AuditEntry auditEntry, final String argKey) {
+        
+        Pattern paramPattern = Pattern.compile("\\[" + argKey + "=(.*)\\]");
+        Matcher m;
+        
+        for (String arg : auditEntry.getArgs()) {
+            m = paramPattern.matcher(arg);
+            if (m.matches()) {
+                return m.group(1);
+            }
+        }
+        return "";
     }
 }

@@ -13,9 +13,10 @@ import pl.edu.icm.coansys.importers.models.DocumentProtos.MediaContainer;
 import com.google.protobuf.InvalidProtocolBufferException;
 
 /**
- *
+ * @deprecated Replaced by {@link ProtobufToTuple}
  * @author akawa
  */
+@Deprecated
 public class DocumentProtobufBytesToTuple extends DocumentProtobufToTupleBase {
 
     @Override

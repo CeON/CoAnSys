@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.edu.icm.coansys.importers.models.DocumentDTO;
 import pl.edu.icm.coansys.importers.parsers.MetadataToProtoMetadataParser;
+import pl.edu.icm.coansys.importers.parsers.MetadataToProtoMetadataParserImpl;
 import pl.edu.icm.coansys.importers.transformers.YElementFromZip2DocumentDto;
 import pl.edu.icm.coansys.importers.utils.ZipArchive;
 import pl.edu.icm.model.bwmeta.YExportable;
@@ -116,7 +117,8 @@ public class ZipDirToDocumentDTOIterator implements Iterable<DocumentDTO> {
                 currentXmlPath = xmlPathIterator.next();
                 try {
                     InputStream xmlIS = currentZipArchive.getFileAsInputStream(currentXmlPath);
-                    yExportableIterator = MetadataToProtoMetadataParser.streamToYExportable(xmlIS, MetadataToProtoMetadataParser.MetadataType.BWMETA).iterator();
+                    MetadataToProtoMetadataParser mtd2prt = new MetadataToProtoMetadataParserImpl();
+                    yExportableIterator = mtd2prt.streamToYExportable(xmlIS, MetadataToProtoMetadataParser.MetadataType.BWMETA).iterator();
                     currentXml++;
                     if (currentXml % 10 == 0) {
                         logger.info("\t" + new Date() + "\tProceeded " + currentXml + ". xml of " + xmls.size());
