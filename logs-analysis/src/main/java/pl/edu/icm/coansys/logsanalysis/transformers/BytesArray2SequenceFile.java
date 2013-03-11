@@ -5,6 +5,7 @@ package pl.edu.icm.coansys.logsanalysis.transformers;
 
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.*;
@@ -17,7 +18,7 @@ import org.slf4j.LoggerFactory;
  * @author Artur Czeczko <a.czeczko@icm.edu.pl>
  */
 public class BytesArray2SequenceFile {
-    
+
     private BytesArray2SequenceFile() {}
 
     private static Configuration createConf() {
@@ -59,7 +60,7 @@ public class BytesArray2SequenceFile {
 }
 
 class BWIterable implements Iterable<byte[]> {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(BWIterable.class);
 
     private SequenceFile.Reader reader;
@@ -74,12 +75,13 @@ class BWIterable implements Iterable<byte[]> {
 
         private SequenceFile.Reader reader;
         private Configuration conf;
-        private boolean nextAvailable = true;
+        private boolean nextAvailable;
         private byte[] nextBytes = null;
 
         public BWIterator(SequenceFile.Reader reader, Configuration conf) {
             this.reader = reader;
             this.conf = conf;
+            nextAvailable = true;
             moveItem();
         }
 
@@ -90,9 +92,13 @@ class BWIterable implements Iterable<byte[]> {
 
         @Override
         public byte[] next() {
-            byte[] retBytes = nextBytes;
-            moveItem();
-            return retBytes;
+            if (nextAvailable) {
+                byte[] retBytes = nextBytes;
+                moveItem();
+                return retBytes;
+            } else {
+                throw new NoSuchElementException();
+            }
         }
 
         @Override
@@ -108,6 +114,7 @@ class BWIterable implements Iterable<byte[]> {
                     nextAvailable = reader.next(key, value);
                 } catch (IOException ex) {
                     logger.error("moveItem: " + ex);
+                    nextAvailable = false;
                 }
                 if (nextAvailable) {
                     nextBytes = value.copyBytes();

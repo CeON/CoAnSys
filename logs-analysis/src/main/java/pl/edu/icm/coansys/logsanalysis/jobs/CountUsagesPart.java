@@ -20,6 +20,7 @@ import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.edu.icm.coansys.logsanalysis.constants.ParamNames;
 import pl.edu.icm.coansys.logsanalysis.metrics.UsageWeight;
 import pl.edu.icm.coansys.logsanalysis.models.AuditEntryHelper;
 import pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos;
@@ -32,7 +33,7 @@ import pl.edu.icm.synat.api.services.audit.model.AuditEntry;
  */
 public class CountUsagesPart implements Tool {
     
-    private static final String DEFAULT_USAGE_WEIGHT_CLASS = "pl.edu.icm.coansys.logsanalysis.metrics.SimpleUsageWeight";
+    private static final String DEFAULT_USAGE_WEIGHT_CLASS = "pl.edu.icm.coansys.logsanalysis.metrics.ComplexUsageWeight";
 
     private static final Logger logger = LoggerFactory.getLogger(CountUsagesPart.class);
     private Configuration conf;
@@ -48,7 +49,7 @@ public class CountUsagesPart implements Tool {
 
             long usageWeight = weight.getWeight(entry);
             if (usageWeight > 0) {
-                String resourceId = AuditEntryHelper.getResourceId(entry);
+                String resourceId = AuditEntryHelper.getArg(entry, ParamNames.RESOURCE_ID_PARAM);
                 context.write(new Text(resourceId), new LongWritable(usageWeight));
             }
         }

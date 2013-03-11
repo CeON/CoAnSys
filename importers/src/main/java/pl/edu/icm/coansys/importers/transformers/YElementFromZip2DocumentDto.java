@@ -16,6 +16,7 @@ import pl.edu.icm.coansys.importers.models.DocumentDTO;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.Media;
 import pl.edu.icm.coansys.importers.parsers.MetadataToProtoMetadataParser;
+import pl.edu.icm.coansys.importers.parsers.MetadataToProtoMetadataParserImpl;
 import pl.edu.icm.coansys.importers.utils.ZipArchive;
 import pl.edu.icm.model.bwmeta.YContentEntry;
 import pl.edu.icm.model.bwmeta.YContentFile;
@@ -47,7 +48,8 @@ public class YElementFromZip2DocumentDto {
         if (yExportable instanceof YElement) {
             YElement yElement = (YElement) yExportable;
 
-            DocumentMetadata docMetadata = MetadataToProtoMetadataParser.yelementToDocumentMetadata(yElement, currentZipArchive, currentXmlPath, collection);
+            MetadataToProtoMetadataParser mtd2prt = new MetadataToProtoMetadataParserImpl();
+            DocumentMetadata docMetadata = mtd2prt.yelementToDocumentMetadata(yElement, currentZipArchive, currentXmlPath, collection);
 
             if (docMetadata != null) {
                 productObject = new DocumentDTO();
