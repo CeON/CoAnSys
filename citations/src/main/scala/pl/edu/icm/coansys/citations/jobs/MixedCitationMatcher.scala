@@ -15,7 +15,7 @@ import pl.edu.icm.coansys.citations.indices.EntityIndex
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
-class MixedCitationMatcher extends ScoobiApp {
+object MixedCitationMatcher extends ScoobiApp {
   override def upload = false
 
   def run() {
