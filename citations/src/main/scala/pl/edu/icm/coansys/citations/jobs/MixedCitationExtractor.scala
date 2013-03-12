@@ -11,8 +11,9 @@ import com.nicta.scoobi.InputsOutputs._
 import org.apache.commons.io.IOUtils
 import com.nicta.scoobi.Persist._
 import org.jdom.output.XMLOutputter
-import org.jdom.Element
 import util.Random
+import org.w3c.dom.{Element, Node}
+import org.jdom.input.DOMBuilder
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -30,9 +31,10 @@ object MixedCitationExtractor extends ScoobiApp {
     val converted = nlms
       .flatMap {
       case (_, xmlString) =>
+        def nodeToString(n: Node) =
+          new XMLOutputter().outputString(new DOMBuilder().build(n.asInstanceOf[Element]))
         val eval = XPathEvaluator.fromInputStream(IOUtils.toInputStream(xmlString))
-        eval.asNodes( """/article/back/ref-list/ref""")
-          .map(entity => new XMLOutputter().outputString(entity.asInstanceOf[Element]))
+        eval.asNodes( """/article/back/ref-list/ref""").map(nodeToString)
     }
       .groupBy(_ => Random.nextFloat)
       .flatMap {
