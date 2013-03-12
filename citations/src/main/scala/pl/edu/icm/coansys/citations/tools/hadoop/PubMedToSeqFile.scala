@@ -11,6 +11,7 @@ import io.Source
 import pl.edu.icm.coansys.commons.scala.files
 import pl.edu.icm.coansys.citations.util.EncapsulatedSequenceFileWriter.WritablePreparer
 import pl.edu.icm.coansys.citations.util.EncapsulatedSequenceFileWriter
+import pl.edu.icm.coansys.commons.scala.automatic_resource_management.using
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -33,10 +34,12 @@ object PubMedToSeqFile {
     val prefixLength = new File(workDir).getAbsolutePath.length + 1
     nlms.par.foreach {
       nlm => try {
-        val key = nlm.getAbsolutePath.substring(prefixLength)
-        val value = Source.fromFile(nlm).mkString
-        writeToSeqFile.synchronized {
-          writeToSeqFile((key, value))
+        using(Source.fromFile(nlm)) { source =>
+          val key = nlm.getAbsolutePath.substring(prefixLength)
+          val value = source.mkString
+          writeToSeqFile.synchronized {
+            writeToSeqFile((key, value))
+          }
         }
       } catch {
         case ex: Throwable =>
