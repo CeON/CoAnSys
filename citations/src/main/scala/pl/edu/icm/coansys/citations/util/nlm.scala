@@ -85,14 +85,14 @@ object nlm {
     }
     meta.setBasicMetadata(basicMeta)
 
+    meta.setKey(eval( """/article/front/article-meta/article-id[@pub-id-type='pmid']"""))
+
     for ((refNode, idx) <- eval.asNodes( """/article/back/ref-list/ref""").zipWithIndex) {
       val refBuilder = referenceMetadataBuilderFromNode(refNode)
       refBuilder.setSourceDocKey(meta.getKey)
       refBuilder.setPosition(idx + 1)
       meta.addReference(refBuilder)
     }
-
-    meta.setKey(basicMeta.getDoi)
 
     val wrapper = DocumentWrapper.newBuilder()
     wrapper.setRowId(meta.getKey)
