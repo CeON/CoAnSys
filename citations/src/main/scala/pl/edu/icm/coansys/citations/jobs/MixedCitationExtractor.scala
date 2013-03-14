@@ -36,7 +36,7 @@ object MixedCitationExtractor extends ScoobiApp {
     }
       .groupBy(_ => Random.nextFloat)
       .flatMap {
-      case (k, v) => Stream.continually(k) zip v
+      case (k, v) => Stream.continually(k) zip v.toStream
     }
     persist(convertToSequenceFile(converted, outUri, overwrite = true))
   }
