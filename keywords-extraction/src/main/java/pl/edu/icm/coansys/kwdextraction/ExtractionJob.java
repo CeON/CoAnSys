@@ -23,7 +23,7 @@ import pl.edu.icm.coansys.importers.models.KeywordExtractionProtos.ExtractedKeyw
 
 /**
  *
- * @author acz
+ * @author Artur Czeczko <a.czeczko@icm.edu.pl>
  */
 public class ExtractionJob implements Tool {
 
