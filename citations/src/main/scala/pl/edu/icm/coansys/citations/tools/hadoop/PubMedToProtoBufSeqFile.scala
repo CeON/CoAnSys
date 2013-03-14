@@ -11,7 +11,7 @@ import pl.edu.icm.coansys.citations.util.nlm.pubmedNlmToProtoBuf
 import org.slf4j.LoggerFactory
 import pl.edu.icm.coansys.commons.scala.files
 import scala.Array
-import pl.edu.icm.coansys.citations.util.EncapsulatedSequenceFileWriter.WritablePreparer
+import com.nicta.scoobi.io.sequence.SeqSchema
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -25,13 +25,17 @@ object PubMedToProtoBufSeqFile {
     val outFile = args(1)
     val extension = "nxml"
     val nlms = files.retrieveFilesByExtension(new File(workDir), extension)
-    implicit val _ = new WritablePreparer[Array[Byte], BytesWritable] {
-      def prepare(in: Array[Byte], out: BytesWritable) {
-        out.set(in, 0, in.length)
-      }
+    implicit val _ = new SeqSchema[Array[Byte]] {
+      type SeqType = BytesWritable
+
+      def toWritable(x: Array[Byte]) = new BytesWritable(x, x.length)
+
+      def fromWritable(x: this.type#SeqType) = x.copyBytes()
+
+      val mf = manifest[BytesWritable]
     }
     val writeToSeqFile =
-      EncapsulatedSequenceFileWriter.fromLocal[BytesWritable, BytesWritable, Array[Byte], Array[Byte]](outFile)
+      EncapsulatedSequenceFileWriter.fromLocal[Array[Byte], Array[Byte]](outFile)
     nlms.par.foreach {
       nlm => try {
         val meta = pubmedNlmToProtoBuf(nlm)

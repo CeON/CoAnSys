@@ -5,11 +5,9 @@
 package pl.edu.icm.coansys.citations.tools.hadoop
 
 import java.io.File
-import org.apache.hadoop.io.Text
 import org.slf4j.LoggerFactory
 import io.Source
 import pl.edu.icm.coansys.commons.scala.files
-import pl.edu.icm.coansys.citations.util.EncapsulatedSequenceFileWriter.WritablePreparer
 import pl.edu.icm.coansys.citations.util.EncapsulatedSequenceFileWriter
 import pl.edu.icm.coansys.commons.scala.automatic_resource_management.using
 
@@ -25,21 +23,17 @@ object PubMedToSeqFile {
     val outFile = args(1)
     val extension = "nxml"
     val nlms = files.retrieveFilesByExtension(new File(workDir), extension)
-    implicit val _ = new WritablePreparer[String, Text] {
-      def prepare(in: String, out: Text) {
-        out.set(in)
-      }
-    }
-    val writeToSeqFile = EncapsulatedSequenceFileWriter.fromLocal[Text, Text, String, String](outFile)
+    val writeToSeqFile = EncapsulatedSequenceFileWriter.fromLocal[String, String](outFile)
     val prefixLength = new File(workDir).getAbsolutePath.length + 1
     nlms.par.foreach {
       nlm => try {
-        using(Source.fromFile(nlm)) { source =>
-          val key = nlm.getAbsolutePath.substring(prefixLength)
-          val value = source.mkString
-          writeToSeqFile.synchronized {
-            writeToSeqFile((key, value))
-          }
+        using(Source.fromFile(nlm)) {
+          source =>
+            val key = nlm.getAbsolutePath.substring(prefixLength)
+            val value = source.mkString
+            writeToSeqFile.synchronized {
+              writeToSeqFile((key, value))
+            }
         }
       } catch {
         case ex: Throwable =>
