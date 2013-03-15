@@ -20,15 +20,13 @@ import pl.edu.icm.coansys.citations.reducers.BestSelector
 object MatcherTest extends Configured with Tool {
 
   def run(args: Array[String]): Int = {
-    val parserModelUri = args(0)
-    val keyIndexUri = args(1)
-    val authorIndexUri = args(2)
-    val documentsUri = args(3)
-    val outUri = args(4)
+    val keyIndexUri = args(0)
+    val authorIndexUri = args(1)
+    val documentsUri = args(2)
+    val outUri = args(3)
     val conf = getConf
     val extractedRefsUri = outUri + "_refs"
     val refsHeuristicUri = outUri + "_heur"
-    conf.set("bibref.parser.model", parserModelUri)
     conf.set("index.key", keyIndexUri)
     conf.set("index.author", authorIndexUri)
     val fs = FileSystem.get(conf)
@@ -92,7 +90,7 @@ object MatcherTest extends Configured with Tool {
   }
 
   def main(args: Array[String]) {
-    val exitCode = ToolRunner.run(MatcherLowLevel, args)
+    val exitCode = ToolRunner.run(MatcherTest, args)
     System.exit(exitCode)
   }
 }
