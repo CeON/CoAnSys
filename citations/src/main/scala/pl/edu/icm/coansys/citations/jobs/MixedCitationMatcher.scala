@@ -29,10 +29,12 @@ object MixedCitationMatcher extends ScoobiApp {
       case (index, xml) =>
         val eval = XPathEvaluator.fromInputStream(IOUtils.toInputStream(xml))
         val pmid = eval( """/ref//pub-id[@pub-id-type='pmid']""")
-        if (!pmid.isEmpty)
+        try {
           Some((xml, index.getEntityById("doc-" + pmid)))
-        else
-          None
+        } catch {
+          case ex: Exception =>
+            None
+        }
     }
 
     persist(convertToSequenceFile(res, outUri, overwrite = true))
