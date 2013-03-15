@@ -4,99 +4,19 @@
 
 package pl.edu.icm.coansys.citations.jobs
 
-import scala.collection.JavaConversions._
-import org.apache.hadoop.mapreduce.{Job, Mapper}
-import org.apache.hadoop.io.{Writable, Text, BytesWritable}
-import pl.edu.icm.coansys.importers.models.DocumentProtos.{ReferenceMetadata, DocumentWrapper}
-import pl.edu.icm.coansys.citations.data.{SimilarityMeasurer, Entity, CitationEntity}
-import pl.edu.icm.coansys.citations.indices.{EntityIndex, AuthorIndex}
+import org.apache.hadoop.mapreduce.Job
+import org.apache.hadoop.io.{Text, BytesWritable}
 import org.apache.hadoop.conf.{Configuration, Configured}
 import org.apache.hadoop.util.{ToolRunner, Tool}
 import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.hadoop.mapreduce.lib.input.{SequenceFileInputFormat, FileInputFormat}
 import org.apache.hadoop.mapreduce.lib.output.{TextOutputFormat, SequenceFileOutputFormat, FileOutputFormat}
-import pl.edu.icm.cermine.bibref.{CRFBibReferenceParser, BibReferenceParser}
-import pl.edu.icm.cermine.bibref.model.BibEntry
+import pl.edu.icm.coansys.citations.mappers.{HeuristicAdder, ExactMatcher, CitationExtractor}
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 object MatcherLowLevel extends Configured with Tool {
-
-  class CitationExtractor extends Mapper[Writable, BytesWritable, BytesWritable, BytesWritable] {
-    type Context = Mapper[Writable, BytesWritable, BytesWritable, BytesWritable]#Context
-    val writable = new BytesWritable()
-    val emptyWritable = new BytesWritable()
-
-    override def map(key: Writable, value: BytesWritable, context: Context) {
-      val wrapper = DocumentWrapper.parseFrom(value.copyBytes())
-      wrapper.getDocumentMetadata.getReferenceList.filterNot(_.getRawCitationText.isEmpty).foreach {
-        case ref =>
-          val bytes = ref.toByteArray
-          writable.set(bytes, 0, bytes.length)
-          context.write(writable, emptyWritable)
-      }
-    }
-  }
-
-  class HeuristicAdder extends Mapper[BytesWritable, BytesWritable, BytesWritable, Text] {
-    type Context = Mapper[BytesWritable, BytesWritable, BytesWritable, Text]#Context
-    val keyWritable = new BytesWritable()
-    val valueWritable = new Text()
-    var parser: BibReferenceParser[BibEntry] = null
-    var index: AuthorIndex = null
-
-    override def setup(context: Context) {
-      val parserModelUri = context.getConfiguration.get("bibref.parser.model")
-      parser = new CRFBibReferenceParser(parserModelUri)
-
-      val authorIndexUri = context.getConfiguration.get("index.author")
-      index = new AuthorIndex(authorIndexUri)
-    }
-
-    override def map(key: BytesWritable, value: BytesWritable, context: Context) {
-      val meta = ReferenceMetadata.parseFrom(key.copyBytes())
-      val cit = CitationEntity.fromUnparsedReferenceMetadata(parser, meta)
-      val bytes = cit.toTypedBytes
-      keyWritable.set(bytes, 0, bytes.length)
-      Matcher.approximatelyMatchingDocuments(cit, index).foreach {
-        case (entityId) =>
-          valueWritable.set(entityId)
-          context.write(keyWritable, valueWritable)
-      }
-    }
-
-    override def cleanup(context: Context) {
-      if (index != null)
-        index.close()
-    }
-  }
-
-  class ExactMatcher extends Mapper[BytesWritable, Text, String, String] {
-    type Context = Mapper[BytesWritable, Text, String, String]#Context
-    val similarityMeasurer = new SimilarityMeasurer
-    var index: EntityIndex = null
-
-    override def setup(context: Context) {
-      val keyIndexUri = context.getConfiguration.get("index.key")
-      index = new EntityIndex(keyIndexUri)
-    }
-
-    override def map(key: BytesWritable, value: Text, context: Context) {
-      val minimalSimilarity = 0.5
-      val cit = Entity.fromTypedBytes(key.copyBytes())
-      val entity = index.getEntityById(value.toString)
-      val similarity = similarityMeasurer.similarity(cit, entity)
-      if (similarity >= minimalSimilarity) {
-        context.write(cit.toReferenceString, entity.toReferenceString)
-      }
-    }
-
-    override def cleanup(context: Context) {
-      if (index != null)
-        index.close()
-    }
-  }
 
   def run(args: Array[String]): Int = {
     val parserModelUri = args(0)
