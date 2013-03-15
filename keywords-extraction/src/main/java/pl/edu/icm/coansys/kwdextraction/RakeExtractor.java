@@ -195,21 +195,15 @@ public class RakeExtractor {
      * Counts deg/freq for every words and for keyword candidates.
      */
     private void countMetrics() {
-        Map<String, Integer> deg = new HashMap<String, Integer>();
-        Map<String, Integer> freq = new HashMap<String, Integer>();
         Map<String, Double> wordScore = new HashMap<String, Double>();
         
         for (String word : cooccurrences.keySet()) {
-            //deg
+            //deg and freq
             int degValue = 0;
             for (String coword : cooccurrences.get(word).keySet()) {
                 degValue += cooccurrences.get(word).get(coword);
             }
-            deg.put(word, degValue);
-            
-            //freq
             int freqValue = cooccurrences.get(word).get(word);
-            freq.put(word, freqValue);
             
             //wordScore = deg/freq
             wordScore.put(word, 1.0 * degValue / freqValue);
