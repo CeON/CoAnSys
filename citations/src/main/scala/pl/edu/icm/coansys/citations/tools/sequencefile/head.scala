@@ -5,9 +5,9 @@
 package pl.edu.icm.coansys.citations.tools.sequencefile
 
 import pl.edu.icm.coansys.commons.scala.automatic_resource_management._
+import pl.edu.icm.coansys.citations.data.Entity
 import pl.edu.icm.coansys.citations.util.{EncapsulatedSequenceFileWriter, SequenceFileIterator}
 import org.apache.hadoop.conf.Configuration
-import org.apache.hadoop.io.Writable
 import com.nicta.scoobi.io.sequence.SeqSchema
 
 /**
@@ -19,18 +19,9 @@ object head {
     val inUri = args(1)
     val outUri = args(2)
     var written = 0
-    implicit val _ = new SeqSchema[Writable] {
-      type SeqType = Writable
-
-      def toWritable(x: Writable) = x
-
-      def fromWritable(x: this.type#SeqType) = x
-
-      val mf = manifest[Writable]
-    }
-    using(SequenceFileIterator.fromUri[Writable, Writable](new Configuration(), inUri)) {
+    using(SequenceFileIterator.fromUri[String, Entity](new Configuration(), inUri)) {
       records =>
-        using(EncapsulatedSequenceFileWriter.fromLocal[Writable, Writable](outUri)) {
+        using(EncapsulatedSequenceFileWriter.fromLocal[String, Entity](outUri)) {
           write =>
             records.take(n).foreach {
               x =>
