@@ -23,7 +23,8 @@ class HeuristicAdder extends Mapper[BytesWritable, BytesWritable, BytesWritable,
 
   override def setup(context: Context) {
     val parserModelUri = context.getConfiguration.get("bibref.parser.model")
-    parser = new CRFBibReferenceParser(parserModelUri)
+    if (!parserModelUri.isEmpty)
+      parser = new CRFBibReferenceParser(parserModelUri)
 
     val authorIndexUri = context.getConfiguration.get("index.author")
     index = new AuthorIndex(authorIndexUri)
@@ -31,7 +32,12 @@ class HeuristicAdder extends Mapper[BytesWritable, BytesWritable, BytesWritable,
 
   override def map(key: BytesWritable, value: BytesWritable, context: Context) {
     val meta = ReferenceMetadata.parseFrom(key.copyBytes())
-    val cit = CitationEntity.fromUnparsedReferenceMetadata(parser, meta)
+    val cit =
+      if (parser == null) {
+        CitationEntity.fromUnparsedReferenceMetadata(parser, meta)
+      } else {
+        CitationEntity.fromReferenceMetadata(meta)
+      }
     val bytes = cit.toTypedBytes
     keyWritable.set(bytes, 0, bytes.length)
     Matcher.approximatelyMatchingDocuments(cit, index).foreach {
