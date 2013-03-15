@@ -22,11 +22,6 @@ class pubmedNlmToProtoBufTest {
   }
 
   @Test(groups = Array("fast"))
-  def docKeyTest() {
-    assertEquals(doc.getKey, "10.1208/s12248-008-9022-y")
-  }
-
-  @Test(groups = Array("fast"))
   def extIdTest() {
     assertEquals(doc.getExtIdCount, 4)
     assertEquals(doc.getExtId(0).getKey, "pmc")
