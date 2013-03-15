@@ -15,50 +15,50 @@ object nlm {
   def pubmedNlmToProtoBuf(f: File): DocumentWrapper =
     pubmedNlmToProtoBuf(new FileInputStream(f))
 
+  def authorBuilderFromNameNode(nameNode: Node): Author.Builder = {
+    val nameEval = new XPathEvaluator(nameNode)
+    val author = Author.newBuilder()
+    author.setKey("TODO: FAKE KEY")
+    author.setSurname(nameEval( """./surname"""))
+    author.setForenames(nameEval( """./given-names"""))
+    author
+  }
+
+  def referenceMetadataBuilderFromNode(node: Node): ReferenceMetadata.Builder = {
+    val refEval = new XPathEvaluator(node)
+    val refBuilder = ReferenceMetadata.newBuilder()
+    refBuilder.setRawCitationText(refEval("."))
+    val basicMeta = BasicMetadata.newBuilder()
+    basicMeta.addTitle(TextWithLanguage.newBuilder().setText(refEval( """./mixed-citation/article-title""")))
+    basicMeta.setDoi(refEval( """./mixed-citation/pub-id[@pub-id-type='doi']"""))
+    basicMeta.setJournal(refEval( """./mixed-citation/source"""))
+    basicMeta.setYear(refEval( """./mixed-citation/year"""))
+    basicMeta.setVolume(refEval( """./mixed-citation/volume"""))
+    basicMeta.setPages(refEval( """./mixed-citation/fpage""") + "-" + refEval( """./mixed-citation/lpage"""))
+    for (nameNode <- refEval.asNodes( """./mixed-citation/person-group[@person-group-type='author']/name""")) {
+      basicMeta.addAuthor(authorBuilderFromNameNode(nameNode))
+    }
+    refBuilder.setBasicMetadata(basicMeta)
+    refBuilder
+  }
+
+  def extIdBuilderFromArticleIdNode(node: Node): KeyValue.Builder = {
+    val idEval = new XPathEvaluator(node)
+    val idBuilder = KeyValue.newBuilder()
+    idBuilder.setKey(idEval("./@pub-id-type"))
+    idBuilder.setValue(idEval("."))
+    idBuilder
+  }
+
+  def abstractBuilderFromNode(node: Node): TextWithLanguage.Builder = {
+    val abstractEval = new XPathEvaluator(node)
+    val abstractBuilder = TextWithLanguage.newBuilder()
+    abstractBuilder.setLanguage(abstractEval("./@lang"))
+    abstractBuilder.setText(abstractEval("."))
+    abstractBuilder
+  }
+
   def pubmedNlmToProtoBuf(is: InputStream): DocumentWrapper = {
-    def authorBuilderFromNameNode(nameNode: Node): Author.Builder = {
-      val nameEval = new XPathEvaluator(nameNode)
-      val author = Author.newBuilder()
-      author.setKey("TODO: FAKE KEY")
-      author.setSurname(nameEval( """./surname"""))
-      author.setForenames(nameEval( """./given-names"""))
-      author
-    }
-
-    def referenceMetadataBuilderFromNode(node: Node): ReferenceMetadata.Builder = {
-      val refEval = new XPathEvaluator(node)
-      val refBuilder = ReferenceMetadata.newBuilder()
-      refBuilder.setRawCitationText(refEval("."))
-      val basicMeta = BasicMetadata.newBuilder()
-      basicMeta.addTitle(TextWithLanguage.newBuilder().setText(refEval( """./mixed-citation/article-title""")))
-      basicMeta.setDoi(refEval( """./mixed-citation/pub-id[@pub-id-type='doi']"""))
-      basicMeta.setJournal(refEval( """./mixed-citation/source"""))
-      basicMeta.setYear(refEval( """./mixed-citation/year"""))
-      basicMeta.setVolume(refEval( """./mixed-citation/volume"""))
-      basicMeta.setPages(refEval( """./mixed-citation/fpage""") + "-" + refEval( """./mixed-citation/lpage"""))
-      for (nameNode <- refEval.asNodes( """./mixed-citation/person-group[@person-group-type='author']/name""")) {
-        basicMeta.addAuthor(authorBuilderFromNameNode(nameNode))
-      }
-      refBuilder.setBasicMetadata(basicMeta)
-      refBuilder
-    }
-
-    def extIdBuilderFromArticleIdNode(node: Node): KeyValue.Builder = {
-      val idEval = new XPathEvaluator(node)
-      val idBuilder = KeyValue.newBuilder()
-      idBuilder.setKey(idEval("./@pub-id-type"))
-      idBuilder.setValue(idEval("."))
-      idBuilder
-    }
-
-    def abstractBuilderFromNode(node: Node): TextWithLanguage.Builder = {
-      val abstractEval = new XPathEvaluator(node)
-      val abstractBuilder = TextWithLanguage.newBuilder()
-      abstractBuilder.setLanguage(abstractEval("./@lang"))
-      abstractBuilder.setText(abstractEval("."))
-      abstractBuilder
-    }
-
     val meta = DocumentMetadata.newBuilder()
     val eval = XPathEvaluator.fromInputStream(is)
     for (idNode <- eval.asNodes( """/article/front/article-meta/article-id""")) {
@@ -98,5 +98,12 @@ object nlm {
     wrapper.setRowId(meta.getKey)
     wrapper.setDocumentMetadata(meta)
     wrapper.build()
+  }
+
+  def main(args: Array[String]) {
+    val path = """C:\Users\matfed\Desktop\Zookeys_2012_Nov_28_(245)_1-1722.nxml"""
+    val is = new FileInputStream(new File(path))
+    val meta = pubmedNlmToProtoBuf(is)
+    println(meta.toString)
   }
 }
