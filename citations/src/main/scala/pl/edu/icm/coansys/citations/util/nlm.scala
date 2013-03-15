@@ -25,17 +25,25 @@ object nlm {
   }
 
   def referenceMetadataBuilderFromNode(node: Node): ReferenceMetadata.Builder = {
+    def orIfEmpty[A](col: TraversableOnce[A], alternative: => TraversableOnce[A]): TraversableOnce[A] = {
+      if (!col.isEmpty)
+        col
+      else
+        alternative
+    }
     val refEval = new XPathEvaluator(node)
     val refBuilder = ReferenceMetadata.newBuilder()
     refBuilder.setRawCitationText(refEval("."))
     val basicMeta = BasicMetadata.newBuilder()
-    basicMeta.addTitle(TextWithLanguage.newBuilder().setText(refEval( """./mixed-citation/article-title""")))
-    basicMeta.setDoi(refEval( """./mixed-citation/pub-id[@pub-id-type='doi']"""))
-    basicMeta.setJournal(refEval( """./mixed-citation/source"""))
-    basicMeta.setYear(refEval( """./mixed-citation/year"""))
-    basicMeta.setVolume(refEval( """./mixed-citation/volume"""))
-    basicMeta.setPages(refEval( """./mixed-citation/fpage""") + "-" + refEval( """./mixed-citation/lpage"""))
-    for (nameNode <- refEval.asNodes( """./mixed-citation/person-group[@person-group-type='author']/name""")) {
+    basicMeta.addTitle(TextWithLanguage.newBuilder().setText(refEval( """.//article-title""")))
+    basicMeta.setDoi(refEval( """.//pub-id[@pub-id-type='doi']"""))
+    basicMeta.setJournal(refEval( """.//source"""))
+    basicMeta.setYear(refEval( """.//year"""))
+    basicMeta.setVolume(refEval( """.//volume"""))
+    val fpage = refEval( """.//fpage""")
+    val lpage = refEval( """.//lpage""")
+    basicMeta.setPages(refEval(fpage + "-" + lpage))
+    for (nameNode <- orIfEmpty(refEval.asNodes( """.//person-group[@person-group-type='author']/name"""), refEval.asNodes( """.//name"""))) {
       basicMeta.addAuthor(authorBuilderFromNameNode(nameNode))
     }
     refBuilder.setBasicMetadata(basicMeta)
