@@ -24,6 +24,7 @@ object IndexBuilder extends ScoobiApp {
   def readDocsFromSeqFiles(uris: List[String]): DList[Entity] = {
     implicit val converter = new BytesConverter[DocumentWrapper](_.toByteArray, DocumentWrapper.parseFrom(_))
     convertValueFromSequenceFile[DocumentWrapper](uris)
+      .filterNot(_.getDocumentMetadata.getKey.isEmpty)
       .map(b => DocumentEntity.fromDocumentMetadata(b.getDocumentMetadata).asInstanceOf[Entity])
   }
 
