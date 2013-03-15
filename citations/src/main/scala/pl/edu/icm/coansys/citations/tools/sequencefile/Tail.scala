@@ -12,7 +12,7 @@ import org.apache.hadoop.conf.Configuration
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
-object Head {
+object Tail {
   def main(args: Array[String]) {
     val n = args(0).toInt
     val inUri = args(1)
@@ -22,7 +22,7 @@ object Head {
       records =>
         using(EncapsulatedSequenceFileWriter.fromLocal[String, Entity](outUri)) {
           write =>
-            records.take(n).foreach {
+            records.drop(n).foreach {
               x =>
                 write(x)
                 written = written + 1
