@@ -28,7 +28,7 @@ object MixedCitationMatcher extends ScoobiApp {
     val res = cits.flatMapWithResource(new EntityIndex(indexUri)) {
       case (index, xml) =>
         val eval = XPathEvaluator.fromInputStream(IOUtils.toInputStream(xml))
-        val pmid = eval( """/ref/mixed-citation/pub-id[@pub-id-type='pmid']""")
+        val pmid = eval( """/ref//pub-id[@pub-id-type='pmid']""")
         if (!pmid.isEmpty)
           Some((xml, index.getEntityById("doc-" + pmid)))
         else
