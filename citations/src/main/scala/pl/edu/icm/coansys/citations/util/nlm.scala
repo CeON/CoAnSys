@@ -42,7 +42,8 @@ object nlm {
     basicMeta.setVolume(refEval( """.//volume"""))
     val fpage = refEval( """.//fpage""")
     val lpage = refEval( """.//lpage""")
-    basicMeta.setPages(refEval(fpage + "-" + lpage))
+    val pages = if (!lpage.isEmpty) fpage + "-" + lpage else fpage
+    basicMeta.setPages(pages)
     for (nameNode <- orIfEmpty(refEval.asNodes( """.//person-group[@person-group-type='author']/name"""), refEval.asNodes( """.//name"""))) {
       basicMeta.addAuthor(authorBuilderFromNameNode(nameNode))
     }
