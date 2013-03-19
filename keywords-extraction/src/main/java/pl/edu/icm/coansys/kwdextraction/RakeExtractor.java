@@ -9,10 +9,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.text.BreakIterator;
+import java.util.Map.Entry;
 import java.util.*;
+import org.jdom.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.edu.icm.cermine.DocumentTextExtractor;
+import pl.edu.icm.cermine.PdfNLMContentExtractor;
 import pl.edu.icm.cermine.PdfRawTextExtractor;
 import pl.edu.icm.cermine.exception.AnalysisException;
 import pl.edu.icm.coansys.importers.constants.ProtoConstants;
@@ -55,8 +58,12 @@ public class RakeExtractor {
      * @throws IOException
      */
     public RakeExtractor(InputStream pdfStream) throws AnalysisException, IOException {
-        DocumentTextExtractor<String> extr = new PdfRawTextExtractor();
-        content = extr.extractText(pdfStream);
+        PdfNLMContentExtractor nextr = new PdfNLMContentExtractor();
+        Element contentEl = nextr.extractContent(pdfStream);
+        Element bodyEl = contentEl.getChild("body");
+        content = bodyEl.getValue();
+        //DocumentTextExtractor<String> extr = new PdfRawTextExtractor();
+        //content = extr.extractText(pdfStream);
         prepareToExtraction();
     }
 
@@ -88,8 +95,8 @@ public class RakeExtractor {
 
     /**
      * All steps of keyword extraction. this.content should be set by a constructor.
-     * 
-     * @throws IOException 
+     *
+     * @throws IOException
      */
     private void prepareToExtraction() throws IOException {
         loadStopwords();
@@ -100,8 +107,8 @@ public class RakeExtractor {
 
     /**
      * Loading stopwords from a file
-     * 
-     * @throws IOException 
+     *
+     * @throws IOException
      */
     private void loadStopwords() throws IOException {
         stopwords = new HashSet<String>();
@@ -121,11 +128,12 @@ public class RakeExtractor {
     }
 
     /**
-     * Finding words or word sequences separated by stopwords, punstuation marks etc.
+     * Finding words or word sequences separated by stopwords, punstuation marks
+     * etc.
      */
     private void extractKeywordCandidates() {
 
-        keywordCandidates = new ArrayList<KeywordCandidate>();
+        Map<String, KeywordCandidate> candidatesMap = new HashMap<String, KeywordCandidate>();
 
         BreakIterator wordIterator = BreakIterator.getWordInstance();
 
@@ -133,7 +141,7 @@ public class RakeExtractor {
         int wordStart = wordIterator.first();
 
         int candidateStart = wordStart;
-        String candidate = null;
+        String candidateStr = null;
         KeywordCandidate kwdCand = new KeywordCandidate();
 
         for (int wordEnd = wordIterator.next(); wordEnd != BreakIterator.DONE; wordStart = wordEnd, wordEnd = wordIterator.next()) {
@@ -144,24 +152,33 @@ public class RakeExtractor {
             if (!word.isEmpty()) {
 
                 if (stopwords.contains(word) || word.matches("\\W+") || isNum(word) || !word.equals(alpha)) {
-                    candidate = content.substring(candidateStart, wordStart);
+                    candidateStr = content.substring(candidateStart, wordStart);
                 } else {
                     kwdCand.addWord(word);
                     if (wordEnd == content.length()) {
-                        candidate = content.substring(candidateStart, wordEnd);
+                        candidateStr = content.substring(candidateStart, wordEnd);
                     }
                 }
-                if (candidate != null) {
-                    candidate = candidate.trim().toLowerCase().replaceAll(ILLEGAL_CHARS, "");
-                    if (!candidate.isEmpty()) {
-                        kwdCand.setKeyword(candidate);
-                        keywordCandidates.add(kwdCand);
+                if (candidateStr != null) {
+                    candidateStr = candidateStr.trim().toLowerCase().replaceAll(ILLEGAL_CHARS, "").replaceAll("\\s+", " ");
+                    if (!candidateStr.isEmpty()) {
+                        if (candidatesMap.containsKey(candidateStr)) {
+                            candidatesMap.get(candidateStr).incCounter();
+                        } else {
+                            kwdCand.setKeyword(candidateStr);
+                            candidatesMap.put(candidateStr, kwdCand);
+                        }
                     }
-                    candidate = null;
+                    candidateStr = null;
                     candidateStart = wordEnd;
                     kwdCand = new KeywordCandidate();
                 }
             }
+        }
+
+        keywordCandidates = new ArrayList<KeywordCandidate>();
+        for (Entry<String, KeywordCandidate> e : candidatesMap.entrySet()) {
+            keywordCandidates.add(e.getValue());
         }
     }
 
@@ -170,7 +187,7 @@ public class RakeExtractor {
      */
     private void countCooccurrences() {
         cooccurrences = new HashMap<String, Map<String, Integer>>();
-        
+
         for (KeywordCandidate cand : keywordCandidates) {
             for (String word : cand.getWords()) {
                 Map<String, Integer> submap;
@@ -181,22 +198,22 @@ public class RakeExtractor {
                     cooccurrences.put(word, submap);
                 }
                 for (String coword : cand.getWords()) {
-                    int count = 1;
+                    int count = cand.getCounter();
                     if (submap.containsKey(coword)) {
-                        count += submap.get(coword);
+                        count += submap.get(coword) * cand.getCounter();
                     }
                     submap.put(coword, count);
                 }
             }
         }
     }
-    
+
     /**
      * Counts deg/freq for every words and for keyword candidates.
      */
     private void countMetrics() {
         Map<String, Double> wordScore = new HashMap<String, Double>();
-        
+
         for (String word : cooccurrences.keySet()) {
             //deg and freq
             int degValue = 0;
@@ -204,11 +221,11 @@ public class RakeExtractor {
                 degValue += cooccurrences.get(word).get(coword);
             }
             int freqValue = cooccurrences.get(word).get(word);
-            
+
             //wordScore = deg/freq
             wordScore.put(word, 1.0 * degValue / freqValue);
         }
-        
+
         for (KeywordCandidate cand : keywordCandidates) {
             double score = 0;
             for (String word : cand.getWords()) {
@@ -216,15 +233,15 @@ public class RakeExtractor {
             }
             cand.setScore(score);
         }
-        
+
         Collections.sort(keywordCandidates);
     }
-    
+
     /**
      * Returns n best keywords from keyword candidates.
-     * 
+     *
      * @param n
-     * @return 
+     * @return
      */
     private List<String> choiceKeywords(int n) {
         int resultSize = Math.min(n, keywordCandidates.size());
@@ -237,18 +254,18 @@ public class RakeExtractor {
 
     /**
      * Returns extracted keywords.
-     * 
-     * @return 
+     *
+     * @return
      */
     public List<String> getKeywords() {
         return choiceKeywords(DEFAULT_KEYWORDS_NUMBER);
     }
-    
+
     /**
      * Returns n best extracted keywords.
-     * 
+     *
      * @param n
-     * @return 
+     * @return
      */
     public List<String> getKeywords(int n) {
         return choiceKeywords(n);
@@ -256,9 +273,9 @@ public class RakeExtractor {
 
     /**
      * Checks if s is a number.
-     * 
+     *
      * @param s
-     * @return 
+     * @return
      */
     private static boolean isNum(String s) {
         try {
