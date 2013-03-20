@@ -33,7 +33,7 @@ object MatcherLowLevel extends Configured with Tool {
     val fs = FileSystem.get(conf)
 
     val extractionConf = new Configuration(conf)
-    val extractionJob = Job.getInstance(extractionConf, "References extractor")
+    val extractionJob = new Job(extractionConf, "References extractor")
     extractionJob.setJarByClass(getClass)
 
     FileInputFormat.addInputPath(extractionJob, new Path(documentsUri))
@@ -51,7 +51,7 @@ object MatcherLowLevel extends Configured with Tool {
 
     val heuristicConf = new Configuration(conf)
     heuristicConf.setInt("mapred.max.split.size", 5 * 1000 * 1000)
-    val heuristicJob = Job.getInstance(heuristicConf, "Heuristic adder")
+    val heuristicJob = new Job(heuristicConf, "Heuristic adder")
     heuristicJob.setJarByClass(getClass)
 
     FileInputFormat.addInputPath(heuristicJob, new Path(extractedRefsUri))
@@ -70,7 +70,7 @@ object MatcherLowLevel extends Configured with Tool {
       return 1
 
     val assessorConf = new Configuration(conf)
-    val assessorJob = Job.getInstance(assessorConf, "Similarity assessor")
+    val assessorJob = new Job(assessorConf, "Similarity assessor")
     assessorJob.setJarByClass(getClass)
 
     FileInputFormat.addInputPath(assessorJob, new Path(refsHeuristicUri))
