@@ -32,7 +32,8 @@ object MatcherLowLevel extends Configured with Tool {
     conf.set("index.author", authorIndexUri)
     val fs = FileSystem.get(conf)
 
-    val extractionJob = new Job(conf, "References extractor")
+    val extractionConf = new Configuration(conf)
+    val extractionJob = new Job(extractionConf, "References extractor")
     extractionJob.setJarByClass(getClass)
 
     FileInputFormat.addInputPath(extractionJob, new Path(documentsUri))
@@ -68,7 +69,8 @@ object MatcherLowLevel extends Configured with Tool {
     if (!heuristicJob.waitForCompletion(true))
       return 1
 
-    val assessorJob = new Job(conf, "Similarity assessor")
+    val assessorConf = new Configuration(conf)
+    val assessorJob = new Job(assessorConf, "Similarity assessor")
     assessorJob.setJarByClass(getClass)
 
     FileInputFormat.addInputPath(assessorJob, new Path(refsHeuristicUri))
