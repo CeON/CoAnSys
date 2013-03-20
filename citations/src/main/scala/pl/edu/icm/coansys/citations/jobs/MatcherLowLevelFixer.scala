@@ -45,7 +45,7 @@ object MatcherLowLevelFixer extends Configured with Tool {
   }
 
   def main(args: Array[String]) {
-    val exitCode = ToolRunner.run(MatcherLowLevel, args)
+    val exitCode = ToolRunner.run(MatcherLowLevelFixer, args)
     System.exit(exitCode)
   }
 }
