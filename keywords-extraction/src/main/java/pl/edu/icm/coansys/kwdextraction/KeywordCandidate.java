@@ -15,6 +15,7 @@ public class KeywordCandidate implements Comparable<KeywordCandidate> {
     private String keyword = "";
     private List<String> words = new ArrayList<String>();
     private Double score;
+    private int counter = 1;
 
     public String getKeyword() {
         return keyword;
@@ -38,6 +39,14 @@ public class KeywordCandidate implements Comparable<KeywordCandidate> {
 
     public void setScore(double score) {
         this.score = score;
+    }
+    
+    public void incCounter() {
+        counter++;
+    }
+    
+    public int getCounter() {
+        return counter;
     }
 
     @Override
