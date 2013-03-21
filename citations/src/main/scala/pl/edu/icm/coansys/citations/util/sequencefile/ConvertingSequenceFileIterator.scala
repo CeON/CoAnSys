@@ -2,7 +2,7 @@
  * (C) 2010-2012 ICM UW. All rights reserved.
  */
 
-package pl.edu.icm.coansys.citations.util
+package pl.edu.icm.coansys.citations.util.sequencefile
 
 import com.nicta.scoobi.io.sequence.SeqSchema
 import org.apache.hadoop.io.SequenceFile

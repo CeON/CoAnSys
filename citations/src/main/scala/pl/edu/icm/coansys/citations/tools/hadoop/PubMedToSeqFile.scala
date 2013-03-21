@@ -8,8 +8,8 @@ import java.io.File
 import org.slf4j.LoggerFactory
 import io.Source
 import pl.edu.icm.coansys.commons.scala.files
-import pl.edu.icm.coansys.citations.util.EncapsulatedSequenceFileWriter
 import pl.edu.icm.coansys.commons.scala.automatic_resource_management.using
+import pl.edu.icm.coansys.citations.util.sequencefile.EncapsulatedSequenceFileWriter
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)

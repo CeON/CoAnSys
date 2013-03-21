@@ -5,12 +5,13 @@
 package pl.edu.icm.coansys.citations.tools.matcher
 
 import pl.edu.icm.coansys.citations.data.{CitationEntity, SimilarityMeasurer, Entity}
-import pl.edu.icm.coansys.citations.util.{ConvertingSequenceFileIterator, XPathEvaluator, nlm}
+import pl.edu.icm.coansys.citations.util.{XPathEvaluator, nlm}
 import org.apache.commons.io.IOUtils
 import org.apache.hadoop.conf.Configuration
 import pl.edu.icm.coansys.commons.scala.automatic_resource_management.using
 import collection.immutable.Queue
 import java.io.{File, FileWriter}
+import pl.edu.icm.coansys.citations.util.sequencefile.ConvertingSequenceFileIterator
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)

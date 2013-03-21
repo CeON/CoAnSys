@@ -8,7 +8,7 @@ import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.io.{SequenceFile, Writable}
 import pl.edu.icm.coansys.commons.scala.automatic_resource_management._
 import org.apache.hadoop.fs.Path
-import pl.edu.icm.coansys.citations.util.SequenceFileIterator
+import pl.edu.icm.coansys.citations.util.sequencefile.SequenceFileIterator
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)

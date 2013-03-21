@@ -2,7 +2,7 @@
  * (C) 2010-2012 ICM UW. All rights reserved.
  */
 
-package pl.edu.icm.coansys.citations.util
+package pl.edu.icm.coansys.citations.util.sequencefile
 
 import org.apache.hadoop.io.SequenceFile
 import org.apache.hadoop.conf.Configuration
@@ -31,14 +31,18 @@ class EncapsulatedSequenceFileWriter[K, V](val writer: SequenceFile.Writer)
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 object EncapsulatedSequenceFileWriter {
-  def fromLocal[K, V](uri: String)
-                     (implicit keySchema: SeqSchema[K],
-                      valueSchema: SeqSchema[V]): EncapsulatedSequenceFileWriter[K, V] = {
-    val conf: Configuration = new Configuration
+  def fromUri[K, V](conf: Configuration, uri: String)
+                   (implicit keySchema: SeqSchema[K],
+                    valueSchema: SeqSchema[V]): EncapsulatedSequenceFileWriter[K, V] = {
     val path: Path = new Path(uri)
 
     val writer = SequenceFile.createWriter(conf, SequenceFile.Writer.file(path),
       SequenceFile.Writer.keyClass(keySchema.mf.erasure), SequenceFile.Writer.valueClass(valueSchema.mf.erasure))
     new EncapsulatedSequenceFileWriter[K, V](writer)
   }
+
+  def fromLocal[K, V](uri: String)
+                     (implicit keySchema: SeqSchema[K],
+                      valueSchema: SeqSchema[V]): EncapsulatedSequenceFileWriter[K, V] =
+    fromUri(new Configuration(), uri)
 }

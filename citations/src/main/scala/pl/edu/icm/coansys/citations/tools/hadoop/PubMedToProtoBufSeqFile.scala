@@ -6,12 +6,13 @@ package pl.edu.icm.coansys.citations.tools.hadoop
 
 import java.io.File
 import org.apache.hadoop.io.BytesWritable
-import pl.edu.icm.coansys.citations.util.{EncapsulatedSequenceFileWriter, misc}
+import pl.edu.icm.coansys.citations.util.misc
 import pl.edu.icm.coansys.citations.util.nlm.pubmedNlmToProtoBuf
 import org.slf4j.LoggerFactory
 import pl.edu.icm.coansys.commons.scala.files
 import scala.Array
 import com.nicta.scoobi.io.sequence.SeqSchema
+import pl.edu.icm.coansys.citations.util.sequencefile.EncapsulatedSequenceFileWriter
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)

@@ -2,7 +2,7 @@
  * (C) 2010-2012 ICM UW. All rights reserved.
  */
 
-package pl.edu.icm.coansys.citations.util
+package pl.edu.icm.coansys.citations.util.sequencefile
 
 import org.apache.hadoop.io.{SequenceFile, Writable}
 import org.apache.hadoop.conf.Configuration
@@ -18,7 +18,8 @@ class SequenceFileIterator(reader: SequenceFile.Reader) extends Iterator[(Writab
 
   def hasNext =
     preloaded || {
-      preloaded = reader.next(key, value); preloaded
+      preloaded = reader.next(key, value);
+      preloaded
     }
 
   def next(): (Writable, Writable) = {
