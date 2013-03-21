@@ -12,11 +12,14 @@ import com.nicta.scoobi.io.sequence.SeqSchema
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
-class EncapsulatedSequenceFileWriter[K, V](val writer: SequenceFile.Writer)
-                                          (implicit keySchema: SeqSchema[K],
-                                           valueSchema: SeqSchema[V]) extends (((K, V)) => Unit) {
+class ConvertingSequenceFileWriter[K, V](val writer: SequenceFile.Writer)
+                                        (implicit keySchema: SeqSchema[K],
+                                         valueSchema: SeqSchema[V]) extends (((K, V)) => Unit) {
   def apply(arg: (K, V)) {
-    val (key, value) = arg
+    append(arg._1, arg._2)
+  }
+
+  def append(key: K, value: V) {
     keySchema.toWritable(key)
     valueSchema.toWritable(value)
     writer.append(keySchema.toWritable(key), valueSchema.toWritable(value))
@@ -30,19 +33,19 @@ class EncapsulatedSequenceFileWriter[K, V](val writer: SequenceFile.Writer)
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
-object EncapsulatedSequenceFileWriter {
+object ConvertingSequenceFileWriter {
   def fromUri[K, V](conf: Configuration, uri: String)
                    (implicit keySchema: SeqSchema[K],
-                    valueSchema: SeqSchema[V]): EncapsulatedSequenceFileWriter[K, V] = {
+                    valueSchema: SeqSchema[V]): ConvertingSequenceFileWriter[K, V] = {
     val path: Path = new Path(uri)
 
     val writer = SequenceFile.createWriter(conf, SequenceFile.Writer.file(path),
       SequenceFile.Writer.keyClass(keySchema.mf.erasure), SequenceFile.Writer.valueClass(valueSchema.mf.erasure))
-    new EncapsulatedSequenceFileWriter[K, V](writer)
+    new ConvertingSequenceFileWriter[K, V](writer)
   }
 
   def fromLocal[K, V](uri: String)
                      (implicit keySchema: SeqSchema[K],
-                      valueSchema: SeqSchema[V]): EncapsulatedSequenceFileWriter[K, V] =
+                      valueSchema: SeqSchema[V]): ConvertingSequenceFileWriter[K, V] =
     fromUri(new Configuration(), uri)
 }

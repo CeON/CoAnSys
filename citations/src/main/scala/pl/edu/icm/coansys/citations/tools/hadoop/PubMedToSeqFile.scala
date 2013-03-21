@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory
 import io.Source
 import pl.edu.icm.coansys.commons.scala.files
 import pl.edu.icm.coansys.commons.scala.automatic_resource_management.using
-import pl.edu.icm.coansys.citations.util.sequencefile.EncapsulatedSequenceFileWriter
+import pl.edu.icm.coansys.citations.util.sequencefile.ConvertingSequenceFileWriter
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -23,7 +23,7 @@ object PubMedToSeqFile {
     val outFile = args(1)
     val extension = "nxml"
     val nlms = files.retrieveFilesByExtension(new File(workDir), extension)
-    val writeToSeqFile = EncapsulatedSequenceFileWriter.fromLocal[String, String](outFile)
+    val writeToSeqFile = ConvertingSequenceFileWriter.fromLocal[String, String](outFile)
     val prefixLength = new File(workDir).getAbsolutePath.length + 1
     nlms.par.foreach {
       nlm => try {

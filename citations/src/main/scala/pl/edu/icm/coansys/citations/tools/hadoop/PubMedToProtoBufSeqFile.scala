@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory
 import pl.edu.icm.coansys.commons.scala.files
 import scala.Array
 import com.nicta.scoobi.io.sequence.SeqSchema
-import pl.edu.icm.coansys.citations.util.sequencefile.EncapsulatedSequenceFileWriter
+import pl.edu.icm.coansys.citations.util.sequencefile.ConvertingSequenceFileWriter
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -36,7 +36,7 @@ object PubMedToProtoBufSeqFile {
       val mf = manifest[BytesWritable]
     }
     val writeToSeqFile =
-      EncapsulatedSequenceFileWriter.fromLocal[Array[Byte], Array[Byte]](outFile)
+      ConvertingSequenceFileWriter.fromLocal[Array[Byte], Array[Byte]](outFile)
     nlms.par.foreach {
       nlm => try {
         val meta = pubmedNlmToProtoBuf(nlm)
