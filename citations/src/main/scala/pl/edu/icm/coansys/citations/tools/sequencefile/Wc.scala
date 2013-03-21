@@ -5,10 +5,9 @@
 package pl.edu.icm.coansys.citations.tools.sequencefile
 
 import pl.edu.icm.coansys.commons.scala.automatic_resource_management._
-import pl.edu.icm.coansys.citations.util.SequenceFileIterator
 import org.apache.hadoop.conf.Configuration
-import org.apache.hadoop.io.Writable
-import com.nicta.scoobi.io.sequence.SeqSchema
+import org.apache.hadoop.io.{SequenceFile, Writable}
+import org.apache.hadoop.fs.Path
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -16,18 +15,17 @@ import com.nicta.scoobi.io.sequence.SeqSchema
 object Wc {
   def main(args: Array[String]) {
     val inUri = args(0)
-    implicit val _ = new SeqSchema[Writable] {
-      type SeqType = Writable
+    var count = 0
 
-      def toWritable(x: Writable) = x
+    using(new SequenceFile.Reader(new Configuration(), SequenceFile.Reader.file(new Path(inUri)))) {
+      reader =>
+        val key = reader.getKeyClass.newInstance().asInstanceOf[Writable]
+        val value = reader.getValueClass.newInstance().asInstanceOf[Writable]
+        while (reader.next(key, value)) {
+          count = count + 1
+        }
 
-      def fromWritable(x: this.type#SeqType) = x
-
-      val mf = manifest[Writable]
     }
-    using(SequenceFileIterator.fromUri[Writable, Writable](new Configuration(), inUri)) {
-      iterator =>
-        println(iterator.size + " lines")
-    }
+    println(count + " lines")
   }
 }
