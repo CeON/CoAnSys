@@ -71,7 +71,6 @@ public class OAIPMHDirToDocumentDTOIterator implements Iterable<DocumentDTO> {
         moveToNextItem();
     }
 
-
     @Override
     public Iterator<DocumentDTO> iterator() {
         return new Iterator<DocumentDTO>() {
@@ -93,7 +92,7 @@ public class OAIPMHDirToDocumentDTOIterator implements Iterable<DocumentDTO> {
 
             @Override
             public void remove() {
-                moveToNextItem();
+                throw new UnsupportedOperationException("Operation remove() is not supported");
             }
         };
     }
@@ -129,8 +128,7 @@ public class OAIPMHDirToDocumentDTOIterator implements Iterable<DocumentDTO> {
                         continue;
                     }
                     if (collectionFromFilename) {
-                        this.collection = nextFile.getName().replaceFirst("listRecords_", "oai-")
-                                .replaceFirst("\\.xml$", "").replaceAll("[^a-zA-Z0-9]", "-").replaceFirst("-[0-9]*$", "");
+                        this.collection = nextFile.getName().replaceFirst("listRecords_", "oai-").replaceFirst("\\.xml$", "").replaceAll("[^a-zA-Z0-9]", "-").replaceFirst("-[0-9]*$", "");
                     }
                     nodeListIndex = 0;
                 } catch (Exception ex) {
