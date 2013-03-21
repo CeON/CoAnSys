@@ -4,28 +4,28 @@
 
 package pl.edu.icm.coansys.citations.util
 
-import com.nicta.scoobi.io.sequence.SeqSchema
-import org.apache.hadoop.io.SequenceFile
+import org.apache.hadoop.io.{SequenceFile, Writable}
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.Path
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
-class SequenceFileIterator[K, V](reader: SequenceFile.Reader)
-                                (implicit keySchema: SeqSchema[K], valueSchema: SeqSchema[V]) extends Iterator[(K, V)] {
-  assert(reader.getKeyClass == keySchema.mf.erasure, "SequenceFile key type doesn't match SeqSchema")
-  assert(reader.getValueClass == valueSchema.mf.erasure, "SequenceFile value type doesn't match SeqSchema")
-  private val keyWritable = keySchema.mf.erasure.newInstance().asInstanceOf[keySchema.SeqType]
-  private val valueWritable = valueSchema.mf.erasure.newInstance().asInstanceOf[valueSchema.SeqType]
-  //TODO: That will fail for empty SequenceFlie
-  private var hasMore = true
+class SequenceFileIterator(reader: SequenceFile.Reader) extends Iterator[(Writable, Writable)] {
+  private val key = reader.getKeyClass.newInstance().asInstanceOf[Writable]
+  private val value = reader.getValueClass.newInstance().asInstanceOf[Writable]
+  private var preloaded = false
 
-  def hasNext = hasMore
+  def hasNext =
+    preloaded || {
+      preloaded = reader.next(key, value); preloaded
+    }
 
-  def next() = {
-    hasMore = reader.next(keyWritable, valueWritable)
-    (keySchema.fromWritable(keyWritable), valueSchema.fromWritable(valueWritable))
+  def next(): (Writable, Writable) = {
+    if (!preloaded) {
+      reader.next(key, value)
+    }
+    return (key, value)
   }
 
   def close() {
@@ -34,8 +34,8 @@ class SequenceFileIterator[K, V](reader: SequenceFile.Reader)
 }
 
 object SequenceFileIterator {
-  def fromUri[K, V](conf: Configuration, uri: String)(implicit keySchema: SeqSchema[K], valueSchema: SeqSchema[V]): SequenceFileIterator[K, V] = {
+  def fromUri(conf: Configuration, uri: String): SequenceFileIterator = {
     val reader = new SequenceFile.Reader(conf, SequenceFile.Reader.file(new Path(uri)))
-    new SequenceFileIterator[K, V](reader)
+    new SequenceFileIterator(reader)
   }
 }

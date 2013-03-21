@@ -6,7 +6,7 @@ package pl.edu.icm.coansys.citations.tools.sequencefile
 
 import pl.edu.icm.coansys.commons.scala.automatic_resource_management._
 import pl.edu.icm.coansys.citations.data.Entity
-import pl.edu.icm.coansys.citations.util.{EncapsulatedSequenceFileWriter, SequenceFileIterator}
+import pl.edu.icm.coansys.citations.util.{EncapsulatedSequenceFileWriter, ConvertingSequenceFileIterator}
 import org.apache.hadoop.conf.Configuration
 
 /**
@@ -18,7 +18,7 @@ object Tail {
     val inUri = args(1)
     val outUri = args(2)
     var written = 0
-    using(SequenceFileIterator.fromUri[String, Entity](new Configuration(), inUri)) {
+    using(ConvertingSequenceFileIterator.fromUri[String, Entity](new Configuration(), inUri)) {
       records =>
         using(EncapsulatedSequenceFileWriter.fromLocal[String, Entity](outUri)) {
           write =>

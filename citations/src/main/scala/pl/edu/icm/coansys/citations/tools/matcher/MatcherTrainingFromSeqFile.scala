@@ -5,7 +5,7 @@
 package pl.edu.icm.coansys.citations.tools.matcher
 
 import pl.edu.icm.coansys.citations.data.{CitationEntity, SimilarityMeasurer, Entity}
-import pl.edu.icm.coansys.citations.util.{SequenceFileIterator, XPathEvaluator, nlm}
+import pl.edu.icm.coansys.citations.util.{ConvertingSequenceFileIterator, XPathEvaluator, nlm}
 import org.apache.commons.io.IOUtils
 import org.apache.hadoop.conf.Configuration
 import pl.edu.icm.coansys.commons.scala.automatic_resource_management.using
@@ -29,7 +29,7 @@ object MatcherTrainingFromSeqFile {
     val n = 40
     val inUri = args(0)
     val outPath = args(1)
-    using(SequenceFileIterator.fromUri[String, Entity](new Configuration(), inUri)) {
+    using(ConvertingSequenceFileIterator.fromUri[String, Entity](new Configuration(), inUri)) {
       records =>
         val begining = records.take(n).toList
         val measurer = new SimilarityMeasurer
