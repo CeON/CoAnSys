@@ -2,7 +2,7 @@
  * (C) 2010-2012 ICM UW. All rights reserved.
  */
 
-package pl.edu.icm.coansys.citations.jobs
+package pl.edu.icm.coansys.citations.jobs.auxiliary
 
 import com.nicta.scoobi.application.ScoobiApp
 import pl.edu.icm.coansys.citations.util.XPathEvaluator
