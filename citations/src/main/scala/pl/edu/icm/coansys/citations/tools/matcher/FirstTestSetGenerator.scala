@@ -10,9 +10,9 @@ import pl.edu.icm.coansys.citations.tools.cermine.util.writeCitationsToXml
 import java.io._
 import util.Random
 import org.jdom.output.XMLOutputter
-import pl.edu.icm.cermine.bibref.parsing.tools.CitationUtils
 import pl.edu.icm.coansys.commons.scala.automatic_resource_management._
 import pl.edu.icm.coansys.commons.scala.xml
+import pl.edu.icm.cermine.bibref.transformers.BibEntryToNLMElementConverter
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -57,7 +57,7 @@ object FirstTestSetGenerator {
       val parserTrainingBibEntries =
         parserTrainingSet.map(dataset_readers.taggedReferenceToBibEntry(_, dataset_readers.corarefTagMapping))
       val mixedCitations = parserTrainingBibEntries.map(entry => new XMLOutputter().outputString({
-        val elem = CitationUtils.bibEntryToNLM(entry)
+        val elem = new BibEntryToNLMElementConverter().convert(entry)
         dataset_readers.findAndCollapseStringName(elem)
         elem
       }))

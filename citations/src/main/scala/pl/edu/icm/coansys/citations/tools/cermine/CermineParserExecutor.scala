@@ -8,8 +8,8 @@ import java.io.{FileInputStream, File}
 import pl.edu.icm.cermine.bibref.CRFBibReferenceParser
 import pl.edu.icm.coansys.citations.tools.cermine.util._
 import pl.edu.icm.coansys.citations.util.dataset_readers.findAndCollapseStringName
-import pl.edu.icm.cermine.bibref.parsing.tools.CitationUtils
 import org.jdom.output.XMLOutputter
+import pl.edu.icm.cermine.bibref.transformers.BibEntryToNLMElementConverter
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -26,7 +26,7 @@ object CermineParserExecutor {
     val citationStrings = citations.map(_.getValue)
     val parsedCitations = citationStrings.map {
       cit =>
-        val elem = CitationUtils.bibEntryToNLM(parser.parseBibReference(cit))
+        val elem = new BibEntryToNLMElementConverter().convert(parser.parseBibReference(cit))
         findAndCollapseStringName(elem)
         elem
     }

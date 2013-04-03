@@ -10,7 +10,6 @@ import pl.edu.icm.cermine.bibref.model.BibEntry
 import io.Source
 import collection.mutable.ListBuffer
 import org.jdom.output.XMLOutputter
-import pl.edu.icm.cermine.bibref.parsing.tools.CitationUtils
 import java.io.{FileWriter, BufferedWriter, FilenameFilter, File}
 import pl.edu.icm.coansys.commons.scala.automatic_resource_management._
 import pl.edu.icm.coansys.commons.scala.xml.StartTag
@@ -18,6 +17,7 @@ import scala.Some
 import pl.edu.icm.coansys.commons.scala.xml.EndTag
 import pl.edu.icm.coansys.commons.scala.xml.Text
 import scala.collection.JavaConversions._
+import pl.edu.icm.cermine.bibref.transformers.BibEntryToNLMElementConverter
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -181,7 +181,7 @@ object dataset_readers {
       }).map(_.getCanonicalPath)
         .flatMap(importBibEntriesFromCiteseerFile)
         .map(entry => new XMLOutputter().outputString({
-        val elem = CitationUtils.bibEntryToNLM(entry)
+        val elem = new BibEntryToNLMElementConverter().convert(entry)
         findAndCollapseStringName(elem)
         elem
       }))
