@@ -8,7 +8,7 @@ import org.apache.hadoop.io.{Text, BytesWritable}
 import org.apache.hadoop.mapreduce.Mapper
 import pl.edu.icm.cermine.bibref.{CRFBibReferenceParser, BibReferenceParser}
 import pl.edu.icm.cermine.bibref.model.BibEntry
-import pl.edu.icm.coansys.citations.data.CitationEntity
+import pl.edu.icm.coansys.citations.data.MatchableEntity
 import pl.edu.icm.coansys.citations.indices.AuthorIndex
 import pl.edu.icm.coansys.citations.jobs.Matcher
 import pl.edu.icm.coansys.importers.models.DocumentProtos.ReferenceMetadata
@@ -34,11 +34,11 @@ class HeuristicAdder extends Mapper[BytesWritable, BytesWritable, BytesWritable,
     val meta = ReferenceMetadata.parseFrom(key.copyBytes())
     val cit =
       if (parser != null) {
-        CitationEntity.fromUnparsedReferenceMetadata(parser, meta)
+        MatchableEntity.fromUnparsedReferenceMetadata(parser, meta)
       } else {
-        CitationEntity.fromReferenceMetadata(meta)
+        MatchableEntity.fromReferenceMetadata(meta)
       }
-    val bytes = cit.toTypedBytes
+    val bytes = cit.data.toByteArray
     keyWritable.set(bytes, 0, bytes.length)
     Matcher.approximatelyMatchingDocuments(cit, index).foreach {
       case (entityId) =>

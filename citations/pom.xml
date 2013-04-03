@@ -28,6 +28,11 @@
             <!--<version>${scala.version}</version>-->
         </dependency>
         <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>${protobuf.java.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.nicta</groupId>
             <artifactId>scoobi_2.9.2</artifactId>
             <version>0.5.0-cdh4</version>

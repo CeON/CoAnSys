@@ -6,7 +6,7 @@ package pl.edu.icm.coansys.citations.mappers
 
 import org.apache.hadoop.mapreduce.Mapper
 import org.apache.hadoop.io.{Text, BytesWritable}
-import pl.edu.icm.coansys.citations.data.{Entity, SimilarityMeasurer}
+import pl.edu.icm.coansys.citations.data.{MatchableEntity, SimilarityMeasurer}
 import pl.edu.icm.coansys.citations.indices.EntityIndex
 
 /**
@@ -24,7 +24,7 @@ class ExactMatcher extends Mapper[BytesWritable, Text, String, String] {
 
   override def map(key: BytesWritable, value: Text, context: Context) {
     val minimalSimilarity = 0.5
-    val cit = Entity.fromTypedBytes(key.copyBytes())
+    val cit = MatchableEntity.fromBytes(key.copyBytes())
     val entity = index.getEntityById(value.toString)
     val similarity = similarityMeasurer.similarity(cit, entity)
     if (similarity >= minimalSimilarity) {

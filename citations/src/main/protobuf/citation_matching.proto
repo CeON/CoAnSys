@@ -1,0 +1,22 @@
+//
+// (C) 2010-2012 ICM UW. All rights reserved.
+//
+package pl.edu.icm.coansys.citations;
+
+option java_package = "pl.edu.icm.coansys.citations.data";
+option java_outer_classname = "CitationMatchingProtos";
+
+message MatchableEntityData {
+  required string id = 1;
+  optional string author = 2;
+  optional string year = 3;
+  optional string pages = 4;
+  optional string source = 5;
+  optional string title = 6;
+  repeated KeyValue auxiliary = 7;
+}
+
+message KeyValue {
+	optional string key = 1;
+	optional string value = 2;
+}

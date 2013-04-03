@@ -7,7 +7,7 @@ package pl.edu.icm.coansys.citations.util
 import pl.edu.icm.coansys.importers.models.DocumentProtos.{DocumentWrapper, ReferenceMetadata, BasicMetadata}
 import scala.collection.JavaConversions._
 import com.nicta.scoobi.core.DList
-import pl.edu.icm.coansys.citations.data.CitationEntity
+import pl.edu.icm.coansys.citations.data.MatchableEntity
 import com.nicta.scoobi.InputsOutputs._
 import pl.edu.icm.cermine.bibref.parsing.tools.CitationUtils
 import pl.edu.icm.coansys.citations.util.AugmentedDList.augmentDList
@@ -31,21 +31,22 @@ object misc {
       .toSet
   }
 
-  def readCitationsFromDocumentsFromSeqFiles(uris: List[String], parserModel: String): DList[CitationEntity] = {
+  def readCitationsFromDocumentsFromSeqFiles(uris: List[String], parserModel: String): DList[MatchableEntity] = {
     //implicit val documentConverter = new BytesConverter[DocumentMetadata](_.toByteArray, DocumentMetadata.parseFrom(_))
     implicit val referenceConverter = new BytesConverter[ReferenceMetadata](_.toByteArray, ReferenceMetadata.parseFrom(_))
     implicit val wrapperConverter = new BytesConverter[DocumentWrapper](_.toByteArray, DocumentWrapper.parseFrom(_))
     val refmeta = convertValueFromSequenceFile[DocumentWrapper](uris)
       .flatMap(_.getDocumentMetadata.getReferenceList)
+    val id = "cit"
     if (parserModel != null)
       refmeta.flatMapWithResource(new CRFBibReferenceParser(parserModel) with NoOpClose) {
         case (parser, meta) if !meta.getRawCitationText.isEmpty =>
-          Some(CitationEntity.fromUnparsedReferenceMetadata(parser, meta))
+          Some(MatchableEntity.fromUnparsedReferenceMetadata(parser, meta))
         case _ =>
           None
       }
     else
-      refmeta.map(CitationEntity.fromReferenceMetadata(_))
+      refmeta.map(MatchableEntity.fromReferenceMetadata(_))
   }
 
   private val uuidCharset = "UTF-8"

@@ -9,7 +9,6 @@ import pl.edu.icm.coansys.citations.util.misc._
 import pl.edu.icm.coansys.citations.util.AugmentedDList._
 import pl.edu.icm.cermine.bibref.{CRFBibReferenceParser, HMMBibReferenceParser}
 import pl.edu.icm.coansys.citations.util.NoOpClose
-import org.jdom.output.XMLOutputter
 import java.lang.String
 import pl.edu.icm.cermine.tools.classification.hmm.{HMMServiceImpl, HMMService}
 import java.io.{FileInputStream, InputStream}
@@ -19,7 +18,6 @@ import pl.edu.icm.cermine.tools.classification.hmm.model.HMMProbabilityInfo
 import pl.edu.icm.cermine.bibref.parsing.model.{Citation, CitationToken, CitationTokenLabel}
 import pl.edu.icm.cermine.tools.classification.features.{FeatureCalculator, FeatureVectorBuilder}
 import java.util
-import pl.edu.icm.cermine.bibref.transformers.BibEntryToNLMElementConverter
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -66,9 +64,10 @@ object Parser extends ScoobiApp {
       //mapWithResource(new HMMParser with NoOpClose) {
       mapWithResource(new CRFBibReferenceParser(new FileInputStream(modelFile)) with NoOpClose) {
       case (parser, citation) =>
-        val parsed = parser.parseBibReference(citation.rawText)
-        val nlm = new BibEntryToNLMElementConverter().convert(parsed)
-        new XMLOutputter().outputString(nlm)
+        ""
+      //        val parsed = parser.parseBibReference(citation.rawText)
+      //        val nlm = new BibEntryToNLMElementConverter().convert(parsed)
+      //        new XMLOutputter().outputString(nlm)
     }
     persist(toTextFile(parsedCitations, args(2), overwrite = true))
   }
