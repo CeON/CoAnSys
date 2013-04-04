@@ -28,7 +28,7 @@ public class Action {
 		return sb;
 	}
 
-	private static StringBuilder rewriteScript(StringBuilder sb,
+	/*private static StringBuilder rewriteScript(StringBuilder sb,
 			List<List<Integer>> startsEnds, List<String> samples, List<String> substituted) {
 		int diff = 0;
 		
@@ -40,7 +40,7 @@ public class Action {
 		}
 		
 		return sb;
-	}
+	}*/
 
 	private static List<String> substituteSamples(List<String> samples) throws IOException {
 			
@@ -83,16 +83,10 @@ public class Action {
 	private static void addScriptLines(StringBuilder script,String sample) throws IOException {
 		BufferedReader br = new BufferedReader(new StringReader(sample));
 		for(String line = br.readLine();line!=null;line=br.readLine()){
-			//beg
-			if(line.startsWith("#")) continue;
-			//input parameters
-			else if(line.matches("[a-zA-Z0-9_-]+=[a-zA-Z0-9_-]+[\\s]*")) continue;
-			//lists
-			else if(line.startsWith("@")) continue;
-			//script
-			else if(line.replaceAll("[ \t]*", "").length()>0){
-				script.append(line).append("\n");
-			}
+                    if(line.replaceAll("[ \t]*", "").length()>0){
+			script.append(line).append("\n");
+                    }
+                    else continue;
 		}
 		br.close();
 	}
@@ -113,9 +107,6 @@ public class Action {
 			}else if(line.startsWith("@")){
 				wflists.add(new WFList(line.split(" ")));
 			}
-			//script
-			else if(line.replaceAll("[ \t]*", "").length()>0) continue;
-			//end
 			else continue;
 		}
 		br.close();

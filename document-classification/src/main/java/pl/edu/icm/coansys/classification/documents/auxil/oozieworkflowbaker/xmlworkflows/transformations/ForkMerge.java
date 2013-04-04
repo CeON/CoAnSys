@@ -101,16 +101,10 @@ public class ForkMerge {
 	private static void addScriptLines(StringBuilder script,String sample, ArrayList<WFList.WFElement> elements) throws IOException {
 		BufferedReader br = new BufferedReader(new StringReader(sample));
 		for(String line = br.readLine();line!=null;line=br.readLine()){
-			//beg
-			if(line.startsWith("#")) continue;
-			//input parameters
-			else if(line.matches("[a-zA-Z0-9_-]+=[a-zA-Z0-9_-]+[\\s]*")) continue;
-			//lists
-			else if(line.startsWith("@")) continue;
-			//script
-			else if(line.replaceAll("[ \t]*", "").length()>0){
-				script.append(addThem(script,line,elements));
-			}
+                    if(line.replaceAll("[ \t]*", "").length()>0){
+                        script.append(addThem(script,line,elements));
+                    }
+                    else continue;
 		}
 		br.close();
 	}
@@ -138,9 +132,6 @@ public class ForkMerge {
 			}else if(line.startsWith("@")){
 				wflists.add(new WFList(line.split(" ")));
 			}
-			//script
-			else if(line.replaceAll("[ \t]*", "").length()>0) continue;
-			//end
 			else continue;
 		}
 		br.close();
