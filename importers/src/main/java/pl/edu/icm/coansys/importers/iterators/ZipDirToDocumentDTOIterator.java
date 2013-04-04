@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.edu.icm.coansys.importers.models.DocumentDTO;
@@ -79,14 +80,17 @@ public class ZipDirToDocumentDTOIterator implements Iterable<DocumentDTO> {
 
             @Override
             public DocumentDTO next() {
-                DocumentDTO actualItem = nextItem;
-                moveToNextItem();
-                return actualItem;
+                if (hasNext()) {
+                    DocumentDTO actualItem = nextItem;
+                    moveToNextItem();
+                    return actualItem;
+                }
+                throw new NoSuchElementException();
             }
 
             @Override
             public void remove() {
-                moveToNextItem();
+                throw new UnsupportedOperationException("Operation remove() is not supported");
             }
         };
     }

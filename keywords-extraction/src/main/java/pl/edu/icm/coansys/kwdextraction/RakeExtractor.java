@@ -4,10 +4,9 @@
 package pl.edu.icm.coansys.kwdextraction;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
+import java.io.InputStreamReader;
 import java.text.BreakIterator;
 import java.util.Map.Entry;
 import java.util.*;
@@ -29,13 +28,29 @@ import pl.edu.icm.coansys.importers.models.DocumentProtos;
 public class RakeExtractor {
 
     private static final Logger logger = LoggerFactory.getLogger(RakeExtractor.class);
-    private static final String STOPWORDS_PATH = "stopwords/stopwords_fr_en.txt";
+    private static final String STOPWORDS_EN = "stopwords_en.txt";
+    private static final String STOPWORDS_FR = "stopwords_fr.txt";
+    private static final String STOPWORDS_PL = "stopwords_pl.txt";
     private static final String ILLEGAL_CHARS = "[^\\p{L}0-9-'\\s]";
     private static final int DEFAULT_KEYWORDS_NUMBER = 8;
+    private static Set<String> stopwords_en;
+    private static Set<String> stopwords_fr;
+    private static Set<String> stopwords_pl;
     private String content;
-    private Set<String> stopwords;
+    private String lang = "en";
     private List<KeywordCandidate> keywordCandidates;
     private Map<String, Map<String, Integer>> cooccurrences;
+
+    static {
+        try {
+            stopwords_en = loadStopwords("en");
+            stopwords_fr = loadStopwords("fr");
+            stopwords_pl = loadStopwords("pl");
+        } catch (IOException ex) {
+            logger.error("Unable to load stopwords: " + ex);
+            throw new RuntimeException(ex);
+        }
+    }
 
     /**
      * Every constructor sets this.content (document's content) and calls
@@ -94,12 +109,12 @@ public class RakeExtractor {
     }
 
     /**
-     * All steps of keyword extraction. this.content should be set by a constructor.
+     * All steps of keyword extraction. this.content should be set by a
+     * constructor.
      *
      * @throws IOException
      */
     private void prepareToExtraction() throws IOException {
-        loadStopwords();
         extractKeywordCandidates();
         countCooccurrences();
         countMetrics();
@@ -110,21 +125,34 @@ public class RakeExtractor {
      *
      * @throws IOException
      */
-    private void loadStopwords() throws IOException {
-        stopwords = new HashSet<String>();
+    private static Set<String> loadStopwords(String lang) throws IOException {
+        Set<String> result = new HashSet<String>();
 
-        URL stopwordsURL = this.getClass().getClassLoader().getResource(STOPWORDS_PATH);
-        String stopwordsPath = stopwordsURL.getPath();
-        BufferedReader br = new BufferedReader(new FileReader(stopwordsPath));
+        String stopwordsPath = STOPWORDS_EN;
+        if (lang.equals("fr")) {
+            stopwordsPath = STOPWORDS_FR;
+        } else if (lang.equals("pl")) {
+            stopwordsPath = STOPWORDS_PL;
+        }
+
+        InputStream stopwordsStream;
+        try {
+            stopwordsStream = RakeExtractor.class.getClassLoader().getResourceAsStream(stopwordsPath);
+        } catch (NullPointerException ex) {
+            stopwordsStream = RakeExtractor.class.getClassLoader().getResourceAsStream("/" + stopwordsPath);
+        }
+        InputStreamReader isr = new InputStreamReader(stopwordsStream);
+        BufferedReader br = new BufferedReader(isr);
 
         String stopword = br.readLine();
         while (stopword != null) {
             stopword = stopword.trim();
             if (!stopword.isEmpty()) {
-                stopwords.add(stopword);
+                result.add(stopword);
             }
             stopword = br.readLine();
         }
+        return result;
     }
 
     /**
@@ -151,7 +179,7 @@ public class RakeExtractor {
 
             if (!word.isEmpty()) {
 
-                if (stopwords.contains(word) || word.matches("\\W+") || isNum(word) || !word.equals(alpha)) {
+                if (stopwords_en.contains(word) || word.matches("\\W+") || isNum(word) || !word.equals(alpha)) {
                     candidateStr = content.substring(candidateStart, wordStart);
                 } else {
                     kwdCand.addWord(word);
@@ -269,6 +297,10 @@ public class RakeExtractor {
      */
     public List<String> getKeywords(int n) {
         return choiceKeywords(n);
+    }
+
+    public void setLang(String lang) {
+        this.lang = lang;
     }
 
     /**

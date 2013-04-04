@@ -15,6 +15,7 @@ import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
 import org.apache.hadoop.util.Tool;
+import org.apache.hadoop.util.ToolRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.edu.icm.coansys.importers.models.DocumentProtos;
@@ -41,7 +42,9 @@ public class ExtractionJob implements Tool {
             for (String keyword : new RakeExtractor(docWrapper).getKeywords()) {
                 kwdBuilder.addKeyword(keyword);
             }
-            context.write(new Text(docWrapper.getRowId()), new BytesWritable(kwdBuilder.build().toByteArray()));
+            if (kwdBuilder.getKeywordCount() > 0) {
+                context.write(new Text(docWrapper.getRowId()), new BytesWritable(kwdBuilder.build().toByteArray()));
+            }
         }
     }
 
@@ -81,10 +84,15 @@ public class ExtractionJob implements Tool {
     @Override
     public void setConf(Configuration conf) {
         this.conf = conf;
+        conf.set("dfs.client.socket-timeout", "70000");
     }
 
     @Override
     public Configuration getConf() {
         return conf;
+    }
+
+    public static void main(String[] args) throws Exception {
+        System.exit(ToolRunner.run(new ExtractionJob(), args));
     }
 }

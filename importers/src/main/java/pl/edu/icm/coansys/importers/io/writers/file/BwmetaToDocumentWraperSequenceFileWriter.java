@@ -100,11 +100,10 @@ public class BwmetaToDocumentWraperSequenceFileWriter {
         try {
             BytesWritable rowKeyBytesWritable = new BytesWritable();
             BytesWritable documentWrapperBytesWritable = new BytesWritable();
-            DocumentWrapper.Builder dw = DocumentWrapper.newBuilder();
 
             writer = createSequenceFileWriter(outputSequenceFile, rowKeyBytesWritable, documentWrapperBytesWritable, isSnappyCompressed);
             for (DocumentDTO doc : zdtp) {
-                DocumentWrapper docWrap = buildFrom(dw, doc);
+                DocumentWrapper docWrap = buildFrom(doc);
 
                 // specify key and value
                 byte[] rowKey = docWrap.getRowId().getBytes();
@@ -124,7 +123,8 @@ public class BwmetaToDocumentWraperSequenceFileWriter {
         }
     }
 
-    private static DocumentWrapper buildFrom(DocumentWrapper.Builder dw, DocumentDTO doc) {
+    private static DocumentWrapper buildFrom(DocumentDTO doc) {
+        DocumentWrapper.Builder dw = DocumentWrapper.newBuilder();
         String rowId = RowComposer.composeRow(doc);
         dw.setRowId(rowId);
         documentCount++;
