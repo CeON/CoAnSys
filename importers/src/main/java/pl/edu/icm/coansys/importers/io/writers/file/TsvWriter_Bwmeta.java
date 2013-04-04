@@ -51,12 +51,15 @@ public class TsvWriter_Bwmeta {
 
         ZipDirToDocumentDTOIterator zdtp = new ZipDirToDocumentDTOIterator(in, col);
         BufferedWriter bw = new BufferedWriter(new FileWriter(new File(out)));
-
-        for (DocumentDTO doc : zdtp) {
-            bw.write(DocumentDTO2TSVLine.translate(doc));
+        try {
+            for (DocumentDTO doc : zdtp) {
+                bw.write(DocumentDTO2TSVLine.translate(doc));
+            }
+            bw.flush();
         }
-        bw.flush();
-        bw.close();
+        finally {
+            bw.close();
+        }
     }
 
     private static void usage() {
