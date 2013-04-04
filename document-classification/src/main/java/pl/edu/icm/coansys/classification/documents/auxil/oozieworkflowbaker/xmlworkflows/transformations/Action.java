@@ -53,7 +53,6 @@ public class Action {
 			getForkMergeDefinition(sample, params,wflists);
 			
 			StringBuilder script =  getForMergeScript(sample, params,wflists);
-			//System.out.println(script);
 			subs_samples.add(script.toString());
 		}
 		
@@ -63,19 +62,17 @@ public class Action {
 	private static StringBuilder getForMergeScript(String sample,HashMap<String,String> params,
 			ArrayList<WFList> wflists) throws IOException {
 		
-		int numOfForks = 1;
+		/*int numOfForks = 1;
 		for(WFList wflist : wflists){
 			numOfForks*=wflist.vals.size();
-		}
+		}*/
 		//build fork node
 		StringBuilder script = new StringBuilder("\n\n\n\n");
 		
-	    ;
-		
-		script.append("	<action name='"+params.get("name")+"'>\n");
+		script.append("	<action name='").append(params.get("name")).append("'>\n");
 		addScriptLines(script,sample);
-		script.append("		<ok to='"+params.get("ok")+"'/>\n");
-		script.append("		<error to='"+params.get("error")+"'/>\n");
+		script.append("		<ok to='").append(params.get("ok")).append("'/>\n");
+		script.append("		<error to='").append(params.get("error")).append("'/>\n");
 		script.append("	</action>\n");
 		script.append("\n\n");
 		
@@ -94,7 +91,7 @@ public class Action {
 			else if(line.startsWith("@")) continue;
 			//script
 			else if(line.replaceAll("[ \t]*", "").length()>0){
-				script.append(line+"\n");
+				script.append(line).append("\n");
 			}
 		}
 		br.close();
@@ -119,7 +116,7 @@ public class Action {
 			//script
 			else if(line.replaceAll("[ \t]*", "").length()>0) continue;
 			//end
-			else if(line.startsWith("#")) continue;
+			else continue;
 		}
 		br.close();
 	}

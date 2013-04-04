@@ -30,7 +30,7 @@ public class ForkMerge {
 		return sb;
 	}
 
-	private static StringBuilder rewriteScript(StringBuilder sb,
+	/*private static StringBuilder rewriteScript(StringBuilder sb,
 			List<List<Integer>> startsEnds, List<String> samples, List<String> substituted) {
 		int diff = 0;
 		
@@ -42,7 +42,7 @@ public class ForkMerge {
 		}
 		
 		return sb;
-	}
+	}*/
 
 	private static List<String> substituteSamples(List<String> samples) throws IOException {
 			
@@ -55,7 +55,6 @@ public class ForkMerge {
 			getForkMergeDefinition(sample, params,wflists);
 			
 			StringBuilder script =  getForMergeScript(sample, params,wflists);
-			//System.out.println(script);
 			subs_samples.add(script.toString());
 		}
 		
@@ -72,9 +71,9 @@ public class ForkMerge {
 		//build fork node
 		StringBuilder script = new StringBuilder("\n\n\n\n");
 		
-		script.append("    <fork name='"+params.get("node_name")+"'>\n");
+		script.append("    <fork name='").append(params.get("node_name")).append("'>\n");
 		for(int i=0;i<numOfForks;i++){
-			script.append("        <path start='"+params.get("node_name")+"_forked_node_"+i+"'/>\n");
+			script.append("        <path start='").append(params.get("node_name")).append("_forked_node_").append(i).append("'/>\n");
 		}
 		script.append("    </fork>\n");
 		script.append("\n\n");
@@ -84,16 +83,16 @@ public class ForkMerge {
 		
 		int fork_num = 0;
 		for(ArrayList<WFList.WFElement> elements : alalwfelement){
-			script.append("    <action name='"+params.get("node_name")+"_forked_node_"+fork_num+"'>\n");
+			script.append("    <action name='").append(params.get("node_name")).append("_forked_node_").append(fork_num).append("'>\n");
 			addScriptLines(script,sample,elements);
-			script.append("        <ok to='"+params.get("node_name")+"_join'/>\n");
-			script.append("        <error to='"+params.get("node_error")+"'/>\n");
+			script.append("        <ok to='").append(params.get("node_name")).append("_join'/>\n");
+			script.append("        <error to='").append(params.get("node_error")).append("'/>\n");
 			script.append("    </action>\n");
 			script.append("\n\n");
 			fork_num++;
 		}
 		script.append("\n\n\n");
-		script.append("    <join name='"+params.get("node_name")+"_join' to='"+params.get("node_after_join")+"'/>\n");
+		script.append("    <join name='").append(params.get("node_name")).append("_join' to='").append(params.get("node_after_join")).append("'/>\n");
 		script.append("\n\n\n");
 		
 		return script;
@@ -142,7 +141,7 @@ public class ForkMerge {
 			//script
 			else if(line.replaceAll("[ \t]*", "").length()>0) continue;
 			//end
-			else if(line.startsWith("#")) continue;
+			else continue;
 		}
 		br.close();
 	}
@@ -152,7 +151,7 @@ public class ForkMerge {
 		params.put(line.split("=")[0], line.split("=")[1]);
 	}
 
-	private static List<String> extractSamples(StringBuilder sb,
+	/*private static List<String> extractSamples(StringBuilder sb,
 			List<List<Integer>> startsEnds) {
 		ArrayList<String> ret = new ArrayList<String>(); 
 		
@@ -163,6 +162,6 @@ public class ForkMerge {
 			ret.add(sb.substring(start,end));
 		}
 		return ret;
-	}
+	}*/
 
 }
