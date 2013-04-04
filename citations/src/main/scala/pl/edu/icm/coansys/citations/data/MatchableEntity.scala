@@ -9,7 +9,7 @@ import pl.edu.icm.coansys.citations.util.misc._
 import pl.edu.icm.coansys.commons.scala.strings
 import pl.edu.icm.coansys.disambiguation.auxil.DiacriticsRemover._
 import pl.edu.icm.cermine.bibref.BibReferenceParser
-import pl.edu.icm.coansys.importers.models.DocumentProtos.ReferenceMetadata
+import pl.edu.icm.coansys.importers.models.DocumentProtos.{DocumentMetadata, BasicMetadata, ReferenceMetadata}
 import pl.edu.icm.coansys.citations.data.CitationMatchingProtos.MatchableEntityData
 import pl.edu.icm.cermine.bibref.model.BibEntry
 import pl.edu.icm.coansys.citations.util.BytesConverter
@@ -71,15 +71,25 @@ object MatchableEntity {
     new MatchableEntity(data.build())
   }
 
+  private def fillUsingBasicMetadata(data: MatchableEntityData.Builder, meta: BasicMetadata) {
+    data.setAuthor(meta.getAuthorList.map(a => if (a.hasName) a.getName else a.getForenames + " " + a.getSurname).mkString(", "))
+    data.setSource(meta.getJournal)
+    data.setTitle(meta.getTitleList.map(_.getText).mkString(" "))
+    data.setPages(meta.getPages)
+    data.setYear(meta.getYear)
+  }
+
+  def fromDocumentMetadata(meta: DocumentMetadata) = {
+    val data = MatchableEntityData.newBuilder()
+    data.setId("doc_" + meta.getKey)
+    fillUsingBasicMetadata(data, meta.getBasicMetadata)
+    new MatchableEntity(data.build())
+  }
+
   def fromReferenceMetadata(meta: ReferenceMetadata) = {
     val data = MatchableEntityData.newBuilder()
     data.setId("cit_" + meta.getSourceDocKey + "_" + meta.getPosition)
-    data.setAuthor(meta.getBasicMetadata.getAuthorList.map(a => if (a.hasName) a.getName else a.getForenames + " " + a.getSurname).mkString(", "))
-    data.setSource(meta.getBasicMetadata.getJournal)
-    data.setTitle(meta.getBasicMetadata.getTitleList.map(_.getText).mkString(" "))
-    data.setPages(meta.getBasicMetadata.getPages)
-    data.setYear(meta.getBasicMetadata.getYear)
-
+    fillUsingBasicMetadata(data, meta.getBasicMetadata)
     new MatchableEntity(data.build())
   }
 

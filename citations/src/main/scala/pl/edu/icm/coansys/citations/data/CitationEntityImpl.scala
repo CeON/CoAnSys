@@ -10,7 +10,7 @@ import pl.edu.icm.coansys.importers.models.DocumentProtos.ReferenceMetadata
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
-class CitationEntityImpl(meta: ReferenceMetadata) extends CitationEntity {
+class CitationEntityImplOld(meta: ReferenceMetadata) extends CitationEntityOld {
   def author = meta.getBasicMetadata.getAuthorList.map(a => if (a.hasName) a.getName else a.getForenames + " " + a.getSurname).mkString(", ")
 
   def source = meta.getBasicMetadata.getJournal

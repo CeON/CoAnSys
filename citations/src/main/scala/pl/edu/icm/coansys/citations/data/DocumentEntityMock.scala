@@ -7,13 +7,13 @@ package pl.edu.icm.coansys.citations.data
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
-class DocumentEntityMock(_author: String = "",
-                         _source: String = "",
-                         _title: String = "",
-                         _pages: String = "",
-                         _year: String = "",
-                         _docId: String = "",
-                         _extId: String = "") extends DocumentEntity {
+class DocumentEntityMockOld(_author: String = "",
+                            _source: String = "",
+                            _title: String = "",
+                            _pages: String = "",
+                            _year: String = "",
+                            _docId: String = "",
+                            _extId: String = "") extends DocumentEntityOld {
   def author = _author
 
   def source = _source

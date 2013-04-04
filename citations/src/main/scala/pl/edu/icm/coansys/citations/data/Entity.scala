@@ -5,7 +5,7 @@
 package pl.edu.icm.coansys.citations.data
 
 import pl.edu.icm.coansys.citations.util.ngrams._
-import pl.edu.icm.coansys.citations.util.{BytesConverter, misc, author_matching}
+import pl.edu.icm.coansys.citations.util.{BytesConverter, misc}
 import pl.edu.icm.coansys.citations.util.misc.tokensFromCermine
 import pl.edu.icm.coansys.commons.scala.strings
 import java.io.{DataInputStream, ByteArrayInputStream, DataOutputStream, ByteArrayOutputStream}
@@ -14,7 +14,7 @@ import pl.edu.icm.coansys.disambiguation.auxil.DiacriticsRemover.removeDiacritic
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
-trait Entity {
+trait EntityOld {
   def entityId: String
 
   def author: String
@@ -38,7 +38,7 @@ trait Entity {
       .toSet
 
   override def equals(other: Any): Boolean = other match {
-    case that: Entity => entityId == that.entityId
+    case that: EntityOld => entityId == that.entityId
     case _ => false
   }
 
@@ -56,15 +56,15 @@ trait Entity {
     buffer.toByteArray
   }
 
-  def similarityTo(other: Entity): Double = {
+  def similarityTo(other: EntityOld): Double = {
     val features = similarityFeaturesWith(other)
     features.sum / features.length
   }
 
-  def similarityFeaturesWith(other: Entity): List[Double] = {
-//    val authorMatchFactor = author_matching.matchFactor(
-//      tokensFromCermine(author),
-//      tokensFromCermine(other.author))
+  def similarityFeaturesWith(other: EntityOld): List[Double] = {
+    //    val authorMatchFactor = author_matching.matchFactor(
+    //      tokensFromCermine(author),
+    //      tokensFromCermine(other.author))
     val authorTrigramMatchFactor =
       trigramSimilarity(author, other.author)
     val authorTokenMatchFactor = {
@@ -114,22 +114,22 @@ trait Entity {
   }
 }
 
-object Entity {
+object EntityOld {
   implicit val converter =
-    new BytesConverter[Entity](
+    new BytesConverter[EntityOld](
       (_.toTypedBytes),
-      (Entity.fromTypedBytes))
+      (EntityOld.fromTypedBytes))
 
-  def fromBytes(entityId: String, bytes: Array[Byte]): Entity = {
+  def fromBytes(entityId: String, bytes: Array[Byte]): EntityOld = {
     entityId.substring(0, 3) match {
       case "cit" =>
-        CitationEntity.fromBytes(bytes)
+        CitationEntityOld.fromBytes(bytes)
       case "doc" =>
-        DocumentEntity.fromBytes(bytes)
+        DocumentEntityOld.fromBytes(bytes)
     }
   }
 
-  def fromTypedBytes(bytes: Array[Byte]): Entity = {
+  def fromTypedBytes(bytes: Array[Byte]): EntityOld = {
     val buffer = new ByteArrayInputStream(bytes)
     val input = new DataInputStream(buffer)
     val entityId = input.readUTF()

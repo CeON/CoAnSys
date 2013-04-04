@@ -4,7 +4,7 @@
 
 package pl.edu.icm.coansys.citations.tools.matcher
 
-import pl.edu.icm.coansys.citations.data.{MatchableEntity, SimilarityMeasurer, Entity}
+import pl.edu.icm.coansys.citations.data.{MatchableEntity, SimilarityMeasurer}
 import pl.edu.icm.coansys.citations.util.{XPathEvaluator, nlm}
 import org.apache.commons.io.IOUtils
 import org.apache.hadoop.conf.Configuration
@@ -35,7 +35,7 @@ object MatcherTrainingFromSeqFile {
         val begining = records.take(n).toList
         val measurer = new SimilarityMeasurer
         val featureVectors = statefulMap(records ++ begining.iterator, Queue.empty.enqueue(begining.unzip._2)) {
-          case ((xmlString, entity), state: Queue[Entity]) =>
+          case ((xmlString, entity), state: Queue[MatchableEntity]) =>
             val eval = XPathEvaluator.fromInputStream(IOUtils.toInputStream(xmlString))
             val refMeta = nlm.referenceMetadataBuilderFromNode(eval.asNode("/ref")).build()
             val cit = MatchableEntity.fromReferenceMetadata(refMeta)

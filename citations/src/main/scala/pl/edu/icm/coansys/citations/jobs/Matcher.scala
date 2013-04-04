@@ -12,7 +12,6 @@ import pl.edu.icm.coansys.importers.models.PICProtos
 import pl.edu.icm.coansys.citations.util.AugmentedDList.augmentDList
 import pl.edu.icm.coansys.citations.indices.{EntityIndex, AuthorIndex}
 import pl.edu.icm.coansys.citations.util.{misc, BytesConverter}
-import pl.edu.icm.coansys.citations.util.misc.readCitationsFromDocumentsFromSeqFiles
 import pl.edu.icm.coansys.citations.data._
 import feature_calculators._
 import pl.edu.icm.cermine.tools.classification.features.FeatureVectorBuilder
@@ -60,10 +59,10 @@ object Matcher extends ScoobiApp {
     }.keys
   }
 
-  def approximatelyMatchingDocumentsStats(citation: CitationEntity, index: AuthorIndex) = {
+  def approximatelyMatchingDocumentsStats(citation: MatchableEntity, index: AuthorIndex) = {
     val documentsWithMatchNo =
       citation.normalisedAuthorTokens
-        .flatMap(tok => index.getDocumentsByAuthor(tok).filterNot(_ == citation.entityId))
+        .flatMap(tok => index.getDocumentsByAuthor(tok).filterNot(_ == citation.id))
         .groupBy(identity)
         .map {
         case (doc, iterable) => (doc, iterable.size)
@@ -79,7 +78,7 @@ object Matcher extends ScoobiApp {
       case (doc, matchNo) => matchNo >= minMatchNo
     }.keys
 
-    ('"' + citation.rawText.filterNot(_ == '"') + '"', citation.normalisedAuthorTokens.mkString(" "), docs.size, maxMatchNo)
+    ('"' + citation.toReferenceString.filterNot(_ == '"') + '"', citation.normalisedAuthorTokens.mkString(" "), docs.size, maxMatchNo)
   }
 
   type EntityId = String
@@ -111,8 +110,8 @@ object Matcher extends ScoobiApp {
           None
     }
 
-  def extractBestMatches(matchesCandidates: DList[(CitationEntity, (EntityId, Double))]) =
-    matchesCandidates.groupByKey[CitationEntity, (EntityId, Double)].map {
+  def extractBestMatches(matchesCandidates: DList[(MatchableEntity, (EntityId, Double))]) =
+    matchesCandidates.groupByKey[MatchableEntity, (EntityId, Double)].map {
       case (cit, matches) =>
         val best = matches.maxBy(_._2)._1
         (cit, best)
@@ -141,20 +140,20 @@ object Matcher extends ScoobiApp {
           None
     }
 
-  def reformatToPicOut(matches: DList[(String, (Int, String))], keyIndexUri: String) =
-    matches.groupByKey[String, (Int, String)]
-      .mapWithResource(new EntityIndex(keyIndexUri)) {
-      case (index, (sourceUuid, refs)) =>
-        val sourceEntity = index.getEntityById("doc-" + sourceUuid).asInstanceOf[DocumentEntity]
-
-        val outBuilder = PICProtos.PicOut.newBuilder()
-        outBuilder.setDocId(sourceEntity.extId)
-        for ((position, targetExtId) <- refs) {
-          outBuilder.addRefs(PICProtos.Reference.newBuilder().setDocId(targetExtId).setRefNum(position))
-        }
-
-        (sourceUuid, outBuilder.build())
-    }
+  //  def reformatToPicOut(matches: DList[(String, (Int, String))], keyIndexUri: String) =
+  //    matches.groupByKey[String, (Int, String)]
+  //      .mapWithResource(new EntityIndex(keyIndexUri)) {
+  //      case (index, (sourceUuid, refs)) =>
+  //        val sourceEntity = index.getEntityById("doc_" + sourceUuid)
+  //
+  //        val outBuilder = PICProtos.PicOut.newBuilder()
+  //        outBuilder.setDocId(sourceEntity.extId)
+  //        for ((position, targetExtId) <- refs) {
+  //          outBuilder.addRefs(PICProtos.Reference.newBuilder().setDocId(targetExtId).setRefNum(position))
+  //        }
+  //
+  //        (sourceUuid, outBuilder.build())
+  //    }
 
   //  def matches(citations: DList[CitationEntity], keyIndexUri: String, authorIndexUri: String) = {
   //    reformatToPicOut(extractBestMatches(addHeuristic(citations, authorIndexUri), keyIndexUri), keyIndexUri)
@@ -177,7 +176,7 @@ object Matcher extends ScoobiApp {
     }
   }
 
-  def heuristicStats(citations: DList[CitationEntity], keyIndexUri: String, authorIndexUri: String) = {
+  def heuristicStats(citations: DList[MatchableEntity], keyIndexUri: String, authorIndexUri: String) = {
     citations.mapWithResource(new AuthorIndex(authorIndexUri)) {
       case (index, cit) =>
         approximatelyMatchingDocumentsStats(cit, index)
@@ -195,7 +194,7 @@ object Matcher extends ScoobiApp {
     val documentsUri = args(3)
     val outUri = args(4)
 
-    val myMatchesDebug = matchesDebug(readCitationsFromDocumentsFromSeqFiles(List(documentsUri), parserModelUri), keyIndexUri, authorIndexUri)
+    val myMatchesDebug = matchesDebug(convertValueFromSequenceFile[MatchableEntity](documentsUri), keyIndexUri, authorIndexUri)
 
     implicit val stringConverter = new BytesConverter[String](misc.uuidEncode, misc.uuidDecode)
     implicit val picOutConverter = new BytesConverter[PICProtos.PicOut](_.toByteString.toByteArray, PICProtos.PicOut.parseFrom(_))

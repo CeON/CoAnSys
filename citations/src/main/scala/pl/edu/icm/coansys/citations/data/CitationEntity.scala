@@ -18,7 +18,7 @@ import pl.edu.icm.cermine.bibref.BibReferenceParser
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
-trait CitationEntity extends Entity {
+trait CitationEntityOld extends EntityOld {
   def entityId: String = "cit-" + sourceDocKey + "-" + position
 
   def sourceDocKey: String
@@ -29,15 +29,15 @@ trait CitationEntity extends Entity {
 
   override def toReferenceString: String = rawText
 
-  override def similarityFeaturesWith(other: Entity): List[Double] = {
+  override def similarityFeaturesWith(other: EntityOld): List[Double] = {
     val base = super.similarityFeaturesWith(other)
-    if (other.isInstanceOf[CitationEntity]) {
+    if (other.isInstanceOf[CitationEntityOld]) {
       val overallMatchFactor =
-        trigramSimilarity(rawText, other.asInstanceOf[CitationEntity].rawText)
+        trigramSimilarity(rawText, other.asInstanceOf[CitationEntityOld].rawText)
       val lettersMatchFactor =
-        trigramSimilarity(lettersOnly(rawText), lettersOnly(other.asInstanceOf[CitationEntity].rawText))
+        trigramSimilarity(lettersOnly(rawText), lettersOnly(other.asInstanceOf[CitationEntityOld].rawText))
       val digitsMatchFactor =
-        trigramSimilarity(digitsOnly(rawText), digitsOnly(other.asInstanceOf[CitationEntity].rawText))
+        trigramSimilarity(digitsOnly(rawText), digitsOnly(other.asInstanceOf[CitationEntityOld].rawText))
 
       base ++ List(overallMatchFactor, lettersMatchFactor, digitsMatchFactor)
     } else {
@@ -46,14 +46,14 @@ trait CitationEntity extends Entity {
   }
 }
 
-object CitationEntity {
+object CitationEntityOld {
   def fromBytes(bytes: Array[Byte]) =
     fromReferenceMetadata(ReferenceMetadata.parseFrom(bytes))
 
-  def fromReferenceMetadata(meta: ReferenceMetadata): CitationEntity =
-    new CitationEntityImpl(meta)
+  def fromReferenceMetadata(meta: ReferenceMetadata): CitationEntityOld =
+    new CitationEntityImplOld(meta)
 
-  def fromUnparsedReferenceMetadata(bibReferenceParser: BibReferenceParser[BibEntry], meta: ReferenceMetadata): CitationEntity = {
+  def fromUnparsedReferenceMetadata(bibReferenceParser: BibReferenceParser[BibEntry], meta: ReferenceMetadata): CitationEntityOld = {
     def getField(bibEntry: BibEntry, key: String): String =
       bibEntry.getAllFieldValues(key).mkString(" ")
 
@@ -71,15 +71,15 @@ object CitationEntity {
     basicMetadata.addTitle(TextWithLanguage.newBuilder.setText(getField(bibEntry, BibEntry.FIELD_TITLE)))
     builder.setBasicMetadata(basicMetadata)
 
-    new CitationEntityImpl(builder.build())
+    new CitationEntityImplOld(builder.build())
   }
 
   implicit val converter =
-    new BytesConverter[CitationEntity](
+    new BytesConverter[CitationEntityOld](
       (_.toTypedBytes),
-      (Entity.fromTypedBytes(_).asInstanceOf[CitationEntity]))
+      (EntityOld.fromTypedBytes(_).asInstanceOf[CitationEntityOld]))
 
-  implicit val grouping = new Grouping[CitationEntity] {
-    def groupCompare(x: CitationEntity, y: CitationEntity) = x.entityId compareTo y.entityId
+  implicit val grouping = new Grouping[CitationEntityOld] {
+    def groupCompare(x: CitationEntityOld, y: CitationEntityOld) = x.entityId compareTo y.entityId
   }
 }

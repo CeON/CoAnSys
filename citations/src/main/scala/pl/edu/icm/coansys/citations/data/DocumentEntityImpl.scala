@@ -12,7 +12,7 @@ import pl.edu.icm.coansys.disambiguation.auxil.DiacriticsRemover.removeDiacritic
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
-class DocumentEntityImpl(meta: DocumentMetadata) extends DocumentEntity {
+class DocumentEntityImplOld(meta: DocumentMetadata) extends DocumentEntityOld {
   def author = {
     val authors = meta.getBasicMetadata.getAuthorList
     val authorsNames = authors.map(a => if (a.hasName) a.getName else a.getForenames + " " + a.getSurname)
