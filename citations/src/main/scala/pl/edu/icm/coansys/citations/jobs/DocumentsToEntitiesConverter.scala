@@ -13,6 +13,8 @@ import com.nicta.scoobi.Scoobi._
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 object DocumentsToEntitiesConverter extends ScoobiApp {
+  override def upload = false
+
   def run() {
     val inUri = args(0)
     val outUri = args(1)

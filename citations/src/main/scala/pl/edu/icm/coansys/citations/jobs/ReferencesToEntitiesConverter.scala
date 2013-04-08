@@ -16,6 +16,8 @@ import pl.edu.icm.cermine.bibref.CRFBibReferenceParser
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 object ReferencesToEntitiesConverter extends ScoobiApp {
+  override def upload = false
+
   def run() {
     assert(args(0) == "-model")
     val parserModel = Some(args(1))
