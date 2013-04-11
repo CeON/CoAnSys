@@ -49,8 +49,12 @@ public class DocumentWrapperSequenceFileIncrementalLoadConfigurator {
         //Passing the variable to WF that could be referred by subsequent actions
         File file = new File(System.getProperty("oozie.action.output.properties"));
         OutputStream os = new FileOutputStream(file);
-        props.store(os, "");
-        os.close();
+        try {
+            props.store(os, "");
+        }
+        finally {
+            os.close();
+        }
     }
 
     /*

@@ -51,12 +51,15 @@ public class WrapperWriter_Bwmeta {
 
         ZipDirToDocumentDTOIterator zdtp = new ZipDirToDocumentDTOIterator(in, col);
         BufferedWriter bw = new BufferedWriter(new FileWriter(new File(out)));
-
-        for (DocumentDTO doc : zdtp) {
-            bw.write(DocumentDTO2WrapperLine.translate(doc));
+        try {
+            for (DocumentDTO doc : zdtp) {
+                bw.write(DocumentDTO2WrapperLine.translate(doc));
+            }
+            bw.flush();
         }
-        bw.flush();
-        bw.close();
+        finally {
+            bw.close();
+        }
     }
 
     private static void usage() {
