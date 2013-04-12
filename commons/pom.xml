@@ -6,7 +6,7 @@
     <parent>
         <groupId>pl.edu.icm.coansys</groupId>
         <artifactId>coansys</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.2-SNAPSHOT</version>
     </parent>
     
     <artifactId>commons</artifactId>
@@ -17,7 +17,7 @@
     <dependencies>
 		<dependency>
 	    	<groupId>pl.edu.icm.coansys</groupId>
-	    	<version>1.0-SNAPSHOT</version>
+	    	<version>1.2-SNAPSHOT</version>
 	    	<artifactId>models</artifactId>
 		</dependency>    
         <dependency>

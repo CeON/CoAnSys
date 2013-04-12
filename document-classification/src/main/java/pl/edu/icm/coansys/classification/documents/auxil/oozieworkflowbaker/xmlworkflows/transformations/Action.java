@@ -28,7 +28,7 @@ public class Action {
 		return sb;
 	}
 
-	private static StringBuilder rewriteScript(StringBuilder sb,
+	/*private static StringBuilder rewriteScript(StringBuilder sb,
 			List<List<Integer>> startsEnds, List<String> samples, List<String> substituted) {
 		int diff = 0;
 		
@@ -40,7 +40,7 @@ public class Action {
 		}
 		
 		return sb;
-	}
+	}*/
 
 	private static List<String> substituteSamples(List<String> samples) throws IOException {
 			
@@ -53,7 +53,6 @@ public class Action {
 			getForkMergeDefinition(sample, params,wflists);
 			
 			StringBuilder script =  getForMergeScript(sample, params,wflists);
-			//System.out.println(script);
 			subs_samples.add(script.toString());
 		}
 		
@@ -63,19 +62,17 @@ public class Action {
 	private static StringBuilder getForMergeScript(String sample,HashMap<String,String> params,
 			ArrayList<WFList> wflists) throws IOException {
 		
-		int numOfForks = 1;
+		/*int numOfForks = 1;
 		for(WFList wflist : wflists){
 			numOfForks*=wflist.vals.size();
-		}
+		}*/
 		//build fork node
 		StringBuilder script = new StringBuilder("\n\n\n\n");
 		
-	    ;
-		
-		script.append("	<action name='"+params.get("name")+"'>\n");
+		script.append("	<action name='").append(params.get("name")).append("'>\n");
 		addScriptLines(script,sample);
-		script.append("		<ok to='"+params.get("ok")+"'/>\n");
-		script.append("		<error to='"+params.get("error")+"'/>\n");
+		script.append("		<ok to='").append(params.get("ok")).append("'/>\n");
+		script.append("		<error to='").append(params.get("error")).append("'/>\n");
 		script.append("	</action>\n");
 		script.append("\n\n");
 		
@@ -86,16 +83,10 @@ public class Action {
 	private static void addScriptLines(StringBuilder script,String sample) throws IOException {
 		BufferedReader br = new BufferedReader(new StringReader(sample));
 		for(String line = br.readLine();line!=null;line=br.readLine()){
-			//beg
-			if(line.startsWith("#")) continue;
-			//input parameters
-			else if(line.matches("[a-zA-Z0-9_-]+=[a-zA-Z0-9_-]+[\\s]*")) continue;
-			//lists
-			else if(line.startsWith("@")) continue;
-			//script
-			else if(line.replaceAll("[ \t]*", "").length()>0){
-				script.append(line+"\n");
-			}
+                    if(line.replaceAll("[ \t]*", "").length()>0){
+			script.append(line).append("\n");
+                    }
+                    else continue;
 		}
 		br.close();
 	}
@@ -116,10 +107,7 @@ public class Action {
 			}else if(line.startsWith("@")){
 				wflists.add(new WFList(line.split(" ")));
 			}
-			//script
-			else if(line.replaceAll("[ \t]*", "").length()>0) continue;
-			//end
-			else if(line.startsWith("#")) continue;
+			else continue;
 		}
 		br.close();
 	}

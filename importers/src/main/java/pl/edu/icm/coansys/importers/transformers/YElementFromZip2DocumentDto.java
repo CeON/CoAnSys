@@ -3,27 +3,25 @@
  */
 package pl.edu.icm.coansys.importers.transformers;
 
+import com.google.protobuf.ByteString;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import pl.edu.icm.coansys.importers.ZipArchive;
 import pl.edu.icm.coansys.importers.constants.BWMetaConstants;
 import pl.edu.icm.coansys.importers.constants.ProtoConstants;
 import pl.edu.icm.coansys.importers.models.DocumentDTO;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.Media;
 import pl.edu.icm.coansys.importers.parsers.MetadataToProtoMetadataParser;
+import pl.edu.icm.coansys.importers.parsers.MetadataToProtoMetadataParserImpl;
+import pl.edu.icm.coansys.importers.utils.ZipArchive;
 import pl.edu.icm.model.bwmeta.YContentEntry;
 import pl.edu.icm.model.bwmeta.YContentFile;
 import pl.edu.icm.model.bwmeta.YElement;
 import pl.edu.icm.model.bwmeta.YExportable;
-
-import com.google.protobuf.ByteString;
 
 /**
  *
@@ -50,7 +48,8 @@ public class YElementFromZip2DocumentDto {
         if (yExportable instanceof YElement) {
             YElement yElement = (YElement) yExportable;
 
-            DocumentMetadata docMetadata = MetadataToProtoMetadataParser.yelementToDocumentMetadata(yElement, currentZipArchive, currentXmlPath, collection);
+            MetadataToProtoMetadataParser mtd2prt = new MetadataToProtoMetadataParserImpl();
+            DocumentMetadata docMetadata = mtd2prt.yelementToDocumentMetadata(yElement, currentZipArchive, currentXmlPath, collection);
 
             if (docMetadata != null) {
                 productObject = new DocumentDTO();
@@ -60,7 +59,7 @@ public class YElementFromZip2DocumentDto {
 
                 List<YContentEntry> contents = yElement.getContents();
                 for (YContentEntry content : contents) {
-                    //get a pdf path from yElement
+                    //get a media path from yElement
                     handleContent(productObject, content, currentZipArchive);
                 }
             }
@@ -73,39 +72,39 @@ public class YElementFromZip2DocumentDto {
         if (content.isFile()) {
             YContentFile yFile = (YContentFile) content;
             if (BWMetaConstants.mimePdfListExtension.contains(yFile.getFormat())) {
-                handlePDFContent(docDTO, yFile, currentZipArchive);
+                fetchMediaFromZip(docDTO, yFile, currentZipArchive, ProtoConstants.mediaTypePdf);
+            } else if (BWMetaConstants.mimeTxtListExtension.contains(yFile.getFormat())) {
+                fetchMediaFromZip(docDTO, yFile, currentZipArchive, ProtoConstants.mediaTypeTxt);
             }
         }
     }
 
-    private void handlePDFContent(DocumentDTO docDTO,
-            YContentFile yFile, ZipArchive currentZipArchive) {
+    private void fetchMediaFromZip(DocumentDTO docDTO, YContentFile yFile, ZipArchive currentZipArchive, String mediaType) {
         for (String location : yFile.getLocations()) {
-            //path to pdf in yFile contains prefix yadda.pack:/, check and remove it
+            //path to media in yFile contains prefix yadda.pack:/, check and remove it
             String prefix = "yadda.pack:/";
             if (location.startsWith(prefix)) {
                 location = location.substring(prefix.length());
-                //path to pdf in zip file contains zip filename, not included in yFile
+                //path to media in zip file contains zip filename, not included in yFile
                 List<String> foundPaths = currentZipArchive.filter(".*" + location);
                 //foundPaths should contain 1 item
                 if (foundPaths.size() > 0) {
                     try {
                         String foundPath = foundPaths.get(0);
-                        InputStream pdfIS = currentZipArchive.getFileAsInputStream(foundPath);
-                        // ... do something with pdfIS
+                        InputStream mediaIS = currentZipArchive.getFileAsInputStream(foundPath);
+                        // ... do something with mediaIS
                         Media.Builder mediaBuilder = Media.newBuilder();
                         mediaBuilder.setKey(docDTO.getKey()); 
                         //Media and Document should have the same key?
-                        String type = ProtoConstants.mediaTypePdf;
-                        mediaBuilder.setMediaType(type);
-                        byte[] content = IOUtils.toByteArray(pdfIS);
+                        mediaBuilder.setMediaType(mediaType);
+                        byte[] content = IOUtils.toByteArray(mediaIS);
                         mediaBuilder.setContent(ByteString.copyFrom(content));
                         mediaBuilder.setSourcePath(currentZipArchive.getZipFilePath() + "#" + foundPath);
                         mediaBuilder.setSourceFilesize(content.length);
                         
                         docDTO.addMedia(mediaBuilder.build());
-                        docDTO.addMediaType(type);
-                        pdfIS.close();
+                        docDTO.addMediaType(mediaType);
+                        mediaIS.close();
 
                     } catch (IOException ex) {
                         logger.error(ex.toString());

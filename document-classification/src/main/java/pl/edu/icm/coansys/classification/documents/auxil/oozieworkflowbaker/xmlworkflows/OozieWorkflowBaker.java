@@ -29,45 +29,45 @@ public class OozieWorkflowBaker {
 		StringBuilder propsSb = readFileToStringBuilder(in_props);
 		StringBuilder sb = readFileToStringBuilder(in_file);
 		sb.append("\n");
-//		System.out.println(sb);
 		sb = new StringBuilder(sb.toString().replaceAll("<!--[\\S\\s.]+?-->", ""));
-		//System.out.println(sb);
 		sb = BashSubstitution.applyBashSubstitution(sb, propsSb);
-//		System.out.println(sb);
 		sb = Replace.substitute(sb);
-//		System.out.println(sb);
 		sb.delete(0, sb.indexOf("# BEG:REMOVE_UP_TO_HERE")+"# BEG:REMOVE_UP_TO_HERE".length()+1);
 		sb = InterpretReplace.substitute(sb);
-		//System.out.println(sb);
 		sb = ForkMerge.substitute(sb);
 		sb = Action.substitute(sb);
-		int index=-1;
+		int index;
 		while((index=sb.indexOf("\n\n\n"))!=-1){
 			sb.delete(index, index+1);
 		}
 			
 		FileWriter fw = new FileWriter(out_file);
-		fw.write(sb.toString());
-		fw.flush();
-		fw.close();
-		
-		return;
+		try { 
+                    fw.write(sb.toString());
+                    fw.flush();
+                }
+                finally{
+                    fw.close();
+                }
 	}
 
 	private static StringBuilder readFileToStringBuilder(File in_file) throws IOException {
 		BufferedReader br = new BufferedReader(new FileReader(in_file));
 		StringBuilder sb = new StringBuilder();
-		
-		for(String line = br.readLine();line!=null;line = br.readLine()){
-			sb.append(line+"\n");
-		}
-		br.close();
+		try{
+                    for(String line = br.readLine();line!=null;line = br.readLine()){
+                            sb.append(line).append("\n");
+                    }
+                }
+                finally {
+                    br.close();
+                }
 		return sb;
 	}
 	
 	public static String escapeDollarSing(String text) {
 		if (text.contains("$")) {
-			StringBuffer sb = new StringBuffer();
+			StringBuilder sb = new StringBuilder();
 			for (char c : text.toCharArray()) {
 				if (c == '$') {
 					sb.append("__DOLLAR_SIGN__");

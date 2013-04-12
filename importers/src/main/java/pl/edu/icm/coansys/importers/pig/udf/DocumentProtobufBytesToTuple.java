@@ -1,3 +1,6 @@
+/*
+ * (C) 2010-2012 ICM UW. All rights reserved.
+ */
 package pl.edu.icm.coansys.importers.pig.udf;
 
 import org.apache.pig.backend.executionengine.ExecException;
@@ -10,9 +13,10 @@ import pl.edu.icm.coansys.importers.models.DocumentProtos.MediaContainer;
 import com.google.protobuf.InvalidProtocolBufferException;
 
 /**
- *
+ * @deprecated Replaced by {@link ProtobufToTuple}
  * @author akawa
  */
+@Deprecated
 public class DocumentProtobufBytesToTuple extends DocumentProtobufToTupleBase {
 
     @Override

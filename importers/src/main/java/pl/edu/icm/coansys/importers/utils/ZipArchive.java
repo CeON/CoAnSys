@@ -1,15 +1,12 @@
 /*
  * (C) 2010-2012 ICM UW. All rights reserved.
  */
-package pl.edu.icm.coansys.importers;
+package pl.edu.icm.coansys.importers.utils;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
@@ -32,13 +29,12 @@ public class ZipArchive {
 
     public ZipArchive(String zipFilePath) throws IOException {
         zipFile = new ZipFile(zipFilePath);
-        entries = zipFile.entries();
-        while (entries.hasMoreElements()) {
-            ZipEntry entry = entries.nextElement();
-            if (!entry.isDirectory()) {
-                filesMap.put(entry.getName(), entry);
-            }
-        }
+        init();
+    }
+
+    public ZipArchive(File file) throws IOException {
+        zipFile = new ZipFile(file);
+        init();
     }
 
     public List<String> filter(String regExp) {
@@ -64,8 +60,18 @@ public class ZipArchive {
         }
         return null;
     }
-    
+
     public String getZipFilePath() {
         return (zipFile != null ? zipFile.getName() : null);
+    }
+
+    private void init() {
+        entries = zipFile.entries();
+        while (entries.hasMoreElements()) {
+            ZipEntry entry = entries.nextElement();
+            if (!entry.isDirectory()) {
+                filesMap.put(entry.getName(), entry);
+            }
+        }
     }
 }

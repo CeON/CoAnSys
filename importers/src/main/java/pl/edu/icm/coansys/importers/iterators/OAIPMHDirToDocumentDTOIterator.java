@@ -36,6 +36,7 @@ import org.w3c.dom.NodeList;
 import pl.edu.icm.coansys.importers.models.DocumentDTO;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.importers.parsers.MetadataToProtoMetadataParser;
+import pl.edu.icm.coansys.importers.parsers.MetadataToProtoMetadataParserImpl;
 
 /**
  *
@@ -70,7 +71,6 @@ public class OAIPMHDirToDocumentDTOIterator implements Iterable<DocumentDTO> {
         moveToNextItem();
     }
 
-
     @Override
     public Iterator<DocumentDTO> iterator() {
         return new Iterator<DocumentDTO>() {
@@ -92,7 +92,7 @@ public class OAIPMHDirToDocumentDTOIterator implements Iterable<DocumentDTO> {
 
             @Override
             public void remove() {
-                moveToNextItem();
+                throw new UnsupportedOperationException("Operation remove() is not supported");
             }
         };
     }
@@ -128,8 +128,7 @@ public class OAIPMHDirToDocumentDTOIterator implements Iterable<DocumentDTO> {
                         continue;
                     }
                     if (collectionFromFilename) {
-                        this.collection = nextFile.getName().replaceFirst("listRecords_", "oai-")
-                                .replaceFirst("\\.xml$", "").replaceAll("[^a-zA-Z0-9]", "-").replaceFirst("-[0-9]*$", "");
+                        this.collection = nextFile.getName().replaceFirst("listRecords_", "oai-").replaceFirst("\\.xml$", "").replaceAll("[^a-zA-Z0-9]", "-").replaceFirst("-[0-9]*$", "");
                     }
                     nodeListIndex = 0;
                 } catch (Exception ex) {
@@ -145,7 +144,8 @@ public class OAIPMHDirToDocumentDTOIterator implements Iterable<DocumentDTO> {
                 item.setAttribute("xmlns:dc", "http://purl.org/dc/elements/1.1/");
                 item.setAttribute("xmlns:oai_dc", "http://www.openarchives.org/OAI/2.0/oai_dc/");
                 str = nodeToXmlString(item);
-                List<DocumentMetadata> docs = MetadataToProtoMetadataParser.parseStream(new ByteArrayInputStream(str.getBytes("UTF-8")),
+                MetadataToProtoMetadataParser mtd2prt = new MetadataToProtoMetadataParserImpl();
+                List<DocumentMetadata> docs = mtd2prt.parseStream(new ByteArrayInputStream(str.getBytes("UTF-8")),
                         MetadataToProtoMetadataParser.MetadataType.OAI_DC, collection);
                 if (docs.size() == 1) {
                     DocumentMetadata dm = docs.get(0);

@@ -34,7 +34,7 @@ public class DocumentProto2EmailPrefixExtractor implements Extractor<DocumentMet
     public List<String> extract(DocumentMetadata input, String... auxil) {
         String authId = auxil[0];
         DocumentMetadata dm = (DocumentMetadata) input;
-        ArrayList<String> ret = new ArrayList<String>();
+        List<String> ret = new ArrayList<String>();
 
         for (Author a : dm.getBasicMetadata().getAuthorList()) {
             if (a.getKey().equals(authId)) {

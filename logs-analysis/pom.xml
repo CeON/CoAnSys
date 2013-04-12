@@ -6,7 +6,7 @@
     <parent>
         <groupId>pl.edu.icm.coansys</groupId>
         <artifactId>coansys</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.2-SNAPSHOT</version>
     </parent>
 
     <artifactId>logs-analysis</artifactId>
@@ -15,16 +15,11 @@
     <url>http://maven.apache.org</url>
 
     <dependencies>
-		<dependency>
-	    	<groupId>pl.edu.icm.coansys</groupId>
-	    	<version>1.0-SNAPSHOT</version>
-	    	<artifactId>models</artifactId>
-		</dependency>    
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-beans</artifactId>
-            <version>3.0.5.RELEASE</version>
-        </dependency>
+        <groupId>pl.edu.icm.coansys</groupId>
+        <version>1.2-SNAPSHOT</version>
+        <artifactId>models</artifactId>
+        </dependency>    
         <dependency>
             <groupId>org.apache.mrunit</groupId>
             <artifactId>mrunit</artifactId>
@@ -32,5 +27,17 @@
             <classifier>hadoop2</classifier>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>pl.edu.icm.synat</groupId>
+            <artifactId>synat-core-services-api</artifactId>
+            <version>${synat.version}</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>pl.edu.icm.synat</groupId>
+            <artifactId>synat-platform-connector</artifactId>
+            <version>${synat.version}</version>
+        </dependency>
     </dependencies>
+    
 </project>

@@ -7,7 +7,7 @@
 
     <groupId>pl.edu.icm.coansys</groupId>
     <artifactId>models</artifactId>
-    <version>1.0-SNAPSHOT</version> 
+    <version>1.2-SNAPSHOT</version> 
 
     <properties>
         <protobuf.java.version>2.4.1</protobuf.java.version>
@@ -20,15 +20,21 @@
             <version>${protobuf.java.version}</version>
         </dependency>
     </dependencies>
+    
+    <scm>
+        <connection>scm:git:ssh://git@github.com/CeON/CoAnSys.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/CeON/CoAnSys.git</developerConnection>
+        <url>https://github.com/CeON/CoAnSys</url>
+    </scm>
 
     <distributionManagement>
         <repository>
             <id>kdd-releases</id>
-            <url>http://maven.icm.edu.pl/artifactory/kdd-releases</url>
+            <url>http://maven.ceon.pl/artifactory/kdd-releases</url>
         </repository>
         <snapshotRepository>
             <id>kdd-snapshots</id>
-            <url>http://maven.icm.edu.pl/artifactory/kdd-snapshots</url>
+            <url>http://maven.ceon.pl/artifactory/kdd-snapshots</url>
         </snapshotRepository>
     </distributionManagement>
 
@@ -46,12 +52,6 @@
 			<plugin>
       			<artifactId>maven-release-plugin</artifactId>
       			<version>2.3.2</version>
-      			<configuration>
-        			<suppressCommitBeforeBranch>true</suppressCommitBeforeBranch>
-        			<suppressCommitBeforeTag>true</suppressCommitBeforeTag>
-        			<remoteTagging>false</remoteTagging>
-        			<autoVersionSubmodules>true</autoVersionSubmodules>
-      			</configuration>
     		</plugin>
         </plugins>
     </build>

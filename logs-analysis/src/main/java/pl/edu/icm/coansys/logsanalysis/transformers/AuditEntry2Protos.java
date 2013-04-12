@@ -22,7 +22,7 @@ public class AuditEntry2Protos {
                 setEventType(entry.getEventType()).setTimestamp(entry.getTimestamp().getTime());
 
         builder.setLevel(AuditEntryProtos.Level.valueOf(entry.getLevel().name()));
-
+        
         builder.addAllArg(Arrays.asList(entry.getArgs()));
 
         return builder.build();

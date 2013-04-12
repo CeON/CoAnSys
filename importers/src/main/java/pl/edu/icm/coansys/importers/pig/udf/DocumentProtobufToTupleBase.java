@@ -21,10 +21,12 @@ import pl.edu.icm.coansys.importers.models.DocumentProtos.ReferenceMetadata;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.TextWithLanguage;
 
 /**
- *
+ * 
+ * @deprecated Replaced by {@link ProtobufToTuple}
  * @author akawa
  * @author acz
  */
+@Deprecated
 public abstract class DocumentProtobufToTupleBase extends EvalFunc<Tuple> {
 
     private static final Map<String, Integer> documentMetadataFieldNumberMap = new HashMap<String, Integer>() {

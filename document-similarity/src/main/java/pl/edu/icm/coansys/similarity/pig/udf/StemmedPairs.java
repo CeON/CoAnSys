@@ -45,7 +45,7 @@ public class StemmedPairs extends EvalFunc<DataBag> {
         text = text.replaceAll("\n", SPACE);
         text = text.replaceAll("[^a-z\\d-_/ ]", "");
 
-        ArrayList<String> strings = new ArrayList<String>();
+        List<String> strings = new ArrayList<String>();
         PorterStemmer ps = new PorterStemmer();
         for (String s : StringUtils.split(text, SPACE)) {
             if (!StopWordsRemover.isAnEnglishStopWords(s)) {;
@@ -65,7 +65,7 @@ public class StemmedPairs extends EvalFunc<DataBag> {
         }
 
         try {
-            ArrayList<Tuple> tuples = new ArrayList<Tuple>();
+            List<Tuple> tuples = new ArrayList<Tuple>();
 
             String terms = (String) input.get(0);
             for (String s : getStemmedPairs(terms)) {

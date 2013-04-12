@@ -1,3 +1,6 @@
+/*
+ * (C) 2010-2012 ICM UW. All rights reserved.
+ */
 package pl.edu.icm.coansys.importers.pig.udf;
 
 import java.io.IOException;
@@ -17,6 +20,7 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.Writable;
+import org.apache.hadoop.io.WritableComparable;
 import org.apache.hadoop.io.compress.CompressionCodec;
 import org.apache.hadoop.io.compress.CompressionCodecFactory;
 import org.apache.hadoop.mapreduce.InputFormat;
@@ -29,6 +33,7 @@ import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.SequenceFileRecordReader;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
+import org.apache.hadoop.util.ReflectionUtils;
 import org.apache.pig.FileInputLoadFunc;
 import org.apache.pig.LoadFunc;
 import org.apache.pig.ResourceSchema;
@@ -43,13 +48,13 @@ import org.apache.pig.data.DataType;
 import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
 import org.apache.pig.impl.PigContext;
+import org.apache.pig.impl.io.NullableTuple;
 import org.apache.pig.impl.util.UDFContext;
 
 /**
- * A Loader for Hadoop-Standard SequenceFiles. able to work with the following
+ * A Loader for Hadoop-Standard SequenceFiles able to work with the following
  * types as keys or values: Text, IntWritable, LongWritable, FloatWritable,
- * DoubleWritable, BooleanWritable, ByteWritable
- *
+ * DoubleWritable, BooleanWritable, ByteWritable, NullableTuple
  */
 public class RichSequenceFileLoader extends FileInputLoadFunc implements StoreFuncInterface {
 
@@ -62,11 +67,9 @@ public class RichSequenceFileLoader extends FileInputLoadFunc implements StoreFu
     private TupleFactory mTupleFactory = TupleFactory.getInstance();
     private byte keyType = DataType.UNKNOWN;
     private byte valType = DataType.UNKNOWN;
-    private DataByteArray dataByteArray = new DataByteArray();
     private Configuration config = new Configuration();
     private Class<?> keyClass;
     private Class<?> valueClass;
-
     public RichSequenceFileLoader() {
         mProtoTuple = new ArrayList<Object>(2);
     }
@@ -75,9 +78,11 @@ public class RichSequenceFileLoader extends FileInputLoadFunc implements StoreFu
         this();
         keyClass = config.getClassByName(keyClassName);
         valueClass = config.getClassByName(valueClassName);
-
-        key = (Writable) keyClass.newInstance();
-        value = (Writable) valueClass.newInstance();
+        
+        //key = (Writable) keyClass.newInstance();
+        key = (Writable) ReflectionUtils.newInstance(keyClass, new Configuration());
+        //value = (Writable) valueClass.newInstance();
+        value = (Writable) ReflectionUtils.newInstance(valueClass, new Configuration());
     }
 
     protected void setKeyType(Class<?> keyClass) throws BackendException {
@@ -90,14 +95,16 @@ public class RichSequenceFileLoader extends FileInputLoadFunc implements StoreFu
 
     protected void setValueType(Class<?> valueClass) throws BackendException {
         this.valType |= inferPigDataType(valueClass);
-        if (keyType == DataType.ERROR) {
-            LOG.warn("Unable to translate key " + key.getClass() + " to a Pig datatype");
-            throw new BackendException("Unable to translate " + key.getClass() + " to a Pig datatype");
+        if (valType == DataType.ERROR) {
+            LOG.warn("Unable to translate value " + value.getClass() + " to a Pig datatype");
+            throw new BackendException("Unable to translate " + value.getClass() + " to a Pig datatype");
         }
     }
 
     protected byte inferPigDataType(Type t) {
-        if (t == DataByteArray.class) {
+    	if (t == NullableTuple.class) {
+            return DataType.GENERIC_WRITABLECOMPARABLE;
+        } else if (t == DataByteArray.class) {
             return DataType.BYTEARRAY;
         } else if (t == Text.class) {
             return DataType.CHARARRAY;
@@ -120,16 +127,24 @@ public class RichSequenceFileLoader extends FileInputLoadFunc implements StoreFu
         }
     }
 
-    protected Object translateWritableToPigDataType(Writable w, byte dataType) {
+    protected Object translateWritableToPigDataType(Writable w, byte dataType) throws ExecException {
         switch (dataType) {
             case DataType.CHARARRAY:
                 return ((Text) w).toString();
             case DataType.BYTEARRAY:
                 if (w instanceof BytesWritable) {
-                    dataByteArray.set(((BytesWritable) w).copyBytes());
-                    return dataByteArray.get();
+                	DataByteArray dba = new DataByteArray();
+                	dba.set(((BytesWritable) w).copyBytes());
+                    return dba;
                 } else {
-                    return ((DataByteArray) w).get();
+                    return ((DataByteArray) w);
+                }
+            case DataType.GENERIC_WRITABLECOMPARABLE:
+                if (w instanceof NullableTuple) {
+                	Tuple t = (Tuple) ((NullableTuple)w).getValueAsPigType();
+					return t.get(0);
+                }else{
+                	return ((WritableComparable) w);
                 }
             case DataType.INTEGER:
                 return ((IntWritable) w).get();
@@ -187,7 +202,6 @@ public class RichSequenceFileLoader extends FileInputLoadFunc implements StoreFu
         if (!next) {
             return null;
         }
-
         key = reader.getCurrentKey();
         value = reader.getCurrentValue();
 
@@ -197,7 +211,6 @@ public class RichSequenceFileLoader extends FileInputLoadFunc implements StoreFu
         if (valType == DataType.UNKNOWN && value != null) {
             setValueType(value.getClass());
         }
-
         mProtoTuple.add(translateWritableToPigDataType(key, keyType));
         mProtoTuple.add(translateWritableToPigDataType(value, valType));
         Tuple t = mTupleFactory.newTuple(mProtoTuple);

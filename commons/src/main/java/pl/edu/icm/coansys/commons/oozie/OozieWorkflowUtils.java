@@ -27,7 +27,11 @@ public class OozieWorkflowUtils {
     public static void captureOutput(Properties outputProperties) throws FileNotFoundException, IOException {
         File file = new File(System.getProperty("oozie.action.output.properties"));
         OutputStream os = new FileOutputStream(file);
-        outputProperties.store(os, "");
-        os.close();
+        try {
+            outputProperties.store(os, "");
+        }
+        finally {
+            os.close();
+        }
     }
 }
