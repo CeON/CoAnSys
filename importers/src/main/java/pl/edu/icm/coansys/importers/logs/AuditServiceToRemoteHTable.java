@@ -11,6 +11,7 @@ import org.apache.hadoop.hbase.rest.client.Cluster;
 import org.apache.hadoop.hbase.rest.client.RemoteHTable;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import pl.edu.icm.coansys.importers.models.LogsProtos;
 import pl.edu.icm.coansys.importers.models.LogsProtos.LogsMessage;
 import pl.edu.icm.synat.api.services.SynatServiceRef;
 import pl.edu.icm.synat.api.services.audit.AuditService;
@@ -26,8 +27,9 @@ public class AuditServiceToRemoteHTable {
 
     @SynatServiceRef(serviceId = "AuditService")
     private AuditService auditService;
-    
-    private AuditServiceToRemoteHTable() {}
+
+    private AuditServiceToRemoteHTable() {
+    }
 
     public static void main(final String[] args) throws IOException {
 
@@ -57,11 +59,13 @@ public class AuditServiceToRemoteHTable {
                 Put put = new Put(Bytes.toBytes(item.getEventId()));
                 byte[] family = Bytes.toBytes(columnFamily);
                 byte[] qualifier = Bytes.toBytes(column);
-                
+
                 LogsMessage serialize = AuditEntry2Protos.serialize(item);
-                byte[] toByteArray = serialize.toByteArray();
-                put.add(family, qualifier, toByteArray);
-                htable.put(put);
+                if (!serialize.getEventType().equals(LogsProtos.EventType.CUSTOM)) {
+                    byte[] toByteArray = serialize.toByteArray();
+                    put.add(family, qualifier, toByteArray);
+                    htable.put(put);
+                }
             }
 
             String nextToken = result.getNextToken();

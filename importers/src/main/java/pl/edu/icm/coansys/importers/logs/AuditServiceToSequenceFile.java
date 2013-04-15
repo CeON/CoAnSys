@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import pl.edu.icm.coansys.importers.models.LogsProtos;
 import pl.edu.icm.coansys.importers.models.LogsProtos.LogsMessage;
 import pl.edu.icm.synat.api.services.SynatServiceRef;
 import pl.edu.icm.synat.api.services.audit.AuditService;
@@ -23,10 +24,11 @@ public class AuditServiceToSequenceFile {
     @SynatServiceRef(serviceId = "AuditService")
     private AuditService auditService;
 
-    private AuditServiceToSequenceFile() {}
-    
+    private AuditServiceToSequenceFile() {
+    }
+
     public static void main(final String[] args) throws IOException {
-        
+
         if (args.length < 1) {
             System.err.println("Usage: AcquireAuditService <output_dir>");
             System.exit(1);
@@ -50,13 +52,15 @@ public class AuditServiceToSequenceFile {
             List<AuditEntry> items = result.getItems();
             for (AuditEntry item : items) {
                 LogsMessage serialize = AuditEntry2Protos.serialize(item);
-                byte[] toByteArray = serialize.toByteArray();
-                serializedLogs.add(toByteArray);
+                if (!serialize.getEventType().equals(LogsProtos.EventType.CUSTOM)) {
+                    byte[] toByteArray = serialize.toByteArray();
+                    serializedLogs.add(toByteArray);
+                }
             }
-            
+
             String filePath = directoryPath + "/" + "logs_sequence_file_" + System.currentTimeMillis() + ".log";
             BytesArray2SequenceFile.write(serializedLogs, filePath);
-            
+
             String nextToken = result.getNextToken();
             result = auditService.queryAudit(condition, nextToken, limit);
         }
