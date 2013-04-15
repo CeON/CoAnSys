@@ -5,14 +5,14 @@
 package pl.edu.icm.coansys.citations.data.feature_calculators
 
 import pl.edu.icm.cermine.tools.classification.features.FeatureCalculator
-import pl.edu.icm.coansys.citations.data.Entity
+import pl.edu.icm.coansys.citations.data.MatchableEntity
 import pl.edu.icm.coansys.citations.util.misc._
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
-object AuthorTokenMatchFactor extends FeatureCalculator[Entity, Entity] {
-  def calculateFeatureValue(e1: Entity, e2: Entity) = {
+object AuthorTokenMatchFactor extends FeatureCalculator[MatchableEntity, MatchableEntity] {
+  def calculateFeatureValue(e1: MatchableEntity, e2: MatchableEntity) = {
     val tokens1 = tokensFromCermine(e1.author)
     val tokens2 = tokensFromCermine(e2.author)
     val counts1 = tokens1.map(_.toLowerCase).groupBy(identity).mapValues(_.length)

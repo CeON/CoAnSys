@@ -5,13 +5,14 @@
 package pl.edu.icm.coansys.citations.indices
 
 import org.apache.hadoop.io.BytesWritable
-import pl.edu.icm.coansys.citations.data.Entity
+import pl.edu.icm.coansys.citations.data.MatchableEntity
+import pl.edu.icm.coansys.citations.data.CitationMatchingProtos.MatchableEntityData
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 class EntityIndex(indexFileUri: String) extends SimpleTextIndex[BytesWritable](indexFileUri) {
-  def getEntityById(id: String): Entity = {
-    Entity.fromTypedBytes(get(id).copyBytes())
+  def getEntityById(id: String): MatchableEntity = {
+    new MatchableEntity(MatchableEntityData.parseFrom(get(id).copyBytes()))
   }
 }
