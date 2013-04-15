@@ -13,5 +13,5 @@ public class ParamNames {
     public static final String REFERER_PARAM = "referrelUrl";
     public static final String SESSION_ID_PARAM = "sessionId";
     public static final String USER_ID_PARAM = "userId";
-    public static final String RESOURCE_ID_PARAM = "resourceId";    
+    public static final String RESOURCE_ID_PARAM = "resourceId";
 }

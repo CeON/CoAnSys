@@ -13,10 +13,9 @@ import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mrunit.mapreduce.MapReduceDriver;
 import org.testng.annotations.BeforeClass;
 import pl.edu.icm.coansys.logsanalysis.constants.ParamNames;
-import pl.edu.icm.coansys.logsanalysis.constants.ServicesEventsWeights;
-import pl.edu.icm.coansys.logsanalysis.models.AuditEntryHelper;
-import pl.edu.icm.coansys.logsanalysis.transformers.AuditEntry2Protos;
-import pl.edu.icm.synat.api.services.audit.model.AuditEntry;
+import pl.edu.icm.coansys.logsanalysis.models.LogsMessageHelper;
+import pl.edu.icm.coansys.importers.models.LogsProtos;
+import pl.edu.icm.coansys.importers.models.LogsProtos.LogsMessage;
 
 /**
  *
@@ -48,11 +47,11 @@ public class CountUsagesTest {
             args.put(ParamNames.RESOURCE_ID_PARAM, TEST_RESOURCE);
             args.put(ParamNames.SESSION_ID_PARAM, TEST_SESSION_ID);
             args.put(ParamNames.USER_ID_PARAM, TEST_USER);
+
+            LogsMessage logsMessage = LogsMessageHelper.createLogsMessage(TEST_EVENT_PREFIX + i, LogsProtos.LogsLevel.INFO,
+                    new Date(System.currentTimeMillis()), LogsProtos.EventType.FETCH_CONTENT, args);
             
-            AuditEntry ae = AuditEntryHelper.getAuditEntry(TEST_EVENT_PREFIX+i, AuditEntry.Level.DEBUG, new Date(System.currentTimeMillis()),
-                    ServicesEventsWeights.FETCH_CONTENT.getServiceId(), ServicesEventsWeights.FETCH_CONTENT.getEventType(), args);
-            
-            byte[] bytes = AuditEntry2Protos.serialize(ae).toByteArray();
+            byte[] bytes = logsMessage.toByteArray();
             mapReduceDriver.addInput(NullWritable.get(), new BytesWritable(bytes));
         }
         mapReduceDriver.addOutput(new Text(TEST_RESOURCE), new LongWritable(TEST_ENTRIES_COUNT));

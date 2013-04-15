@@ -9,7 +9,7 @@ import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
  *
  * @author acz
  */
-public class DocumentMetadataToTuple extends ProtobufToTuple {
+public class DocumentMetadataToTuple extends ProtoBytearrayToTuple {
     
     private static final Class PROTOBUF_CLASS = DocumentMetadata.class;
     

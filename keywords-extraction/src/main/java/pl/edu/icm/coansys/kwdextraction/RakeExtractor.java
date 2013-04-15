@@ -27,25 +27,28 @@ import pl.edu.icm.coansys.importers.models.DocumentProtos;
  */
 public class RakeExtractor {
 
+    private enum Lang {
+
+        PL, FR, EN
+    }
     private static final Logger logger = LoggerFactory.getLogger(RakeExtractor.class);
     private static final String STOPWORDS_EN = "stopwords_en.txt";
     private static final String STOPWORDS_FR = "stopwords_fr.txt";
     private static final String STOPWORDS_PL = "stopwords_pl.txt";
     private static final String ILLEGAL_CHARS = "[^\\p{L}0-9-'\\s]";
     private static final int DEFAULT_KEYWORDS_NUMBER = 8;
-    private static Set<String> stopwords_en;
-    private static Set<String> stopwords_fr;
-    private static Set<String> stopwords_pl;
+    private static final Map<Lang, Set<String>> stopwords;
     private String content;
-    private String lang = "en";
+    private Lang lang = Lang.EN;
     private List<KeywordCandidate> keywordCandidates;
     private Map<String, Map<String, Integer>> cooccurrences;
 
     static {
         try {
-            stopwords_en = loadStopwords("en");
-            stopwords_fr = loadStopwords("fr");
-            stopwords_pl = loadStopwords("pl");
+            stopwords = new EnumMap<Lang, Set<String>>(Lang.class);
+            for (Lang l : Lang.values()) {
+                stopwords.put(l, loadStopwords(l));
+            }
         } catch (IOException ex) {
             logger.error("Unable to load stopwords: " + ex);
             throw new RuntimeException(ex);
@@ -72,13 +75,8 @@ public class RakeExtractor {
      * @throws AnalysisException
      * @throws IOException
      */
-    public RakeExtractor(InputStream pdfStream) throws AnalysisException, IOException {
-        PdfNLMContentExtractor nextr = new PdfNLMContentExtractor();
-        Element contentEl = nextr.extractContent(pdfStream);
-        Element bodyEl = contentEl.getChild("body");
-        content = bodyEl.getValue();
-        //DocumentTextExtractor<String> extr = new PdfRawTextExtractor();
-        //content = extr.extractText(pdfStream);
+    public RakeExtractor(InputStream pdfStream) throws IOException, AnalysisException {
+        content = extractTextFromPdf(pdfStream);
         prepareToExtraction();
     }
 
@@ -94,10 +92,9 @@ public class RakeExtractor {
         for (DocumentProtos.Media media : docWrapper.getMediaContainer().getMediaList()) {
             if (media.getMediaType().equals(ProtoConstants.mediaTypePdf)) {
                 try {
-                    DocumentTextExtractor<String> extr = new PdfRawTextExtractor();
-                    sb.append(extr.extractText(media.getContent().newInput()));
+                    sb.append(extractTextFromPdf(media.getContent().newInput()));
                 } catch (AnalysisException ex) {
-                    logger.error("Cannot extract text from PDF: " + ex.toString());
+                    logger.error("Cannot extract text from PDF: " + ex.toString() + " " + media.getSourcePath());
                 }
             } else if (media.getMediaType().equals(ProtoConstants.mediaTypeTxt)) {
                 sb.append(media.getContent().toStringUtf8());
@@ -106,6 +103,31 @@ public class RakeExtractor {
         }
         content = sb.toString();
         prepareToExtraction();
+    }
+
+    /**
+     * Extract text from pdf stream
+     *
+     * @param pdfStream
+     * @return String object containing document content
+     * @throws IOException
+     * @throws AnalysisException
+     */
+    private String extractTextFromPdf(InputStream pdfStream) throws IOException, AnalysisException {
+        String result;
+        PdfNLMContentExtractor nextr = new PdfNLMContentExtractor();
+        Element contentEl = nextr.extractContent(pdfStream);
+        Element bodyEl = contentEl.getChild("body");
+        result = bodyEl.getValue();
+        
+        if (result == null || result.isEmpty()) {
+            DocumentTextExtractor<String> extr = new PdfRawTextExtractor();
+            result = extr.extractText(pdfStream);
+        }
+        //TODO language detection
+        //LanguageIdentifierBean li = new LanguageIdentifierBean();
+        //return ("en".equals(li.classify(result))) ? result : "";
+        return result;
     }
 
     /**
@@ -125,13 +147,28 @@ public class RakeExtractor {
      *
      * @throws IOException
      */
-    private static Set<String> loadStopwords(String lang) throws IOException {
+    private static Set<String> loadStopwords(Lang lang) throws IOException {
         Set<String> result = new HashSet<String>();
 
-        String stopwordsPath = STOPWORDS_EN;
-        if (lang.equals("fr")) {
+        String stopwordsPath;
+        switch (lang) {
+            case EN:
+                stopwordsPath = STOPWORDS_EN;
+                break;
+            case FR:
+                stopwordsPath = STOPWORDS_FR;
+                break;
+            case PL:
+                stopwordsPath = STOPWORDS_PL;
+                break;
+            default:
+                stopwordsPath = STOPWORDS_EN;
+                break;
+        }
+
+        if (lang.equals(Lang.FR)) {
             stopwordsPath = STOPWORDS_FR;
-        } else if (lang.equals("pl")) {
+        } else if (lang.equals(Lang.PL)) {
             stopwordsPath = STOPWORDS_PL;
         }
 
@@ -179,7 +216,7 @@ public class RakeExtractor {
 
             if (!word.isEmpty()) {
 
-                if (stopwords_en.contains(word) || word.matches("\\W+") || isNum(word) || !word.equals(alpha)) {
+                if (stopwords.get(lang).contains(word) || word.matches("\\W+") || isNum(word) || !word.equals(alpha)) {
                     candidateStr = content.substring(candidateStart, wordStart);
                 } else {
                     kwdCand.addWord(word);
@@ -300,7 +337,13 @@ public class RakeExtractor {
     }
 
     public void setLang(String lang) {
-        this.lang = lang;
+        if ("fr".equals(lang)) {
+            this.lang = Lang.FR;
+        } else if ("pl".equals(lang)) {
+            this.lang = Lang.PL;
+        } else {
+            this.lang = Lang.EN;
+        }
     }
 
     /**
