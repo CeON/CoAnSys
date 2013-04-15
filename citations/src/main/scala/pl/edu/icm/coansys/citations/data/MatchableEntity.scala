@@ -50,7 +50,7 @@ object MatchableEntity {
     def groupCompare(x: MatchableEntity, y: MatchableEntity) = x.id compareTo y.id
   }
 
-  def fromBytes(bytes: Array[Byte]) = {
+  def fromBytes(bytes: Array[Byte]): MatchableEntity = {
     new MatchableEntity(MatchableEntityData.parseFrom(bytes))
   }
 
@@ -59,7 +59,7 @@ object MatchableEntity {
                      source: String = "",
                      title: String = "",
                      pages: String = "",
-                     year: String = "") = {
+                     year: String = ""): MatchableEntity = {
     val data = MatchableEntityData.newBuilder()
     data.setId(id)
     data.setAuthor(author)
@@ -72,28 +72,40 @@ object MatchableEntity {
   }
 
   private def fillUsingBasicMetadata(data: MatchableEntityData.Builder, meta: BasicMetadata) {
-    data.setAuthor(meta.getAuthorList.map(a => if (a.hasName) a.getName else a.getForenames + " " + a.getSurname).mkString(", "))
+    data.setAuthor(meta.getAuthorList.map(a => if (a.hasName) a.getName else a.getForenames + " " + a.getSurname).mkString(" "))
     data.setSource(meta.getJournal)
     data.setTitle(meta.getTitleList.map(_.getText).mkString(" "))
     data.setPages(meta.getPages)
     data.setYear(meta.getYear)
   }
 
-  def fromDocumentMetadata(meta: DocumentMetadata) = {
+  def fromBasicMetadata(id: String, meta: BasicMetadata): MatchableEntity = {
     val data = MatchableEntityData.newBuilder()
-    data.setId("doc_" + meta.getKey)
+    data.setId(id)
+    fillUsingBasicMetadata(data, meta)
+    new MatchableEntity(data.build())
+  }
+
+  def fromDocumentMetadata(meta: DocumentMetadata): MatchableEntity =
+    fromDocumentMetadata("doc_" + meta.getKey, meta)
+
+  def fromDocumentMetadata(id: String, meta: DocumentMetadata): MatchableEntity = {
+    val data = MatchableEntityData.newBuilder()
+    data.setId(id)
     fillUsingBasicMetadata(data, meta.getBasicMetadata)
     new MatchableEntity(data.build())
   }
 
-  def fromReferenceMetadata(meta: ReferenceMetadata) = {
+  def fromReferenceMetadata(meta: ReferenceMetadata): MatchableEntity =
+    fromReferenceMetadata("cit_" + meta.getSourceDocKey + "_" + meta.getPosition, meta)
+
+  def fromReferenceMetadata(id: String, meta: ReferenceMetadata): MatchableEntity = {
     val data = MatchableEntityData.newBuilder()
-    data.setId("cit_" + meta.getSourceDocKey + "_" + meta.getPosition)
     fillUsingBasicMetadata(data, meta.getBasicMetadata)
     new MatchableEntity(data.build())
   }
 
-  def fromUnparsedReferenceMetadata(bibReferenceParser: BibReferenceParser[BibEntry], meta: ReferenceMetadata) = {
+  def fromUnparsedReferenceMetadata(bibReferenceParser: BibReferenceParser[BibEntry], meta: ReferenceMetadata): MatchableEntity = {
     def getField(bibEntry: BibEntry, key: String): String =
       bibEntry.getAllFieldValues(key).mkString(" ")
 
