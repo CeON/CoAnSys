@@ -29,7 +29,7 @@ import org.apache.pig.impl.logicalLayer.schema.Schema.FieldSchema;
  *
  * @author Artur Czeczko <a.czeczko@icm.edu.pl> 
  */
-public class ProtobufToTuple extends EvalFunc<Tuple> {
+public class ProtoBytearrayToTuple extends EvalFunc<Tuple> {
 
     private Class<? extends Message> protobufClass;
     private Schema schema;
@@ -60,24 +60,24 @@ public class ProtobufToTuple extends EvalFunc<Tuple> {
      *
      * @param protobufClass a class of protocol buffers messages
      */
-    public ProtobufToTuple(Class<? extends Message> protobufClass) {
+    public ProtoBytearrayToTuple(Class<? extends Message> protobufClass) {
         this.protobufClass = protobufClass;
     }
 
     /**
      * Constructor with a protobuf class name. It can be called directly from
      * pig latin scripts, i.e.: <p> define myUDF
-     * pl.edu.icm.coansys.importers.pig.udf.ProtobufToTuple("protobufClassName");
+     * pl.edu.icm.coansys.importers.pig.udf.ProtoBytearrayToTuple("protobufClassName");
      * <p> FOREACH data GENERATE myUDF($0);
      *
      * @param protobufClassName
      * @throws ClassNotFoundException
      */
-    public ProtobufToTuple(String protobufClassName) throws ClassNotFoundException {
+    public ProtoBytearrayToTuple(String protobufClassName) throws ClassNotFoundException {
         this((Class<? extends Message>) Class.forName(protobufClassName));
     }
 
-    private ProtobufToTuple() {
+    private ProtoBytearrayToTuple() {
     }
 
     /**
@@ -90,7 +90,7 @@ public class ProtobufToTuple extends EvalFunc<Tuple> {
     public Schema outputSchema(Schema input) {
         if (schema == null) {
             String mainTupleName = getSchemaName(this.getClass().getName().toLowerCase(), input);
-            schema = ProtobufToTuple.protobufToSchema(protobufClass, mainTupleName);
+            schema = ProtoBytearrayToTuple.protobufToSchema(protobufClass, mainTupleName);
         }
         return schema;
     }
@@ -102,7 +102,7 @@ public class ProtobufToTuple extends EvalFunc<Tuple> {
             Method parseFromMethod = protobufClass.getMethod("parseFrom", byte[].class);
             Message metadata = (Message) parseFromMethod.invoke(null, protoMetadata.get());
 
-            return ProtobufToTuple.messageToTuple(metadata);
+            return ProtoBytearrayToTuple.messageToTuple(metadata);
         } catch (Exception ex) {
             throw new ExecException(ex);
         }

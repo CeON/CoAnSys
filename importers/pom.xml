@@ -25,6 +25,17 @@
             <artifactId>commons</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>pl.edu.icm.synat</groupId>
+            <artifactId>synat-core-services-api</artifactId>
+            <version>${synat.version}</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>pl.edu.icm.synat</groupId>
+            <artifactId>synat-platform-connector</artifactId>
+            <version>${synat.version}</version>
+        </dependency>
     </dependencies>
     
 </project>

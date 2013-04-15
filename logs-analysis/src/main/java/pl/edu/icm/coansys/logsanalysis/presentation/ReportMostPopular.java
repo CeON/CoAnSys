@@ -5,8 +5,8 @@ package pl.edu.icm.coansys.logsanalysis.presentation;
 
 import java.io.IOException;
 import java.util.Date;
-import pl.edu.icm.coansys.logsanalysis.models.MostPopularProtos;
-import pl.edu.icm.coansys.logsanalysis.models.MostPopularProtos.ResourceStat;
+import pl.edu.icm.coansys.importers.models.MostPopularProtos;
+import pl.edu.icm.coansys.importers.models.MostPopularProtos.ResourceStat;
 import pl.edu.icm.coansys.logsanalysis.transformers.BytesArray2SequenceFile;
 
 /**

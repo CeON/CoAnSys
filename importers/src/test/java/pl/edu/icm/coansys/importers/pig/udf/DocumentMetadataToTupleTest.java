@@ -91,8 +91,8 @@ public class DocumentMetadataToTupleTest {
         }
         assertTrue(keyFound, "Key not found in tuple");
         
-        //convert to DocumentMetadata by TupleToProtobuf UDF
-        TupleToProtobuf tpl2dm = new TupleToProtobuf(DocumentMetadata.class);
+        //convert to DocumentMetadata by TupleToProtoBytearray UDF
+        TupleToProtoBytearray tpl2dm = new TupleToProtoBytearray(DocumentMetadata.class);
         DataByteArray finalDMdba = tpl2dm.exec(pigTuple);
         DocumentMetadata finalDM = DocumentMetadata.parseFrom(finalDMdba.get());
         

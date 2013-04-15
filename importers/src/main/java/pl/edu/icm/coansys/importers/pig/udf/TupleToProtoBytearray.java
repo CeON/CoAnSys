@@ -30,7 +30,7 @@ import org.apache.pig.impl.logicalLayer.schema.Schema.FieldSchema;
  *
  * @author Artur Czeczko <a.czeczko@icm.edu.pl>
  */
-public class TupleToProtobuf extends EvalFunc<DataByteArray> {
+public class TupleToProtoBytearray extends EvalFunc<DataByteArray> {
 
     private Class<? extends Message> protobufClass;
     /**
@@ -60,24 +60,24 @@ public class TupleToProtobuf extends EvalFunc<DataByteArray> {
      *
      * @param protobufClass a class of protocol buffers messages
      */
-    public TupleToProtobuf(Class<? extends Message> protobufClass) {
+    public TupleToProtoBytearray(Class<? extends Message> protobufClass) {
         this.protobufClass = protobufClass;
     }
 
     /**
      * Constructor with a protobuf class name. It can be called directly from
      * pig latin scripts, i.e.: <p> define myUDF
-     * pl.edu.icm.coansys.importers.pig.udf.TupleToProtobuf("protobufClassName");
+     * pl.edu.icm.coansys.importers.pig.udf.TupleToProtoBytearray("protobufClassName");
      * <p> FOREACH data GENERATE myUDF($0);
      *
      * @param protobufClassName
      * @throws ClassNotFoundException
      */
-    public TupleToProtobuf(String protobufClassName) throws ClassNotFoundException {
+    public TupleToProtoBytearray(String protobufClassName) throws ClassNotFoundException {
         this((Class<? extends Message>) Class.forName(protobufClassName));
     }
 
-    private TupleToProtobuf() {
+    private TupleToProtoBytearray() {
     }
 
     /**

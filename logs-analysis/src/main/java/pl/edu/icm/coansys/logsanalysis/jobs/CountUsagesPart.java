@@ -22,10 +22,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.edu.icm.coansys.logsanalysis.constants.ParamNames;
 import pl.edu.icm.coansys.logsanalysis.metrics.UsageWeight;
-import pl.edu.icm.coansys.logsanalysis.models.AuditEntryHelper;
-import pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos;
-import pl.edu.icm.coansys.logsanalysis.transformers.AuditEntry2Protos;
-import pl.edu.icm.synat.api.services.audit.model.AuditEntry;
+import pl.edu.icm.coansys.logsanalysis.models.LogsMessageHelper;
+import pl.edu.icm.coansys.importers.models.LogsProtos;
 
 /**
  *
@@ -44,12 +42,12 @@ public class CountUsagesPart implements Tool {
 
         @Override
         protected void map(Writable key, BytesWritable value, Context context) throws IOException, InterruptedException {
-            AuditEntryProtos.LogMessage logMessage = AuditEntryProtos.LogMessage.parseFrom(value.copyBytes());
-            AuditEntry entry = AuditEntry2Protos.deserialize(logMessage);
 
-            long usageWeight = weight.getWeight(entry);
+            LogsProtos.LogsMessage logMessage = LogsProtos.LogsMessage.parseFrom(value.copyBytes());
+
+            long usageWeight = weight.getWeight(logMessage);
             if (usageWeight > 0) {
-                String resourceId = AuditEntryHelper.getArg(entry, ParamNames.RESOURCE_ID_PARAM);
+                String resourceId = LogsMessageHelper.getParam(logMessage, ParamNames.RESOURCE_ID_PARAM);
                 context.write(new Text(resourceId), new LongWritable(usageWeight));
             }
         }
