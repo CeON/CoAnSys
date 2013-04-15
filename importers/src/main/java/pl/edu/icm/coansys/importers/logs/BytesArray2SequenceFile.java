@@ -1,7 +1,7 @@
 /*
  * (C) 2010-2012 ICM UW. All rights reserved.
  */
-package pl.edu.icm.coansys.logsanalysis.transformers;
+package pl.edu.icm.coansys.importers.logs;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -19,7 +19,8 @@ import org.slf4j.LoggerFactory;
  */
 public class BytesArray2SequenceFile {
 
-    private BytesArray2SequenceFile() {}
+    private BytesArray2SequenceFile() {
+    }
 
     private static Configuration createConf() {
         Configuration conf = new Configuration();
@@ -57,76 +58,75 @@ public class BytesArray2SequenceFile {
 
         return new BWIterable(reader, conf);
     }
-}
 
-class BWIterable implements Iterable<byte[]> {
+    private static class BWIterable implements Iterable<byte[]> {
 
-    private static final Logger logger = LoggerFactory.getLogger(BWIterable.class);
-
-    private SequenceFile.Reader reader;
-    private Configuration conf;
-
-    public BWIterable(SequenceFile.Reader reader, Configuration conf) {
-        this.reader = reader;
-        this.conf = conf;
-    }
-
-    private static class BWIterator implements Iterator<byte[]> {
-
+        private static final Logger logger = LoggerFactory.getLogger(BWIterable.class);
         private SequenceFile.Reader reader;
         private Configuration conf;
-        private boolean nextAvailable;
-        private byte[] nextBytes = null;
 
-        public BWIterator(SequenceFile.Reader reader, Configuration conf) {
+        public BWIterable(SequenceFile.Reader reader, Configuration conf) {
             this.reader = reader;
             this.conf = conf;
-            nextAvailable = true;
-            moveItem();
         }
 
-        @Override
-        public boolean hasNext() {
-            return nextAvailable;
-        }
+        private static class BWIterator implements Iterator<byte[]> {
 
-        @Override
-        public byte[] next() {
-            if (nextAvailable) {
-                byte[] retBytes = nextBytes;
+            private SequenceFile.Reader reader;
+            private Configuration conf;
+            private boolean nextAvailable;
+            private byte[] nextBytes = null;
+
+            public BWIterator(SequenceFile.Reader reader, Configuration conf) {
+                this.reader = reader;
+                this.conf = conf;
+                nextAvailable = true;
                 moveItem();
-                return retBytes;
-            } else {
-                throw new NoSuchElementException();
+            }
+
+            @Override
+            public boolean hasNext() {
+                return nextAvailable;
+            }
+
+            @Override
+            public byte[] next() {
+                if (nextAvailable) {
+                    byte[] retBytes = nextBytes;
+                    moveItem();
+                    return retBytes;
+                } else {
+                    throw new NoSuchElementException();
+                }
+            }
+
+            @Override
+            public void remove() {
+                moveItem();
+            }
+
+            private void moveItem() {
+                if (nextAvailable) {
+                    Writable key = (Writable) ReflectionUtils.newInstance(reader.getKeyClass(), conf);
+                    BytesWritable value = new BytesWritable();
+                    try {
+                        nextAvailable = reader.next(key, value);
+                    } catch (IOException ex) {
+                        logger.error("moveItem: " + ex);
+                        nextAvailable = false;
+                    }
+                    if (nextAvailable) {
+                        nextBytes = value.copyBytes();
+                    } else {
+                        IOUtils.closeStream(reader);
+                    }
+                }
             }
         }
 
         @Override
-        public void remove() {
-            throw new UnsupportedOperationException("Operation remove() is not supported");
+        public Iterator<byte[]> iterator() {
+            return new BWIterator(reader, conf);
         }
-
-        private void moveItem() {
-            if (nextAvailable) {
-                Writable key = (Writable) ReflectionUtils.newInstance(reader.getKeyClass(), conf);
-                BytesWritable value = new BytesWritable();
-                try {
-                    nextAvailable = reader.next(key, value);
-                } catch (IOException ex) {
-                    logger.error("moveItem: " + ex);
-                    nextAvailable = false;
-                }
-                if (nextAvailable) {
-                    nextBytes = value.copyBytes();
-                } else {
-                    IOUtils.closeStream(reader);
-                }
-            }
-        }
-    }
-
-    @Override
-    public Iterator<byte[]> iterator() {
-        return new BWIterator(reader, conf);
     }
 }

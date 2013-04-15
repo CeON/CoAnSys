@@ -1,15 +1,13 @@
 /*
  * (C) 2010-2012 ICM UW. All rights reserved.
  */
-package pl.edu.icm.coansys.logsanalysis.logsacquisition;
+package pl.edu.icm.coansys.importers.logs;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import pl.edu.icm.coansys.importers.models.LogsProtos.LogsMessage;
-import pl.edu.icm.coansys.logsanalysis.transformers.AuditEntry2Protos;
-import pl.edu.icm.coansys.logsanalysis.transformers.BytesArray2SequenceFile;
 import pl.edu.icm.synat.api.services.SynatServiceRef;
 import pl.edu.icm.synat.api.services.audit.AuditService;
 import pl.edu.icm.synat.api.services.audit.model.AuditEntry;

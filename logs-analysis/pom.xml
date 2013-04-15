@@ -28,17 +28,6 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>pl.edu.icm.synat</groupId>
-            <artifactId>synat-core-services-api</artifactId>
-            <version>${synat.version}</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>pl.edu.icm.synat</groupId>
-            <artifactId>synat-platform-connector</artifactId>
-            <version>${synat.version}</version>
-        </dependency>
-        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>models</artifactId>
             <version>${project.version}</version>

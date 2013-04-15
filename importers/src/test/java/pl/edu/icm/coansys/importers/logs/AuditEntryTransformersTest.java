@@ -1,7 +1,7 @@
 /*
  * (C) 2010-2012 ICM UW. All rights reserved.
  */
-package pl.edu.icm.coansys.logsanalysis.transformers;
+package pl.edu.icm.coansys.importers.logs;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,8 +11,6 @@ import java.util.List;
 import static org.testng.AssertJUnit.*;
 import static org.testng.internal.junit.ArrayAsserts.assertArrayEquals;
 import pl.edu.icm.coansys.importers.models.LogsProtos.LogsMessage;
-import pl.edu.icm.coansys.logsanalysis.logsacquisition.GenerateDummyLogs;
-//import pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos;
 import pl.edu.icm.synat.api.services.audit.model.AuditEntry;
 
 /**
