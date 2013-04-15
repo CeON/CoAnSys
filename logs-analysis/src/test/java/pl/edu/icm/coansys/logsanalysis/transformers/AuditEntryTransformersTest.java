@@ -10,8 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 import static org.testng.AssertJUnit.*;
 import static org.testng.internal.junit.ArrayAsserts.assertArrayEquals;
+import pl.edu.icm.coansys.importers.models.LogsProtos.LogsMessage;
 import pl.edu.icm.coansys.logsanalysis.logsacquisition.GenerateDummyLogs;
-import pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos;
+//import pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos;
 import pl.edu.icm.synat.api.services.audit.model.AuditEntry;
 
 /**
@@ -35,7 +36,7 @@ public class AuditEntryTransformersTest {
 
         auditEntries = GenerateDummyLogs.generateLogs(20);
         for (AuditEntry entry : auditEntries) {
-            AuditEntryProtos.LogMessage protoMessage = AuditEntry2Protos.serialize(entry);
+            LogsMessage protoMessage = AuditEntry2Protos.serialize(entry);
             protosList.add(protoMessage.toByteArray());
         }
         try {
@@ -45,7 +46,7 @@ public class AuditEntryTransformersTest {
             tempFile.delete();
         }
         for (byte[] bytes : readProtosList) {
-            AuditEntryProtos.LogMessage protoMessage = AuditEntryProtos.LogMessage.parseFrom(bytes);
+            LogsMessage protoMessage = LogsMessage.parseFrom(bytes);
             deserializedAuditEntries.add(AuditEntry2Protos.deserialize(protoMessage));
         }
         

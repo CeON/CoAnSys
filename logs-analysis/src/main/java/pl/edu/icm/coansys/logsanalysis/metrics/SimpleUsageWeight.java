@@ -3,8 +3,8 @@
  */
 package pl.edu.icm.coansys.logsanalysis.metrics;
 
-import pl.edu.icm.coansys.logsanalysis.constants.ServicesEventsWeights;
-import pl.edu.icm.synat.api.services.audit.model.AuditEntry;
+import pl.edu.icm.coansys.importers.models.LogsProtos;
+import pl.edu.icm.coansys.importers.models.LogsProtos.LogsMessage;
 
 /**
  *
@@ -13,12 +13,8 @@ import pl.edu.icm.synat.api.services.audit.model.AuditEntry;
 public class SimpleUsageWeight implements UsageWeight {
 
     @Override
-    public long getWeight(AuditEntry entry) {
-        String eventType = entry.getEventType();
-        String serviceId = entry.getServiceId();
-        
-        if (ServicesEventsWeights.FETCH_CONTENT.getEventType().equals(eventType) &&
-                ServicesEventsWeights.FETCH_CONTENT.getServiceId().equals(serviceId)) {
+    public long getWeight(LogsMessage message) {
+        if (message.getEventType().equals(LogsProtos.EventType.FETCH_CONTENT)) {
             return 1;
         } else {
             return 0;

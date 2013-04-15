@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.LogMessage;
+import pl.edu.icm.coansys.importers.models.LogsProtos.LogsMessage;
 import pl.edu.icm.coansys.logsanalysis.transformers.AuditEntry2Protos;
 import pl.edu.icm.coansys.logsanalysis.transformers.BytesArray2SequenceFile;
 import pl.edu.icm.synat.api.services.SynatServiceRef;
@@ -51,7 +51,7 @@ public class AuditServiceToSequenceFile {
             List<byte[]> serializedLogs = new ArrayList<byte[]>();
             List<AuditEntry> items = result.getItems();
             for (AuditEntry item : items) {
-                LogMessage serialize = AuditEntry2Protos.serialize(item);
+                LogsMessage serialize = AuditEntry2Protos.serialize(item);
                 byte[] toByteArray = serialize.toByteArray();
                 serializedLogs.add(toByteArray);
             }

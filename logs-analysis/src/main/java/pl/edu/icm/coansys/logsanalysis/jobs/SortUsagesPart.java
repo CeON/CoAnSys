@@ -24,7 +24,7 @@ import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.edu.icm.coansys.logsanalysis.models.MostPopularProtos;
+import pl.edu.icm.coansys.importers.models.MostPopularProtos;
 
 /**
  *

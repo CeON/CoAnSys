@@ -3,10 +3,12 @@
  */
 package pl.edu.icm.coansys.logsanalysis.transformers;
 
-import java.util.Arrays;
 import java.util.Date;
-import pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos;
-import pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.LogMessage.Builder;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import pl.edu.icm.coansys.importers.models.LogsProtos;
+import pl.edu.icm.coansys.importers.models.LogsProtos.EventData;
+import pl.edu.icm.coansys.importers.models.LogsProtos.EventData.Builder;
 import pl.edu.icm.synat.api.services.audit.model.AuditEntry;
 
 /**
@@ -15,27 +17,89 @@ import pl.edu.icm.synat.api.services.audit.model.AuditEntry;
  */
 public class AuditEntry2Protos {
 
-    public static AuditEntryProtos.LogMessage serialize(AuditEntry entry) {
-        Builder builder = AuditEntryProtos.LogMessage.newBuilder();
+    private enum EventTypeConstants {
 
-        builder.setEventId(entry.getEventId()).setServiceId(entry.getServiceId()).
-                setEventType(entry.getEventType()).setTimestamp(entry.getTimestamp().getTime());
+        /*
+         * event source, event type, enum from protobuf
+         */
+        MARK_TO_READ("collectionsAssignElement", "addToSpecialCollection", LogsProtos.EventType.MARK_TO_READ),
+        FETCH_CONTENT("repositoryFacade", "fetchContent", LogsProtos.EventType.FETCH_CONTENT),
+        EXPORT_METADATA("metadataExportingService", "exportMetadata", LogsProtos.EventType.EXPORT_METADATA),
+        RECOMMENDATION_EMAIL("mailSharingService", "sendRecommendationMail", LogsProtos.EventType.RECOMMENDATION_EMAIL),
+        VIEW_REFERENCES("publicationsReferences", "render", LogsProtos.EventType.VIEW_REFERENCES);
 
-        builder.setLevel(AuditEntryProtos.Level.valueOf(entry.getLevel().name()));
-        
-        builder.addAllArg(Arrays.asList(entry.getArgs()));
+        private String eventSource;
+        private String eventType;
+        private LogsProtos.EventType protosEventType;
 
-        return builder.build();
+        private EventTypeConstants(String eventSource, String eventType, LogsProtos.EventType protosEventType) {
+            this.eventSource = eventSource;
+            this.eventType = eventType;
+            this.protosEventType = protosEventType;
+        }
     }
 
-    public static AuditEntry deserialize(AuditEntryProtos.LogMessage proto) {
-        String[] args = new String[proto.getArgCount()];
-        
-        for (int i = 0; i < proto.getArgCount(); i++) {
-            args[i] = proto.getArg(i);
+    public static LogsProtos.LogsMessage serialize(AuditEntry entry) {
+        LogsProtos.LogsMessage.Builder messageBuilder = LogsProtos.LogsMessage.newBuilder();
+
+        messageBuilder.setEventId(entry.getEventId());
+        messageBuilder.setLevel(LogsProtos.LogsLevel.valueOf(entry.getLevel().name()));
+        messageBuilder.setTimestamp(entry.getTimestamp().getTime());
+
+        //event_type
+        messageBuilder.setEventType(LogsProtos.EventType.CUSTOM);
+        for (EventTypeConstants b : EventTypeConstants.values()) {
+            if (b.eventSource.equals(entry.getServiceId()) && b.eventType.equals(entry.getEventType())) {
+                messageBuilder.setEventType(b.protosEventType);
+            }
         }
-        
+        if (messageBuilder.getEventType().equals(LogsProtos.EventType.CUSTOM)) {
+            messageBuilder.setCustomEventSource(entry.getServiceId());
+            messageBuilder.setCustomEventType(entry.getEventType());
+        }
+
+        //args
+        Pattern paramPattern = Pattern.compile("\\[([^=]+)=(.*)\\]");
+        Matcher m;
+
+        for (String arg : entry.getArgs()) {
+            m = paramPattern.matcher(arg);
+            if (m.matches()) {
+                Builder evtDataBuilder = LogsProtos.EventData.newBuilder();
+                evtDataBuilder.setParamName(m.group(1));
+                evtDataBuilder.setParamValue(m.group(2));
+
+                messageBuilder.addArg(evtDataBuilder);
+            }
+        }
+
+        return messageBuilder.build();
+    }
+
+    public static AuditEntry deserialize(LogsProtos.LogsMessage proto) {
+        String serviceId = "";
+        String eventType = "";
+        String[] args = new String[proto.getArgCount()];
+
+        if (proto.getEventType().equals(LogsProtos.EventType.CUSTOM)) {
+            serviceId = proto.getCustomEventSource();
+            eventType = proto.getCustomEventType();
+        } else {
+            for (EventTypeConstants etcons : EventTypeConstants.values()) {
+                if (proto.getEventType().equals(etcons.protosEventType)) {
+                    serviceId = etcons.eventSource;
+                    eventType = etcons.eventType;
+                    break;
+                }
+            }
+        }
+
+        for (int i = 0; i < proto.getArgCount(); i ++) {
+            EventData arg = proto.getArg(i);
+            args[i] = "[" + arg.getParamName() + "=" + arg.getParamValue() + "]";
+        }
+
         return new AuditEntry(proto.getEventId(), AuditEntry.Level.valueOf(proto.getLevel().name()),
-                new Date(proto.getTimestamp()), proto.getServiceId(), proto.getEventType(), args);
+                new Date(proto.getTimestamp()), serviceId, eventType, args);
     }
 }
