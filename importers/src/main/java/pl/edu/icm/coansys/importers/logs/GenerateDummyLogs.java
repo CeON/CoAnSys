@@ -10,6 +10,7 @@ import java.net.MalformedURLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import pl.edu.icm.coansys.commons.hadoop.BytesArray2SequenceFile;
 import pl.edu.icm.synat.api.services.audit.model.AuditEntry;
 
 /**
