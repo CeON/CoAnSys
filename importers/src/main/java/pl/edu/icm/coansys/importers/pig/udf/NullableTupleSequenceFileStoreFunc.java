@@ -52,8 +52,23 @@ public class NullableTupleSequenceFileStoreFunc extends StoreFunc {
 		if(t.size() != 2) {
 			throw new ExecException("Output tuple has wrong size: is " + t.size() + ", should be 2");
 		}
-		byte[] keyBytes = ((DataByteArray) t.get(0)).get();
-		byte[] valueBytes = ((DataByteArray) t.get(1)).get();
+                Object keyItem = t.get(0);
+                Object valueItem = t.get(1);
+                byte[] keyBytes;
+                byte[] valueBytes;
+
+                if (DataByteArray.class.isAssignableFrom(keyItem.getClass())) {
+                    keyBytes = ((DataByteArray) keyItem).get();
+                } else {
+                    keyBytes = keyItem.toString().getBytes();
+                }
+                
+                if (DataByteArray.class.isAssignableFrom(valueItem.getClass())) {
+                    valueBytes = ((DataByteArray) valueItem).get();
+                } else {
+                    valueBytes = valueItem.toString().getBytes();
+                }
+                
 		if (keyBytes == null || valueBytes == null) {
 			throw new ExecException("Output tuple contains null");
 		}
