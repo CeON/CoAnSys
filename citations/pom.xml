@@ -44,11 +44,6 @@
         </dependency>
         <dependency>
             <groupId>pl.edu.icm.coansys</groupId>
-            <artifactId>importers</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>pl.edu.icm.coansys</groupId>
             <artifactId>disambiguation</artifactId>
             <version>${project.version}</version>
         </dependency>
