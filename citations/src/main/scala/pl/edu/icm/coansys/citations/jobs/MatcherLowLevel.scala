@@ -20,10 +20,10 @@ import pl.edu.icm.coansys.citations.reducers.BestSelector
 object MatcherLowLevel extends Configured with Tool {
 
   def run(args: Array[String]): Int = {
-    val keyIndexUri = args(1)
-    val authorIndexUri = args(2)
-    val documentsUri = args(3)
-    val outUri = args(4)
+    val keyIndexUri = args(0)
+    val authorIndexUri = args(1)
+    val documentsUri = args(2)
+    val outUri = args(3)
     val conf = getConf
     val refsHeuristicUri = outUri + "_heur"
     conf.set("index.key", keyIndexUri)
