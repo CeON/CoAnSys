@@ -19,6 +19,7 @@ import pl.edu.icm.cermine.PdfRawTextExtractor;
 import pl.edu.icm.cermine.exception.AnalysisException;
 import pl.edu.icm.coansys.importers.constants.ProtoConstants;
 import pl.edu.icm.coansys.importers.models.DocumentProtos;
+import pl.edu.icm.coansys.kwdextraction.langident.LanguageIdentifierBean;
 
 /**
  * Implementation of Rapid Automatic Keyword Extraction algorithm
@@ -125,9 +126,9 @@ public class RakeExtractor {
             result = extr.extractText(pdfStream);
         }
         //TODO language detection
-        //LanguageIdentifierBean li = new LanguageIdentifierBean();
-        //return ("en".equals(li.classify(result))) ? result : "";
-        return result;
+        LanguageIdentifierBean li = new LanguageIdentifierBean();
+        return ("en".equals(li.classify(result))) ? result : "";
+        //return result;
     }
 
     /**
