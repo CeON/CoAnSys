@@ -125,10 +125,9 @@ public class RakeExtractor {
             DocumentTextExtractor<String> extr = new PdfRawTextExtractor();
             result = extr.extractText(pdfStream);
         }
-        //TODO language detection
+
         LanguageIdentifierBean li = new LanguageIdentifierBean();
         return ("en".equals(li.classify(result))) ? result : "";
-        //return result;
     }
 
     /**
@@ -165,12 +164,6 @@ public class RakeExtractor {
             default:
                 stopwordsPath = STOPWORDS_EN;
                 break;
-        }
-
-        if (lang.equals(Lang.FR)) {
-            stopwordsPath = STOPWORDS_FR;
-        } else if (lang.equals(Lang.PL)) {
-            stopwordsPath = STOPWORDS_PL;
         }
 
         InputStream stopwordsStream;

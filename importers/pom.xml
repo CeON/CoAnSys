@@ -13,6 +13,9 @@
     <packaging>jar</packaging>
     <name>Data Importers</name>
     <url>http://maven.apache.org</url>
+    <properties>
+        <synat.version>1.8.1</synat.version>
+    </properties>
                
     <dependencies>
         <dependency>
