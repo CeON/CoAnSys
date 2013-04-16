@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import static org.testng.AssertJUnit.*;
 import static org.testng.internal.junit.ArrayAsserts.assertArrayEquals;
+import pl.edu.icm.coansys.commons.hadoop.BytesArray2SequenceFile;
 import pl.edu.icm.coansys.importers.models.LogsProtos.LogsMessage;
 import pl.edu.icm.synat.api.services.audit.model.AuditEntry;
 

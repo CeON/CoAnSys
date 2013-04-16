@@ -32,6 +32,12 @@
             <artifactId>models</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>pl.edu.icm.coansys</groupId>
+            <artifactId>commons</artifactId>
+            <version>1.2-SNAPSHOT</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
     
 </project>
