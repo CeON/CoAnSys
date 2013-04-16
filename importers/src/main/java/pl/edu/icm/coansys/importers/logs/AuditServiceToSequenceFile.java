@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import pl.edu.icm.coansys.commons.hadoop.BytesArray2SequenceFile;
 import pl.edu.icm.coansys.importers.models.LogsProtos;
 import pl.edu.icm.coansys.importers.models.LogsProtos.LogsMessage;
 import pl.edu.icm.synat.api.services.SynatServiceRef;
