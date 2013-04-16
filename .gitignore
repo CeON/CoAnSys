@@ -27,6 +27,7 @@
 /logs-analysis/target/
 /target/
 /integration/target/
+/keywords-extraction/target/
 
 #pig temp files
 *.crc
