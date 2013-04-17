@@ -105,13 +105,13 @@ object MatchableEntity {
     new MatchableEntity(data.build())
   }
 
-  def fromUnparsedReferenceMetadata(bibReferenceParser: BibReferenceParser[BibEntry], meta: ReferenceMetadata): MatchableEntity = {
+  def fromUnparsedReference(bibReferenceParser: BibReferenceParser[BibEntry], id: String, rawText: String): MatchableEntity = {
     def getField(bibEntry: BibEntry, key: String): String =
       bibEntry.getAllFieldValues(key).mkString(" ")
 
-    val bibEntry = bibReferenceParser.parseBibReference(removeDiacritics(meta.getRawCitationText))
+    val bibEntry = bibReferenceParser.parseBibReference(removeDiacritics(rawText))
     val data = MatchableEntityData.newBuilder()
-    data.setId("cit_" + meta.getSourceDocKey + "_" + meta.getPosition)
+    data.setId(id)
     data.setAuthor(getField(bibEntry, BibEntry.FIELD_AUTHOR))
     data.setSource(getField(bibEntry, BibEntry.FIELD_JOURNAL))
     data.setTitle(getField(bibEntry, BibEntry.FIELD_TITLE))
@@ -120,6 +120,13 @@ object MatchableEntity {
 
     new MatchableEntity(data.build())
   }
+
+  def fromUnparsedReferenceMetadata(bibReferenceParser: BibReferenceParser[BibEntry],
+                                    meta: ReferenceMetadata): MatchableEntity =
+    fromUnparsedReference(
+      bibReferenceParser,
+      "cit_" + meta.getSourceDocKey + "_" + meta.getPosition,
+      meta.getRawCitationText)
 
 
 }

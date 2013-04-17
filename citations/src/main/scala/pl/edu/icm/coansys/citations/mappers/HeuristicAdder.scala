@@ -8,7 +8,7 @@ import org.apache.hadoop.io.{Writable, Text, BytesWritable}
 import org.apache.hadoop.mapreduce.Mapper
 import pl.edu.icm.coansys.citations.data.MatchableEntity
 import pl.edu.icm.coansys.citations.indices.AuthorIndex
-import pl.edu.icm.coansys.citations.jobs.Matcher
+import pl.edu.icm.coansys.citations.util.matching
 
 
 class HeuristicAdder extends Mapper[Writable, BytesWritable, BytesWritable, Text] {
@@ -25,7 +25,7 @@ class HeuristicAdder extends Mapper[Writable, BytesWritable, BytesWritable, Text
   override def map(key: Writable, value: BytesWritable, context: Context) {
     val entity = MatchableEntity.fromBytes(value.copyBytes())
     keyWritable.set(value)
-    Matcher.approximatelyMatchingDocuments(entity, index).foreach {
+    matching.approximatelyMatchingDocuments(entity, index).foreach {
       case (entityId) =>
         valueWritable.set(entityId)
         context.write(keyWritable, valueWritable)
