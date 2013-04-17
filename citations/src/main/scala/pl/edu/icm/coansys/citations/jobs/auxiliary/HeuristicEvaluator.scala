@@ -9,7 +9,6 @@ import com.nicta.scoobi.InputsOutputs._
 import pl.edu.icm.coansys.citations.util.XPathEvaluator
 import org.apache.commons.io.IOUtils
 import org.apache.commons.lang.StringUtils
-import pl.edu.icm.coansys.commons.scala.xml.removeTags
 import com.nicta.scoobi.Persist._
 import scala.Some
 
@@ -46,17 +45,15 @@ object HeuristicEvaluator extends ScoobiApp {
     val matchable = (refs ++ docs).groupByKey[String, Option[String]].flatMap {
       case (id, iter) =>
         try {
-          val xml = iter.flatten.mkString("")
-          if (StringUtils.isNotEmpty(xml)) {
-            val text = removeTags(xml, " ").trim
-            val trimmed = text.dropWhile(c => c.isDigit).trim
-            Some(id, trimmed)
-          } else
-            None
+          val (defined, undefined) = iter.partition(_.isDefined)
+          if (!undefined.isEmpty) {
+            Stream.continually(id) zip defined.flatten.toStream
+          }
+          Stream.empty[(String, String)]
         } catch {
           case e: Exception =>
             e.printStackTrace()
-            None
+            Stream.empty[(String, String)]
         }
     }
 
