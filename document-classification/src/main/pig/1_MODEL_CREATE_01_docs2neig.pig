@@ -8,9 +8,14 @@
 -- -----------------------------------------------------
 %DEFAULT commonJarsPath 'lib/*.jar'
 
-%DEFAULT dc_m_hbase_inputDocsData SpringerMetadataOnly
-%DEFAULT dc_m_hdfs_neighs /tmp/docsim.pigout
+%DEFAULT dc_m_in_inputDocsData /home/pdendek/icm_dane/springer/onespringer-sf/springer-00000.sf
+%DEFAULT dc_m_hdfs_neighs /tmp/dataNeight
 %DEFAULT dc_m_int_folds 5
+%DEFAULT dc_m_meth_extraction getBWBWFromHDFS
+%DEFAULT dc_m_meth_extraction_inner pl.edu.icm.coansys.importers.pig.udf.RichSequenceFileLoader
+
+DEFINE keyTiKwAbsCatExtractor pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_MAP_WHEN_CATEG_LIM('en');
+DEFINE documentMetaExtractor pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_DOCUMENT_METADATA();
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- register section
@@ -33,7 +38,7 @@ IMPORT 'AUXIL_macros.def.pig';
 -- set section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
-%DEFAULT dc_m_double_sample 0.001
+%DEFAULT dc_m_double_sample 1.0
 %DEFAULT parallel_param 16
 %DEFAULT pig_tmpfilecompression_param true
 %DEFAULT pig_tmpfilecompression_codec_param gz
@@ -51,16 +56,15 @@ set pig.skewedjoin.reduce.memusage $pig_skewedjoin_reduce_memusage
 -- code section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
+--X1 = $dc_m_meth_extraction('$dc_m_in_inputDocsData','$dc_m_meth_extraction_inner'); 
+--X20 = limit X1 10;
+X20 = $dc_m_meth_extraction('$dc_m_in_inputDocsData','$dc_m_meth_extraction_inner'); 
+--describe X20;
+X21 = foreach X20 generate $0, flatten(documentMetaExtractor($1));
+--describe X21;
+X3 = foreach X21 generate $0 as key,keyTiKwAbsCatExtractor($1,0) as data, (int)(RANDOM()*$dc_m_int_folds) as part;
+--describe X3;
+X4 = filter X3 by $1 is not null;
+--describe X4;
+STORE X4 into '$dc_m_hdfs_neighs'; --key,map,part
 
-rawX = getProtosFromHbase('$dc_m_hbase_inputDocsData'); 
-raw = SAMPLE rawX $dc_m_double_sample;
-
-extracted_X = FOREACH raw GENERATE 
-		$0 as key,
-		pl.edu.icm.coansys.classification.documents.pig.extractors.
-			EXTRACT_MAP_WHEN_CATEG_LIM($1,'0') as data, --		
-		(int)(RANDOM()*$dc_m_int_folds) as part;
-
-neigh = filter extracted_X by $1 is not null;
---neigh = SAMPLE neighX $dc_m_double_sample;
-STORE neigh into '$dc_m_hdfs_neighs'; --key,map,part
