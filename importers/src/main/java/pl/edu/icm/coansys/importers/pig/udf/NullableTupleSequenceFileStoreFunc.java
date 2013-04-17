@@ -52,17 +52,32 @@ public class NullableTupleSequenceFileStoreFunc extends StoreFunc {
 		if(t.size() != 2) {
 			throw new ExecException("Output tuple has wrong size: is " + t.size() + ", should be 2");
 		}
-		byte[] keyBytes = ((DataByteArray) t.get(0)).get();
-		byte[] valueBytes = ((DataByteArray) t.get(1)).get();
-		if (keyBytes == null || valueBytes == null) {
+                Object keyItem = t.get(0);
+                Object valueItem = t.get(1);
+                DataByteArray keyDBA;
+                DataByteArray valueDBA;
+
+                if (DataByteArray.class.isAssignableFrom(keyItem.getClass())) {
+                    keyDBA = (DataByteArray) keyItem;
+                } else {
+                    keyDBA = new DataByteArray(keyItem.toString().getBytes());
+                }
+                
+                if (DataByteArray.class.isAssignableFrom(valueItem.getClass())) {
+                    valueDBA = (DataByteArray) valueItem;
+                } else {
+                    valueDBA = new DataByteArray(valueItem.toString().getBytes());
+                }
+                
+		if (keyDBA == null || valueDBA == null) {
 			throw new ExecException("Output tuple contains null");
 		}
 
 		ArrayList alk = new ArrayList();
-		alk.add(keyBytes);
-	    NullableTuple key = new NullableTuple(TupleFactory.getInstance().newTuple(alk));
-	    ArrayList alv = new ArrayList();
-		alv.add(valueBytes);
+		alk.add(keyDBA);
+                NullableTuple key = new NullableTuple(TupleFactory.getInstance().newTuple(alk));
+                ArrayList alv = new ArrayList();
+		alv.add(valueDBA);
 		NullableTuple val = new NullableTuple(TupleFactory.getInstance().newTuple(alv));
 
 		try {

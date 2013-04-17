@@ -4,6 +4,7 @@
 package pl.edu.icm.coansys.importers.pig.udf;
 
 import com.google.protobuf.AbstractMessage.Builder;
+import com.google.protobuf.ByteString;
 import com.google.protobuf.Descriptors.Descriptor;
 import com.google.protobuf.Descriptors.EnumDescriptor;
 import com.google.protobuf.Descriptors.EnumValueDescriptor;
@@ -93,14 +94,14 @@ public class TupleToProtoBytearray extends EvalFunc<DataByteArray> {
 
     /**
      * Converts data from tuple to serialized protocol buffers message
-     * 
+     *
      * @param input
      * @return
-     * @throws ExecException 
+     * @throws ExecException
      */
     @Override
     public DataByteArray exec(Tuple input) throws ExecException {
-        
+
         Method method;
         try {
             method = protobufClass.getMethod("newBuilder");
@@ -122,7 +123,7 @@ public class TupleToProtoBytearray extends EvalFunc<DataByteArray> {
         } catch (IllegalAccessException ex) {
             throw new ExecException(ex);
         }
-        
+
         Message message = recursiveConvert(input, builder);
         return new DataByteArray(message.toByteArray());
     }
@@ -187,6 +188,9 @@ public class TupleToProtoBytearray extends EvalFunc<DataByteArray> {
                     EnumDescriptor enumDescr = protobufField.getEnumType();
                     EnumValueDescriptor enumValueDescr = enumDescr.findValueByName((String) tupleField);
                     builder.setField(protobufField, enumValueDescr);
+                } else if (protobufType.equals(Type.BYTES)) {
+                    DataByteArray dba = (DataByteArray) tupleField;
+                    builder.setField(protobufField, ByteString.copyFrom(dba.get()));
                 } else { //scalar type
                     builder.setField(protobufField, tupleField);
                 }
