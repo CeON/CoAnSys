@@ -43,11 +43,14 @@ object HeuristicEvaluator extends ScoobiApp {
           None
     }
 
-    val matchable = (refs ++ docs).groupByKey[String, Option[String]].filter(_._2.size > 1).flatMap {
+    val matchable = (refs ++ docs).groupByKey[String, Option[String]].flatMap {
       case (id, iter) =>
         try {
           val xml = iter.flatten.mkString("")
-          Some(id, removeTags(xml, " "))
+          if (StringUtils.isNotEmpty(xml))
+            Some(id, xml)
+          else
+            None
         } catch {
           case e: Exception =>
             e.printStackTrace()
