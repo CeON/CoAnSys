@@ -47,9 +47,11 @@ object HeuristicEvaluator extends ScoobiApp {
       case (id, iter) =>
         try {
           val xml = iter.flatten.mkString("")
-          if (StringUtils.isNotEmpty(xml))
-            Some(id, xml)
-          else
+          if (StringUtils.isNotEmpty(xml)) {
+            val text = removeTags(xml, " ").trim
+            val trimmed = text.dropWhile(c => c.isDigit).trim
+            Some(id, trimmed)
+          } else
             None
         } catch {
           case e: Exception =>
