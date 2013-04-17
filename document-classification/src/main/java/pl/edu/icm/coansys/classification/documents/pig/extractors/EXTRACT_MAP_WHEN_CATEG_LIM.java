@@ -7,8 +7,10 @@ import com.google.common.base.Joiner;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.pig.EvalFunc;
 import org.apache.pig.data.DataBag;
@@ -19,8 +21,10 @@ import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
 import org.apache.pig.impl.logicalLayer.FrontendException;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
+import org.apache.zookeeper.KeeperException.UnimplementedException;
 
 import pl.edu.icm.coansys.classification.documents.auxil.StackTraceExtractor;
+import pl.edu.icm.coansys.disambiguation.auxil.Pair;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.ClassifCode;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.TextWithLanguage;
@@ -32,6 +36,15 @@ import pl.edu.icm.coansys.importers.models.DocumentProtos.TextWithLanguage;
 @SuppressWarnings("rawtypes")
 public class EXTRACT_MAP_WHEN_CATEG_LIM extends EvalFunc<Map> {
 
+	private String language = null;
+	
+	public EXTRACT_MAP_WHEN_CATEG_LIM(String language){
+		this.language = language;
+	}
+
+	public EXTRACT_MAP_WHEN_CATEG_LIM(){
+	}
+	
     @Override
     public Schema outputSchema(Schema p_input) {
         try {
@@ -45,37 +58,14 @@ public class EXTRACT_MAP_WHEN_CATEG_LIM extends EvalFunc<Map> {
     public Map exec(Tuple input) throws IOException {
         try {
             DataByteArray protoMetadata = (DataByteArray) input.get(0);
+            int lim = (Integer) input.get(1);
             DocumentMetadata metadata = DocumentMetadata.parseFrom(protoMetadata.get());
 
-            String titles;
-            String abstracts;
-
-            List<String> titleList = new ArrayList<String>();
-            for (TextWithLanguage title : metadata.getBasicMetadata().getTitleList()) {
-                titleList.add(title.getText());
+            if(language!=null){
+            	return generateConcreteLanguageMap(metadata,lim);
+            }else{
+            	return generateAllLanguageMap(metadata,lim);
             }
-            titles = Joiner.on(" ").join(titleList);
-
-            List<String> abstractsList = new ArrayList<String>();
-            for (TextWithLanguage documentAbstract : metadata.getBasicMetadata().getTitleList()) {
-                abstractsList.add(documentAbstract.getText());
-            }
-            abstracts = Joiner.on(" ").join(abstractsList);
-
-
-            Integer lim = Integer.parseInt((String) input.get(1));
-            DataBag db = getCategories(metadata.getBasicMetadata().getClassifCodeList());
-            if (db.size() >= lim) {
-                Map<String, Object> map = new HashMap<String, Object>();
-                map.put("key", metadata.getKey());
-                map.put("title", titles);
-                map.put("keywords", getConcatenated(metadata.getKeywordList()));
-                map.put("abstract", abstracts);
-                map.put("categories", db);
-                return map;
-            }
-            return null;
-
         } catch (Exception e) {
             // Throwing an exception will cause the task to fail.
             throw new IOException("Caught exception processing input row:\n"
@@ -83,6 +73,106 @@ public class EXTRACT_MAP_WHEN_CATEG_LIM extends EvalFunc<Map> {
         }
     }
 
+    protected Map generateConcreteLanguageMap(DocumentMetadata dm, int lim){
+    	String docTitle;
+        String docAbstract;
+        
+        if((docTitle = extractLangTitle(dm))==null) return null;
+        docAbstract = extractLangAbstract(dm);
+        Pair<String, DataBag> kwCc = extractLangKeywords(dm);
+        
+        
+        if (kwCc.getY().size() > lim) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("key", dm.getKey());
+            map.put("title", docTitle);
+            map.put("keywords", kwCc.getX());
+            map.put("abstract", docAbstract);
+            map.put("categories", kwCc.getY());
+            return map;
+        }
+        return null;
+    }
+
+	private Pair<String, DataBag> extractLangKeywords(DocumentMetadata dm) {
+		List<String> kws = new ArrayList<String>();
+		Set<String> ctgs = new HashSet<String>();
+		for(TextWithLanguage twl : dm.getKeywordList()){
+			if(language.equalsIgnoreCase(twl.getLanguage())){
+				String str = twl.getText();
+				if(!isClassifCode(str)) kws.add(str);
+				else ctgs.add(str);
+			}
+		}
+		
+		for(ClassifCode cc : dm.getBasicMetadata().getClassifCodeList()){
+			for(String s : cc.getValueList())
+				ctgs.add(s);
+		}
+		
+		DataBag db = new DefaultDataBag();
+		for(String s : ctgs){
+			db.add(TupleFactory.getInstance().newTuple(s));
+		}
+		
+		return new Pair<String,DataBag>(Joiner.on(" ").join(kws),db);
+	}
+
+	private boolean isClassifCode(String str) {
+		if(isMSc(str))
+			return true;
+		else return false;
+	}
+
+	private boolean isMSc(String str) {
+		return str.toUpperCase().matches("[0-9][0-9][A-Z][0-9][0-9]");
+	}
+
+	private String extractLangAbstract(DocumentMetadata dm) {
+		String docAbstract;
+		List<String> abstractsList = new ArrayList<String>();
+		//getDocumentAbstractList()
+        for (TextWithLanguage documentAbstract : dm.getDocumentAbstractList()) {
+        	if(language.equalsIgnoreCase(documentAbstract.getLanguage()));
+            	abstractsList.add(documentAbstract.getText());
+        }
+        docAbstract = Joiner.on(" ").join(abstractsList);
+		return docAbstract;
+	}
+
+	private String extractLangTitle(DocumentMetadata dm) {
+		List<String> titleList = new ArrayList<String>();
+		//getTitleList()
+        for (TextWithLanguage title : dm.getBasicMetadata().getTitleList()) {
+        	if(language.equalsIgnoreCase(title.getLanguage())); 
+            	titleList.add(title.getText());
+        }
+        
+        String docTitle;
+        switch(titleList.size()){
+        case 0:
+        	System.out.println("No title IN GIVEN LANG ("+language+") out of "+dm.getBasicMetadata().getTitleCount()
+        			+" titles. Ignoring record!");
+        	return null;
+        case 1:
+        	docTitle = titleList.get(0);
+        	break;
+        default:
+        	System.out.println("Number of titles IN GIVEN LANGUAGE ("+language+") is more then one. " +
+        			"Titles will be concatenated");
+        	docTitle = Joiner.on(" ").join(titleList);
+        	break;
+        }
+        if(docTitle.trim().isEmpty()) return null;
+		return docTitle;
+	}
+    
+    
+    
+    protected Map generateAllLanguageMap(DocumentMetadata dm, int lim) throws UnimplementedException{
+    	throw new UnimplementedException();
+    }    
+    
     private DataBag getCategories(List<ClassifCode> classifCodeList) {
         DataBag db = new DefaultDataBag();
         for (ClassifCode code : classifCodeList) {
@@ -95,14 +185,7 @@ public class EXTRACT_MAP_WHEN_CATEG_LIM extends EvalFunc<Map> {
     }
 
     private String getConcatenated(List<TextWithLanguage> list) {
-        if (list == null || list.isEmpty()) {
-            return null;
-        }
-        StringBuilder sb = new StringBuilder(list.size());
-        sb.append(list.get(0));
-        for (int i = 1; i < list.size(); i++) {
-            sb.append(" ").append(list.get(i).getText());
-        }
-        return sb.toString();
+        if (list == null || list.isEmpty()) {return null;}
+        return Joiner.on(" ").join(list);
     }
 }
