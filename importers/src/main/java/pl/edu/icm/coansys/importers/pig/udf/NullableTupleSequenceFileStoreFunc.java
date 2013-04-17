@@ -54,30 +54,30 @@ public class NullableTupleSequenceFileStoreFunc extends StoreFunc {
 		}
                 Object keyItem = t.get(0);
                 Object valueItem = t.get(1);
-                byte[] keyBytes;
-                byte[] valueBytes;
+                DataByteArray keyDBA;
+                DataByteArray valueDBA;
 
                 if (DataByteArray.class.isAssignableFrom(keyItem.getClass())) {
-                    keyBytes = ((DataByteArray) keyItem).get();
+                    keyDBA = (DataByteArray) keyItem;
                 } else {
-                    keyBytes = keyItem.toString().getBytes();
+                    keyDBA = new DataByteArray(keyItem.toString().getBytes());
                 }
                 
                 if (DataByteArray.class.isAssignableFrom(valueItem.getClass())) {
-                    valueBytes = ((DataByteArray) valueItem).get();
+                    valueDBA = (DataByteArray) valueItem;
                 } else {
-                    valueBytes = valueItem.toString().getBytes();
+                    valueDBA = new DataByteArray(valueItem.toString().getBytes());
                 }
                 
-		if (keyBytes == null || valueBytes == null) {
+		if (keyDBA == null || valueDBA == null) {
 			throw new ExecException("Output tuple contains null");
 		}
 
 		ArrayList alk = new ArrayList();
-		alk.add(keyBytes);
-	    NullableTuple key = new NullableTuple(TupleFactory.getInstance().newTuple(alk));
-	    ArrayList alv = new ArrayList();
-		alv.add(valueBytes);
+		alk.add(keyDBA);
+                NullableTuple key = new NullableTuple(TupleFactory.getInstance().newTuple(alk));
+                ArrayList alv = new ArrayList();
+		alv.add(valueDBA);
 		NullableTuple val = new NullableTuple(TupleFactory.getInstance().newTuple(alv));
 
 		try {
