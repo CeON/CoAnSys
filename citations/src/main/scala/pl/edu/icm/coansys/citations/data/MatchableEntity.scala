@@ -101,6 +101,7 @@ object MatchableEntity {
 
   def fromReferenceMetadata(id: String, meta: ReferenceMetadata): MatchableEntity = {
     val data = MatchableEntityData.newBuilder()
+    data.setId(id)
     fillUsingBasicMetadata(data, meta.getBasicMetadata)
     new MatchableEntity(data.build())
   }
