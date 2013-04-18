@@ -1,15 +1,15 @@
 /*
  * (C) 2010-2012 ICM UW. All rights reserved.
  */
-package pl.edu.icm.coansys.logsanalysis.logsacquisition;
+package pl.edu.icm.coansys.importers.logs;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import pl.edu.icm.coansys.logsanalysis.models.AuditEntryProtos.LogMessage;
-import pl.edu.icm.coansys.logsanalysis.transformers.AuditEntry2Protos;
-import pl.edu.icm.coansys.logsanalysis.transformers.BytesArray2SequenceFile;
+import pl.edu.icm.coansys.commons.hadoop.BytesArray2SequenceFile;
+import pl.edu.icm.coansys.importers.models.LogsProtos;
+import pl.edu.icm.coansys.importers.models.LogsProtos.LogsMessage;
 import pl.edu.icm.synat.api.services.SynatServiceRef;
 import pl.edu.icm.synat.api.services.audit.AuditService;
 import pl.edu.icm.synat.api.services.audit.model.AuditEntry;
@@ -25,10 +25,11 @@ public class AuditServiceToSequenceFile {
     @SynatServiceRef(serviceId = "AuditService")
     private AuditService auditService;
 
-    private AuditServiceToSequenceFile() {}
-    
+    private AuditServiceToSequenceFile() {
+    }
+
     public static void main(final String[] args) throws IOException {
-        
+
         if (args.length < 1) {
             System.err.println("Usage: AcquireAuditService <output_dir>");
             System.exit(1);
@@ -51,14 +52,16 @@ public class AuditServiceToSequenceFile {
             List<byte[]> serializedLogs = new ArrayList<byte[]>();
             List<AuditEntry> items = result.getItems();
             for (AuditEntry item : items) {
-                LogMessage serialize = AuditEntry2Protos.serialize(item);
-                byte[] toByteArray = serialize.toByteArray();
-                serializedLogs.add(toByteArray);
+                LogsMessage serialize = AuditEntry2Protos.serialize(item);
+                if (!serialize.getEventType().equals(LogsProtos.EventType.CUSTOM)) {
+                    byte[] toByteArray = serialize.toByteArray();
+                    serializedLogs.add(toByteArray);
+                }
             }
-            
+
             String filePath = directoryPath + "/" + "logs_sequence_file_" + System.currentTimeMillis() + ".log";
             BytesArray2SequenceFile.write(serializedLogs, filePath);
-            
+
             String nextToken = result.getNextToken();
             result = auditService.queryAudit(condition, nextToken, limit);
         }

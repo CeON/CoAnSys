@@ -1,7 +1,7 @@
 /*
  * (C) 2010-2012 ICM UW. All rights reserved.
  */
-package pl.edu.icm.coansys.logsanalysis.logsacquisition;
+package pl.edu.icm.coansys.importers.logs;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -10,10 +10,7 @@ import java.net.MalformedURLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import pl.edu.icm.coansys.logsanalysis.constants.ParamNames;
-import pl.edu.icm.coansys.logsanalysis.models.AuditEntryHelper;
-import pl.edu.icm.coansys.logsanalysis.transformers.AuditEntry2Protos;
-import pl.edu.icm.coansys.logsanalysis.transformers.BytesArray2SequenceFile;
+import pl.edu.icm.coansys.commons.hadoop.BytesArray2SequenceFile;
 import pl.edu.icm.synat.api.services.audit.model.AuditEntry;
 
 /**
@@ -31,6 +28,7 @@ public final class GenerateDummyLogs {
     // dummy param values
     private static String startLogs = "2012-01-01";
     private static String endLogs = "2012-08-01";
+    private static final String[] SERVICES = {"PORTAL"};
     private static final String[] EVENTTYPES = {"SAVE_TO_DISK"};
     private static final String[] IPADDRESSES = {"173.194.70.101", "173.194.70.102",
         "173.194.70.113", "173.194.70.138", "173.194.70.139",
@@ -97,17 +95,22 @@ public final class GenerateDummyLogs {
 
                 randomFloat = random.nextFloat();
                 long time = sessionStart + (long) (randomFloat * (sessionEnd - sessionStart));
+                String serviceId = SERVICES[random.nextInt(SERVICES.length)];
                 String eventType = EVENTTYPES[random.nextInt(EVENTTYPES.length)];
 
-                Map<String, String> args = new HashMap<String, String>();
-                args.put(ParamNames.RESOURCE_ID_PARAM, RESOURCES[random.nextInt(RESOURCES.length)]);
-                args.put(ParamNames.SESSION_ID_PARAM, sessionId);
-                args.put(ParamNames.IP_PARAM, IPADDRESSES[random.nextInt(IPADDRESSES.length)]);
-                args.put(ParamNames.URL_PARAM, URLS[random.nextInt(URLS.length)]);
-                args.put(ParamNames.REFERER_PARAM, URLS[random.nextInt(URLS.length)]);
-                args.put(ParamNames.USER_ID_PARAM, user);
+                List<String> argsList = new ArrayList<String>();
+                argsList.add("[resource_id=" + RESOURCES[random.nextInt(RESOURCES.length)] + "]");
+                argsList.add("[sesion_id=" + sessionId + "]");
+                argsList.add("[ip_address=" + IPADDRESSES[random.nextInt(IPADDRESSES.length)] + "]");
+                argsList.add("[url=" + URLS[random.nextInt(URLS.length)] + "]");
+                argsList.add("[http_referer=" + URLS[random.nextInt(URLS.length)] + "]");
+                argsList.add("[user_id=" + user + "]");
 
-                AuditEntry newLog = AuditEntryHelper.getAuditEntry(eventType, AuditEntry.Level.INFO, new Date(time), "PORTAL", eventType, args);
+                String[] args = new String[argsList.size()];
+                args = argsList.toArray(args);
+
+                AuditEntry newLog = new AuditEntry(generateRandomId(), AuditEntry.Level.INFO, new Date(time), 
+                        serviceId, eventType, args);
                 result.add(newLog);
             }
         }

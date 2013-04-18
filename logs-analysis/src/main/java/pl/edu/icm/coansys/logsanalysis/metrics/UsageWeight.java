@@ -3,13 +3,13 @@
  */
 package pl.edu.icm.coansys.logsanalysis.metrics;
 
-import pl.edu.icm.synat.api.services.audit.model.AuditEntry;
+import pl.edu.icm.coansys.importers.models.LogsProtos;
 
 /**
  *
  * @author Artur Czeczko <a.czeczko@icm.edu.pl>
  */
 public interface UsageWeight {
-    public long getWeight(AuditEntry entry);
+    public long getWeight(LogsProtos.LogsMessage message);
     
 }
