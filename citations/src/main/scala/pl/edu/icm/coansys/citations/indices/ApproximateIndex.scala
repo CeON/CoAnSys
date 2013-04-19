@@ -20,7 +20,7 @@ import pl.edu.icm.coansys.citations.util.{hdfs, BytesIterable, misc}
  *
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
-class ApproximateIndex[V <: Writable : Manifest](override val indexFileUri: String) extends SimpleIndex[Text, V](indexFileUri) {
+class ApproximateIndex[V <: Writable : Manifest](override val indexFileUri: String, override val useDistributedCache: Boolean) extends SimpleIndex[Text, V](indexFileUri, useDistributedCache) {
   def getApproximate(query: String): Iterable[V] = {
     def isTooBig(query: String, key: String): Boolean =
       !key.startsWith(query.substring(0, query.length - 1))
