@@ -32,13 +32,13 @@ object HeuristicEvaluatorCont extends ScoobiApp {
         case (id, xmlString) =>
           val eval = XPathEvaluator.fromInputStream(IOUtils.toInputStream(xmlString))
           val ref = nlm.referenceMetadataBuilderFromNode(eval.asNode("."))
-          (id, MatchableEntity.fromReferenceMetadata(ref.build()))
+          (id, (xmlString, MatchableEntity.fromReferenceMetadata(ref.build())))
       }.mapWithResource(new AuthorIndex(authorIndex)) {
-        case (index, (id, entity)) =>
-          (id, matching.approximatelyMatchingDocuments(entity, index))
+        case (index, (id, (xmlString, entity))) =>
+          (id, (xmlString, matching.approximatelyMatchingDocuments(entity, index)))
       }.map {
-        case (id, matching) =>
-          (id, matching.mkString(" "))
+        case (id, (xmlString, matching)) =>
+          (id, matching.mkString(" ") + "\n" + xmlString)
       }
     persist(convertToSequenceFile(result, outUri, overwrite = true))
   }
