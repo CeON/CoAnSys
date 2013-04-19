@@ -11,7 +11,7 @@ import org.apache.hadoop.conf.Configuration
  */
 object Head {
   def main(args: Array[String]) {
-    if (args.length != 1) {
+    if (args.length != 3) {
       println ("Copies n first records to a separate sequence file.")
       println ()
       println ("Usage: Head <n> <in_sequence_file> <out_sequence_file>")
