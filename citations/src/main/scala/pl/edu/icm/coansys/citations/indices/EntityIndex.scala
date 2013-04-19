@@ -11,7 +11,7 @@ import pl.edu.icm.coansys.citations.data.CitationMatchingProtos.MatchableEntityD
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
-class EntityIndex(indexFileUri: String) extends SimpleTextIndex[BytesWritable](indexFileUri) {
+class EntityIndex(indexFileUri: String, useDistributedCache: Boolean = true) extends SimpleTextIndex[BytesWritable](indexFileUri, useDistributedCache) {
   def getEntityById(id: String): MatchableEntity = {
     new MatchableEntity(MatchableEntityData.parseFrom(get(id).copyBytes()))
   }

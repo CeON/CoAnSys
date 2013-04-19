@@ -9,8 +9,8 @@ import pl.edu.icm.coansys.citations.util.{misc, BytesIterable}
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
-class AuthorIndex(val indexFileUri: String) {
-  private val index = new ApproximateIndex[BytesIterable](indexFileUri)
+class AuthorIndex(val indexFileUri: String, val useDistributedCache: Boolean = true) {
+  private val index = new ApproximateIndex[BytesIterable](indexFileUri, useDistributedCache)
 
   def getDocumentsByAuthor(author: String): Iterable[String] = {
     index.getApproximate(author).flatMap(_.iterable map misc.uuidDecode).toSet

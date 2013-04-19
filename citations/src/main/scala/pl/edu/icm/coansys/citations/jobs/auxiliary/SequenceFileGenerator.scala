@@ -64,7 +64,7 @@ object SequenceFileGenerator extends ScoobiApp {
                                |        <pub-id pub-id-type="pmid">10027307</pub-id>
                                |    </citation>
                                |</ref>
-                               | """))
+                               | """.stripMargin))
     persist(convertToSequenceFile(pairs, outUri, overwrite = true))
   }
 }

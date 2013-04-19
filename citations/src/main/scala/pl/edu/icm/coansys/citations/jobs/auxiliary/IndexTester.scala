@@ -14,7 +14,7 @@ object IndexTester extends ScoobiApp {
   override def upload = false
 
   def testIndex(indexUri: String, query: String) {
-    val index = new AuthorIndex(indexUri)
+    val index = new AuthorIndex(indexUri, false)
     index.getDocumentsByAuthor(query).foreach(println)
   }
 
