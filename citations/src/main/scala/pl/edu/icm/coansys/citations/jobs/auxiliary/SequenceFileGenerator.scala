@@ -18,7 +18,7 @@ object SequenceFileGenerator extends ScoobiApp {
                                |    <citation citation-type="journal">
                                |        <person-group person-group-type="author">
                                |            <name>
-                               |                <surname>Sakaguchi</surname>
+                               |                <surname>aa</surname>
                                |                <given-names>M</given-names>
                                |            </name>
                                |            <name>
@@ -64,7 +64,7 @@ object SequenceFileGenerator extends ScoobiApp {
                                |        <pub-id pub-id-type="pmid">10027307</pub-id>
                                |    </citation>
                                |</ref>
-                               | """))
+                               | """.stripMargin))
     persist(convertToSequenceFile(pairs, outUri, overwrite = true))
   }
 }
