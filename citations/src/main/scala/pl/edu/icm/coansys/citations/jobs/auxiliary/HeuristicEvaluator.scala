@@ -46,10 +46,10 @@ object HeuristicEvaluator extends ScoobiApp {
       case (id, iter) =>
         try {
           val (defined, undefined) = iter.partition(_.isDefined)
-          if (!undefined.isEmpty) {
+          if (!undefined.isEmpty) 
             Stream.continually(id) zip defined.flatten.toStream
-          }
-          Stream.empty[(String, String)]
+          else
+            Stream.empty[(String, String)]
         } catch {
           case e: Exception =>
             e.printStackTrace()
