@@ -32,7 +32,7 @@ class MatchableEntity(val data: MatchableEntityData) {
   def year = data.getYear
 
   def normalisedAuthorTokens: Iterable[String] =
-    tokensFromCermine(strings.lettersOnly(removeDiacritics(author.toLowerCase)))
+    tokensFromCermine(strings.lettersOnly(removeDiacritics(author)))
       .flatMap { tok =>
         if (tok.length <= 3 && tok.forall(_.isUpper))
           tok.toCharArray.map(_.toString)
