@@ -33,6 +33,12 @@ class MatchableEntity(val data: MatchableEntityData) {
 
   def normalisedAuthorTokens: Iterable[String] =
     tokensFromCermine(strings.lettersOnly(removeDiacritics(author.toLowerCase)))
+      .flatMap { tok =>
+        if (tok.length <= 3 && tok.forall(_.isUpper))
+          tok.toCharArray.map(_.toString)
+        else
+          Some(tok)
+      }
       .filter(_.length > 1)
       .map(_.toLowerCase)
       .toSet
