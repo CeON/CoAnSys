@@ -27,7 +27,7 @@ object matching {
    */
   def approximatelyMatchingDocuments(citation: MatchableEntity, index: AuthorIndex): Iterable[EntityId] = {
     val documentsWithMatchNo =
-      citation.normalisedAuthorTokens
+      citation.normalisedAuthorTokens.toList
         .flatMap(tok => index.getDocumentsByAuthor(tok).filterNot(_ == citation.id))
         .groupBy(identity)
         .map {
