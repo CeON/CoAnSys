@@ -64,7 +64,7 @@ public class RakeExtractor {
      * @throws IOException
      */
     public RakeExtractor(String content) throws IOException {
-        this.content = content;
+        this.content = filterLang(content, "en");
         prepareToExtraction();
     }
 
@@ -94,7 +94,7 @@ public class RakeExtractor {
             if (media.getMediaType().equals(ProtoConstants.mediaTypePdf)) {
                 try {
                     sb.append(extractTextFromPdf(media.getContent().newInput()));
-                } catch (AnalysisException ex) {
+                } catch (Exception ex) {
                     logger.error("Cannot extract text from PDF: " + ex.toString() + " " + media.getSourcePath());
                 }
             } else if (media.getMediaType().equals(ProtoConstants.mediaTypeTxt)) {
@@ -126,8 +126,13 @@ public class RakeExtractor {
             result = extr.extractText(pdfStream);
         }
 
+        return filterLang(result, "en");
+    }
+
+    private String filterLang(String content, String language) throws IOException {
         LanguageIdentifierBean li = new LanguageIdentifierBean();
-        return ("en".equals(li.classify(result))) ? result : "";
+        String retvalue = (language.equals(li.classify(content))) ? content : "";
+        return retvalue;
     }
 
     /**
