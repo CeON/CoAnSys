@@ -1,5 +1,5 @@
 ###################### OOZIE
-masterNode=hadoop-master
+masterNode=hadoop-master.vls.icm.edu.pl
 nameNode=hdfs://${masterNode}:8020
 jobTracker=${masterNode}:8021
 hbaseZookeeperQuorum=${masterNode}
@@ -25,3 +25,9 @@ dc_m_hdfs_dataEnriched=${results}/dataEnrich
 dc_m_hdfs_modelEvaluation=${results}/modelEval
 ######################################## INPUT # INT ###################################
 @dc_m_int_folds@ 5
+##################################### INPUT # PIG_SCRIPT ###############################
+dc_m_pigScript_featureVector=tfidf
+dc_m_pigScript_similarityMetric=cosine
+dc_m_pigScript_modelBuilderClass=mlknnThresBuild
+dc_m_pigScript_modelUse=mlknnThresClassify
+########################################################################################
