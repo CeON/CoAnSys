@@ -1,0 +1,33 @@
+###################### OOZIE
+masterNode=hadoop-master.vls.icm.edu.pl
+nameNode=hdfs://${masterNode}:8020
+jobTracker=${masterNode}:8021
+hbaseZookeeperQuorum=${masterNode}
+queueName=default
+project=coansys_dc-model-creation
+###################### AUXIL 
+dc_exec_path=${HDFS_EXEC_PATH}
+###################### OOZIE
+oozie.wf.application.path=${dc_exec_path}
+results=${dc_exec_path}/results/
+workflowPath=${oozie.wf.application.path}
+commonJarsPath=*.jar
+pigScriptsDir=pig
+
+####################### document-classification classification #########################
+######################################## INPUT # HBASE #################################
+dc_m_in_inputDocsData=/user/pdendek/springer-seq-20130417_1657/*11.sf
+######################################## HDFS ##################################
+dc_m_hdfs_neighs=${results}/neighs
+dc_m_hdfs_docClassifMapping=${results}/doc_classif_mapping
+dc_m_hdfs_model=${results}/model
+dc_m_hdfs_dataEnriched=${results}/dataEnrich
+dc_m_hdfs_modelEvaluation=${results}/modelEval
+######################################## INPUT # INT ###################################
+@dc_m_int_folds@ 5
+##################################### INPUT # PIG_SCRIPT ###############################
+dc_m_pigScript_featureVector=tfidf
+dc_m_pigScript_similarityMetric=cosine
+dc_m_pigScript_modelBuilderClass=mlknnThresBuild
+dc_m_pigScript_modelUse=mlknnThresClassify
+########################################################################################
