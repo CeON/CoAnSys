@@ -24,7 +24,7 @@
         <java>
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
-            <main-class>pl.edu.icm.coansys.citations.jobs.ReferencesToEntitiesConverter</main-class>
+            <main-class>pl.edu.icm.coansys.citations.jobs.BasicMetadataToEntitiesConverter</main-class>
             <arg>${cit_inputSrcSeqFile}</arg>
             <arg>${cit_workDir}/source_entities</arg>
         </java>
