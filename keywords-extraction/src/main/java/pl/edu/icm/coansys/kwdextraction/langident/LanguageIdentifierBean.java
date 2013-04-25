@@ -1,24 +1,7 @@
-package pl.edu.icm.coansys.kwdextraction.langident;
-
 /*
- * #%L
- * synat-content-impl
- * %%
- * Copyright (C) 2010 - 2013 ICM, Warsaw University
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
+ * (C) 2010-2012 ICM UW. All rights reserved.
  */
+package pl.edu.icm.coansys.kwdextraction.langident;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -57,8 +40,8 @@ public class LanguageIdentifierBean implements LanguageIdentifier {
     private static final String LANGUAGES_PROPERTY_NAME = "languages";
     private static final String CANNOT_FIND_RESOURCE = "Cannot find resource ";
     private static final String PROFILE_PROPERTIES
-        = "pl/edu/icm/synat/tools/language/identifier/profiles.properties";
-    private static final String PROFILE_PREFIX = "pl/edu/icm/synat/tools/language/transliteration/profile/";
+        = "pl/edu/icm/coansys/kwdextraction/langident/profiles.properties";
+    private static final String PROFILE_PREFIX = "pl/edu/icm/coansys/kwdextraction/langident/profile/";
     private static final String PROFILE_SUFFIX = ".txt";
 
     public static final String LANG_NONE = "**";

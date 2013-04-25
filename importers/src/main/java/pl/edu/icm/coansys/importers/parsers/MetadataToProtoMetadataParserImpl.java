@@ -265,7 +265,7 @@ public class MetadataToProtoMetadataParserImpl implements MetadataToProtoMetadat
     }
 
     private static List<YExportable> stringToYExportable(String data, MetadataType type) throws TransformationException, IOException {
-        List<YExportable> result = null;
+        List<YExportable> result = new ArrayList<YExportable>();
 
         switch (type) {
             case BWMETA:
