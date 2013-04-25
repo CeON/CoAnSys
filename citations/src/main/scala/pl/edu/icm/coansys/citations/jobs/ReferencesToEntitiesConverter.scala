@@ -17,7 +17,7 @@ import pl.edu.icm.cermine.bibref.model.BibEntry
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 object ReferencesToEntitiesConverter extends ScoobiApp {
-  override def upload = false
+  override lazy val upload = false
 
   def run() {
     var parser: (()=> BibReferenceParser[BibEntry] with NoOpClose) = null

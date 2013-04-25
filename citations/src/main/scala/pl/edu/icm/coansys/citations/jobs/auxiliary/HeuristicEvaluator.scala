@@ -16,7 +16,7 @@ import scala.Some
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 object HeuristicEvaluator extends ScoobiApp {
-  override def upload = false
+  override lazy val upload = false
 
   def run() {
     val refsUri = args(0)

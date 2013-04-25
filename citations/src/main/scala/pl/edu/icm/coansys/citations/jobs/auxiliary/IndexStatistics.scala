@@ -13,7 +13,7 @@ import pl.edu.icm.coansys.citations.util.BytesIterable
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 object IndexStatistics extends ScoobiApp {
-  override def upload = false
+  override lazy val upload = false
 
   def run() {
     val indexFileUri = args(0)

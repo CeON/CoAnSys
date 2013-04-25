@@ -11,7 +11,7 @@ import pl.edu.icm.coansys.citations.indices.AuthorIndex
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 object IndexTester extends ScoobiApp {
-  override def upload = false
+  override lazy val upload = false
 
   def testIndex(indexUri: String, query: String) {
     val index = new AuthorIndex(indexUri, false)
