@@ -11,8 +11,8 @@ import org.apache.hadoop.io.Text
  *
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
-class SimpleTextIndex[V <: org.apache.hadoop.io.Writable : Manifest](override val indexFileUri: String)
-  extends SimpleIndex[Text, V](indexFileUri) {
+class SimpleTextIndex[V <: org.apache.hadoop.io.Writable : Manifest](override val indexFileUri: String, override val useDistributedCache: Boolean)
+  extends SimpleIndex[Text, V](indexFileUri, useDistributedCache) {
   val text = new Text()
 
   def get(s: String): V = {
