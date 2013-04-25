@@ -4,23 +4,13 @@
 
 <workflow-app xmlns="uri:oozie:workflow:0.1" name="citation-matching-wf">
     <start to="prelude"/>
-    <!--<start to="import"/>-->
-    <!--<action name="import">-->
-    <!--<java>-->
-    <!--<job-tracker>${jobTracker}</job-tracker>-->
-    <!--<name-node>${nameNode}</name-node>-->
 
-
-    <!--</java>-->
-    <!--<ok to="generate-indices" />-->
-    <!--<error to="fail" />-->
-    <!--</action>-->
     <action name="prelude">
         <fs>
             <delete path="${cit_workDir}"/>
             <mkdir path="${cit_workDir}"/>
         </fs>
-        <ok to="generate-key-index"/>
+        <ok to="convert-source-entities"/>
         <error to="fail"/>
     </action>
     <!--
@@ -29,14 +19,41 @@
         <path start="generate-author-index"/>
     </fork>
     -->
+
+    <action name="convert-source-entities">
+        <java>
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <main-class>pl.edu.icm.coansys.citations.jobs.BasicMetadataToEntitiesConverter</main-class>
+            <arg>${cit_inputSrcSeqFile}</arg>
+            <arg>${cit_workDir}/source_entities</arg>
+        </java>
+
+        <ok to="convert-destination-entities"/>
+        <error to="fail"/>
+    </action>
+
+    <action name="convert-destination-entities">
+        <java>
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <main-class>pl.edu.icm.coansys.citations.jobs.BasicMetadataToEntitiesConverter</main-class>
+            <arg>${cit_inputDestSeqFile}</arg>
+            <arg>${cit_workDir}/destination_entities</arg>
+        </java>
+
+        <ok to="generate-key-index"/>
+        <error to="fail"/>
+    </action>
+
     <action name="generate-key-index">
         <java>
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
             <main-class>pl.edu.icm.coansys.citations.jobs.IndexBuilder</main-class>
             <arg>-key</arg>
-            <arg>${cit_inputSeqFile}</arg>
-            <arg>${cit_keyIndexFullPath}</arg>
+            <arg>${cit_workDir}/destination_entities</arg>
+            <arg>${cit_workDir}/key_index</arg>
         </java>
 
         <ok to="generate-author-index"/>
@@ -48,8 +65,8 @@
             <name-node>${nameNode}</name-node>
             <main-class>pl.edu.icm.coansys.citations.jobs.IndexBuilder</main-class>
             <arg>-author</arg>
-            <arg>${cit_inputSeqFile}</arg>
-            <arg>${cit_authorIndexFullPath}</arg>
+            <arg>${cit_workDir}/destination_entities</arg>
+            <arg>${cit_workDir}/author_index</arg>
         </java>
 
         <ok to="do-matching"/>
@@ -62,48 +79,21 @@
         <java>
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
-            <main-class>pl.edu.icm.coansys.citations.jobs.Matcher</main-class>
+            <main-class>pl.edu.icm.coansys.citations.jobs.MatcherLowLevel</main-class>
             <arg>-files</arg>
             <arg>
-                ${cit_keyIndexFullPath}/data#key-data,${cit_keyIndexFullPath}/index#key-index,${cit_authorIndexFullPath}/data#author-data,${cit_authorIndexFullPath}/index#author-index
+                ${cit_workDir}/key_index/data#key-data,${cit_workDir}/key_index/index#key-index,${cit_workDir}/author_index/data#author-data,${cit_workDir}/author_index/index#author-index
             </arg>
-            <arg>${cit_keyIndex}</arg>
-            <arg>${cit_authorIndex}</arg>
-            <arg>${cit_inputSeqFile}</arg>
+            <arg>key_index</arg>
+            <arg>author_index</arg>
+            <arg>${cit_workDir}/source_entities</arg>
             <arg>${cit_outputSeqFile}</arg>
-        </java>
-
-        <ok to="create-hfile"/>
-        <error to="fail"/>
-    </action>
-    <action name="create-hfile">
-        <java>
-            <job-tracker>${jobTracker}</job-tracker>
-            <name-node>${nameNode}</name-node>
-            <main-class>pl.edu.icm.coansys.importers.io.writers.hbase.DocumentWrapperSequenceFileToHBase</main-class>
-            <arg>-D</arg><arg>hbase.table.full.column.name=${cit_hbaseOutColumn}</arg>
-            <arg>-D</arg><arg>mapreduce.map.class=pl.edu.icm.coansys.importers.io.writers.hbase.BytesWritableSequenceFileToHBasePutMapper</arg> 
-            <arg>-D</arg><arg>bulk.output=${cit_bulkloadTmpDir}</arg>
-            <arg>${cit_outputSeqFile}</arg>
-            <arg>${cit_hbaseOutTable}</arg>
-        </java>
-
-        <ok to="bulkload"/>
-        <error to="fail"/>
-    </action>
-
-    <action name="bulkload">
-        <java>
-            <job-tracker>${jobTracker}</job-tracker>
-            <name-node>${nameNode}</name-node>
-            <main-class>org.apache.hadoop.hbase.mapreduce.LoadIncrementalHFiles</main-class>
-            <arg>${cit_bulkloadTmpDir}</arg>
-            <arg>${cit_hbaseOutTable}</arg>
         </java>
 
         <ok to="end"/>
         <error to="fail"/>
     </action>
+
     <kill name="fail">
         <message>Workflow failed</message>
     </kill>

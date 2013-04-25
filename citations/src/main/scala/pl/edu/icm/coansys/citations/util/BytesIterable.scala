@@ -30,4 +30,7 @@ class BytesIterable(var iterable: Iterable[Array[Byte]]) extends Writable {
         buff
     }
   }
+
+  override def toString =
+    iterable.map(new String(_, "UTF-8")).mkString("\n")
 }
