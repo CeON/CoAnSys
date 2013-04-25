@@ -10,7 +10,7 @@ import org.apache.commons.lang.StringUtils
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 object HeuristicStats extends ScoobiApp {
-  override def upload = false
+  override lazy val upload = false
 
   def run() {
     val inUri = args(0)

@@ -9,7 +9,7 @@ import com.nicta.scoobi.application.ScoobiApp
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 object SequenceFileGenerator extends ScoobiApp {
-  override def upload = false
+  override lazy val upload = false
 
   def run() {
     val outUri = args(0)

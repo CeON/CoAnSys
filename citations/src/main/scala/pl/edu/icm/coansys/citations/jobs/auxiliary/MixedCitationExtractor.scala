@@ -18,7 +18,7 @@ import org.jdom.input.DOMBuilder
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 object MixedCitationExtractor extends ScoobiApp {
-  override def upload = false
+  override lazy val upload = false
 
   def run() {
     configuration.set("mapred.task.timeout", 60 * 60 * 1000)
