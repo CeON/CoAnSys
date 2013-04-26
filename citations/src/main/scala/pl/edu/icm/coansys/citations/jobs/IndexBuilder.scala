@@ -13,7 +13,7 @@ import pl.edu.icm.coansys.citations.indices.{SimpleIndex, ApproximateIndex}
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 object IndexBuilder extends ScoobiApp {
-  override lazy val upload = false
+  override def includeLibJars = true
 
   def run() {
     val usage = "Usage: IndexBuilder [-key|-author] <input_seqfile> <output_index_path>"

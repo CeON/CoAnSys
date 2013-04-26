@@ -13,7 +13,7 @@ import com.nicta.scoobi.Scoobi._
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 object BasicMetadataToEntitiesConverter extends ScoobiApp {
-  override lazy val upload = false
+  override def includeLibJars = true
 
   def run() {
     val inUri = args(0)
