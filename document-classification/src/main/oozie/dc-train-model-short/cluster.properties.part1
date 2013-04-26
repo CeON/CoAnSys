@@ -16,7 +16,10 @@ pigScriptsDir=pig
 
 ####################### document-classification classification #########################
 ######################################## INPUT # HBASE #################################
-dc_m_in_inputDocsData=/user/pdendek/springer-copy/*.sf
+#dc_m_in_inputDocsData=/user/pdendek/springer-seq-20130417_1657/*11.sf
+#dc_m_in_inputDocsData=/user/pdendek/springer-seq-20130417_1657/sjapp06072*.sf
+#dc_m_in_inputDocsData=/user/pdendek/springer-seq-20130417_1657/sjapp060*.sf
+dc_m_in_inputDocsData=/user/pdendek/springer-seq-20130417_1657/sjapp*.sf
 ######################################## HDFS ##################################
 dc_m_hdfs_neighs=${results}/neighs
 dc_m_hdfs_docClassifMapping=${results}/doc_classif_mapping
