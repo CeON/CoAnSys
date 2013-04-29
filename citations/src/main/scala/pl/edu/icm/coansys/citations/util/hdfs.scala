@@ -33,19 +33,21 @@ object hdfs {
   }
 
   /**
-   * Converts SequenceFile to a MapFile. Assumes that Sequence file path is Path(uri, MapFile.DATA_FILE_NAME)
+   * Converts SequenceFile to a MapFile.
    */
   def convertSeqToMap(uri: String) {
     val conf = new Configuration()
     val fs = FileSystem.get(URI.create(uri), conf)
     val map = new Path(uri)
+    val mapContents = fs.listStatus(map).head.getPath
     val mapData = new Path(map, MapFile.DATA_FILE_NAME)
+    fs.rename(mapContents, mapData)
     val (keyClass, valueClass) = extractSeqTypes(mapData.toUri.toString)
     MapFile.fix(fs, map, keyClass.asInstanceOf[Class[_ <: Writable]], valueClass.asInstanceOf[Class[_ <: Writable]], false, conf)
   }
 
   /**
-   * Merges and sorts all SequenceFiles in given directory and saves as Path(uri, MapFile.DATA_FILE_NAME)
+   * Merges and sorts all SequenceFiles in given directory.
    */
   def mergeSeqs(uri: String) {
     val conf = new Configuration()
@@ -55,6 +57,7 @@ object hdfs {
     val mapData = new Path(dir, MapFile.DATA_FILE_NAME)
     val (keyClass, valueClass) = extractSeqTypes(paths(0).toUri.toString)
     val sorter = new Sorter(fs, keyClass.asInstanceOf[Class[_ <: WritableComparable[_]]], valueClass, conf)
+    sorter.setMemory(128 * 1000 * 1000)
     sorter.sort(paths, mapData, true)
   }
 
