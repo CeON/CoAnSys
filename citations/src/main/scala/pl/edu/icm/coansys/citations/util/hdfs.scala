@@ -53,7 +53,7 @@ object hdfs {
     val conf = new Configuration()
     val fs = FileSystem.get(URI.create(uri), conf)
     val dir = new Path(uri)
-    val paths: Array[Path] = fs.listStatus(dir).map(_.getPath)
+    val paths: Array[Path] = fs.listStatus(dir).map(_.getPath).filterNot(_.getName.startsWith("_"))
     val mapData = new Path(dir, MapFile.DATA_FILE_NAME)
     val (keyClass, valueClass) = extractSeqTypes(paths(0).toUri.toString)
     val sorter = new Sorter(fs, keyClass.asInstanceOf[Class[_ <: WritableComparable[_]]], valueClass, conf)
