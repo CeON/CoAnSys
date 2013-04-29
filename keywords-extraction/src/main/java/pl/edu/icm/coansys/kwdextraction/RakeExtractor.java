@@ -3,10 +3,7 @@
  */
 package pl.edu.icm.coansys.kwdextraction;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.text.BreakIterator;
 import java.util.Map.Entry;
 import java.util.*;
@@ -19,6 +16,7 @@ import pl.edu.icm.cermine.PdfRawTextExtractor;
 import pl.edu.icm.cermine.exception.AnalysisException;
 import pl.edu.icm.coansys.importers.constants.ProtoConstants;
 import pl.edu.icm.coansys.importers.models.DocumentProtos;
+import pl.edu.icm.coansys.importers.models.DocumentProtos.TextWithLanguage;
 import pl.edu.icm.coansys.kwdextraction.langident.LanguageIdentifierBean;
 
 /**
@@ -30,17 +28,39 @@ public class RakeExtractor {
 
     private enum Lang {
 
-        PL, FR, EN
+        // language code, stopwords path
+        PL("pl", "stopwords_pl.txt"),
+        FR("fr", "stopwords_fr.txt"),
+        EN("en", "stopwords_en.txt");
+        private String langCode;
+        private String stopwordsPath;
+
+        Lang(String langCode, String stopwordsPath) {
+            this.langCode = langCode;
+            this.stopwordsPath = stopwordsPath;
+        }
+    }
+
+    private enum ExtractionOption {
+
+        CONTENT(true, false),
+        ABSTRACT(false, true),
+        CONTENT_AND_ABSTRACT(true, true);
+        private boolean fromContent;
+        private boolean fromAbstract;
+
+        ExtractionOption(boolean fromContent, boolean fromAbstract) {
+            this.fromContent = fromContent;
+            this.fromAbstract = fromAbstract;
+        }
     }
     private static final Logger logger = LoggerFactory.getLogger(RakeExtractor.class);
-    private static final String STOPWORDS_EN = "stopwords_en.txt";
-    private static final String STOPWORDS_FR = "stopwords_fr.txt";
-    private static final String STOPWORDS_PL = "stopwords_pl.txt";
     private static final String ILLEGAL_CHARS = "[^\\p{L}0-9-'\\s]";
     private static final int DEFAULT_KEYWORDS_NUMBER = 8;
     private static final Map<Lang, Set<String>> stopwords;
     private String content;
-    private Lang lang = Lang.EN;
+    private Lang lang;
+    private ExtractionOption extractionOption;
     private List<KeywordCandidate> keywordCandidates;
     private Map<String, Map<String, Integer>> cooccurrences;
 
@@ -61,10 +81,13 @@ public class RakeExtractor {
      * prepareToExtraction()
      *
      * @param content Document's content as a String
+     * @param langCode Document's language (texts in other languages will be
+     * ignored)
      * @throws IOException
      */
-    public RakeExtractor(String content) throws IOException {
-        this.content = filterLang(content, "en");
+    public RakeExtractor(String content, String langCode) throws IOException {
+        setLang(langCode);
+        this.content = filterTextByLang(content, lang.langCode);
         prepareToExtraction();
     }
 
@@ -72,12 +95,15 @@ public class RakeExtractor {
      * Every constructor sets this.content (document's content) and calls
      * prepareToExtraction()
      *
-     * @param pdfStream Stream containing a PDF file
+     * @param pdfContent Byte array containing a PDF file
+     * @param langCode Document's language (texts in other languages will be
+     * ignored)
      * @throws AnalysisException
      * @throws IOException
      */
-    public RakeExtractor(InputStream pdfStream) throws IOException, AnalysisException {
-        content = extractTextFromPdf(pdfStream);
+    public RakeExtractor(byte[] pdfContent, String langCode) throws AnalysisException, IOException {
+        setLang(langCode);
+        content = extractTextFromPdf(pdfContent, this.lang);
         prepareToExtraction();
     }
 
@@ -86,22 +112,38 @@ public class RakeExtractor {
      * prepareToExtraction()
      *
      * @param docWrapper Protocol buffers message containing document
+     * @param option specifies which parts of the document are searched while
+     * extracting keywords. Possible values: ABSTRACT - only the abstract is
+     * processed, CONTENT - on the body of the document is processed,
+     * CONTENT_AND_ABSTRACT - both abstract and body are processed.
      * @throws IOException
      */
-    public RakeExtractor(DocumentProtos.DocumentWrapper docWrapper) throws IOException {
+    public RakeExtractor(DocumentProtos.DocumentWrapper docWrapper, String option, String langCode) throws IOException {
+        setLang(langCode);
+        setOption(option);
         StringBuilder sb = new StringBuilder();
-        for (DocumentProtos.Media media : docWrapper.getMediaContainer().getMediaList()) {
-            if (media.getMediaType().equals(ProtoConstants.mediaTypePdf)) {
-                try {
-                    sb.append(extractTextFromPdf(media.getContent().newInput()));
-                } catch (Exception ex) {
-                    logger.error("Cannot extract text from PDF: " + ex.toString() + " " + media.getSourcePath());
+
+        if (extractionOption.fromContent) {
+            for (DocumentProtos.Media media : docWrapper.getMediaContainer().getMediaList()) {
+                if (media.getMediaType().equals(ProtoConstants.mediaTypePdf)) {
+                    try {
+                        sb.append(extractTextFromPdf(media.getContent().toByteArray(), this.lang));
+                    } catch (Exception ex) {
+                        logger.error("Cannot extract text from PDF: " + ex.toString() + " " + media.getSourcePath());
+                    }
+                } else if (media.getMediaType().equals(ProtoConstants.mediaTypeTxt)) {
+                    sb.append(filterTextByLang(media.getContent().toStringUtf8(), lang.langCode));
                 }
-            } else if (media.getMediaType().equals(ProtoConstants.mediaTypeTxt)) {
-                sb.append(media.getContent().toStringUtf8());
+                sb.append("\n");
             }
-            sb.append("\n");
         }
+
+        if (extractionOption.fromAbstract) {
+            for (TextWithLanguage documentAbstract : docWrapper.getDocumentMetadata().getDocumentAbstractList()) {
+                sb.append(filterTextByLang(documentAbstract.getText(), lang.langCode));
+            }
+        }
+
         content = sb.toString();
         prepareToExtraction();
     }
@@ -109,35 +151,47 @@ public class RakeExtractor {
     /**
      * Extract text from pdf stream
      *
-     * @param pdfStream
+     * @param pdfContent content of pdf file
+     * @param lang Document's language (texts in other languages will be
+     * ignored)
      * @return String object containing document content
      * @throws IOException
      * @throws AnalysisException
      */
-    private String extractTextFromPdf(InputStream pdfStream) throws IOException, AnalysisException {
+    private String extractTextFromPdf(byte[] pdfContent, Lang lang) throws IOException, AnalysisException {
         String result;
+        InputStream pdfStream = new ByteArrayInputStream(pdfContent);
         PdfNLMContentExtractor nextr = new PdfNLMContentExtractor();
         Element contentEl = nextr.extractContent(pdfStream);
         Element bodyEl = contentEl.getChild("body");
         result = bodyEl.getValue();
-        
+
         if (result == null || result.isEmpty()) {
+            pdfStream = new ByteArrayInputStream(pdfContent);
             DocumentTextExtractor<String> extr = new PdfRawTextExtractor();
             result = extr.extractText(pdfStream);
         }
 
-        return filterLang(result, "en");
+        return filterTextByLang(result, lang.langCode);
     }
 
-    private String filterLang(String content, String language) throws IOException {
+    /**
+     * Returns a text only if it is in given language
+     *
+     * @param text
+     * @param language
+     * @return text or empty String
+     * @throws IOException
+     */
+    private String filterTextByLang(String text, String language) throws IOException {
         LanguageIdentifierBean li = new LanguageIdentifierBean();
-        String retvalue = (language.equals(li.classify(content))) ? content : "";
+        String retvalue = (language.equals(li.classify(text))) ? text : "";
         return retvalue;
     }
 
     /**
-     * All steps of keyword extraction. this.content should be set by a
-     * constructor.
+     * All steps of keyword extraction. Not to be called before setting of
+     * this.content, this.lang and this.option.
      *
      * @throws IOException
      */
@@ -150,32 +204,18 @@ public class RakeExtractor {
     /**
      * Loading stopwords from a file
      *
+     * @param lang Stopwords language
+     * @return Set of stopwords
      * @throws IOException
      */
     private static Set<String> loadStopwords(Lang lang) throws IOException {
         Set<String> result = new HashSet<String>();
 
-        String stopwordsPath;
-        switch (lang) {
-            case EN:
-                stopwordsPath = STOPWORDS_EN;
-                break;
-            case FR:
-                stopwordsPath = STOPWORDS_FR;
-                break;
-            case PL:
-                stopwordsPath = STOPWORDS_PL;
-                break;
-            default:
-                stopwordsPath = STOPWORDS_EN;
-                break;
-        }
-
         InputStream stopwordsStream;
         try {
-            stopwordsStream = RakeExtractor.class.getClassLoader().getResourceAsStream(stopwordsPath);
+            stopwordsStream = RakeExtractor.class.getClassLoader().getResourceAsStream(lang.stopwordsPath);
         } catch (NullPointerException ex) {
-            stopwordsStream = RakeExtractor.class.getClassLoader().getResourceAsStream("/" + stopwordsPath);
+            stopwordsStream = RakeExtractor.class.getClassLoader().getResourceAsStream("/" + lang.stopwordsPath);
         }
         InputStreamReader isr = new InputStreamReader(stopwordsStream);
         BufferedReader br = new BufferedReader(isr);
@@ -192,7 +232,7 @@ public class RakeExtractor {
     }
 
     /**
-     * Finding words or word sequences separated by stopwords, punstuation marks
+     * Finding words or word sequences separated by stopwords, punctuation marks
      * etc.
      */
     private void extractKeywordCandidates() {
@@ -335,14 +375,18 @@ public class RakeExtractor {
         return choiceKeywords(n);
     }
 
-    public void setLang(String lang) {
-        if ("fr".equals(lang)) {
+    private void setLang(String langCode) {
+        if ("fr".equals(langCode)) {
             this.lang = Lang.FR;
-        } else if ("pl".equals(lang)) {
+        } else if ("pl".equals(langCode)) {
             this.lang = Lang.PL;
         } else {
             this.lang = Lang.EN;
         }
+    }
+
+    private void setOption(String option) {
+        this.extractionOption = ExtractionOption.valueOf(option);
     }
 
     /**
@@ -358,5 +402,21 @@ public class RakeExtractor {
             return false;
         }
         return true;
+    }
+
+    public static List<String> getSupportedLanguages() {
+        List<String> result = new ArrayList<String>();
+        for (Lang l : Lang.values()) {
+            result.add(l.langCode);
+        }
+        return result;
+    }
+
+    public static List<String> getAvailableExtractionOptions() {
+        List<String> result = new ArrayList<String>();
+        for (ExtractionOption opt : ExtractionOption.values()) {
+            result.add(opt.name());
+        }
+        return result;
     }
 }
