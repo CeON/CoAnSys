@@ -6,6 +6,7 @@ import com.nicta.scoobi.Persist._
 import pl.edu.icm.coansys.citations.util.{XPathEvaluator, nlm}
 import org.apache.commons.io.IOUtils
 import pl.edu.icm.coansys.citations.data.MatchableEntity
+import org.apache.commons.lang.StringUtils
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -17,7 +18,7 @@ object HeuristicStatsWrong extends ScoobiApp {
     val results = Scoobi.convertFromSequenceFile[String, String](inUri)
       .flatMap { case (k, v) =>
         val parts = v.split("\n", 2)
-        val ids = parts(0).split(" ").map(_.substring(4))
+        val ids = parts(0).split(" ").filterNot(StringUtils.isEmpty).map(_.substring(4))
         val xmlString = parts(1)
         if (ids contains k) {
           None
