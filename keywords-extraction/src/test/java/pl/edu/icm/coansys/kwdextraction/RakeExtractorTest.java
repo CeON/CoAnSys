@@ -17,6 +17,7 @@ import static org.testng.Assert.assertEquals;
 public class RakeExtractorTest {
 
     private static final String TXTFILE = "bson-cc0.txt";
+    private static final String LANGUAGE = "en";
     private static final List<String> EXPECTED_KEYWORDS = Arrays.asList(
             "binary interchange formats",
             "binary json",
@@ -27,7 +28,7 @@ public class RakeExtractorTest {
     public void rakeTxtTest() throws IOException {
         String txtPath = this.getClass().getClassLoader().getResource(TXTFILE).getPath();
         String fileContent = FileUtils.readFileToString(new File(txtPath));
-        RakeExtractor rake = new RakeExtractor(fileContent);
+        RakeExtractor rake = new RakeExtractor(fileContent, LANGUAGE);
 
         List<String> extractedKeywords = rake.getKeywords(EXPECTED_KEYWORDS.size());
 

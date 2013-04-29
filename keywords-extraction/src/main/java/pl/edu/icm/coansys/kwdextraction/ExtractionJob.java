@@ -28,6 +28,16 @@ import pl.edu.icm.coansys.importers.models.KeywordExtractionProtos.ExtractedKeyw
  */
 public class ExtractionJob implements Tool {
 
+    /*
+     * EXTRACTION_OPTION - i.e. CONTENT, ABSTRACT, CONTENT_AND_ABSTRACT
+     * EXTRACTION_LANGUAGE - "en", "pl", "fr". Only texts in this language will
+     * be processed.
+     */
+    private static final String EXTRACTION_OPTION = "EXTRACTION_OPTION";
+    private static final String EXTRACTION_LANGUAGE = "EXTRACTION_LANGUAGE";
+
+    private static final String ALGORITHM_NAME = "RAKE";
+
     private static final Logger logger = LoggerFactory.getLogger(ExtractionJob.class);
     Configuration conf;
 
@@ -35,11 +45,16 @@ public class ExtractionJob implements Tool {
 
         @Override
         protected void map(Writable key, BytesWritable value, Context context) throws IOException, InterruptedException {
+
+            Configuration conf = context.getConfiguration();
+            String extractionOption = conf.get(EXTRACTION_OPTION);
+            String lang = conf.get(EXTRACTION_LANGUAGE);
+
             DocumentWrapper docWrapper = DocumentProtos.DocumentWrapper.parseFrom(value.copyBytes());
             ExtractedKeywords.Builder kwdBuilder = ExtractedKeywords.newBuilder();
-            kwdBuilder.setAlgorithm("RAKE");
+            kwdBuilder.setAlgorithm(ALGORITHM_NAME);
             kwdBuilder.setDocId(docWrapper.getRowId());
-            for (String keyword : new RakeExtractor(docWrapper).getKeywords()) {
+            for (String keyword : new RakeExtractor(docWrapper, extractionOption, lang).getKeywords()) {
                 kwdBuilder.addKeyword(keyword);
             }
             if (kwdBuilder.getKeywordCount() > 0) {
@@ -50,10 +65,21 @@ public class ExtractionJob implements Tool {
 
     @Override
     public int run(String[] args) throws Exception {
-        if (args.length < 2) {
-            logger.error("Usage: ExtractionJob <input_seqfile> <output_dir>");
+        if (args.length < 4) {
+            logger.error("Usage: ExtractionJob <input_seqfile> <output_dir> <extractionOption> <language>");
+            logger.error("  extractionOption must be one of the following:");
+            for (String opt : RakeExtractor.getAvailableExtractionOptions()) {
+                logger.error("    " + opt);
+            }
+            logger.error("  supported languages:");
+            for (String lang : RakeExtractor.getSupportedLanguages()) {
+                logger.error("    " + lang);
+            }
             return 1;
         }
+
+        conf.set(EXTRACTION_OPTION, args[2]);
+        conf.set(EXTRACTION_LANGUAGE, args[3]);
 
         Job job = new Job(conf);
         job.setJarByClass(ExtractionJob.class);
@@ -67,17 +93,13 @@ public class ExtractionJob implements Tool {
         SequenceFileOutputFormat.setOutputPath(job, new Path(args[1]));
 
         job.setMapperClass(ExtractMap.class);
-        
+
         job.setNumReduceTasks(0);
 
         /*
          * Launch job
          */
-        long startTime = ManagementFactory.getThreadMXBean().getThreadCpuTime(Thread.currentThread().getId());
         boolean success = job.waitForCompletion(true);
-        long endTime = ManagementFactory.getThreadMXBean().getThreadCpuTime(Thread.currentThread().getId());
-        double duration = (endTime - startTime) / Math.pow(10, 9);
-        logger.info("=== Job Finished in " + duration + " seconds " + (success ? "(success)" : "(failure)"));
         return success ? 0 : 1;
     }
 
