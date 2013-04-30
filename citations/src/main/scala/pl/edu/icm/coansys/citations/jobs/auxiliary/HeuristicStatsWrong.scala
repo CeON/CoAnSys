@@ -7,6 +7,9 @@ import com.nicta.scoobi.Persist._
 import org.apache.commons.lang.StringUtils
 import pl.edu.icm.coansys.citations.util.AugmentedDList.augmentDList
 import pl.edu.icm.coansys.citations.indices.EntityIndex
+import pl.edu.icm.coansys.citations.util.{nlm, XPathEvaluator}
+import org.apache.commons.io.IOUtils
+import pl.edu.icm.coansys.citations.data.MatchableEntity
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -21,13 +24,17 @@ object HeuristicStatsWrong extends ScoobiApp {
       .flatMapWithResource(new EntityIndex(indexUri)) { case (index, (k, v)) =>
         val parts = v.split("\n", 2)
         val ids = parts(0).split(" ").filterNot(StringUtils.isEmpty).map(_.substring(4))
-        val xml = parts(1)
+        val xmlString = parts(1)
         if (ids contains k) {
           None
         } else {
+          val eval = XPathEvaluator.fromInputStream(IOUtils.toInputStream(xmlString))
+          val ref = nlm.referenceMetadataBuilderFromNode(eval.asNode(".")).build()
+          val srcCit = MatchableEntity.fromReferenceMetadata(ref)
           val srcDoc = index.getEntityById("doc_" + k)
           val dstDocs = ids.map(id => index.getEntityById("doc_" + id))
-          Some((srcDoc.toDebugString, xml + "\n\n" + dstDocs.map(_.toDebugString).mkString("\n")))
+          Some((xmlString + "\n\n" + srcCit.toDebugString + "\n\n" + srcDoc.toDebugString,
+            dstDocs.map(_.toDebugString).mkString("\n")))
         }
       }
 
