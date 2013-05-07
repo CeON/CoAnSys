@@ -34,4 +34,9 @@ object ConvertingSequenceFileIterator {
     assert(reader.getValueClass == valueSchema.mf.erasure, "SequenceFile value type doesn't match SeqSchema")
     new ConvertingSequenceFileIterator[K, V](new SequenceFileIterator(reader))
   }
+
+  def fromLocal[K, V](uri: String)
+                     (implicit keySchema: SeqSchema[K],
+                      valueSchema: SeqSchema[V]): ConvertingSequenceFileIterator[K, V] =
+    fromUri(new Configuration(), uri)
 }
