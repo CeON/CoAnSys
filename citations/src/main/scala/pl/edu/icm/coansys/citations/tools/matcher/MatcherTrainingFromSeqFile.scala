@@ -12,6 +12,7 @@ import pl.edu.icm.coansys.commons.scala.automatic_resource_management.using
 import collection.immutable.Queue
 import java.io.{File, FileWriter}
 import pl.edu.icm.coansys.citations.util.sequencefile.ConvertingSequenceFileIterator
+import pl.edu.icm.coansys.citations.util.libsvm.featureVectorToLibSvmLine
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -50,10 +51,7 @@ object MatcherTrainingFromSeqFile {
         val lines = featureVectors.map {
           case (equal, fv) =>
             val label = if (equal) 1 else 0
-            val features = (Stream.from(1) zip fv.getFeatures).map {
-              case (i, v) => i + ":" + v
-            }.mkString(" ")
-            label + " " + features
+            featureVectorToLibSvmLine(fv, label)
         }
         using(new FileWriter(new File(outPath))) {
           writer =>
