@@ -37,7 +37,8 @@ import pl.edu.icm.coansys.importers.models.DocumentProtos.TextWithLanguage;
 public class EXTRACT_MAP_WHEN_CATEG_LIM extends EvalFunc<Map> {
 
 	enum Action{
-		REMOVE,
+		REMOVE_KEYCHARACTERS,
+		REMOVE_NONAPLHANUMERIC,
 		TRANSLATE
 	}
 	
@@ -48,7 +49,9 @@ public class EXTRACT_MAP_WHEN_CATEG_LIM extends EvalFunc<Map> {
 		this.language = language;
 		
 		if(action.equalsIgnoreCase("remove")){
-			this.action = Action.REMOVE;
+			this.action = Action.REMOVE_KEYCHARACTERS;
+		}else if(action.equalsIgnoreCase("removeall")){
+			this.action = Action.REMOVE_NONAPLHANUMERIC;
 		}else if (action.equalsIgnoreCase("translate")){
 			this.action = Action.TRANSLATE;
 		}else{
@@ -61,11 +64,11 @@ public class EXTRACT_MAP_WHEN_CATEG_LIM extends EvalFunc<Map> {
 	public EXTRACT_MAP_WHEN_CATEG_LIM(String language){
 		this.language = language;
 		System.out.println("Default action taken against non-alphanumeric signs in title or abstract is a symbol removal.");
-		this.action = Action.REMOVE;
+		this.action = Action.REMOVE_KEYCHARACTERS;
 	}
 	
 	public EXTRACT_MAP_WHEN_CATEG_LIM(){
-		this.action = Action.REMOVE;
+		this.action = Action.REMOVE_KEYCHARACTERS;
 	}
 	
     @Override
@@ -107,9 +110,12 @@ public class EXTRACT_MAP_WHEN_CATEG_LIM extends EvalFunc<Map> {
         if(action==Action.TRANSLATE){
         	docTitle = translateNonAlphaNumeric(docTitle);
         	docAbstract = translateNonAlphaNumeric(docAbstract);
+        }else if (action==Action.REMOVE_KEYCHARACTERS){
+        	docTitle = removeAllKeyPunctations(docTitle);
+        	docAbstract = removeAllKeyPunctations(docAbstract);
         }else{
-        	docTitle = removeAllNonAlphaNumberic(docTitle);
-        	docAbstract = removeAllNonAlphaNumberic(docAbstract);
+        	docTitle = removeAllNonAlphaNumeric(docTitle);
+        	docAbstract = removeAllNonAlphaNumeric(docAbstract);
         }
         
         if (kwCc.getY().size() > lim) {
@@ -124,7 +130,12 @@ public class EXTRACT_MAP_WHEN_CATEG_LIM extends EvalFunc<Map> {
         return null;
     }
     
-    private String removeAllNonAlphaNumberic(String str){
+    private String removeAllNonAlphaNumeric(String str){
+    	str = str.replaceAll("[^a-zA-Z0-9_ ]", "");
+    	return str;
+    }
+    
+    private String removeAllKeyPunctations(String str){
     	str = str.replaceAll(",", "");
     	str = str.replaceAll("#", "");
     	return str;
@@ -144,7 +155,7 @@ public class EXTRACT_MAP_WHEN_CATEG_LIM extends EvalFunc<Map> {
 				String str = twl.getText();
 				
 				if(action==Action.TRANSLATE) str = translateNonAlphaNumeric(str);
-		        else str = removeAllNonAlphaNumberic(str);
+		        else str = removeAllKeyPunctations(str);
 		        
 				if(!isClassifCode(str)) kws.add(str);
 				else ctgs.add(str);
