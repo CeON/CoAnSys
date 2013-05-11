@@ -131,7 +131,7 @@ public class EXTRACT_MAP_WHEN_CATEG_LIM extends EvalFunc<Map> {
     }
     
     private String removeAllNonAlphaNumeric(String str){
-    	str = str.replaceAll("[^a-zA-Z0-9_ ]", "");
+    	str = str.replaceAll("[^a-zA-Z0-9_\\- ]", "");
     	return str;
     }
     
