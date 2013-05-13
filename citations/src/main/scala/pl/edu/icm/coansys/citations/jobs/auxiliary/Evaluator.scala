@@ -31,6 +31,7 @@ object Evaluator extends ScoobiApp {
     // citId->citData
     val citations = heuristic.map {
       case (k, v) =>
+        println("citations step on " + k)
         val parts = v.split("\n", 2)
         val xmlString = parts(1)
         val eval = XPathEvaluator.fromInputStream(IOUtils.toInputStream(xmlString))
@@ -41,6 +42,7 @@ object Evaluator extends ScoobiApp {
     // doc_destDocId->correctId
     val proposed = heuristic.flatMap {
       case (k, v) =>
+        println("proposed step on " + k)
         val parts = v.split("\n", 2)
         val ids = parts(0).split(" ").filterNot(StringUtils.isEmpty).toSet
         ids zip Stream.continually(k)
@@ -49,11 +51,13 @@ object Evaluator extends ScoobiApp {
     //citId->heuristicly matched data
     val withData = Relational.joinLeft(proposed, indexList).map {
       case (prefixedDest, (src, Some(entity))) =>
+        println("withData on " + prefixedDest)
         //val dest = prefixedDest.substring(4)
         (src, entity)
     }.groupByKey[String, MatchableEntity]
     val results = Relational.joinLeft(citations, withData).flatMapWithResource(new SimilarityMeasurer with NoOpClose) {
       case (measurer, (key, (cit, Some(iter)))) =>
+        println("last step on " + key)
         val best = iter.maxBy(measurer.similarity(_, cit))
         if (best.id.substring(4) != key)
           Some(cit.toDebugString, best.toDebugString)
