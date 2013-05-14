@@ -20,7 +20,7 @@ import org.apache.commons.io.IOUtils
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 object HeuristicEvaluatorCont extends ScoobiApp {
-  override def upload = false
+  override lazy val upload = false
 
   def run() {
     val authorIndex = args(0)

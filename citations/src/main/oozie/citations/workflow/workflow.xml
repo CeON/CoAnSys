@@ -2,7 +2,7 @@
   ~ (C) 2010-2012 ICM UW. All rights reserved.
   -->
 
-<workflow-app xmlns="uri:oozie:workflow:0.1" name="citation-matching-wf">
+<workflow-app xmlns="uri:oozie:workflow:0.3" name="citation-matching-wf">
     <start to="prelude"/>
 
     <action name="prelude">
@@ -69,27 +69,167 @@
             <arg>${cit_workDir}/author_index</arg>
         </java>
 
-        <ok to="do-matching"/>
+        <ok to="add-heuristic"/>
         <error to="fail"/>
     </action>
     <!--
     <join name="generated-indices" to="do-matching"/>
     -->
-    <action name="do-matching">
-        <java>
+    <action name="add-heuristic">
+        <map-reduce>
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
-            <main-class>pl.edu.icm.coansys.citations.jobs.MatcherLowLevel</main-class>
-            <arg>-files</arg>
-            <arg>
-                ${cit_workDir}/key_index/data#key-data,${cit_workDir}/key_index/index#key-index,${cit_workDir}/author_index/data#author-data,${cit_workDir}/author_index/index#author-index
-            </arg>
-            <arg>key_index</arg>
-            <arg>author_index</arg>
-            <arg>${cit_workDir}/source_entities</arg>
-            <arg>${cit_outputSeqFile}</arg>
-        </java>
+            <prepare>
+                <delete path="${cit_workDir}/source_entities_heur"/>
+            </prepare>
+            <configuration>
+                <property>
+                    <name>mapred.mapper.new-api</name>
+                    <value>true</value>
+                </property>
+                <property>
+                    <name>mapred.reducer.new-api</name>
+                    <value>true</value>
+                </property>
+                <!-- General job parameters -->
+                <property>
+                    <name>mapred.job.queue.name</name>
+                    <value>${queueName}</value>
+                </property>
+                <!-- MapReduce Mapper/Reducer parameters -->
+                <property>
+                    <name>mapreduce.map.class</name>
+                    <value>pl.edu.icm.coansys.citations.mappers.HeuristicAdder</value>
+                </property>
+                <property>
+                    <name>mapred.reduce.tasks</name>
+                    <value>0</value>
+                </property>
+                <!-- MapReduce input/output parameters -->
+                <property>
+                    <name>mapred.input.dir</name>
+                    <value>${cit_workDir}/source_entities</value>
+                </property>
+                <property>
+                    <name>mapred.output.dir</name>
+                    <value>${cit_workDir}/source_entities_heur</value>
+                </property>
+                <property>
+                    <name>mapreduce.inputformat.class</name>
+                    <value>org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat</value>
+                </property>
+                <property>
+                    <name>mapreduce.outputformat.class</name>
+                    <value>org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat</value>
+                </property>
+                <property>
+                    <name>mapred.output.key.class</name>
+                    <value>org.apache.hadoop.io.BytesWritable</value>
+                </property>
+                <property>
+                    <name>mapred.output.value.class</name>
+                    <value>org.apache.hadoop.io.Text</value>
+                </property>
+                <property>
+                    <name>mapred.max.split.size</name>
+                    <value>5000000</value>
+                </property>
+                <property>
+                    <name>index.key</name>
+                    <value>key_index</value>
+                </property>
+                <property>
+                    <name>index.author</name>
+                    <value>author_index</value>
+                </property>
+            </configuration>
+            <file>${cit_workDir}/key_index/data#key-data</file>
+            <file>${cit_workDir}/key_index/index#key-index</file>
+            <file>${cit_workDir}/author_index/data#author-data</file>
+            <file>${cit_workDir}/author_index/index#author-index</file>
+        </map-reduce>
+        <ok to="assess"/>
+        <error to="fail"/>
+    </action>
 
+
+    <action name="assess">
+        <map-reduce>
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <prepare>
+                <delete path="${cit_workDir}/matching"/>
+            </prepare>
+            <configuration>
+                <property>
+                    <name>mapred.mapper.new-api</name>
+                    <value>true</value>
+                </property>
+                <property>
+                    <name>mapred.reducer.new-api</name>
+                    <value>true</value>
+                </property>
+                <!-- General job parameters -->
+                <property>
+                    <name>mapred.job.queue.name</name>
+                    <value>${queueName}</value>
+                </property>
+                <!-- MapReduce Mapper/Reducer parameters -->
+                <property>
+                    <name>mapreduce.map.class</name>
+                    <value>pl.edu.icm.coansys.citations.mappers.ExactAssesor</value>
+                </property>
+                <property>
+                    <name>mapreduce.reduce.class</name>
+                    <value>pl.edu.icm.coansys.citations.reducers.BestSelector</value>
+                </property>
+                <property>
+                    <name>mapreduce.combine.class</name>
+                    <value>pl.edu.icm.coansys.citations.reducers.BestSelector</value>
+                </property>
+                <!-- MapReduce input/output parameters -->
+                <property>
+                    <name>mapred.input.dir</name>
+                    <value>${cit_workDir}/source_entities_heur</value>
+                </property>
+                <property>
+                    <name>mapred.output.dir</name>
+                    <value>${cit_workDir}/matching</value>
+                </property>
+                <property>
+                    <name>mapreduce.inputformat.class</name>
+                    <value>org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat</value>
+                </property>
+                <property>
+                    <name>mapreduce.outputformat.class</name>
+                    <value>org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat</value>
+                </property>
+                <property>
+                    <name>mapred.output.key.class</name>
+                    <value>org.apache.hadoop.io.Text</value>
+                </property>
+                <property>
+                    <name>mapred.output.value.class</name>
+                    <value>org.apache.hadoop.io.Text</value>
+                </property>
+                <property>
+                    <name>mapred.max.split.size</name>
+                    <value>5000000</value>
+                </property>
+                <property>
+                    <name>index.key</name>
+                    <value>key_index</value>
+                </property>
+                <property>
+                    <name>index.author</name>
+                    <value>author_index</value>
+                </property>
+            </configuration>
+            <file>${cit_workDir}/key_index/data#key-data</file>
+            <file>${cit_workDir}/key_index/index#key-index</file>
+            <file>${cit_workDir}/author_index/data#author-data</file>
+            <file>${cit_workDir}/author_index/index#author-index</file>
+        </map-reduce>
         <ok to="end"/>
         <error to="fail"/>
     </action>

@@ -23,7 +23,7 @@ class SimilarityMeasurer {
     YearMatchFactor))
 
   val classifier = new SVMClassifier[MatchableEntity, MatchableEntity, MatchingResult](featureVectorBuilder, classOf[MatchingResult]) {}
-  classifier.loadModelFromResources("/pl/edu/icm/coansys/citations/pubmedMatching.model", null)
+  classifier.loadModelFromResources("/pl/edu/icm/coansys/citations/pubmedMatchingBetter.model", null)
 
   def similarity(e1: MatchableEntity, e2: MatchableEntity): Double =
     classifier.predictProbabilities(e1, e2)(MatchingResult.Match)

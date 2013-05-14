@@ -4,20 +4,20 @@ import com.nicta.scoobi.application.ScoobiApp
 import com.nicta.scoobi.Scoobi
 import com.nicta.scoobi.Persist._
 import com.nicta.scoobi.InputsOutputs._
+import org.apache.commons.lang.StringUtils
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 object HeuristicStats extends ScoobiApp {
-  override def upload = false
+  override lazy val upload = false
 
   def run() {
     val inUri = args(0)
-    val outUri = args(1)
 
     val results = Scoobi.convertFromSequenceFile[String, String](inUri)
       .map { case (k, v) =>
-        (k, v.split("\n", 2)(0).split(" ").map(_.substring(4)))
+        (k, v.split("\n", 2)(0).split(" ").filterNot(StringUtils.isEmpty).map(_.substring(4)))
       }
       .map {case (k, v) =>
         val distrib =

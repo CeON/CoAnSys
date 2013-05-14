@@ -16,7 +16,7 @@ import pl.edu.icm.coansys.citations.util.BytesConverter
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 object NlmToProtoBufTransformer extends ScoobiApp {
-  override def upload = false
+  override lazy val upload = false
 
   def run() {
     implicit val wrapperConverter =

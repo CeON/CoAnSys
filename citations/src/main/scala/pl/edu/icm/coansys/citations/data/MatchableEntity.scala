@@ -44,6 +44,15 @@ class MatchableEntity(val data: MatchableEntityData) {
       .toSet
 
   def toReferenceString: String = List(author, title, source, pages, year).mkString("; ")
+
+  def toDebugString: String =
+    "id: " + id + "\n" +
+      "author: " + author + "\n" +
+      "author tokens: " + normalisedAuthorTokens + "\n" +
+      "source: " + source + "\n" +
+      "title: " + title + "\n" +
+      "pages: " + pages + "\n" +
+      "year: " + year + "\n"
 }
 
 object MatchableEntity {
