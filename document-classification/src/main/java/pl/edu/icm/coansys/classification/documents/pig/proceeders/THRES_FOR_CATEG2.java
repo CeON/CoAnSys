@@ -49,8 +49,12 @@ public class THRES_FOR_CATEG2 extends EvalFunc<Tuple>{
 			Arrays.fill(pos, 0);
 			Arrays.fill(neg, 0);
 			for(Tuple t : db){
-				pos[(Integer)t.get(1)]=(Long)t.get(2);
-				neg[(Integer)t.get(1)]=(Long)t.get(3);
+				long i  = (Long)t.get(1);
+				long i1 = (Long)t.get(2);
+				long i2 = (Long)t.get(3);
+				
+				pos[(int) i]= i1;
+				neg[(int) i]= i2;
 			}
 
 			int thres = -1;
