@@ -9,7 +9,7 @@ import com.nicta.scoobi.application.ScoobiApp
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 object SequenceFileGenerator extends ScoobiApp {
-  override def upload = false
+  override lazy val upload = false
 
   def run() {
     val outUri = args(0)
@@ -52,6 +52,26 @@ object SequenceFileGenerator extends ScoobiApp {
                                |            <name>
                                |                <surname>Gazdar</surname>
                                |                <given-names>AF</given-names>
+                               |            </name>
+                               |        </person-group>
+                               |        <article-title>Development of a sensitive, specific reverse transcriptase polymerase chain reaction-based assay for epithelial tumour cells in effusions</article-title>
+                               |        <source>Br J Cancer</source>
+                               |        <year>1999</year>
+                               |        <volume>79</volume>
+                               |        <fpage>416</fpage>
+                               |        <lpage>422</lpage>
+                               |        <!--PubMed citation query: 'Br J Cancer||79|416||bib31|'-->
+                               |        <pub-id pub-id-type="pmid">10027307</pub-id>
+                               |    </citation>
+                               |</ref>
+                               | """.stripMargin),
+                               ("20", """<?xml version="1.0" encoding="UTF-8"?>
+                               |<ref id="bib31">
+                               |    <citation citation-type="journal">
+                               |        <person-group person-group-type="author">
+                               |            <name>
+                               |                <surname>aa</surname>
+                               |                <given-names>M</given-names>
                                |            </name>
                                |        </person-group>
                                |        <article-title>Development of a sensitive, specific reverse transcriptase polymerase chain reaction-based assay for epithelial tumour cells in effusions</article-title>

@@ -49,7 +49,7 @@ object Parser extends ScoobiApp {
     def parseBibReference = bibReferenceParser.parseBibReference _
   }
 
-  override def upload = false
+  override lazy val upload = false
 
   def run() {
     configuration.set("mapred.max.split.size", 500000)

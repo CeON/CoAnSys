@@ -26,6 +26,9 @@ class SequenceFileIterator(reader: SequenceFile.Reader) extends Iterator[(Writab
     if (!preloaded) {
       reader.next(key, value)
     }
+    else {
+      preloaded = false
+    }
     return (key, value)
   }
 

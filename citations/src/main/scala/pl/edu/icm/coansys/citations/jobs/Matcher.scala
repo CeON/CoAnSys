@@ -23,7 +23,7 @@ import collection.JavaConversions._
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 object Matcher extends ScoobiApp {
-  override def upload = false
+  override lazy val upload = false
 
   private implicit val picOutConverter =
     new BytesConverter[PICProtos.PicOut](_.toByteArray, PICProtos.PicOut.parseFrom(_))
