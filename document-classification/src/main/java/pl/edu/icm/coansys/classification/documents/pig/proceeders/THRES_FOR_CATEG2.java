@@ -44,13 +44,13 @@ public class THRES_FOR_CATEG2 extends EvalFunc<Tuple>{
 			String categ = (String) input.get(1);
 			DataBag db = (DataBag) input.get(2);
 			
-			long[] pos = new long[num+1];
-			long[] neg = new long[num+1];
+			long[] pos = new long[num];
+			long[] neg = new long[num];
 			Arrays.fill(pos, 0);
 			Arrays.fill(neg, 0);
 			for(Tuple t : db){
-				pos[(Integer)t.get(0)]=(Long)t.get(1);
-				neg[(Integer)t.get(0)]=(Long)t.get(2);
+				pos[(Integer)t.get(1)]=(Long)t.get(2);
+				neg[(Integer)t.get(1)]=(Long)t.get(3);
 			}
 
 			int thres = -1;
