@@ -3,6 +3,8 @@
  */
 package pl.edu.icm.coansys.kwdextraction.langident;
 
+import org.slf4j.helpers.MessageFormatter;
+
 public abstract class BusinessException extends RuntimeException {
 
 	public BusinessException() {
