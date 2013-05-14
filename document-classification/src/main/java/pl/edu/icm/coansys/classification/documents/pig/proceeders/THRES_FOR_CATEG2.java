@@ -44,8 +44,8 @@ public class THRES_FOR_CATEG2 extends EvalFunc<Tuple>{
 			String categ = (String) input.get(1);
 			DataBag db = (DataBag) input.get(2);
 			
-			long[] pos = new long[num];
-			long[] neg = new long[num];
+			long[] pos = new long[num+1];//no of neighbours +1 for 0 count
+			long[] neg = new long[num+1];
 			Arrays.fill(pos, 0);
 			Arrays.fill(neg, 0);
 			for(Tuple t : db){
