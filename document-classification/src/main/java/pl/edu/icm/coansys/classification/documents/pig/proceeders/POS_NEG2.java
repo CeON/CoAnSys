@@ -71,16 +71,27 @@ public class POS_NEG2 extends EvalFunc<DataBag>{
 			//3 categsA: {(categA: chararray)}
 			//4 categsB: {(categB: chararray)})
 			for(Tuple t : bag){
-				if(haveNotDataAboutDocA){
+				if(haveNotDataAboutDocA){ 
 					for(Tuple ccA : (DataBag)t.get(3)){
 						docCCSet.add((String)ccA.get(0));
 					}
 					haveNotDataAboutDocA = false;
 				} 
-				for(Tuple ccA : (DataBag)t.get(4)){
-					String cc = (String)ccA.get(0);
-					neighCCList.add(cc);
-					neighCCSet.add(cc);
+				try{
+					for(Tuple ccA : (DataBag)t.get(4)){
+						String cc = (String)ccA.get(0);
+						neighCCList.add(cc);
+						neighCCSet.add(cc);
+					}
+				}catch(NullPointerException npe){
+					try{
+						System.out.println("The (neighbour) document "+(String)t.get(2)+" associated with the document "+keyA+" has no classification codes!!! Ignoring issue...");
+						System.out.println("Caught exception processing input row:\t"
+		            		+StackTraceExtractor.getStackTrace(npe).replace("\n", "\t"));
+					}catch(Exception e){
+						System.out.println("Could not log the NullPointerException (probably in pl.edu.icm.coansys.classification.documents.pig.proceeders.POS_NEG2.java:81)");
+						System.out.println("This issue will be ignored");
+					}
 				}
 			}
 			

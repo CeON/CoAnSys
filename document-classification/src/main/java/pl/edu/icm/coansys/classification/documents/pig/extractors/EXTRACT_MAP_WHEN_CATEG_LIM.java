@@ -140,7 +140,7 @@ public class EXTRACT_MAP_WHEN_CATEG_LIM extends EvalFunc<Map> {
     	str = str.replaceAll("#", "");
     	return str;
     }
-    
+     
     private String translateNonAlphaNumeric(String str){
     	str = str.replaceAll(",", " COMMA ");
     	str = str.replaceAll("#", " HASH ");
@@ -155,7 +155,8 @@ public class EXTRACT_MAP_WHEN_CATEG_LIM extends EvalFunc<Map> {
 				String str = twl.getText();
 				
 				if(action==Action.TRANSLATE) str = translateNonAlphaNumeric(str);
-		        else str = removeAllKeyPunctations(str);
+		        else if(action==Action.REMOVE_KEYCHARACTERS) str = removeAllKeyPunctations(str);
+		        else str = removeAllNonAlphaNumeric(str);
 		        
 				if(!isClassifCode(str)) kws.add(str);
 				else ctgs.add(str);

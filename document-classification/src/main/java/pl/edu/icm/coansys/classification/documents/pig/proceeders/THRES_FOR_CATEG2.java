@@ -83,7 +83,7 @@ public class THRES_FOR_CATEG2 extends EvalFunc<Tuple>{
 			// Throwing an exception will cause the task to fail.
             throw new IOException("Caught exception processing input row:\n"
             		+ StackTraceExtractor.getStackTrace(e));
-		}
+		} 
 	}
 
 	private double countF1(int tp, int tn, int fp, int fn) {
