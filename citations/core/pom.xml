@@ -12,7 +12,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>core</artifactId>
-    <name>Citations core</name>
+    <name>Citations Core</name>
     <description>Classes for citation analysis tool</description>
 
     <dependencies>
@@ -57,6 +57,18 @@
             <artifactId>xmlunit</artifactId>
             <version>1.3</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-common</artifactId>
+            <version>${hadoop.common.version}</version>
+            <!--<scope>provided</scope>-->
+        </dependency>
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-client</artifactId>
+            <version>${hadoop.client.version}</version>
+            <!--<scope>provided</scope>-->
         </dependency>
     </dependencies>
 

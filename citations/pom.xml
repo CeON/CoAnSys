@@ -16,6 +16,8 @@
     <packaging>pom</packaging>
     <modules>
         <module>core</module>
+        <module>main-workflow</module>
+        <module>inner-workflow</module>
     </modules>
 
 
