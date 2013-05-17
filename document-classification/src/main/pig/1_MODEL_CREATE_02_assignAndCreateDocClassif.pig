@@ -98,10 +98,12 @@ set pig.skewedjoin.reduce.memusage $pig_skewedjoin_reduce_memusage
 -- -----------------------------------------------------
 
 A = load '$dc_m_hdfs_neighs' as (key:chararray, data:map[], part:int); --key,map,part
---A0 = foreach A generate key, data#'categories' as categs;
+A0 = foreach A generate key, (bag{tuple(chararray)})data#'categories' as categs, part;
 --dump A0;
-C = foreach A generate key, pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_BAG_FROM_MAP(data,'categories') as categs, part; --key,categs,part
-store C into '$dc_m_hdfs_docClassifMapping'; --key,{categ}, part
+--C = foreach A generate key, pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_BAG_FROM_MAP(data,'categories') as categs, part; --key,categs,part
+/*A1 selection is needed only when reading data filed (map) is faulty*/
+--A1 = filter A0 by key matches 'SPRINGER.+';
+store A0 into '$dc_m_hdfs_docClassifMapping'; --key,{categ}, part
 
 /*
 CODE BELOW IS USEFULL ONLY IF YOU ALLOW SOME PART OF CLASSIFICATION CODES TO PROCESS,
