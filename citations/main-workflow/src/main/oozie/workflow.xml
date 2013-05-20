@@ -18,7 +18,7 @@
         <java>
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
-            <main-class>pl.edu.icm.coansys.citations.jobs.</main-class>
+            <main-class>pl.edu.icm.coansys.citations.jobs.ReferenceExtractor</main-class>
             <arg>-fs</arg><arg>${nameNode}</arg>
             <arg>-jt</arg><arg>${jobTracker}</arg>
             <arg>${cit_inputSrcSeqFile}</arg>
@@ -29,6 +29,13 @@
     </action>
 
     <action name="reference_extractor">
+        <job-tracker>${jobTracker}</job-tracker>
+        <name-node>${nameNode}</name-node>
+        <main-class>pl.edu.icm.coansys.citations.jobs.DocumentExtractor</main-class>
+        <arg>-fs</arg><arg>${nameNode}</arg>
+        <arg>-jt</arg><arg>${jobTracker}</arg>
+        <arg>${cit_inputSrcSeqFile}</arg>
+        <arg>${cit_workDir}/destination_entities</arg>
         <ok to="inner"/>
         <error to="fail"/>
     </action>
@@ -55,11 +62,11 @@
                 </property>
                 <property>
                     <name>cit_inputSrcSeqFile</name>
-                    <value>${nameNode}${workingDir}/reference_extractor/reference</value>
+                    <value>${nameNode}${workingDir}/source_entities</value>
                 </property>
                 <property>
                     <name>cit_inputDestSeqFile</name>
-                    <value>${nameNode}${workingDir}/document_extractor/document</value>
+                    <value>${nameNode}${workingDir}/destination_entities</value>
                 </property>
                 <property>
                     <name>cit_outputSeqFile</name>

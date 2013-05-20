@@ -16,9 +16,9 @@ Workflow properties:
 
 -->
 
-<workflow-app xmlns="uri:oozie:workflow:0.3" name="citation-matching-wf">
+<workflow-app xmlns="uri:oozie:workflow:0.1" name="citation-matching-wf">
     <start to="prelude"/>
-
+    <!--<start to="add-heuristic"/>-->
     <action name="prelude">
         <fs>
             <delete path="${cit_workDir}"/>
@@ -39,6 +39,8 @@ Workflow properties:
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
             <main-class>pl.edu.icm.coansys.citations.jobs.BasicMetadataToEntitiesConverter</main-class>
+            <arg>-fs</arg><arg>${nameNode}</arg>
+            <arg>-jt</arg><arg>${jobTracker}</arg>
             <arg>${cit_inputSrcSeqFile}</arg>
             <arg>${cit_workDir}/source_entities</arg>
         </java>
@@ -52,6 +54,8 @@ Workflow properties:
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
             <main-class>pl.edu.icm.coansys.citations.jobs.BasicMetadataToEntitiesConverter</main-class>
+            <arg>-fs</arg><arg>${nameNode}</arg>
+            <arg>-jt</arg><arg>${jobTracker}</arg>
             <arg>${cit_inputDestSeqFile}</arg>
             <arg>${cit_workDir}/destination_entities</arg>
         </java>
@@ -65,6 +69,8 @@ Workflow properties:
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
             <main-class>pl.edu.icm.coansys.citations.jobs.IndexBuilder</main-class>
+            <arg>-fs</arg><arg>${nameNode}</arg>
+            <arg>-jt</arg><arg>${jobTracker}</arg>
             <arg>-key</arg>
             <arg>${cit_workDir}/destination_entities</arg>
             <arg>${cit_workDir}/key_index</arg>
@@ -78,6 +84,8 @@ Workflow properties:
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
             <main-class>pl.edu.icm.coansys.citations.jobs.IndexBuilder</main-class>
+            <arg>-fs</arg><arg>${nameNode}</arg>
+            <arg>-jt</arg><arg>${jobTracker}</arg>
             <arg>-author</arg>
             <arg>${cit_workDir}/destination_entities</arg>
             <arg>${cit_workDir}/author_index</arg>
@@ -165,7 +173,6 @@ Workflow properties:
         <ok to="assess"/>
         <error to="fail"/>
     </action>
-
 
     <action name="assess">
         <map-reduce>
