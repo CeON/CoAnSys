@@ -8,7 +8,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>inner-workflow</artifactId>
     <packaging>oozie</packaging>
-    <name>inner-workflow</name>
+    <name>Citations Inner Workflow</name>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>

@@ -21,8 +21,8 @@
             <main-class>pl.edu.icm.coansys.citations.jobs.ReferenceExtractor</main-class>
             <arg>-fs</arg><arg>${nameNode}</arg>
             <arg>-jt</arg><arg>${jobTracker}</arg>
-            <arg>${cit_inputSrcSeqFile}</arg>
-            <arg>${cit_workDir}/source_entities</arg>
+            <arg>${inputSeqFile}</arg>
+            <arg>${workingDir}/source_entities</arg>
         </java>
         <ok to="reference_extractor"/>
         <error to="fail"/>
@@ -34,8 +34,8 @@
         <main-class>pl.edu.icm.coansys.citations.jobs.DocumentExtractor</main-class>
         <arg>-fs</arg><arg>${nameNode}</arg>
         <arg>-jt</arg><arg>${jobTracker}</arg>
-        <arg>${cit_inputSrcSeqFile}</arg>
-        <arg>${cit_workDir}/destination_entities</arg>
+        <arg>${inputSeqFile}</arg>
+        <arg>${workingDir}/destination_entities</arg>
         <ok to="inner"/>
         <error to="fail"/>
     </action>
