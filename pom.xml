@@ -301,4 +301,11 @@
             <url>http://nicta.github.com/scoobi/releases/</url>
         </repository>
     </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>yadda</id>
+            <name>YADDA project repository</name>
+            <url>http://maven.icm.edu.pl/artifactory/repo</url>
+        </pluginRepository>
+    </pluginRepositories>
 </project>

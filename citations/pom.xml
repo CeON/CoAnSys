@@ -1,89 +1,24 @@
-<!--
-  ~ (C) 2010-2012 ICM UW. All rights reserved.
-  -->
-
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>coansys</artifactId>
         <groupId>pl.edu.icm.coansys</groupId>
         <version>1.2-SNAPSHOT</version>
     </parent>
-
     <modelVersion>4.0.0</modelVersion>
+
+    <groupId>pl.edu.icm.coansys.citations</groupId>
     <artifactId>citations</artifactId>
     <name>Citations</name>
     <description>A citation analysis tool</description>
+    <packaging>pom</packaging>
+    <modules>
+        <module>core</module>
+        <module>main-workflow</module>
+        <module>inner-workflow</module>
+    </modules>
 
-    <dependencies>
-        <dependency>
-            <groupId>pl.edu.icm.coansys</groupId>
-            <version>1.2-SNAPSHOT</version>
-            <artifactId>models</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.scala-lang</groupId>
-            <artifactId>scala-library</artifactId>
-            <version>2.9.2</version>
-            <!--<version>${scala.version}</version>-->
-        </dependency>
-        <dependency>
-            <groupId>com.google.protobuf</groupId>
-            <artifactId>protobuf-java</artifactId>
-            <version>${protobuf.java.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.nicta</groupId>
-            <artifactId>scoobi_2.9.2</artifactId>
-            <version>0.6.2-cdh4</version>
-        </dependency>
-        <dependency>
-            <groupId>pl.edu.icm.coansys</groupId>
-            <artifactId>commons-scala</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>pl.edu.icm.coansys</groupId>
-            <artifactId>disambiguation</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>pl.edu.icm.cermine</groupId>
-            <artifactId>cermine-impl</artifactId>
-            <version>1.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>xmlunit</groupId>
-            <artifactId>xmlunit</artifactId>
-            <version>1.3</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
 
-    <build>
-        <sourceDirectory>src/main/scala</sourceDirectory>
-        <testSourceDirectory>src/test/scala</testSourceDirectory>
-        <plugins>
-            <plugin>
-                <groupId>org.scala-tools</groupId>
-                <artifactId>maven-scala-plugin</artifactId>
-                <version>2.15.0</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>compile</goal>
-                            <goal>testCompile</goal>
-                        </goals>
-                        <configuration>
-                            <args>
-                                <arg>-make:transitive</arg>
-                                <arg>-dependencyfile</arg>
-                                <arg>${project.build.directory}/.scala_dependencies</arg>
-                            </args>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
 </project>
