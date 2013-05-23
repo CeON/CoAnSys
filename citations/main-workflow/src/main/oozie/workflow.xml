@@ -29,13 +29,15 @@
     </action>
 
     <action name="reference_extractor">
-        <job-tracker>${jobTracker}</job-tracker>
-        <name-node>${nameNode}</name-node>
-        <main-class>pl.edu.icm.coansys.citations.jobs.DocumentExtractor</main-class>
-        <arg>-fs</arg><arg>${nameNode}</arg>
-        <arg>-jt</arg><arg>${jobTracker}</arg>
-        <arg>${inputSeqFile}</arg>
-        <arg>${workingDir}/destination_entities</arg>
+        <java>
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <main-class>pl.edu.icm.coansys.citations.jobs.DocumentExtractor</main-class>
+            <arg>-fs</arg><arg>${nameNode}</arg>
+            <arg>-jt</arg><arg>${jobTracker}</arg>
+            <arg>${inputSeqFile}</arg>
+            <arg>${workingDir}/destination_entities</arg>
+        </java>
         <ok to="inner"/>
         <error to="fail"/>
     </action>
