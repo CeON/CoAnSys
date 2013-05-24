@@ -11,7 +11,7 @@ import org.apache.hadoop.conf.Configuration
  */
 object Tail {
   def main(args: Array[String]) {
-    if (args.length != 1) {
+    if (args.length != 3) {
       println ("Omits n first records of a sequence file and copies the rest to a new one.")
       println ()
       println ("Usage: Tail <n> <in_sequence_file> <out_sequence_file>")
