@@ -10,11 +10,11 @@
             <delete path="${workingDir}"/>
             <mkdir path="${workingDir}"/>
         </fs>
-        <ok to="document_extractor"/>
+        <ok to="reference_extractor"/>
         <error to="fail"/>
     </action>
 
-    <action name="document_extractor">
+    <action name="reference_extractor">
         <java>
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
@@ -24,11 +24,11 @@
             <arg>${inputSeqFile}</arg>
             <arg>${workingDir}/source_entities</arg>
         </java>
-        <ok to="reference_extractor"/>
+        <ok to="document_extractor"/>
         <error to="fail"/>
     </action>
 
-    <action name="reference_extractor">
+    <action name="document_extractor">
         <java>
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
@@ -48,7 +48,7 @@
             <configuration>
                 <property>
                     <name>cit_workDir</name>
-                    <value>${nameNode}${workingDir}/inner-workflow</value>
+                    <value>${workingDir}/inner-workflow</value>
                 </property>
                 <property>
                     <name>jobTracker</name>
