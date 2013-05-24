@@ -8,12 +8,17 @@ import pl.edu.icm.coansys.citations.util.BytesConverter
 import pl.edu.icm.coansys.importers.models.DocumentProtos.BasicMetadata
 import pl.edu.icm.coansys.citations.data.MatchableEntity
 import com.nicta.scoobi.Scoobi._
+import java.io.File
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 object BasicMetadataToEntitiesConverter extends ScoobiApp {
-  override def includeLibJars = true
+  val myJars = System.getProperty("java.class.path").split(File.pathSeparator)
+    .filter(_.toLowerCase.contains(File.separator + "distcache" + File.separator))
+    .filter(_.toLowerCase.endsWith(".jar"))
+
+  configuration.addJars(myJars)
 
   def run() {
     val inUri = args(0)
