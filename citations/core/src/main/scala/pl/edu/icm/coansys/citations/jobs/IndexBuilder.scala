@@ -9,16 +9,13 @@ import com.nicta.scoobi.InputsOutputs.convertValueFromSequenceFile
 import pl.edu.icm.coansys.citations.data.MatchableEntity
 import pl.edu.icm.coansys.citations.indices.{SimpleIndex, ApproximateIndex}
 import java.io.File
+import pl.edu.icm.coansys.citations.util.scoobi
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 object IndexBuilder extends ScoobiApp {
-  val myJars = System.getProperty("java.class.path").split(File.pathSeparator)
-    .filter(_.toLowerCase.contains(File.separator + "distcache" + File.separator))
-    .filter(_.toLowerCase.endsWith(".jar"))
-
-  configuration.addJars(myJars)
+  scoobi.addDistCacheJarsToConfiguration(configuration)
 
   def run() {
     val usage = "Usage: IndexBuilder [-key|-author] <input_seqfile> <output_index_path>"
