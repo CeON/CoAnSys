@@ -7,7 +7,7 @@ package pl.edu.icm.coansys.citations.jobs
 import collection.JavaConversions._
 import com.nicta.scoobi.Scoobi._
 import pl.edu.icm.coansys.citations.util.AugmentedDList.augmentDList
-import pl.edu.icm.coansys.citations.util.{NoOpClose, BytesConverter}
+import pl.edu.icm.coansys.citations.util.{scoobi, NoOpClose, BytesConverter}
 import pl.edu.icm.coansys.importers.models.DocumentProtos.{ReferenceMetadata, DocumentWrapper}
 import pl.edu.icm.coansys.citations.data.MatchableEntity
 import pl.edu.icm.cermine.bibref.{BibReferenceParser, CRFBibReferenceParser}
@@ -17,7 +17,7 @@ import pl.edu.icm.cermine.bibref.model.BibEntry
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 object ReferencesToEntitiesConverter extends ScoobiApp {
-  override lazy val upload = false
+  scoobi.addDistCacheJarsToConfiguration(configuration)
 
   def run() {
     var parser: (()=> BibReferenceParser[BibEntry] with NoOpClose) = null

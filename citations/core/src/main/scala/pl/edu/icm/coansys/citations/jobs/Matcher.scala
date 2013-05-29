@@ -12,7 +12,7 @@ import pl.edu.icm.coansys.importers.models.PICProtos
 import pl.edu.icm.coansys.citations.util.AugmentedDList.augmentDList
 import pl.edu.icm.coansys.citations.util.matching._
 import pl.edu.icm.coansys.citations.indices.{EntityIndex, AuthorIndex}
-import pl.edu.icm.coansys.citations.util.{misc, BytesConverter}
+import pl.edu.icm.coansys.citations.util.{scoobi, misc, BytesConverter}
 import pl.edu.icm.coansys.citations.data._
 import feature_calculators._
 import pl.edu.icm.cermine.tools.classification.features.FeatureVectorBuilder
@@ -23,7 +23,7 @@ import collection.JavaConversions._
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 object Matcher extends ScoobiApp {
-  override lazy val upload = false
+  scoobi.addDistCacheJarsToConfiguration(configuration)
 
   private implicit val picOutConverter =
     new BytesConverter[PICProtos.PicOut](_.toByteArray, PICProtos.PicOut.parseFrom(_))

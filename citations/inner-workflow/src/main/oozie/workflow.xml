@@ -16,7 +16,7 @@ Workflow properties:
 
 -->
 
-<workflow-app xmlns="uri:oozie:workflow:0.1" name="citation-matching-wf">
+<workflow-app xmlns="uri:oozie:workflow:0.1" name="citation-matching-inner-wf">
     <start to="prelude"/>
     <!--<start to="add-heuristic"/>-->
     <action name="prelude">

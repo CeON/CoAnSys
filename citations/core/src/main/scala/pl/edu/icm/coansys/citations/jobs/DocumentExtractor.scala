@@ -3,6 +3,8 @@ package pl.edu.icm.coansys.citations.jobs
 import com.nicta.scoobi.Scoobi._
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentWrapper
 import pl.edu.icm.coansys.citations.data.WireFormats._
+import java.io.File
+import pl.edu.icm.coansys.citations.util.scoobi
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -10,6 +12,8 @@ import pl.edu.icm.coansys.citations.data.WireFormats._
 
 
 object DocumentExtractor extends ScoobiApp {
+  scoobi.addDistCacheJarsToConfiguration(configuration)
+
   lazy val documentIdPrefix = "doc_"
 
   def extractDocuments(in: DList[DocumentWrapper]) =
