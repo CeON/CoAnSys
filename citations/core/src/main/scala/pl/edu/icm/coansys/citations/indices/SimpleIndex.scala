@@ -12,6 +12,7 @@ import pl.edu.icm.coansys.citations.data.MatchableEntity
 import pl.edu.icm.coansys.citations.util.hdfs
 import com.nicta.scoobi.Scoobi._
 import scala.Some
+import org.apache.commons.io.FileUtils
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -24,7 +25,7 @@ class SimpleIndex[K <: WritableComparable[_] : Manifest, V <: Writable : Manifes
     val indexPathCandidates = new java.io.File(".").listFiles().map(_.getCanonicalPath).filter(_.endsWith(indexFileUri + "/" + MapFile.INDEX_FILE_NAME))
     if (indexPathCandidates.length > 0) {
       val indexPath = new java.io.File(indexPathCandidates.head).getParent
-      new java.io.File(indexPath, MapFile.INDEX_FILE_NAME).renameTo(new java.io.File(path, MapFile.INDEX_FILE_NAME))
+      FileUtils.moveFile(new java.io.File(indexPath, MapFile.INDEX_FILE_NAME), new java.io.File(path, MapFile.INDEX_FILE_NAME))
     }
     new MapFile.Reader(new Path("file://" + path), conf)
   } else {

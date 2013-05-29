@@ -4,7 +4,7 @@
 
 package pl.edu.icm.coansys.citations.jobs
 
-import pl.edu.icm.coansys.citations.util.BytesConverter
+import pl.edu.icm.coansys.citations.util.{scoobi, BytesConverter}
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentWrapper
 import pl.edu.icm.coansys.citations.data.MatchableEntity
 import com.nicta.scoobi.Scoobi._
@@ -13,7 +13,7 @@ import com.nicta.scoobi.Scoobi._
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 object DocumentsToEntitiesConverter extends ScoobiApp {
-  override lazy val upload = false
+  scoobi.addDistCacheJarsToConfiguration(configuration)
 
   def run() {
     val inUri = args(0)
