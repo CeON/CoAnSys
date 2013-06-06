@@ -109,6 +109,9 @@
                     </plugin>
                 </plugins>
             </build>
+            <properties>
+                <skipITs>true</skipITs>
+            </properties>
         </profile>
         <profile>
             <!-- used in project CoAnSys/document-classification -->
