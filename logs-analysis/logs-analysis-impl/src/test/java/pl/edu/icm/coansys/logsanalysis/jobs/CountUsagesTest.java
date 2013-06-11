@@ -41,7 +41,7 @@ public class CountUsagesTest {
     }
     
     @org.testng.annotations.Test(groups = {"fast"})
-    public void countUsagesTest() {        
+    public void countUsagesTest() {
         for (int i = 0; i < TEST_ENTRIES_COUNT; i++) {
             Map<String, String> args = new HashMap<String, String>();
             args.put(ParamNames.RESOURCE_ID_PARAM, TEST_RESOURCE);
