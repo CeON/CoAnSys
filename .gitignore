@@ -1,4 +1,4 @@
-*.class
+.class
 *~
 *.confidential.*
 *.ignore.*
@@ -18,16 +18,7 @@
 *.jar
 *.war
 *.ear
-/commons/target/
-/disambiguation-author/target/
-/disambiguation/target/
-/document-similarity/target/
-/examples/target/
-/importers/target/
-/logs-analysis/target/
-/target/
-/integration/target/
-/keywords-extraction/target/
+target/
 
 #pig temp files
 *.crc
