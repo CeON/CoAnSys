@@ -1,32 +1,11 @@
 <workflow-app xmlns="uri:oozie:workflow:0.1" name="logs-analysis-wf">
-    <start to="acquire-logs" />
-    <action name="acquire-logs">
-        <java>
-            <job-tracker>${jobTracker}</job-tracker>
-            <name-node>${nameNode}</name-node>
-            <prepare>
-                <delete path="${LOGS_STORE_DIR}" />
-                <mkdir path="${LOGS_STORE_DIR}" />
-            </prepare>
-            <configuration>
-                <property>
-                    <name>mapred.job.queue.name</name>
-                    <value>${queueName}</value>
-                </property> 
-            </configuration>
-            <main-class>pl.edu.icm.coansys.logsanalysis.logsacquisition.AcquireAuditService</main-class>
-            <java-opts></java-opts>
-            <arg>${LOGS_STORE_DIR}</arg> 
-        </java>
-        <ok to="count-part" />
-        <error to="finalize-error" />
-    </action>
+    <start to="count-part" />
     <action name="count-part">
         <map-reduce>
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
             <prepare>
-                <delete path="${INTERMEDIATE_DATA}" />
+                <delete path="${hdfsWorkingDirURI}/intermediate-data" />
             </prepare>
             <configuration>
                 <!-- This is required for new api usage -->
@@ -56,11 +35,11 @@
                 </property>
                 <property>
                     <name>mapred.input.dir</name>
-                    <value>${LOGS_STORE_DIR}</value>
+                    <value>${inputData}</value>
                 </property>
                 <property>
                     <name>mapred.output.dir</name>
-                    <value>${INTERMEDIATE_DATA}</value>
+                    <value>${hdfsWorkingDirURI}/intermediate-data</value>
                 </property>
                 <property>
                   <name>mapred.job.queue.name</name>
@@ -104,7 +83,7 @@
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
             <prepare>
-                <delete path="${OUTPUT_DATA}" />
+                <delete path="${outputData}" />
             </prepare>            
             <configuration>
                 <!-- This is required for new api usage -->
@@ -130,11 +109,11 @@
                 </property>
                 <property>
                     <name>mapred.input.dir</name>
-                    <value>${INTERMEDIATE_DATA}</value>
+                    <value>${hdfsWorkingDirURI}/intermediate-data</value>
                 </property>
                 <property>
                     <name>mapred.output.dir</name>
-                    <value>${OUTPUT_DATA}</value>
+                    <value>${outputData}</value>
                 </property>
                 <property>
                   <name>mapred.job.queue.name</name>
@@ -175,16 +154,14 @@
     </action>
     <action name="finalize">
         <fs>
-            <delete path="${LOGS_STORE_DIR}" />
-            <delete path="${INTERMEDIATE_DATA}" />
+            <delete path="${hdfsWorkingDirURI}/intermediate-data" />
         </fs>
         <ok to="end" />
         <error to="fail" />
     </action>
     <action name="finalize-error">
         <fs>
-            <delete path="${LOGS_STORE_DIR}" />
-            <delete path="${INTERMEDIATE_DATA}" />
+            <delete path="${hdfsWorkingDirURI}/intermediate-data" />
         </fs>
         <ok to="fail" />
         <error to="fail" />
