@@ -1,41 +1,20 @@
 package pl.edu.icm.coansys.logsanalysis;
 
 import java.io.File;
-import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.SequenceFile.Reader;
-import static org.junit.Assert.*;
-import org.junit.*;
+import static org.testng.Assert.*;
+import org.testng.annotations.Test;
 import pl.edu.icm.coansys.importers.models.MostPopularProtos;
 import pl.edu.icm.coansys.importers.models.MostPopularProtos.MostPopularStats;
 import pl.edu.icm.coansys.importers.models.MostPopularProtos.ResourceStat;
 import pl.edu.icm.oozierunner.OozieRunner;
 
 public class TestIT {
-
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-        System.out.println("setUpClass");
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-        System.out.println("tearDownClass");
-    }
-
-    @Before
-    public void setUp() throws Exception {
-        System.out.println("setUp");
-    }
-
-    @After
-    public void tearDown() {
-        System.out.println("tearDown");
-    }
 
     @Test
     public void testTest1() throws Exception {
@@ -63,17 +42,11 @@ public class TestIT {
                         foundRecords++;
                         counter += stat.getCounter();
                     }
-                    System.out.println("output value: " + protoValue);
                 }
             }
         }
 
         assertEquals(5, foundRecords);
         assertEquals(44, counter);
-    }
-
-    @Test
-    public void testTest2() throws Exception {
-        System.out.println("Test2");
     }
 }

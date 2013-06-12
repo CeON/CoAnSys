@@ -35,7 +35,7 @@
                 </property>
                 <property>
                     <name>mapred.input.dir</name>
-                    <value>${inputData}</value>
+                    <value>${hdfsDirInputData}</value>
                 </property>
                 <property>
                     <name>mapred.output.dir</name>
@@ -83,7 +83,7 @@
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
             <prepare>
-                <delete path="${outputData}" />
+                <delete path="${hdfsDirOutputData}" />
             </prepare>            
             <configuration>
                 <!-- This is required for new api usage -->
@@ -113,7 +113,7 @@
                 </property>
                 <property>
                     <name>mapred.output.dir</name>
-                    <value>${outputData}</value>
+                    <value>${hdfsDirOutputData}</value>
                 </property>
                 <property>
                   <name>mapred.job.queue.name</name>
