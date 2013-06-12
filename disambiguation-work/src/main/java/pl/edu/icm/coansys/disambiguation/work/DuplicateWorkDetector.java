@@ -1,4 +1,4 @@
-package pl.edu.icm.coansys.disambiguation.work.tool;
+package pl.edu.icm.coansys.disambiguation.work;
 
 import java.io.File;
 
@@ -19,15 +19,15 @@ import org.slf4j.LoggerFactory;
 import com.google.common.base.Preconditions;
 
 
-public class DuplicateGenerator  extends Configured implements Tool {
+public class DuplicateWorkDetector extends Configured implements Tool {
 
-    private static Logger log = LoggerFactory.getLogger(DuplicateGenerator.class);
+    private static Logger log = LoggerFactory.getLogger(DuplicateWorkDetector.class);
     
     
     public static void main(String[] args) throws Exception {
         checkArguments(args);
-        ToolRunner.run(new Configuration(), new DuplicateGenerator(), args);
-        
+        int res = ToolRunner.run(new Configuration(), new DuplicateWorkDetector(), args);
+        System.exit(res);
     }
 
     
@@ -37,17 +37,14 @@ public class DuplicateGenerator  extends Configured implements Tool {
         
         String inputFile = args[0];
         
-        String baseOutputDir = args[1];
-        String jobOutputDir = baseOutputDir + "/duplicated-works";
+        String jobOutputDir = args[1];
         
-        FileUtils.deleteDirectory(new File(jobOutputDir));
-        
-        
-        Job job = Job.getInstance(getConf(), "duplicateGenerator");
+        Job job = Job.getInstance(getConf(), "duplicateWorkDetector");
         
         job.setJarByClass(getClass());
         
-        job.setMapperClass(DuplicateGenerateMapper.class);
+        job.setMapperClass(DuplicateWorkDetectMapper.class);
+        job.setReducerClass(DuplicateWorkDetectReducer.class);
         
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(BytesWritable.class);
@@ -58,13 +55,7 @@ public class DuplicateGenerator  extends Configured implements Tool {
         job.setOutputFormatClass(SequenceFileOutputFormat.class);
         SequenceFileOutputFormat.setOutputPath(job, new Path(jobOutputDir));
         
-        
         boolean success = job.waitForCompletion(true);
-        
-        FileUtils.copyFile(new File(jobOutputDir+"/part-r-00000"), new File(baseOutputDir+"/ambiguous-publications.seq"));
-        
-        FileUtils.deleteDirectory(new File(jobOutputDir));
-        
         
         return success ? 0 : 1;
     
@@ -76,7 +67,7 @@ public class DuplicateGenerator  extends Configured implements Tool {
     private static void checkArguments(String[] args) {
         if (args.length < 2) {
             log.error("Missing arguments.");
-            log.error("Usage: DuplicateGenerator inputFile outputDir");
+            log.error("Usage: DuplicateWorkDetector inputFile outputDir");
             System.exit(1);
         }
         

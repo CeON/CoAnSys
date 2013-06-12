@@ -2,6 +2,7 @@ package pl.edu.icm.coansys.disambiguation.work.tool;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.UUID;
 
 import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.Text;
@@ -56,7 +57,12 @@ public class DuplicateGenerateMapper extends Mapper<Writable, BytesWritable, Tex
         TextWithLanguage newTitle0 = TextWithLanguage.newBuilder(basicMetadata.getTitle(titleIndex)).setText(newTitle).build();
         BasicMetadata newBasicMetadata = BasicMetadata.newBuilder(basicMetadata).setTitle(titleIndex, newTitle0).build();
         DocumentMetadata newDocumentMetadata = DocumentMetadata.newBuilder(docWrapper.getDocumentMetadata()).setBasicMetadata(newBasicMetadata).build();
-        DocumentWrapper newDocWrapper = DocumentWrapper.newBuilder(docWrapper).setDocumentMetadata(newDocumentMetadata).build();
+        DocumentWrapper newDocWrapper = DocumentWrapper.newBuilder(docWrapper).setDocumentMetadata(newDocumentMetadata).setRowId(docWrapper.getRowId()+UUID.randomUUID()).build();
+        return newDocWrapper;
+    }
+    
+    private DocumentWrapper changeRowId(DocumentWrapper docWrapper, String newRowId) {
+        DocumentWrapper newDocWrapper = DocumentWrapper.newBuilder(docWrapper).setRowId(newRowId).build();
         return newDocWrapper;
     }
 }
