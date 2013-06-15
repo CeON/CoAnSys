@@ -42,11 +42,11 @@ public class DuplicateGenerateMapper extends Mapper<Writable, BytesWritable, Tex
         context.write(new Text(docWrapper.getRowId()), new BytesWritable(value.copyBytes()));
         
         String title0 = docWrapper.getDocumentMetadata().getBasicMetadata().getTitle(0).getText();
-        log.info("title = " + title0);
+        log.debug("title = " + title0);
         if (oldNewTitles.containsKey(title0)) {
             DocumentWrapper newDocWrapper = changeTitle(docWrapper, 0, oldNewTitles.get(title0));
             
-            log.info("changed title = " + newDocWrapper.getDocumentMetadata().getBasicMetadata().getTitle(0).getText());
+            log.debug("changed title = " + newDocWrapper.getDocumentMetadata().getBasicMetadata().getTitle(0).getText());
             context.write(new Text(docWrapper.getRowId()), new BytesWritable(newDocWrapper.toByteArray()));
         }
         

@@ -2,7 +2,6 @@ package pl.edu.icm.coansys.disambiguation.work;
 
 import java.io.File;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
@@ -15,6 +14,9 @@ import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import pl.edu.icm.coansys.commons.spring.DiMapper;
+import pl.edu.icm.coansys.commons.spring.DiReducer;
 
 import com.google.common.base.Preconditions;
 
@@ -39,12 +41,17 @@ public class DuplicateWorkDetector extends Configured implements Tool {
         
         String jobOutputDir = args[1];
         
+        getConf().set(DiMapper.DI_MAP_APPLICATION_CONTEXT_PATH, "spring/applicationContext.xml");
+        getConf().set(DiMapper.DI_MAP_SERVICE_BEAN_NAME, "duplicateWorkDetectMapService");
+        getConf().set(DiReducer.DI_REDUCE_APPLICATION_CONTEXT_PATH, "spring/applicationContext.xml");
+        getConf().set(DiReducer.DI_REDUCE_SERVICE_BEAN_NAME, "duplicateWorkDetectReduceService");
+        
         Job job = Job.getInstance(getConf(), "duplicateWorkDetector");
         
         job.setJarByClass(getClass());
         
-        job.setMapperClass(DuplicateWorkDetectMapper.class);
-        job.setReducerClass(DuplicateWorkDetectReducer.class);
+        job.setMapperClass(DiMapper.class);
+        job.setReducerClass(DiReducer.class);
         
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(BytesWritable.class);

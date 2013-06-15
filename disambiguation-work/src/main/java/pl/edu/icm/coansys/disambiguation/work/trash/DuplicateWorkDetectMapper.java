@@ -1,4 +1,4 @@
-package pl.edu.icm.coansys.disambiguation.work;
+package pl.edu.icm.coansys.disambiguation.work.trash;
 
 import java.io.IOException;
 
@@ -13,14 +13,14 @@ import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentWrapper;
 public class DuplicateWorkDetectMapper  extends Mapper<Writable, BytesWritable, Text, BytesWritable>  {
     //private static Logger log = LoggerFactory.getLogger(FuzzyDuplicateWorkMapper.class);
     
-    private static String KEY_START_SUBSTRING_LENGTH = "keyStartSubstringLength";
+    private static String KEY_LENGTH = "keyLength";
     
     @Override
     protected void map(Writable key, BytesWritable value, Context context) throws IOException, InterruptedException {
 
         DocumentWrapper docWrapper = DocumentProtos.DocumentWrapper.parseFrom(value.copyBytes());
         
-        int keyLength = context.getConfiguration().getInt(KEY_START_SUBSTRING_LENGTH, 3);
+        int keyLength = context.getConfiguration().getInt(KEY_LENGTH, 3);
         
         String hashKey = docWrapper.getDocumentMetadata().getBasicMetadata().getTitle(0).getText().substring(0, keyLength);
         

@@ -1,4 +1,4 @@
-package pl.edu.icm.coansys.disambiguation.work;
+package pl.edu.icm.coansys.disambiguation.work.trash;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -6,23 +6,33 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.testng.collections.Sets;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import pl.edu.icm.coansys.disambiguation.work.DuplicateWorkVoter;
+import pl.edu.icm.coansys.disambiguation.work.DuplicateWorkVoterConfiguration;
 import pl.edu.icm.coansys.importers.models.DocumentProtos;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentWrapper;
 
-import com.beust.jcommander.internal.Lists;
-import com.beust.jcommander.internal.Maps;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
+
 
 public class DuplicateWorkDetectReducer extends Reducer<Text, BytesWritable, Text, BytesWritable> {
 
     private static Logger log = LoggerFactory.getLogger(DuplicateWorkDetectReducer.class);
+    
+    @Autowired
+    private DuplicateWorkVoter duplicateWorkVoter;
+    
+        
+   
     
     @Override
     protected void reduce(Text key, Iterable<BytesWritable> values, Context context) throws IOException, InterruptedException {
@@ -43,13 +53,13 @@ public class DuplicateWorkDetectReducer extends Reducer<Text, BytesWritable, Tex
         
         int i=0;
         for (DocumentWrapper document : documents) {
-            
+           
            for (DocumentWrapper other : new ArrayList<DocumentWrapper>(documentsCopy)) {
                 
                 if (document.getRowId().equals(other.getRowId())) {
                     documentsCopy.remove(other);
                 } else {
-                    if (isSame(context, document, other)) {
+                    if (duplicateWorkVoter.isDuplicate(document, other, DuplicateWorkVoterConfiguration.create())) {
                         addSameWorks(sameWorksMap, i++, document, other);
                         documentsCopy.remove(other);
                     }
@@ -77,19 +87,5 @@ public class DuplicateWorkDetectReducer extends Reducer<Text, BytesWritable, Tex
         sameWorks.add(other);
     }
 
-    private boolean isSame(Context context, DocumentWrapper document, DocumentWrapper other) {
-        int maxDistance = context.getConfiguration().getInt("MAX_DISTANCE", 5);
-        
-        String docTitle = DocumentWrapperHelper.getMainTitle(document);
-        String otherTitle = DocumentWrapperHelper.getMainTitle(other);
-        log.info("comparing:\n");
-        log.info(docTitle);
-        log.info(otherTitle);
-        
-        int distance = StringUtils.getLevenshteinDistance(docTitle, otherTitle);
-        if (distance<maxDistance) {
-            return true;
-        }
-        return false;
-    }
+    
 }
