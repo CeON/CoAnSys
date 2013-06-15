@@ -1,7 +1,6 @@
 package pl.edu.icm.coansys.disambiguation.work;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -16,10 +15,6 @@ import org.springframework.stereotype.Service;
 
 import pl.edu.icm.coansys.commons.spring.DiReduceService;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentWrapper;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 
 @Service("duplicateWorkDetectReduceService")
 public class DuplicateWorkDetectReduceService implements DiReduceService<Text, BytesWritable, Text, BytesWritable> {
