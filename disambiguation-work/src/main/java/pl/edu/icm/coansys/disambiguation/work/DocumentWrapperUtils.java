@@ -13,20 +13,31 @@ import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentWrapper;
 import com.google.common.collect.Lists;
 import com.google.protobuf.InvalidProtocolBufferException;
 
-public abstract class DocumentWrapperHelper {
+/** 
+ * Contains various utility methods related to DocumentWrapper class
+ * @author lukdumi
+ * 
+ * */
+public abstract class DocumentWrapperUtils {
 
-    private static Logger log = LoggerFactory.getLogger(DocumentWrapperHelper.class);
+    private static Logger log = LoggerFactory.getLogger(DocumentWrapperUtils.class);
     
     
-    private DocumentWrapperHelper() {
+    private DocumentWrapperUtils() {
         throw new IllegalStateException("a helper class, not to instantiate");
     }
     
-    
+    /** 
+     * documentWrapper.getDocumentMetadata().getBasicMetadata().getTitle(0).getText() 
+     * 
+     * */
     public static String getMainTitle(DocumentWrapper documentWrapper) {
         return documentWrapper.getDocumentMetadata().getBasicMetadata().getTitle(0).getText();
     }
     
+    /** 
+     * Returns list of {@link DocumentWrapper}s parsed from values
+     */
     public static List<DocumentWrapper> extractDocumentWrappers(Text key, Iterable<BytesWritable> values) throws InvalidProtocolBufferException {
         List<DocumentWrapper> documents = Lists.newArrayList();
         

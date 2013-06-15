@@ -27,12 +27,13 @@ public class DuplicateWorkDetectReduceService implements DiReduceService<Text, B
     private DuplicateWorkService duplicateWorkService;
         
     
+    
     //******************** DiReduceService Implementation ********************
     
     @Override
     public void reduce(Text key, Iterable<BytesWritable> values, Reducer<Text, BytesWritable, Text, BytesWritable>.Context context) throws IOException, InterruptedException {
         
-        List<DocumentWrapper> documents = DocumentWrapperHelper.extractDocumentWrappers(key, values);
+        List<DocumentWrapper> documents = DocumentWrapperUtils.extractDocumentWrappers(key, values);
         
         Map<Integer, Set<DocumentWrapper>> duplicateWorksMap = duplicateWorkService.findDuplicates(documents);
         

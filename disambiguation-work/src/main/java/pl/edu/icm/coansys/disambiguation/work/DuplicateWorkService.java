@@ -25,6 +25,22 @@ public class DuplicateWorkService {
     
     //******************** LOGIC ********************
     
+    /**
+     * Find duplicates in the passed document list. Every set of duplicates is written under a unique key in the returned map.
+     * Whether 2 documents are considered duplicates is determined by {@link DuplicateWorkVoter#isDuplicate(DocumentWrapper, DocumentWrapper)} 
+     * 
+     * E.g. let's assume we passed to the method the documents symbolized here as:
+     * AAA, BBb, bbb, AAa, aAA, ccc
+     * And that:
+     * AAA is duplicate of AAa and aAA, and:
+     * BBb is duplicate of bbb
+     * 
+     * Then the result of this method will be something like this:
+     * <1, <AAA, AAa, aAA>>
+     * <2, <BBb, bbb>>
+     * 
+     * 
+     */
     public Map<Integer, Set<DocumentWrapper>> findDuplicates(List<DocumentWrapper> documents) {
         Map<Integer, Set<DocumentWrapper>> sameWorksMap = Maps.newHashMap();
         
@@ -38,7 +54,7 @@ public class DuplicateWorkService {
                 if (document.getRowId().equals(other.getRowId())) {
                     documentsCopy.remove(other);
                 } else {
-                    if (duplicateWorkVoter.isDuplicate(document, other, DuplicateWorkVoterConfiguration.create())) {
+                    if (duplicateWorkVoter.isDuplicate(document, other)) {
                         addSameWorks(sameWorksMap, i++, document, other);
                         documentsCopy.remove(other);
                     }

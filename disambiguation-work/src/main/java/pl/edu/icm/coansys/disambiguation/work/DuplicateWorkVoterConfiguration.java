@@ -1,5 +1,14 @@
 package pl.edu.icm.coansys.disambiguation.work;
 
+import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentWrapper;
+
+/**
+ * A set of configuration options influencing the result of 
+ * {@link DuplicateWorkVoter#isDuplicate(DocumentWrapper, DocumentWrapper, DuplicateWorkVoterConfiguration)} 
+ * 
+ * @author lukdumi
+ *
+ */
 public class DuplicateWorkVoterConfiguration {
 
     private int maxLevenshteinDistance = 5;
@@ -32,6 +41,7 @@ public class DuplicateWorkVoterConfiguration {
     
     
     //******************** SETTERS ********************
+    
     public void setMaxLevenshteinDistance(int maxLevenshteinDistance) {
         this.maxLevenshteinDistance = maxLevenshteinDistance;
     }
