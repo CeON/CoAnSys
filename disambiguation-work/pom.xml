@@ -1,0 +1,93 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+ 	<modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>pl.edu.icm.coansys</groupId>
+        <artifactId>coansys</artifactId>
+        <version>1.2-SNAPSHOT</version>
+    </parent>
+    
+    <artifactId>disambiguation-work</artifactId>
+    <packaging>jar</packaging>
+    <name>Disambiguation - Work</name>
+   
+   
+   <dependencies>
+   		<dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>commons</artifactId>
+            <version>${project.version}</version>
+        </dependency>  
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>disambiguation</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.apache.mrunit</groupId>
+            <artifactId>mrunit</artifactId>
+            <version>0.9.0-incubating</version>
+            <classifier>hadoop2</classifier>
+            <scope>test</scope>
+	    </dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aop</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-expression</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-beans</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aspects</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+		</dependency>
+		<dependency>
+ 			<groupId>org.springframework.data</groupId>
+ 			<artifactId>spring-data-hadoop</artifactId>
+		</dependency>
+		
+
+        
+    </dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.2.1</version>
+				<executions>
+					<execution>
+					
+						<id>generate-test-duplicate-works</id>
+						<phase>test-compile</phase>
+						<goals>
+							<goal>java</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<mainClass>pl.edu.icm.coansys.disambiguation.work.tool.DuplicateGenerator</mainClass>
+					<arguments>
+						<argument>${project.basedir}/src/test/resources/publications.seq</argument>
+						<argument>${project.basedir}/src/test/resources/generated</argument>
+					</arguments>
+					<classpathScope>test</classpathScope>
+					
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
