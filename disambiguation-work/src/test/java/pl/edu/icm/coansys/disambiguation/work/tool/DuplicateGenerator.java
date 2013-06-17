@@ -41,10 +41,8 @@ public class DuplicateGenerator  extends Configured implements Tool {
         String jobOutputDir = baseOutputDir + "/duplicated-works";
         
         FileUtils.deleteDirectory(new File(jobOutputDir));
-        
-        
-        Job job = Job.getInstance(getConf(), "duplicateGenerator");
-        
+
+        Job job = new Job(getConf(), "duplicateGenerator");
         job.setJarByClass(getClass());
         
         job.setMapperClass(DuplicateGenerateMapper.class);
