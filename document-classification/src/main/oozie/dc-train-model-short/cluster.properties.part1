@@ -1,5 +1,5 @@
 ###################### OOZIE
-masterNode=localhost.localdomain
+masterNode=hadoop-master.vls.icm.edu.pl
 nameNode=hdfs://${masterNode}:8020
 jobTracker=${masterNode}:8021
 hbaseZookeeperQuorum=${masterNode}
@@ -19,7 +19,7 @@ pigScriptsDir=pig
 #dc_m_in_inputDocsData=/user/pdendek/springer-seq-20130417_1657/*11.sf
 #dc_m_in_inputDocsData=/user/pdendek/springer-seq-20130417_1657/sjapp06072*.sf
 #dc_m_in_inputDocsData=/user/pdendek/springer-seq-20130417_1657/sjapp060*.sf
-dc_m_in_inputDocsData=/user/pdendek/springer-seq-20130417_1657/sjapp*.sf
+dc_m_in_inputDocsData=/user/pdendek/springer-seq-20130426_1433/s*.sf
 ######################################## HDFS ##################################
 dc_m_hdfs_neighs=${results}/neighs
 dc_m_hdfs_docClassifMapping=${results}/doc_classif_mapping
@@ -28,6 +28,7 @@ dc_m_hdfs_dataEnriched=${results}/dataEnrich
 dc_m_hdfs_modelEvaluation=${results}/modelEval
 ######################################## INPUT # INT ###################################
 @dc_m_int_folds@ 5
+dc_m_double_sample=1.0
 ##################################### INPUT # PIG_SCRIPT ###############################
 dc_m_pigScript_featureVector=tfidf
 dc_m_pigScript_similarityMetric=cosine
