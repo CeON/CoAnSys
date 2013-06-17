@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0                       http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<!--
+  ~ (C) 2010-2012 ICM UW. All rights reserved.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0                       http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>pl.edu.icm.coansys</groupId>
@@ -104,10 +109,13 @@
                     </plugin>
                 </plugins>
             </build>
+            <properties>
+                <skipITs>true</skipITs>
+            </properties>
         </profile>
         <profile>
-			<!-- used in project CoAnSys/document-classification -->
-			<!-- requires the file $PROJECT/src/main/resources/assemblies/only-deps.xml -->
+            <!-- used in project CoAnSys/document-classification -->
+            <!-- requires the file $PROJECT/src/main/resources/assemblies/only-deps.xml -->
             <id>sep</id>
             <build>
                 <plugins>
@@ -185,11 +193,10 @@
         <module>disambiguation-author</module>
         <module>document-classification</module>
         <module>document-similarity</module>
-        <module>importers</module>
         <module>integration</module>
         <module>logs-analysis</module>
         <module>keywords-extraction</module>
-        <module>models</module>        
+        <module>models</module>
     </modules>
 
     <dependencies>
@@ -245,19 +252,19 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>${slf4j.version}</version>
-        </dependency>        
+        </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
             <version>${slf4j.version}</version>
-        </dependency>  
+        </dependency>
         <dependency>
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java</artifactId>
             <version>${protobuf.java.version}</version>
         </dependency>
     </dependencies>
-    
+
     <scm>
         <connection>scm:git:ssh://git@github.com/CeON/CoAnSys.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/CeON/CoAnSys.git</developerConnection>
@@ -274,7 +281,7 @@
             <url>http://maven.ceon.pl/artifactory/kdd-snapshots</url>
         </snapshotRepository>
     </distributionManagement>
-    
+
     <repositories>
         <repository>
             <id>yadda</id>
@@ -297,4 +304,11 @@
             <url>http://nicta.github.com/scoobi/releases/</url>
         </repository>
     </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>yadda</id>
+            <name>YADDA project repository</name>
+            <url>http://maven.icm.edu.pl/artifactory/repo</url>
+        </pluginRepository>
+    </pluginRepositories>
 </project>
