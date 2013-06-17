@@ -8,7 +8,7 @@ import java.util.Properties;
 
 public class CurrentTime {
 	public static void main(String[] args) throws Exception{
-		if(args.length<1){
+		if(args.length==1){
 	         File file = new File(System.getProperty("oozie.action.output.properties"));
 	         Properties props = new Properties();
 	         
@@ -22,3 +22,4 @@ public class CurrentTime {
 				"CurrentTime one parameter (property name) has to be passed");
 	}
 }
+
