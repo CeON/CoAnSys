@@ -1,9 +1,10 @@
 package pl.edu.icm.coansys.disambiguation.work;
 
-import java.io.File;
+import java.io.IOException;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
+import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.Text;
@@ -27,7 +28,6 @@ public class DuplicateWorkDetector extends Configured implements Tool {
     
     
     public static void main(String[] args) throws Exception {
-        checkArguments(args);
         int res = ToolRunner.run(new Configuration(), new DuplicateWorkDetector(), args);
         System.exit(res);
     }
@@ -45,8 +45,9 @@ public class DuplicateWorkDetector extends Configured implements Tool {
         getConf().set(DiMapper.DI_MAP_SERVICE_BEAN_NAME, "duplicateWorkDetectMapService");
         getConf().set(DiReducer.DI_REDUCE_APPLICATION_CONTEXT_PATH, "spring/applicationContext.xml");
         getConf().set(DiReducer.DI_REDUCE_SERVICE_BEAN_NAME, "duplicateWorkDetectReduceService");
+        getConf().setInt(DuplicateWorkDetectMapService.KEY_LENGTH, 5);
         
-        Job job = Job.getInstance(getConf(), "duplicateWorkDetector");
+        Job job = new Job(getConf(), "duplicateWorkDetector");
         
         job.setJarByClass(getClass());
         
@@ -71,14 +72,15 @@ public class DuplicateWorkDetector extends Configured implements Tool {
 
     //******************** PRIVATE ********************
     
-    private static void checkArguments(String[] args) {
+    private void checkArguments(String[] args) throws IOException {
         if (args.length < 2) {
             log.error("Missing arguments.");
             log.error("Usage: DuplicateWorkDetector inputFile outputDir");
             System.exit(1);
         }
-        
-        Preconditions.checkArgument(new File(args[0]).exists(), args[0] + " does not exist");
+        FileSystem hdfs = FileSystem.get(getConf());
+        Path path = new Path(args[0]);
+        Preconditions.checkArgument(hdfs.exists(path), args[0] + " does not exist");
         
     }
 

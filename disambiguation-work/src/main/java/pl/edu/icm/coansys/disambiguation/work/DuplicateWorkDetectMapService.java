@@ -6,16 +6,21 @@ import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.mapreduce.Mapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import pl.edu.icm.coansys.commons.spring.DiMapService;
+import pl.edu.icm.coansys.disambiguation.auxil.DiacriticsRemover;
 import pl.edu.icm.coansys.importers.models.DocumentProtos;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentWrapper;
 
 @Service("duplicateWorkDetectMapService")
 public class DuplicateWorkDetectMapService implements DiMapService<Writable, BytesWritable, Text, BytesWritable> {
 
-    private static String KEY_LENGTH = "keyLength";
+    private static Logger log = LoggerFactory.getLogger(DuplicateWorkDetectMapService.class);
+    
+    public static String KEY_LENGTH = "keyLength";
     
     @Override
     public void map(Writable key, BytesWritable value, Mapper<Writable, BytesWritable, Text, BytesWritable>.Context context)
@@ -23,13 +28,29 @@ public class DuplicateWorkDetectMapService implements DiMapService<Writable, Byt
         
         DocumentWrapper docWrapper = DocumentProtos.DocumentWrapper.parseFrom(value.copyBytes());
         
-        int keyLength = context.getConfiguration().getInt(KEY_LENGTH, 3);
+        int keyLength = context.getConfiguration().getInt(KEY_LENGTH, 5);
         
-        String hashKey = docWrapper.getDocumentMetadata().getBasicMetadata().getTitle(0).getText().substring(0, keyLength);
+        String title = docWrapper.getDocumentMetadata().getBasicMetadata().getTitle(0).getText();
         
-        context.write(new Text(hashKey), new BytesWritable(value.copyBytes()));
+        String docKey = generateDocumentKey(keyLength, title);
+        
+        log.info("{}:{}", docKey, title);
+        
+        context.write(new Text(docKey), new BytesWritable(value.copyBytes()));
         
         
+    }
+
+    //******************** PRIVATE ********************
+    
+    private String generateDocumentKey(int keyLength, String title) {
+        title = DiacriticsRemover.removeDiacritics(title);
+        title = title.replaceAll("\\W", "");
+        String docKey = title; 
+        if (title.length() > keyLength) {
+            docKey = docKey.substring(0, keyLength);
+        }
+        return docKey;
     }
 
 }

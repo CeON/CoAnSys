@@ -2,9 +2,8 @@ package pl.edu.icm.coansys.disambiguation.work;
 
 
 
-import javax.inject.Inject;
-
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentWrapper;
@@ -14,7 +13,7 @@ public class DuplicateWorkVoter {
 
     private DuplicateWorkVoterConfiguration config;
     
-    @Inject 
+    @Autowired 
     public DuplicateWorkVoter(DuplicateWorkVoterConfiguration config) {
         this.config = config;
     }
