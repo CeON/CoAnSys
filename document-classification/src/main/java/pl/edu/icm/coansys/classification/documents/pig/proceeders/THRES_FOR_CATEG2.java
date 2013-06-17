@@ -23,7 +23,7 @@ import pl.edu.icm.coansys.classification.documents.auxil.StackTraceExtractor;
 *
 * @author pdendek
 */
-public class THRES_FOR_CATEG extends EvalFunc<Tuple>{
+public class THRES_FOR_CATEG2 extends EvalFunc<Tuple>{
 
 	@Override
 	public Schema outputSchema(Schema p_input){
@@ -33,56 +33,39 @@ public class THRES_FOR_CATEG extends EvalFunc<Tuple>{
 		}catch(FrontendException e){
 			throw new IllegalStateException(e);
 		}
-	} 
-	
+	}
+
+	//C1: {categ: chararray,count: long,occ_pos: long,occ_neg: long}
 	public Tuple exec(Tuple input) throws IOException {
 		if (input == null || input.size() == 0)
 			return null;
 		try{
-			Object o0 = input.get(0);
-			if(o0==null) return null;
-			String categA = (String) input.get(0); //categPOS
-			Object o1 = input.get(1);
-			DataBag pos = o1==null ? new DefaultDataBag() : (DataBag) input.get(1);
+			Integer num = (Integer) input.get(0);
+			String categ = (String) input.get(1);
+			DataBag db = (DataBag) input.get(2);
+			
+			long[] pos = new long[num+1];//no of neighbours +1 for 0 count
+			long[] neg = new long[num+1];
+			Arrays.fill(pos, 0);
+			Arrays.fill(neg, 0);
+			for(Tuple t : db){
+				int i  = (Integer)t.get(1);
+				long i1 = (Long)t.get(2);
+				long i2 = (Long)t.get(3);
+				
+				pos[i]= i1;
+				neg[i]= i2;
+			}
 
-			Object o2 = input.get(2);
-			if(o2==null) return null;
-			String categB = (String) input.get(2); //categPOS
-			Object o3 = input.get(3);
-			DataBag neg = o3==null ? new DefaultDataBag() : (DataBag) input.get(3);
-			
-			//num of neighbours (1,2,3,...) + "null" neigh cell
-			Integer neight_max = Integer.parseInt(input.get(4).toString()) + 1;
-			
-			String categ = "".equals(categA)? categB : categA;
-			
-			int[] posc = new int[neight_max];
-			int[] negc = new int[neight_max];
-			Arrays.fill(posc, 0);
-			Arrays.fill(negc, 0);
-			
-			System.out.println("Start");
-			for(Tuple t : pos){
-				long neigh = (Long) t.get(1);
-				long dococc = (Long) t.get(2);
-				posc[(int)neigh] = (int) dococc;
-			}
-			System.out.println("Constructed pos array");
-			for(Tuple t : neg){
-				long neigh = (Long) t.get(1);
-				long dococc = (Long) t.get(2);
-				negc[(int)neigh] = (int) dococc;
-			}
-			System.out.println("Constructed neg array");
 			int thres = -1;
 			double bestF1 = 0;
 			
 			
-			for(int i = 1; i<neight_max;i++){
-				int TP = countLess(i,posc);
-				int TN = countEqMore(i,posc);
-				int FP = countLess(i,negc);
-				int FN = countEqMore(i,negc);
+			for(int i = 1; i<num;i++){
+				int TP = countLess(i,pos);
+				int TN = countEqMore(i,pos);
+				int FP = countLess(i,neg);
+				int FN = countEqMore(i,neg);
 				double F1 = countF1(TP,TN,FP,FN);
 				if(F1>bestF1){
 					thres = i;
@@ -100,7 +83,7 @@ public class THRES_FOR_CATEG extends EvalFunc<Tuple>{
 			// Throwing an exception will cause the task to fail.
             throw new IOException("Caught exception processing input row:\n"
             		+ StackTraceExtractor.getStackTrace(e));
-		}
+		} 
 	}
 
 	private double countF1(int tp, int tn, int fp, int fn) {
@@ -112,13 +95,13 @@ public class THRES_FOR_CATEG extends EvalFunc<Tuple>{
 		return denominator!=0 ? 2*(p*r)/denominator :0;
 	}
 
-	private int countEqMore(int curr, int[] posc) {
+	private int countEqMore(int curr, long[] posc) {
 		int ret = 0;
 		for(int i = curr; i<posc.length; i++) ret+=posc[i];
 		return ret;
 	}
 
-	private int countLess(int curr, int[] posc) {
+	private int countLess(int curr, long[] posc) {
 		int ret = 0;
 		for(int i = 0; i<curr; i++) ret+=posc[i];
 		return ret;

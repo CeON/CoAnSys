@@ -25,8 +25,8 @@ REGISTER '$commonJarsPath'
 -- declare section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
-%DECLARE TR _Tr_
-%declare TE _Te_
+%DEFAULT TR _Tr_
+%DEFAULT TE _Te_
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- import section
@@ -64,8 +64,8 @@ split D into
 	Te if $2 == $dc_m_int_concreteInvestigatedFold,
 	Tr if $2 != $dc_m_int_concreteInvestigatedFold;
 
-sh echo "=============================$dc_m_hdfs_src$TR$dc_m_int_concreteInvestigatedFold====================================="
-sh echo "=============================$dc_m_hdfs_src$TE$dc_m_int_concreteInvestigatedFold====================================="
+sh echo "===========$dc_m_hdfs_src$TR$dc_m_int_concreteInvestigatedFold================="
+sh echo "===========$dc_m_hdfs_src$TE$dc_m_int_concreteInvestigatedFold============="
 
 store Tr into '$dc_m_hdfs_src$TR$dc_m_int_concreteInvestigatedFold';
 store Te into '$dc_m_hdfs_src$TE$dc_m_int_concreteInvestigatedFold';
