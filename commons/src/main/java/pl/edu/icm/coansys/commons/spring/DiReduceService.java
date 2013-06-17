@@ -4,6 +4,11 @@ import java.io.IOException;
 
 import org.apache.hadoop.mapreduce.Reducer;
 
+/**
+ * A contract for classes performing reduce business logic in {@link DiReducer}
+ * @author lukdumi
+ *
+ */
 public interface DiReduceService<KEYIN, VALUEIN, KEYOUT, VALUEOUT> {
     
     
