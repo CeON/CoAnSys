@@ -70,11 +70,10 @@ message DocumentMetadata{
 }
 
 message ReferenceMetadata{
-	required string key = 1;
-	required BasicMetadata basicMetadata = 2;
-	optional string sourceDocKey = 3;
-	optional int32 position = 4;
-	optional string rawCitationText = 5;
+	required BasicMetadata basicMetadata = 1;
+	optional string sourceDocKey = 2;
+	optional int32 position = 3;
+	optional string rawCitationText = 4;
 }
 
 message Media {
