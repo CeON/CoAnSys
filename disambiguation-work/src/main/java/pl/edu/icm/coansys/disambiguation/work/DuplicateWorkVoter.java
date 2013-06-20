@@ -45,6 +45,7 @@ public class DuplicateWorkVoter {
 
     //******************** PRIVATE ********************
 
+    
     private boolean sameTitles(DocumentWrapper doc1, DocumentWrapper doc2) {
         int maxDistance = config.getMaxLevenshteinDistance();
         
@@ -65,9 +66,9 @@ public class DuplicateWorkVoter {
         // 'Alice has got a cat part 2'
         return sameTrailingNumbers(doc1Title, doc2Title);
         
-        
     }
 
+    
     private boolean sameTrailingNumbers(String doc1Title, String doc2Title) {
         
         doc1Title = replaceLastRomanNumberToDecimal(doc1Title);
@@ -110,6 +111,12 @@ public class DuplicateWorkVoter {
     private boolean sameYears(DocumentWrapper doc1, DocumentWrapper doc2) {
         String doc1year = DocumentWrapperUtils.getPublicationYear(doc1);
         String doc2year = DocumentWrapperUtils.getPublicationYear(doc2);
+
+        // if one of the years is not known then i treat these years as equal
+        if (doc1year == null || doc2year == null) {
+            return true;
+        }
+        
         return StringUtils.equalsIgnoreCase(doc1year, doc2year);
         
     }

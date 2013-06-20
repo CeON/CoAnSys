@@ -174,20 +174,35 @@ public abstract class StringUtils {
     }
     
     /** 
-     * 1. Removes all characters that are not: letters, digits, spaces and dots, then removes diacritics and lower-cases <br/>
-     * 2. Replaces one or more white spaces with one space <br/>
-     * 3. Replaces dots with spaces <br/>
-     * 4. Removes diacritics <br/>
+     * - Trims <br/>
+     * - Removes all characters that are not: letters, digits, spaces and dots<br/>
+     * - Replaces white spaces with spaces <br/>
+     * - Replaces dots with spaces <br/>
+     * - Compacts many spaces to one space <br/>
+     * - Removes diacritics <br/>
+     * - Lower cases <br/>
+     * 
      * @see DiacriticsRemover#removeDiacritics(String, boolean)
      * 
      * */
-    public static String normalize(String title) {
-        title = title.replaceAll("[^\\W\\d\\s\\.]", "");
-        title = title.replaceAll("\\s+", " ");
-        title = title.replaceAll("\\.", " ");
-        title = DiacriticsRemover.removeDiacritics(title);
-        title = title.toLowerCase();
-        return title;
+    public static String normalize(String value) {
+       value = value.trim(); 
+       StringBuilder sb = new StringBuilder();
+       for (int i=0;i<value.length();++i) {
+           char c = value.charAt(i);
+           if (Character.isLetterOrDigit(c)) {
+              sb.append(c);
+           } else if (Character.isWhitespace(c)) {
+              sb.append(" "); 
+           } else if (c=='.') {
+               sb.append(" ");
+           }
+         }
+       value = sb.toString();
+       value = value.replaceAll(" +", " ");
+       value = DiacriticsRemover.removeDiacritics(value);
+       value = value.toLowerCase();
+       return value;
     }
     
 

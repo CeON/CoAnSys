@@ -72,4 +72,18 @@ public class StringUtilsTest {
         
         Assert.assertEquals("", StringUtils.replaceLastWordNumberToDecimal(""));
      }
+    
+    
+    @Test
+    public void testNormalize() {
+        String value = "Aloha II scooby doo! part XIX";
+        Assert.assertEquals("aloha ii scooby doo part xix", StringUtils.normalize(value));
+    }
+    
+    @Test
+    public void testNormalizeRussian() {
+        String value = "Квантовый размерный эффект в трехмерных микрокристаллах полупроводников";
+        Assert.assertEquals("квантовыи размерныи эффект в трехмерных микрокристаллах полупроводников", StringUtils.normalize(value));
+    }
+    
 }
