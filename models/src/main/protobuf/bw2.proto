@@ -24,12 +24,15 @@ message ClassifCode{
 	repeated string value = 2;
 }
 
+// unused, to be removed
 message Affiliation{
 	required string key = 1;
 	required string affiliationId = 2;
 	required string text = 3;
 }
 
+// key -- docId + "#c" + positionNumber
+// positionNumber -- author's position in the document, starting by 1
 message Author{
 	required string key = 1;
    	optional string forenames = 2;
@@ -57,6 +60,11 @@ message BasicMetadata{
    	repeated ClassifCode classifCode = 11;
 }
 
+
+// key -- a hash based on title, authors' names, year, abstract, issn, issue, pages, volume (name based UUID, type 3)
+// (see pl.edu.icm.coansys.parsers.MetadataToProtoMetadataParserImpl.calculateDocKey())
+// collection -- a collection name, usually a publisher name or if data is harvester from the web, a collection can be an URL
+// sourcePath -- additional info about a location from which the data was imported
 message DocumentMetadata{
 	required string key = 1;
 	required BasicMetadata basicMetadata = 2;
@@ -69,6 +77,7 @@ message DocumentMetadata{
         optional string sourcePath = 9;
 }
 
+// position -- citation's position in reference list, starting by 1
 message ReferenceMetadata{
 	required BasicMetadata basicMetadata = 1;
 	optional string sourceDocKey = 2;
@@ -76,6 +85,9 @@ message ReferenceMetadata{
 	optional string rawCitationText = 4;
 }
 
+// key -- same as in DocumentMetadata
+// mediaType -- "media.type.pdf", "media.type.txt" etc.; defined in ProtoConstants class
+// destinationPath -- probably unused
 message Media {
 	required string key = 1;
 	required string mediaType = 2;
@@ -86,10 +98,13 @@ message Media {
         optional string destinationPath = 7;
 }
 
+// a container to pack multiple media entries in a single message (to store in one HBase cell)
 message MediaContainer {
 	repeated Media media = 1;
 }
 
+// used only in sequece files, to store both metadata and media as a single value;
+// rowId -- collection + (if PDF attached) "_PDF" + "_" + documentMetadata.key;
 message DocumentWrapper{
 	required string rowId = 1;
 	optional DocumentMetadata documentMetadata = 2;
