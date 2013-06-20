@@ -1652,593 +1652,6 @@ public final class DocumentProtos {
     // @@protoc_insertion_point(class_scope:ClassifCode)
   }
   
-  public interface AffiliationOrBuilder
-      extends com.google.protobuf.MessageOrBuilder {
-    
-    // required string key = 1;
-    boolean hasKey();
-    String getKey();
-    
-    // required string affiliationId = 2;
-    boolean hasAffiliationId();
-    String getAffiliationId();
-    
-    // required string text = 3;
-    boolean hasText();
-    String getText();
-  }
-  public static final class Affiliation extends
-      com.google.protobuf.GeneratedMessage
-      implements AffiliationOrBuilder {
-    // Use Affiliation.newBuilder() to construct.
-    private Affiliation(Builder builder) {
-      super(builder);
-    }
-    private Affiliation(boolean noInit) {}
-    
-    private static final Affiliation defaultInstance;
-    public static Affiliation getDefaultInstance() {
-      return defaultInstance;
-    }
-    
-    public Affiliation getDefaultInstanceForType() {
-      return defaultInstance;
-    }
-    
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return pl.edu.icm.coansys.importers.models.DocumentProtos.internal_static_Affiliation_descriptor;
-    }
-    
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return pl.edu.icm.coansys.importers.models.DocumentProtos.internal_static_Affiliation_fieldAccessorTable;
-    }
-    
-    private int bitField0_;
-    // required string key = 1;
-    public static final int KEY_FIELD_NUMBER = 1;
-    private java.lang.Object key_;
-    public boolean hasKey() {
-      return ((bitField0_ & 0x00000001) == 0x00000001);
-    }
-    public String getKey() {
-      java.lang.Object ref = key_;
-      if (ref instanceof String) {
-        return (String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
-          key_ = s;
-        }
-        return s;
-      }
-    }
-    private com.google.protobuf.ByteString getKeyBytes() {
-      java.lang.Object ref = key_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
-        key_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    
-    // required string affiliationId = 2;
-    public static final int AFFILIATIONID_FIELD_NUMBER = 2;
-    private java.lang.Object affiliationId_;
-    public boolean hasAffiliationId() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
-    }
-    public String getAffiliationId() {
-      java.lang.Object ref = affiliationId_;
-      if (ref instanceof String) {
-        return (String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
-          affiliationId_ = s;
-        }
-        return s;
-      }
-    }
-    private com.google.protobuf.ByteString getAffiliationIdBytes() {
-      java.lang.Object ref = affiliationId_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
-        affiliationId_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    
-    // required string text = 3;
-    public static final int TEXT_FIELD_NUMBER = 3;
-    private java.lang.Object text_;
-    public boolean hasText() {
-      return ((bitField0_ & 0x00000004) == 0x00000004);
-    }
-    public String getText() {
-      java.lang.Object ref = text_;
-      if (ref instanceof String) {
-        return (String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
-          text_ = s;
-        }
-        return s;
-      }
-    }
-    private com.google.protobuf.ByteString getTextBytes() {
-      java.lang.Object ref = text_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
-        text_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    
-    private void initFields() {
-      key_ = "";
-      affiliationId_ = "";
-      text_ = "";
-    }
-    private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized != -1) return isInitialized == 1;
-      
-      if (!hasKey()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      if (!hasAffiliationId()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      if (!hasText()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      memoizedIsInitialized = 1;
-      return true;
-    }
-    
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      getSerializedSize();
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeBytes(1, getKeyBytes());
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeBytes(2, getAffiliationIdBytes());
-      }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        output.writeBytes(3, getTextBytes());
-      }
-      getUnknownFields().writeTo(output);
-    }
-    
-    private int memoizedSerializedSize = -1;
-    public int getSerializedSize() {
-      int size = memoizedSerializedSize;
-      if (size != -1) return size;
-    
-      size = 0;
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(1, getKeyBytes());
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(2, getAffiliationIdBytes());
-      }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(3, getTextBytes());
-      }
-      size += getUnknownFields().getSerializedSize();
-      memoizedSerializedSize = size;
-      return size;
-    }
-    
-    private static final long serialVersionUID = 0L;
-    @java.lang.Override
-    protected java.lang.Object writeReplace()
-        throws java.io.ObjectStreamException {
-      return super.writeReplace();
-    }
-    
-    public static pl.edu.icm.coansys.importers.models.DocumentProtos.Affiliation parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
-    }
-    public static pl.edu.icm.coansys.importers.models.DocumentProtos.Affiliation parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
-    }
-    public static pl.edu.icm.coansys.importers.models.DocumentProtos.Affiliation parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
-    }
-    public static pl.edu.icm.coansys.importers.models.DocumentProtos.Affiliation parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
-    }
-    public static pl.edu.icm.coansys.importers.models.DocumentProtos.Affiliation parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
-    }
-    public static pl.edu.icm.coansys.importers.models.DocumentProtos.Affiliation parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
-    }
-    public static pl.edu.icm.coansys.importers.models.DocumentProtos.Affiliation parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
-    }
-    public static pl.edu.icm.coansys.importers.models.DocumentProtos.Affiliation parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
-    }
-    public static pl.edu.icm.coansys.importers.models.DocumentProtos.Affiliation parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
-    }
-    public static pl.edu.icm.coansys.importers.models.DocumentProtos.Affiliation parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
-    }
-    
-    public static Builder newBuilder() { return Builder.create(); }
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(pl.edu.icm.coansys.importers.models.DocumentProtos.Affiliation prototype) {
-      return newBuilder().mergeFrom(prototype);
-    }
-    public Builder toBuilder() { return newBuilder(this); }
-    
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements pl.edu.icm.coansys.importers.models.DocumentProtos.AffiliationOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return pl.edu.icm.coansys.importers.models.DocumentProtos.internal_static_Affiliation_descriptor;
-      }
-      
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return pl.edu.icm.coansys.importers.models.DocumentProtos.internal_static_Affiliation_fieldAccessorTable;
-      }
-      
-      // Construct using pl.edu.icm.coansys.importers.models.DocumentProtos.Affiliation.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-      
-      private Builder(BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-        }
-      }
-      private static Builder create() {
-        return new Builder();
-      }
-      
-      public Builder clear() {
-        super.clear();
-        key_ = "";
-        bitField0_ = (bitField0_ & ~0x00000001);
-        affiliationId_ = "";
-        bitField0_ = (bitField0_ & ~0x00000002);
-        text_ = "";
-        bitField0_ = (bitField0_ & ~0x00000004);
-        return this;
-      }
-      
-      public Builder clone() {
-        return create().mergeFrom(buildPartial());
-      }
-      
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return pl.edu.icm.coansys.importers.models.DocumentProtos.Affiliation.getDescriptor();
-      }
-      
-      public pl.edu.icm.coansys.importers.models.DocumentProtos.Affiliation getDefaultInstanceForType() {
-        return pl.edu.icm.coansys.importers.models.DocumentProtos.Affiliation.getDefaultInstance();
-      }
-      
-      public pl.edu.icm.coansys.importers.models.DocumentProtos.Affiliation build() {
-        pl.edu.icm.coansys.importers.models.DocumentProtos.Affiliation result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-      
-      private pl.edu.icm.coansys.importers.models.DocumentProtos.Affiliation buildParsed()
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        pl.edu.icm.coansys.importers.models.DocumentProtos.Affiliation result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(
-            result).asInvalidProtocolBufferException();
-        }
-        return result;
-      }
-      
-      public pl.edu.icm.coansys.importers.models.DocumentProtos.Affiliation buildPartial() {
-        pl.edu.icm.coansys.importers.models.DocumentProtos.Affiliation result = new pl.edu.icm.coansys.importers.models.DocumentProtos.Affiliation(this);
-        int from_bitField0_ = bitField0_;
-        int to_bitField0_ = 0;
-        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
-          to_bitField0_ |= 0x00000001;
-        }
-        result.key_ = key_;
-        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
-          to_bitField0_ |= 0x00000002;
-        }
-        result.affiliationId_ = affiliationId_;
-        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
-          to_bitField0_ |= 0x00000004;
-        }
-        result.text_ = text_;
-        result.bitField0_ = to_bitField0_;
-        onBuilt();
-        return result;
-      }
-      
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof pl.edu.icm.coansys.importers.models.DocumentProtos.Affiliation) {
-          return mergeFrom((pl.edu.icm.coansys.importers.models.DocumentProtos.Affiliation)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-      
-      public Builder mergeFrom(pl.edu.icm.coansys.importers.models.DocumentProtos.Affiliation other) {
-        if (other == pl.edu.icm.coansys.importers.models.DocumentProtos.Affiliation.getDefaultInstance()) return this;
-        if (other.hasKey()) {
-          setKey(other.getKey());
-        }
-        if (other.hasAffiliationId()) {
-          setAffiliationId(other.getAffiliationId());
-        }
-        if (other.hasText()) {
-          setText(other.getText());
-        }
-        this.mergeUnknownFields(other.getUnknownFields());
-        return this;
-      }
-      
-      public final boolean isInitialized() {
-        if (!hasKey()) {
-          
-          return false;
-        }
-        if (!hasAffiliationId()) {
-          
-          return false;
-        }
-        if (!hasText()) {
-          
-          return false;
-        }
-        return true;
-      }
-      
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder(
-            this.getUnknownFields());
-        while (true) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              this.setUnknownFields(unknownFields.build());
-              onChanged();
-              return this;
-            default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                this.setUnknownFields(unknownFields.build());
-                onChanged();
-                return this;
-              }
-              break;
-            }
-            case 10: {
-              bitField0_ |= 0x00000001;
-              key_ = input.readBytes();
-              break;
-            }
-            case 18: {
-              bitField0_ |= 0x00000002;
-              affiliationId_ = input.readBytes();
-              break;
-            }
-            case 26: {
-              bitField0_ |= 0x00000004;
-              text_ = input.readBytes();
-              break;
-            }
-          }
-        }
-      }
-      
-      private int bitField0_;
-      
-      // required string key = 1;
-      private java.lang.Object key_ = "";
-      public boolean hasKey() {
-        return ((bitField0_ & 0x00000001) == 0x00000001);
-      }
-      public String getKey() {
-        java.lang.Object ref = key_;
-        if (!(ref instanceof String)) {
-          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
-          key_ = s;
-          return s;
-        } else {
-          return (String) ref;
-        }
-      }
-      public Builder setKey(String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
-        key_ = value;
-        onChanged();
-        return this;
-      }
-      public Builder clearKey() {
-        bitField0_ = (bitField0_ & ~0x00000001);
-        key_ = getDefaultInstance().getKey();
-        onChanged();
-        return this;
-      }
-      void setKey(com.google.protobuf.ByteString value) {
-        bitField0_ |= 0x00000001;
-        key_ = value;
-        onChanged();
-      }
-      
-      // required string affiliationId = 2;
-      private java.lang.Object affiliationId_ = "";
-      public boolean hasAffiliationId() {
-        return ((bitField0_ & 0x00000002) == 0x00000002);
-      }
-      public String getAffiliationId() {
-        java.lang.Object ref = affiliationId_;
-        if (!(ref instanceof String)) {
-          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
-          affiliationId_ = s;
-          return s;
-        } else {
-          return (String) ref;
-        }
-      }
-      public Builder setAffiliationId(String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
-        affiliationId_ = value;
-        onChanged();
-        return this;
-      }
-      public Builder clearAffiliationId() {
-        bitField0_ = (bitField0_ & ~0x00000002);
-        affiliationId_ = getDefaultInstance().getAffiliationId();
-        onChanged();
-        return this;
-      }
-      void setAffiliationId(com.google.protobuf.ByteString value) {
-        bitField0_ |= 0x00000002;
-        affiliationId_ = value;
-        onChanged();
-      }
-      
-      // required string text = 3;
-      private java.lang.Object text_ = "";
-      public boolean hasText() {
-        return ((bitField0_ & 0x00000004) == 0x00000004);
-      }
-      public String getText() {
-        java.lang.Object ref = text_;
-        if (!(ref instanceof String)) {
-          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
-          text_ = s;
-          return s;
-        } else {
-          return (String) ref;
-        }
-      }
-      public Builder setText(String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000004;
-        text_ = value;
-        onChanged();
-        return this;
-      }
-      public Builder clearText() {
-        bitField0_ = (bitField0_ & ~0x00000004);
-        text_ = getDefaultInstance().getText();
-        onChanged();
-        return this;
-      }
-      void setText(com.google.protobuf.ByteString value) {
-        bitField0_ |= 0x00000004;
-        text_ = value;
-        onChanged();
-      }
-      
-      // @@protoc_insertion_point(builder_scope:Affiliation)
-    }
-    
-    static {
-      defaultInstance = new Affiliation(true);
-      defaultInstance.initFields();
-    }
-    
-    // @@protoc_insertion_point(class_scope:Affiliation)
-  }
-  
   public interface AuthorOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
     
@@ -10896,11 +10309,6 @@ public final class DocumentProtos {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_ClassifCode_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_Affiliation_descriptor;
-  private static
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_Affiliation_fieldAccessorTable;
-  private static com.google.protobuf.Descriptors.Descriptor
     internal_static_Author_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
@@ -10948,40 +10356,38 @@ public final class DocumentProtos {
       "value\030\002 \002(\t\022\017\n\007comment\030\003 \001(\t\"C\n\020TextWith" +
       "Language\022\014\n\004text\030\001 \002(\t\022\020\n\010language\030\002 \001(\t" +
       "\022\017\n\007comment\030\003 \001(\t\",\n\013ClassifCode\022\016\n\006sour" +
-      "ce\030\001 \002(\t\022\r\n\005value\030\002 \003(\t\"?\n\013Affiliation\022\013" +
-      "\n\003key\030\001 \002(\t\022\025\n\raffiliationId\030\002 \002(\t\022\014\n\004te" +
-      "xt\030\003 \002(\t\"\333\001\n\006Author\022\013\n\003key\030\001 \002(\t\022\021\n\tfore" +
-      "names\030\002 \001(\t\022\017\n\007surname\030\003 \001(\t\022\014\n\004name\030\004 \001" +
-      "(\t\022\r\n\005email\030\005 \001(\t\022!\n\016affiliationRef\030\006 \003(" +
-      "\0132\t.KeyValue\022\r\n\005docId\030\007 \001(\t\022\026\n\016positionN",
-      "umber\030\010 \001(\005\022\030\n\005extId\030\t \003(\0132\t.KeyValue\022\037\n" +
-      "\014auxiliarInfo\030\n \003(\0132\t.KeyValue\"\343\001\n\rBasic" +
-      "Metadata\022 \n\005title\030\001 \003(\0132\021.TextWithLangua" +
-      "ge\022\027\n\006author\030\002 \003(\0132\007.Author\022\013\n\003doi\030\003 \001(\t" +
-      "\022\017\n\007journal\030\004 \001(\t\022\014\n\004isbn\030\005 \001(\t\022\014\n\004issn\030" +
-      "\006 \001(\t\022\014\n\004year\030\007 \001(\t\022\r\n\005issue\030\010 \001(\t\022\016\n\006vo" +
-      "lume\030\t \001(\t\022\r\n\005pages\030\n \001(\t\022!\n\013classifCode" +
-      "\030\013 \003(\0132\014.ClassifCode\"\241\002\n\020DocumentMetadat" +
-      "a\022\013\n\003key\030\001 \002(\t\022%\n\rbasicMetadata\030\002 \002(\0132\016." +
-      "BasicMetadata\022+\n\020documentAbstract\030\003 \003(\0132",
-      "\021.TextWithLanguage\022\"\n\007keyword\030\004 \003(\0132\021.Te" +
-      "xtWithLanguage\022\030\n\005extId\030\005 \003(\0132\t.KeyValue" +
-      "\022\037\n\014auxiliarInfo\030\006 \003(\0132\t.KeyValue\022%\n\tref" +
-      "erence\030\007 \003(\0132\022.ReferenceMetadata\022\022\n\ncoll" +
-      "ection\030\010 \001(\t\022\022\n\nsourcePath\030\t \001(\t\"{\n\021Refe" +
-      "renceMetadata\022%\n\rbasicMetadata\030\001 \002(\0132\016.B" +
-      "asicMetadata\022\024\n\014sourceDocKey\030\002 \001(\t\022\020\n\010po" +
-      "sition\030\003 \001(\005\022\027\n\017rawCitationText\030\004 \001(\t\"\221\001" +
-      "\n\005Media\022\013\n\003key\030\001 \002(\t\022\021\n\tmediaType\030\002 \002(\t\022" +
-      "\017\n\007content\030\003 \002(\014\022\022\n\ncollection\030\004 \001(\t\022\022\n\n",
-      "sourcePath\030\005 \001(\t\022\026\n\016sourceFilesize\030\006 \001(\003" +
-      "\022\027\n\017destinationPath\030\007 \001(\t\"\'\n\016MediaContai" +
-      "ner\022\025\n\005media\030\001 \003(\0132\006.Media\"v\n\017DocumentWr" +
-      "apper\022\r\n\005rowId\030\001 \002(\t\022+\n\020documentMetadata" +
-      "\030\002 \001(\0132\021.DocumentMetadata\022\'\n\016mediaContai" +
-      "ner\030\003 \001(\0132\017.MediaContainerB5\n#pl.edu.icm" +
-      ".coansys.importers.modelsB\016DocumentProto" +
-      "s"
+      "ce\030\001 \002(\t\022\r\n\005value\030\002 \003(\t\"\333\001\n\006Author\022\013\n\003ke" +
+      "y\030\001 \002(\t\022\021\n\tforenames\030\002 \001(\t\022\017\n\007surname\030\003 " +
+      "\001(\t\022\014\n\004name\030\004 \001(\t\022\r\n\005email\030\005 \001(\t\022!\n\016affi" +
+      "liationRef\030\006 \003(\0132\t.KeyValue\022\r\n\005docId\030\007 \001" +
+      "(\t\022\026\n\016positionNumber\030\010 \001(\005\022\030\n\005extId\030\t \003(" +
+      "\0132\t.KeyValue\022\037\n\014auxiliarInfo\030\n \003(\0132\t.Key",
+      "Value\"\343\001\n\rBasicMetadata\022 \n\005title\030\001 \003(\0132\021" +
+      ".TextWithLanguage\022\027\n\006author\030\002 \003(\0132\007.Auth" +
+      "or\022\013\n\003doi\030\003 \001(\t\022\017\n\007journal\030\004 \001(\t\022\014\n\004isbn" +
+      "\030\005 \001(\t\022\014\n\004issn\030\006 \001(\t\022\014\n\004year\030\007 \001(\t\022\r\n\005is" +
+      "sue\030\010 \001(\t\022\016\n\006volume\030\t \001(\t\022\r\n\005pages\030\n \001(\t" +
+      "\022!\n\013classifCode\030\013 \003(\0132\014.ClassifCode\"\241\002\n\020" +
+      "DocumentMetadata\022\013\n\003key\030\001 \002(\t\022%\n\rbasicMe" +
+      "tadata\030\002 \002(\0132\016.BasicMetadata\022+\n\020document" +
+      "Abstract\030\003 \003(\0132\021.TextWithLanguage\022\"\n\007key" +
+      "word\030\004 \003(\0132\021.TextWithLanguage\022\030\n\005extId\030\005",
+      " \003(\0132\t.KeyValue\022\037\n\014auxiliarInfo\030\006 \003(\0132\t." +
+      "KeyValue\022%\n\treference\030\007 \003(\0132\022.ReferenceM" +
+      "etadata\022\022\n\ncollection\030\010 \001(\t\022\022\n\nsourcePat" +
+      "h\030\t \001(\t\"{\n\021ReferenceMetadata\022%\n\rbasicMet" +
+      "adata\030\001 \002(\0132\016.BasicMetadata\022\024\n\014sourceDoc" +
+      "Key\030\002 \001(\t\022\020\n\010position\030\003 \001(\005\022\027\n\017rawCitati" +
+      "onText\030\004 \001(\t\"\221\001\n\005Media\022\013\n\003key\030\001 \002(\t\022\021\n\tm" +
+      "ediaType\030\002 \002(\t\022\017\n\007content\030\003 \002(\014\022\022\n\ncolle" +
+      "ction\030\004 \001(\t\022\022\n\nsourcePath\030\005 \001(\t\022\026\n\016sourc" +
+      "eFilesize\030\006 \001(\003\022\027\n\017destinationPath\030\007 \001(\t",
+      "\"\'\n\016MediaContainer\022\025\n\005media\030\001 \003(\0132\006.Medi" +
+      "a\"v\n\017DocumentWrapper\022\r\n\005rowId\030\001 \002(\t\022+\n\020d" +
+      "ocumentMetadata\030\002 \001(\0132\021.DocumentMetadata" +
+      "\022\'\n\016mediaContainer\030\003 \001(\0132\017.MediaContaine" +
+      "rB5\n#pl.edu.icm.coansys.importers.models" +
+      "B\016DocumentProtos"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -11012,16 +10418,8 @@ public final class DocumentProtos {
               new java.lang.String[] { "Source", "Value", },
               pl.edu.icm.coansys.importers.models.DocumentProtos.ClassifCode.class,
               pl.edu.icm.coansys.importers.models.DocumentProtos.ClassifCode.Builder.class);
-          internal_static_Affiliation_descriptor =
-            getDescriptor().getMessageTypes().get(3);
-          internal_static_Affiliation_fieldAccessorTable = new
-            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_Affiliation_descriptor,
-              new java.lang.String[] { "Key", "AffiliationId", "Text", },
-              pl.edu.icm.coansys.importers.models.DocumentProtos.Affiliation.class,
-              pl.edu.icm.coansys.importers.models.DocumentProtos.Affiliation.Builder.class);
           internal_static_Author_descriptor =
-            getDescriptor().getMessageTypes().get(4);
+            getDescriptor().getMessageTypes().get(3);
           internal_static_Author_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_Author_descriptor,
@@ -11029,7 +10427,7 @@ public final class DocumentProtos {
               pl.edu.icm.coansys.importers.models.DocumentProtos.Author.class,
               pl.edu.icm.coansys.importers.models.DocumentProtos.Author.Builder.class);
           internal_static_BasicMetadata_descriptor =
-            getDescriptor().getMessageTypes().get(5);
+            getDescriptor().getMessageTypes().get(4);
           internal_static_BasicMetadata_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_BasicMetadata_descriptor,
@@ -11037,7 +10435,7 @@ public final class DocumentProtos {
               pl.edu.icm.coansys.importers.models.DocumentProtos.BasicMetadata.class,
               pl.edu.icm.coansys.importers.models.DocumentProtos.BasicMetadata.Builder.class);
           internal_static_DocumentMetadata_descriptor =
-            getDescriptor().getMessageTypes().get(6);
+            getDescriptor().getMessageTypes().get(5);
           internal_static_DocumentMetadata_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_DocumentMetadata_descriptor,
@@ -11045,7 +10443,7 @@ public final class DocumentProtos {
               pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata.class,
               pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata.Builder.class);
           internal_static_ReferenceMetadata_descriptor =
-            getDescriptor().getMessageTypes().get(7);
+            getDescriptor().getMessageTypes().get(6);
           internal_static_ReferenceMetadata_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_ReferenceMetadata_descriptor,
@@ -11053,7 +10451,7 @@ public final class DocumentProtos {
               pl.edu.icm.coansys.importers.models.DocumentProtos.ReferenceMetadata.class,
               pl.edu.icm.coansys.importers.models.DocumentProtos.ReferenceMetadata.Builder.class);
           internal_static_Media_descriptor =
-            getDescriptor().getMessageTypes().get(8);
+            getDescriptor().getMessageTypes().get(7);
           internal_static_Media_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_Media_descriptor,
@@ -11061,7 +10459,7 @@ public final class DocumentProtos {
               pl.edu.icm.coansys.importers.models.DocumentProtos.Media.class,
               pl.edu.icm.coansys.importers.models.DocumentProtos.Media.Builder.class);
           internal_static_MediaContainer_descriptor =
-            getDescriptor().getMessageTypes().get(9);
+            getDescriptor().getMessageTypes().get(8);
           internal_static_MediaContainer_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_MediaContainer_descriptor,
@@ -11069,7 +10467,7 @@ public final class DocumentProtos {
               pl.edu.icm.coansys.importers.models.DocumentProtos.MediaContainer.class,
               pl.edu.icm.coansys.importers.models.DocumentProtos.MediaContainer.Builder.class);
           internal_static_DocumentWrapper_descriptor =
-            getDescriptor().getMessageTypes().get(10);
+            getDescriptor().getMessageTypes().get(9);
           internal_static_DocumentWrapper_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_DocumentWrapper_descriptor,
