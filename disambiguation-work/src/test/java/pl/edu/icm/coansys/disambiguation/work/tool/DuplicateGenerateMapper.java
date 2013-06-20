@@ -44,7 +44,7 @@ public class DuplicateGenerateMapper extends Mapper<Writable, BytesWritable, Tex
         String title0 = docWrapper.getDocumentMetadata().getBasicMetadata().getTitle(0).getText();
         log.debug("title = " + title0);
         if (oldNewTitles.containsKey(title0)) {
-            DocumentWrapper newDocWrapper = changeTitle(docWrapper, 0, oldNewTitles.get(title0));
+            DocumentWrapper newDocWrapper = MockDocumentWrapperFactory.changeTitle(docWrapper, 0, oldNewTitles.get(title0));
             
             log.debug("changed title = " + newDocWrapper.getDocumentMetadata().getBasicMetadata().getTitle(0).getText());
             context.write(new Text(docWrapper.getRowId()), new BytesWritable(newDocWrapper.toByteArray()));
@@ -52,14 +52,7 @@ public class DuplicateGenerateMapper extends Mapper<Writable, BytesWritable, Tex
         
     }
 
-    private DocumentWrapper changeTitle(DocumentWrapper docWrapper, int titleIndex, String newTitle) {
-        BasicMetadata basicMetadata = docWrapper.getDocumentMetadata().getBasicMetadata();
-        TextWithLanguage newTitle0 = TextWithLanguage.newBuilder(basicMetadata.getTitle(titleIndex)).setText(newTitle).build();
-        BasicMetadata newBasicMetadata = BasicMetadata.newBuilder(basicMetadata).setTitle(titleIndex, newTitle0).build();
-        DocumentMetadata newDocumentMetadata = DocumentMetadata.newBuilder(docWrapper.getDocumentMetadata()).setBasicMetadata(newBasicMetadata).build();
-        DocumentWrapper newDocWrapper = DocumentWrapper.newBuilder(docWrapper).setDocumentMetadata(newDocumentMetadata).setRowId(docWrapper.getRowId()+UUID.randomUUID()).build();
-        return newDocWrapper;
-    }
+   
     
     private DocumentWrapper changeRowId(DocumentWrapper docWrapper, String newRowId) {
         DocumentWrapper newDocWrapper = DocumentWrapper.newBuilder(docWrapper).setRowId(newRowId).build();
