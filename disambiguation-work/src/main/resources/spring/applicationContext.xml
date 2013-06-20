@@ -8,7 +8,9 @@
         
 
 	<bean id="duplicateWorkVoterConfiguration" class="pl.edu.icm.coansys.disambiguation.work.DuplicateWorkVoterConfiguration">
-		<property name="maxLevenshteinDistance" value="5"/>
+		<property name="titleMaxLevenshteinDistance" value="5"/>
+		<property name="titleMostMeaningfulEndLength" value="8"/>
+		<property name="titleEndMaxLevenshteinDistance" value="3"/>
 	</bean>
 
    <context:component-scan resource-pattern="**/*.class" base-package="pl.edu.icm.coansys.disambiguation.work"/>

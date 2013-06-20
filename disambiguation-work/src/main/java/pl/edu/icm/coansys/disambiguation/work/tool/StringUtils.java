@@ -12,7 +12,24 @@ import com.google.common.collect.Maps;
  * @author Łukasz Dumiszewski
  *
  */
-public abstract class StringUtils {
+public final class StringUtils {
+    
+    
+    static Map<String, String> wordToDecimal = Maps.newHashMap(); 
+    static {
+        wordToDecimal.put("ONE", "1");
+        wordToDecimal.put("TWO", "2");
+        wordToDecimal.put("THREE", "3");
+        wordToDecimal.put("FOUR", "4");
+        wordToDecimal.put("FIVE", "5");
+        wordToDecimal.put("SIX", "6");
+        wordToDecimal.put("SEVEN", "7");
+        wordToDecimal.put("EIGHT", "8");
+        wordToDecimal.put("NINE", "9");
+        wordToDecimal.put("TEN", "10");
+     }
+
+    
     
     private StringUtils() {
         throw new IllegalStateException();
@@ -138,19 +155,6 @@ public abstract class StringUtils {
         return value;
     }
     
-    static Map<String, String> wordToDecimal = Maps.newHashMap(); 
-    static {
-        wordToDecimal.put("ONE", "1");
-        wordToDecimal.put("TWO", "2");
-        wordToDecimal.put("THREE", "3");
-        wordToDecimal.put("FOUR", "4");
-        wordToDecimal.put("FIVE", "5");
-        wordToDecimal.put("SIX", "6");
-        wordToDecimal.put("SEVEN", "7");
-        wordToDecimal.put("EIGHT", "8");
-        wordToDecimal.put("NINE", "9");
-        wordToDecimal.put("TEN", "10");
-     }
     
     /**
      * If the trailing part of the value is a string denoting number (one, two, three... ten)
@@ -174,11 +178,15 @@ public abstract class StringUtils {
     }
     
     /** 
+     *  Normalizes the given value. The normalized strings are better suited for not strict comparisons, in which we
+     *  don't care about characters that are not letters or digits, about accidental spaces, or about different
+     *  diacritics etc. <br/><br/>
+     *  This method: <br/>
      * - Trims <br/>
      * - Removes all characters that are not: letters, digits, spaces and dots<br/>
      * - Replaces white spaces with spaces <br/>
      * - Replaces dots with spaces <br/>
-     * - Compacts many spaces to one space <br/>
+     * - Compacts many-spaces gaps to one-space gaps <br/>
      * - Removes diacritics <br/>
      * - Lower cases <br/>
      * 

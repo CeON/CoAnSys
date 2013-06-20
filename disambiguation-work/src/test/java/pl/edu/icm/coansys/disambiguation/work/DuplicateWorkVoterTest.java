@@ -15,6 +15,10 @@ public class DuplicateWorkVoterTest {
     
     @Before
     public void setUp() throws Exception {
+        DuplicateWorkVoterConfiguration config = new DuplicateWorkVoterConfiguration();
+        config.setTitleMaxLevenshteinDistance(5);
+        config.setTitleEndMaxLevenshteinDistance(3);
+        config.setTitleMostMeaningfulEndLength(8);
         duplicateWorkVoter = new DuplicateWorkVoter(new DuplicateWorkVoterConfiguration());
     }
 
@@ -141,7 +145,31 @@ public class DuplicateWorkVoterTest {
         Assert.assertFalse(duplicateWorkVoter.isDuplicate(doc1, doc2));
         
     }
- 
+    
+    @Test
+    public void testTitleEndsDifferent() {
+        Author janKowalski = MockDocumentWrapperFactory.createAuthor("Jan", "Kowalski", 1);
+        Author adamNowak = MockDocumentWrapperFactory.createAuthor("Adam", "Nowak", 2);
+        
+        DocumentWrapper doc1 = MockDocumentWrapperFactory.createDocumentWrapper("Doświadczenia Unii Europejskiej w zakresie polityki proinnowacyjnej", 2012, janKowalski, adamNowak);
+        DocumentWrapper doc2 = MockDocumentWrapperFactory.createDocumentWrapper(" Doświadczenia Unii Europejskiej w zakresie polityki innowacyjnej", 2012, janKowalski, adamNowak);
+        
+        Assert.assertTrue(duplicateWorkVoter.isDuplicate(doc1, doc2));
+
+        
+        doc1 = MockDocumentWrapperFactory.createDocumentWrapper("Aspiracje integracyjne państw śródziemnomorskich - Turcja", 2012, janKowalski, adamNowak);
+        doc2 = MockDocumentWrapperFactory.createDocumentWrapper("Aspiracje integracyjne państw śródziemnomorskich - Malta", 2012, janKowalski, adamNowak);
+        
+        Assert.assertFalse(duplicateWorkVoter.isDuplicate(doc1, doc2));
+        
+        
+        doc1 = MockDocumentWrapperFactory.createDocumentWrapper("Atak z sieci", 2012, janKowalski, adamNowak);
+        doc2 = MockDocumentWrapperFactory.createDocumentWrapper("Atak z ulicy", 2012, janKowalski, adamNowak);
+        
+        Assert.assertFalse(duplicateWorkVoter.isDuplicate(doc1, doc2));
+        
+    }
+    
    
 
 }

@@ -18,6 +18,7 @@ import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentWrapper;
 @Service("duplicateWorkDetectMapService")
 public class DuplicateWorkDetectMapService implements DiMapService<Writable, BytesWritable, Text, BytesWritable> {
 
+    @SuppressWarnings("unused")
     private static Logger log = LoggerFactory.getLogger(DuplicateWorkDetectMapService.class);
     
     public static String KEY_LENGTH = "keyLength";
@@ -33,8 +34,6 @@ public class DuplicateWorkDetectMapService implements DiMapService<Writable, Byt
         String title = docWrapper.getDocumentMetadata().getBasicMetadata().getTitle(0).getText();
         
         String docKey = generateDocumentKey(keyLength, title);
-        
-        log.info("{}:{}", docKey, title);
         
         context.write(new Text(docKey), new BytesWritable(value.copyBytes()));
         

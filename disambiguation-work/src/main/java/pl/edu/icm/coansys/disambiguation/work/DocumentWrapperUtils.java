@@ -16,12 +16,13 @@ import com.google.common.collect.Lists;
 import com.google.protobuf.InvalidProtocolBufferException;
 
 /** 
- * Contains various utility methods related to DocumentWrapper class
+ * Contains various utility methods related to the {@link DocumentWrapper} class
  * @author lukdumi
  * 
  * */
 public abstract class DocumentWrapperUtils {
 
+    @SuppressWarnings("unused")
     private static Logger log = LoggerFactory.getLogger(DocumentWrapperUtils.class);
     
     
@@ -37,6 +38,8 @@ public abstract class DocumentWrapperUtils {
     public static String getMainTitle(DocumentWrapper documentWrapper) {
         return documentWrapper.getDocumentMetadata().getBasicMetadata().getTitle(0).getText();
     }
+    
+    
     
     /**
      * Returns the author of the publication that is on the given authorPosition. 
@@ -55,6 +58,8 @@ public abstract class DocumentWrapperUtils {
         return null;
     }
     
+    
+    
     /** 
      * documentWrapper.getDocumentMetadata().getBasicMetadata().getYear()
      */
@@ -62,16 +67,16 @@ public abstract class DocumentWrapperUtils {
         return documentWrapper.getDocumentMetadata().getBasicMetadata().getYear();
     }
     
+    
+    
     /** 
      * Returns list of {@link DocumentWrapper}s parsed from values
      */
     public static List<DocumentWrapper> extractDocumentWrappers(Text key, Iterable<BytesWritable> values) throws InvalidProtocolBufferException {
         List<DocumentWrapper> documents = Lists.newArrayList();
         
-        log.debug("--------\nkey: {}", key);
         for (BytesWritable value : values) {
             DocumentWrapper docWrapper = DocumentProtos.DocumentWrapper.parseFrom(value.copyBytes());
-            log.debug("value: {}", docWrapper.getDocumentMetadata().getBasicMetadata().getTitle(0).getText());
             documents.add(docWrapper);
         }
         
