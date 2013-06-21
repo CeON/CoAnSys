@@ -13,7 +13,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import pl.edu.icm.coansys.disambiguation.work.tool.Bw2ProtoFileReader;
+import pl.edu.icm.coansys.disambiguation.work.tool.Bw2ProtoFileUtils;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentWrapper;
 
 /** This test assumes there is /generated/ambiguous-publications.seq file on the classpath. 
@@ -40,7 +40,7 @@ public class DuplicateWorkDetectorTest {
     
     @Test
     public void test() throws Exception {
-        List<DocumentWrapper> docWrappers = Bw2ProtoFileReader.readDocWrappers(outputDir+"/part-r-00000"); 
+        List<DocumentWrapper> docWrappers = Bw2ProtoFileUtils.readDocWrappers(outputDir+"/part-r-00000"); 
         Assert.assertEquals(4, docWrappers.size());
        
     }

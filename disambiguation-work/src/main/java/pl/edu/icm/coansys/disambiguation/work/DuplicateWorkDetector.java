@@ -47,6 +47,7 @@ public class DuplicateWorkDetector extends Configured implements Tool {
         getConf().set(DiReducer.DI_REDUCE_SERVICE_BEAN_NAME, "duplicateWorkDetectReduceService");
         getConf().setInt(DuplicateWorkDetectMapService.KEY_LENGTH, 5);
         
+        @SuppressWarnings("deprecation")
         Job job = new Job(getConf(), "duplicateWorkDetector");
         
         job.setJarByClass(getClass());
