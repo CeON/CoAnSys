@@ -17,7 +17,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <hadoop.version>2.0.0-mr1-cdh4.0.1</hadoop.version>
         <hadoop.common.version>2.0.0-cdh4.0.1</hadoop.common.version>
-        <hadoop.client.version>2.0.0-cdh4.0.1</hadoop.client.version>
         <pig.version>0.9.2-cdh4.0.1</pig.version>
         <hbase.version>0.92.1-cdh4.0.1</hbase.version>
         <slf4j.version>1.6.4</slf4j.version>
@@ -217,12 +216,6 @@
         </dependency>
         <dependency>
             <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-client</artifactId>
-            <version>${hadoop.client.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-core</artifactId>
             <version>${hadoop.version}</version>
             <scope>provided</scope>
@@ -316,16 +309,16 @@
                 <version>${spring.version}</version>
             </dependency>
             <dependency>
-            	<groupId>org.springframework</groupId>
-            	<artifactId>spring-test</artifactId>
-            	<version>${spring.version}</version>
-        	</dependency>
-            
-            <dependency>
  				<groupId>org.springframework.data</groupId>
  				<artifactId>spring-data-hadoop</artifactId>
  				<version>1.0.0.RELEASE</version>
 			</dependency> 
+			<dependency>
+            	<groupId>org.springframework</groupId>
+            	<artifactId>spring-test</artifactId>
+            	<version>${spring.version}</version>
+        	</dependency>
+			
         </dependencies>
     </dependencyManagement>
 

@@ -49,7 +49,7 @@ public class PartExtractor extends Configured implements Tool {
             System.exit(1);
         }
          
-        Job job = Job.getInstance(getConf(), "Part extracting");
+        Job job = new Job(getConf(), "Part extracting");
        
         
         job.getConfiguration().setInt("percentOfWritten", percentOfWritten);
