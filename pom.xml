@@ -313,6 +313,12 @@
  				<artifactId>spring-data-hadoop</artifactId>
  				<version>1.0.0.RELEASE</version>
 			</dependency> 
+			<dependency>
+            	<groupId>org.springframework</groupId>
+            	<artifactId>spring-test</artifactId>
+            	<version>${spring.version}</version>
+        	</dependency>
+			
         </dependencies>
     </dependencyManagement>
 

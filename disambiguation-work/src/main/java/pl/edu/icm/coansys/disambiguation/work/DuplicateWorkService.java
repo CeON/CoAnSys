@@ -55,11 +55,12 @@ public class DuplicateWorkService {
                     documentsCopy.remove(other);
                 } else {
                     if (duplicateWorkVoter.isDuplicate(document, other)) {
-                        addSameWorks(sameWorksMap, i++, document, other);
+                        addSameWorks(sameWorksMap, i, document, other);
                         documentsCopy.remove(other);
                     }
                 }
-            }    
+            }
+           i++;
         }
         return sameWorksMap;
     }

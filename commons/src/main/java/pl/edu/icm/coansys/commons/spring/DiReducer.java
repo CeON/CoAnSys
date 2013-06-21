@@ -8,7 +8,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 
 /** 
- * An implementation of {@link Reducer} class that facilitates the use of the spring framework in the reduce phase.
+ * An implementation of the {@link Reducer} class that facilitates the use of the spring framework in the reduce phase.
  * 
  * The class starts the spring application context in the {@link #setup(org.apache.hadoop.mapreduce.Reducer.Context)} method and uses
  * {@link DiReducerService} spring bean to perform the business logic in the {@link #reduce(Object, Iterable, org.apache.hadoop.mapreduce.Reducer.Context)}
