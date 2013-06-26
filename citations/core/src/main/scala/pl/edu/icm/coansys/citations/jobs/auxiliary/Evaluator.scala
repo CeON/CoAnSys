@@ -54,6 +54,7 @@ object Evaluator extends ScoobiApp {
         println("withData on " + prefixedDest)
         //val dest = prefixedDest.substring(4)
         (src, entity)
+      case _ => throw new RuntimeException("This should never happen")
     }.groupByKey[String, MatchableEntity]
     val results = Relational.joinLeft(citations, withData).flatMapWithResource(new SimilarityMeasurer with NoOpClose) {
       case (measurer, (key, (cit, Some(iter)))) =>
@@ -63,6 +64,7 @@ object Evaluator extends ScoobiApp {
           Some(cit.toDebugString, best.toDebugString)
         else
           None
+      case _ => throw new RuntimeException("This should never happen")
     }
 
     persist(toTextFile(results, outUri, overwrite = true))
