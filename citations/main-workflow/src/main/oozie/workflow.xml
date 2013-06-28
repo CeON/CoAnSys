@@ -67,6 +67,10 @@
                     <value>${workingDir}/source_entities</value>
                 </property>
                 <property>
+                    <name>cit_inputSrcFormat</name>
+                    <value>Raw</value>
+                </property>
+                <property>
                     <name>cit_inputDestSeqFile</name>
                     <value>${workingDir}/destination_entities</value>
                 </property>
