@@ -20,7 +20,7 @@ object ReferenceExtractor extends ScoobiApp {
        .flatMap{x =>
        val docId = x.getDocumentMetadata.getKey
        x.getDocumentMetadata.getReferenceList.map { ref =>
-         (citationIdPrefix + docId + "_" + ref.getPosition, ref.getBasicMetadata)
+         (citationIdPrefix + docId + "_" + ref.getPosition, ref.getRawCitationText)
        }
      }
 
