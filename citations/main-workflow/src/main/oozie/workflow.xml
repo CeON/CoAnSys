@@ -44,7 +44,7 @@
 
     <action name="inner">
         <sub-workflow>
-            <app-path>${wf:appPath()}/inner-workflow</app-path>
+            <app-path>${wf:appPath()}/pl.edu.icm.coansys.citations-inner-workflow</app-path>
             <configuration>
                 <property>
                     <name>cit_workDir</name>
