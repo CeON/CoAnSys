@@ -42,6 +42,7 @@ Workflow properties:
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
             <main-class>pl.edu.icm.coansys.citations.jobs.ReferencesToEntitiesConverter</main-class>
+            <arg>-Dmapred.max.split.size=500000</arg>
             <arg>-fs</arg><arg>${nameNode}</arg>
             <arg>-jt</arg><arg>${jobTracker}</arg>
             <arg>${cit_inputSrcSeqFile}</arg>
