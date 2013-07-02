@@ -139,8 +139,8 @@ public class DuplicateWorkVoter {
     // 'Alice has got a cat part 2'
     private boolean sameTrailingNumbers(String title1, String title2) {
         
-        Integer doc1TitleTrailingInteger = getTrailingInteger(title1);
-        Integer doc2TitleTrailingInteger = getTrailingInteger(title2);
+        String doc1TitleTrailingInteger = getTrailingInteger(title1);
+        String doc2TitleTrailingInteger = getTrailingInteger(title2);
         
         
         if (doc1TitleTrailingInteger != null && doc2TitleTrailingInteger != null) {

@@ -42,13 +42,13 @@ public final class StringUtils {
      * Alice has got a cat 12 - will return 12 (the position of '1')
      * Alice has got a black cat - will return null (no trailing number in the string) 
      */
-    public static Integer getTrailingInteger(String str) {
+    public static String getTrailingInteger(String str) {
         int positionOfTrailingInteger = getPositionOfTrailingInteger(str);
         if (positionOfTrailingInteger == -1) {
             // string does not end in digits
             return null;
         }
-        return Integer.parseInt(str.substring(positionOfTrailingInteger));
+        return str.substring(positionOfTrailingInteger);
     }
 
     

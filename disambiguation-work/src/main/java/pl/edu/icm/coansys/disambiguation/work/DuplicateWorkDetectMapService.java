@@ -35,11 +35,14 @@ public class DuplicateWorkDetectMapService implements DiMapService<Writable, Byt
         
         String docKey = generateDocumentKey(keyLength, title);
         
-        context.write(new Text(docKey), new BytesWritable(value.copyBytes()));
+        DocumentWrapper thinDocWrapper = DocumentWrapperUtils.cloneDocumentMetadata(docWrapper);
+        
+        context.write(new Text(docKey), new BytesWritable(thinDocWrapper.toByteArray()));
         
         
     }
 
+    
     //******************** PRIVATE ********************
     
     private String generateDocumentKey(int keyLength, String title) {
