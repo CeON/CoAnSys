@@ -47,8 +47,12 @@ public class DuplicateWorkDetector extends Configured implements Tool {
         getConf().set(DiReducer.DI_REDUCE_SERVICE_BEAN_NAME, "duplicateWorkDetectReduceService");
         getConf().setInt(DuplicateWorkDetectMapService.KEY_LENGTH, 5);
         
+        getConf().set("dfs.client.socket-timeout", "120000");
+        
         @SuppressWarnings("deprecation")
         Job job = new Job(getConf(), "duplicateWorkDetector");
+        
+        job.setNumReduceTasks(8);
         
         job.setJarByClass(getClass());
         

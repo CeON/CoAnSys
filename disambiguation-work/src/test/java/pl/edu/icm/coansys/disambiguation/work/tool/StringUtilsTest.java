@@ -21,8 +21,8 @@ public class StringUtilsTest {
     
     @Test
     public void testGetTrailingInteger() {
-        Assert.assertEquals(12, StringUtils.getTrailingInteger("Alice has got a cat 12").intValue());
-        Assert.assertEquals(12234, StringUtils.getTrailingInteger("Alice has got a cat12234").intValue());
+        Assert.assertEquals("12", StringUtils.getTrailingInteger("Alice has got a cat 12"));
+        Assert.assertEquals("12234", StringUtils.getTrailingInteger("Alice has got a cat12234"));
         Assert.assertNull(StringUtils.getTrailingInteger("Alice has got a cat12234 sdsd"));
     }
 
