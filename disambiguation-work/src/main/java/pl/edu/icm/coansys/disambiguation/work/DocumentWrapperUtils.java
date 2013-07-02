@@ -83,4 +83,14 @@ public abstract class DocumentWrapperUtils {
         return documents;
     }
     
+
+    /**
+     * Returns the clone of the passed DocumentWrapper with filled {@link DocumentWrapper#getDocumentMetadata()} and {@link DocumentWrapper#getRowId()} only 
+     */
+    public static DocumentWrapper cloneDocumentMetadata(DocumentWrapper docWrapper) {
+        DocumentWrapper thinDocWrapper = DocumentWrapper.newBuilder().setDocumentMetadata(docWrapper.getDocumentMetadata()).setRowId(docWrapper.getRowId()).build();
+        return thinDocWrapper;
+    }
+
+    
 }

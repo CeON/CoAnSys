@@ -39,12 +39,8 @@
 			<artifactId>spring-expression</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework</groupId>
+		<groupId>org.springframework</groupId>
 			<artifactId>spring-beans</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-aspects</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -65,8 +61,25 @@
         
     </dependencies>
 	<build>
+	
 		<plugins>
-			<plugin>
+			<!-- force sure fire to use junit instead of testng -->
+        <!-- force sure fire to use junit instead of testng -->
+	        <plugin>
+	            <groupId>org.apache.maven.plugins</groupId>
+	            <artifactId>maven-surefire-plugin</artifactId>
+	            <version>2.10</version>
+	            <dependencies>
+	                <dependency>
+	                    <groupId>org.apache.maven.surefire</groupId>
+	                    <artifactId>surefire-junit47</artifactId>
+	                    <version>2.10</version>
+	                </dependency>
+	            </dependencies>
+	        </plugin>
+	        
+    		<plugin>
+
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
 				<version>1.2.1</version>
