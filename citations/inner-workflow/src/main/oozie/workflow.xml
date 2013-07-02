@@ -10,7 +10,8 @@ Workflow properties:
  - jobTracker
  - nameNode
  - queueName
- - cit_inputSrcSeqFile - source file containing citations to be matched in (CitId as Text, BasicMetadata as Bytes) format
+ - cit_inputSrcSeqFile - source file containing citations to be matched in (CitId as Text, $cit_inputSrcFormat) format
+ - cit_inputSrcFormat - either BasicMetadata or Raw
  - cit_inputDestSeqFile - documents the citations will be matched against in (DocId as Text, BasicMetadata as Bytes) format
  - cit_outputSeqFile - the matching in (CitId as Text, DocId as Text) format.
 
@@ -24,17 +25,35 @@ Workflow properties:
             <delete path="${cit_workDir}"/>
             <mkdir path="${cit_workDir}"/>
         </fs>
-        <ok to="convert-source-entities"/>
+        <ok to="source-entities-type"/>
         <error to="fail"/>
     </action>
-    <!--
-    <fork name="generate-indices">
-        <path start="generate-key-index"/>
-        <path start="generate-author-index"/>
-    </fork>
-    -->
 
-    <action name="convert-source-entities">
+    <decision name="source-entities-type">
+        <switch>
+            <case to="convert-basicmetadata-source-entities">${cit_inputSrcFormat eq "BasicMetadata"}</case>
+            <case to="convert-raw-source-entities">${cit_inputSrcFormat eq "Raw"}</case>
+            <default to="fail"/>
+        </switch>
+    </decision>
+
+    <action name="convert-raw-source-entities">
+        <java>
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <main-class>pl.edu.icm.coansys.citations.jobs.ReferencesToEntitiesConverter</main-class>
+            <arg>-Dmapred.max.split.size=500000</arg>
+            <arg>-fs</arg><arg>${nameNode}</arg>
+            <arg>-jt</arg><arg>${jobTracker}</arg>
+            <arg>${cit_inputSrcSeqFile}</arg>
+            <arg>${cit_workDir}/source_entities</arg>
+        </java>
+
+        <ok to="convert-destination-entities"/>
+        <error to="fail"/>
+    </action>
+
+    <action name="convert-basicmetadata-source-entities">
         <java>
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
