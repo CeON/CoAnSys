@@ -48,6 +48,7 @@ public class DuplicateWorkDetector extends Configured implements Tool {
         getConf().setInt(DuplicateWorkDetectMapService.KEY_LENGTH, 5);
         
         getConf().set("dfs.client.socket-timeout", "120000");
+        getConf().setInt("mapred.task.timeout", 120000);
         
         @SuppressWarnings("deprecation")
         Job job = new Job(getConf(), "duplicateWorkDetector");
