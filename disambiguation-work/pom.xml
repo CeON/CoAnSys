@@ -78,31 +78,7 @@
 	            </dependencies>
 	        </plugin>
 	        
-    		<plugin>
-
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>exec-maven-plugin</artifactId>
-				<version>1.2.1</version>
-				<executions>
-					<execution>
-					
-						<id>generate-test-duplicate-works</id>
-						<phase>test-compile</phase>
-						<goals>
-							<goal>java</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<mainClass>pl.edu.icm.coansys.disambiguation.work.tool.DuplicateGenerator</mainClass>
-					<arguments>
-						<argument>${project.basedir}/src/test/resources/publications.seq</argument>
-						<argument>${project.basedir}/src/test/resources/generated</argument>
-					</arguments>
-					<classpathScope>test</classpathScope>
-					
-				</configuration>
-			</plugin>
+    		
 		</plugins>
 	</build>
 </project>

@@ -14,22 +14,23 @@ import org.junit.Before;
 import org.junit.Test;
 
 import pl.edu.icm.coansys.disambiguation.work.tool.Bw2ProtoFileUtils;
+import pl.edu.icm.coansys.disambiguation.work.tool.DuplicateGenerator;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentWrapper;
 
-/** This test assumes there is /generated/ambiguous-publications.seq file on the classpath. 
- *  The file will be generated during maven test phase
- * 
- * */
+
 public class DuplicateWorkDetectorTest {
     
-    private URL inputFileUrl = this.getClass().getResource("/generated/ambiguous-publications.seq");
+    
     private URL baseOutputUrl = this.getClass().getResource("/");
     private String outputDir = baseOutputUrl.getPath() + "/testOut";
     
     
     @Before
     public void before() throws Exception{
+        URL inputSeqFileUrl = this.getClass().getResource("/publications.seq");
+        ToolRunner.run(new Configuration(), new DuplicateGenerator(), new String[]{inputSeqFileUrl.getFile(), this.getClass().getResource("/").getFile()});
         FileUtils.deleteDirectory(new File(outputDir));
+        URL inputFileUrl = this.getClass().getResource("/generated/ambiguous-publications.seq");
         ToolRunner.run(new Configuration(), new DuplicateWorkDetector(), new String[]{inputFileUrl.getPath(), outputDir});
     }
     
