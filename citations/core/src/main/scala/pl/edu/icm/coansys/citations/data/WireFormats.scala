@@ -1,7 +1,7 @@
 package pl.edu.icm.coansys.citations.data
 
 import pl.edu.icm.coansys.citations.util.BytesConverter
-import pl.edu.icm.coansys.importers.models.DocumentProtos.{BasicMetadata, DocumentWrapper}
+import pl.edu.icm.coansys.models.DocumentProtos.{BasicMetadata, DocumentWrapper}
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)

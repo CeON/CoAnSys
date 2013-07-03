@@ -12,8 +12,8 @@ import org.springframework.stereotype.Service;
 
 import pl.edu.icm.coansys.commons.spring.DiMapService;
 import pl.edu.icm.coansys.disambiguation.work.tool.StringUtils;
-import pl.edu.icm.coansys.importers.models.DocumentProtos;
-import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentWrapper;
+import pl.edu.icm.coansys.models.DocumentProtos;
+import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
 
 @Service("duplicateWorkDetectMapService")
 public class DuplicateWorkDetectMapService implements DiMapService<Writable, BytesWritable, Text, BytesWritable> {

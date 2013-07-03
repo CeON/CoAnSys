@@ -14,7 +14,7 @@ import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mrunit.mapreduce.MapReduceDriver;
 import org.testng.annotations.BeforeClass;
-import pl.edu.icm.coansys.importers.models.MostPopularProtos;
+import pl.edu.icm.coansys.models.MostPopularProtos;
 
 /**
  *

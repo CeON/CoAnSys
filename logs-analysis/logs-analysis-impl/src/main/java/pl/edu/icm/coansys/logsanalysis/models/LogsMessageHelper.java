@@ -3,7 +3,7 @@
  */
 package pl.edu.icm.coansys.logsanalysis.models;
 
-import pl.edu.icm.coansys.importers.models.LogsProtos;
+import pl.edu.icm.coansys.models.LogsProtos;
 import java.util.Date;
 import java.util.Map;
 

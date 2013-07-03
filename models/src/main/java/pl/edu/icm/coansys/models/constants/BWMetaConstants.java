@@ -1,7 +1,7 @@
 /*
  * (C) 2010-2012 ICM UW. All rights reserved.
  */
-package pl.edu.icm.coansys.importers.constants;
+package pl.edu.icm.coansys.models.constants;
 
 import java.util.ArrayList;
 import java.util.List;

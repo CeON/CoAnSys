@@ -19,13 +19,14 @@ import pl.edu.icm.coansys.disambiguation.auxil.DiacriticsRemover;
 import pl.edu.icm.coansys.disambiguation.auxil.LoggingInDisambiguation;
 import pl.edu.icm.coansys.disambiguation.auxil.TextArrayWritable;
 import pl.edu.icm.coansys.disambiguation.auxil.TextTextArrayMapWritable;
-import pl.edu.icm.coansys.importers.constants.HBaseConstant;
-import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
+import pl.edu.icm.coansys.models.constants.HBaseConstant;
+import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 
 import com.google.common.base.Joiner;
 import java.util.ArrayList;
 import java.util.List;
-import pl.edu.icm.coansys.importers.models.DocumentProtos.TextWithLanguage;
+import pl.edu.icm.coansys.models.DocumentProtos.KeywordsList;
+import pl.edu.icm.coansys.models.DocumentProtos.TextWithLanguage;
 
 /**
  *
@@ -58,7 +59,9 @@ public class WordCountMapper_Proto extends TableMapper<TextArrayWritable, IntWri
         for(TextWithLanguage docAbstract : dm.getDocumentAbstractList()) {
             inputDataStringBuilder.append(docAbstract.getText()).append(" ");
         }
-        inputDataStringBuilder.append(Joiner.on(" ").join(dm.getKeywordList())).append(" ");
+        for (KeywordsList keywordsList : dm.getKeywordsList()) {
+            inputDataStringBuilder.append(Joiner.on(" ").join(keywordsList.getKeywordsList())).append(" ");
+        }
         
         List<String> titles = new ArrayList<String>();
         for (TextWithLanguage title : dm.getBasicMetadata().getTitleList()) {

@@ -5,7 +5,7 @@
 package pl.edu.icm.coansys.citations.jobs
 
 import pl.edu.icm.coansys.citations.util.{scoobi, BytesConverter}
-import pl.edu.icm.coansys.importers.models.DocumentProtos.BasicMetadata
+import pl.edu.icm.coansys.models.DocumentProtos.BasicMetadata
 import pl.edu.icm.coansys.citations.data.MatchableEntity
 import com.nicta.scoobi.Scoobi._
 import java.io.File

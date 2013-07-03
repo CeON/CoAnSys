@@ -25,9 +25,10 @@ import org.apache.zookeeper.KeeperException.UnimplementedException;
 
 import pl.edu.icm.coansys.classification.documents.auxil.StackTraceExtractor;
 import pl.edu.icm.coansys.disambiguation.auxil.Pair;
-import pl.edu.icm.coansys.importers.models.DocumentProtos.ClassifCode;
-import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
-import pl.edu.icm.coansys.importers.models.DocumentProtos.TextWithLanguage;
+import pl.edu.icm.coansys.models.DocumentProtos.ClassifCode;
+import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
+import pl.edu.icm.coansys.models.DocumentProtos.KeywordsList;
+import pl.edu.icm.coansys.models.DocumentProtos.TextWithLanguage;
 
 /**
  *
@@ -97,14 +98,19 @@ public class EXTRACT_MAP_WHEN_CATEG_LIM extends EvalFunc<Map> {
 	private Pair<String, DataBag> extractLangKeywords(DocumentMetadata dm) {
 		List<String> kws = new ArrayList<String>();
 		Set<String> ctgs = new HashSet<String>();
-		for(TextWithLanguage twl : dm.getKeywordList()){
-			if(language.equalsIgnoreCase(twl.getLanguage())){
-				String str = twl.getText();
-				if(!isClassifCode(str)) kws.add(str);
-				else ctgs.add(str);
-			}
-		}
-		
+
+        for (KeywordsList keywordsList : dm.getKeywordsList()) {
+            if (language.equalsIgnoreCase(keywordsList.getLanguage())) {
+                for (String kwd : keywordsList.getKeywordsList()) {
+                    if (!isClassifCode(kwd)) {
+                        kws.add(kwd);
+                    } else {
+                        ctgs.add(kwd);
+                    }
+                }
+            }
+        }
+        
 		for(ClassifCode cc : dm.getBasicMetadata().getClassifCodeList()){
 			for(String s : cc.getValueList())
 				ctgs.add(s);
