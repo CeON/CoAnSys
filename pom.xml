@@ -56,6 +56,15 @@
                 </executions>
             </plugin>
         </plugins>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+                    <groupId>pl.edu.icm.maven</groupId>
+                    <artifactId>oozie-maven-plugin</artifactId>
+                    <version>${oozie-maven-plugin.version}</version>
+				</plugin>
+			</plugins>
+	    </pluginManagement>
     </build>
 
     <profiles>
@@ -323,11 +332,6 @@
                 <groupId>pl.edu.icm.coansys</groupId>
                 <artifactId>oozie-runner</artifactId>
                 <version>${oozie-runner.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>pl.edu.icm.maven</groupId>
-                <artifactId>oozie-maven-plugin</artifactId>
-                <version>${oozie-maven-plugin.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
