@@ -5,7 +5,7 @@
 package pl.edu.icm.coansys.citations.util
 
 import java.io.{FileInputStream, InputStream, File}
-import pl.edu.icm.coansys.importers.models.DocumentProtos._
+import pl.edu.icm.coansys.models.DocumentProtos._
 import org.w3c.dom.Node
 
 /**

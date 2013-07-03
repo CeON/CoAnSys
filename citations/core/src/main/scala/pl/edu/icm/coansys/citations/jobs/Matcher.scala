@@ -8,7 +8,7 @@ import com.nicta.scoobi.application.ScoobiApp
 import com.nicta.scoobi.core.DList
 import com.nicta.scoobi.Persist._
 import com.nicta.scoobi.InputsOutputs._
-import pl.edu.icm.coansys.importers.models.PICProtos
+import pl.edu.icm.coansys.models.PICProtos
 import pl.edu.icm.coansys.citations.util.AugmentedDList.augmentDList
 import pl.edu.icm.coansys.citations.util.matching._
 import pl.edu.icm.coansys.citations.indices.{EntityIndex, AuthorIndex}

@@ -2,7 +2,7 @@ package pl.edu.icm.coansys.citations.jobs
 
 import org.testng.annotations.Test
 import com.nicta.scoobi.application.InMemoryHadoop
-import pl.edu.icm.coansys.importers.models.DocumentProtos.{BasicMetadata, DocumentMetadata, DocumentWrapper}
+import pl.edu.icm.coansys.models.DocumentProtos.{BasicMetadata, DocumentMetadata, DocumentWrapper}
 import com.nicta.scoobi.Scoobi._
 import org.testng.Assert._
 import pl.edu.icm.coansys.citations.data.WireFormats._

@@ -3,11 +3,11 @@ package pl.edu.icm.coansys.disambiguation.work.tool;
 import java.util.List;
 import java.util.UUID;
 
-import pl.edu.icm.coansys.importers.models.DocumentProtos.Author;
-import pl.edu.icm.coansys.importers.models.DocumentProtos.BasicMetadata;
-import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
-import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentWrapper;
-import pl.edu.icm.coansys.importers.models.DocumentProtos.TextWithLanguage;
+import pl.edu.icm.coansys.models.DocumentProtos.Author;
+import pl.edu.icm.coansys.models.DocumentProtos.BasicMetadata;
+import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
+import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
+import pl.edu.icm.coansys.models.DocumentProtos.TextWithLanguage;
 
 import com.beust.jcommander.internal.Lists;
 

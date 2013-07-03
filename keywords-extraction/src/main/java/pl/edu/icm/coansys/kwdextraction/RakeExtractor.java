@@ -14,10 +14,10 @@ import pl.edu.icm.cermine.DocumentTextExtractor;
 import pl.edu.icm.cermine.PdfNLMContentExtractor;
 import pl.edu.icm.cermine.PdfRawTextExtractor;
 import pl.edu.icm.cermine.exception.AnalysisException;
-import pl.edu.icm.coansys.importers.constants.ProtoConstants;
-import pl.edu.icm.coansys.importers.models.DocumentProtos;
-import pl.edu.icm.coansys.importers.models.DocumentProtos.TextWithLanguage;
 import pl.edu.icm.coansys.kwdextraction.langident.LanguageIdentifierBean;
+import pl.edu.icm.coansys.models.DocumentProtos;
+import pl.edu.icm.coansys.models.DocumentProtos.TextWithLanguage;
+import pl.edu.icm.coansys.models.constants.ProtoConstants;
 
 /**
  * Implementation of Rapid Automatic Keyword Extraction algorithm

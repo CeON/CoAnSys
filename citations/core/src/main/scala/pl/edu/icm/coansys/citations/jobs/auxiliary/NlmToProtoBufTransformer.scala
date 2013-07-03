@@ -8,7 +8,7 @@ import com.nicta.scoobi.application.ScoobiApp
 import com.nicta.scoobi.InputsOutputs._
 import pl.edu.icm.coansys.citations.util.nlm._
 import org.apache.commons.io.IOUtils
-import pl.edu.icm.coansys.importers.models.DocumentProtos.{DocumentWrapper, DocumentMetadata}
+import pl.edu.icm.coansys.models.DocumentProtos.{DocumentWrapper, DocumentMetadata}
 import com.nicta.scoobi.Persist._
 import pl.edu.icm.coansys.citations.util.BytesConverter
 
