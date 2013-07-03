@@ -9,7 +9,7 @@ import pl.edu.icm.coansys.citations.util.misc._
 import pl.edu.icm.coansys.commons.scala.strings
 import pl.edu.icm.coansys.disambiguation.auxil.DiacriticsRemover._
 import pl.edu.icm.cermine.bibref.BibReferenceParser
-import pl.edu.icm.coansys.importers.models.DocumentProtos.{DocumentMetadata, BasicMetadata, ReferenceMetadata}
+import pl.edu.icm.coansys.models.DocumentProtos.{DocumentMetadata, BasicMetadata, ReferenceMetadata}
 import pl.edu.icm.coansys.citations.data.CitationMatchingProtos.MatchableEntityData
 import pl.edu.icm.cermine.bibref.model.BibEntry
 import pl.edu.icm.coansys.citations.util.BytesConverter

@@ -7,7 +7,7 @@ package pl.edu.icm.coansys.citations.mappers
 import collection.JavaConversions._
 import org.apache.hadoop.io.{BytesWritable, Writable}
 import org.apache.hadoop.mapreduce.Mapper
-import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentWrapper
+import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)

@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 import pl.edu.icm.coansys.classification.documents.auxil.LoggingInClassification;
 import pl.edu.icm.coansys.classification.documents.auxil.StringListIntListWritable;
 import pl.edu.icm.coansys.disambiguation.auxil.TextArrayWritable;
-import pl.edu.icm.coansys.importers.constants.HBaseConstant;
+import pl.edu.icm.coansys.models.constants.HBaseConstant;
 
 /**
 *

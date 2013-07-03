@@ -4,7 +4,6 @@
 package pl.edu.icm.coansys.kwdextraction;
 
 import java.io.IOException;
-import java.lang.management.ManagementFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.BytesWritable;
@@ -18,9 +17,9 @@ import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.edu.icm.coansys.importers.models.DocumentProtos;
-import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentWrapper;
-import pl.edu.icm.coansys.importers.models.KeywordExtractionProtos.ExtractedKeywords;
+import pl.edu.icm.coansys.models.DocumentProtos;
+import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
+import pl.edu.icm.coansys.models.KeywordExtractionProtos.ExtractedKeywords;
 
 /**
  *

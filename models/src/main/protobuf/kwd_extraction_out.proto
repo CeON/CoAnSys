@@ -2,7 +2,7 @@
 // (C) 2010-2012 ICM UW. All rights reserved.
 //
 
-option java_package = "pl.edu.icm.coansys.importers.models";
+option java_package = "pl.edu.icm.coansys.models";
 option java_outer_classname = "KeywordExtractionProtos";
 
 message ExtractedKeywords{
