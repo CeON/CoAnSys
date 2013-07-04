@@ -104,12 +104,8 @@ public class THRES_FOR_CATEG extends EvalFunc<Tuple>{
 	}
 
 	private double countF1(int tp, int tn, int fp, int fn) {
-		double denominator = (tp+fp);
-		double p = denominator!=0 ? tp/denominator : Double.POSITIVE_INFINITY;
-		denominator = (tp+fn);
-		double r = denominator!=0 ? tp/denominator : Double.POSITIVE_INFINITY;
-		denominator = p!=Double.POSITIVE_INFINITY && r!=Double.POSITIVE_INFINITY ? (p+r) : -1;
-		return denominator!=0 ? 2*(p*r)/denominator :0;
+		int denominator = Math.max(0, 2 * Math.max(0, tp) + Math.max(0, fn) + Math.max(0, fp));
+                return denominator!=0 ? (double)(2 * tp)/(double)denominator : 0;
 	}
 
 	private int countEqMore(int curr, int[] posc) {
