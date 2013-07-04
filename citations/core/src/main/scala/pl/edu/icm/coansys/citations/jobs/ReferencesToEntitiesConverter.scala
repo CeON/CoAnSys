@@ -36,7 +36,14 @@ object ReferencesToEntitiesConverter extends ScoobiApp {
     val entities = convertFromSequenceFile[String, String](inUri)
       .flatMapWithResource(parser()) {
       case (the_parser, (id, text)) if !text.isEmpty =>
-        Some(id, MatchableEntity.fromUnparsedReference(the_parser, id, text))
+        try {
+          Some(id, MatchableEntity.fromUnparsedReference(the_parser, id, text))
+        } catch {
+          case e:Exception =>
+            System.err.println("Error while parsing " + text)
+            e.printStackTrace(System.err)
+            None
+        }
       case _ =>
         None
     }
