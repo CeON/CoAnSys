@@ -139,8 +139,9 @@ public class EXTRACT_MAP_WHEN_CATEG_LIM extends EvalFunc<Map> {
 		List<String> abstractsList = new ArrayList<String>();
 		//getDocumentAbstractList()
         for (TextWithLanguage documentAbstract : dm.getDocumentAbstractList()) {
-        	if(language.equalsIgnoreCase(documentAbstract.getLanguage()));
-            	abstractsList.add(documentAbstract.getText());
+        	if(language.equalsIgnoreCase(documentAbstract.getLanguage())) {
+                    abstractsList.add(documentAbstract.getText());
+                }
         }
         docAbstract = Joiner.on(" ").join(abstractsList);
 		return docAbstract;
@@ -150,8 +151,9 @@ public class EXTRACT_MAP_WHEN_CATEG_LIM extends EvalFunc<Map> {
 		List<String> titleList = new ArrayList<String>();
 		//getTitleList()
         for (TextWithLanguage title : dm.getBasicMetadata().getTitleList()) {
-        	if(language.equalsIgnoreCase(title.getLanguage())); 
-            	titleList.add(title.getText());
+        	if(language.equalsIgnoreCase(title.getLanguage())) {
+                    titleList.add(title.getText());
+                }
         }
         
         String docTitle;
