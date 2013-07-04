@@ -274,7 +274,7 @@ public class TfidfJob_Proto implements Tool {
         tfidfJob.setOutputFormatClass(SequenceFileOutputFormat.class);
 
         SequenceFileInputFormat.addInputPath(tfidfJob, new Path(AUXIL_PATH + "job2"));
-        SequenceFileOutputFormat.setOutputPath(tfidfJob, new Path(FINAL_PATH + new Random().nextInt()));
+        SequenceFileOutputFormat.setOutputPath(tfidfJob, new Path(FINAL_PATH + (int)(Math.random() * Integer.MAX_VALUE)));
 
         /*
          * Launch job
