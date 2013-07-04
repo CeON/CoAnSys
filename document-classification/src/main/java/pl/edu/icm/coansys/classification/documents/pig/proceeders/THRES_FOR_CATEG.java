@@ -7,16 +7,10 @@ package pl.edu.icm.coansys.classification.documents.pig.proceeders;
 
 import java.io.IOException;
 import java.util.Arrays;
-
 import org.apache.pig.EvalFunc;
-import org.apache.pig.data.DataBag;
-import org.apache.pig.data.DataType;
-import org.apache.pig.data.DefaultDataBag;
-import org.apache.pig.data.Tuple;
-import org.apache.pig.data.TupleFactory;
+import org.apache.pig.data.*;
 import org.apache.pig.impl.logicalLayer.FrontendException;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
-
 import pl.edu.icm.coansys.classification.documents.auxil.StackTraceExtractor;
 
 /**
@@ -80,10 +74,9 @@ public class THRES_FOR_CATEG extends EvalFunc<Tuple>{
 			
 			for(int i = 1; i<neight_max;i++){
 				int TP = countLess(i,posc);
-				int TN = countEqMore(i,posc);
 				int FP = countLess(i,negc);
 				int FN = countEqMore(i,negc);
-				double F1 = countF1(TP,TN,FP,FN);
+				double F1 = countF1(TP, FP, FN);
 				if(F1>bestF1){
 					thres = i;
 					bestF1 = F1;
@@ -103,7 +96,7 @@ public class THRES_FOR_CATEG extends EvalFunc<Tuple>{
 		}
 	}
 
-	private double countF1(int tp, int tn, int fp, int fn) {
+	private double countF1(int tp, int fp, int fn) {
 		int denominator = Math.max(0, 2 * Math.max(0, tp) + Math.max(0, fn) + Math.max(0, fp));
                 return denominator!=0 ? (double)(2 * tp)/(double)denominator : 0;
 	}
