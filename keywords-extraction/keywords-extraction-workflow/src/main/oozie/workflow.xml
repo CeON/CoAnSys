@@ -1,0 +1,86 @@
+<workflow-app xmlns="uri:oozie:workflow:0.1" name="logs-analysis-wf">
+    <start to="keyword-extraction" />
+    <action name="keyword-extraction">
+        <map-reduce>
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <prepare>
+                <delete path="${hdfsWorkingDirURI}/intermediate-data" />
+            </prepare>
+            <configuration>
+                <!-- This is required for new api usage -->
+                <property>
+                    <name>mapred.mapper.new-api</name>
+                    <value>true</value>
+                </property>
+                <property>
+                    <name>mapred.reducer.new-api</name>
+                    <value>true</value>
+                </property>
+                <property>
+                    <name>mapreduce.map.class</name>
+                    <value>pl.edu.icm.coansys.kwdextraction.ExtractionJob$ExtractMap</value>
+                </property>
+                <property>
+                    <name>mapred.map.tasks</name>
+                    <value>6</value>
+                </property>
+                <property>
+                    <name>mapred.reduce.tasks</name>
+                    <value>0</value>
+                </property>
+
+                <property>
+                    <name>mapred.input.dir</name>
+                    <value>${hdfsDirInputData}</value>
+                </property>
+                <property>
+                    <name>mapred.output.dir</name>
+                    <value>${hdfsDirOutputData}</value>
+                </property>
+                <property>
+                  <name>mapred.job.queue.name</name>
+                  <value>${queueName}</value>
+                </property>
+                <property>
+                    <name>mapreduce.inputformat.class</name>
+                    <value>org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat</value>
+                </property>
+                <property>
+                    <name>mapreduce.outputformat.class</name>
+                    <value>org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat</value>
+                </property>
+                <property>
+                    <name>mapred.mapoutput.key.class</name>
+                    <value>org.apache.hadoop.io.Text</value>
+                </property>
+                <property>
+                    <name>mapred.mapoutput.value.class</name>
+                    <value>org.apache.hadoop.io.BytesWritable</value>
+                </property>
+                <property>
+                    <name>mapred.output.key.class</name>
+                    <value>org.apache.hadoop.io.Text</value>
+                </property>
+                <property>
+                    <name>mapred.output.value.class</name>
+                    <value>org.apache.hadoop.io.BytesWritable</value>
+                </property>
+                <property>
+                    <name>EXTRACTION_OPTION</name>
+                    <value>${EXTRACTION_OPTION}</value>
+                </property>
+                <property>
+                    <name>EXTRACTION_LANGUAGE</name>
+                    <value>${EXTRACTION_LANGUAGE}</value>
+                </property>
+            </configuration>
+        </map-reduce>
+        <ok to="end" />
+        <error to="fail" />
+    </action>
+    <kill name="fail">
+        <message>Workflow failed</message>
+    </kill>
+    <end name="end" />
+</workflow-app>
