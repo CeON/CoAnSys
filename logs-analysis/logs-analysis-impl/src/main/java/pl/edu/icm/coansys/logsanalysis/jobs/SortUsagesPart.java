@@ -150,7 +150,7 @@ public class SortUsagesPart implements Tool {
             while (!countersStack.empty()) {
                 long n = countersStack.pop();
                 for (String resource : buffer.get(n)) {
-                    result.add(new AbstractMap.SimpleEntry<Long, String>(new Long(n), resource));
+                    result.add(new AbstractMap.SimpleEntry<Long, String>(Long.valueOf(n), resource));
                 }
             }
         }
