@@ -2,7 +2,7 @@ package pl.edu.icm.coansys.citations.jobs
 
 import collection.JavaConversions._
 import com.nicta.scoobi.Scoobi._
-import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentWrapper
+import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper
 import pl.edu.icm.coansys.citations.data.WireFormats._
 import java.io.File
 import pl.edu.icm.coansys.citations.util.scoobi
@@ -20,7 +20,7 @@ object ReferenceExtractor extends ScoobiApp {
        .flatMap{x =>
        val docId = x.getDocumentMetadata.getKey
        x.getDocumentMetadata.getReferenceList.map { ref =>
-         (citationIdPrefix + docId + "_" + ref.getPosition, ref.getBasicMetadata)
+         (citationIdPrefix + docId + "_" + ref.getPosition, ref.getRawCitationText)
        }
      }
 

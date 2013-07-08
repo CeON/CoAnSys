@@ -4,7 +4,7 @@
 
 package pl.edu.icm.coansys.citations.util
 
-import pl.edu.icm.coansys.importers.models.DocumentProtos.{DocumentWrapper, ReferenceMetadata, BasicMetadata}
+import pl.edu.icm.coansys.models.DocumentProtos.{DocumentWrapper, ReferenceMetadata, BasicMetadata}
 import scala.collection.JavaConversions._
 import com.nicta.scoobi.core.DList
 import pl.edu.icm.coansys.citations.data.MatchableEntity

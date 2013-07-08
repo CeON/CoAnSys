@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.disambiguation.auxil.LoggingInDisambiguation;
 import pl.edu.icm.coansys.disambiguation.auxil.TextTextArrayMapWritable;
-import pl.edu.icm.coansys.importers.constants.HBaseConstant;
+import pl.edu.icm.coansys.models.constants.HBaseConstant;
 
 /**
  *

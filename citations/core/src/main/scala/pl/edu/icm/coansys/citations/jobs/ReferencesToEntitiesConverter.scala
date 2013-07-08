@@ -4,11 +4,9 @@
 
 package pl.edu.icm.coansys.citations.jobs
 
-import collection.JavaConversions._
 import com.nicta.scoobi.Scoobi._
 import pl.edu.icm.coansys.citations.util.AugmentedDList.augmentDList
-import pl.edu.icm.coansys.citations.util.{scoobi, NoOpClose, BytesConverter}
-import pl.edu.icm.coansys.importers.models.DocumentProtos.{ReferenceMetadata, DocumentWrapper}
+import pl.edu.icm.coansys.citations.util.{scoobi, NoOpClose}
 import pl.edu.icm.coansys.citations.data.MatchableEntity
 import pl.edu.icm.cermine.bibref.{BibReferenceParser, CRFBibReferenceParser}
 import pl.edu.icm.cermine.bibref.model.BibEntry
@@ -35,17 +33,21 @@ object ReferencesToEntitiesConverter extends ScoobiApp {
       outUri = args(1)
     }
 
-    implicit val dwConverter = new BytesConverter[DocumentWrapper](_.toByteArray, DocumentWrapper.parseFrom(_))
-    implicit val rmConverter = new BytesConverter[ReferenceMetadata](_.toByteArray, ReferenceMetadata.parseFrom(_))
-    val entities = convertValueFromSequenceFile[DocumentWrapper](inUri)
-      .flatMap[ReferenceMetadata](b => b.getDocumentMetadata.getReferenceList.toIterable)
+    val entities = convertFromSequenceFile[String, String](inUri)
       .flatMapWithResource(parser()) {
-      case (the_parser, meta) if !meta.getRawCitationText.isEmpty =>
-        Some(MatchableEntity.fromUnparsedReferenceMetadata(the_parser, meta))
+      case (the_parser, (id, text)) if !text.isEmpty =>
+        try {
+          Some(id, MatchableEntity.fromUnparsedReference(the_parser, id, text))
+        } catch {
+          case e:Exception =>
+            System.err.println("Error while parsing " + text)
+            e.printStackTrace(System.err)
+            None
+        }
       case _ =>
         None
     }
 
-    persist(convertToSequenceFile(entities.map(ent => (ent.id, ent)), outUri))
+    persist(convertToSequenceFile(entities, outUri))
   }
 }

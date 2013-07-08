@@ -6,7 +6,7 @@ import org.apache.hadoop.mapreduce.Mapper;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /** 
- * An implementation of {@link Mapper} class that facilitates the use of the spring framework in the map phase.
+ * An implementation of the {@link Mapper} class that facilitates the use of the spring framework in the map phase.
  * 
  * The class starts the spring application context in the {@link #setup(org.apache.hadoop.mapreduce.Mapper.Context)} method and uses
  * {@link DiMapperService} spring bean to perform the business logic in the {@link #map(Object, Object, org.apache.hadoop.mapreduce.Mapper.Context)}

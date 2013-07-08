@@ -24,9 +24,9 @@ import pl.edu.icm.coansys.disambiguation.auxil.LoggingInDisambiguation;
 import pl.edu.icm.coansys.disambiguation.auxil.TextTextArrayMapWritable;
 import pl.edu.icm.coansys.disambiguation.features.Extractor;
 import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
-import pl.edu.icm.coansys.importers.constants.HBaseConstant;
-import pl.edu.icm.coansys.importers.models.DocumentProtos.Author;
-import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
+import pl.edu.icm.coansys.models.constants.HBaseConstant;
+import pl.edu.icm.coansys.models.DocumentProtos.Author;
+import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 
 /**
  *

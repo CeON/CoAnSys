@@ -1,8 +1,10 @@
 package pl.edu.icm.coansys.disambiguation.work.tool;
 
 import java.io.File;
+import java.util.Collection;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
@@ -15,8 +17,6 @@ import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.common.base.Preconditions;
 
 
 public class DuplicateGenerator  extends Configured implements Tool {
@@ -38,7 +38,7 @@ public class DuplicateGenerator  extends Configured implements Tool {
         String inputFile = args[0];
         
         String baseOutputDir = args[1];
-        String jobOutputDir = baseOutputDir + "/duplicated-works";
+        String jobOutputDir = baseOutputDir + "generated/duplicated-works";
         
         FileUtils.deleteDirectory(new File(jobOutputDir));
 
@@ -56,10 +56,11 @@ public class DuplicateGenerator  extends Configured implements Tool {
         job.setOutputFormatClass(SequenceFileOutputFormat.class);
         SequenceFileOutputFormat.setOutputPath(job, new Path(jobOutputDir));
         
+        job.setNumReduceTasks(1);
         
         boolean success = job.waitForCompletion(true);
         
-        FileUtils.copyFile(new File(jobOutputDir+"/part-r-00000"), new File(baseOutputDir+"/ambiguous-publications.seq"));
+        FileUtils.copyFile(new File(jobOutputDir+"/part-r-00000"), new File(baseOutputDir+"/generated/ambiguous-publications.seq"));
         
         FileUtils.deleteDirectory(new File(jobOutputDir));
         
@@ -78,7 +79,7 @@ public class DuplicateGenerator  extends Configured implements Tool {
             System.exit(1);
         }
         
-        Preconditions.checkArgument(new File(args[0]).exists(), args[0] + " does not exist");
+        //Preconditions.checkArgument(new File(args[0]).exists(), args[0] + " does not exist");
         
     }
 

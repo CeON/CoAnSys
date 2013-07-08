@@ -14,8 +14,8 @@ import org.apache.hadoop.mrunit.mapreduce.MapReduceDriver;
 import org.testng.annotations.BeforeClass;
 import pl.edu.icm.coansys.logsanalysis.constants.ParamNames;
 import pl.edu.icm.coansys.logsanalysis.models.LogsMessageHelper;
-import pl.edu.icm.coansys.importers.models.LogsProtos;
-import pl.edu.icm.coansys.importers.models.LogsProtos.LogsMessage;
+import pl.edu.icm.coansys.models.LogsProtos;
+import pl.edu.icm.coansys.models.LogsProtos.LogsMessage;
 
 /**
  *

@@ -11,13 +11,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import pl.edu.icm.coansys.commons.spring.DiMapService;
-import pl.edu.icm.coansys.disambiguation.auxil.DiacriticsRemover;
-import pl.edu.icm.coansys.importers.models.DocumentProtos;
-import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentWrapper;
+import pl.edu.icm.coansys.disambiguation.work.tool.StringUtils;
+import pl.edu.icm.coansys.models.DocumentProtos;
+import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
 
 @Service("duplicateWorkDetectMapService")
 public class DuplicateWorkDetectMapService implements DiMapService<Writable, BytesWritable, Text, BytesWritable> {
 
+    @SuppressWarnings("unused")
     private static Logger log = LoggerFactory.getLogger(DuplicateWorkDetectMapService.class);
     
     public static String KEY_LENGTH = "keyLength";
@@ -34,23 +35,25 @@ public class DuplicateWorkDetectMapService implements DiMapService<Writable, Byt
         
         String docKey = generateDocumentKey(keyLength, title);
         
-        log.info("{}:{}", docKey, title);
+        DocumentWrapper thinDocWrapper = DocumentWrapperUtils.cloneDocumentMetadata(docWrapper);
         
-        context.write(new Text(docKey), new BytesWritable(value.copyBytes()));
+        context.write(new Text(docKey), new BytesWritable(thinDocWrapper.toByteArray()));
         
         
     }
 
+    
     //******************** PRIVATE ********************
     
     private String generateDocumentKey(int keyLength, String title) {
-        title = DiacriticsRemover.removeDiacritics(title);
-        title = title.replaceAll("\\W", "");
+        title = StringUtils.normalize(title);
         String docKey = title; 
         if (title.length() > keyLength) {
             docKey = docKey.substring(0, keyLength);
         }
         return docKey;
     }
+
+   
 
 }

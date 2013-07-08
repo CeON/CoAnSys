@@ -25,9 +25,10 @@ import org.apache.zookeeper.KeeperException.UnimplementedException;
 
 import pl.edu.icm.coansys.classification.documents.auxil.StackTraceExtractor;
 import pl.edu.icm.coansys.disambiguation.auxil.Pair;
-import pl.edu.icm.coansys.importers.models.DocumentProtos.ClassifCode;
-import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
-import pl.edu.icm.coansys.importers.models.DocumentProtos.TextWithLanguage;
+import pl.edu.icm.coansys.models.DocumentProtos.ClassifCode;
+import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
+import pl.edu.icm.coansys.models.DocumentProtos.KeywordsList;
+import pl.edu.icm.coansys.models.DocumentProtos.TextWithLanguage;
 
 /**
  *
@@ -150,6 +151,7 @@ public class EXTRACT_MAP_WHEN_CATEG_LIM extends EvalFunc<Map> {
 	private Pair<String, DataBag> extractLangKeywords(DocumentMetadata dm) {
 		List<String> kws = new ArrayList<String>();
 		Set<String> ctgs = new HashSet<String>();
+
 		for(TextWithLanguage twl : dm.getKeywordList()){
 			if(language.equalsIgnoreCase(twl.getLanguage())){
 				String str = twl.getText();
@@ -191,8 +193,9 @@ public class EXTRACT_MAP_WHEN_CATEG_LIM extends EvalFunc<Map> {
 		List<String> abstractsList = new ArrayList<String>();
 		//getDocumentAbstractList()
         for (TextWithLanguage documentAbstract : dm.getDocumentAbstractList()) {
-        	if(language.equalsIgnoreCase(documentAbstract.getLanguage()));
-            	abstractsList.add(documentAbstract.getText());
+        	if(language.equalsIgnoreCase(documentAbstract.getLanguage())) {
+                    abstractsList.add(documentAbstract.getText());
+                }
         }
         docAbstract = Joiner.on(" ").join(abstractsList);
 		return docAbstract;
@@ -202,8 +205,9 @@ public class EXTRACT_MAP_WHEN_CATEG_LIM extends EvalFunc<Map> {
 		List<String> titleList = new ArrayList<String>();
 		//getTitleList()
         for (TextWithLanguage title : dm.getBasicMetadata().getTitleList()) {
-        	if(language.equalsIgnoreCase(title.getLanguage())); 
-            	titleList.add(title.getText());
+        	if(language.equalsIgnoreCase(title.getLanguage())) {
+                    titleList.add(title.getText());
+                }
         }
         
         String docTitle;

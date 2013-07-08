@@ -44,7 +44,7 @@
 
     <action name="inner">
         <sub-workflow>
-            <app-path>${wf:appPath()}/inner-workflow</app-path>
+            <app-path>${wf:appPath()}/pl.edu.icm.coansys.citations-inner-workflow</app-path>
             <configuration>
                 <property>
                     <name>cit_workDir</name>
@@ -65,6 +65,10 @@
                 <property>
                     <name>cit_inputSrcSeqFile</name>
                     <value>${workingDir}/source_entities</value>
+                </property>
+                <property>
+                    <name>cit_inputSrcFormat</name>
+                    <value>Raw</value>
                 </property>
                 <property>
                     <name>cit_inputDestSeqFile</name>
