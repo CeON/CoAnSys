@@ -61,11 +61,13 @@ public class Bw2ProtoFileUtils {
         try {
             Configuration conf = new Configuration();
             reader = getSequenceFileReader(inputFileUri, conf);
+            SequenceFile.Reader.bufferSize(250000);
             Writable key = (Writable)ReflectionUtils.newInstance(reader.getKeyClass(), conf);
             Writable value = (Writable)ReflectionUtils.newInstance(reader.getValueClass(), conf);
             while (reader.next(key, value)) {
                 DocumentWrapper docWrapper = DocumentProtos.DocumentWrapper.parseFrom(((BytesWritable)value).copyBytes());
                 out.println(format(key, docWrapper));
+                
             }
             
         }

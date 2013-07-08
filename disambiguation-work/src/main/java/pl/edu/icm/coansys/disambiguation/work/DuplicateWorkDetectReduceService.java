@@ -46,8 +46,6 @@ public class DuplicateWorkDetectReduceService implements DiReduceService<Text, B
         
         List<DocumentWrapper> documents = DocumentWrapperUtils.extractDocumentWrappers(key, values);
         
-        log.info("reduce, key: {}, number of documents: {}", key.toString(), documents.size());
-        
         long startTime = new Date().getTime();
         
         process(key, context, documents, 0);
@@ -63,6 +61,7 @@ public class DuplicateWorkDetectReduceService implements DiReduceService<Text, B
     
 
     private void process(Text key,  Reducer<Text, BytesWritable, Text, BytesWritable>.Context context,  List<DocumentWrapper> documents, int level) throws IOException, InterruptedException {
+        log.info("reduce, key: {}, number of documents: {}", key.toString(), documents.size());
         
         level++;
         
@@ -71,12 +70,13 @@ public class DuplicateWorkDetectReduceService implements DiReduceService<Text, B
             log.info("documents splitted into: {} packs", documentPacks.size());
             
             for (Map.Entry<Text, List<DocumentWrapper>> docs : documentPacks.entrySet()) {
-                process(docs.getKey(), context, docs.getValue(), level);
+                if (docs.getValue().size()<2) {
+                    process(docs.getKey(), context, docs.getValue(), level);
+                }
             }
             
             
         } else {
-            
             Map<Integer, Set<DocumentWrapper>> duplicateWorksMap = duplicateWorkService.findDuplicates(documents);
             saveDuplicatesToContext(duplicateWorksMap, key, context);
             context.progress();
