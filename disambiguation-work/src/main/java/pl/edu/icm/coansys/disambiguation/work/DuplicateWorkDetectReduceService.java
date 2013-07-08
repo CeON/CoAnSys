@@ -50,7 +50,7 @@ public class DuplicateWorkDetectReduceService implements DiReduceService<Text, B
         
         process(key, context, documents, 0);
         
-        log.info("time [sec]: " + (new Date().getTime()-startTime)/1000);
+        log.info("time [msec]: " + (new Date().getTime()-startTime));
         
     }
 

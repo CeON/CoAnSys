@@ -5,7 +5,7 @@ import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
 
 
 /**
- * A utility class for a work deduplication map/reduce key generator
+ * A work deduplication map/reduce phase key generator
  * @author Łukasz Dumiszewski
  *
  */
@@ -19,6 +19,10 @@ abstract class WorkKeyGenerator {
     }
     
     
+    /**
+     * Generates key for the given {@link DocumentWrapper}
+     * @param level influences the keyLength, the keyLength is a multiplication of the level and {@link #KEY_PART_LENGTH} 
+     */
     public static String generateKey(DocumentWrapper doc, int level) {
         String docKey = DocumentWrapperUtils.getMainTitle(doc);
         docKey = StringTools.normalize(docKey);
