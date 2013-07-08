@@ -27,7 +27,7 @@ public class THRES_FOR_CATEG extends EvalFunc<Tuple>{
 		}catch(FrontendException e){
 			throw new IllegalStateException(e);
 		}
-	}
+	} 
 	
 	public Tuple exec(Tuple input) throws IOException {
 		if (input == null || input.size() == 0)

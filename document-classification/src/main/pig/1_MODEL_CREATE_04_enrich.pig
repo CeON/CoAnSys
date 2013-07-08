@@ -58,12 +58,15 @@ set pig.skewedjoin.reduce.memusage $pig_skewedjoin_reduce_memusage
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 
+/*load classes having categories*/
 X1 = LOAD '$dc_m_hdfs_docClassifMapping' as (key:chararray,categs:bag{(categ:chararray)}); --key,{categ}
 X2 = foreach X1 generate key;
 X3 = group X2 all;
 X4 = foreach X3 generate X2, 1 as crosspoint;
 
 D1 = LOAD '$dc_m_hdfs_neighs' as (key:chararray,data:map[],part:int);
+/*D11 is only needed when rows are constructed previously in a faulty way */
+--D11 = filter D1 by key matches 'SPRINGER.+';
 D2 = foreach D1 generate *, 1 as crosspoint;
 D3 = join D2 by crosspoint, X4 by crosspoint using 'replicated'; --key,map,part,crosspoint,{keys},crosspoint
 D4 = foreach D3 generate key,data,flatten(X2) as allowed;
@@ -74,7 +77,7 @@ E = $dc_m_pigScript_featureVector(D6);
 
 F = group E by key;
 G = foreach F generate *;
-CroZ = filter(cross F, G parallel 16) by F::group != G::group;
+CroZ = filter(cross F, G) by F::group != G::group;
 
 G = $dc_m_pigScript_similarityMetric(CroZ); --keyA,keyB,sim
 G1 = group G by keyA;

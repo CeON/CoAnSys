@@ -78,7 +78,9 @@ set pig.skewedjoin.reduce.memusage $pig_skewedjoin_reduce_memusage
 
 A = LOAD '$dc_m_hdfs_dataEnriched' as (keyA:chararray,keyB:chararray,sim:double,categsA:bag{(categA:chararray)},categsB:bag{(categB:chararray)}); --keyA,keyB,sim,{categA},{categB}
 
-Z0 = foreach A generate keyA as keyA, flatten(categsB) as categB;
+AA = distinct A;
+
+Z0 = foreach AA generate keyA as keyA, flatten(categsB) as categB;
 Z1 = group Z0 by (keyA, categB);
 Z2 = foreach Z1 generate group.keyA as keyA, group.categB as categProp, COUNT(Z0) as occ, 1 as crosspoint;
 
@@ -91,7 +93,7 @@ Y2 = group Y1 by keyA;
 
 C = foreach Y2 generate group as key, Y1.categProp as categs;
 
-Q1 = foreach A generate flatten(categsA) as categQ;
+Q1 = foreach AA generate flatten(categsA) as categQ;
 Q2 = distinct Q1;
 Q3 = group Q2 all;
 Q5 = foreach Q3 generate COUNT(Q2) as categCount, 1 as crosspoint;
@@ -123,7 +125,7 @@ W11 = foreach W10 generate SUM(W1.acc)/(double)COUNT(W1) as acc,
 			1 as crosspoint;
 
 W2 = join W111 by crosspoint, Q5 by crosspoint using 'replicated';
-W3 = foreach W2 generate acc, p,r,f1, hl/(double)categCount, zol;
+W3 = foreach W2 generate '$dc_m_hdfs_model',acc, p,r,f1, hl/(double)categCount, zol;
 
 store W3 into '$dc_m_hdfs_modelEvaluation';
 
