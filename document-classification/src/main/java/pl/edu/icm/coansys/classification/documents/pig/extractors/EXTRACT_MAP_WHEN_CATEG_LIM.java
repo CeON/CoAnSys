@@ -37,13 +37,39 @@ import pl.edu.icm.coansys.models.DocumentProtos.TextWithLanguage;
 @SuppressWarnings("rawtypes")
 public class EXTRACT_MAP_WHEN_CATEG_LIM extends EvalFunc<Map> {
 
-	private String language = null;
+	enum Action{
+		REMOVE_KEYCHARACTERS,
+		REMOVE_NONAPLHANUMERIC,
+		TRANSLATE
+	}
 	
-	public EXTRACT_MAP_WHEN_CATEG_LIM(String language){
+	private String language = null;
+	private Action action = null;
+	
+	public EXTRACT_MAP_WHEN_CATEG_LIM(String language, String action) throws Exception{
 		this.language = language;
+		
+		if(action.equalsIgnoreCase("remove")){
+			this.action = Action.REMOVE_KEYCHARACTERS;
+		}else if(action.equalsIgnoreCase("removeall")){
+			this.action = Action.REMOVE_NONAPLHANUMERIC;
+		}else if (action.equalsIgnoreCase("translate")){
+			this.action = Action.TRANSLATE;
+		}else{
+			throw new Exception("You have to choose one of two actions \"remove\" or \"translate\". " +
+					"Your proposition is \""+action+"\". " +
+					"Please modify your proposition.");
+		}
 	}
 
+	public EXTRACT_MAP_WHEN_CATEG_LIM(String language){
+		this.language = language;
+		System.out.println("Default action taken against non-alphanumeric signs in title or abstract is a symbol removal.");
+		this.action = Action.REMOVE_KEYCHARACTERS;
+	}
+	
 	public EXTRACT_MAP_WHEN_CATEG_LIM(){
+		this.action = Action.REMOVE_KEYCHARACTERS;
 	}
 	
     @Override
@@ -82,6 +108,16 @@ public class EXTRACT_MAP_WHEN_CATEG_LIM extends EvalFunc<Map> {
         docAbstract = extractLangAbstract(dm);
         Pair<String, DataBag> kwCc = extractLangKeywords(dm);
         
+        if(action==Action.TRANSLATE){
+        	docTitle = translateNonAlphaNumeric(docTitle);
+        	docAbstract = translateNonAlphaNumeric(docAbstract);
+        }else if (action==Action.REMOVE_KEYCHARACTERS){
+        	docTitle = removeAllKeyPunctations(docTitle);
+        	docAbstract = removeAllKeyPunctations(docAbstract);
+        }else{
+        	docTitle = removeAllNonAlphaNumeric(docTitle);
+        	docAbstract = removeAllNonAlphaNumeric(docAbstract);
+        }
         
         if (kwCc.getY().size() > lim) {
             Map<String, Object> map = new HashMap<String, Object>();
@@ -94,23 +130,41 @@ public class EXTRACT_MAP_WHEN_CATEG_LIM extends EvalFunc<Map> {
         }
         return null;
     }
-
+    
+    private String removeAllNonAlphaNumeric(String str){
+    	str = str.replaceAll("[^a-zA-Z0-9_\\- ]", "");
+    	return str;
+    }
+    
+    private String removeAllKeyPunctations(String str){
+    	str = str.replaceAll(",", "");
+    	str = str.replaceAll("#", "");
+    	return str;
+    }
+     
+    private String translateNonAlphaNumeric(String str){
+    	str = str.replaceAll(",", " COMMA ");
+    	str = str.replaceAll("#", " HASH ");
+    	return str;
+    }
+    
 	private Pair<String, DataBag> extractLangKeywords(DocumentMetadata dm) {
 		List<String> kws = new ArrayList<String>();
 		Set<String> ctgs = new HashSet<String>();
 
-        for (KeywordsList keywordsList : dm.getKeywordsList()) {
-            if (language.equalsIgnoreCase(keywordsList.getLanguage())) {
-                for (String kwd : keywordsList.getKeywordsList()) {
-                    if (!isClassifCode(kwd)) {
-                        kws.add(kwd);
-                    } else {
-                        ctgs.add(kwd);
-                    }
-                }
-            }
-        }
-        
+		for(KeywordsList kwl : dm.getKeywordsList()){
+			if(language.equalsIgnoreCase(kwl.getLanguage())){
+				for(String str : kwl.getKeywordsList()){
+					if(action==Action.TRANSLATE) str = translateNonAlphaNumeric(str);
+			        else if(action==Action.REMOVE_KEYCHARACTERS) str = removeAllKeyPunctations(str);
+			        else str = removeAllNonAlphaNumeric(str);
+			        
+					if(!isClassifCode(str)) kws.add(str);
+					else ctgs.add(str);
+				}
+			}
+		}
+		
 		for(ClassifCode cc : dm.getBasicMetadata().getClassifCodeList()){
 			for(String s : cc.getValueList())
 				ctgs.add(s);

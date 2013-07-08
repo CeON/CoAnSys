@@ -1,15 +1,43 @@
 <!--
  (C) 2010-2012 ICM UW. All rights reserved.
 -->
+
+# BEG:REPLACE @MAIL-DEF@
+wf.id=${wf:id()}
+oozie.wf.application.path=${dc_exec_path}
+results=${results}
+dc_c_in_inputDocsData=${dc_c_in_inputDocsData}
+dc_c_in_ModelDir=${dc_c_in_ModelDir}
+dc_c_fv=${dc_c_fv}
+dc_c_sim=${dc_c_sim}
+dc_c_neigh=${dc_c_neigh}
+dc_c_double_sample=${dc_c_double_sample}
+dc_c_OutputDir=${dc_c_OutputDir}
+dc_c_tmp=${dc_c_tmp}
+# END:REPLACE
+
+
+
 <workflow-app name='dc-classification' xmlns="uri:oozie:workflow:0.2">
-    <start to='classify'/>
+	<start to='start-mail'/>
+
+    <action name='start-mail'>
+        <email xmlns="uri:oozie:email-action:0.1">
+            <to>piotr.dendek@gmail.com</to>
+            <subject>OOZIE started! for ${wf:id()} STARTED execution at ${timestamp()}</subject>
+            <body>
+The wf ${wf:id()} started.
+@MAIL-DEF@
+			</body>
+        </email>
+        <ok to="classify"/>
+        <error to="kill"/>
+    </action>
+
     <action name='classify'>
         <pig>
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
-            <prepare>
-                <delete path="${dc_classification_OutputDir}"/>
-            </prepare>
             <configuration>
                 <property>
                     <name>mapred.job.queue.name</name>
@@ -17,24 +45,53 @@
                 </property> 
             </configuration>
             <script>${pigScriptsDir}/2_MODEL_USE_classify.pig</script>
-            <param>DEF_SRC=${dc_classification_InputHBase}</param>
-            <param>inMo=${dc_modelcreation_ModelDir}</param>
-            <param>DEF_DST=${dc_classification_OutputDir}</param>
-            <param>DEF_LIM=1</param>
-            <param>featurevector=${dc_classification_fv}</param>
-            <param>simmeth=${dc_classification_sim}</param>
-            <param>neigh=${dc_classification_neigh}</param>
+			<param>parallel_param=190</param>
+			<param>dc_c_in_ModelDir=${dc_c_in_ModelDir}</param>
+			<param>dc_c_in_inputDocsData=${dc_c_in_inputDocsData}</param>
+			<param>dc_c_fv=${dc_c_fv}</param>
+			<param>dc_c_sim=${dc_c_sim}</param>
+			<param>dc_c_tmp=${dc_c_tmp}</param>
+			<param>dc_c_neigh=${dc_c_neigh}</param>
+			<param>dc_c_double_sample=${dc_c_double_sample}</param>
+			<param>dc_c_OutputDir=${dc_c_OutputDir}</param>
+			<param>commonJarsPath=${commonJarsPath}</param>
             <file>${pigScriptsDir}/AUXIL_docsim.macros.def.pig#AUXIL_docsim.macros.def.pig</file>
             <file>${pigScriptsDir}/AUXIL_macros.def.pig#AUXIL_macros.def.pig</file>
-            <file>${pigScriptsDir}/SIM_${dc_classification_sim}.pig#SIM_${dc_classification_sim}.pig</file>
-            <file>${pigScriptsDir}/FV_${dc_classification_fv}.pig#FV_${dc_classification_fv}.pig</file>
+            <file>${pigScriptsDir}/SIM_${dc_c_sim}.pig#SIM_${dc_c_sim}.pig</file>
+            <file>${pigScriptsDir}/FV_${dc_c_fv}.pig#FV_${dc_c_fv}.pig</file>
         </pig>       
         <ok to='end'/>
         <error to='kill'/>
     </action>
 
-    <kill name='kill'>
+    <action name="end">
+        <email xmlns="uri:oozie:email-action:0.1">
+            <to>piotr.dendek@gmail.com</to>
+            <subject>OOZIE completed! for ${wf:id()} SUCC-FINISHED execution at ${timestamp()}</subject>
+            <body>
+The wf ${wf:id()} successfully completed.
+@MAIL-DEF@
+			</body>
+        </email>
+        <ok to="end2"/>
+        <error to="kill"/>
+    </action>
+
+    <action name="kill">
+        <email xmlns="uri:oozie:email-action:0.1">
+            <to>piotr.dendek@gmail.com</to>
+            <subject>OOZIE completed! for ${wf:id()} FAILED execution at ${timestamp()}</subject>
+            <body>
+The wf ${wf:id()} failed: error message[${wf:errorMessage(wf:lastErrorNode())}]
+@MAIL-DEF@
+			</body>
+        </email>
+        <ok to="kill2"/>
+        <error to="kill2"/>
+    </action>
+
+    <kill name='kill2'>
         <message>Workflow failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
     </kill>
-    <end name='end'/>
+    <end name='end2'/>
 </workflow-app>

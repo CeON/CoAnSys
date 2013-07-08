@@ -98,23 +98,28 @@ set pig.skewedjoin.reduce.memusage $pig_skewedjoin_reduce_memusage
 -- -----------------------------------------------------
 
 A = load '$dc_m_hdfs_neighs' as (key:chararray, data:map[], part:int); --key,map,part
---A0 = foreach A generate key, data#'categories' as categs;
+A0 = foreach A generate key, (bag{tuple(chararray)})data#'categories' as categs, part;
 --dump A0;
-C = foreach A generate key, pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_BAG_FROM_MAP(data,'categories') as categs, part;
+--C = foreach A generate key, pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_BAG_FROM_MAP(data,'categories') as categs, part; --key,categs,part
+/*A1 selection is needed only when reading data filed (map) is faulty*/
+--A1 = filter A0 by key matches 'SPRINGER.+';
+store A0 into '$dc_m_hdfs_docClassifMapping'; --key,{categ}, part
 
-dC0 = $dc_m_pigScript_strategyOfNeigCandidatesFiltering(C,$dc_m_int_folds,$dc_m_int_categBoundary);
+/*
+CODE BELOW IS USEFULL ONLY IF YOU ALLOW SOME PART OF CLASSIFICATION CODES TO PROCESS,
+E.G. THOSE, WHICH OCCURES IN OTHER FOLDS
+*/
+/*
+dC0 = $dc_m_pigScript_strategyOfNeigCandidatesFiltering(C,$dc_m_int_folds,$dc_m_int_categBoundary); --categs
 dC00 = filter dC0 by categ!='';
-
-dC01 = howmanyrecords(dC00);
-
+--dC01 = howmanyrecords(dC00);
 C1  = foreach C generate *, 1 as crosspoint;
 dC1 = foreach dC00 generate *,1 as crosspoint;
-
 C2 = join C1 by crosspoint, dC1 by crosspoint using 'replicated';--key, categs:{categ},part,crosspoint,allowed,crosspoint;
-
 C3 = foreach C2 generate key,flatten(categs) as reg,categ as allowed, part;
 C4 = filter C3 by reg == allowed;
 C5 = foreach C4 generate key,reg as categ, part;
 C6 = group C5 by (key,part);
 C7 = foreach C6 generate group.key as key, C5.categ as categs, group.part as part;
 store C7 into '$dc_m_hdfs_docClassifMapping'; --key,{categ}, part
+*/

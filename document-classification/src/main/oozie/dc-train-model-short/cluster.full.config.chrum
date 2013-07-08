@@ -1,0 +1,19 @@
+#
+# (C) 2010-2013 ICM UW. All rights reserved.
+#
+
+OOZIE_SERVER=hadoop-master.vls.icm.edu.pl
+OOZIE_PORT=11000
+
+PROJECT=coansys_dc-train
+HUSER=pdendek
+
+HDFS=/user/${HUSER}/workflows/
+LOCAL_TRIGGER=/mnt/srv-nfs/pdendek/20130417/triggers/coansys_dc-train
+LOCAL=obsolute
+
+lib <- /usr/lib/pig/pig-0.9.2-cdh4.0.1.jar,../../../../../citations/target/citations-1.2-SNAPSHOT.jar,../../../../../commons-scala/target/commons-scala-1.2-SNAPSHOT.jar,../../../../../commons/target/commons-1.2-SNAPSHOT.jar,../../../../../disambiguation-author/target/disambiguation-author-1.2-SNAPSHOT.jar,../../../../../disambiguation/target/disambiguation-1.2-SNAPSHOT.jar,../../../../../document-classification/target/document-classification-1.2-SNAPSHOT-only-dependencies.jar,../../../../../document-classification/target/document-classification-1.2-SNAPSHOT.jar,../../../../../document-similarity/target/document-similarity-1.2-SNAPSHOT.jar,../../../../../importers/target/importers-1.2-SNAPSHOT.jar,../../../../../integration/target/integration-1.2-SNAPSHOT.jar,../../../../../keywords-extraction/target/keywords-extraction-1.2-SNAPSHOT.jar,../../../../../logs-analysis/target/logs-analysis-1.2-SNAPSHOT.jar,../../../../../models/target/models-1.2-SNAPSHOT.jar
+
+bash <- ../../bash/getText.sh
+pig <- ../../pig/*
+results <- ./cluster.full.config.chrum
