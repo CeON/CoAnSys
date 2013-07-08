@@ -13,6 +13,8 @@ object scoobi {
     val jars = files.filter(_.toLowerCase.endsWith(".jar"))
     val jarsFromDistCache = jars.filter(_.toLowerCase.contains(File.separator + "distcache" + File.separator))
 
-    configuration.addJars(jarsFromDistCache)
+    val paramName = "tmpjars"
+    val tmpjars = configuration.get(paramName, "").split(",")
+    configuration.set(paramName, (tmpjars ++ jarsFromDistCache).mkString(","))
   }
 }
