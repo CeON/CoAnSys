@@ -1,0 +1,11 @@
+<configuration>
+  <property>
+    <name>USAGE_WEIGHT_CLASS</name>
+    <value>pl.edu.icm.coansys.logsanalysis.metrics.ComplexUsageWeight</value>
+  </property>
+  <property>
+    <name>NB_OF_RECORDS</name>
+    <value>20</value>
+  </property>
+</configuration>
+

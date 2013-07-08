@@ -5,7 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import pl.edu.icm.coansys.disambiguation.work.tool.MockDocumentWrapperFactory;
-import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentWrapper;
+import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
 
 public class WorkTitleComparatorTest {
 

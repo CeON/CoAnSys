@@ -9,9 +9,9 @@ import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.SequenceFile.Reader;
 import static org.testng.Assert.*;
 import org.testng.annotations.Test;
-import pl.edu.icm.coansys.importers.models.MostPopularProtos;
-import pl.edu.icm.coansys.importers.models.MostPopularProtos.MostPopularStats;
-import pl.edu.icm.coansys.importers.models.MostPopularProtos.ResourceStat;
+import pl.edu.icm.coansys.models.MostPopularProtos;
+import pl.edu.icm.coansys.models.MostPopularProtos.MostPopularStats;
+import pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat;
 import pl.edu.icm.oozierunner.OozieRunner;
 
 public class TestIT {

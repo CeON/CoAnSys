@@ -18,9 +18,10 @@ import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
 
 import pl.edu.icm.coansys.classification.documents.auxil.StackTraceExtractor;
-import pl.edu.icm.coansys.importers.models.DocumentProtos.ClassifCode;
-import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
-import pl.edu.icm.coansys.importers.models.DocumentProtos.TextWithLanguage;
+import pl.edu.icm.coansys.models.DocumentProtos.ClassifCode;
+import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
+import pl.edu.icm.coansys.models.DocumentProtos.KeywordsList;
+import pl.edu.icm.coansys.models.DocumentProtos.TextWithLanguage;
 
 /**
  *
@@ -56,7 +57,7 @@ public class EXTRACT_MAP_WHEN_CATEG extends EvalFunc<Map> {
                 Map<String, Object> map = new HashMap<String, Object>();
                 map.put("key", metadata.getKey());
                 map.put("title", titles);
-                map.put("keywords", getConcatenated(metadata.getKeywordList()));
+                map.put("keywords", getConcatenated(metadata.getKeywordsList()));
                 map.put("abstract", abstracts);
                 map.put("categories", db);
                 return map;
@@ -81,15 +82,15 @@ public class EXTRACT_MAP_WHEN_CATEG extends EvalFunc<Map> {
         return db;
     }
 
-    private String getConcatenated(List<TextWithLanguage> list) {
+    private String getConcatenated(List<KeywordsList> list) {
         if (list == null || list.isEmpty()) {
             return null;
         }
-        StringBuilder sb = new StringBuilder(list.size());
-        sb.append(list.get(0));
-        for (int i = 1; i < list.size(); i++) {
-            sb.append(" ").append(list.get(i).getText());
+        List<String> allKeywords = new ArrayList<String>();
+        if (allKeywords.isEmpty()) {
+            return null;
+        } else {
+            return Joiner.on(" ").join(allKeywords);
         }
-        return sb.toString();
     }
 }

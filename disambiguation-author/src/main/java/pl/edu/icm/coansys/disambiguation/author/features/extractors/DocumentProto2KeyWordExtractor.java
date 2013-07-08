@@ -4,7 +4,6 @@
 package pl.edu.icm.coansys.disambiguation.author.features.extractors;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -13,8 +12,8 @@ import org.slf4j.LoggerFactory;
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DocumentBased;
 import pl.edu.icm.coansys.disambiguation.author.jobs.hdfs.DisambiguationJob_Toy;
 import pl.edu.icm.coansys.disambiguation.features.Extractor;
-import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
-import pl.edu.icm.coansys.importers.models.DocumentProtos.TextWithLanguage;
+import pl.edu.icm.coansys.models.DocumentProtos;
+import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 
 /**
  * The {@link Extractor} from {@link DocumentProtos.DocumentMetadata} (commit 33ad120f11eb430d450) to a feature value list. 
@@ -33,9 +32,11 @@ public class DocumentProto2KeyWordExtractor implements Extractor<DocumentMetadat
 	public List<String> extract(DocumentMetadata input, String... auxil) {
 		DocumentMetadata dm = (DocumentMetadata) input;
 		List<String> ret = new ArrayList<String>();
-		for(TextWithLanguage kw : dm.getKeywordList()){
-			ret.addAll(Arrays.asList(kw.getText().split(" ")));
-		}
+        for (DocumentProtos.KeywordsList keywordsList : dm.getKeywordsList()) {
+            for (String kw : keywordsList.getKeywordsList()) {
+                ret.add(kw);
+            }
+        }
 		return ret;
 	}
 }

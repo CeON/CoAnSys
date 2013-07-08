@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 import pl.edu.icm.coansys.classification.documents.auxil.LoggingInClassification;
 import pl.edu.icm.coansys.classification.documents.auxil.StringListIntListWritable;
 import pl.edu.icm.coansys.disambiguation.auxil.TextArrayWritable;
-import pl.edu.icm.coansys.importers.constants.HBaseConstant;
+import pl.edu.icm.coansys.models.constants.HBaseConstant;
 
 /**
 *
@@ -274,7 +274,7 @@ public class TfidfJob_Proto implements Tool {
         tfidfJob.setOutputFormatClass(SequenceFileOutputFormat.class);
 
         SequenceFileInputFormat.addInputPath(tfidfJob, new Path(AUXIL_PATH + "job2"));
-        SequenceFileOutputFormat.setOutputPath(tfidfJob, new Path(FINAL_PATH + new Random().nextInt()));
+        SequenceFileOutputFormat.setOutputPath(tfidfJob, new Path(FINAL_PATH + (int)(Math.random() * Integer.MAX_VALUE)));
 
         /*
          * Launch job

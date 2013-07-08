@@ -7,7 +7,7 @@ package pl.edu.icm.coansys.citations.util
 import org.testng.Assert._
 import org.testng.annotations.Test
 import pl.edu.icm.coansys.citations.util.misc.normalizedAuthorTokensFromAuthorList
-import pl.edu.icm.coansys.importers.models.DocumentProtos.{BasicMetadata, Author}
+import pl.edu.icm.coansys.models.DocumentProtos.{BasicMetadata, Author}
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)

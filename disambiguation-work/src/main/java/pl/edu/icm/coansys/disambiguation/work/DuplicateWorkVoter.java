@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import pl.edu.icm.coansys.disambiguation.work.comparator.WorkAuthorComparator;
 import pl.edu.icm.coansys.disambiguation.work.comparator.WorkTitleComparator;
 import pl.edu.icm.coansys.disambiguation.work.comparator.WorkYearComparator;
-import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentWrapper;
+import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
 
 
 /**

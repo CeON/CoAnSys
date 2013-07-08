@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.disambiguation.work.tool.Bw2ProtoFileUtils;
 import pl.edu.icm.coansys.disambiguation.work.tool.DuplicateGenerator;
-import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentWrapper;
+import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
 
 
 public class DuplicateWorkDetectorTest {

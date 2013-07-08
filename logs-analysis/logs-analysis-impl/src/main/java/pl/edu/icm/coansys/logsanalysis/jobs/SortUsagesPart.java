@@ -24,7 +24,7 @@ import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.edu.icm.coansys.importers.models.MostPopularProtos;
+import pl.edu.icm.coansys.models.MostPopularProtos;
 
 /**
  *
@@ -150,7 +150,7 @@ public class SortUsagesPart implements Tool {
             while (!countersStack.empty()) {
                 long n = countersStack.pop();
                 for (String resource : buffer.get(n)) {
-                    result.add(new AbstractMap.SimpleEntry<Long, String>(new Long(n), resource));
+                    result.add(new AbstractMap.SimpleEntry<Long, String>(Long.valueOf(n), resource));
                 }
             }
         }

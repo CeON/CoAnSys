@@ -36,7 +36,7 @@ import pl.edu.icm.coansys.disambiguation.idgenerators.UuIdGenerator;
 public class ClusterDisambiguationReducer_Toy extends Reducer<Text, TextTextArrayMapWritable, Text, Text> {
 
     private static Logger logger = Logger.getLogger(LoggingInDisambiguation.class);
-    private String reducerId = new Date().getTime() + "_" + new Random().nextFloat();
+    private String reducerId = new Date().getTime() + "_" + Math.random();
     private double threshold;
     private List<FeatureInfo> featureInfos;
     private Disambiguator[] features;
