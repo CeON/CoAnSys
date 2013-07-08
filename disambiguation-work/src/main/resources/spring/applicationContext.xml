@@ -16,6 +16,11 @@
 		<property name="titleLengthExactComparison" value="7"/>
 
 	</bean>
+	
+	<bean id="workYearComparatorConfiguration" class="pl.edu.icm.coansys.disambiguation.work.comparator.WorkYearComparatorConfiguration">
+		<property name="publicationYearMaxDistance" value="0"/>
+
+	</bean>
 
    <context:component-scan resource-pattern="**/*.class" base-package="pl.edu.icm.coansys.disambiguation.work"/>
 
