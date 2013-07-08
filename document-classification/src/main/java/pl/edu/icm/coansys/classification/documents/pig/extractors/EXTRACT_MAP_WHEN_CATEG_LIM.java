@@ -152,16 +152,16 @@ public class EXTRACT_MAP_WHEN_CATEG_LIM extends EvalFunc<Map> {
 		List<String> kws = new ArrayList<String>();
 		Set<String> ctgs = new HashSet<String>();
 
-		for(TextWithLanguage twl : dm.getKeywordList()){
-			if(language.equalsIgnoreCase(twl.getLanguage())){
-				String str = twl.getText();
-				
-				if(action==Action.TRANSLATE) str = translateNonAlphaNumeric(str);
-		        else if(action==Action.REMOVE_KEYCHARACTERS) str = removeAllKeyPunctations(str);
-		        else str = removeAllNonAlphaNumeric(str);
-		        
-				if(!isClassifCode(str)) kws.add(str);
-				else ctgs.add(str);
+		for(KeywordsList kwl : dm.getKeywordsList()){
+			if(language.equalsIgnoreCase(kwl.getLanguage())){
+				for(String str : kwl.getKeywordsList()){
+					if(action==Action.TRANSLATE) str = translateNonAlphaNumeric(str);
+			        else if(action==Action.REMOVE_KEYCHARACTERS) str = removeAllKeyPunctations(str);
+			        else str = removeAllNonAlphaNumeric(str);
+			        
+					if(!isClassifCode(str)) kws.add(str);
+					else ctgs.add(str);
+				}
 			}
 		}
 		
