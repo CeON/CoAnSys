@@ -21,7 +21,7 @@ public class WorkYearComparator {
         String doc1year = DocumentWrapperUtils.getPublicationYear(doc1);
         String doc2year = DocumentWrapperUtils.getPublicationYear(doc2);
 
-        // if one of the years is not known then i treat these years as equal
+        // if one of the years is not known then treat these years as equal
         if (StringUtils.isBlank(doc1year) || StringUtils.isBlank(doc2year)) {
             return true;
         }
