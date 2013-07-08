@@ -1,6 +1,7 @@
 package pl.edu.icm.coansys.disambiguation.work;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -16,10 +17,20 @@ import org.springframework.stereotype.Service;
 import pl.edu.icm.coansys.commons.spring.DiReduceService;
 import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentWrapper;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+
+
+/**
+ * 
+ * @author Łukasz Dumiszewski
+ *
+ */
+
 @Service("duplicateWorkDetectReduceService")
 public class DuplicateWorkDetectReduceService implements DiReduceService<Text, BytesWritable, Text, BytesWritable> {
     
-    @SuppressWarnings("unused")
+    //@SuppressWarnings("unused")
     private static Logger log = LoggerFactory.getLogger(DuplicateWorkDetectReduceService.class);
     
     
@@ -35,18 +46,63 @@ public class DuplicateWorkDetectReduceService implements DiReduceService<Text, B
         
         List<DocumentWrapper> documents = DocumentWrapperUtils.extractDocumentWrappers(key, values);
         
-        Map<Integer, Set<DocumentWrapper>> duplicateWorksMap = duplicateWorkService.findDuplicates(documents);
+        log.info("reduce, key: {}, number of documents: {}", key.toString(), documents.size());
         
-        saveDuplicatesToContext(duplicateWorksMap, key, context);
+        long startTime = new Date().getTime();
+        
+        process(key, context, documents, 0);
+        
+        log.info("time [sec]: " + (new Date().getTime()-startTime)/1000);
         
     }
-
 
 
 
     
     //******************** PRIVATE ********************
     
+
+    private void process(Text key,  Reducer<Text, BytesWritable, Text, BytesWritable>.Context context,  List<DocumentWrapper> documents, int level) throws IOException, InterruptedException {
+        
+        level++;
+        
+        if (documents.size()>1000) {
+            Map<Text, List<DocumentWrapper>> documentPacks = splitDocuments(key, documents, level);
+            log.info("documents splitted into: {} packs", documentPacks.size());
+            
+            for (Map.Entry<Text, List<DocumentWrapper>> docs : documentPacks.entrySet()) {
+                process(docs.getKey(), context, docs.getValue(), level);
+            }
+            
+            
+        } else {
+            
+            Map<Integer, Set<DocumentWrapper>> duplicateWorksMap = duplicateWorkService.findDuplicates(documents);
+            saveDuplicatesToContext(duplicateWorksMap, key, context);
+            context.progress();
+        }
+    }
+
+
+
+
+    
+    private Map<Text, List<DocumentWrapper>> splitDocuments(Text key, List<DocumentWrapper> documents, int level) {
+        Map<Text, List<DocumentWrapper>> splitDocuments = Maps.newHashMap();
+        for (DocumentWrapper doc : documents) {
+            Text newKey = new Text(WorkKeyGenerator.generateKey(doc, level));
+            List<DocumentWrapper> list = splitDocuments.get(newKey);
+            if (list == null) {
+                list = Lists.newArrayList();
+                splitDocuments.put(newKey, list);
+            }
+            list.add(doc);
+        }
+        
+        return splitDocuments;
+    }
+
+
     
     private void saveDuplicatesToContext(Map<Integer, Set<DocumentWrapper>> sameWorksMap, Text key, Reducer<Text, BytesWritable, Text, BytesWritable>.Context context)
             throws IOException, InterruptedException {

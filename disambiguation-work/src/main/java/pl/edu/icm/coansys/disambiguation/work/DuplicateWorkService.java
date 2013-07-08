@@ -14,6 +14,12 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
+/**
+ * 
+ * @author Łukasz Dumiszewski
+ *
+ */
+
 @Service("duplicateWorkService")
 public class DuplicateWorkService {
 

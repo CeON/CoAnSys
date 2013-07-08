@@ -42,10 +42,10 @@ public class DuplicateWorkServiceTest {
         
         documentWrapper1 = MockDocumentWrapperFactory.createDocumentWrapper("Ala ma kota a", 2012, janKowalski, adamNowak);
         DocumentWrapper documentWrapper2 = MockDocumentWrapperFactory.createDocumentWrapper("Ala ma kota b", 2012, janKowalski, adamNowak);
-        DocumentWrapper documentWrapper3 = MockDocumentWrapperFactory.createDocumentWrapper("Ala ma kota gh", 2012, janKowalski, adamNowak);
-        DocumentWrapper documentWrapper4 = MockDocumentWrapperFactory.createDocumentWrapper("Ala ma kota ff", 2012, janKowalski, adamNowak);
-        documentWrapper5 = MockDocumentWrapperFactory.createDocumentWrapper("Ola ma psiaka 300", 2012, janKowalski, adamNowak);
-        DocumentWrapper documentWrapper6 = MockDocumentWrapperFactory.createDocumentWrapper("Ola mma pisaka 300", 2012, janKowalski, adamNowak);
+        DocumentWrapper documentWrapper3 = MockDocumentWrapperFactory.createDocumentWrapper("Ala ma kota g", 2012, janKowalski, adamNowak);
+        DocumentWrapper documentWrapper4 = MockDocumentWrapperFactory.createDocumentWrapper("Ala mna kota f", 2012, janKowalski, adamNowak);
+        documentWrapper5 = MockDocumentWrapperFactory.createDocumentWrapper("Ola ma fajnego psiaka 300", 2012, janKowalski, adamNowak);
+        DocumentWrapper documentWrapper6 = MockDocumentWrapperFactory.createDocumentWrapper("Ola mma fajnego pisaka 300", 2012, janKowalski, adamNowak);
         
         documentWrappers.add(documentWrapper1);
         documentWrappers.add(documentWrapper2);

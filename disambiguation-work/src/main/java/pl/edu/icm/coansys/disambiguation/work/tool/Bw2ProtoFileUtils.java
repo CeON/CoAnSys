@@ -22,9 +22,16 @@ import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentWrapper;
 
 import com.google.common.collect.Lists;
 
+/**
+ * Utility methods related to bw2proto sequence files
+ * @author Łukasz Dumiszewski
+ *
+ */
 
 public class Bw2ProtoFileUtils {
 
+    
+    
     public static List<DocumentWrapper> readDocWrappers(String inputFileUri) {
         
         List<DocumentWrapper> docWrappers = Lists.newArrayList();
