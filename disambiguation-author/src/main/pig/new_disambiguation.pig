@@ -15,6 +15,7 @@
 
 DEFINE keyTiKwAbsCatExtractor pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_MAP_WHEN_CATEG_LIM('en','removeall');
 DEFINE documentMetaExtractor pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_DOCUMENT_METADATA();
+DEFINE contribDocumentMetaExtractor pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_DOCUMENT_METADATA();
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- register section
@@ -50,6 +51,10 @@ set pig.tmpfilecompression.codec $pig_tmpfilecompression_codec_param
 set job.priority $job_priority
 set pig.cachedbag.memusage $pig_cachedbag_mem_usage
 set pig.skewedjoin.reduce.memusage $pig_skewedjoin_reduce_memusage
+
+
+
+DEFINE exhaustiveAND pl.icm.edu.disambiguation('$params');
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- code section
@@ -57,7 +62,7 @@ set pig.skewedjoin.reduce.memusage $pig_skewedjoin_reduce_memusage
 -- -----------------------------------------------------
 A1 = $dc_m_meth_extraction('$dc_m_in_inputDocsData','$dc_m_meth_extraction_inner'); 
 A2 = sample A1 $dc_m_double_sample;
-B = foreach A2 generate ... as (keyId:chararray, sname:chararray, metadata);
+B = foreach A2 generate $0, flatten(documentMetaExtractor($1));
 C = group B by sname;
 D = foreach C generate group as sname, B as datagroup, COUNT(B) as count;
 split D into
