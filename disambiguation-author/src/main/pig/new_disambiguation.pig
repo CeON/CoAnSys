@@ -8,13 +8,13 @@
 -- -----------------------------------------------------
 %DEFAULT commonJarsPath 'lib/*.jar'
 
-%DEFAULT dc_m_hdfs_inputDocsData /home/pdendek/icm_dane/springer/onespringer-sf/springer-00000.sf
-%DEFAULT dc_m_hdfs_outputContribs /tmp/outputContribs
+%DEFAULT dc_m_hdfs_inputDocsData /user/krzywojc/b/bazekon-20130314.sf 
+%DEFAULT time 20130709_1009
+%DEFAULT dc_m_hdfs_outputContribs disambiguation/outputContribs$time
 %DEFAULT dc_m_meth_extraction getBWBWFromHDFS
-%DEFAULT dc_m_meth_extraction_inner pl.edu.icm.coansys.importers.pig.udf.RichSequenceFileLoader
+%DEFAULT dc_m_meth_extraction_inner pl.edu.icm.coansys.pig.udf.RichSequenceFileLoader
 
 DEFINE keyTiKwAbsCatExtractor pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_MAP_WHEN_CATEG_LIM('en','removeall');
-DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_DOCUMENT_METADATA();
 DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_SNAME_DOCUMENT_METADATA();
 -- -----------------------------------------------------
 -- -----------------------------------------------------
@@ -60,9 +60,10 @@ set pig.skewedjoin.reduce.memusage $pig_skewedjoin_reduce_memusage
 -- code section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
-A1 = $dc_m_meth_extraction('$dc_m_in_inputDocsData','$dc_m_meth_extraction_inner'); 
+A1 = $dc_m_meth_extraction('$dc_m_hdfs_inputDocsData','$dc_m_meth_extraction_inner'); 
 A2 = sample A1 $dc_m_double_sample;
-B = foreach A2 generate $0, flatten(documentMetaExtractor($1));
+B = foreach A2 generate flatten(snameDocumentMetaExtractor($1)) as (key:chararray, sname:chararray, metadata:bytearray);
+describe B;
 C = group B by sname;
 D = foreach C generate group as sname, B as datagroup, COUNT(B) as count;
 E = limit D 10;
