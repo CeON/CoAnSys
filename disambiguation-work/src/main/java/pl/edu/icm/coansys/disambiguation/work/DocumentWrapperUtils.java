@@ -6,7 +6,6 @@ import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.CollectionUtils;
 
 import pl.edu.icm.coansys.models.DocumentProtos;
 import pl.edu.icm.coansys.models.DocumentProtos.Author;
@@ -17,7 +16,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 
 /** 
  * Contains various utility methods related to the {@link DocumentWrapper} class
- * @author lukdumi
+ * @author Łukasz Dumiszewski
  * 
  * */
 public abstract class DocumentWrapperUtils {
@@ -46,16 +45,24 @@ public abstract class DocumentWrapperUtils {
      * Returns null if there is no author on the authorPosition.  
      */
     public static Author getAuthor(DocumentWrapper documentWrapper, int authorPosition) {
-        List<Author> authors = documentWrapper.getDocumentMetadata().getBasicMetadata().getAuthorList();
-        if (CollectionUtils.isEmpty(authors)) {
-            return null;
-        }
+        List<Author> authors = getAuthors(documentWrapper);
         for (Author author : authors) {
             if (author.getPositionNumber()==authorPosition) {
                 return author;
             }
         }
         return null;
+    }
+    
+    /**
+     * wrapper for documentWrapper.getDocumentMetadata().getBasicMetadata().getAuthorList(); Never returns null
+     */
+    public static List<Author> getAuthors(DocumentWrapper documentWrapper) {
+        List<Author> authors = documentWrapper.getDocumentMetadata().getBasicMetadata().getAuthorList();
+        if (authors==null) {
+            authors = Lists.newArrayList();
+        }
+        return authors;
     }
     
     

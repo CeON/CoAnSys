@@ -12,6 +12,8 @@ import org.apache.hadoop.util.ToolRunner;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.disambiguation.work.tool.Bw2ProtoFileUtils;
 import pl.edu.icm.coansys.disambiguation.work.tool.DuplicateGenerator;
@@ -20,6 +22,7 @@ import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
 
 public class DuplicateWorkDetectorTest {
     
+    private static Logger log = LoggerFactory.getLogger(DuplicateWorkDetectorTest.class);
     
     private URL baseOutputUrl = this.getClass().getResource("/");
     private String outputDir = baseOutputUrl.getPath() + "/testOut";
@@ -41,8 +44,11 @@ public class DuplicateWorkDetectorTest {
     
     @Test
     public void test() throws Exception {
-        List<DocumentWrapper> docWrappers = Bw2ProtoFileUtils.readDocWrappers(outputDir+"/part-r-00000"); 
-        Assert.assertEquals(4, docWrappers.size());
+        List<DocumentWrapper> docWrappers = Bw2ProtoFileUtils.readDocWrappers(outputDir+"/part-r-00000");
+        for (DocumentWrapper doc : docWrappers) {
+            log.info(DocumentWrapperUtils.getMainTitle(doc));
+        }
+        Assert.assertEquals(6, docWrappers.size());
        
     }
 

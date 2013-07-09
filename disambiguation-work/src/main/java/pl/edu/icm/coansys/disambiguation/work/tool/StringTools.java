@@ -12,7 +12,7 @@ import com.google.common.collect.Maps;
  * @author Łukasz Dumiszewski
  *
  */
-public final class StringUtils {
+public final class StringTools {
     
     
     static Map<String, String> wordToDecimal = Maps.newHashMap(); 
@@ -31,7 +31,7 @@ public final class StringUtils {
 
     
     
-    private StringUtils() {
+    private StringTools() {
         throw new IllegalStateException();
     }
     
@@ -86,7 +86,7 @@ public final class StringUtils {
     /**
      * Converts roman number to decimal.
      *  
-     * @throws IllegalArgumentException if the number is not a valid roman number, see: {@link StringUtils#isRomanNumber(String)} 
+     * @throws IllegalArgumentException if the number is not a valid roman number, see: {@link StringTools#isRomanNumber(String)} 
      */
     public static int romanToDecimal(String romanNumber) {
         Preconditions.checkArgument(isRomanNumber(romanNumber));
@@ -190,10 +190,15 @@ public final class StringUtils {
      * - Removes diacritics <br/>
      * - Lower cases <br/>
      * 
+     * Returns null if the value is null 
+     * 
      * @see DiacriticsRemover#removeDiacritics(String, boolean)
      * 
      * */
     public static String normalize(String value) {
+       if (value==null || value.isEmpty()) {
+           return value;
+       }
        value = value.trim(); 
        StringBuilder sb = new StringBuilder();
        for (int i=0;i<value.length();++i) {
@@ -213,7 +218,36 @@ public final class StringUtils {
        return value;
     }
     
-
+    /**
+     * Removes stop words <br/>
+     * The comparison of ... -> comparison ... <br/><br/>
+     * 
+     * Stop words supported so far: <br/>
+     * the, a, an, of, and, or
+     * 
+     * The white spaces between the stop words and other words are compacted to one space<br/>
+     */
+    public static String removeStopWords(String value) {
+        value = value.replaceAll("^([T|t][H|h][E|e]\\s+)|\\s+[T|t][H|h][E|e]\\s+", " ");
+        value = value.replaceAll("^([O|o][F|f]\\s+)|\\s+[O|o][F|f]\\s+", " ");
+        value = value.replaceAll("^[a|A]\\s+|[a|A]\\s+"," ");
+        value = value.replaceAll("^([A|a][N|n]\\s+)|\\s+[A|a][N|n]\\s+", " ");
+        value = value.replaceAll("^([A|a][N|n][D|d]\\s+)|\\s+[A|a][N|n][D|d]\\s+", " ");
+        value = value.replaceAll("^([O|o][R|r]\\s+)|\\s+[O|o][R|r]\\s+", " ");
+        return value;
+        
+    }
+    
+    /**
+     * Is the levenshtein distance of the two strings < maxDistance?
+     */
+    public static boolean inLevenshteinDistance(String title1, String title2, int maxDistance) {
+        int distance = org.apache.commons.lang.StringUtils.getLevenshteinDistance(title1, title2);
+        if (distance>maxDistance) {
+            return false;
+        }
+        return true;
+    }
 
     
     //******************** PRIVATE ********************

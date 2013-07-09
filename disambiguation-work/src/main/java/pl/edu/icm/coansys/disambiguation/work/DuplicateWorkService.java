@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.mortbay.log.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,9 +15,16 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
+/**
+ * 
+ * @author Łukasz Dumiszewski
+ *
+ */
+
 @Service("duplicateWorkService")
 public class DuplicateWorkService {
 
+    
     
     @Autowired
     private DuplicateWorkVoter duplicateWorkVoter;
@@ -50,7 +58,6 @@ public class DuplicateWorkService {
         for (DocumentWrapper document : documents) {
            
            for (DocumentWrapper other : new ArrayList<DocumentWrapper>(documentsCopy)) {
-                
                 if (document.getRowId().equals(other.getRowId())) {
                     documentsCopy.remove(other);
                 } else {
@@ -64,6 +71,9 @@ public class DuplicateWorkService {
         }
         return sameWorksMap;
     }
+    
+    
+    
     
 
     //******************** PRIVATE ********************
