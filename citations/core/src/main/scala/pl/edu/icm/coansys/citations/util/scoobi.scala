@@ -14,7 +14,7 @@ object scoobi {
     val jarsFromDistCache = jars.filter(_.toLowerCase.contains(File.separator + "distcache" + File.separator))
 
     val paramName = "tmpjars"
-    val tmpjars = configuration.get(paramName, "").split(",")
-    configuration.set(paramName, (tmpjars ++ jarsFromDistCache).mkString(","))
+    val tmpjars = configuration.get(paramName, "").split(",").filter(new File(_).exists())
+    configuration.set(paramName, (tmpjars ++ jarsFromDistCache).filterNot(_.trim.isEmpty).mkString(","))
   }
 }
