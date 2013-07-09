@@ -14,8 +14,8 @@
 %DEFAULT dc_m_meth_extraction_inner pl.edu.icm.coansys.importers.pig.udf.RichSequenceFileLoader
 
 DEFINE keyTiKwAbsCatExtractor pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_MAP_WHEN_CATEG_LIM('en','removeall');
-DEFINE documentMetaExtractor pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_DOCUMENT_METADATA();
-DEFINE contribDocumentMetaExtractor pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_DOCUMENT_METADATA();
+DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_DOCUMENT_METADATA();
+DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_SNAME_DOCUMENT_METADATA();
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- register section
@@ -54,7 +54,7 @@ set pig.skewedjoin.reduce.memusage $pig_skewedjoin_reduce_memusage
 
 
 
-DEFINE exhaustiveAND pl.icm.edu.disambiguation('$params');
+--DEFINE exhaustiveAND pl.icm.edu.disambiguation('$params');
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- code section
@@ -65,6 +65,9 @@ A2 = sample A1 $dc_m_double_sample;
 B = foreach A2 generate $0, flatten(documentMetaExtractor($1));
 C = group B by sname;
 D = foreach C generate group as sname, B as datagroup, COUNT(B) as count;
+E = limit D 10;
+store E into '$dc_m_hdfs_outputContribs';
+/*
 split D into
 	D1 if count = 1,
 	D100 if (count > 1 and count < 100),
@@ -78,4 +81,4 @@ EX = foreach D1 generate FLATTEN(genUUID(datagroup.sname)), FLATTEN(CONTRIB(data
 
 F = union E1,E100,E1000,EX;
 store F into '$dc_m_hdfs_outputContribs';
-
+*/
