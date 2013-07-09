@@ -13,7 +13,12 @@
     <name>Author Disambiguation Tool</name>
     <url>http://maven.apache.org</url>
 
-    <dependencies>    
+    <dependencies>
+        <dependency>
+            <groupId>pl.edu.icm.coansys</groupId>
+            <artifactId>coansys-io-input</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>         
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>commons</artifactId>
