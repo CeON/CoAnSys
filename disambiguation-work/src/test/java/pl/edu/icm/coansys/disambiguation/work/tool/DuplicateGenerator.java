@@ -1,10 +1,8 @@
 package pl.edu.icm.coansys.disambiguation.work.tool;
 
 import java.io.File;
-import java.util.Collection;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;

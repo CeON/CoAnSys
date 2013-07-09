@@ -31,6 +31,12 @@ public abstract class MockDocumentWrapperFactory {
         return createDocumentWrapper(basicMetadata);
     }
     
+    public static DocumentWrapper createDocumentWrapper(String title0, String issn, String journalTitle) {
+        TextWithLanguage textTitle0 = TextWithLanguage.newBuilder().setText(title0).build();
+        BasicMetadata basicMetadata = BasicMetadata.newBuilder().addTitle(textTitle0).setIssn(issn).setJournal(journalTitle).build();
+        return createDocumentWrapper(basicMetadata);
+    }
+    
     public static DocumentWrapper createDocumentWrapper(String title0, int publicationYear, List<Author> authors) {
         TextWithLanguage textTitle0 = TextWithLanguage.newBuilder().setText(title0).build();
         BasicMetadata basicMetadata = BasicMetadata.newBuilder().addTitle(textTitle0).addAllAuthor(authors).setYear(""+publicationYear).build();
