@@ -10,10 +10,37 @@
 # END:REPLACE
 
 # BEG:REPLACE @OOZIE-END@
+    <action name="end">
+        <email xmlns="uri:oozie:email-action:0.1">
+            <to>piotr.dendek@gmail.com</to>
+            <subject>OOZIE completed! for ${wf:id()}</subject>
+            <body>
+The wf ${wf:id()} successfully completed.
+
+oozie.wf.application.path=${dc_exec_path}
+results=${results}
+
+dc_m_in_inputDocsData=${dc_m_in_inputDocsData}
+dc_m_hdfs_neighs=${dc_m_hdfs_neighs}
+dc_m_hdfs_docClassifMapping=${dc_m_hdfs_docClassifMapping}
+dc_m_hdfs_model=${dc_m_hdfs_model}
+dc_m_hdfs_dataEnriched=${dc_m_hdfs_dataEnriched}
+dc_m_hdfs_modelEvaluation=${dc_m_hdfs_modelEvaluation}
+dc_m_int_folds=${dc_m_int_folds}
+dc_m_pigScript_featureVector=${dc_m_pigScript_featureVector}
+dc_m_pigScript_similarityMetric=${dc_m_pigScript_similarityMetric}
+dc_m_pigScript_modelBuilderClass=${dc_m_pigScript_modelBuilderClass}
+dc_m_pigScript_modelUse=${dc_m_pigScript_modelUse}
+			</body>
+        </email>
+        <ok to="end2"/>
+        <error to="kill"/>
+    </action>
+
 	<kill name="kill">
 		<message>Workflow failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
 	</kill>
-	<end name="end"/>
+	<end name="end2"/>
 </workflow-app>
 # END:REPLACE
 
@@ -78,6 +105,7 @@
 			<script>${pigScriptsDir}/1_MODEL_CREATE_01_docs2neig.pig</script>
 			<param>dc_m_in_inputDocsData=${dc_m_in_inputDocsData}</param>
 			<param>dc_m_hdfs_neighs=${dc_m_hdfs_neighs}</param>
+			<param>dc_m_double_sample=${dc_m_double_sample}</param>
 			@AUXIL@
 # END:REPLACE
 <!-- ================================================================= -->
