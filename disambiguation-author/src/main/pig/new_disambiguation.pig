@@ -8,7 +8,7 @@
 -- -----------------------------------------------------
 %DEFAULT commonJarsPath 'lib/*.jar'
 
-%DEFAULT dc_m_hdfs_inputDocsData /user/krzywojc/b/bazekon-20130314.sf 
+%DEFAULT dc_m_hdfs_inputDocsData /bwndata/seqfile/bazekon-20130314.sf 
 %DEFAULT time 20130709_1009
 %DEFAULT dc_m_hdfs_outputContribs disambiguation/outputContribs$time
 %DEFAULT dc_m_meth_extraction getBWBWFromHDFS
