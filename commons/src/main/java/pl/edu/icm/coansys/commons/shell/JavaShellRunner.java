@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Map;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 /**
@@ -42,12 +43,17 @@ public class JavaShellRunner {
     }
 
     private static void printOutputStream(Process proces) throws IOException {
-        BufferedReader in = new BufferedReader(new InputStreamReader(proces.getInputStream()));
-        String resultLine;
-        while ((resultLine = in.readLine()) != null) {
-            System.out.println(resultLine);
+        BufferedReader in = null;
+        try{
+            in = new BufferedReader(new InputStreamReader(proces.getInputStream()));
+            String resultLine;
+            while ((resultLine = in.readLine()) != null) {
+                System.out.println(resultLine);
+            }
         }
-
+        finally {
+            IOUtils.closeQuietly(in);
+        }
     }
     
     private static ProcessBuilder buildProcess(String[] args) {

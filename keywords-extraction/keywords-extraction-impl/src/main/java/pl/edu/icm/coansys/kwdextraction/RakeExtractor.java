@@ -7,6 +7,7 @@ import java.io.*;
 import java.text.BreakIterator;
 import java.util.Map.Entry;
 import java.util.*;
+import org.apache.commons.io.IOUtils;
 import org.jdom.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -211,22 +212,30 @@ public class RakeExtractor {
     private static Set<String> loadStopwords(Lang lang) throws IOException {
         Set<String> result = new HashSet<String>();
 
-        InputStream stopwordsStream;
+        InputStream stopwordsStream = null;
+        InputStreamReader isr = null;
+        BufferedReader br = null;
         try {
             stopwordsStream = RakeExtractor.class.getClassLoader().getResourceAsStream(lang.stopwordsPath);
         } catch (NullPointerException ex) {
             stopwordsStream = RakeExtractor.class.getClassLoader().getResourceAsStream("/" + lang.stopwordsPath);
         }
-        InputStreamReader isr = new InputStreamReader(stopwordsStream);
-        BufferedReader br = new BufferedReader(isr);
+        
+        try {
+            isr = new InputStreamReader(stopwordsStream);
+            br = new BufferedReader(isr);
 
-        String stopword = br.readLine();
-        while (stopword != null) {
-            stopword = stopword.trim();
-            if (!stopword.isEmpty()) {
-                result.add(stopword);
+            String stopword = br.readLine();
+            while (stopword != null) {
+                stopword = stopword.trim();
+                if (!stopword.isEmpty()) {
+                    result.add(stopword);
+                }
+                stopword = br.readLine();
             }
-            stopword = br.readLine();
+        }
+        finally {
+            IOUtils.closeQuietly(br);
         }
         return result;
     }
