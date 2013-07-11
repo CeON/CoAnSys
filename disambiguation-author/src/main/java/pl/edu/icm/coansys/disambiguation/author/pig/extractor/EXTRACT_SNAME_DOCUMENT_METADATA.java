@@ -6,6 +6,7 @@ package pl.edu.icm.coansys.disambiguation.author.pig.extractor;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
 import org.apache.pig.EvalFunc;
 import org.apache.pig.data.DataBag;
@@ -37,24 +38,18 @@ public class EXTRACT_SNAME_DOCUMENT_METADATA extends EvalFunc<DataBag>{
 	}
 	
 	public DataBag exec(Tuple input) throws IOException {
+		
+	
 		if (input == null || input.size() == 0)
 			return null;
-		try{
-			Object key = null;
-			try{
-				key = (DataByteArray) input.get(0);
-			}catch(Exception e){
-				System.out.println("Trying to read field rowId");
-				System.out.println("Failure!");
-				e.printStackTrace();
-				throw e;
-			}
-			
+		
+		try{		
 			DataByteArray dba = null;
 			try{
-				dba = (DataByteArray) key;	
+				dba = (DataByteArray) input.get(0);	
 			}catch(Exception e){
-				System.out.println("Trying to cast Object ("+input.getType(1)+") to DataByteArray");
+				System.out.println("Trying to cast Object ("+input.getType(0)
+						+") to DataByteArray");
 				System.out.println("Failure!");
 				e.printStackTrace();
 				throw e;
@@ -71,11 +66,15 @@ public class EXTRACT_SNAME_DOCUMENT_METADATA extends EvalFunc<DataBag>{
 			}
 			
 			DataBag ret = new DefaultDataBag();
-			DataByteArray metadata = new DataByteArray(dm.getDocumentMetadata().toByteArray());
+			DataByteArray metadata = 
+					new DataByteArray(dm.getDocumentMetadata().toByteArray());
 			
-			for(Author a : dm.getDocumentMetadata().getBasicMetadata().getAuthorList()){
-				String sname = a.getSurname();
-				Object[] to = new Object[]{key,sname, metadata};
+			List <Author> authors =  
+					dm.getDocumentMetadata().getBasicMetadata().getAuthorList();
+			
+			for ( int i = 0; i < authors.size(); i++ ){
+				String sname = authors.get(i).getSurname();
+				Object[] to = new Object[]{sname, metadata, i};
 				Tuple t = TupleFactory.getInstance().newTuple(Arrays.asList(to));
 				ret.add(t);
 			}
