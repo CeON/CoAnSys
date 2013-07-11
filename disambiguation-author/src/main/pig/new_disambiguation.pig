@@ -72,7 +72,7 @@ A2 = sample A1 $dc_m_double_sample;
 -- snameDocument...Extrator ma zwracac czworki nie trojki. Dodatkowa kolumna (pos) to indeks danego sname w tablicy autorow w metadanych
 -- zebym w getContributors nie musial iterowac sie po calej liscie, tylko od razu strzelic w indeks
 
-B = foreach A2 generate flatten(snameDocumentMetaExtractor($1)) as (key:chararray, sname:chararray, metadata:bytearray, contribPos:int);
+B = foreach A2 generate flatten(snameDocumentMetaExtractor($1)) as (sname:chararray, metadata:bytearray, contribPos:int);
 -- B: {key: chararray,sname: chararray,metadata: bytearray}
 
 -- sname: {(ket,sname,metadata), (key,sname,metadata), ...)}

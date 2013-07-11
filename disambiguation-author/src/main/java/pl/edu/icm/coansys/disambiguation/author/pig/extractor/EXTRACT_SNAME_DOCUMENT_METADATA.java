@@ -38,20 +38,12 @@ public class EXTRACT_SNAME_DOCUMENT_METADATA extends EvalFunc<DataBag>{
 	}
 	
 	public DataBag exec(Tuple input) throws IOException {
+		
+	
 		if (input == null || input.size() == 0)
 			return null;
 		
-		try{
-			Object key = null;
-			try{
-				key = (String) input.get(0);
-			}catch(Exception e){
-				System.out.println("Trying to read field rowId");
-				System.out.println("Failure!");
-				e.printStackTrace();
-				throw e;
-			}
-			
+		try{		
 			DataByteArray dba = null;
 			try{
 				dba = (DataByteArray) input.get(1);	
@@ -82,7 +74,7 @@ public class EXTRACT_SNAME_DOCUMENT_METADATA extends EvalFunc<DataBag>{
 			
 			for ( int i = 0; i < authors.size(); i++ ){
 				String sname = authors.get(i).getSurname();
-				Object[] to = new Object[]{key,sname, metadata, i};
+				Object[] to = new Object[]{sname, metadata, i};
 				Tuple t = TupleFactory.getInstance().newTuple(Arrays.asList(to));
 				ret.add(t);
 			}
