@@ -23,6 +23,7 @@ public class JavaShellRunner {
     private JavaShellRunner() {}
     
     private static String[] parseArgs(String[] args) {
+        String[] result = new String[2];
         if (args == null || args.length < 2) {
             logger.debug("# of parameters should be greater or equal to 2");
             logger.debug("You need to provide:");
@@ -30,16 +31,19 @@ public class JavaShellRunner {
             logger.debug("* the directory where the script is to run");
             logger.debug("");
 
-            args = new String[2];
-            args[0] = "/home/akawa/Documents/codes/scripts/create_testProto.sh";
-            args[1] = "/home/akawa/Documents/codes/scripts";
+            result[0] = "/home/akawa/Documents/codes/scripts/create_testProto.sh";
+            result[1] = "/home/akawa/Documents/codes/scripts";
 
             logger.debug("Default values will be used:");
-            logger.debug("* " + args[0]);
-            logger.debug("* " + args[1]);
+            logger.debug("* " + result[0]);
+            logger.debug("* " + result[1]);
+        }
+        else {
+            result[0] = args[0];
+            result[1] = args[1];
         }
 
-        return args;
+        return result;
     }
 
     private static void printOutputStream(Process proces) throws IOException {
@@ -68,9 +72,8 @@ public class JavaShellRunner {
     }
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        args = parseArgs(args);
 
-        ProcessBuilder pb = buildProcess(args);
+        ProcessBuilder pb = buildProcess(parseArgs(args));
         Process proc = pb.start();
         printOutputStream(proc);
         if (proc.waitFor() == 0) {

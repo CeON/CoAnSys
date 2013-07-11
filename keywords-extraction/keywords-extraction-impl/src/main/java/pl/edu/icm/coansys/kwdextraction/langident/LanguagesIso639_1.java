@@ -204,12 +204,13 @@ public enum LanguagesIso639_1 {
      * normalized language code. CategorizationException is thrown if language code is not valid.
      */
     public static String checkAndNormalize(String langCode) throws CategorizationException {
+        String result = null;
         if (langCode!=null) {
-            langCode = normalize(langCode.trim());
+            result = normalize(langCode.trim());
         }
-        if (! isValid(langCode))
-			throw new CategorizationException("["+langCode+"] is not valid ISO 639-1 language code");
-        return langCode;
+        if (! isValid(result))
+			throw new CategorizationException("["+result+"] is not valid ISO 639-1 language code");
+        return result;
     }
 
     private static String normalize(final String code) {

@@ -75,17 +75,17 @@ public class DuplicateWorkDetectReduceService implements DiReduceService<Text, B
             return;
         }
         
-        level++;
+        int lev = level + 1;
         
         if (documents.size()>maxNumberOfDocuments) {
-            Map<Text, List<DocumentWrapper>> documentPacks = splitDocuments(key, documents, level);
+            Map<Text, List<DocumentWrapper>> documentPacks = splitDocuments(key, documents, lev);
             log.info(dashes+ "documents split into: {} packs", documentPacks.size());
             
             for (Map.Entry<Text, List<DocumentWrapper>> docs : documentPacks.entrySet()) {
                 if (docs.getValue().size()==documents.size()) { // docs were not splitted, the generated key is the same for all the titles, may happen if the documents have the same short title, e.g. news in brief
                    maxNumberOfDocuments+=maxNumberOfDocuments; 
                 }
-                process(docs.getKey(), context, docs.getValue(), level, maxNumberOfDocuments);
+                process(docs.getKey(), context, docs.getValue(), lev, maxNumberOfDocuments);
             }
             
             
