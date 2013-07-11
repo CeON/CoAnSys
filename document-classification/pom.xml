@@ -12,6 +12,19 @@
     <name>Document Classification Tool</name>
     <url>http://maven.apache.org</url>
 
+	<build>
+		<resources>
+			<resource>
+				<directory>src/main/pig</directory>
+				<filtering>false</filtering>
+				<includes>
+					<include>**/*.pig</include>
+				</includes>
+				<targetPath>${build.directory}/classes/pig</targetPath>
+			</resource>
+		</resources>
+	</build>
+
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
