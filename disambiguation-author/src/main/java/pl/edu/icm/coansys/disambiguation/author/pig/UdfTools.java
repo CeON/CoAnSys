@@ -1,3 +1,6 @@
+/*
+ * (C) 2010-2012 ICM UW. All rights reserved.
+ */
 package pl.edu.icm.coansys.disambiguation.author.pig;
 
 import java.io.IOException;
@@ -14,6 +17,11 @@ import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 
 import java.util.Date;
 
+/**
+ * @author pdendek
+ * @author mwos
+ */
+
 public class UdfTools  {
 	
 	class GenUUID extends EvalFunc< String > {
@@ -22,9 +30,8 @@ public class UdfTools  {
 	     * @param Tuple input with one String - contributor name, 
 	     * for whom we want find unique id
 	     * @returns String UUID
-	     */
-		
-		//TO DO: na wejsciu DateBag nie pojedyncza Tupla
+	     */		
+		//TODO: na wejsciu DateBag nie pojedyncza Tupla, na wykscoi DateBag z String
 		@Override
 		public String exec( Tuple input ) throws IOException {	
 			return "" + input.get(0) + (new Date()).getTime();
@@ -33,7 +40,12 @@ public class UdfTools  {
 	
 	class GetContributors extends EvalFunc<String> {
 
-		//TO DO: na wejsciu jak genUUID
+		/**
+		 * @param Tuple input with DocumentMetadata metadata of document 
+		 * and int index of contributor in document authors list  
+		 * @return int author's key
+		 */
+		//TODO: wejscie i wyjscie jak TODO w GenUUID
 		@Override
 		public String exec( Tuple input ) throws IOException {
 					
