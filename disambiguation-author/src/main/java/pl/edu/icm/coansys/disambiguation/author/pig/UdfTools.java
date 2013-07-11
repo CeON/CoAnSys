@@ -6,11 +6,11 @@ package pl.edu.icm.coansys.disambiguation.author.pig;
 import java.io.IOException;
 
 import org.apache.pig.EvalFunc;
-import org.apache.pig.data.DataBag;
+//import org.apache.pig.data.DataBag;
 import org.apache.pig.data.DataByteArray;
-import org.apache.pig.data.DefaultDataBag;
+//import org.apache.pig.data.DefaultDataBag;
 import org.apache.pig.data.Tuple;
-import org.apache.pig.data.TupleFactory;
+//import org.apache.pig.data.TupleFactory;
 
 import pl.edu.icm.coansys.disambiguation.author.auxil.StackTraceExtractor;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
@@ -24,7 +24,7 @@ import java.util.Date;
 
 public class UdfTools  {
 	
-	class GenUUID extends EvalFunc< String > {
+	public class GenUUID extends EvalFunc< String > {
 
 	    /**
 	     * @param Tuple input with one String - contributor name, 
@@ -38,7 +38,7 @@ public class UdfTools  {
 		}
 	}
 	
-	class GetContributors extends EvalFunc<String> {
+	public class GetContributors extends EvalFunc<String> {
 
 		/**
 		 * @param Tuple input with DocumentMetadata metadata of document 

@@ -4,9 +4,9 @@ import org.apache.pig.EvalFunc;
 import org.apache.pig.backend.executionengine.ExecException;
 import org.apache.pig.data.Tuple;
 
-import pl.edu.icm.coansys.disambiguation.auxil.TextTextArrayMapWritable;
-import pl.edu.icm.coansys.disambiguation.features.Disambiguator;
-import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
+//import pl.edu.icm.coansys.disambiguation.auxil.TextTextArrayMapWritable;
+//import pl.edu.icm.coansys.disambiguation.features.Disambiguator;
+//import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
 
 
 public class Udf extends EvalFunc<Tuple>{
