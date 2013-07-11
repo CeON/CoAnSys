@@ -14,9 +14,9 @@ public class GetContributors extends EvalFunc<String> {
 	/**
 	 * @param Tuple input with DocumentMetadata metadata of document 
 	 * and int index of contributor in document authors list  
-	 * @return int author's key
+	 * @return String author's key
 	 */
-	//TODO: wejscie i wyjscie jak TODO w GenUUID
+
 	@Override
 	public String exec( Tuple input ) throws IOException {
 				

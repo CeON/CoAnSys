@@ -84,11 +84,11 @@ C = group B by sname;
 --     ^ sname
 
 D = foreach C generate group as sname, B as datagroup, COUNT(B) as count;
--- D: {sname: chararray,datagroup: {(key: chararray,sname: chararray,metadata: bytearray)},count: long}
+-- D: {sname: chararray,datagroup: {(sname:chararray, metadata:bytearray, contribPos:int)},count: long}
 
 -- D: {sname: chararray,datagroup: {(key: chararray,sname: chararray,metadata: bytearray)},count: long}
 -- i powyzszego tupla dostaje do mojego udf'a. z dategroup moge sobie policzyc SIM
-E = limit D 10;
+E = limit D 3;
 -- store E into '$dc_m_hdfs_outputContribs';
 
 -- patrzy na ostatnia kolumne w D (ilosc kontrybutorow o tym samym sname
@@ -98,12 +98,18 @@ split D into
 	D1000 if (count >= 100 and count < 1000),
 	DX if count >= 1000;
 
+-- zmiana koncepcji dla singli:
+-- dla kontrybutorow D1: porozbijac databagi (ktore przeciez maja po jednym elemencie)
+-- na tabele z rekordami o tych wlasnie tuplach, wtedy w udfi'e nie bede musial zrzucac z databagow
+S = foreach D1 generate flatten( datagroup );
+E1 = foreach S generate FLATTEN( sinlgeAND( datagroup.metadata, datagroup.contribPos ) ); 		
+-- i wtedy do singleAND dawac S i mam slicznego prostego tupla z metadata, contribPos i zwracac UUID - key
 
-E1 = foreach D1 generate 
-		FLATTEN( genUUID(datagroup.sname) ), 
-		FLATTEN( getContributors( datagroup.metadata, datagroup.contribPos ) );
 
-dump E1;
+-- zagrozenia na przyszlosc: jeden autor w wyniku tego, ze jako kontrybutor zosta; uznany za wiecej niz jeden autor, moze dostac wiecej niz jeden UUID
+
+
+-- dump E1;
 
 -- E100 = foreach D100 generate exhaustiveAND(*) as authors;
 

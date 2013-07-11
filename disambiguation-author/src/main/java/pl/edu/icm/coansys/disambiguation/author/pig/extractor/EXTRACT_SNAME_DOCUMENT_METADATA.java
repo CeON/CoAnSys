@@ -46,9 +46,9 @@ public class EXTRACT_SNAME_DOCUMENT_METADATA extends EvalFunc<DataBag>{
 		try{		
 			DataByteArray dba = null;
 			try{
-				dba = (DataByteArray) input.get(1);	
+				dba = (DataByteArray) input.get(0);	
 			}catch(Exception e){
-				System.out.println("Trying to cast Object ("+input.getType(1)
+				System.out.println("Trying to cast Object ("+input.getType(0)
 						+") to DataByteArray");
 				System.out.println("Failure!");
 				e.printStackTrace();
@@ -57,7 +57,7 @@ public class EXTRACT_SNAME_DOCUMENT_METADATA extends EvalFunc<DataBag>{
 			
 			DocumentWrapper dm = null;
 			try{
-				dm = DocumentWrapper.parseFrom(dba.get());
+				dm = DocumentWrapper.parseFrom( dba.get() );
 			}catch(Exception e){
 				System.out.println("Trying to read ByteArray to DocumentMetadata");
 				System.out.println("Failure!");
