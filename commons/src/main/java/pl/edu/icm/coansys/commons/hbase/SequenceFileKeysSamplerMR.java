@@ -135,8 +135,7 @@ public class SequenceFileKeysSamplerMR implements Tool {
             System.exit(-1);
         }
 
-        int result = createParitionFile(args[0], args[1]);
-        return result;
+        return createParitionFile(args[0], args[1]);
     }
 
     private int createParitionFile(String sequenceFileInput, String outputPath) throws IOException, ClassNotFoundException, InterruptedException {

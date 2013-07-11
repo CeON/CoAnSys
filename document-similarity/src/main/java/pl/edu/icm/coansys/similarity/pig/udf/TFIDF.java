@@ -48,8 +48,7 @@ public class TFIDF extends EvalFunc<Double> {
         double abstractTfidfWeight = getZeroIfNull((Double) tuple.get(4));
         double abstractTfidf = getZeroIfNull((Double) tuple.get(5));
 
-        double weightedTFIDF = (keywordTfidf * keywordTfidfWeight) + (titleTfidf * titleTfidfWeight) + (abstractTfidf * abstractTfidfWeight);
-        return weightedTFIDF;
+        return (keywordTfidf * keywordTfidfWeight) + (titleTfidf * titleTfidfWeight) + (abstractTfidf * abstractTfidfWeight);
     }
     
     private double getZeroIfNull(Double d) {

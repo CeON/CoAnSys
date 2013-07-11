@@ -186,8 +186,7 @@ public class RakeExtractor {
      */
     private String filterTextByLang(String text, String language) throws IOException {
         LanguageIdentifierBean li = new LanguageIdentifierBean();
-        String retvalue = (language.equals(li.classify(text))) ? text : "";
-        return retvalue;
+        return (language.equals(li.classify(text))) ? text : "";
     }
 
     /**

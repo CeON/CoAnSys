@@ -72,8 +72,7 @@ public class StemmedPairs extends EvalFunc<DataBag> {
                 tuples.add(TupleFactory.getInstance().newTuple(s));
             }
 
-            DataBag bd = new DefaultDataBag(tuples);
-            return bd;
+            return new DefaultDataBag(tuples);
         } catch (Exception e) {
             throw new IOException("Caught exception processing input row ", e);
         }

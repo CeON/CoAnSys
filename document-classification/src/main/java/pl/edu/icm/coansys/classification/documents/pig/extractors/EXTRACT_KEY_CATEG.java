@@ -84,8 +84,7 @@ public class EXTRACT_KEY_CATEG extends EvalFunc<Tuple>{
 //	        System.out.println("");
 	        
 	        Object[] to = new Object[]{key,db,bagsize};
-	        Tuple t = TupleFactory.getInstance().newTuple(Arrays.asList(to));
-	        return t;
+	        return TupleFactory.getInstance().newTuple(Arrays.asList(to));
 			
 		}catch(Exception e){
 			// Throwing an exception will cause the task to fail.
