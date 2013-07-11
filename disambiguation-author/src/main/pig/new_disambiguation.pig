@@ -17,8 +17,8 @@
 
 DEFINE keyTiKwAbsCatExtractor pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_MAP_WHEN_CATEG_LIM('en','removeall');
 DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_SNAME_DOCUMENT_METADATA();
-DEFINE genUUID pl.edu.icm.coansys.disambiguation.author.pig.UdfTools.GenUUID(); 
-DEFINE getContributors pl.edu.icm.coansys.disambiguation.author.pig.UdfTools.GetContributors();
+DEFINE genUUID pl.edu.icm.coansys.disambiguation.author.pig.GenUUID(); 
+DEFINE getContributors pl.edu.icm.coansys.disambiguation.author.pig.GetContributors();
 
 -- -----------------------------------------------------
 -- -----------------------------------------------------
@@ -68,7 +68,6 @@ A1 = $dc_m_meth_extraction('$dc_m_hdfs_inputDocsData','$dc_m_meth_extraction_inn
 
 A2 = sample A1 $dc_m_double_sample;
 -- A2: {key: chararray,value: bytearray}
-)
 
 -- snameDocument...Extrator ma zwracac czworki nie trojki. Dodatkowa kolumna (pos) to indeks danego sname w tablicy autorow w metadanych
 -- zebym w getContributors nie musial iterowac sie po calej liscie, tylko od razu strzelic w indeks
@@ -94,7 +93,7 @@ E = limit D 10;
 
 -- patrzy na ostatnia kolumne w D (ilosc kontrybutorow o tym samym sname
 split D into
-	D1 if count = 1,
+	D1 if count == 1,
 	D100 if (count > 1 and count < 100),
 	D1000 if (count >= 100 and count < 1000),
 	DX if count >= 1000;
@@ -104,7 +103,7 @@ E1 = foreach D1 generate
 		FLATTEN( genUUID(datagroup.sname) ), 
 		FLATTEN( getContributors( datagroup.metadata, datagroup.contribPos ) );
 
-dump E1;#
+dump E1;
 
 -- E100 = foreach D100 generate exhaustiveAND(*) as authors;
 
