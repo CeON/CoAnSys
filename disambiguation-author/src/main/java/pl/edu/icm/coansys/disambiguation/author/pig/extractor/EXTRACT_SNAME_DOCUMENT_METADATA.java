@@ -57,7 +57,7 @@ public class EXTRACT_SNAME_DOCUMENT_METADATA extends EvalFunc<DataBag>{
 			
 			DocumentWrapper dm = null;
 			try{
-				dm = DocumentWrapper.parseFrom(dba.get());
+				dm = DocumentWrapper.parseFrom( dba.get() );
 			}catch(Exception e){
 				System.out.println("Trying to read ByteArray to DocumentMetadata");
 				System.out.println("Failure!");

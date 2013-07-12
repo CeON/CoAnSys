@@ -17,9 +17,7 @@
 
 DEFINE keyTiKwAbsCatExtractor pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_MAP_WHEN_CATEG_LIM('en','removeall');
 DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_SNAME_DOCUMENT_METADATA();
-DEFINE genUUID pl.edu.icm.coansys.disambiguation.author.pig.GenUUID(); 
-DEFINE getContributors pl.edu.icm.coansys.disambiguation.author.pig.GetContributors();
-
+DEFINE sinlgeAND pl.edu.icm.coansys.disambiguation.author.pig.SingleAND();
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- register section
@@ -84,11 +82,11 @@ C = group B by sname;
 --     ^ sname
 
 D = foreach C generate group as sname, B as datagroup, COUNT(B) as count;
--- D: {sname: chararray,datagroup: {(key: chararray,sname: chararray,metadata: bytearray)},count: long}
+-- D: {sname: chararray,datagroup: {(sname:chararray, metadata:bytearray, contribPos:int)},count: long}
 
 -- D: {sname: chararray,datagroup: {(key: chararray,sname: chararray,metadata: bytearray)},count: long}
 -- i powyzszego tupla dostaje do mojego udf'a. z dategroup moge sobie policzyc SIM
-E = limit D 10;
+E = limit D 3;
 -- store E into '$dc_m_hdfs_outputContribs';
 
 -- patrzy na ostatnia kolumne w D (ilosc kontrybutorow o tym samym sname
@@ -98,12 +96,20 @@ split D into
 	D1000 if (count >= 100 and count < 1000),
 	DX if count >= 1000;
 
+-- zmiana koncepcji dla singli:
+-- dla kontrybutorow D1: porozbijac databagi (ktore przeciez maja po jednym elemencie)
+-- na tabele z rekordami o tych wlasnie tuplach, wtedy w udfi'e nie bede musial zrzucac z databagow
+S = foreach D1 generate flatten( datagroup ) as (sname, metadata, contribPos);
+-- S: {datagroup::sname: chararray,datagroup::metadata: bytearray,datagroup::contribPos: int}
 
-E1 = foreach D1 generate 
-		FLATTEN( genUUID(datagroup.sname) ), 
-		FLATTEN( getContributors( datagroup.metadata, datagroup.contribPos ) );
+E1 = foreach S generate flatten( sinlgeAND( metadata, contribPos ) );
+	
+-- i wtedy do singleAND dawac S i mam slicznego prostego tupla z metadata, contribPos i zwracac UUID - key
 
-dump E1;
+store E1 into '$dc_m_hdfs_outputContribs'; 
+
+
+-- dump E1;
 
 -- E100 = foreach D100 generate exhaustiveAND(*) as authors;
 
