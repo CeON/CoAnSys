@@ -15,7 +15,7 @@ import com.google.common.collect.Maps;
 public final class StringTools {
     
     
-    static Map<String, String> wordToDecimal = Maps.newHashMap(); 
+    static final Map<String, String> wordToDecimal = Maps.newHashMap(); 
     static {
         wordToDecimal.put("ONE", "1");
         wordToDecimal.put("TWO", "2");
@@ -195,14 +195,14 @@ public final class StringTools {
      * @see DiacriticsRemover#removeDiacritics(String, boolean)
      * 
      * */
-    public static String normalize(String value) {
+    public static String normalize(final String value) {
        if (value==null || value.isEmpty()) {
            return value;
        }
-       value = value.trim(); 
+       String result = value.trim(); 
        StringBuilder sb = new StringBuilder();
-       for (int i=0;i<value.length();++i) {
-           char c = value.charAt(i);
+       for (int i=0;i<result.length();++i) {
+           char c = result.charAt(i);
            if (Character.isLetterOrDigit(c)) {
               sb.append(c);
            } else if (Character.isWhitespace(c)) {
@@ -211,11 +211,11 @@ public final class StringTools {
                sb.append(" ");
            }
          }
-       value = sb.toString();
-       value = value.replaceAll(" +", " ");
-       value = DiacriticsRemover.removeDiacritics(value);
-       value = value.toLowerCase();
-       return value;
+       result = sb.toString();
+       result = result.replaceAll(" +", " ");
+       result = DiacriticsRemover.removeDiacritics(result);
+       result = result.toLowerCase();
+       return result;
     }
     
     /**
@@ -227,14 +227,14 @@ public final class StringTools {
      * 
      * The white spaces between the stop words and other words are compacted to one space<br/>
      */
-    public static String removeStopWords(String value) {
-        value = value.replaceAll("^([T|t][H|h][E|e]\\s+)|\\s+[T|t][H|h][E|e]\\s+", " ");
-        value = value.replaceAll("^([O|o][F|f]\\s+)|\\s+[O|o][F|f]\\s+", " ");
-        value = value.replaceAll("^[a|A]\\s+|[a|A]\\s+"," ");
-        value = value.replaceAll("^([A|a][N|n]\\s+)|\\s+[A|a][N|n]\\s+", " ");
-        value = value.replaceAll("^([A|a][N|n][D|d]\\s+)|\\s+[A|a][N|n][D|d]\\s+", " ");
-        value = value.replaceAll("^([O|o][R|r]\\s+)|\\s+[O|o][R|r]\\s+", " ");
-        return value;
+    public static String removeStopWords(final String value) {
+        String result = value.replaceAll("^([T|t][H|h][E|e]\\s+)|\\s+[T|t][H|h][E|e]\\s+", " ");
+        result = result.replaceAll("^([O|o][F|f]\\s+)|\\s+[O|o][F|f]\\s+", " ");
+        result = result.replaceAll("^[a|A]\\s+|[a|A]\\s+"," ");
+        result = result.replaceAll("^([A|a][N|n]\\s+)|\\s+[A|a][N|n]\\s+", " ");
+        result = result.replaceAll("^([A|a][N|n][D|d]\\s+)|\\s+[A|a][N|n][D|d]\\s+", " ");
+        result = result.replaceAll("^([O|o][R|r]\\s+)|\\s+[O|o][R|r]\\s+", " ");
+        return result;
         
     }
     

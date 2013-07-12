@@ -103,8 +103,7 @@ public class EXTRACT_KEY_TI_ABS_KW_WHEN_CATEG extends EvalFunc<Tuple> {
                 }
                 Object[] to = new Object[]{key, titles, abstracts, Joiner.on(" ").join(allKeywords)};
 
-                Tuple t = TupleFactory.getInstance().newTuple(Arrays.asList(to));
-                return t;
+                return TupleFactory.getInstance().newTuple(Arrays.asList(to));
             }
             return null;
 

@@ -119,6 +119,7 @@ public class DisambiguationJob_Toy implements Tool {
     }
 
     private void parseArgs(String[] args) {
+        String[] tmp = new String[5];
         if (args == null || args.length != 5) {
             logger.debug("# of parameters is not equal to 5");
             logger.debug("You need to provide:");
@@ -136,20 +137,26 @@ public class DisambiguationJob_Toy implements Tool {
             logger.debug("* -0.846161134713438d");
             logger.debug("* DisambiguationJob_Toy");
 
-            args = new String[5];
-            args[0] = "testProto";
-            args[1] = "disambigTest";
-            args[2] = "EmailDisambiguator#DocumentProto2EmailExtractor#0.81#1,"
+            tmp[0] = "testProto";
+            tmp[1] = "disambigTest";
+            tmp[2] = "EmailDisambiguator#DocumentProto2EmailExtractor#0.81#1,"
                     + "KeywordDisambiguator#DocumentProto2KeyWordExtractor#0.13#33";
-            args[3] = "-0.846161134713438d";
-            args[4] = "DisambiguationJob_Toy";
+            tmp[3] = "-0.846161134713438d";
+            tmp[4] = "DisambiguationJob_Toy";
+        }
+        else {
+            tmp[0] = args[0];
+            tmp[1] = args[1];
+            tmp[2] = args[2];
+            tmp[3] = args[3];
+            tmp[4] = args[4];
         }
 
-        setINPUT_TABLE(args[0]);
-        setOUTPUT_TABLE(args[1]);
-        setFEATURES_DESCRIPTION(args[2]);
-        setTHRESHOLD(args[3]);
-        setNAME(args[4]);
+        setINPUT_TABLE(tmp[0]);
+        setOUTPUT_TABLE(tmp[1]);
+        setFEATURES_DESCRIPTION(tmp[2]);
+        setTHRESHOLD(tmp[3]);
+        setNAME(tmp[4]);
     }
 
     /*

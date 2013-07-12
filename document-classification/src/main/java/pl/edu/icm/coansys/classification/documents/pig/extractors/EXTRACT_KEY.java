@@ -43,8 +43,7 @@ public class EXTRACT_KEY extends EvalFunc<Tuple>{
 			DocumentMetadata dm = DocumentMetadata.parseFrom(dba.get());
 	        String key = dm.getKey();
 	        Object[] to = new Object[]{key};
-	        Tuple t = TupleFactory.getInstance().newTuple(Arrays.asList(to));
-	        return t;
+	        return TupleFactory.getInstance().newTuple(Arrays.asList(to));
 			
 		}catch(Exception e){
 			// Throwing an exception will cause the task to fail.

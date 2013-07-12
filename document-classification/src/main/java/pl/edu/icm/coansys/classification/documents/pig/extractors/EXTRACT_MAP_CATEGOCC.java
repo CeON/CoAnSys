@@ -71,8 +71,7 @@ public class EXTRACT_MAP_CATEGOCC extends EvalFunc<Tuple> {
             long num = db.size();
 
             Object[] to = new Object[]{map, num};
-            Tuple t = TupleFactory.getInstance().newTuple(Arrays.asList(to));
-            return t;
+            return TupleFactory.getInstance().newTuple(Arrays.asList(to));
         } catch (Exception e) {
         	// Throwing an exception will cause the task to fail.
             throw new IOException("Caught exception processing input row:\n"

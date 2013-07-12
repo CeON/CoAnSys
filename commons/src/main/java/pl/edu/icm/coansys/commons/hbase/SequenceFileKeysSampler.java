@@ -52,8 +52,7 @@ public class SequenceFileKeysSampler implements Tool {
         
         String sequenceFileInput = args[0];
         int regionCnt = Integer.parseInt(args[1]);
-        int result = createParitionFile(sequenceFileInput, regionCnt);
-        return result;
+        return createParitionFile(sequenceFileInput, regionCnt);
     }
 
     private int createParitionFile(String sequenceFileInput, int regionCnt) throws IOException, ClassNotFoundException, InterruptedException {

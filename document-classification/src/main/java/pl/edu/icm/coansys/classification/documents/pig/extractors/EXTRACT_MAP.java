@@ -55,7 +55,7 @@ public class EXTRACT_MAP extends EvalFunc<Map> {
             map.put("key", metadata.getKey());
             map.put("title", titles);
             map.put("keywords", getConcatenated(metadata.getKeywordsList()));
-            map.put("abstract", titles);
+            map.put("abstract", abstracts);
             map.put("categories", getCategories(metadata.getBasicMetadata().getClassifCodeList()));
 
             return map;

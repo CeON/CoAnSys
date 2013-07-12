@@ -75,8 +75,7 @@ public class AvgSimilarity extends EvalFunc<Double> {
                 list.add(similarity);
             }
 
-            Double totalSimilarity = simFunct.getDocumentsTotalSimilarity(doc1Key, doc2Key, list);
-            return totalSimilarity;
+            return simFunct.getDocumentsTotalSimilarity(doc1Key, doc2Key, list);
 
         } catch (ExecException ex) {
             throw new RuntimeException("Error while calculation of getDocumentsKeywordsCombinedSimilarity", ex);
