@@ -67,4 +67,14 @@ public class SequenceFileSplitAlgorithm implements SplitAlgorithm {
     public String separator() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+
+    @Override
+    public void setFirstRow(String string) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void setLastRow(String string) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }
