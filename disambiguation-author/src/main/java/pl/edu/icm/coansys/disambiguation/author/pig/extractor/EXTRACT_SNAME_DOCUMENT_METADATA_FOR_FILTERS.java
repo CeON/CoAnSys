@@ -26,7 +26,7 @@ import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
 *
 * @author pdendek
 */
-public class EXTRACT_SNAME_DOCUMENT_METADATA_FOR_FILITERS extends EvalFunc<DataBag>{
+public class EXTRACT_SNAME_DOCUMENT_METADATA_FOR_FILTERS extends EvalFunc<DataBag>{
 
 	@Override
 	public Schema outputSchema(Schema p_input){
