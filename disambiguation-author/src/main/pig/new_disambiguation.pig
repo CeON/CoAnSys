@@ -8,10 +8,13 @@
 -- -----------------------------------------------------
 %DEFAULT commonJarsPath 'lib/*.jar'
 
-%DEFAULT dc_m_hdfs_inputDocsData /bwndata/seqfile/bazekon-20130314.sf 
-%DEFAULT time 20130709_1009
---%DEFAULT dc_m_hdfs_outputContribs disambiguation/outputContribs$time
-%DEFAULT dc_m_hdfs_outputContribs disambiguation/outputContribs
+
+%DEFAULT inputdir /bwndata/seqfile/bazekon-20130314.sf
+%DEFAULT dc_m_hdfs_inputDocsData $inputdir
+
+%DEFAULT time 0
+%DEFAULT dc_m_hdfs_outputContribs disambiguation/outputContribs$time
+
 %DEFAULT dc_m_meth_extraction getBWBWFromHDFS
 %DEFAULT dc_m_meth_extraction_inner pl.edu.icm.coansys.pig.udf.RichSequenceFileLoader
 
@@ -67,29 +70,14 @@ A1 = $dc_m_meth_extraction('$dc_m_hdfs_inputDocsData','$dc_m_meth_extraction_inn
 A2 = sample A1 $dc_m_double_sample;
 -- A2: {key: chararray,value: bytearray}
 
--- snameDocument...Extrator ma zwracac czworki nie trojki. Dodatkowa kolumna (pos) to indeks danego sname w tablicy autorow w metadanych
--- zebym w getContributors nie musial iterowac sie po calej liscie, tylko od razu strzelic w indeks
-
 B = foreach A2 generate flatten(snameDocumentMetaExtractor($1)) as (sname:chararray, metadata:bytearray, contribPos:int);
--- B: {key: chararray,sname: chararray,metadata: bytearray}
-
--- sname: {(ket,sname,metadata), (key,sname,metadata), ...)}
--- [?] czyli nie przejmujemy sie tym, ze J. Kowalski to moze byc to samo co J. Kowalski
 
 C = group B by sname;
-
--- C: {group: chararray,B: {(key: chararray,sname: chararray,metadata: bytearray)}}
---     ^ sname
 
 D = foreach C generate group as sname, B as datagroup, COUNT(B) as count;
 -- D: {sname: chararray,datagroup: {(sname:chararray, metadata:bytearray, contribPos:int)},count: long}
 
--- D: {sname: chararray,datagroup: {(key: chararray,sname: chararray,metadata: bytearray)},count: long}
--- i powyzszego tupla dostaje do mojego udf'a. z dategroup moge sobie policzyc SIM
-E = limit D 3;
--- store E into '$dc_m_hdfs_outputContribs';
-
--- patrzy na ostatnia kolumne w D (ilosc kontrybutorow o tym samym sname
+-- patrzy na ostatnia kolumne w D (ilosc kontrybutorow o tym samym sname)
 split D into
 	D1 if count == 1,
 	D100 if (count > 1 and count < 100),
@@ -103,8 +91,7 @@ S = foreach D1 generate flatten( datagroup ) as (sname, metadata, contribPos);
 -- S: {datagroup::sname: chararray,datagroup::metadata: bytearray,datagroup::contribPos: int}
 
 E1 = foreach S generate flatten( sinlgeAND( metadata, contribPos ) );
-	
--- i wtedy do singleAND dawac S i mam slicznego prostego tupla z metadata, contribPos i zwracac UUID - key
+-- UUID - contribKey (gdzie dla singli UUID = contribkey
 
 store E1 into '$dc_m_hdfs_outputContribs'; 
 
