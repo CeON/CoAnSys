@@ -12,8 +12,7 @@
 
 %DEFAULT time 20130709_1009
 
---%DEFAULT dc_m_hdfs_outputContribs disambiguation/outputContribs$time
-%DEFAULT dc_m_hdfs_outputContribs disambiguation/outputContribs
+%DEFAULT dc_m_hdfs_outputContribs disambiguation/outputContribs$time
 %DEFAULT dc_m_meth_extraction getBWBWFromHDFS
 %DEFAULT dc_m_meth_extraction_inner pl.edu.icm.coansys.pig.udf.RichSequenceFileLoader
 
