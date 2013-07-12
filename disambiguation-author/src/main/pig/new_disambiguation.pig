@@ -17,9 +17,7 @@
 
 DEFINE keyTiKwAbsCatExtractor pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_MAP_WHEN_CATEG_LIM('en','removeall');
 DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_SNAME_DOCUMENT_METADATA();
-DEFINE genUUID pl.edu.icm.coansys.disambiguation.author.pig.GenUUID(); 
-DEFINE getContributors pl.edu.icm.coansys.disambiguation.author.pig.GetContributors();
-
+DEFINE sinlgeAND pl.edu.icm.coansys.disambiguation.author.pig.SingleAND();
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- register section
@@ -105,6 +103,7 @@ S = foreach D1 generate flatten( datagroup );
 E1 = foreach S generate FLATTEN( sinlgeAND( datagroup.metadata, datagroup.contribPos ) ); 		
 -- i wtedy do singleAND dawac S i mam slicznego prostego tupla z metadata, contribPos i zwracac UUID - key
 
+store E1 into '$dc_m_hdfs_outputContribs';
 
 -- zagrozenia na przyszlosc: jeden autor w wyniku tego, ze jako kontrybutor zosta; uznany za wiecej niz jeden autor, moze dostac wiecej niz jeden UUID
 
