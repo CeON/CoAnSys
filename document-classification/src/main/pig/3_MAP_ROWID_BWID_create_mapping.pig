@@ -16,7 +16,7 @@
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 REGISTER /usr/lib/hbase/lib/zookeeper.jar
-REGISTER /usr/lib/hbase/hbase-0.92.1-cdh4.0.1-security.jar 
+REGISTER /usr/lib/hbase/hbase-0.94.6-cdh4.3.0-security.jar 
 REGISTER /usr/lib/hbase/lib/guava-11.0.2.jar
 
 REGISTER '$commonJarsPath'

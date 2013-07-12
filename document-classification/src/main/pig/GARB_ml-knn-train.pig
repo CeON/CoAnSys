@@ -6,7 +6,7 @@
 -- import section
 -- -----------------------------------------------------
 register /usr/lib/hbase/lib/zookeeper.jar 
-register /usr/lib/hbase/hbase-0.92.1-cdh4.0.1-security.jar 
+register /usr/lib/hbase/hbase-0.94.6-cdh4.3.0-security.jar 
 register /usr/lib/hbase/lib/guava-11.0.2.jar 
 register lib/document-classification-1.0-SNAPSHOT.jar
 register lib/document-classification-1.0-SNAPSHOT-only-dependencies.jar
