@@ -99,13 +99,14 @@ split D into
 -- zmiana koncepcji dla singli:
 -- dla kontrybutorow D1: porozbijac databagi (ktore przeciez maja po jednym elemencie)
 -- na tabele z rekordami o tych wlasnie tuplach, wtedy w udfi'e nie bede musial zrzucac z databagow
-S = foreach D1 generate flatten( datagroup );
-E1 = foreach S generate FLATTEN( sinlgeAND( datagroup.metadata, datagroup.contribPos ) ); 		
+S = foreach D1 generate flatten( datagroup ) as (sname, metadata, contribPos);
+-- S: {datagroup::sname: chararray,datagroup::metadata: bytearray,datagroup::contribPos: int}
+
+E1 = foreach S generate flatten( sinlgeAND( metadata, contribPos ) );
+	
 -- i wtedy do singleAND dawac S i mam slicznego prostego tupla z metadata, contribPos i zwracac UUID - key
 
-store E1 into '$dc_m_hdfs_outputContribs';
-
--- zagrozenia na przyszlosc: jeden autor w wyniku tego, ze jako kontrybutor zosta; uznany za wiecej niz jeden autor, moze dostac wiecej niz jeden UUID
+store E1 into '$dc_m_hdfs_outputContribs'; 
 
 
 -- dump E1;
