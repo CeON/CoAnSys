@@ -25,7 +25,7 @@ DEFINE sinlgeAND pl.edu.icm.coansys.disambiguation.author.pig.SingleAND();
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 REGISTER /usr/lib/hbase/lib/zookeeper.jar
-REGISTER /usr/lib/hbase/hbase-0.92.1-cdh4.0.1-security.jar 
+REGISTER /usr/lib/hbase/hbase-0.94.6-cdh4.3.0-security.jar 
 REGISTER /usr/lib/hbase/lib/guava-11.0.2.jar
 
 REGISTER '$commonJarsPath'
@@ -82,14 +82,13 @@ split D into
 	D1000 if (count >= 100 and count < 1000),
 	DX if count >= 1000;
 
--- zmiana koncepcji dla singli:
--- dla kontrybutorow D1: porozbijac databagi (ktore przeciez maja po jednym elemencie)
--- na tabele z rekordami o tych wlasnie tuplach, wtedy w udfi'e nie bede musial zrzucac z databagow
-S = foreach D1 generate flatten( datagroup ) as (sname, metadata, contribPos);
--- S: {datagroup::sname: chararray,datagroup::metadata: bytearray,datagroup::contribPos: int}
+E = LIMIT D1 1;
 
-T = LIMIT S 10
+F = foreach E generate flatten( datagroup ) as (sname, metadata, contribPos);
+-- F: {datagroup::sname: chararray,datagroup::metadata: bytearray,datagroup::contribPos: int}
 
-U = foreach T generate (metadata, contribPos);
+G = foreach F generate (metadata, contribPos);
 
-DUMP U;
+DESCRIBE G;
+
+STORE G INTO 'singleAndTest_Table';
