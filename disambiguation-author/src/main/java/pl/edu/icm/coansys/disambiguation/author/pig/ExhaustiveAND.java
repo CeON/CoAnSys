@@ -17,6 +17,7 @@ import org.apache.pig.data.TupleFactory;
 
 import pl.edu.icm.coansys.disambiguation.author.auxil.StackTraceExtractor;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.DisambiguatorFactory;
+import pl.edu.icm.coansys.disambiguation.auxil.pig.PigDisambiguator;
 import pl.edu.icm.coansys.disambiguation.clustering.strategies.SingleLinkageHACStrategy_OnlyMax;
 import pl.edu.icm.coansys.disambiguation.features.Disambiguator;
 import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
@@ -26,24 +27,33 @@ import pl.edu.icm.coansys.disambiguation.idgenerators.UuIdGenerator;
 public class ExhaustiveAND extends EvalFunc<DataBag> {
 
 	private double threshold;
-	private Disambiguator[] features;
-	private List<FeatureInfo> featureInfos;
-
+	private PigDisambiguator[] features;
+	private List<FeatureInfo> featureInfos; 
+	
 	public ExhaustiveAND(String threshold, String featureDescription){
 		this.threshold = Double.parseDouble(threshold);
         this.featureInfos = FeatureInfo.parseFeatureInfoString(featureDescription);	
-        this.features = new Disambiguator[featureInfos.size()];  
-        
         DisambiguatorFactory ff = new DisambiguatorFactory();
+        
+        int featureNum = 0;
+        for(FeatureInfo fi : featureInfos){
+        	if(!fi.getDisambiguatorName().equals("")) featureNum++;
+        }
+        
+        this.features = new PigDisambiguator[featureNum];
+        
         int index = -1;
         for(FeatureInfo fi : featureInfos){
+        	if(fi.getDisambiguatorName().equals("")) continue;
         	index++;
-        	features[index] = ff.create(fi);
+        	Disambiguator d = ff.create(fi);
+        	features[index] = new PigDisambiguator(d);
+        	//posortuj dysambiguatory malejaco wg. in wag, np. Email#1.0,ClasifCode#0.7
         }
 	}
 
 	/*
-	 * Tuple: sname,{(sname, contribId,metadata)} 
+	 * Tuple: sname,{(contribId:chararray,contribPos:int,sname:chararray, metadata:map[])} 
 	 */
 	@Override
 	public DataBag exec( Tuple input ) throws IOException {
@@ -66,25 +76,24 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 	}
 
 	@SuppressWarnings("null")
-	private double[][] calculateAffinity(Tuple[] contribsT, List<String> contribsId) {
+	private double[][] calculateAffinity(Tuple[] contribsT, List<String> contribsId) throws Exception {
 		/**
 		 * Object[1][4] -- the 5th feature of the 2nd contributor
 		 */
-		Object[][] contribFeature = new Object[contribsT.length][features.length];
 		double[][] sim = null;
 		
 		
 		for(int i = 1; i < contribsT.length;i++){
 			sim[i] = new double[i];
-			getContribId(contribsT,contribsId);
 			for(int j = 0; j<i; j++){
 				sim[i][j]=threshold;
-				for(int d=0; d<features.length;d++){
-					List<String> f1 = getFeature(contribFeature[i][d],contribsT[i]);
-					List<String> f2 = getFeature(contribFeature[i][d],contribsT[i]);
-					
+				for(int d=0; d<features.length;d++){					
         			FeatureInfo featureInfo = featureInfos.get(d);
-					double partial = features[d].calculateAffinity(f1, f2);
+					@SuppressWarnings("unchecked")
+					Object oA =  ((Map<String,DataBag>) contribsT[i].get(3)).get(featureInfo.getFeatureExtractorName());
+					@SuppressWarnings("unchecked")
+					Object oB = (DataBag) ((Map<String,DataBag>) contribsT[j].get(3)).get(featureInfo.getFeatureExtractorName());	
+					double partial = features[d].calculateAffinity(oA, oB);
 					partial = partial/featureInfo.getMaxValue()*featureInfo.getWeight();
 					sim[i][j]+=partial;
         			if(sim[i][j]>0) break;
@@ -92,16 +101,6 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 			}
 		}
 		return sim;
-	}
-
-	private void getContribId(Tuple[] contribsT, List<String> authId) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	private List<String> getFeature(Object object, Tuple tuple) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 	
 	protected Map<Integer, List<String>> splitIntoMap(int[] clusterAssociation, List<String> authorIds) {
