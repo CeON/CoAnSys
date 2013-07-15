@@ -49,9 +49,11 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag>{
 		List<FeatureInfo>features = FeatureInfo.parseFeatureInfoString( info );
 		des = new DisambiguationExtractor[ features.size() ];
 		
+		int i = 0;
 		for ( FeatureInfo f : features ) {
 			Class<?> c = Class.forName("pl.edu.icm.coansys.disambiguation.author.pig.extractor" + f.getFeatureExtractorName() );
-			des[0] = (DisambiguationExtractor<?>) c.newInstance();
+			des[i] = (DisambiguationExtractor<?>) c.newInstance();
+			i++;
 		}
 	}
 	
@@ -60,7 +62,6 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag>{
 			des = new DisambiguationExtractor[1];
 			Class<?> c = Class.forName("pl.edu.icm.coansys.disambiguation.author.pig.extractor.EX_TITLE");
 			des[0] = (DisambiguationExtractor<?>) c.newInstance();
-	
 	}
 	
 	public DataBag exec(Tuple input) throws IOException {
