@@ -69,8 +69,7 @@ public class EXTRACT_DOCUMENT_METADATA extends EvalFunc<Tuple>{
 			}
 			
 	        Object[] to = new Object[]{new DataByteArray(dm.getDocumentMetadata().toByteArray())};
-	        Tuple t = TupleFactory.getInstance().newTuple(Arrays.asList(to));
-	        return t;
+	        return TupleFactory.getInstance().newTuple(Arrays.asList(to));
 			
 		}catch(Exception e){
 			// Throwing an exception will cause the task to fail.

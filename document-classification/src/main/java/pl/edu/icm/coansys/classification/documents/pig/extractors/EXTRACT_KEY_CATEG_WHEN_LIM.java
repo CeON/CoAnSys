@@ -95,8 +95,7 @@ public class EXTRACT_KEY_CATEG_WHEN_LIM extends EvalFunc<Tuple>{
 //	        System.out.println("");
 	        if(bagsize>limnum){
 	        	Object[] to = new Object[]{key,db,bagsize};
-		        Tuple t = TupleFactory.getInstance().newTuple(Arrays.asList(to));
-		        return t;
+		        return TupleFactory.getInstance().newTuple(Arrays.asList(to));
 	        }
 	        return null;
 		}catch(Exception e){

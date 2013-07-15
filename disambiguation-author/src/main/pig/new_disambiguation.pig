@@ -6,17 +6,17 @@
 -- default section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
-%DEFAULT commonJarsPath 'lib/*.jar'
+%DEFAULT JARS '*.jar'
+%DEFAULT commonJarsPath 'lib/$JARS'
 
 %DEFAULT dc_m_hdfs_inputDocsData /bwndata/seqfile/bazekon-20130314.sf 
 %DEFAULT time 20130709_1009
-
 %DEFAULT dc_m_hdfs_outputContribs disambiguation/outputContribs$time
 %DEFAULT dc_m_meth_extraction getBWBWFromHDFS
 %DEFAULT dc_m_meth_extraction_inner pl.edu.icm.coansys.pig.udf.RichSequenceFileLoader
 
 DEFINE keyTiKwAbsCatExtractor pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_MAP_WHEN_CATEG_LIM('en','removeall');
-DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_SNAME_DOCUMENT_METADATA();
+DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_CONTRIBDATA_GIVENDATA();
 DEFINE sinlgeAND pl.edu.icm.coansys.disambiguation.author.pig.SingleAND();
 -- -----------------------------------------------------
 -- -----------------------------------------------------
@@ -24,7 +24,7 @@ DEFINE sinlgeAND pl.edu.icm.coansys.disambiguation.author.pig.SingleAND();
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 REGISTER /usr/lib/hbase/lib/zookeeper.jar
-REGISTER /usr/lib/hbase/hbase-0.94.6-cdh4.3.0-security.jar 
+REGISTER /usr/lib/hbase/hbase-*-cdh4.*-security.jar 
 REGISTER /usr/lib/hbase/lib/guava-11.0.2.jar
 
 REGISTER '$commonJarsPath'
@@ -69,6 +69,9 @@ A2 = sample A1 $dc_m_double_sample;
 
 B = foreach A2 generate flatten(snameDocumentMetaExtractor($1)) as (sname:chararray, metadata:bytearray, contribPos:int);
 
+store B into '$dc_m_hdfs_outputContribs';
+
+/*
 C = group B by sname;
 
 D = foreach C generate group as sname, B as datagroup, COUNT(B) as count;

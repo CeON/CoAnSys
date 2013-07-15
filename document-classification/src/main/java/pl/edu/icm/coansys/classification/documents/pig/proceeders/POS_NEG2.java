@@ -113,8 +113,7 @@ public class POS_NEG2 extends EvalFunc<DataBag>{
 				Object[] to = new Object[]{p.x,0,p.y};
 		        alt.add(TupleFactory.getInstance().newTuple(Arrays.asList(to)));
 			}			
-			DataBag db = new DefaultDataBag(alt);
-			return db;
+			return new DefaultDataBag(alt);
 			
 		}catch(Exception e){
             throw new IOException("Caught exception processing input row:\t"
