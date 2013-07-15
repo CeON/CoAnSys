@@ -12,12 +12,12 @@
 
 %DEFAULT time 20130709_1009
 
-%DEFAULT dc_m_hdfs_outputContribs disambiguation/outputContribs$time
+--%DEFAULT dc_m_hdfs_outputContribs disambiguation/outputContribs$time
 %DEFAULT dc_m_meth_extraction getBWBWFromHDFS
 %DEFAULT dc_m_meth_extraction_inner pl.edu.icm.coansys.pig.udf.RichSequenceFileLoader
 
 DEFINE keyTiKwAbsCatExtractor pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_MAP_WHEN_CATEG_LIM('en','removeall');
-DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_SNAME_DOCUMENT_METADATA();
+DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_SNAME_DOCUMENT_METADATA_FOR_FILTERS();
 DEFINE sinlgeAND pl.edu.icm.coansys.disambiguation.author.pig.SingleAND();
 -- -----------------------------------------------------
 -- -----------------------------------------------------
@@ -76,50 +76,15 @@ D = foreach C generate group as sname, B as datagroup, COUNT(B) as count;
 -- D: {sname: chararray,datagroup: {(sname:chararray, metadata:bytearray, contribPos:int)},count: long}
 
 -- patrzy na ostatnia kolumne w D (ilosc kontrybutorow o tym samym sname)
-split D into
-	D1 if count == 1,
-	D100 if (count > 1 and count < 100),
-	D1000 if (count >= 100 and count < 1000),
-	DX if count >= 1000;
+D1 = FILTER D BY count == 1;
 
--- zmiana koncepcji dla singli:
--- dla kontrybutorow D1: porozbijac databagi (ktore przeciez maja po jednym elemencie)
--- na tabele z rekordami o tych wlasnie tuplach, wtedy w udfi'e nie bede musial zrzucac z databagow
-S = foreach D1 generate flatten( datagroup ) as (sname, metadata, contribPos);
--- S: {datagroup::sname: chararray,datagroup::metadata: bytearray,datagroup::contribPos: int}
+E = LIMIT D1 1;
 
-E1 = foreach S generate flatten( sinlgeAND( metadata, contribPos ) );
--- UUID - contribKey (gdzie dla singli UUID = contribkey
+F = foreach E generate flatten( datagroup ) as (sname, metadata, contribPos);
+-- F: {datagroup::sname: chararray,datagroup::metadata: bytearray,datagroup::contribPos: int}
 
-store E1 into '$dc_m_hdfs_outputContribs'; 
+G = foreach F generate (metadata, contribPos);
 
-
--- dump E1;
-
--- E100 = foreach D100 generate exhaustiveAND(*) as authors;
-
--- udf ma wypluwac bag'a
--- UUID_1,				 UUID_2, UUID_3
--- {key_1, key_2, key_3},{key_4},{key_5, key_6}
--- to mają byc klucze kontrybutorow nie dokumentow! (w metadanych)
-
-
--- OK? F1 = foreach E1 generate flatten(TOKENIZE(authors)) as autor;
--- F100 = foreach E100 generate flatten(TOKENIZE(authors)) as autor;
-
--- store F1 into '$dc_m_hdfs_outputContribs';
-
-/*
--- to mi wypluje podmacierze
-E1000_1 = foreach D1000 generate approximateAND1(*); 
--- a dalej mam obliczyc te podmacierze
-E1000_2 = foreach E1000_1 generate approximateAND2(*);
-
--- 																			datagroup.data
-EX = foreach DX generate FLATTEN(genUUID(datagroup.sname)), FLATTEN(CONTRIB(*));
-
--- [?] czy przed union nie powinno byc rozbicie pojedynczego rekordu na rekody wzgledem UUID
--- zebysmy mieli UUID - key, UUID - key?
-G = union F1,F100,F1000,FX;
-store G into '$dc_m_hdfs_outputContribs';
-*/
+DUMP G;
+-- DESCRIBE G;
+-- STORE G INTO 'singleAndTest_Table';

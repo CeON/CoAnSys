@@ -17,7 +17,7 @@
 %DEFAULT dc_m_meth_extraction_inner pl.edu.icm.coansys.pig.udf.RichSequenceFileLoader
 
 DEFINE keyTiKwAbsCatExtractor pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_MAP_WHEN_CATEG_LIM('en','removeall');
-DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_SNAME_DOCUMENT_METADATA();
+DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_SNAME_DOCUMENT_METADATA_FOR_FILTERS();
 DEFINE sinlgeAND pl.edu.icm.coansys.disambiguation.author.pig.SingleAND();
 -- -----------------------------------------------------
 -- -----------------------------------------------------
@@ -76,11 +76,7 @@ D = foreach C generate group as sname, B as datagroup, COUNT(B) as count;
 -- D: {sname: chararray,datagroup: {(sname:chararray, metadata:bytearray, contribPos:int)},count: long}
 
 -- patrzy na ostatnia kolumne w D (ilosc kontrybutorow o tym samym sname)
-split D into
-	D1 if count == 1,
-	D100 if (count > 1 and count < 100),
-	D1000 if (count >= 100 and count < 1000),
-	DX if count >= 1000;
+D1 = FILTER D BY count == 1;
 
 -- zmiana koncepcji dla singli:
 -- dla kontrybutorow D1: porozbijac databagi (ktore przeciez maja po jednym elemencie)
@@ -91,8 +87,11 @@ S = foreach D1 generate flatten( datagroup ) as (sname, metadata, contribPos);
 E1 = foreach S generate flatten( sinlgeAND( metadata, contribPos ) );
 -- UUID - contribKey (gdzie dla singli UUID = contribkey
 
-store E1 into '$dc_m_hdfs_outputContribs'; 
+--store E1 into '$dc_m_hdfs_outputContribs'; 
 
+F = LIMIT E1 1;
+
+dump F;
 
 -- dump E1;
 
