@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Date;
 import java.util.Scanner;
 
 import org.apache.pig.data.DataByteArray;
@@ -85,16 +86,26 @@ public class disambiguationTests {
 	@Test
 	public void newDisambiguation() throws IOException, ParseException {
 		
-		PigTest test = new PigTest("/home/m/icm/CoAnSys_przez_pdendek/disambiguation-author/src/main/pig/new_disambiguation.pig");
+		String tmpOutput = testPath + "test2_" + (new Date()).getTime() + ".tmp";
+		
+		System.out.println( tmpOutput );
+		
+		String[] params = {
+				"dc_m_hdfs_inputDocsData=" + testPath + "test2_secret.in",
+				"dc_m_hdfs_outputContribs=" + tmpOutput
+				};
+		
+		//TODO: poprawic sciezke:
+		PigTest test = new PigTest("/home/m/icm/CoAnSys_przez_pdendek/disambiguation-author/src/main/pig/new_disambiguation.pig",
+				params);
 		
 		//1. odsiac input
 		//2. w new_di..pig zparametryzowac input
 		//3. wywolac z parametrami
 		//4. wygenerowac out
 		
-		File expected = new File( testPath + "test2.out" );
-		test.assertOutput( expected );
-		
+		File expected = new File( testPath + "test2_secret.out" );
+		test.assertOutput( "E1", expected );
 		//TODO
 	}
 }
