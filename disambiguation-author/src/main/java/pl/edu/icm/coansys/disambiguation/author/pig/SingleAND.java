@@ -47,6 +47,7 @@ public class SingleAND extends EvalFunc< Tuple > {
 			
 		}catch(Exception e){
 			// Throwing an exception will cause the task to fail.
+			//TODO: ponizsze dewelopersko. Poprawic na chwytanie bez przerywania.
 			throw new IOException("Caught exception processing input row:\n"
 					+ StackTraceExtractor.getStackTrace(e));
 		}

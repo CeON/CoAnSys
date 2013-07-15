@@ -21,6 +21,7 @@ import org.apache.pig.impl.logicalLayer.FrontendException;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
 
 import pl.edu.icm.coansys.disambiguation.author.auxil.StackTraceExtractor;
+import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
 import pl.edu.icm.coansys.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
@@ -42,38 +43,23 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag>{
 		}
 	}
 	
-	public EXTRACT_CONTRIBDATA_GIVENDATA(String s){
+	public EXTRACT_CONTRIBDATA_GIVENDATA(String info) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
 		
-		String[] features = s.split(",");
+		List<FeatureInfo>features = FeatureInfo.parseFeatureInfoString( info );
+		des = new DisambiguationExtractor[ features.size() ];
 		
-		for ( String f : features ) {
-			
-			
+		for ( FeatureInfo f : features ) {
+			Class<?> c = Class.forName("pl.edu.icm.coansys.disambiguation.author.pig.extractor" + f.getFeatureExtractorName() );
+			des[0] = (DisambiguationExtractor<?>) c.newInstance();
 		}
-		
-		//TODO dopisz wyciaganie DisambiguationExtractor'ow (czyli NazwyEkstraktora) z wejsciowego string'a w postaci 
-		// NazwaFeaturea#NazwaEkstraktora#WagaFeature'a#WartoscMaxymala[,NazwaFeaturea#NazwaEkstraktora#WagaFeature'a#WartoscMaxymala]*
-		// i dodawanie tego do tablicy des tak jak w konstruktorze EXTRACT_CONTRIBDATA_GIVENDATA()
 	}
 	
-	public EXTRACT_CONTRIBDATA_GIVENDATA(){
-		try {
+	public EXTRACT_CONTRIBDATA_GIVENDATA() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+
 			des = new DisambiguationExtractor[1];
-			Class c = Class.forName("pl.edu.icm.coansys.disambiguation.author.pig.extractor.EX_KEYWORDS");
-			des[0] = (DisambiguationExtractor) c.newInstance();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			// dopisz rzutanie wyjatku korzystajac ze StackTraceExtractora tak jak w EXTRACT_SNAME_DOCUMENT_METADATA 
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			// dopisz rzutanie wyjatku korzystajac ze StackTraceExtractora tak jak w EXTRACT_SNAME_DOCUMENT_METADATA			
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			// dopisz rzutanie wyjatku korzystajac ze StackTraceExtractora tak jak w EXTRACT_SNAME_DOCUMENT_METADATA			
-			e.printStackTrace();
-		}
+			Class<?> c = Class.forName("pl.edu.icm.coansys.disambiguation.author.pig.extractor.EX_TITLE");
+			des[0] = (DisambiguationExtractor<?>) c.newInstance();
+	
 	}
 	
 	public DataBag exec(Tuple input) throws IOException {
