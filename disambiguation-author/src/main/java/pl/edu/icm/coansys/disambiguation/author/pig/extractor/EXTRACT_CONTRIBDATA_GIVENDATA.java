@@ -51,7 +51,7 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag>{
 		
 		int i = 0;
 		for ( FeatureInfo f : features ) {
-			Class<?> c = Class.forName("pl.edu.icm.coansys.disambiguation.author.pig.extractor" + f.getFeatureExtractorName() );
+			Class<?> c = Class.forName("pl.edu.icm.coansys.disambiguation.author.pig.extractor." + f.getFeatureExtractorName() );
 			des[i] = (DisambiguationExtractor<?>) c.newInstance();
 			i++;
 		}
