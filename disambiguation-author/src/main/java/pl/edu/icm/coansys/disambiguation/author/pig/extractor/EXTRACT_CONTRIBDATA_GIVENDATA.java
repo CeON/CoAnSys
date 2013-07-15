@@ -32,6 +32,7 @@ import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
 */
 public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag>{
 
+	@SuppressWarnings("rawtypes")
 	DisambiguationExtractor[] des = null;
 	
 	@Override
@@ -107,7 +108,7 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag>{
 			//potencjalnie bedzie do tego potrzebna osobna petla.
 			Object[] retObj = new Object[des.length];
 			int i=-1;
-			for(DisambiguationExtractor de : des){
+			for(DisambiguationExtractor<?> de : des){
 				i++;
 				retObj[i] = de.extract(dm);
 			}
@@ -115,7 +116,7 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag>{
 			//dodawanie wyciagnietych danych odnosnie dokumentu i kontrybutora do mapy informacji
 			Map<String, Object> map = new HashMap<String, Object>();
 			i = -1;
-			for(DisambiguationExtractor de : des){
+			for(DisambiguationExtractor<?> de : des){
 				i++;
 				map.put(de.getClass().getSimpleName(), retObj[i]);
 			}

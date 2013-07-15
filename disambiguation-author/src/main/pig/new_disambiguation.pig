@@ -16,7 +16,8 @@
 %DEFAULT dc_m_meth_extraction_inner pl.edu.icm.coansys.pig.udf.RichSequenceFileLoader
 
 DEFINE keyTiKwAbsCatExtractor pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_MAP_WHEN_CATEG_LIM('en','removeall');
-DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_CONTRIBDATA_GIVENDATA();
+-- DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_CONTRIBDATA_GIVENDATA();
+DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_CONTRIBDATA_GIVENDATA('unused#EX_YEAR#0.0#0.0,unused#EX_TITLE#0.0#0.0');
 DEFINE sinlgeAND pl.edu.icm.coansys.disambiguation.author.pig.SingleAND();
 DEFINE GenUUID pl.edu.icm.coansys.disambiguation.author.pig.GenUUID();
 -- -----------------------------------------------------
@@ -86,7 +87,7 @@ split D into
 -- dla kontrybutorow D1: porozbijac databagi (ktore przeciez maja po jednym elemencie)
 -- na tabele z rekordami o tych wlasnie tuplach, wtedy w udfi'e nie bede musial zrzucac z databagow
 D1A = foreach D1 generate flatten( datagroup );-- as (cId:chararray, contribPos:int, sname:chararray, metadata:map);
--- S: {datagroup::sname: chararray,datagroup::metadata: bytearray,datagroup::contribPos: int}
+
 D1B = foreach D1A generate cId, FLATTEN(GenUUID(TOBAG(cId)));
 
 
