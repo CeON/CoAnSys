@@ -43,6 +43,14 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag>{
 	}
 	
 	public EXTRACT_CONTRIBDATA_GIVENDATA(String s){
+		
+		String[] features = s.split(",");
+		
+		for ( String f : features ) {
+			
+			
+		}
+		
 		//TODO dopisz wyciaganie DisambiguationExtractor'ow (czyli NazwyEkstraktora) z wejsciowego string'a w postaci 
 		// NazwaFeaturea#NazwaEkstraktora#WagaFeature'a#WartoscMaxymala[,NazwaFeaturea#NazwaEkstraktora#WagaFeature'a#WartoscMaxymala]*
 		// i dodawanie tego do tablicy des tak jak w konstruktorze EXTRACT_CONTRIBDATA_GIVENDATA()
