@@ -13,8 +13,8 @@ public class EX_KEYWORDS implements  DisambiguationExtractor<DataBag>  {
 		DataBag db = new DefaultDataBag();
 		String lang = null;
 		
-		for(KeywordsList k : dm.getKeywordsList() ){
-			for(String s : 	k.getKeywordsList() ){
+		for ( KeywordsList k : dm.getKeywordsList() ){
+			for ( String s : k.getKeywordsList() ){
 				db.add(TupleFactory.getInstance().newTuple(s));
 			}
 		}
