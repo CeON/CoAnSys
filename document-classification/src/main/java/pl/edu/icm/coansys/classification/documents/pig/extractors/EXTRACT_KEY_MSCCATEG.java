@@ -80,8 +80,7 @@ public class EXTRACT_KEY_MSCCATEG extends EvalFunc<Tuple>{
 	        		db.add(TupleFactory.getInstance().newTuple(code.getValueList()));
 	        
 	        Object[] to = new Object[]{key,db};
-	        Tuple t = TupleFactory.getInstance().newTuple(Arrays.asList(to));
-	        return t;
+	        return TupleFactory.getInstance().newTuple(Arrays.asList(to));
 			
 		}catch(Exception e){
 			// Throwing an exception will cause the task to fail.

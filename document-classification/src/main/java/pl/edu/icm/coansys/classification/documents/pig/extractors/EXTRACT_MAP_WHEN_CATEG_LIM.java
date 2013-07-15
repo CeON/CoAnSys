@@ -132,20 +132,19 @@ public class EXTRACT_MAP_WHEN_CATEG_LIM extends EvalFunc<Map> {
     }
     
     private String removeAllNonAlphaNumeric(String str){
-    	str = str.replaceAll("[^a-zA-Z0-9_\\- ]", "");
-    	return str;
+    	return str.replaceAll("[^a-zA-Z0-9_\\- ]", "");
     }
     
     private String removeAllKeyPunctations(String str){
-    	str = str.replaceAll(",", "");
-    	str = str.replaceAll("#", "");
-    	return str;
+    	String result = str.replaceAll(",", "");
+    	result = result.replaceAll("#", "");
+    	return result;
     }
      
     private String translateNonAlphaNumeric(String str){
-    	str = str.replaceAll(",", " COMMA ");
-    	str = str.replaceAll("#", " HASH ");
-    	return str;
+    	String result = str.replaceAll(",", " COMMA ");
+    	result = result.replaceAll("#", " HASH ");
+    	return result;
     }
     
 	private Pair<String, DataBag> extractLangKeywords(DocumentMetadata dm) {

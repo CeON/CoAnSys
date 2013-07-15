@@ -38,16 +38,16 @@ public class StemmedPairs extends EvalFunc<DataBag> {
     }
     private final String SPACE = " ";
 
-    public List<String> getStemmedPairs(String text) throws IOException {
-        text = text.toLowerCase();
-        text = DiacriticsRemover.removeDiacritics(text);
-        text = text.replaceAll("_", SPACE);
-        text = text.replaceAll("\n", SPACE);
-        text = text.replaceAll("[^a-z\\d-_/ ]", "");
+    public List<String> getStemmedPairs(final String text) throws IOException {
+        String tmp  = text.toLowerCase();
+        tmp = DiacriticsRemover.removeDiacritics(tmp);
+        tmp = tmp.replaceAll("_", SPACE);
+        tmp = tmp.replaceAll("\n", SPACE);
+        tmp = tmp.replaceAll("[^a-z\\d-_/ ]", "");
 
         List<String> strings = new ArrayList<String>();
         PorterStemmer ps = new PorterStemmer();
-        for (String s : StringUtils.split(text, SPACE)) {
+        for (String s : StringUtils.split(tmp, SPACE)) {
             if (!StopWordsRemover.isAnEnglishStopWords(s)) {;
                 ps.add(s.toCharArray(), s.length());
                 ps.stem();
@@ -72,8 +72,7 @@ public class StemmedPairs extends EvalFunc<DataBag> {
                 tuples.add(TupleFactory.getInstance().newTuple(s));
             }
 
-            DataBag bd = new DefaultDataBag(tuples);
-            return bd;
+            return new DefaultDataBag(tuples);
         } catch (Exception e) {
             throw new IOException("Caught exception processing input row ", e);
         }

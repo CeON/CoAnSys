@@ -101,6 +101,7 @@ public class DisambiguationJob_Toy extends Configured implements Tool {
     }
 
     private void parseArgs(String[] args) {
+        String[] tmp = new String[5];
         if (args == null || args.length != 5) {
             logger.debug("# of parameters is not equal to 5");
             logger.debug("You need to provide:");
@@ -118,21 +119,26 @@ public class DisambiguationJob_Toy extends Configured implements Tool {
             logger.debug("* -0.846161134713438d");
             logger.debug("* DisambiguationJob_Toy");
 
-            args = new String[5];
-            //args[0] = "grotoap10";
-            args[0] = "grotoap10_dump/mproto-m-00000";
-            args[1] = "grotoap10_disambig";
-            args[2] = "EmailDisambiguator#DocumentProto2EmailExtractor#0.81#1,"
+            tmp[0] = "grotoap10_dump/mproto-m-00000";
+            tmp[1] = "grotoap10_disambig";
+            tmp[2] = "EmailDisambiguator#DocumentProto2EmailExtractor#0.81#1,"
                     + "KeywordDisambiguator#DocumentProto2KeyWordExtractor#0.13#33";
-            args[3] = "-0.846161134713438d";
-            args[4] = "DisambiguationJob_Toy";
+            tmp[3] = "-0.846161134713438d";
+            tmp[4] = "DisambiguationJob_Toy";
+        }
+        else {
+            tmp[0] = args[0];
+            tmp[1] = args[1];
+            tmp[2] = args[2];
+            tmp[3] = args[3];
+            tmp[4] = args[4];
         }
 
-        setInputPath(args[0]);
-        setOutputDir(args[1]);
-        setFEATURES_DESCRIPTION(args[2]);
-        setTHRESHOLD(args[3]);
-        setName(args[4]);
+        setInputPath(tmp[0]);
+        setOutputDir(tmp[1]);
+        setFEATURES_DESCRIPTION(tmp[2]);
+        setTHRESHOLD(tmp[3]);
+        setName(tmp[4]);
     }
 
     /*

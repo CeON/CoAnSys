@@ -70,8 +70,7 @@ public class STEMMED_PAIRS extends EvalFunc<DataBag>{
 		        alt.add(TupleFactory.getInstance().newTuple(Arrays.asList(to)));
 			}
 			
-			DataBag bd = new DefaultDataBag(alt); 
-			return bd;
+			return new DefaultDataBag(alt); 
 		}catch(Exception e){
 			// Throwing an exception will cause the task to fail.
             throw new IOException("Caught exception processing input row:\n"
