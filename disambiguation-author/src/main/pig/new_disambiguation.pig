@@ -19,6 +19,7 @@
 DEFINE keyTiKwAbsCatExtractor pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_MAP_WHEN_CATEG_LIM('en','removeall');
 DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_CONTRIBDATA_GIVENDATA();
 DEFINE sinlgeAND pl.edu.icm.coansys.disambiguation.author.pig.SingleAND();
+DEFINE GenUUID pl.edu.icm.coansys.disambiguation.author.pig.GenUUID();
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- register section
@@ -68,11 +69,10 @@ A1 = $dc_m_meth_extraction('$dc_m_hdfs_inputDocsData','$dc_m_meth_extraction_inn
 A2 = sample A1 $dc_m_double_sample;
 -- A2: {key: chararray,value: bytearray}
 
-B = foreach A2 generate flatten(snameDocumentMetaExtractor($1)) as (sname:chararray, metadata:bytearray, contribPos:int);
+B = foreach A2 generate flatten(snameDocumentMetaExtractor($1)) as (cId:chararray, contribPos:int, sname:chararray, metadata:map[]); 
 
-store B into '$dc_m_hdfs_outputContribs';
+--store B into '$dc_m_hdfs_outputContribs';
 
-/*
 C = group B by sname;
 
 D = foreach C generate group as sname, B as datagroup, COUNT(B) as count;
@@ -88,13 +88,15 @@ split D into
 -- zmiana koncepcji dla singli:
 -- dla kontrybutorow D1: porozbijac databagi (ktore przeciez maja po jednym elemencie)
 -- na tabele z rekordami o tych wlasnie tuplach, wtedy w udfi'e nie bede musial zrzucac z databagow
-S = foreach D1 generate flatten( datagroup ) as (sname, metadata, contribPos);
+D1A = foreach D1 generate flatten( datagroup );-- as (cId:chararray, contribPos:int, sname:chararray, metadata:map);
 -- S: {datagroup::sname: chararray,datagroup::metadata: bytearray,datagroup::contribPos: int}
+D1B = foreach D1A generate cId, FLATTEN(GenUUID(TOBAG(cId)));
 
-E1 = foreach S generate flatten( sinlgeAND( metadata, contribPos ) );
+
+--E1 = foreach S generate flatten( sinlgeAND( metadata, contribPos ) );
 -- UUID - contribKey (gdzie dla singli UUID = contribkey
 
-store E1 into '$dc_m_hdfs_outputContribs'; 
+store D1B into '$dc_m_hdfs_outputContribs'; 
 
 
 -- dump E1;
