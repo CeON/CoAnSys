@@ -67,9 +67,10 @@ A1 = $dc_m_meth_extraction('$dc_m_hdfs_inputDocsData','$dc_m_meth_extraction_inn
 A2 = sample A1 $dc_m_double_sample;
 -- A2: {key: chararray,value: bytearray}
 
-B = foreach A2 generate flatten(snameDocumentMetaExtractor($1)) as (sname:chararray, metadata:bytearray, contribPos:int);
+B = foreach A2 generate flatten(snameDocumentMetaExtractor($1));
 
 store B into '$dc_m_hdfs_outputContribs';
+DESCRIBE B;
 
 /*
 C = group B by sname;
