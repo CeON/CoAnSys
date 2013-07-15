@@ -30,14 +30,14 @@ public class SingleAND extends EvalFunc< Tuple > {
 		try{			
 			//getting metadata
 			DataByteArray dba = (DataByteArray) input.get(0);
-			DocumentMetadata metadane = DocumentMetadata.parseFrom( dba.get() );
-	
+			DocumentMetadata metadata = DocumentMetadata.parseFrom( dba.get() );
+			
 			//getting contributor index in list of this document's authors
 			int contributorPos = (Integer) input.get(1);
 
 			Tuple ret = new DefaultTuple();
 			
-			Author contr = metadane.getBasicMetadata().getAuthorList().
+			Author contr = metadata.getBasicMetadata().getAuthorList().
 					get( contributorPos );
 			
 			ret.append( contr.getKey() );
