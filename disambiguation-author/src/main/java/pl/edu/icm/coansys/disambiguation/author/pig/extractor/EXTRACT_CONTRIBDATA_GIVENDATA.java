@@ -51,7 +51,7 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag>{
 	public EXTRACT_CONTRIBDATA_GIVENDATA(){
 		try {
 			des = new DisambiguationExtractor[1];
-			Class c = Class.forName("pl.edu.icm.coansys.disambiguation.author.pig.extractor.EX_YEAR");
+			Class c = Class.forName("pl.edu.icm.coansys.disambiguation.author.pig.extractor.EX_KEYWORDS");
 			des[0] = (DisambiguationExtractor) c.newInstance();
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
