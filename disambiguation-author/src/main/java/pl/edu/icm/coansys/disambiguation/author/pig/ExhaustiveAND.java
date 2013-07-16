@@ -53,7 +53,7 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 	}
 
 	/*
-	 * Tuple: sname,{(contribId:chararray,contribPos:int,sname:chararray, metadata:map[])} 
+	 * Tuple: sname,{(contribId:chararray,contribPos:int,sname:chararray, metadata:map[])},count
 	 */
 	@Override
 	public DataBag exec( Tuple input ) throws IOException {
