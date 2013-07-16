@@ -19,7 +19,7 @@ DEFINE keyTiKwAbsCatExtractor pl.edu.icm.coansys.classification.documents.pig.ex
 -- DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_CONTRIBDATA_GIVENDATA();
 DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_CONTRIBDATA_GIVENDATA('unused#EX_YEAR#0#0,unused#EX_TITLE#0#0');
 DEFINE sinlgeAND pl.edu.icm.coansys.disambiguation.author.pig.SingleAND();
-DEFINE exhaustiveAND pl.edu.icm.coansys.disambiguation.author.pig.ExhaustiveAND('0','EX_TITLE#unused#0#0,EX_YEAR#unused#0#0');
+DEFINE exhaustiveAND pl.edu.icm.coansys.disambiguation.author.pig.ExhaustiveAND('0.7','EX_TITLE#unused#1#1,EX_YEAR#unused#0#1');
 DEFINE GenUUID pl.edu.icm.coansys.disambiguation.author.pig.GenUUID();
 -- -----------------------------------------------------
 -- -----------------------------------------------------

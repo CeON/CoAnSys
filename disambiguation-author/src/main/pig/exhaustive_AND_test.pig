@@ -81,7 +81,7 @@ C = group B by sname;
 D = foreach C generate group as sname, B as datagroup, COUNT(B) as count;
 -- D: {sname: chararray,datagroup: {(sname:chararray, metadata:bytearray, contribPos:int)},count: long}
 
-dump D;
+-- dump D;
 -- patrzy na ostatnia kolumne w D (ilosc kontrybutorow o tym samym sname)
 E = foreach D generate exhaustiveAND(*);
 dump E;

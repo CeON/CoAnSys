@@ -11,6 +11,7 @@ import java.util.Map;
 
 import org.apache.pig.EvalFunc;
 import org.apache.pig.data.DataBag;
+import org.apache.pig.data.DataByteArray;
 import org.apache.pig.data.DefaultDataBag;
 import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
@@ -43,8 +44,10 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
         this.features = new PigDisambiguator[featureNum];
         
         int index = -1;
+        System.out.println("======exhaustiveAnd constructor===========");
         for(FeatureInfo fi : featureInfos){
         	if(fi.getDisambiguatorName().equals("")) continue;
+        	System.out.println( fi.getDisambiguatorName() );
         	index++;
         	Disambiguator d = ff.create(fi);
         	features[index] = new PigDisambiguator(d);
@@ -60,17 +63,23 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 				
 		if (input == null || input.size() == 0) return null;
 		try{
-			DataBag contribs = (DataBag) input.get(1);
-			Iterator<Tuple> it = contribs.iterator();
-			Tuple[] contribsT = new Tuple[(int) contribs.size()];//TODO zmien na liste (np. LinkedList)
-			List<String> contribsId = new LinkedList<String>();
+			System.out.println("========ExhaustiveEND.exec========");
+			//sname - po co?
+			//bag: contribId,pozycja - po co?,sname,mapa: <extractor,wartosci>,
+			//count - po co?
+			DataBag contribs = (DataBag) input.get(1);  //biore bag'a z kontrybutorami
+			Iterator<Tuple> it = contribs.iterator();	//iterator po bag'u
+			//TODO zmien na liste (np. LinkedList)
+			Tuple[] contribsT = new Tuple[(int) contribs.size()]; // tu bedzie zrzucony bag
+			List<String> contribsId = new LinkedList<String>(); // UWAGA: tego tu nie wypelniam? sprawdzic!
 			int i = 0;
-			while(it.hasNext()){
-				Tuple t = it.next();;
-				System.out.println("====================");
+						
+			while ( it.hasNext() ) { //iteruje sie po bag'u, zrzucam bag'a do tablicy Tupli
+				Tuple t = it.next();
 				System.out.println(t);
-				System.out.println("====================");
-				contribsT[i]=t;
+				System.out.println("==================================");
+				contribsT[i] = t;
+				i++;
 			}
 			
 			double sim[][] = calculateAffinity(contribsT,contribsId);
@@ -84,23 +93,48 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 					+ StackTraceExtractor.getStackTrace(e));
 		}
 	}
-
+	
+	//po co contribsId przekazywane jako argument?
+	//po 1. - nie uzywane ponizej
+	//po 2. - nie wypelniane w exec
+	//po 3. - id kontrybutorow siedzą w contribsT - get(0)
+	
 	private double[][] calculateAffinity(Tuple[] contribsT, List<String> contribsId) throws Exception {
 		
-		double[][] sim = new double[contribsT.length][];;
+		double[][] sim = new double[contribsT.length][];
 		
-		for(int i = 1; i < contribsT.length;i++){
+		//zmienic kolejnosc petli?
+		for ( int i = 1; i < contribsT.length; i++ ) {
 			sim[i] = new double[i];
-			for(int j = 0; j<i; j++){
+			for ( int j = 0; j < i; j++ ) {
 				sim[i][j]=threshold;
-				for(int d=0; d<features.length;d++){					
-        			FeatureInfo featureInfo = featureInfos.get(d);
+				for ( int d = 0; d < features.length; d++ ){					
+        
+					FeatureInfo featureInfo = featureInfos.get(d);
+					
+					//bo to oznacza, ze nie zostal stworzony obiekt disambiguatora
+					//pod features[d]
+					if ( featureInfo.getDisambiguatorName().equals("") ) continue;
+					
+					//pobieranie wartosci (cech) spod danego klucza (nazwy ekstraktora = nazwa cechy)
+					//w contribsT[i].get(3) siedzi interesujaca nas mapa
+					System.out.println("typy");
+					System.out.println( contribsT[i].get(3).getClass().getName() );
+					Map<String,DataByteArray> ma = (Map<String, DataByteArray>) contribsT[i].get(3);
+					//System.out.println( ma.get( featureInfo.getFeatureExtractorName() ).getClass().getName() );
+					DataByteArray oA = ma.get( featureInfo.getFeatureExtractorName() );
+					
+					//1. a co jesli  featureInfo.getFeatureExtractorName() == ""
+					//jesli maja byc pamietane w mapie, to powinna byc multi map
+					//2. czemu w mapa<String,DataBag> a nie map<String, Tuple>
+					//albo <String,Object> - taka jest wrzucana mapa w EXTRACT_CONTRIBDATA_METADATA
+					//albo w ogole dac znak zapytania i bedzie swiety spokoj?
 					@SuppressWarnings("unchecked")
-					Object oA =  ((Map<String,DataBag>) contribsT[i].get(3)).get(featureInfo.getFeatureExtractorName());
-					@SuppressWarnings("unchecked")
-					Object oB = (DataBag) ((Map<String,DataBag>) contribsT[j].get(3)).get(featureInfo.getFeatureExtractorName());	
-					double partial = features[d].calculateAffinity(oA, oB);
-					partial = partial/featureInfo.getMaxValue()*featureInfo.getWeight();
+					DataByteArray  oB = ((Map<String,DataByteArray >) contribsT[j].get(3)).get( featureInfo.getFeatureExtractorName() );	
+					System.out.println( "dba to str: " + oB.toString() );
+					
+					double partial = features[d].calculateAffinity( oA, oB );
+					partial = partial / featureInfo.getMaxValue() * featureInfo.getWeight();
 					sim[i][j]+=partial;
         			if(sim[i][j]>0) break;
 				}
