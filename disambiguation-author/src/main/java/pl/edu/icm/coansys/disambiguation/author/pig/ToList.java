@@ -1,4 +1,4 @@
-package pl.edu.icm.coansys.disambiguation.auxil.pig;
+package pl.edu.icm.coansys.disambiguation.author.pig;
 
 import java.util.Iterator;
 import java.util.LinkedList;
