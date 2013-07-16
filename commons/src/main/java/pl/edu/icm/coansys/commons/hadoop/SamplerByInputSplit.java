@@ -70,8 +70,7 @@ public class SamplerByInputSplit implements Tool {
 
     @Override
     public int run(String[] args) throws Exception {
-        int result = createParitionFile(args[0], args[1], Float.parseFloat(args[2]));
-        return result;
+        return createParitionFile(args[0], args[1], Float.parseFloat(args[2]));
     }
 
     private int createParitionFile(String sequenceFileInput, String outputPath, float frequency) throws IOException, ClassNotFoundException, InterruptedException {

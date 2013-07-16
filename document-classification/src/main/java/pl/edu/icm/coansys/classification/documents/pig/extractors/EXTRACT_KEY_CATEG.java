@@ -18,8 +18,8 @@ import org.apache.pig.impl.logicalLayer.FrontendException;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
 
 import pl.edu.icm.coansys.classification.documents.auxil.StackTraceExtractor;
-import pl.edu.icm.coansys.importers.models.DocumentProtos.ClassifCode;
-import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
+import pl.edu.icm.coansys.models.DocumentProtos.ClassifCode;
+import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 
 /**
 *
@@ -84,8 +84,7 @@ public class EXTRACT_KEY_CATEG extends EvalFunc<Tuple>{
 //	        System.out.println("");
 	        
 	        Object[] to = new Object[]{key,db,bagsize};
-	        Tuple t = TupleFactory.getInstance().newTuple(Arrays.asList(to));
-	        return t;
+	        return TupleFactory.getInstance().newTuple(Arrays.asList(to));
 			
 		}catch(Exception e){
 			// Throwing an exception will cause the task to fail.

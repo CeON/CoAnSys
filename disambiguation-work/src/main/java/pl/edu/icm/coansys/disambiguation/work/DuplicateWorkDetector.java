@@ -21,7 +21,11 @@ import pl.edu.icm.coansys.commons.spring.DiReducer;
 
 import com.google.common.base.Preconditions;
 
-
+/**
+ * 
+ * @author Łukasz Dumiszewski
+ *
+ */
 public class DuplicateWorkDetector extends Configured implements Tool {
 
     private static Logger log = LoggerFactory.getLogger(DuplicateWorkDetector.class);
@@ -45,10 +49,15 @@ public class DuplicateWorkDetector extends Configured implements Tool {
         getConf().set(DiMapper.DI_MAP_SERVICE_BEAN_NAME, "duplicateWorkDetectMapService");
         getConf().set(DiReducer.DI_REDUCE_APPLICATION_CONTEXT_PATH, "spring/applicationContext.xml");
         getConf().set(DiReducer.DI_REDUCE_SERVICE_BEAN_NAME, "duplicateWorkDetectReduceService");
-        getConf().setInt(DuplicateWorkDetectMapService.KEY_LENGTH, 5);
         
-        @SuppressWarnings("deprecation")
+        
+        getConf().set("dfs.client.socket-timeout", "120000");
+        getConf().setInt("mapred.task.timeout", 1200000);
+        getConf().set("mapred.child.java.opts", "-Xmx4096m");
+        
         Job job = new Job(getConf(), "duplicateWorkDetector");
+        
+        job.setNumReduceTasks(8);
         
         job.setJarByClass(getClass());
         

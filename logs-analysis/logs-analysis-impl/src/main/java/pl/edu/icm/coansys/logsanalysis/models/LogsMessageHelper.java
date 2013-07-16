@@ -3,9 +3,10 @@
  */
 package pl.edu.icm.coansys.logsanalysis.models;
 
-import pl.edu.icm.coansys.importers.models.LogsProtos;
+import pl.edu.icm.coansys.models.LogsProtos;
 import java.util.Date;
 import java.util.Map;
+import java.util.Set;
 
 /**
  *
@@ -27,10 +28,10 @@ public final class LogsMessageHelper {
         messageBuilder.setTimestamp(timestamp.getTime());
         messageBuilder.setEventType(evtType);
 
-        for (String paramName : paramsMap.keySet()) {
+        for (Map.Entry<String,String> entry : paramsMap.entrySet()) {
             LogsProtos.EventData.Builder paramBuilder = LogsProtos.EventData.newBuilder();
-            paramBuilder.setParamName(paramName);
-            paramBuilder.setParamValue(paramsMap.get(paramName));
+            paramBuilder.setParamName(entry.getKey());
+            paramBuilder.setParamValue(entry.getValue());
             messageBuilder.addArg(paramBuilder);
         }
 

@@ -135,8 +135,7 @@ public class SequenceFileKeysSamplerMR implements Tool {
             System.exit(-1);
         }
 
-        int result = createParitionFile(args[0], args[1]);
-        return result;
+        return createParitionFile(args[0], args[1]);
     }
 
     private int createParitionFile(String sequenceFileInput, String outputPath) throws IOException, ClassNotFoundException, InterruptedException {
@@ -164,11 +163,17 @@ public class SequenceFileKeysSamplerMR implements Tool {
     }
 
     public static void main(String[] args) throws Exception {
+        String[] arguments = new String[2];
         if (args.length == 0) {
-            args = DEFAULT_ARGS;
-            FileUtils.deleteDirectory(new File(DEFAULT_ARGS[1]));
+            arguments[0] = DEFAULT_ARGS[0];
+            arguments[1] = DEFAULT_ARGS[1];
+            FileUtils.deleteDirectory(new File(arguments[1]));
         }
-        int result = ToolRunner.run(new SequenceFileKeysSamplerMR(), args);
+        else if (args.length >= 2) {
+            arguments[0] = args[0];
+            arguments[1] = args[1];            
+        }
+        int result = ToolRunner.run(new SequenceFileKeysSamplerMR(), arguments);
         System.exit(result);
     }
 

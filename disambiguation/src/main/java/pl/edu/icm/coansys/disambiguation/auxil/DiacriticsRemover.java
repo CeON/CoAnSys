@@ -87,11 +87,11 @@ public class DiacriticsRemover {
             return null;
         }
 
-        text = Normalizer.normalize(text, Normalizer.Form.NFKD);
+        String tmp = Normalizer.normalize(text, Normalizer.Form.NFKD);
 
         StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < text.length(); i++) {
-            Character ch = text.charAt(i);
+        for (int i = 0; i < tmp.length(); i++) {
+            Character ch = tmp.charAt(i);
             if (Character.getType(ch) == Character.NON_SPACING_MARK) {
                 continue;
             }
@@ -152,8 +152,8 @@ public class DiacriticsRemover {
             return text;
         }
 
-        text = text.toLowerCase(Locale.ENGLISH);
-        text = Normalizer.normalize(text, Normalizer.Form.NFKD);
+        String tmp = text.toLowerCase(Locale.ENGLISH);
+        tmp = Normalizer.normalize(tmp, Normalizer.Form.NFKD);
 
         StringBuilder builder = new StringBuilder();
         if (idempotent) {
@@ -161,8 +161,8 @@ public class DiacriticsRemover {
         }
 
         boolean wasSpaceSeparator = false;
-        for (int i = 0; i < text.length(); i++) {
-            Character ch = text.charAt(i);
+        for (int i = 0; i < tmp.length(); i++) {
+            Character ch = tmp.charAt(i);
             if (!ArrayUtils.contains(INTERESTING_TYPES, Character.getType(ch))
                     && !ArrayUtils.contains(INTERESTING_CHARACTERS, ch)) {
                 continue;

@@ -16,7 +16,6 @@
             <plugin>
                 <groupId>pl.edu.icm.maven</groupId>
                 <artifactId>oozie-maven-plugin</artifactId>
-                <version>1.0</version>
                 <extensions>true</extensions>
             </plugin>
         </plugins>

@@ -14,7 +14,7 @@
 %DEFAULT dc_m_meth_extraction getBWBWFromHDFS
 %DEFAULT dc_m_meth_extraction_inner pl.edu.icm.coansys.importers.pig.udf.RichSequenceFileLoader
 
-DEFINE keyTiKwAbsCatExtractor pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_MAP_WHEN_CATEG_LIM('en');
+DEFINE keyTiKwAbsCatExtractor pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_MAP_WHEN_CATEG_LIM('en','removeall');
 DEFINE documentMetaExtractor pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_DOCUMENT_METADATA();
 -- -----------------------------------------------------
 -- -----------------------------------------------------
@@ -56,15 +56,10 @@ set pig.skewedjoin.reduce.memusage $pig_skewedjoin_reduce_memusage
 -- code section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
---X1 = $dc_m_meth_extraction('$dc_m_in_inputDocsData','$dc_m_meth_extraction_inner'); 
---X20 = limit X1 10;
-X20 = $dc_m_meth_extraction('$dc_m_in_inputDocsData','$dc_m_meth_extraction_inner'); 
---describe X20;
-X21 = foreach X20 generate $0, flatten(documentMetaExtractor($1));
---describe X21;
-X3 = foreach X21 generate $0 as key,keyTiKwAbsCatExtractor($1,0) as data, (int)(RANDOM()*$dc_m_int_folds) as part;
---describe X3;
-X4 = filter X3 by $1 is not null;
---describe X4;
-STORE X4 into '$dc_m_hdfs_neighs'; --key,map,part
 
+X20 = $dc_m_meth_extraction('$dc_m_in_inputDocsData','$dc_m_meth_extraction_inner'); 
+X200 = sample X20 $dc_m_double_sample;
+X21 = foreach X200 generate $0, flatten(documentMetaExtractor($1));
+X3 = foreach X21 generate $0 as key,keyTiKwAbsCatExtractor($1,1) as data, (int)(RANDOM()*$dc_m_int_folds) as part;
+X4 = filter X3 by $1 is not null;
+STORE X4 into '$dc_m_hdfs_neighs'; --key,map,part
