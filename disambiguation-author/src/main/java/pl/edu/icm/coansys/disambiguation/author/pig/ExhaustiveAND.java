@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +49,7 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
         	index++;
         	Disambiguator d = ff.create(fi);
         	features[index] = new PigDisambiguator(d);
-        	//posortuj dysambiguatory malejaco wg. in wag, np. Email#1.0,ClasifCode#0.7
+        	//TODO posortuj dysambiguatory malejaco wg. in wag, np. Email#1.0,ClasifCode#0.7
         }
 	}
 
@@ -60,9 +61,19 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 				
 		if (input == null || input.size() == 0) return null;
 		try{
-			Bag contribsB = (Bag) input.get(1);
-			Tuple[] contribsT = (Tuple[]) contribsB.toArray();
+			DataBag contribs = (DataBag) input.get(1);
+			Iterator<Tuple> it = contribs.iterator();
+			Tuple[] contribsT = new Tuple[(int) contribs.size()];//TODO zmien na liste (np. LinkedList)
 			List<String> contribsId = new LinkedList<String>();
+			int i = 0;
+			while(it.hasNext()){
+				Tuple t = it.next();;
+				System.out.println("====================");
+				System.out.println(t);
+				System.out.println("====================");
+				contribsT[i]=t;
+			}
+			
 			double sim[][] = calculateAffinity(contribsT,contribsId);
 			
 	        int[] clusterAssociations = new SingleLinkageHACStrategy_OnlyMax().clusterize(sim);
@@ -75,13 +86,9 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 		}
 	}
 
-	@SuppressWarnings("null")
 	private double[][] calculateAffinity(Tuple[] contribsT, List<String> contribsId) throws Exception {
-		/**
-		 * Object[1][4] -- the 5th feature of the 2nd contributor
-		 */
-		double[][] sim = null;
 		
+		double[][] sim = new double[contribsT.length][];;
 		
 		for(int i = 1; i < contribsT.length;i++){
 			sim[i] = new double[i];
