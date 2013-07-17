@@ -56,33 +56,37 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 	/*
 	 * Tuple: sname,{(contribId:chararray,contribPos:int,sname:chararray, metadata:map[{(chararray)}])},count
 	 */
+
 	@Override
 	public DataBag exec( Tuple input ) throws IOException {
 				
 		if ( input == null || input.size() == 0 ) return null;
 		try{
 			System.out.println("========ExhaustiveEND.exec========");
+			
 			//sname - po co?
 			//bag: contribId,pozycja - po co?,sname,mapa: <extractor,bag: tuple ze stringiem>,
 			//count - po co?
+			//TODO w razie nudy:
+			//wystarczyloby wrzucac do udf'a tylko baga z metadanymi 
+			//co daje odpornosc na zmiany struktury calej tabeli
+			
+			
 			DataBag contribs = (DataBag) input.get(1);  //biore bag'a z kontrybutorami
 			Iterator<Tuple> it = contribs.iterator();	//iterator po bag'u
-			//TODO zmien na liste (np. LinkedList)
-			Tuple[] contribsT = new Tuple[(int) contribs.size()]; // tu bedzie zrzucony bag
-			List<String> contribsId = new LinkedList<String>(); // UWAGA: tego tu nie wypelniam? sprawdzic!
-			int i = 0;
+
+			List< Map<String,Object> > contribsT = new LinkedList< Map<String,Object> > ();
+			List< String > contribsId = new LinkedList<String>(); 
 			
-			//TODO: zmiana koncepcji: do calculateAffinity powedruje lista map, a nie tablica tupli z bag'a
+			//Ziana koncepcji: do calculateAffinity powedruje lista map, a nie tablica tupli z bag'a
 			//(cale tuple sa tam niepotrzebne)
+			//+ jesli zmieni sie struktura tabeli, to musze wprowadzic zmiany tylko w exec
 			while ( it.hasNext() ) { //iteruje sie po bag'u, zrzucam bag'a do tablicy Tupli
 				Tuple t = it.next();
 				System.out.println(t);
 				contribsId.add( (String) t.get(0) ); //biore contrId z Tupla
-				
-				
+				contribsT.add( (Map<String, Object>) t.get(3) );				
 				System.out.println("-----------------------------------");				
-				contribsT[i] = t;
-				i++;
 			}
 			
 			
@@ -107,15 +111,17 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 	
 	//po co contribsId przekazywane jako argument?
 	//po 1. - nie uzywane ponizej
-	//po 2. - nie wypelniane w exec
 	//po 3. - id kontrybutorow siedzą w contribsT - get(0)
+	//ad po 3. - w ogole te Id nie sa ponizszej potrzebne, mozna by zmienic koncepcje
+	//i wrzucac gotową listę map a nie tablice tupli
+	//powyzsze zrobione
 	
-	private double[][] calculateAffinity( Tuple[] contribsT/*, List<String> contribsId */) throws Exception {
+	private double[][] calculateAffinity( List< Map<String,Object> > contribsT/*, List<String> contribsId */) throws Exception {
 		
-		double[][] sim = new double[contribsT.length][];
+		double[][] sim = new double[contribsT.size()][];
 		
 		//zmienic kolejnosc petli?
-		for ( int i = 1; i < contribsT.length; i++ ) {
+		for ( int i = 1; i < contribsT.size(); i++ ) {
 			sim[i] = new double[i];
 			for ( int j = 0; j < i; j++ ) {
 				sim[i][j]=threshold;
@@ -123,18 +129,17 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
         
 					FeatureInfo featureInfo = featureInfos.get(d);
 					
-					//bo to oznacza, ze nie zostal stworzony obiekt disambiguatora
+					//ponizsze implikuje nie stworzenie obiektu disambiguatora
 					//pod features[d]
 					if ( featureInfo.getDisambiguatorName().equals("") ) continue;
 					
 					//pobieranie wartosci (cech) spod danego klucza (nazwy ekstraktora = nazwa cechy)
-					//w contribsT[i].get(3) siedzi interesujaca nas mapa
-					//de facto Object = DataBag
-					Map<String,Object> mA = (Map<String, Object>) contribsT[i].get(3); //biore mape z tupla
-					Object oA = mA.get( featureInfo.getFeatureExtractorName() ); //biore Bag wartości danej cechy
-					Map<String,Object> mB = (Map<String, Object>) contribsT[j].get(3); //j.w.			
-					Object oB = mB.get( featureInfo.getFeatureExtractorName() );
-									
+					//w contribsT.get(i) siedzi interesujaca nas mapa
+					//de facto Object = DataBag.
+					//Biore z i'tej mapy (zbioru cech i'tego kontrybutora) Bag wartości danej cechy:			
+					Object oA = contribsT.get(i).get( featureInfo.getFeatureExtractorName() ); 
+					Object oB = contribsT.get(j).get( featureInfo.getFeatureExtractorName() ); 
+										
 					double partial = features[d].calculateAffinity( oA, oB );
 					partial = partial / featureInfo.getMaxValue() * featureInfo.getWeight();
 					sim[i][j] += partial;
@@ -151,8 +156,7 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 		Map<Integer, List<String>> clusterMap = new HashMap<Integer, List<String>>();
 		
         for (int i = 0; i < clusterAssociation.length; i++) {
-        												//bo authorIds jest puste
-            addToMap(clusterMap, clusterAssociation[i], authorIds.get(i)); //tu sie sypie
+            addToMap(clusterMap, clusterAssociation[i], authorIds.get(i)); 
         }
 		return clusterMap;
 	}
