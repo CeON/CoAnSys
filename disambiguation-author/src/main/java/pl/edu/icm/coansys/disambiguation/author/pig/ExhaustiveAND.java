@@ -11,7 +11,6 @@ import java.util.Map;
 
 import org.apache.pig.EvalFunc;
 import org.apache.pig.data.DataBag;
-import org.apache.pig.data.DataByteArray;
 import org.apache.pig.data.DefaultDataBag;
 import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
@@ -120,17 +119,16 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 					//w contribsT[i].get(3) siedzi interesujaca nas mapa
 					System.out.println("typy");
 					System.out.println( contribsT[i].get(3).getClass().getName() );
-					Map<String,DataByteArray> ma = (Map<String, DataByteArray>) contribsT[i].get(3);
+					Map<String,Object> ma = (Map<String, Object>) contribsT[i].get(3);
 					//System.out.println( ma.get( featureInfo.getFeatureExtractorName() ).getClass().getName() );
-					DataByteArray oA = ma.get( featureInfo.getFeatureExtractorName() );
+					Object oA = ma.get( featureInfo.getFeatureExtractorName() );
 					
 					//1. a co jesli  featureInfo.getFeatureExtractorName() == ""
 					//jesli maja byc pamietane w mapie, to powinna byc multi map
 					//2. czemu w mapa<String,DataBag> a nie map<String, Tuple>
 					//albo <String,Object> - taka jest wrzucana mapa w EXTRACT_CONTRIBDATA_METADATA
 					//albo w ogole dac znak zapytania i bedzie swiety spokoj?
-					@SuppressWarnings("unchecked")
-					DataByteArray  oB = ((Map<String,DataByteArray >) contribsT[j].get(3)).get( featureInfo.getFeatureExtractorName() );	
+					Object  oB = ((Map<String,Object >) contribsT[j].get(3)).get( featureInfo.getFeatureExtractorName() );	
 					System.out.println( "dba to str: " + oB.toString() );
 					
 					double partial = features[d].calculateAffinity( oA, oB );

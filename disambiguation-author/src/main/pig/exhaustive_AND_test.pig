@@ -73,7 +73,7 @@ set pig.skewedjoin.reduce.memusage $pig_skewedjoin_reduce_memusage
 --A2 = sample A1 $dc_m_double_sample;
 -- A2: {key: chararray,value: bytearray}
 
-B = load '$dc_m_hdfs_inputDocsData2' as (cId:chararray,cPos:int,sname:chararray,data:map[]);
+B = load '$dc_m_hdfs_inputDocsData2' as (cId:chararray,cPos:int,sname:chararray,data:map[{(chararray)}]);
 
 
 C = group B by sname;

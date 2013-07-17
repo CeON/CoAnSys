@@ -3,6 +3,7 @@
  */
 package pl.edu.icm.coansys.disambiguation.author.pig;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 
@@ -39,6 +40,7 @@ public class PigDisambiguator extends Disambiguator{
 			return calculateAffinity((String) f1, (String) f2);
 		//TODO:
 		}else if(f1 instanceof DataByteArray && f2 instanceof DataByteArray ){
+			System.out.println( "odkryl typ DBA :( ");
 			return calculateAffinity(f1.toString(), f2.toString());
 		}else{
 			throw new Exception("data type "+ f1.getClass()+" unsupported in calculateAffinity");
@@ -58,6 +60,7 @@ public class PigDisambiguator extends Disambiguator{
 	}
 	
 	// TODO zajrzec do artykulu, jak nie bedzie info to spytac Piotra czy warto uzyc equalize
+	@SuppressWarnings("unused")
 	private String equalize( String str ) {
 		str = str.replace( ",", "" );
 		str = str.replace( ".", "" );
@@ -66,8 +69,8 @@ public class PigDisambiguator extends Disambiguator{
 	}
 	
 	public double calculateAffinity(String f1, String f2) {
-		LinkedList fl1 = (LinkedList) Arrays.asList( f1.split(" ") );
-		LinkedList fl2 = (LinkedList) Arrays.asList( f2.split(" ") );
+		ArrayList <String> fl1 = (ArrayList<String>) Arrays.asList( f1.split(" ") );
+		ArrayList <String> fl2 = (ArrayList<String>) Arrays.asList( f2.split(" ") );
 		return d.calculateAffinity( fl1, fl2 );
 	}
 	

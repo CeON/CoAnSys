@@ -32,7 +32,6 @@ import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
 */
 public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag>{
 
-	@SuppressWarnings("rawtypes")
 	DisambiguationExtractor[] des = null;
 	
 	@Override
@@ -52,7 +51,7 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag>{
 		int i = 0;
 		for ( FeatureInfo f : features ) {
 			Class<?> c = Class.forName("pl.edu.icm.coansys.disambiguation.author.pig.extractor." + f.getFeatureExtractorName() );
-			des[i] = (DisambiguationExtractor<?>) c.newInstance();
+			des[i] = (DisambiguationExtractor) c.newInstance();
 			i++;
 		}
 	}
@@ -61,7 +60,7 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag>{
 
 			des = new DisambiguationExtractor[1];
 			Class<?> c = Class.forName("pl.edu.icm.coansys.disambiguation.author.pig.extractor.EX_TITLE");
-			des[0] = (DisambiguationExtractor<?>) c.newInstance();
+			des[0] = (DisambiguationExtractor) c.newInstance();
 	}
 	
 	public DataBag exec(Tuple input) throws IOException {
@@ -109,7 +108,7 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag>{
 			//potencjalnie bedzie do tego potrzebna osobna petla.
 			Object[] retObj = new Object[des.length];
 			int i=-1;
-			for(DisambiguationExtractor<?> de : des){
+			for(DisambiguationExtractor de : des){
 				i++;
 				retObj[i] = de.extract(dm);
 			}
@@ -117,7 +116,7 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag>{
 			//dodawanie wyciagnietych danych odnosnie dokumentu i kontrybutora do mapy informacji
 			Map<String, Object> map = new HashMap<String, Object>();
 			i = -1;
-			for(DisambiguationExtractor<?> de : des){
+			for(DisambiguationExtractor de : des){
 				i++;
 				map.put(de.getClass().getSimpleName(), retObj[i]);
 			}
