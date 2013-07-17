@@ -36,7 +36,7 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
         DisambiguatorFactory ff = new DisambiguatorFactory();
         
         int featureNum = 0;
-        for(FeatureInfo fi : featureInfos){
+        for ( FeatureInfo fi : featureInfos ){
         	if(!fi.getDisambiguatorName().equals("")) featureNum++;
         }
         
@@ -44,8 +44,8 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
         
         int index = -1;
         System.out.println("======exhaustiveAnd constructor===========");
-        for(FeatureInfo fi : featureInfos){
-        	if(fi.getDisambiguatorName().equals("")) continue;
+        for ( FeatureInfo fi : featureInfos ){
+        	if ( fi.getDisambiguatorName().equals("") ) continue;
         	System.out.println( fi.getDisambiguatorName() );
         	index++;
         	Disambiguator d = ff.create(fi);
@@ -59,7 +59,7 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 	@Override
 	public DataBag exec( Tuple input ) throws IOException {
 				
-		if (input == null || input.size() == 0) return null;
+		if ( input == null || input.size() == 0 ) return null;
 		try{
 			System.out.println("========ExhaustiveEND.exec========");
 			//sname - po co?
@@ -71,24 +71,33 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 			Tuple[] contribsT = new Tuple[(int) contribs.size()]; // tu bedzie zrzucony bag
 			List<String> contribsId = new LinkedList<String>(); // UWAGA: tego tu nie wypelniam? sprawdzic!
 			int i = 0;
-						
+			
+			//TODO: zmiana koncepcji: do calculateAffinity powedruje lista map, a nie tablica tupli z bag'a
+			//(cale tuple sa tam niepotrzebne)
 			while ( it.hasNext() ) { //iteruje sie po bag'u, zrzucam bag'a do tablicy Tupli
 				Tuple t = it.next();
 				System.out.println(t);
-		        System.out.println("-----------------------------------");				
+				contribsId.add( (String) t.get(0) ); //biore contrId z Tupla
+				
+				
+				System.out.println("-----------------------------------");				
 				contribsT[i] = t;
 				i++;
 			}
 			
-			double sim[][] = calculateAffinity ( contribsT, contribsId );
+			
+			double sim[][] = calculateAffinity ( contribsT/*, contribsId */);
 			System.out.println( "sim[][] obliczone ");
 			
-	        int[] clusterAssociations = new SingleLinkageHACStrategy_OnlyMax().clusterize(sim);
-	        Map<Integer,List<String>> clusterMap = splitIntoMap(clusterAssociations, contribsId);
+			// clusterAssociations[ index_kontrybutora ] = klaster, do ktorego go przyporzadkowano
+	        int[] clusterAssociations = new SingleLinkageHACStrategy_OnlyMax().clusterize( sim );
+			
+	        System.out.println( "clusterAssociations[] obliczone ");
+	        Map<Integer,List<String>> clusterMap = splitIntoMap( clusterAssociations, contribsId );
 	        
 	        System.out.println("==================================");
 	        
-	        return createResultingTuples(clusterMap, contribsId);
+	        return createResultingTuples(clusterMap/*, contribsId*/);
 		}catch(Exception e){
 			// Throwing an exception will cause the task to fail.
 			throw new IOException("Caught exception processing input row:\n"
@@ -101,7 +110,7 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 	//po 2. - nie wypelniane w exec
 	//po 3. - id kontrybutorow siedzą w contribsT - get(0)
 	
-	private double[][] calculateAffinity(Tuple[] contribsT, List<String> contribsId) throws Exception {
+	private double[][] calculateAffinity( Tuple[] contribsT/*, List<String> contribsId */) throws Exception {
 		
 		double[][] sim = new double[contribsT.length][];
 		
@@ -128,8 +137,8 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 									
 					double partial = features[d].calculateAffinity( oA, oB );
 					partial = partial / featureInfo.getMaxValue() * featureInfo.getWeight();
-					sim[i][j]+=partial;
-        			if(sim[i][j]>0) break;
+					sim[i][j] += partial;
+        			if ( sim[i][j] > 0 ) break;
 				}
 			}
 		}
@@ -138,27 +147,32 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 	
 	protected Map<Integer, List<String>> splitIntoMap(int[] clusterAssociation, List<String> authorIds) {
 		
+		//pod dany klaster id (clusterAssociation) wrzucamy id kontrybutorow
 		Map<Integer, List<String>> clusterMap = new HashMap<Integer, List<String>>();
 		
         for (int i = 0; i < clusterAssociation.length; i++) {
-            addToMap(clusterMap, clusterAssociation[i], authorIds.get(i));
+        												//bo authorIds jest puste
+            addToMap(clusterMap, clusterAssociation[i], authorIds.get(i)); //tu sie sypie
         }
 		return clusterMap;
 	}
 	
 	protected <K, V> void addToMap(Map<Integer, List<String>> clusters, int clusterAssociation, String string) {
-        List<String> values = clusters.get(clusterAssociation);
+
+		//patrze czy klucz (id klastra) jest juz w mapie
+		List<String> values = clusters.get(clusterAssociation);
         if (values == null) {
             values = new ArrayList<String>();
             values.add(string);
             clusters.put(clusterAssociation, values);
         }else{
+        	//jak nie, to dodaje do danego klastra (value) id kontrybutora
         	values.add(string);
         }
     }
 	
-	protected DataBag createResultingTuples(Map<Integer, List<String>> clusterMap,
-			List<String> authorIds2) {
+	protected DataBag createResultingTuples( Map<Integer, List<String>> clusterMap /*,
+			 List<String> authorIds2 */ ) {
     	IdGenerator idgenerator = new UuIdGenerator();
     	
     	DataBag ret = new DefaultDataBag();
