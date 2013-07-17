@@ -9,7 +9,6 @@ import java.util.LinkedList;
 
 import org.apache.pig.backend.executionengine.ExecException;
 import org.apache.pig.data.DataBag;
-import org.apache.pig.data.DataByteArray;
 import org.apache.pig.data.Tuple;
 
 import pl.edu.icm.coansys.disambiguation.features.Disambiguator;
@@ -25,7 +24,7 @@ import pl.edu.icm.coansys.disambiguation.features.Disambiguator;
 public class PigDisambiguator extends Disambiguator{
 	Disambiguator d = null;
 	
-	public PigDisambiguator(Disambiguator d){
+	public PigDisambiguator(Disambiguator d) {
 		this.d = d;
 	}
 	
@@ -38,23 +37,21 @@ public class PigDisambiguator extends Disambiguator{
 			return calculateAffinity((DataBag) f1, (DataBag) f2);
 		}else if(f1 instanceof String && f2 instanceof String ){
 			return calculateAffinity((String) f1, (String) f2);
-		//TODO:
-		}else if(f1 instanceof DataByteArray && f2 instanceof DataByteArray ){
-			System.out.println( "odkryl typ DBA :( ");
-			return calculateAffinity(f1.toString(), f2.toString());
 		}else{
 			throw new Exception("data type "+ f1.getClass()+" unsupported in calculateAffinity");
 		}
 	}
 	
 	public double calculateAffinity(Tuple f1, Tuple f2) throws ExecException {
-		LinkedList fl1 = new LinkedList();
-		fl1.add(f1.get(0));
-		LinkedList fl2 = new LinkedList();
-		fl2.add(f2.get(0));
+		LinkedList<String> fl1 = new LinkedList<String>();
+		fl1.add( (String) f1.get(0) );
+		LinkedList<String> fl2 = new LinkedList<String>();
+		fl2.add( (String) f2.get(0) );
+		
 		return d.calculateAffinity(fl1, fl2);
 	}
 	
+
 	public double calculateAffinity(DataBag f1, DataBag f2) {
 		return d.calculateAffinity(ToList.execute(f1), ToList.execute(f2));
 	}

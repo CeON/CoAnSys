@@ -50,12 +50,11 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
         	index++;
         	Disambiguator d = ff.create(fi);
         	features[index] = new PigDisambiguator(d);
-        	//TODO posortuj dysambiguatory malejaco wg. in wag, np. Email#1.0,ClasifCode#0.7
         }
 	}
 
 	/*
-	 * Tuple: sname,{(contribId:chararray,contribPos:int,sname:chararray, metadata:map[])},count
+	 * Tuple: sname,{(contribId:chararray,contribPos:int,sname:chararray, metadata:map[{(chararray)}])},count
 	 */
 	@Override
 	public DataBag exec( Tuple input ) throws IOException {
@@ -64,7 +63,7 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 		try{
 			System.out.println("========ExhaustiveEND.exec========");
 			//sname - po co?
-			//bag: contribId,pozycja - po co?,sname,mapa: <extractor,wartosci>,
+			//bag: contribId,pozycja - po co?,sname,mapa: <extractor,bag: tuple ze stringiem>,
 			//count - po co?
 			DataBag contribs = (DataBag) input.get(1);  //biore bag'a z kontrybutorami
 			Iterator<Tuple> it = contribs.iterator();	//iterator po bag'u
@@ -76,15 +75,19 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 			while ( it.hasNext() ) { //iteruje sie po bag'u, zrzucam bag'a do tablicy Tupli
 				Tuple t = it.next();
 				System.out.println(t);
-				System.out.println("==================================");
+		        System.out.println("-----------------------------------");				
 				contribsT[i] = t;
 				i++;
 			}
 			
-			double sim[][] = calculateAffinity(contribsT,contribsId);
+			double sim[][] = calculateAffinity ( contribsT, contribsId );
+			System.out.println( "sim[][] obliczone ");
 			
 	        int[] clusterAssociations = new SingleLinkageHACStrategy_OnlyMax().clusterize(sim);
 	        Map<Integer,List<String>> clusterMap = splitIntoMap(clusterAssociations, contribsId);
+	        
+	        System.out.println("==================================");
+	        
 	        return createResultingTuples(clusterMap, contribsId);
 		}catch(Exception e){
 			// Throwing an exception will cause the task to fail.
@@ -117,20 +120,12 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 					
 					//pobieranie wartosci (cech) spod danego klucza (nazwy ekstraktora = nazwa cechy)
 					//w contribsT[i].get(3) siedzi interesujaca nas mapa
-					System.out.println("typy");
-					System.out.println( contribsT[i].get(3).getClass().getName() );
-					Map<String,Object> ma = (Map<String, Object>) contribsT[i].get(3);
-					//System.out.println( ma.get( featureInfo.getFeatureExtractorName() ).getClass().getName() );
-					Object oA = ma.get( featureInfo.getFeatureExtractorName() );
-					
-					//1. a co jesli  featureInfo.getFeatureExtractorName() == ""
-					//jesli maja byc pamietane w mapie, to powinna byc multi map
-					//2. czemu w mapa<String,DataBag> a nie map<String, Tuple>
-					//albo <String,Object> - taka jest wrzucana mapa w EXTRACT_CONTRIBDATA_METADATA
-					//albo w ogole dac znak zapytania i bedzie swiety spokoj?
-					Object  oB = ((Map<String,Object >) contribsT[j].get(3)).get( featureInfo.getFeatureExtractorName() );	
-					System.out.println( "dba to str: " + oB.toString() );
-					
+					//de facto Object = DataBag
+					Map<String,Object> mA = (Map<String, Object>) contribsT[i].get(3); //biore mape z tupla
+					Object oA = mA.get( featureInfo.getFeatureExtractorName() ); //biore Bag wartości danej cechy
+					Map<String,Object> mB = (Map<String, Object>) contribsT[j].get(3); //j.w.			
+					Object oB = mB.get( featureInfo.getFeatureExtractorName() );
+									
 					double partial = features[d].calculateAffinity( oA, oB );
 					partial = partial / featureInfo.getMaxValue() * featureInfo.getWeight();
 					sim[i][j]+=partial;
