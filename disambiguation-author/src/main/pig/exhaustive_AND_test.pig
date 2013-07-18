@@ -79,53 +79,9 @@ B = load '$dc_m_hdfs_inputDocsData2' as (cId:chararray,cPos:int,sname:chararray,
 C = group B by sname;
 
 D = foreach C generate group as sname, B as datagroup, COUNT(B) as count;
--- D: {sname: chararray,datagroup: {(sname:chararray, metadata:bytearray, contribPos:int)},count: long}
+-- D: {sname: chararray, datagroup: {(cId: chararray,cPos: int,sname: chararray,data: map[{(val_0: chararray)}])}, count: long}
 
 -- dump D;
 -- patrzy na ostatnia kolumne w D (ilosc kontrybutorow o tym samym sname)
-E = foreach D generate exhaustiveAND(*);
+E = foreach D generate exhaustiveAND( datagroup );
 dump E;
-/*
--- zmiana koncepcji dla singli:
--- dla kontrybutorow D1: porozbijac databagi (ktore przeciez maja po jednym elemencie)
--- na tabele z rekordami o tych wlasnie tuplach, wtedy w udfi'e nie bede musial zrzucac z databagow
-D1A = foreach D1 generate flatten( datagroup );-- as (cId:chararray, contribPos:int, sname:chararray, metadata:map);
-
-D1B = foreach D1A generate cId, FLATTEN(GenUUID(TOBAG(cId)));
-
-
---E1 = foreach S generate flatten( sinlgeAND( metadata, contribPos ) );
--- UUID - contribKey (gdzie dla singli UUID = contribkey
-store D1A into '$dc_m_hdfs_outputContribs';
---store D1B into '$dc_m_hdfs_outputContribs'; 
-
-
--- dump E1;
-
--- E100 = foreach D100 generate exhaustiveAND(*) as authors;
-
--- udf ma wypluwac bag'a
--- UUID_1,				 UUID_2, UUID_3
--- {key_1, key_2, key_3},{key_4},{key_5, key_6}
--- to mają byc klucze kontrybutorow nie dokumentow! (w metadanych)
-
-
--- OK? F1 = foreach E1 generate flatten(TOKENIZE(authors)) as autor;
--- F100 = foreach E100 generate flatten(TOKENIZE(authors)) as autor;
-
--- store F1 into '$dc_m_hdfs_outputContribs';
-
-/*
--- to mi wypluje podmacierze
-E1000_1 = foreach D1000 generate approximateAND1(*); 
--- a dalej mam obliczyc te podmacierze
-E1000_2 = foreach E1000_1 generate approximateAND2(*);
-
--- 																			datagroup.data
-EX = foreach DX generate FLATTEN(genUUID(datagroup.sname)), FLATTEN(CONTRIB(*));
-
--- [?] czy przed union nie powinno byc rozbicie pojedynczego rekordu na rekody wzgledem UUID
--- zebysmy mieli UUID - key, UUID - key?
-G = union F1,F100,F1000,FX;
-store G into '$dc_m_hdfs_outputContribs';
-*/

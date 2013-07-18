@@ -27,8 +27,10 @@ import pl.edu.icm.coansys.disambiguation.idgenerators.UuIdGenerator;
 public class ExhaustiveAND extends EvalFunc<DataBag> {
 
 	private double threshold;
+	private final double NOT_CALCULATED = Double.NEGATIVE_INFINITY;	
 	private PigDisambiguator[] features;
 	private List<FeatureInfo> featureInfos;
+	private double sim[][];
 
 	public ExhaustiveAND(String threshold, String featureDescription){
 		this.threshold = Double.parseDouble(threshold);
@@ -58,18 +60,24 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 
 	@Override
 	public DataBag exec( Tuple input ) throws IOException {
+		
+		/*System.out.println( input.size() );
+		
+		for( int i = 0; i < input.size(); i++ )
+			System.out.println( input.get(i) );
 
+		System.out.println( "------------------" );*/
+		
+		
 		if ( input == null || input.size() == 0 ) return null;
 		try{
-			//sname - po co?
 			//bag: contribId,pozycja - po co?,sname,mapa: <extractor,bag: tuple ze stringiem>,
-			//count - po co?
 			//TODO w razie nudy:
-			//wystarczyloby wrzucac do udf'a tylko baga z metadanymi
+			//wystarczyloby wrzucac do udf'a tylko (contrib id i mape z metadanymi) z datagroup
 			//co daje odpornosc na zmiany struktury calej tabeli
 
-
-			DataBag contribs = (DataBag) input.get(1);  //biore bag'a z kontrybutorami
+		
+			DataBag contribs = (DataBag) input.get(0);  //biore bag'a z kontrybutorami
 			Iterator<Tuple> it = contribs.iterator();	//iterator po bag'u
 
 			List< Map<String,Object> > contribsT = new LinkedList< Map<String,Object> > ();
@@ -83,22 +91,47 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 				contribsId.add( (String) t.get(0) ); //biore contrId z Tupla
 				contribsT.add( (Map<String, Object>) t.get(3) );
 			}
-
-			//sim jako argument do calculateAffinity, zebym mogl inicjowac tym, co dostane z Aproximate
-			double sim[][] = calculateAffinity ( contribsT/*, contribsId */);
+			
+			//inicjuje sim[][]
+			sim = new double[contribsT.size()][];
+			for ( int i = 1; i < contribsT.size(); i++ ) {
+				sim[i] = new double[i];
+				for ( int j = 0; j < i; j++ ) 
+					sim[i][j] = NOT_CALCULATED;
+			}
+				
+			//jesli podano sim do inicjacji:
+			if ( input.size() == 2 ) {			
+				DataBag similarities = (DataBag) input.get(1);  //biore bag'a z wyliczonymi podobienstwami
+				it = similarities.iterator();	//iterator po bag'u
+				while ( it.hasNext() ) { //iteruje sie po bag'u, zrzucam bag'a do tablicy Tupli
+					Tuple t = it.next();
+					int idX = t.getType(0);
+					int idY = t.getType(1);
+					double simValue = t.getType(2);
+					
+					sim[ idX ][ idY ] = simValue;
+				}
+				
+			}
+			
+			//obliczam sim[][]
+			calculateAffinity ( contribsT );
 
 			// clusterAssociations[ index_kontrybutora ] = klaster, do ktorego go przyporzadkowano
 	        int[] clusterAssociations = new SingleLinkageHACStrategy_OnlyMax().clusterize( sim );
 
 	        Map<Integer,List<String>> clusterMap = splitIntoMap( clusterAssociations, contribsId );
 
-	        return createResultingTuples(clusterMap/*, contribsId*/);
+	        return createResultingTuples( clusterMap );
 	        //zwraca bag: Tuple z (Obiektem z (String (UUID) i bag: { Tuple z ( String (contrib ID) ) } ) )
 		}catch(Exception e){
 			// Throwing an exception will cause the task to fail.
 			throw new IOException("Caught exception processing input row:\n"
 					+ StackTraceExtractor.getStackTrace(e));
 		}
+		
+		//return new DefaultDataBag();
 	}
 
 	//po co contribsId przekazywane jako argument?
@@ -108,17 +141,17 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 	//i wrzucac gotową listę map a nie tablice tupli
 	//powyzsze zrobione
 
-	private double[][] calculateAffinity( List< Map<String,Object> > contribsT/*, List<String> contribsId */) throws Exception {
+	private void calculateAffinity( List< Map<String,Object> > contribsT/*, List<String> contribsId */) throws Exception {
 
-		double[][] sim = new double[contribsT.size()][];
-
-		//zmienic kolejnosc petli?
 		for ( int i = 1; i < contribsT.size(); i++ ) {
-			sim[i] = new double[i];
 			for ( int j = 0; j < i; j++ ) {
-				sim[i][j]=threshold;
+				
+				//jesli wartosc jest obliczona, to nie obliczam ponownie
+				if( sim[i][j] != NOT_CALCULATED ) continue;
+				sim[i][j] = threshold;
+				
 				for ( int d = 0; d < features.length; d++ ){
-
+					
 					FeatureInfo featureInfo = featureInfos.get(d);
 
 					//ponizsze implikuje nie stworzenie obiektu disambiguatora
@@ -135,11 +168,12 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 					double partial = features[d].calculateAffinity( oA, oB );
 					partial = partial / featureInfo.getMaxValue() * featureInfo.getWeight();
 					sim[i][j] += partial;
+					
+					//na pewno ci sami, wiec przerywam
         			if ( sim[i][j] > 0 ) break;
 				}
 			}
 		}
-		return sim;
 	}
 
 	protected Map<Integer, List<String>> splitIntoMap(int[] clusterAssociation, List<String> authorIds) {

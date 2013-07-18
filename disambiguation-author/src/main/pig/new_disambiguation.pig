@@ -76,7 +76,7 @@ B = foreach A2 generate flatten(snameDocumentMetaExtractor($1)) as (cId:chararra
 C = group B by sname;
 
 D = foreach C generate group as sname, B as datagroup, COUNT(B) as count;
--- D: {sname: chararray,datagroup: {(sname:chararray, metadata:bytearray, contribPos:int)},count: long}
+-- D: {sname: chararray, datagroup: {(cId: chararray,cPos: int,sname: chararray,data: map[{(val_0: chararray)}])}, count: long}
 
 -- patrzy na ostatnia kolumne w D (ilosc kontrybutorow o tym samym sname)
 split D into
