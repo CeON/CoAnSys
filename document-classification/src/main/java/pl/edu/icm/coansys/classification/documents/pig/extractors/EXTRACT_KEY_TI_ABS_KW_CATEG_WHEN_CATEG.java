@@ -3,26 +3,18 @@
  */
 package pl.edu.icm.coansys.classification.documents.pig.extractors;
 
+import com.google.common.base.Joiner;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
-
+import java.util.List;
 import org.apache.pig.EvalFunc;
-import org.apache.pig.data.DataBag;
-import org.apache.pig.data.DataByteArray;
-import org.apache.pig.data.DataType;
-import org.apache.pig.data.DefaultDataBag;
-import org.apache.pig.data.Tuple;
-import org.apache.pig.data.TupleFactory;
+import org.apache.pig.data.*;
 import org.apache.pig.impl.logicalLayer.FrontendException;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
-
 import pl.edu.icm.coansys.classification.documents.auxil.StackTraceExtractor;
 import pl.edu.icm.coansys.models.DocumentProtos.ClassifCode;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
-
-import com.google.common.base.Joiner;
-import java.util.ArrayList;
-import java.util.List;
 import pl.edu.icm.coansys.models.DocumentProtos.KeywordsList;
 import pl.edu.icm.coansys.models.DocumentProtos.TextWithLanguage;
 
@@ -73,11 +65,12 @@ public class EXTRACT_KEY_TI_ABS_KW_CATEG_WHEN_CATEG extends EvalFunc<Tuple> {
 
             DataBag db = new DefaultDataBag();
             int bagsize = 0;
-            for (ClassifCode code : dm.getBasicMetadata().getClassifCodeList())
+            for (ClassifCode code : dm.getBasicMetadata().getClassifCodeList()) {
                 for (String co_str : code.getValueList()) {
                     bagsize++;
                     db.add(TupleFactory.getInstance().newTuple(co_str));
                 }
+            }
             
             if (bagsize > 0) {
                 

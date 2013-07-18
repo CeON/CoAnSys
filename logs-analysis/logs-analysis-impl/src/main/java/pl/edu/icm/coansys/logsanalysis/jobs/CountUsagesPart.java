@@ -83,7 +83,7 @@ public class CountUsagesPart implements Tool {
     }
 
     @Override
-    public int run(String[] args) throws Exception {
+    public int run(String[] args) throws IOException, InterruptedException, ClassNotFoundException {
 
         if (args.length < 2) {
             logger.error("Usage: CountUsagePart <input_seqfile> <output_dir> [<usage_weight_class>]");

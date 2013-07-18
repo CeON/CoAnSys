@@ -3,8 +3,10 @@
  */
 package pl.edu.icm.coansys.classification.documents.jobs;
 
+import com.google.common.base.Joiner;
 import java.io.IOException;
-
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
 import org.apache.hadoop.hbase.mapreduce.TableMapper;
@@ -13,20 +15,15 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import pl.edu.icm.coansys.classification.documents.auxil.PorterStemmer;
+import pl.edu.icm.coansys.commons.java.PorterStemmer;
 import pl.edu.icm.coansys.disambiguation.auxil.DiacriticsRemover;
 import pl.edu.icm.coansys.disambiguation.auxil.LoggingInDisambiguation;
 import pl.edu.icm.coansys.disambiguation.auxil.TextArrayWritable;
 import pl.edu.icm.coansys.disambiguation.auxil.TextTextArrayMapWritable;
-import pl.edu.icm.coansys.models.constants.HBaseConstant;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
-
-import com.google.common.base.Joiner;
-import java.util.ArrayList;
-import java.util.List;
 import pl.edu.icm.coansys.models.DocumentProtos.KeywordsList;
 import pl.edu.icm.coansys.models.DocumentProtos.TextWithLanguage;
+import pl.edu.icm.coansys.models.constants.HBaseConstant;
 
 /**
  *

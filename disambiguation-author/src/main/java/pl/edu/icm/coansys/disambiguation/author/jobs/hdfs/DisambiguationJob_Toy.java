@@ -3,6 +3,7 @@
  */
 package pl.edu.icm.coansys.disambiguation.author.jobs.hdfs;
 
+import java.io.IOException;
 import java.lang.management.ManagementFactory;
 
 import org.apache.hadoop.conf.Configuration;
@@ -145,7 +146,7 @@ public class DisambiguationJob_Toy extends Configured implements Tool {
      * Job configuration and ignition
      */
     @Override
-    public int run(String[] args) throws Exception {
+    public int run(String[] args) throws IOException, InterruptedException, ClassNotFoundException {
         parseArgs(args);
         
         Configuration config = getConf();

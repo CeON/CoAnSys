@@ -158,7 +158,7 @@ public class SortUsagesPart implements Tool {
     }
 
     @Override
-    public int run(String[] args) throws Exception {
+    public int run(String[] args) throws IOException, InterruptedException, ClassNotFoundException {
 
         if (args.length < 3) {
             logger.error("Usage: SortUsagePart <input_dir> <output_dir> <nb_of_records>");

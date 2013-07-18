@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import org.apache.pig.EvalFunc;
 import org.apache.pig.data.DataBag;
 import org.apache.pig.data.DataType;
@@ -17,7 +16,6 @@ import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
 import org.apache.pig.impl.logicalLayer.FrontendException;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
-
 import pl.edu.icm.coansys.classification.documents.auxil.StackTraceExtractor;
 
 /**
@@ -52,11 +50,15 @@ public class CHECK_CLASSIF extends EvalFunc<Tuple>{
 			List<String> N = null;
 			int tp,tn,fp,fn;
 
-			for(Tuple t : categReal) T.add((String) t.get(0));
+			for(Tuple t : categReal) {
+                            T.add((String) t.get(0));
+                        }
 			for(Tuple t : categNeigh){
 				toChoose.add((String) t.get(0));
 			}
-			for(Tuple t : categClassif) P.add((String) t.get(0));
+			for(Tuple t : categClassif) {
+                            P.add((String) t.get(0));
+                        }
 			
 			F = cloneArrayList(toChoose);
 			F.removeAll(T);
@@ -86,7 +88,9 @@ public class CHECK_CLASSIF extends EvalFunc<Tuple>{
 
 	private List<String> cloneArrayList(List<String> in){
 		List<String> ret = new ArrayList<String>();
-		for(String s : in) ret.add(s);
+		for(String s : in) {
+                    ret.add(s);
+                }
 		return ret;
 	}
 }

@@ -6,24 +6,12 @@ package pl.edu.icm.coansys.classification.documents.pig.proceeders;
 
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-
+import java.util.*;
 import org.apache.pig.EvalFunc;
-import org.apache.pig.data.DataBag;
-import org.apache.pig.data.DataType;
-import org.apache.pig.data.DefaultDataBag;
-import org.apache.pig.data.Tuple;
-import org.apache.pig.data.TupleFactory;
+import org.apache.pig.data.*;
 import org.apache.pig.impl.logicalLayer.FrontendException;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
-
-import pl.edu.icm.coansys.classification.documents.auxil.PorterStemmer;
 import pl.edu.icm.coansys.classification.documents.auxil.StackTraceExtractor;
-import pl.edu.icm.coansys.classification.documents.auxil.StopWordsRemover;
 
 /**
 *
@@ -98,12 +86,13 @@ public class POS_NEG2 extends EvalFunc<DataBag>{
 			ArrayList<Pair<String,Integer>> posPairs = new ArrayList<Pair<String,Integer>>();
 			ArrayList<Pair<String,Integer>> negPairs = new ArrayList<Pair<String,Integer>>();
 			
-			for(String cc : docCCSet)
+			for(String cc : docCCSet) { 
 				posPairs.add(new Pair<String,Integer>(cc,Collections.frequency(neighCCList, cc)));
-			neighCCSet.removeAll(docCCSet);
-			for(String cc : neighCCSet)
+                        }
+                        neighCCSet.removeAll(docCCSet);
+			for(String cc : neighCCSet) {
 				negPairs.add(new Pair<String,Integer>(cc,Collections.frequency(neighCCList, cc)));
-		
+                        }
 			List<Tuple> alt = new ArrayList<Tuple>(); 
 			for(Pair<String,Integer> p : posPairs){
 				Object[] to = new Object[]{p.x,p.y,0};
