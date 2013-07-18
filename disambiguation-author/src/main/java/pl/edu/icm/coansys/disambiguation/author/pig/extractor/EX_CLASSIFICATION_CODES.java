@@ -7,11 +7,12 @@ import org.apache.pig.data.TupleFactory;
 import pl.edu.icm.coansys.models.DocumentProtos.ClassifCode;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 
-public class EX_CLASSIFICATION_CODES implements  DisambiguationExtractor<DataBag>  {
+public class EX_CLASSIFICATION_CODES implements  DisambiguationExtractor {
+	
+	@Override
 	public DataBag extract(Object o, Object... objects){
 		DocumentMetadata dm = (DocumentMetadata) o;
 		DataBag db = new DefaultDataBag();
-		String lang = null;
 		
 		for(ClassifCode cc : dm.getBasicMetadata().getClassifCodeList()){
 			for(String s : cc.getValueList()){

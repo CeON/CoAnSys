@@ -7,11 +7,12 @@ import org.apache.pig.data.TupleFactory;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.models.DocumentProtos.KeywordsList;
 
-public class EX_KEYWORDS implements  DisambiguationExtractor<DataBag>  {
+public class EX_KEYWORDS implements  DisambiguationExtractor  {
+	
+	@Override
 	public DataBag extract(Object o, Object... objects){
 		DocumentMetadata dm = (DocumentMetadata) o;
 		DataBag db = new DefaultDataBag();
-		String lang = null;
 		
 		for ( KeywordsList k : dm.getKeywordsList() ){
 			for ( String s : k.getKeywordsList() ){
