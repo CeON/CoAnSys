@@ -50,7 +50,7 @@ public class HTableToSequenceFile implements Tool {
     }
 
     @Override
-    public int run(String[] args) throws Exception {
+    public int run(String[] args) throws IOException, InterruptedException, ClassNotFoundException {
         if (args.length < 4) {
             System.err.println("Usage: HTableToSequenceFile <table_name> <column_family> <column_name> <sequence_file_path>");
             System.exit(1);

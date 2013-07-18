@@ -4,6 +4,7 @@
  */
 package pl.edu.icm.coansys.commons.hbase;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.Properties;
 import org.apache.hadoop.filecache.DistributedCache;
@@ -22,7 +23,7 @@ public class IncrementalLoadConfigurator {
     private IncrementalLoadConfigurator() {
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws IOException {
 
         String tableName = args[0];
 

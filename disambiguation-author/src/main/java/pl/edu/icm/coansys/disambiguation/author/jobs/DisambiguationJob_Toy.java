@@ -3,6 +3,7 @@
  */
 package pl.edu.icm.coansys.disambiguation.author.jobs;
 
+import java.io.IOException;
 import java.lang.management.ManagementFactory;
 
 import org.apache.hadoop.conf.Configuration;
@@ -165,7 +166,7 @@ public class DisambiguationJob_Toy implements Tool {
      *
      */
     @Override
-    public int run(String[] args) throws Exception {
+    public int run(String[] args) throws IOException, InterruptedException, ClassNotFoundException {
 
         String[] otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();
         parseArgs(otherArgs);
