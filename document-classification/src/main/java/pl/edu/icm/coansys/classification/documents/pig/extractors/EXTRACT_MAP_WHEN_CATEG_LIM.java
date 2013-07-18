@@ -165,8 +165,9 @@ public class EXTRACT_MAP_WHEN_CATEG_LIM extends EvalFunc<Map> {
 		}
 		
 		for(ClassifCode cc : dm.getBasicMetadata().getClassifCodeList()){
-			for(String s : cc.getValueList())
-				ctgs.add(s);
+			for(String s : cc.getValueList()) {
+                                ctgs.add(s);
+                        }
 		}
 		
 		DataBag db = new DefaultDataBag();

@@ -86,12 +86,13 @@ public class POS_NEG2 extends EvalFunc<DataBag>{
 			ArrayList<Pair<String,Integer>> posPairs = new ArrayList<Pair<String,Integer>>();
 			ArrayList<Pair<String,Integer>> negPairs = new ArrayList<Pair<String,Integer>>();
 			
-			for(String cc : docCCSet)
+			for(String cc : docCCSet) { 
 				posPairs.add(new Pair<String,Integer>(cc,Collections.frequency(neighCCList, cc)));
-			neighCCSet.removeAll(docCCSet);
-			for(String cc : neighCCSet)
+                        }
+                        neighCCSet.removeAll(docCCSet);
+			for(String cc : neighCCSet) {
 				negPairs.add(new Pair<String,Integer>(cc,Collections.frequency(neighCCList, cc)));
-		
+                        }
 			List<Tuple> alt = new ArrayList<Tuple>(); 
 			for(Pair<String,Integer> p : posPairs){
 				Object[] to = new Object[]{p.x,p.y,0};
