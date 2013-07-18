@@ -346,7 +346,7 @@ public class RakeExtractor {
             cand.setScore(score);
         }
 
-        Collections.sort(keywordCandidates);
+        Collections.sort(keywordCandidates, new KeywordCandidate.ScoreComparator());
     }
 
     /**
