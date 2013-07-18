@@ -6,24 +6,12 @@ package pl.edu.icm.coansys.classification.documents.pig.proceeders;
 
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-
+import java.util.*;
 import org.apache.pig.EvalFunc;
-import org.apache.pig.data.DataBag;
-import org.apache.pig.data.DataType;
-import org.apache.pig.data.DefaultDataBag;
-import org.apache.pig.data.Tuple;
-import org.apache.pig.data.TupleFactory;
+import org.apache.pig.data.*;
 import org.apache.pig.impl.logicalLayer.FrontendException;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
-
-import pl.edu.icm.coansys.classification.documents.auxil.PorterStemmer;
 import pl.edu.icm.coansys.classification.documents.auxil.StackTraceExtractor;
-import pl.edu.icm.coansys.classification.documents.auxil.StopWordsRemover;
 
 /**
 *

@@ -5,27 +5,20 @@
 package pl.edu.icm.coansys.classification.documents.pig.proceeders;
 
 
+import com.google.common.base.Joiner;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import org.apache.pig.EvalFunc;
 import org.apache.pig.PigServer;
-import org.apache.pig.data.DataBag;
-import org.apache.pig.data.DataType;
-import org.apache.pig.data.DefaultDataBag;
-import org.apache.pig.data.Tuple;
-import org.apache.pig.data.TupleFactory;
+import org.apache.pig.data.*;
 import org.apache.pig.impl.logicalLayer.FrontendException;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
-
-import pl.edu.icm.coansys.classification.documents.auxil.PorterStemmer;
 import pl.edu.icm.coansys.classification.documents.auxil.StackTraceExtractor;
-import pl.edu.icm.coansys.classification.documents.auxil.StopWordsRemover;
+import pl.edu.icm.coansys.commons.java.PorterStemmer;
+import pl.edu.icm.coansys.commons.java.StopWordsRemover;
 import pl.edu.icm.coansys.disambiguation.auxil.DiacriticsRemover;
-
-import com.google.common.base.Joiner;
 
 /**
 *
