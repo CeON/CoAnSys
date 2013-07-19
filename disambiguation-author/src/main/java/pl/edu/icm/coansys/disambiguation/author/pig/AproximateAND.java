@@ -24,7 +24,13 @@ import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
 import pl.edu.icm.coansys.disambiguation.idgenerators.IdGenerator;
 import pl.edu.icm.coansys.disambiguation.idgenerators.UuIdGenerator;
 
-public class ExhaustiveAND extends EvalFunc<DataBag> {
+
+// zmiany w stosunku do pierwotnego Exhaustive:
+// - poslugiwanie sie nadanymi identyfikatorami int zamiast string dla kazdego kontrybutora
+// zamiana mapy na tablice - zbicie log'a + porownywanie stringow / ich hashy, ktore trzeba generowac jest dluzsze
+
+
+public class AproximateAND extends EvalFunc<DataBag> {
 
 	private double threshold;
 	private final double NOT_CALCULATED = Double.NEGATIVE_INFINITY;	
@@ -32,7 +38,7 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 	private List<FeatureInfo> featureInfos;
 	private double sim[][];
 
-	public ExhaustiveAND(String threshold, String featureDescription){
+	public AproximateAND(String threshold, String featureDescription){
 		this.threshold = Double.parseDouble(threshold);
         this.featureInfos = FeatureInfo.parseFeatureInfoString(featureDescription);
         DisambiguatorFactory ff = new DisambiguatorFactory();
@@ -101,7 +107,8 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 				for ( int j = 0; j < i; j++ ) 
 					sim[i][j] = NOT_CALCULATED;
 			}
-				
+			
+			/*
 			//jesli podano sim do inicjacji:
 			if ( input.size() == 2 ) {			
 				DataBag similarities = (DataBag) input.get(1);  //biore bag'a z wyliczonymi podobienstwami
@@ -115,6 +122,7 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 					sim[ idX ][ idY ] = simValue;
 				}			
 			}
+			*/
 			
 			//obliczam sim[][]
 			calculateAffinity ( contribsT );
@@ -151,7 +159,7 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 				if( sim[i][j] != NOT_CALCULATED ) continue;
 				sim[i][j] = threshold;
 				
-				for ( int d = 0; d < features.length; d++ ){
+				for ( int d = 0; d < features.length; d++ ) {
 					
 					FeatureInfo featureInfo = featureInfos.get(d);
 
@@ -188,6 +196,7 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 		return clusterMap;
 	}
 
+	//TO DO: zamienic map clusters na tablice
 	protected <K, V> void addToMap(Map<Integer, List<String>> clusters, int clusterAssociation, String string) {
 
 		//patrze czy klucz (id klastra) jest juz w mapie
@@ -196,26 +205,31 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
             values = new ArrayList<String>();
             values.add(string);
             clusters.put(clusterAssociation, values);
-        }else{
+        } else {
         	//jak nie, to dodaje do danego klastra (value) id kontrybutora
         	values.add(string);
         }
     }
 
-	protected DataBag createResultingTuples( Map<Integer, List<String>> clusterMap /*,
-			 List<String> authorIds2 */ ) {
-    	IdGenerator idgenerator = new UuIdGenerator();
+	protected DataBag createResultingTuples( Map<Integer, List<Integer>> clusterMap  ) {
+    	
+		//IdGenerator idgenerator = new UuIdGenerator();
 
     	DataBag ret = new DefaultDataBag();
-        for (Map.Entry<Integer, List<String>> o : clusterMap.entrySet()) {
-        	String clusterId = idgenerator.genetareId(o.getValue());
+        
+    	//iteruje po klastrach
+    	for (Map.Entry< Integer, List<Integer> > o : clusterMap.entrySet()) {
+        	
+    		//String clusterId = idgenerator.genetareId(o.getValue());
 
         	DataBag contribs = new DefaultDataBag();
-        	for(String s : o.getValue()){
-        		contribs.add(TupleFactory.getInstance().newTuple(s));
+        	
+        	for( int sid : o.getValue() ) {
+        		simIdToClusterId[ sid ] = contribs.size();
+        		contribs.add( TupleFactory.getInstance().newTuple( dataIn[ sid ] ) );
         	}
 
-        	Object[] to = new Object[]{clusterId,contribs};
+        	Object[] to = new Object[]{contribs};
 	        ret.add(TupleFactory.getInstance().newTuple(Arrays.asList(to)));
         }
 		return ret;

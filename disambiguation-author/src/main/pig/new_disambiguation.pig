@@ -19,6 +19,7 @@
 DEFINE keyTiKwAbsCatExtractor pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_MAP_WHEN_CATEG_LIM('en','removeall');
 DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_CONTRIBDATA_GIVENDATA('$dc_m_str_feature_info');
 DEFINE exhaustiveAND pl.edu.icm.coansys.disambiguation.author.pig.ExhaustiveAND('0.7','$dc_m_str_feature_info');
+DEFINE aproximateAND pl.edu.icm.coansys.disambiguation.author.pig.AproximateAND('0.7','$dc_m_str_feature_info');
 DEFINE sinlgeAND pl.edu.icm.coansys.disambiguation.author.pig.SingleAND();
 DEFINE GenUUID pl.edu.icm.coansys.disambiguation.author.pig.GenUUID();
 -- -----------------------------------------------------
@@ -95,7 +96,7 @@ E1 = foreach D1A generate cId as cId, FLATTEN(GenUUID(TOBAG(cId))) as uuid;
 
 D100LIM = LIMIT D100 2;
 --do exhaustive trafia teraz: sname, datagroup, countl
-D100A = foreach D100LIM generate flatten( exhaustiveAND(*) ) as (uuid:chararray, cIds:chararray);
+D100A = foreach D100LIM generate flatten( exhaustiveAND( datagroup ) ) as (uuid:chararray, cIds:chararray);
 describe D100A;
 DUMP D100A;
 -- D100A = foreach D100LIM generate flatten( exhaustiveAND( datagroup.cId, datagroup.metadata ) ) as (uuid:chararray, cIds:chararray);
