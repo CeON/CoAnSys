@@ -3,15 +3,18 @@ package pl.edu.icm.coansys.disambiguation.author.pig;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.pig.EvalFunc;
 import org.apache.pig.data.DataBag;
 import org.apache.pig.data.DefaultDataBag;
+import org.apache.pig.data.DefaultTuple;
 import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
 
@@ -21,9 +24,6 @@ import pl.edu.icm.coansys.disambiguation.author.pig.PigDisambiguator;
 import pl.edu.icm.coansys.disambiguation.clustering.strategies.SingleLinkageHACStrategy_OnlyMax;
 import pl.edu.icm.coansys.disambiguation.features.Disambiguator;
 import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
-import pl.edu.icm.coansys.disambiguation.idgenerators.IdGenerator;
-import pl.edu.icm.coansys.disambiguation.idgenerators.UuIdGenerator;
-
 
 // zmiany w stosunku do pierwotnego Exhaustive:
 // - poslugiwanie sie nadanymi identyfikatorami int zamiast string dla kazdego kontrybutora
@@ -37,7 +37,10 @@ public class AproximateAND extends EvalFunc<DataBag> {
 	private PigDisambiguator[] features;
 	private List<FeatureInfo> featureInfos;
 	private double sim[][];
-
+	private Tuple datain[];
+	//TODO: możliwie pozamieniac listy na tablice
+	
+	
 	public AproximateAND(String threshold, String featureDescription){
 		this.threshold = Double.parseDouble(threshold);
         this.featureInfos = FeatureInfo.parseFeatureInfoString(featureDescription);
@@ -64,6 +67,7 @@ public class AproximateAND extends EvalFunc<DataBag> {
 	 * Tuple: sname,{(contribId:chararray,contribPos:int,sname:chararray, metadata:map[{(chararray)}])},count
 	 */
 
+
 	@Override
 	public DataBag exec( Tuple input ) throws IOException {
 		
@@ -87,20 +91,26 @@ public class AproximateAND extends EvalFunc<DataBag> {
 		
 			DataBag contribs = (DataBag) input.get(0);  //biore bag'a z kontrybutorami
 			Iterator<Tuple> it = contribs.iterator();	//iterator po bag'u
-
+			datain = new DefaultTuple[ (int) contribs.size() ];
+			
 			List< Map<String,Object> > contribsT = new LinkedList< Map<String,Object> > ();
-			List< String > contribsId = new LinkedList<String>();
+			//List< String > contribsId = new LinkedList<String>(); //nie potrzebuje, bo w wyniku posluguje sie nadanymi etykietami a nie sname
 
 			//Ziana koncepcji: do calculateAffinity powedruje lista map, a nie tablica tupli z bag'a
 			//(cale tuple sa tam niepotrzebne)
 			//+ jesli zmieni sie struktura tabeli, to musze wprowadzic zmiany tylko w exec
+			
+			int k = 0;
 			while ( it.hasNext() ) { //iteruje sie po bag'u, zrzucam bag'a do tablicy Tupli
 				Tuple t = it.next();
-				contribsId.add( (String) t.get(0) ); //biore contrId z Tupla
+				datain[ k++ ] = t;
+				//contribsId.add( (String) t.get(0) ); //biore contrId z Tupla
 				contribsT.add( (Map<String, Object>) t.get(3) );
+				
 			}
 			
 			//inicjuje sim[][]
+			//TODO: przeanalizowac reszte kodu, bo indeksowanie od 1 nie od 0 - moglem sie pomylic
 			sim = new double[contribsT.size()][];
 			for ( int i = 1; i < contribsT.size(); i++ ) {
 				sim[i] = new double[i];
@@ -129,8 +139,9 @@ public class AproximateAND extends EvalFunc<DataBag> {
 
 			// clusterAssociations[ index_kontrybutora ] = klaster, do ktorego go przyporzadkowano
 	        int[] clusterAssociations = new SingleLinkageHACStrategy_OnlyMax().clusterize( sim );
+	        //TODO: gdybym chcial wyodrebnic z exhaustive i aproximate do klasy nadrzednej, to strategia poza exec i inicjowana w overridowanym czyms (konstruktorze)
 
-	        Map<Integer,List<String>> clusterMap = splitIntoMap( clusterAssociations, contribsId );
+	        List < Vector<Integer> >  clusterMap = splitIntoClusters( clusterAssociations );
 
 	        return createResultingTuples( clusterMap );
 	        //zwraca bag: Tuple z (Obiektem z (String (UUID) i bag: { Tuple z ( String (contrib ID) ) } ) )
@@ -143,20 +154,15 @@ public class AproximateAND extends EvalFunc<DataBag> {
 		//return new DefaultDataBag();
 	}
 
-	//po co contribsId przekazywane jako argument?
-	//po 1. - nie uzywane ponizej
-	//po 3. - id kontrybutorow siedzą w contribsT - get(0)
-	//ad po 3. - w ogole te Id nie sa ponizszej potrzebne, mozna by zmienic koncepcje
-	//i wrzucac gotową listę map a nie tablice tupli
-	//powyzsze zrobione
-
-	private void calculateAffinity( List< Map<String,Object> > contribsT/*, List<String> contribsId */) throws Exception {
+	// TODO: ponizsza metode wydzielic do nadklasy (jest w takiej samej postaci w Exhaustive i Aproximate)
+	// to samo konstruktor i pare innych
+	private void calculateAffinity( List< Map<String,Object> > contribsT ) throws Exception {
 
 		for ( int i = 1; i < contribsT.size(); i++ ) {
 			for ( int j = 0; j < i; j++ ) {
 				
 				//jesli wartosc jest obliczona, to nie obliczam ponownie
-				if( sim[i][j] != NOT_CALCULATED ) continue;
+				if ( sim[i][j] != NOT_CALCULATED ) continue;
 				sim[i][j] = threshold;
 				
 				for ( int d = 0; d < features.length; d++ ) {
@@ -185,53 +191,56 @@ public class AproximateAND extends EvalFunc<DataBag> {
 		}
 	}
 
-	protected Map<Integer, List<String>> splitIntoMap(int[] clusterAssociation, List<String> authorIds) {
-
-		//pod dany klaster id (clusterAssociation) wrzucamy id kontrybutorow
-		Map<Integer, List<String>> clusterMap = new HashMap<Integer, List<String>>();
-
+	protected List < Vector<Integer> > splitIntoClusters( int[] clusterAssociation ) {
+		
+		int clusterNumber = Collections.max( Arrays.asList( ArrayUtils.toObject( clusterAssociation ) ) );
+		List < Vector<Integer> > clusters = new ArrayList < Vector< Integer > > ( clusterNumber );
+		// cluster[ id klastra ] = vector  simId kontrybutorow
+		
         for (int i = 0; i < clusterAssociation.length; i++) {
-            addToMap(clusterMap, clusterAssociation[i], authorIds.get(i));
+            clusters.get( clusterAssociation[i] ).add( i );
         }
-		return clusterMap;
+		return clusters;
 	}
 
-	//TO DO: zamienic map clusters na tablice
-	protected <K, V> void addToMap(Map<Integer, List<String>> clusters, int clusterAssociation, String string) {
-
-		//patrze czy klucz (id klastra) jest juz w mapie
-		List<String> values = clusters.get(clusterAssociation);
-        if (values == null) {
-            values = new ArrayList<String>();
-            values.add(string);
-            clusters.put(clusterAssociation, values);
-        } else {
-        	//jak nie, to dodaje do danego klastra (value) id kontrybutora
-        	values.add(string);
-        }
-    }
-
-	protected DataBag createResultingTuples( Map<Integer, List<Integer>> clusterMap  ) {
+	protected DataBag createResultingTuples( List < Vector<Integer> > clusters ) {
     	
 		//IdGenerator idgenerator = new UuIdGenerator();
-
     	DataBag ret = new DefaultDataBag();
-        
+    	int simIdToClusterId[] = new int[ sim.length ];
+    	
     	//iteruje po klastrach
-    	for (Map.Entry< Integer, List<Integer> > o : clusterMap.entrySet()) {
+    	for ( Vector<Integer> cluster: clusters ) {
         	
-    		//String clusterId = idgenerator.genetareId(o.getValue());
+        	DataBag contribDatas = new DefaultDataBag();
+        	DataBag similarities = new DefaultDataBag();
 
-        	DataBag contribs = new DefaultDataBag();
-        	
-        	for( int sid : o.getValue() ) {
-        		simIdToClusterId[ sid ] = contribs.size();
-        		contribs.add( TupleFactory.getInstance().newTuple( dataIn[ sid ] ) );
+        	// iteruje po kontrybutorach w klastrze (znajdują sie tam simId)
+        	for ( int i = 0; i < cluster.size(); i++ ) {
+        		
+        		int sidX = cluster.get( i );
+        		
+        		simIdToClusterId[ sidX ] = i;
+        		contribDatas.add( datain[ sidX ] );
+        		
+        		//dodaje do wyniku wartosci podobienst dla faktycznie obliczonych
+        		for ( int j = 0; j < i; j++ ) {
+        			int sidY = cluster.get( j );
+        			
+        			assert( sidX > sidY );
+        			assert( simIdToClusterId[ sidX ] > simIdToClusterId[ sidY ] );
+        			
+        			if ( sim[ sidX ][ sidY ] != Double.NEGATIVE_INFINITY && sim[ sidX ][ sidY ] != Double.POSITIVE_INFINITY ) {
+        				Object[] clusterTriple = new Object[]{ simIdToClusterId[ sidX ], simIdToClusterId[ sidY ], sim[ sidX ][ sidY ] };
+        				similarities.add( TupleFactory.getInstance().newTuple( Arrays.asList( clusterTriple ) ) );
+        			}
+        		}
         	}
 
-        	Object[] to = new Object[]{contribs};
+        	Object[] to = new Object[]{ contribDatas, similarities };
 	        ret.add(TupleFactory.getInstance().newTuple(Arrays.asList(to)));
         }
 		return ret;
+		//bag z: { bag z dane jak na wejsciu aproximate odpowiadające kontrybutorom z poszczegolnych klastrow, bag z triple podobienstwami }
 	}
 }
