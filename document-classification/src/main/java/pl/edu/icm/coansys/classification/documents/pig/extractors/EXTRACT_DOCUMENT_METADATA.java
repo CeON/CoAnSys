@@ -16,7 +16,7 @@ import org.apache.pig.impl.logicalLayer.FrontendException;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
 
 import pl.edu.icm.coansys.classification.documents.auxil.StackTraceExtractor;
-import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentWrapper;
+import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
 
 /**
 *
@@ -69,8 +69,7 @@ public class EXTRACT_DOCUMENT_METADATA extends EvalFunc<Tuple>{
 			}
 			
 	        Object[] to = new Object[]{new DataByteArray(dm.getDocumentMetadata().toByteArray())};
-	        Tuple t = TupleFactory.getInstance().newTuple(Arrays.asList(to));
-	        return t;
+	        return TupleFactory.getInstance().newTuple(Arrays.asList(to));
 			
 		}catch(Exception e){
 			// Throwing an exception will cause the task to fail.

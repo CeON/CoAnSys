@@ -3,11 +3,11 @@ package pl.edu.icm.coansys.disambiguation.work.tool;
 import java.util.List;
 import java.util.UUID;
 
-import pl.edu.icm.coansys.importers.models.DocumentProtos.Author;
-import pl.edu.icm.coansys.importers.models.DocumentProtos.BasicMetadata;
-import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
-import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentWrapper;
-import pl.edu.icm.coansys.importers.models.DocumentProtos.TextWithLanguage;
+import pl.edu.icm.coansys.models.DocumentProtos.Author;
+import pl.edu.icm.coansys.models.DocumentProtos.BasicMetadata;
+import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
+import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
+import pl.edu.icm.coansys.models.DocumentProtos.TextWithLanguage;
 
 import com.beust.jcommander.internal.Lists;
 
@@ -28,6 +28,12 @@ public abstract class MockDocumentWrapperFactory {
     public static DocumentWrapper createDocumentWrapper(String title0) {
         TextWithLanguage textTitle0 = TextWithLanguage.newBuilder().setText(title0).build();
         BasicMetadata basicMetadata = BasicMetadata.newBuilder().addTitle(textTitle0).build();
+        return createDocumentWrapper(basicMetadata);
+    }
+    
+    public static DocumentWrapper createDocumentWrapper(String title0, String issn, String journalTitle) {
+        TextWithLanguage textTitle0 = TextWithLanguage.newBuilder().setText(title0).build();
+        BasicMetadata basicMetadata = BasicMetadata.newBuilder().addTitle(textTitle0).setIssn(issn).setJournal(journalTitle).build();
         return createDocumentWrapper(basicMetadata);
     }
     

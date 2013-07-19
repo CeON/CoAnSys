@@ -5,7 +5,6 @@ package pl.edu.icm.coansys.classification.documents.jobs;
 
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
-import java.util.Random;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
@@ -29,7 +28,7 @@ import org.slf4j.LoggerFactory;
 import pl.edu.icm.coansys.classification.documents.auxil.LoggingInClassification;
 import pl.edu.icm.coansys.classification.documents.auxil.StringListIntListWritable;
 import pl.edu.icm.coansys.disambiguation.auxil.TextArrayWritable;
-import pl.edu.icm.coansys.importers.constants.HBaseConstant;
+import pl.edu.icm.coansys.models.constants.HBaseConstant;
 
 /**
 *
@@ -75,10 +74,10 @@ public class TfidfJob_Proto implements Tool {
     }
 
     public TfidfJob_Proto setAUXIL_PATH(String aUXIL_PATH) {
-        if (!aUXIL_PATH.endsWith("/")) {
-            aUXIL_PATH += "/";
-        }
         AUXIL_PATH = aUXIL_PATH;
+        if (!AUXIL_PATH.endsWith("/")) {
+            AUXIL_PATH += "/";
+        }
         return this;
     }
 
@@ -123,6 +122,7 @@ public class TfidfJob_Proto implements Tool {
     }
 
     private void parseArgs(String[] args) {
+        String[] tmp = new String[4];
         if (args == null || args.length != 3) {
             logger.debug("# of parameters is not equal to 4");
             logger.debug("You need to provide:");
@@ -136,17 +136,22 @@ public class TfidfJob_Proto implements Tool {
             logger.debug("* /user/pdendek/tfidf/");
             logger.debug("* TfidfJob_Proto");
 
-            args = new String[4];
-            args[0] = "testProto";
-            args[1] = "/home/pdendek/tfidf/intermediate";
-            args[2] = "/user/pdendek/tfidf/final";
-            args[3] = "TfidfJob_Proto";
+            tmp[0] = "testProto";
+            tmp[1] = "/home/pdendek/tfidf/intermediate";
+            tmp[2] = "/user/pdendek/tfidf/final";
+            tmp[3] = "TfidfJob_Proto";
+        }
+        else {
+            tmp[0] = args[0];
+            tmp[1] = args[1];
+            tmp[2] = args[2];
+            tmp[3] = args[3];
         }
 
-        setINPUT_TABLE(args[0]);
-        setAUXIL_PATH(args[1]);
-        setFINAL_PATH(args[2]);
-        setNAME(args[3]);
+        setINPUT_TABLE(tmp[0]);
+        setAUXIL_PATH(tmp[1]);
+        setFINAL_PATH(tmp[2]);
+        setNAME(tmp[3]);
     }
 
     /*
@@ -274,7 +279,7 @@ public class TfidfJob_Proto implements Tool {
         tfidfJob.setOutputFormatClass(SequenceFileOutputFormat.class);
 
         SequenceFileInputFormat.addInputPath(tfidfJob, new Path(AUXIL_PATH + "job2"));
-        SequenceFileOutputFormat.setOutputPath(tfidfJob, new Path(FINAL_PATH + new Random().nextInt()));
+        SequenceFileOutputFormat.setOutputPath(tfidfJob, new Path(FINAL_PATH + (int)(Math.random() * Integer.MAX_VALUE)));
 
         /*
          * Launch job

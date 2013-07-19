@@ -23,12 +23,12 @@
         <dependency>
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-library</artifactId>
-            <version>2.9.2</version>
+            <version>2.10.0</version>
         </dependency>
         <dependency>
             <groupId>com.nicta</groupId>
-            <artifactId>scoobi_2.9.2</artifactId>
-            <version>0.6.2-cdh4</version>
+            <artifactId>scoobi_2.10</artifactId>
+            <version>0.7.1-cdh4</version>
         </dependency>
         <dependency>
             <groupId>pl.edu.icm.coansys</groupId>

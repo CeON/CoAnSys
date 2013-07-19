@@ -12,8 +12,8 @@ import org.slf4j.LoggerFactory;
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DocumentBased;
 import pl.edu.icm.coansys.disambiguation.author.jobs.hdfs.DisambiguationJob_Toy;
 import pl.edu.icm.coansys.disambiguation.features.Extractor;
-import pl.edu.icm.coansys.importers.models.DocumentProtos.ClassifCode;
-import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
+import pl.edu.icm.coansys.models.DocumentProtos.ClassifCode;
+import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 
 /**
  * The {@link Extractor} from {@link DocumentProtos.DocumentMetadata} (commit

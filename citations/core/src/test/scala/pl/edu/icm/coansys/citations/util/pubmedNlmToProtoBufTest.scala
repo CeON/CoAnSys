@@ -7,7 +7,7 @@ package pl.edu.icm.coansys.citations.util
 import org.testng.annotations.{BeforeClass, Test}
 import org.testng.Assert._
 import pl.edu.icm.coansys.citations.util.nlm.pubmedNlmToProtoBuf
-import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata
+import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)

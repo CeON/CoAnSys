@@ -16,15 +16,22 @@ import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.util.ReflectionUtils;
 
 import pl.edu.icm.coansys.disambiguation.work.DocumentWrapperUtils;
-import pl.edu.icm.coansys.importers.models.DocumentProtos;
-import pl.edu.icm.coansys.importers.models.DocumentProtos.Author;
-import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentWrapper;
+import pl.edu.icm.coansys.models.DocumentProtos;
+import pl.edu.icm.coansys.models.DocumentProtos.Author;
+import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
 
 import com.google.common.collect.Lists;
 
+/**
+ * Utility methods related to bw2proto sequence files
+ * @author Łukasz Dumiszewski
+ *
+ */
 
 public class Bw2ProtoFileUtils {
 
+    
+    
     public static List<DocumentWrapper> readDocWrappers(String inputFileUri) {
         
         List<DocumentWrapper> docWrappers = Lists.newArrayList();
@@ -54,11 +61,13 @@ public class Bw2ProtoFileUtils {
         try {
             Configuration conf = new Configuration();
             reader = getSequenceFileReader(inputFileUri, conf);
+            SequenceFile.Reader.bufferSize(250000);
             Writable key = (Writable)ReflectionUtils.newInstance(reader.getKeyClass(), conf);
             Writable value = (Writable)ReflectionUtils.newInstance(reader.getValueClass(), conf);
             while (reader.next(key, value)) {
                 DocumentWrapper docWrapper = DocumentProtos.DocumentWrapper.parseFrom(((BytesWritable)value).copyBytes());
                 out.println(format(key, docWrapper));
+                
             }
             
         }

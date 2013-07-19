@@ -2,17 +2,15 @@ package pl.edu.icm.coansys.citations.jobs
 
 import collection.JavaConversions._
 import com.nicta.scoobi.Scoobi._
-import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentWrapper
+import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper
 import pl.edu.icm.coansys.citations.data.WireFormats._
 import java.io.File
-import pl.edu.icm.coansys.citations.util.scoobi
+import pl.edu.icm.coansys.citations.util.MyScoobiApp
 
 /**
   * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
   */
-object ReferenceExtractor extends ScoobiApp {
-  scoobi.addDistCacheJarsToConfiguration(configuration)
-
+object ReferenceExtractor extends MyScoobiApp {
   lazy val citationIdPrefix = "cit_"
 
    def extractReferences(docs: DList[DocumentWrapper]) =
@@ -28,8 +26,8 @@ object ReferenceExtractor extends ScoobiApp {
      val inUri = args(0)
      val outUri = args(1)
 
-     val entities = extractReferences(convertValueFromSequenceFile[DocumentWrapper](inUri))
+     val entities = extractReferences(valueFromSequenceFile[DocumentWrapper](inUri))
 
-     persist(convertToSequenceFile(entities, outUri))
+     persist(toSequenceFile(entities, outUri))
    }
  }

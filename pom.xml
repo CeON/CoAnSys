@@ -14,16 +14,18 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <hadoop.version>2.0.0-mr1-cdh4.0.1</hadoop.version>
-        <hadoop.common.version>2.0.0-cdh4.0.1</hadoop.common.version>
-        <pig.version>0.9.2-cdh4.0.1</pig.version>
-        <hbase.version>0.92.1-cdh4.0.1</hbase.version>
+        <hadoop.version>2.0.0-mr1-cdh4.3.0</hadoop.version>
+        <hadoop.common.version>2.0.0-cdh4.3.0</hadoop.common.version>
+        <pig.version>0.11.0-cdh4.3.0</pig.version>
+        <hbase.version>0.94.6-cdh4.3.0</hbase.version>
         <slf4j.version>1.6.4</slf4j.version>
         <protobuf.java.version>2.4.1</protobuf.java.version>
         <testng.version>6.5.2</testng.version>
         <maven.surefire.plugin.version>2.12.3</maven.surefire.plugin.version>
-        <bwmeta.version>2.2.0</bwmeta.version>
         <spring.version>3.2.0.RELEASE</spring.version>
+        <oozie-maven-plugin.version>1.1-SNAPSHOT</oozie-maven-plugin.version>
+        <oozie-runner.version>1.1-SNAPSHOT</oozie-runner.version>
+        <jackson-mapper-asl.version>1.9.12</jackson-mapper-asl.version>
  
     </properties>
 
@@ -54,6 +56,15 @@
                 </executions>
             </plugin>
         </plugins>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+                    <groupId>pl.edu.icm.maven</groupId>
+                    <artifactId>oozie-maven-plugin</artifactId>
+                    <version>${oozie-maven-plugin.version}</version>
+				</plugin>
+			</plugins>
+	    </pluginManagement>
     </build>
 
     <profiles>
@@ -209,16 +220,11 @@
             <type>jar</type>
         </dependency>
         <dependency>
-            <groupId>pl.edu.icm.bwmeta</groupId>
-            <artifactId>bwmeta</artifactId>
-            <version>${bwmeta.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-core</artifactId>
             <version>${hadoop.version}</version>
             <scope>provided</scope>
-        </dependency> 
+        </dependency>
         <dependency>
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-common</artifactId>
@@ -258,11 +264,17 @@
             <artifactId>protobuf-java</artifactId>
             <version>${protobuf.java.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-asl</artifactId>
+            <version>${jackson-mapper-asl.version}</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
 
-	<dependencyManagement>
+    <dependencyManagement>
         <dependencies>
-        	<dependency>
+            <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-aop</artifactId>
                 <version>${spring.version}</version>
@@ -271,7 +283,7 @@
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-expression</artifactId>
                 <version>${spring.version}</version>
-            </dependency>            
+            </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-beans</artifactId>
@@ -281,12 +293,12 @@
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-aspects</artifactId>
                 <version>${spring.version}</version>
-            </dependency>            
+            </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-orm</artifactId>
                 <version>${spring.version}</version>
-            </dependency>                     
+            </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-context</artifactId>
@@ -308,16 +320,20 @@
                 <version>${spring.version}</version>
             </dependency>
             <dependency>
- 				<groupId>org.springframework.data</groupId>
- 				<artifactId>spring-data-hadoop</artifactId>
- 				<version>1.0.0.RELEASE</version>
-			</dependency> 
-			<dependency>
-            	<groupId>org.springframework</groupId>
-            	<artifactId>spring-test</artifactId>
-            	<version>${spring.version}</version>
-        	</dependency>
-			
+                <groupId>org.springframework.data</groupId>
+                <artifactId>spring-data-hadoop</artifactId>
+                <version>1.0.0.RELEASE</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-test</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>pl.edu.icm.coansys</groupId>
+                <artifactId>oozie-runner</artifactId>
+                <version>${oozie-runner.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

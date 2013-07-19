@@ -17,13 +17,14 @@ import org.apache.pig.impl.logicalLayer.FrontendException;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
 
 import pl.edu.icm.coansys.classification.documents.auxil.StackTraceExtractor;
-import pl.edu.icm.coansys.importers.models.DocumentProtos.ClassifCode;
-import pl.edu.icm.coansys.importers.models.DocumentProtos.DocumentMetadata;
+import pl.edu.icm.coansys.models.DocumentProtos.ClassifCode;
+import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 
 import com.google.common.base.Joiner;
 import java.util.ArrayList;
 import java.util.List;
-import pl.edu.icm.coansys.importers.models.DocumentProtos.TextWithLanguage;
+import pl.edu.icm.coansys.models.DocumentProtos.KeywordsList;
+import pl.edu.icm.coansys.models.DocumentProtos.TextWithLanguage;
 
 /**
  *
@@ -94,10 +95,14 @@ public class EXTRACT_KEY_TI_ABS_KW_CATEG_WHEN_CATEG extends EvalFunc<Tuple> {
                     abstractsList.add(documentAbstract.getText());
                 }
                 abstracts = Joiner.on(" ").join(abstractsList);
+
+                List<String> allKeywords = new ArrayList<String>();
+                for (KeywordsList keywordsList : dm.getKeywordsList()) {
+                    allKeywords.addAll(keywordsList.getKeywordsList());
+                }
+                Object[] to = new Object[]{key, titles, abstracts, Joiner.on(" ").join(allKeywords), db, bagsize};
                 
-                Object[] to = new Object[]{key, titles, abstracts, Joiner.on(" ").join(dm.getKeywordList()), db, bagsize};
-                Tuple t = TupleFactory.getInstance().newTuple(Arrays.asList(to));
-                return t;
+                return TupleFactory.getInstance().newTuple(Arrays.asList(to));
             }
             return null;
 
