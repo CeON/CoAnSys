@@ -141,9 +141,9 @@ public class AproximateAND extends EvalFunc<DataBag> {
 	        int[] clusterAssociations = new SingleLinkageHACStrategy_OnlyMax().clusterize( sim );
 	        //TODO: gdybym chcial wyodrebnic z exhaustive i aproximate do klasy nadrzednej, to strategia poza exec i inicjowana w overridowanym czyms (konstruktorze)
 
-	        List < Vector<Integer> >  clusterMap = splitIntoClusters( clusterAssociations );
+	        List < Vector<Integer> >  clusterList = splitIntoClusters( clusterAssociations );
 
-	        return createResultingTuples( clusterMap );
+	        return createResultingTuples( clusterList );
 	        //zwraca bag: Tuple z (Obiektem z (String (UUID) i bag: { Tuple z ( String (contrib ID) ) } ) )
 		}catch(Exception e){
 			// Throwing an exception will cause the task to fail.
@@ -191,16 +191,28 @@ public class AproximateAND extends EvalFunc<DataBag> {
 		}
 	}
 
+	//zwraca listę niepustych klastrów (czyli potencjalnie tożsamych kontrybutorow)
 	protected List < Vector<Integer> > splitIntoClusters( int[] clusterAssociation ) {
 		
-		int clusterNumber = Collections.max( Arrays.asList( ArrayUtils.toObject( clusterAssociation ) ) );
-		List < Vector<Integer> > clusters = new ArrayList < Vector< Integer > > ( clusterNumber );
+		int clusterNumber = 1 + Collections.max( Arrays.asList( ArrayUtils.toObject( clusterAssociation ) ) );
+		
+		List < Vector<Integer> > clusters = new ArrayList < Vector< Integer > > ();
 		// cluster[ id klastra ] = vector  simId kontrybutorow
 		
-        for (int i = 0; i < clusterAssociation.length; i++) {
+		for( int i = 0; i < clusterNumber; i++ )
+			clusters.add( new Vector<Integer> () );
+		
+        for ( int i = 0; i < clusterAssociation.length; i++ ) {
             clusters.get( clusterAssociation[i] ).add( i );
         }
-		return clusters;
+        
+        //pozbywam sie pustych klastrow
+        List < Vector<Integer> > ret = new ArrayList < Vector< Integer > > ();
+		for( int i = 0; i < clusterNumber; i++ )
+			if ( !clusters.get( i ).isEmpty() )
+				ret.add( clusters.get( i ) );
+
+		return ret;
 	}
 
 	protected DataBag createResultingTuples( List < Vector<Integer> > clusters ) {

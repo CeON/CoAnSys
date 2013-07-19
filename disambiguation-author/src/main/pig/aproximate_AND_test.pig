@@ -82,5 +82,5 @@ D = foreach C generate group as sname, B as datagroup, COUNT(B) as count;
 
 -- dump D;
 -- patrzy na ostatnia kolumne w D (ilosc kontrybutorow o tym samym sname)
-E = foreach D generate aproximateAND( datagroup );
+E = foreach D generate flatten( aproximateAND( datagroup ) );
 dump E;
