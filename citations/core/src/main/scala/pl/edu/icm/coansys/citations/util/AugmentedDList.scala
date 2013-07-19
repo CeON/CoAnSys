@@ -19,7 +19,7 @@ class AugmentedDList[A](dlist: DList[A]) {
    */
   def mapWithResource[T <: {def close()}, B: Manifest : WireFormat](resource: => T)(block: (T, A) => B): DList[B] = {
     dlist.parallelDo(new DoFn[A, B] {
-      var res = null.asInstanceOf[T]
+      private var res = null.asInstanceOf[T]
 
       def setup() {
         res = resource
@@ -40,14 +40,14 @@ class AugmentedDList[A](dlist: DList[A]) {
    */
   def flatMapWithResource[T <: {def close()}, C: Manifest : WireFormat](resource: => T)(block: (T, A) => Iterable[C]): DList[C] = {
     dlist.parallelDo(new DoFn[A, C] {
-      var res = null.asInstanceOf[T]
+      private var res = null.asInstanceOf[T]
 
       def setup() {
         res = resource
       }
 
       def process(input: A, emitter: Emitter[C]) {
-        block(res, input).foreach(emitter.emit(_))
+        block(res, input).foreach(emitter.emit)
       }
 
       def cleanup(emitter: Emitter[C]) {
