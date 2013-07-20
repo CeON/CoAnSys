@@ -15,8 +15,12 @@ abstract class MyScoobiApp extends ScoobiApp {
   override def upload = true
 
   override def configureJars(implicit configuration: ScoobiConfiguration) = {
-    uploadedJars.foreach(path =>
-      DistributedCache.addFileToClassPath(new Path(path.toUri.getPath), configuration))
+    val added =
+      Option(DistributedCache.getFileClassPaths(configuration)).map(_.toList).getOrElse(List())
+        .map(_.toUri.getPath).toSet
+    uploadedJars
+      .filterNot(path => added.contains(path.toUri.getPath))
+      .foreach(path => DistributedCache.addFileToClassPath(new Path(path.toUri.getPath), configuration))
 
     // add new jars to the classpath and make sure that values are still unique for cache files and classpath entries
     configuration.addValues("mapred.classpath", jars.map(j => libjarsDirectory + (new File(j.getFile).getName)), ":")
