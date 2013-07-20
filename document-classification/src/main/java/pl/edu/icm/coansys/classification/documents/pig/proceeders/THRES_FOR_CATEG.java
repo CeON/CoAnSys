@@ -103,13 +103,17 @@ public class THRES_FOR_CATEG extends EvalFunc<Tuple>{
 
 	private int countEqMore(int curr, int[] posc) {
 		int ret = 0;
-		for(int i = curr; i<posc.length; i++) ret+=posc[i];
+		for(int i = curr; i<posc.length; i++) {
+                    ret+=posc[i];
+                }
 		return ret;
 	}
 
 	private int countLess(int curr, int[] posc) {
 		int ret = 0;
-		for(int i = 0; i<curr; i++) ret+=posc[i];
+		for(int i = 0; i<curr; i++) {
+                    ret+=posc[i];
+                }
 		return ret;
 	}
 

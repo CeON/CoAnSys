@@ -7,16 +7,13 @@ package pl.edu.icm.coansys.classification.documents.pig.proceeders;
 
 import java.io.IOException;
 import java.util.Arrays;
-
 import org.apache.pig.EvalFunc;
 import org.apache.pig.data.DataBag;
 import org.apache.pig.data.DataType;
-import org.apache.pig.data.DefaultDataBag;
 import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
 import org.apache.pig.impl.logicalLayer.FrontendException;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
-
 import pl.edu.icm.coansys.classification.documents.auxil.StackTraceExtractor;
 
 /**
@@ -97,13 +94,17 @@ public class THRES_FOR_CATEG2 extends EvalFunc<Tuple>{
 
 	private int countEqMore(int curr, long[] posc) {
 		int ret = 0;
-		for(int i = curr; i<posc.length; i++) ret+=posc[i];
+		for(int i = curr; i<posc.length; i++) {
+                    ret+=posc[i];
+                }
 		return ret;
 	}
 
 	private int countLess(int curr, long[] posc) {
 		int ret = 0;
-		for(int i = 0; i<curr; i++) ret+=posc[i];
+		for(int i = 0; i<curr; i++) {
+                    ret+=posc[i];
+                }
 		return ret;
 	}
 

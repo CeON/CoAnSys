@@ -85,14 +85,12 @@ public class EXTRACT_KEY_CATEG_WHEN_LIM extends EvalFunc<Tuple>{
 	        String key = dm.getKey();
 	        DataBag db = new DefaultDataBag();
 	        int bagsize = 0;
-//	        System.out.print(key+":");
-	        for(ClassifCode code : dm.getBasicMetadata().getClassifCodeList())
+	        for(ClassifCode code : dm.getBasicMetadata().getClassifCodeList()) {
 	        	for(String co_str : code.getValueList()){
 	        		bagsize++;
-//	        		System.out.print(" "+co_str);
 	        		db.add(TupleFactory.getInstance().newTuple(co_str));
 	        	}
-//	        System.out.println("");
+                }
 	        if(bagsize>limnum){
 	        	Object[] to = new Object[]{key,db,bagsize};
 		        return TupleFactory.getInstance().newTuple(Arrays.asList(to));

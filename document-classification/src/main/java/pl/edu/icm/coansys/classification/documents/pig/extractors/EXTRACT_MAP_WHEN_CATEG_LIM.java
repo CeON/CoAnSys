@@ -46,7 +46,7 @@ public class EXTRACT_MAP_WHEN_CATEG_LIM extends EvalFunc<Map> {
 	private String language = null;
 	private Action action = null;
 	
-	public EXTRACT_MAP_WHEN_CATEG_LIM(String language, String action) throws Exception{
+	public EXTRACT_MAP_WHEN_CATEG_LIM(String language, String action){
 		this.language = language;
 		
 		if(action.equalsIgnoreCase("remove")){
@@ -56,7 +56,7 @@ public class EXTRACT_MAP_WHEN_CATEG_LIM extends EvalFunc<Map> {
 		}else if (action.equalsIgnoreCase("translate")){
 			this.action = Action.TRANSLATE;
 		}else{
-			throw new Exception("You have to choose one of two actions \"remove\" or \"translate\". " +
+			throw new IllegalArgumentException("You have to choose one of two actions \"remove\" or \"translate\". " +
 					"Your proposition is \""+action+"\". " +
 					"Please modify your proposition.");
 		}
@@ -165,8 +165,9 @@ public class EXTRACT_MAP_WHEN_CATEG_LIM extends EvalFunc<Map> {
 		}
 		
 		for(ClassifCode cc : dm.getBasicMetadata().getClassifCodeList()){
-			for(String s : cc.getValueList())
-				ctgs.add(s);
+			for(String s : cc.getValueList()) {
+                                ctgs.add(s);
+                        }
 		}
 		
 		DataBag db = new DefaultDataBag();

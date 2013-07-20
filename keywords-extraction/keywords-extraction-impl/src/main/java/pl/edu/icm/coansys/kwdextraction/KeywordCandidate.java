@@ -4,13 +4,14 @@
 package pl.edu.icm.coansys.kwdextraction;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
  *
  * @author Artur Czeczko <a.czeczko@icm.edu.pl>
  */
-public class KeywordCandidate implements Comparable<KeywordCandidate> {
+public class KeywordCandidate {
     
     private String keyword = "";
     private List<String> words = new ArrayList<String>();
@@ -49,8 +50,11 @@ public class KeywordCandidate implements Comparable<KeywordCandidate> {
         return counter;
     }
 
-    @Override
-    public int compareTo(KeywordCandidate o) {
-        return - this.score.compareTo(o.score);
+    public static class ScoreComparator implements Comparator<KeywordCandidate> {
+
+        @Override
+        public int compare(KeywordCandidate o1, KeywordCandidate o2) {
+            return - o1.score.compareTo(o2.score);
+        }
     }
 }

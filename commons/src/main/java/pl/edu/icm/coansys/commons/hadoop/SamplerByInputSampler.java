@@ -32,7 +32,7 @@ public class SamplerByInputSampler implements Tool {
     }
 
     @Override
-    public int run(String[] args) throws Exception {
+    public int run(String[] args) throws IOException, ClassNotFoundException, InterruptedException {
         return createParitionFile(args[0], args[1], Float.parseFloat(args[2]), Integer.parseInt(args[3]));
     }
 

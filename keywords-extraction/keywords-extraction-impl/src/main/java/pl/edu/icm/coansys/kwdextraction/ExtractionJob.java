@@ -63,7 +63,7 @@ public class ExtractionJob implements Tool {
     }
 
     @Override
-    public int run(String[] args) throws Exception {
+    public int run(String[] args) throws IOException, InterruptedException, ClassNotFoundException {
         if (args.length < 4) {
             logger.error("Usage: ExtractionJob <input_seqfile> <output_dir> <extractionOption> <language>");
             logger.error("  extractionOption must be one of the following:");

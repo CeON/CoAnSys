@@ -5,7 +5,7 @@ import pl.edu.icm.cermine.tools.classification.features.FeatureVector
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
-object libsvm {
+object libsvm_util {
   /**
    * Converts a feature vector to the text line in LibSVM format.
    */
