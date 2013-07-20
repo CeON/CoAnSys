@@ -22,7 +22,7 @@ class SimilarityMeasurer {
     TitleMatchFactor,
     YearMatchFactor)
 
-  val classifier = SvmClassifier.fromResource("/pl/edu/icm/coansys/citations/pic.model")
+  val classifier = SvmClassifier.fromResource("/pl/edu/icm/coansys/citations/weakMatching.model")
 
   def similarity(e1: MatchableEntity, e2: MatchableEntity): Double =
     classifier.predictProbabilities(featureVectorBuilder.map(_.calculateFeatureValue(e1, e2)).toArray)(1)
