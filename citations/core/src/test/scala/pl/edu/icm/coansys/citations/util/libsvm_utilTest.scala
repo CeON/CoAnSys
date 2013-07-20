@@ -1,6 +1,6 @@
 package pl.edu.icm.coansys.citations.util
 
-import pl.edu.icm.coansys.citations.util.libsvm._
+import pl.edu.icm.coansys.citations.util.libsvm_util._
 import org.testng.annotations.Test
 import org.testng.Assert._
 import pl.edu.icm.cermine.tools.classification.features.FeatureVector
@@ -8,7 +8,7 @@ import pl.edu.icm.cermine.tools.classification.features.FeatureVector
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
-class libsvmTest {
+class libsvm_utilTest {
   @Test(groups = Array("fast"))
   def featureVectorToLibSvmLineTest() {
     val fv = new FeatureVector()
