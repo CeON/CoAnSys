@@ -6,21 +6,14 @@ package pl.edu.icm.coansys.classification.documents.pig.extractors;
 
 import java.io.IOException;
 import java.util.Arrays;
-
 import org.apache.pig.EvalFunc;
-import org.apache.pig.data.DataBag;
-import org.apache.pig.data.DataByteArray;
-import org.apache.pig.data.DataType;
-import org.apache.pig.data.DefaultDataBag;
-import org.apache.pig.data.Tuple;
-import org.apache.pig.data.TupleFactory;
+import org.apache.pig.data.*;
 import org.apache.pig.impl.logicalLayer.FrontendException;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
-
 import pl.edu.icm.coansys.classification.documents.auxil.StackTraceExtractor;
-import pl.edu.icm.coansys.models.constants.ProtoConstants;
 import pl.edu.icm.coansys.models.DocumentProtos.ClassifCode;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
+import pl.edu.icm.coansys.models.constants.ProtoConstants;
 
 /**
 *
@@ -75,10 +68,11 @@ public class EXTRACT_KEY_MSCCATEG extends EvalFunc<Tuple>{
 	        String key = dm.getKey();
 	        DataBag db = new DefaultDataBag();
 	        
-	        for(ClassifCode code : dm.getBasicMetadata().getClassifCodeList())
-	        	if(ProtoConstants.documentClassifCodeMsc.equals(code.getSource()))
+	        for(ClassifCode code : dm.getBasicMetadata().getClassifCodeList()) {
+	        	if(ProtoConstants.documentClassifCodeMsc.equals(code.getSource())) {
 	        		db.add(TupleFactory.getInstance().newTuple(code.getValueList()));
-	        
+                        }
+                }
 	        Object[] to = new Object[]{key,db};
 	        return TupleFactory.getInstance().newTuple(Arrays.asList(to));
 			

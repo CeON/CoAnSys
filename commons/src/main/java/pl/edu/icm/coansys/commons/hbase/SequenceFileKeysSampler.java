@@ -43,7 +43,7 @@ public class SequenceFileKeysSampler implements Tool {
     }
 
     @Override
-    public int run(String[] args) throws Exception {
+    public int run(String[] args) throws IOException, ClassNotFoundException, InterruptedException  {
 
         if (args.length < 2) {
             usage("Wrong number of arguments: " + args.length);

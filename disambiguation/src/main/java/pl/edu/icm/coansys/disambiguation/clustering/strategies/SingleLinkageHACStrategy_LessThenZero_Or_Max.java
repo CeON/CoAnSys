@@ -21,7 +21,9 @@ public class SingleLinkageHACStrategy_LessThenZero_Or_Max extends SingleLinkageH
 		double[][] in = {{},{15},{46,3},{2,-18,-20},{-100,-100,3,-200}};
 		int[] out = new SingleLinkageHACStrategy_LessThenZero_Or_Max().clusterize(in);
 		StringBuilder sb = new StringBuilder(""); 
-		for(int i : out) sb.append(i+"\t");
+		for(int i : out) {
+                    sb.append(i+"\t");
+                }
 		sb.append("\n");
 		log.info(sb.toString());
 	}
