@@ -4,15 +4,12 @@
 
 package pl.edu.icm.coansys.citations.jobs
 
-import com.nicta.scoobi.application.ScoobiApp
-import com.nicta.scoobi.core.DList
-import com.nicta.scoobi.Persist._
-import com.nicta.scoobi.InputsOutputs._
+import com.nicta.scoobi.Scoobi._
 import pl.edu.icm.coansys.models.PICProtos
 import pl.edu.icm.coansys.citations.util.AugmentedDList.augmentDList
 import pl.edu.icm.coansys.citations.util.matching._
 import pl.edu.icm.coansys.citations.indices.{EntityIndex, AuthorIndex}
-import pl.edu.icm.coansys.citations.util.{scoobi, misc, BytesConverter}
+import pl.edu.icm.coansys.citations.util.{MyScoobiApp, misc, BytesConverter}
 import pl.edu.icm.coansys.citations.data._
 import feature_calculators._
 import pl.edu.icm.cermine.tools.classification.features.FeatureVectorBuilder
@@ -22,11 +19,10 @@ import collection.JavaConversions._
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
-object Matcher extends ScoobiApp {
-  scoobi.addDistCacheJarsToConfiguration(configuration)
+object Matcher extends MyScoobiApp {
 
   private implicit val picOutConverter =
-    new BytesConverter[PICProtos.PicOut](_.toByteArray, PICProtos.PicOut.parseFrom(_))
+    new BytesConverter[PICProtos.PicOut](_.toByteArray, PICProtos.PicOut.parseFrom)
 
   type EntityId = String
 
@@ -141,10 +137,10 @@ object Matcher extends ScoobiApp {
     val documentsUri = args(3)
     val outUri = args(4)
 
-    val myMatchesDebug = matchesDebug(convertValueFromSequenceFile[MatchableEntity](documentsUri), keyIndexUri, authorIndexUri)
+    val myMatchesDebug = matchesDebug(valueFromSequenceFile[MatchableEntity](documentsUri), keyIndexUri, authorIndexUri)
 
     implicit val stringConverter = new BytesConverter[String](misc.uuidEncode, misc.uuidDecode)
-    implicit val picOutConverter = new BytesConverter[PICProtos.PicOut](_.toByteString.toByteArray, PICProtos.PicOut.parseFrom(_))
+    implicit val picOutConverter = new BytesConverter[PICProtos.PicOut](_.toByteString.toByteArray, PICProtos.PicOut.parseFrom)
     persist(toTextFile(myMatchesDebug, outUri, overwrite = true))
     //    persist(toTextFile(heuristicStats(readCitationsFromDocumentsFromSeqFiles(List(documentsUri), parserModelUri), keyIndexUri, authorIndexUri), outUri, overwrite = true))
   }

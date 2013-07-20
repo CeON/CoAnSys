@@ -12,7 +12,7 @@ import pl.edu.icm.coansys.commons.scala.automatic_resource_management.using
 import collection.immutable.Queue
 import java.io.{File, FileWriter}
 import pl.edu.icm.coansys.citations.util.sequencefile.ConvertingSequenceFileIterator
-import pl.edu.icm.coansys.citations.util.libsvm.featureVectorToLibSvmLine
+import pl.edu.icm.coansys.citations.util.libsvm_util.featureVectorToLibSvmLine
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)

@@ -1,9 +1,6 @@
 package pl.edu.icm.coansys.citations.jobs.auxiliary
 
-import com.nicta.scoobi.application.ScoobiApp
-import com.nicta.scoobi.Scoobi
-import com.nicta.scoobi.InputsOutputs._
-import com.nicta.scoobi.Persist._
+import com.nicta.scoobi.Scoobi._
 import org.apache.commons.lang.StringUtils
 import pl.edu.icm.coansys.citations.util.AugmentedDList.augmentDList
 import pl.edu.icm.coansys.citations.indices.EntityIndex
@@ -20,7 +17,7 @@ object HeuristicStatsWrong extends ScoobiApp {
     val inUri = args(1)
     val outUri = args(2)
 
-    val results = Scoobi.convertFromSequenceFile[String, String](inUri)
+    val results = fromSequenceFile[String, String](inUri)
       .flatMapWithResource(new EntityIndex(indexUri)) { case (index, (k, v)) =>
         val parts = v.split("\n", 2)
         val ids = parts(0).split(" ").filterNot(StringUtils.isEmpty).map(_.substring(4))
@@ -38,6 +35,6 @@ object HeuristicStatsWrong extends ScoobiApp {
         }
       }
 
-    persist(convertToSequenceFile(results, outUri, overwrite = true))
+    persist(toSequenceFile(results, outUri, overwrite = true))
   }
 }

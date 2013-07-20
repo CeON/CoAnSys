@@ -12,7 +12,7 @@ import pl.edu.icm.coansys.citations.data.WireFormats._
  */
 class DocumentExtractorTest extends InMemoryHadoop {
   def scoobiArgs = Seq()
-  implicit val conf = new ScoobiConfiguration
+  implicit val conf = ScoobiConfiguration()
 
   @Test(groups = Array("slow"))
   def basicTest() {

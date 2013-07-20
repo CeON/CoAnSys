@@ -4,26 +4,22 @@
 
 package pl.edu.icm.coansys.citations.jobs.auxiliary
 
-import com.nicta.scoobi.application.ScoobiApp
-import com.nicta.scoobi.InputsOutputs._
+import com.nicta.scoobi.Scoobi._
 import pl.edu.icm.coansys.citations.util.XPathEvaluator
 import org.apache.commons.io.IOUtils
 import org.apache.commons.lang.StringUtils
-import com.nicta.scoobi.Persist._
 import scala.Some
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 object HeuristicEvaluator extends ScoobiApp {
-  override lazy val upload = false
-
   def run() {
     val refsUri = args(0)
     val docsUri = args(1)
     val outUri = args(2)
 
-    val refs = convertValueFromSequenceFile[String](refsUri).flatMap {
+    val refs = valueFromSequenceFile[String](refsUri).flatMap {
       xml =>
         val eval = XPathEvaluator.fromInputStream(IOUtils.toInputStream(xml))
         val id = eval( """.//pub-id[@pub-id-type='pmid']""")
@@ -32,7 +28,7 @@ object HeuristicEvaluator extends ScoobiApp {
         else
           None
     }
-    val docs = convertValueFromSequenceFile[String](docsUri).flatMap {
+    val docs = valueFromSequenceFile[String](docsUri).flatMap {
       xml =>
         val eval = XPathEvaluator.fromInputStream(IOUtils.toInputStream(xml))
         val id = eval( """/article/front/article-meta/article-id[@pub-id-type='pmid']""")
@@ -57,6 +53,6 @@ object HeuristicEvaluator extends ScoobiApp {
         }
     }
 
-    persist(convertToSequenceFile(matchable, outUri, overwrite = true))
+    persist(toSequenceFile(matchable, outUri, overwrite = true))
   }
 }

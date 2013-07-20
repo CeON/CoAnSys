@@ -4,18 +4,15 @@
 
 package pl.edu.icm.coansys.citations.jobs
 
-import com.nicta.scoobi.application.ScoobiApp
-import com.nicta.scoobi.InputsOutputs.convertValueFromSequenceFile
+import com.nicta.scoobi.Scoobi._
 import pl.edu.icm.coansys.citations.data.MatchableEntity
 import pl.edu.icm.coansys.citations.indices.{SimpleIndex, ApproximateIndex}
-import java.io.File
-import pl.edu.icm.coansys.citations.util.scoobi
+import pl.edu.icm.coansys.citations.util.MyScoobiApp
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
-object IndexBuilder extends ScoobiApp {
-  scoobi.addDistCacheJarsToConfiguration(configuration)
+object IndexBuilder extends MyScoobiApp {
 
   def run() {
     val usage = "Usage: IndexBuilder [-key|-author] <input_seqfile> <output_index_path>"
@@ -24,9 +21,9 @@ object IndexBuilder extends ScoobiApp {
     } else {
       args(0) match {
         case "-key" =>
-          SimpleIndex.buildKeyIndex(convertValueFromSequenceFile[MatchableEntity](args(1)), args(2))
+          SimpleIndex.buildKeyIndex(valueFromSequenceFile[MatchableEntity](args(1)), args(2))
         case "-author" =>
-          ApproximateIndex.buildAuthorIndex(convertValueFromSequenceFile[MatchableEntity](args(1)), args(2))
+          ApproximateIndex.buildAuthorIndex(valueFromSequenceFile[MatchableEntity](args(1)), args(2))
         case _ =>
           println(usage)
       }

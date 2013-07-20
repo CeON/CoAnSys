@@ -17,7 +17,7 @@ object IndexStatistics extends ScoobiApp {
 
   def run() {
     val indexFileUri = args(0)
-    val reader = new MapFile.Reader(new Path(indexFileUri), configuration)
+    val reader = new MapFile.Reader(new Path(indexFileUri), configuration.configuration)
     val key = new Text()
     val value = new BytesIterable()
     println("Entries:")
