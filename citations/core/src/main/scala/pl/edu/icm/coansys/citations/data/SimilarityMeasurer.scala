@@ -6,7 +6,6 @@ package pl.edu.icm.coansys.citations.data
 
 import collection.JavaConversions._
 import feature_calculators._
-import pl.edu.icm.cermine.tools.classification.svm.SVMClassifier
 import pl.edu.icm.cermine.tools.classification.features.FeatureVectorBuilder
 import pl.edu.icm.coansys.citations.util.SvmClassifier
 
@@ -14,18 +13,20 @@ import pl.edu.icm.coansys.citations.util.SvmClassifier
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 class SimilarityMeasurer {
-  val featureVectorBuilder = List(
+  val featureCalculators = List(
     AuthorTrigramMatchFactor,
     AuthorTokenMatchFactor,
     PagesMatchFactor,
     SourceMatchFactor,
     TitleMatchFactor,
     YearMatchFactor)
+  val featureVectorBuilder = new FeatureVectorBuilder[MatchableEntity, MatchableEntity]
+  featureVectorBuilder.setFeatureCalculators(featureCalculators)
 
   val classifier = SvmClassifier.fromResource("/pl/edu/icm/coansys/citations/weakMatching.model")
 
   def similarity(e1: MatchableEntity, e2: MatchableEntity): Double =
-    classifier.predictProbabilities(featureVectorBuilder.map(_.calculateFeatureValue(e1, e2)).toArray)(1)
+    classifier.predictProbabilities(featureCalculators.map(_.calculateFeatureValue(e1, e2)).toArray)(1)
 }
 
 object SimilarityMeasurer {
