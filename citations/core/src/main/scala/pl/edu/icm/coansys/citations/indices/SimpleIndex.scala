@@ -50,7 +50,7 @@ class SimpleIndex[K <: WritableComparable[_] : Manifest, V <: Writable : Manifes
 
 object SimpleIndex {
   def buildKeyIndex(documents: DList[MatchableEntity], indexFile: String)(implicit conf: ScoobiConfiguration) {
-    persist(convertToSequenceFile(documents.map(doc => (doc.id, doc)), indexFile))
+    persist(toSequenceFile(documents.map(doc => (doc.id, doc)), indexFile))
     hdfs.mergeSeqs(indexFile)
     hdfs.convertSeqToMap(indexFile)
   }

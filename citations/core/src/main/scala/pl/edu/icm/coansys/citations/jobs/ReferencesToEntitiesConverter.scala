@@ -6,7 +6,7 @@ package pl.edu.icm.coansys.citations.jobs
 
 import com.nicta.scoobi.Scoobi._
 import pl.edu.icm.coansys.citations.util.AugmentedDList.augmentDList
-import pl.edu.icm.coansys.citations.util.{scoobi, NoOpClose}
+import pl.edu.icm.coansys.citations.util.{MyScoobiApp, NoOpClose}
 import pl.edu.icm.coansys.citations.data.MatchableEntity
 import pl.edu.icm.cermine.bibref.{BibReferenceParser, CRFBibReferenceParser}
 import pl.edu.icm.cermine.bibref.model.BibEntry
@@ -14,9 +14,7 @@ import pl.edu.icm.cermine.bibref.model.BibEntry
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
-object ReferencesToEntitiesConverter extends ScoobiApp {
-  scoobi.addDistCacheJarsToConfiguration(configuration)
-
+object ReferencesToEntitiesConverter extends MyScoobiApp {
   def run() {
     var parser: (()=> BibReferenceParser[BibEntry] with NoOpClose) = null
     var inUri: String = null
@@ -33,7 +31,7 @@ object ReferencesToEntitiesConverter extends ScoobiApp {
       outUri = args(1)
     }
 
-    val entities = convertFromSequenceFile[String, String](inUri)
+    val entities = fromSequenceFile[String, String](inUri)
       .flatMapWithResource(parser()) {
       case (the_parser, (id, text)) if !text.isEmpty =>
         try {
@@ -48,6 +46,6 @@ object ReferencesToEntitiesConverter extends ScoobiApp {
         None
     }
 
-    persist(convertToSequenceFile(entities, outUri))
+    persist(toSequenceFile(entities, outUri))
   }
 }

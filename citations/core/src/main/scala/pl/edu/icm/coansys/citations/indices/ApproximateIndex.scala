@@ -9,9 +9,8 @@ import org.apache.hadoop.io.{Writable, Text}
 import collection.mutable.ListBuffer
 import com.nicta.scoobi.core.DList
 import com.nicta.scoobi.io.sequence.SeqSchema
-import com.nicta.scoobi.Persist.persist
-import com.nicta.scoobi.InputsOutputs.convertToSequenceFile
-import com.nicta.scoobi.application.ScoobiConfiguration
+import com.nicta.scoobi.io.sequence.SequenceOutput.toSequenceFile
+import com.nicta.scoobi.Scoobi._
 import pl.edu.icm.coansys.citations.data.MatchableEntity
 import pl.edu.icm.coansys.citations.util.{hdfs, BytesIterable, misc}
 
@@ -108,7 +107,7 @@ object ApproximateIndex {
       type SeqType = BytesIterable
       val mf = manifest[BytesIterable]
     }
-    persist(convertToSequenceFile(indexEntries(documents), indexFile))
+    persist(toSequenceFile(indexEntries(documents), indexFile))
     hdfs.mergeSeqs(indexFile)
     hdfs.convertSeqToMap(indexFile)
   }

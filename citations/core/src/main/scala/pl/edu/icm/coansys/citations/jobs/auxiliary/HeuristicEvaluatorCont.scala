@@ -4,31 +4,24 @@
 
 package pl.edu.icm.coansys.citations.jobs.auxiliary
 
-import com.nicta.scoobi.application.ScoobiApp
-import com.nicta.scoobi.InputsOutputs
-import pl.edu.icm.coansys.commons.scala.xml
+import com.nicta.scoobi.Scoobi._
 import pl.edu.icm.coansys.citations.util.AugmentedDList.augmentDList
-import pl.edu.icm.cermine.bibref.CRFBibReferenceParser
-import pl.edu.icm.coansys.citations.util.{nlm, XPathEvaluator, matching, NoOpClose}
+import pl.edu.icm.coansys.citations.util.{nlm, XPathEvaluator, matching}
 import pl.edu.icm.coansys.citations.data.MatchableEntity
 import pl.edu.icm.coansys.citations.indices.AuthorIndex
-import com.nicta.scoobi.Persist._
-import com.nicta.scoobi.InputsOutputs._
 import org.apache.commons.io.IOUtils
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 object HeuristicEvaluatorCont extends ScoobiApp {
-  override lazy val upload = false
-
   def run() {
     val authorIndex = args(0)
     val citationUri = args(1)
     val outUri = args(2)
 
     val result =
-      InputsOutputs.convertFromSequenceFile[String, String](citationUri).map {
+      fromSequenceFile[String, String](citationUri).map {
         case (id, xmlString) =>
           val eval = XPathEvaluator.fromInputStream(IOUtils.toInputStream(xmlString))
           val ref = nlm.referenceMetadataBuilderFromNode(eval.asNode("."))
@@ -40,6 +33,6 @@ object HeuristicEvaluatorCont extends ScoobiApp {
         case (id, (xmlString, matching)) =>
           (id, matching.mkString(" ") + "\n" + xmlString)
       }
-    persist(convertToSequenceFile(result, outUri, overwrite = true))
+    persist(toSequenceFile(result, outUri, overwrite = true))
   }
 }

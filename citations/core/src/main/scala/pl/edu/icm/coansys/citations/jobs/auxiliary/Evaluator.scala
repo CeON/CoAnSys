@@ -1,20 +1,11 @@
 package pl.edu.icm.coansys.citations.jobs.auxiliary
 
-import collection.JavaConversions._
-import com.nicta.scoobi.application.ScoobiApp
-import com.nicta.scoobi.Scoobi
-import com.nicta.scoobi.InputsOutputs._
-import com.nicta.scoobi.Persist._
+import com.nicta.scoobi.Scoobi._
 import org.apache.commons.lang.StringUtils
 import pl.edu.icm.coansys.citations.util.AugmentedDList.augmentDList
-import pl.edu.icm.coansys.citations.indices.{AuthorIndex, EntityIndex}
-import pl.edu.icm.coansys.citations.util.{NoOpClose, libsvm, nlm, XPathEvaluator}
+import pl.edu.icm.coansys.citations.util.{NoOpClose, nlm, XPathEvaluator}
 import org.apache.commons.io.IOUtils
 import pl.edu.icm.coansys.citations.data.{SimilarityMeasurer, MatchableEntity}
-import pl.edu.icm.cermine.tools.classification.features.FeatureVectorBuilder
-import pl.edu.icm.coansys.citations.data.feature_calculators._
-import com.nicta.scoobi.core.DList
-import pl.edu.icm.coansys.citations.util.matching._
 import com.nicta.scoobi.lib.Relational
 
 /**
@@ -26,8 +17,8 @@ object Evaluator extends ScoobiApp {
     val inUri = args(1)
     val outUri = args(2)
 
-    val indexList = Scoobi.convertFromSequenceFile[String, MatchableEntity](indexUri)
-    val heuristic = Scoobi.convertFromSequenceFile[String, String](inUri)
+    val indexList = fromSequenceFile[String, MatchableEntity](indexUri)
+    val heuristic = fromSequenceFile[String, String](inUri)
     // citId->citData
     val citations = heuristic.map {
       case (k, v) =>
