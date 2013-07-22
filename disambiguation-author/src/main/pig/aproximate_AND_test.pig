@@ -9,7 +9,7 @@
 %DEFAULT JARS '*.jar'
 %DEFAULT commonJarsPath 'lib/$JARS'
 
-%DEFAULT dc_m_hdfs_inputDocsData2 '../../test/resources/data.in' 
+%DEFAULT dc_m_hdfs_inputDocsData2 '../../test/resources/data2.in' 
 %DEFAULT time 20130709_1009
 %DEFAULT dc_m_hdfs_outputContribs disambiguation/outputContribs$time
 %DEFAULT dc_m_meth_extraction getBWBWFromHDFS

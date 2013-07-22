@@ -72,6 +72,7 @@ A2 = sample A1 $dc_m_double_sample;
 -- A2: {key: chararray,value: bytearray}
 
 -- z kazdego dokumentu (rekordu tabeli wejsciowe) tworze rekordy z kontrybutorami
+-- TODO: wlasciwie tego contribPos tutaj juz nie potrzebujemy, poniewaz wyciagamy tam cId (a do tego byla potrzeba pozcyja) => mozna by zmienic EXTRACT_GIVEN_DATA
 B = foreach A2 generate flatten(snameDocumentMetaExtractor($1)) as (cId:chararray, contribPos:int, sname:chararray, metadata:map[{(chararray)}]); 
 
 C = group B by sname;

@@ -47,7 +47,6 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
         int index = -1;
         for ( FeatureInfo fi : featureInfos ){
         	if ( fi.getDisambiguatorName().equals("") ) continue;
-        	System.out.println( fi.getDisambiguatorName() );
         	index++;
         	Disambiguator d = ff.create(fi);
         	features[index] = new PigDisambiguator(d);
