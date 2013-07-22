@@ -91,14 +91,15 @@ split D into
 -- dla kontrybutorow D1: splaszczamy databagi (ktore przeciez maja po jednym elemencie)
 D1A = foreach D1 generate flatten( datagroup );-- as (cId:chararray, contribPos:int, sname:chararray, metadata:map);
 E1 = foreach D1A generate cId as cId, FLATTEN(GenUUID(TOBAG(cId))) as uuid;
--- contribID, UUID
+-- E1: {cId: chararray,uuid: chararray}
 
 
 D100LIM = LIMIT D100 2;
 --do exhaustive trafia teraz: sname, datagroup, countl
+
 D100A = foreach D100LIM generate flatten( exhaustiveAND( datagroup ) ) as (uuid:chararray, cIds:chararray);
-describe D100A;
-DUMP D100A;
+-- describe D100A;
+-- DUMP D100A;
 -- D100A = foreach D100LIM generate flatten( exhaustiveAND( datagroup.cId, datagroup.metadata ) ) as (uuid:chararray, cIds:chararray);
 -- z flatten: 
 -- UUID_1, {key_1, key_2, key_3}
@@ -108,19 +109,26 @@ DUMP D100A;
 -- {key_1, key_2, key_3},{key_4},{key_5, key_6}
 -- gdzie key_* to klucze kontrybutorow (autorow dokumentow) w metadanych
 E100 = foreach D100A generate flatten( cIds ) as cId, uuid;
-
-describe E1;
--- E1: {cId: chararray,uuid: chararray}
-DUMP E1;
-describe E100;
 -- E100: {cId: NULL,uuid: chararray}
-DUMP E100;
+
+
+-- describe E1;
+-- DUMP E1;
+-- describe E100;
+-- DUMP E100;
+
+DTEST = D100LIM;
+APRO = foreach DTEST generate flatten( aproximateAND( datagroup ) ); -- as datagroup, simTriples
+DESCRIBE APRO;
+DUMP APRO;
+-- D1000A = foreach APRO generate flatten( exhaustiveAND( datagroup, simTriples ) ) as (uuid:chararray, cIds:chararray);
+-- E100 = foreach D1000A generate flatten( cIds ) as cId, uuid;
 
 
 -- krzaczy bo w E1 cId jest typu chararray a w E100 NULL
-R = union E1, E100;
-describe R;
-DUMP R;
+-- R = union E1, E100, E1000;
+-- describe R;
+-- DUMP R;
 
 --Z = foreach D100A generate uuid;
 --describe Z;
