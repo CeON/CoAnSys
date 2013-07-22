@@ -181,7 +181,8 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 
 		//pod dany klaster id (clusterAssociation) wrzucamy id kontrybutorow
 		Map<Integer, List<String>> clusterMap = new HashMap<Integer, List<String>>();
-
+		//TODO: mapa na np liste jak w aproximate
+		
         for (int i = 0; i < clusterAssociation.length; i++) {
             addToMap(clusterMap, clusterAssociation[i], authorIds.get(i));
         }
