@@ -170,7 +170,7 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 					sim[i][j] += partial;
 					
 					//na pewno ci sami, wiec przerywam
-        			if ( sim[i][j] > 0 ) break;
+        			if ( sim[i][j] >= 0 ) break;
 				}
 			}
 		}

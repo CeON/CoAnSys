@@ -67,10 +67,10 @@ public class AproximateAND extends EvalFunc<DataBag> {
 				
 		if ( input == null || input.size() == 0 ) return null;
 		try {
-			//bag: contribId,pozycja - po co?,sname,mapa: <extractor,bag: tuple ze stringiem>,
-			//opcjonalnie: bag: tuple ( int index w sim contrib X, int ..contrib Y, double sim value) 
+			//UWAGA: input aproximate musi byc taki sam jak exhaustive (bo z aproximate trafi do exhaustive wprost)
+			//bag: contribId, pozycja - po co (nie potrzebne ani w aproximate ani w exhaustive)?,sname,mapa: <extractor,bag: tuple ze stringiem>,
 			//TODO w razie nudy:
-			//wystarczyloby wrzucac do udf'a tylko (contrib id i mape z metadanymi) z datagroup
+			//wystarczyloby wrzucac do udf'a tylko (mape z metadanymi) z datagroup
 			//co daje odpornosc na zmiany struktury calej tabeli
 			//ale to bym musial zmienic na poziomie generowania tabel (nie generowac z niepotrzebnymi danymi)
 
@@ -196,7 +196,7 @@ public class AproximateAND extends EvalFunc<DataBag> {
 					sim[i][j] += partial;
 					
 					//prawdopodobnie Ci sami
-        			if ( sim[i][j] > 0 ) {
+        			if ( sim[i][j] >= 0 ) {
         				//lacze przedstawicieli i, j w jedna unie
         				union( i, j );
         				break;
