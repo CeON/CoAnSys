@@ -14,12 +14,12 @@
 %DEFAULT dc_m_hdfs_outputContribs disambiguation/outputContribs$time
 %DEFAULT dc_m_meth_extraction getBWBWFromHDFS
 %DEFAULT dc_m_meth_extraction_inner pl.edu.icm.coansys.pig.udf.RichSequenceFileLoader
-%DEFAULT dc_m_str_feature_info 'TitleDisambiguator#EX_TITLE#1#1,#EX_YEAR#0#1'
+%DEFAULT dc_m_str_feature_info 'TitleDisambiguator#EX_TITLE#1#1,YearDisambiguator#EX_YEAR#1#1'
 
 DEFINE keyTiKwAbsCatExtractor pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_MAP_WHEN_CATEG_LIM('en','removeall');
 DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_CONTRIBDATA_GIVENDATA('$dc_m_str_feature_info');
-DEFINE exhaustiveAND pl.edu.icm.coansys.disambiguation.author.pig.ExhaustiveAND('0.7','$dc_m_str_feature_info');
-DEFINE aproximateAND pl.edu.icm.coansys.disambiguation.author.pig.AproximateAND('0.7','$dc_m_str_feature_info');
+DEFINE exhaustiveAND pl.edu.icm.coansys.disambiguation.author.pig.ExhaustiveAND('-1.0','$dc_m_str_feature_info');
+DEFINE aproximateAND pl.edu.icm.coansys.disambiguation.author.pig.AproximateAND('-1.0','$dc_m_str_feature_info');
 DEFINE sinlgeAND pl.edu.icm.coansys.disambiguation.author.pig.SingleAND();
 DEFINE GenUUID pl.edu.icm.coansys.disambiguation.author.pig.GenUUID();
 -- -----------------------------------------------------
@@ -57,51 +57,38 @@ set pig.tmpfilecompression.codec $pig_tmpfilecompression_codec_param
 set job.priority $job_priority
 set pig.cachedbag.memusage $pig_cachedbag_mem_usage
 set pig.skewedjoin.reduce.memusage $pig_skewedjoin_reduce_memusage
-
-
-
---DEFINE exhaustiveAND pl.icm.edu.disambiguation('$params');
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- code section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 A1 = $dc_m_meth_extraction('$dc_m_hdfs_inputDocsData','$dc_m_meth_extraction_inner'); 
-
-A2 = sample A1 $dc_m_double_sample;
 -- A2: {key: chararray,value: bytearray}
+-- A2 = sample A1 $dc_m_double_sample;
 
 -- z kazdego dokumentu (rekordu tabeli wejsciowe) tworze rekordy z kontrybutorami
 -- TODO: wlasciwie tego contribPos tutaj juz nie potrzebujemy, poniewaz wyciagamy tam cId (a do tego byla potrzeba pozcyja) => mozna by zmienic EXTRACT_GIVEN_DATA
-B = foreach A2 generate flatten(snameDocumentMetaExtractor($1)) as (cId:chararray, contribPos:int, sname:chararray, metadata:map[{(chararray)}]); 
-
+B = foreach A1 generate flatten(snameDocumentMetaExtractor($1)) as (cId:chararray, contribPos:int, sname:chararray, metadata:map[{(chararray)}]); 
 C = group B by sname;
-
-D = foreach C generate group as sname, B as datagroup, COUNT(B) as count;
 -- D: {sname: chararray, datagroup: {(cId: chararray,cPos: int,sname: chararray,data: map[{(val_0: chararray)}])}, count: long}
+D = foreach C generate group as sname, B as datagroup, COUNT(B) as count;
 
--- patrzy na ostatnia kolumne w D (ilosc kontrybutorow o tym samym sname)
 split D into
 	D1 if count == 1,
 	D100 if (count > 1 and count < 100),
 	D1000 if (count >= 100 and count < 1000),
 	DX if count >= 1000;
-
-
-
--- dla kontrybutorow D1: splaszczamy databagi (ktore przeciez maja po jednym elemencie)
+-- -----------------------------------------------------
+-- SINGLE CONTRIBUTORS ---------------------------------
+-- -----------------------------------------------------
+-- dla kontrybutorow D1: splaszczamy databagi (ktore przeciez maja po jednym elemencie) i od razu generujemy co trzeba
 D1A = foreach D1 generate flatten( datagroup );-- as (cId:chararray, contribPos:int, sname:chararray, metadata:map);
-E1 = foreach D1A generate cId as cId, FLATTEN(GenUUID(TOBAG(cId))) as uuid;
 -- E1: {cId: chararray,uuid: chararray}
-
-
-D100LIM = LIMIT D100 2;
---do exhaustive trafia teraz: sname, datagroup, countl
-
-D100A = foreach D100LIM generate flatten( exhaustiveAND( datagroup ) ) as (uuid:chararray, cIds:chararray);
--- describe D100A;
--- DUMP D100A;
--- D100A = foreach D100LIM generate flatten( exhaustiveAND( datagroup.cId, datagroup.metadata ) ) as (uuid:chararray, cIds:chararray);
+E1 = foreach D1A generate cId as cId, FLATTEN(GenUUID(TOBAG(cId))) as uuid;
+-- -----------------------------------------------------
+-- SMALL GRUPS OF CONTRIBUTORS -------------------------
+-- -----------------------------------------------------
+D100A = foreach D100 generate flatten( exhaustiveAND( datagroup ) ) as (uuid:chararray, cIds:chararray);
 -- z flatten: 
 -- UUID_1, {key_1, key_2, key_3}
 -- UUID_4, {key_4}
@@ -110,52 +97,27 @@ D100A = foreach D100LIM generate flatten( exhaustiveAND( datagroup ) ) as (uuid:
 -- {key_1, key_2, key_3},{key_4},{key_5, key_6}
 -- gdzie key_* to klucze kontrybutorow (autorow dokumentow) w metadanych
 E100 = foreach D100A generate flatten( cIds ) as cId, uuid;
--- E100: {cId: NULL,uuid: chararray}
+-- -----------------------------------------------------
+-- BIG GRUPS OF CONTRIBUTORS ---------------------------
+-- -----------------------------------------------------
+-- D1000A: {datagroup: NULL,simTriples: NULL}
+D1000A = foreach D1000 generate flatten( aproximateAND( datagroup ) ) as (datagroup, simTriples);
+-- D1000B: {uuid: chararray,cIds: chararray}
+D1000B = foreach D1000A generate flatten( exhaustiveAND( datagroup, simTriples ) ) as (uuid:chararray, cIds:chararray);
+-- E1000: {cId: chararray,uuid: chararray}
+E1000 = foreach D1000B generate flatten( cIds ) as cId, uuid;
+-- -----------------------------------------------------
+-- REALLY BIG GRUPS OF CONTRIBUTORS ---------------------------
+-- -----------------------------------------------------
+DXA = foreach DX generate flatten( aproximateAND( datagroup ) ) as (datagroup, simTriples);
+DXB = foreach DXA generate flatten( exhaustiveAND( datagroup, simTriples ) ) as (uuid:chararray, cIds:chararray);
+EX = foreach DXB generate flatten( cIds ) as cId, uuid;
 
+-- -----------------------------------------------------
+-- RESOULT ----------------- ---------------------------
+-- -----------------------------------------------------
+R = union E1, E100, E1000, EX;
+-- R: {cId: chararray,uuid: chararray}
+DUMP R;
 
--- describe E1;
--- DUMP E1;
--- describe E100;
--- DUMP E100;
-
-DTEST = D100LIM;
-APRO = foreach DTEST generate flatten( aproximateAND( datagroup ) ); -- as datagroup, simTriples
-DESCRIBE APRO;
-DUMP APRO;
--- D1000A = foreach APRO generate flatten( exhaustiveAND( datagroup, simTriples ) ) as (uuid:chararray, cIds:chararray);
--- E100 = foreach D1000A generate flatten( cIds ) as cId, uuid;
-
-
--- krzaczy bo w E1 cId jest typu chararray a w E100 NULL
--- R = union E1, E100, E1000;
--- describe R;
--- DUMP R;
-
---Z = foreach D100A generate uuid;
---describe Z;
---DUMP Z;
--- store D1B into '$dc_m_hdfs_outputContribs'; 
-
-
-
-
--- OK? F1 = foreach E1 generate flatten(TOKENIZE(authors)) as autor;
--- F100 = foreach E100 generate flatten(TOKENIZE(authors)) as autor;
-
--- store F1 into '$dc_m_hdfs_outputContribs';
-
-/*
--- to mi wypluje podmacierze
-E1000_1 = foreach D1000 generate approximateAND1(*); 
--- a dalej mam obliczyc te podmacierze
-E1000_2 = foreach E1000_1 generate approximateAND2(*);
-
--- 																			datagroup.data
-EX = foreach DX generate FLATTEN(genUUID(datagroup.sname)), FLATTEN(CONTRIB(*));
-
--- [?] czy przed union nie powinno byc rozbicie pojedynczego rekordu na rekody wzgledem UUID
--- zebysmy mieli UUID - key, UUID - key?
-G = union F1,F100,F1000,FX;
-store G into '$dc_m_hdfs_outputContribs';
-*/
-
+-- store R into '$dc_m_hdfs_outputContribs'; 

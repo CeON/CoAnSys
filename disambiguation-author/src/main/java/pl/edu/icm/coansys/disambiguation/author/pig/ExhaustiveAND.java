@@ -94,7 +94,7 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 			}
 			
 			//inicjuje sim[][]
-			sim = new double[contribsT.size()][];
+			sim = new double[ contribsT.size() ][];
 			for ( int i = 1; i < contribsT.size(); i++ ) {
 				sim[i] = new double[i];
 				for ( int j = 0; j < i; j++ ) 
@@ -109,6 +109,10 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 					Tuple t = it.next();
 					int idX = t.getType(0);
 					int idY = t.getType(1);
+					
+					assert( idX > idY );
+					assert( contribsT.size() > idX );
+					
 					double simValue = t.getType(2);
 					
 					sim[ idX ][ idY ] = simValue;
