@@ -1,0 +1,29 @@
+#
+# (C) 2010-2012 ICM UW. All rights reserved.
+#
+masterNode=hadoop-master.vls.icm.edu.pl
+nameNode=hdfs://${masterNode}:8020
+jobTracker=${masterNode}:8021
+hbaseZookeeperQuorum=${masterNode}
+queueName=default
+project=coansys
+subproject=dc-classification
+###################### AUXIL 
+dc_exec_path=${HDFS_EXEC_PATH}
+###################### OOZIE
+oozie.wf.application.path=${dc_exec_path}
+results=${dc_exec_path}/results/
+workflowPath=${oozie.wf.application.path}
+commonJarsPath=*.jar
+pigScriptsDir=pig
+
+########### document-classification classification ###########
+dc_c_in_inputDocsData=/user/pdendek/springer-seq-20130426_1433/s*.sf
+dc_c_in_ModelDir=/user/pdendek/workflows//coansys_dc-train/1368709228.91/5/1368709288.51//results//model_2
+dc_c_fv=tfidf
+dc_c_sim=cosine
+@dc_c_neigh@ 5
+dc_c_double_sample=1.0
+dc_c_OutputDir=${results}/classified
+dc_c_tmp=${results}/temp
+##############################################################
