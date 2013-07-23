@@ -120,7 +120,7 @@ public class AproximateAND extends EvalFunc<DataBag> {
 	
 	//TODO Find & Union + calculate Affinity do osobnej klasy? sam nie wiem, bo teraz w aproximateAND i ExhaustiveAND to są różne twory
 	//Find & Union
-	//To call cluster id for each contributors from clusterAssicuiations tab use find()!
+	//To call cluster id for each contributors from clusterAssicuiations tab - use find()!
 	private int clusterAssociations[], clusterSize[];
 	
 	//finding cluster associations
@@ -231,7 +231,7 @@ public class AproximateAND extends EvalFunc<DataBag> {
 	}
 
 	//o ( N * max_cluster_size )
-	protected DataBag createResultingTuples( List < Vector<Integer> > clusters ) {
+	protected DataBag createResultingTuples( List < Vector<Integer> > clusters ) throws Exception {
     	
 		//IdGenerator idgenerator = new UuIdGenerator();
     	DataBag ret = new DefaultDataBag();
@@ -256,8 +256,11 @@ public class AproximateAND extends EvalFunc<DataBag> {
         		for ( int j = 0; j < i; j++ ) {
         			int sidY = cluster.get( j );
         			
-        			assert( sidX > sidY );
-        			assert( simIdToClusterId[ sidX ] > simIdToClusterId[ sidY ] );
+        			if ( sidX <= sidY ||  simIdToClusterId[ sidX ] <= simIdToClusterId[ sidY ] ) {
+        				String m = "Trying to write wrong data during create tuple: ";
+        				m += ", sidX: " + sidX + ", sidY: " + sidY + ", simIdToClusterId[ sidX ]: " + simIdToClusterId[ sidX ] + ", simIdToClusterId[ sidY ]: " + simIdToClusterId[ sidY ];
+        				throw new Exception( m );
+        			}
         			
         			if ( sim[ sidX ][ sidY ] != Double.NEGATIVE_INFINITY && sim[ sidX ][ sidY ] != Double.POSITIVE_INFINITY ) {
         				Object[] clusterTriple = new Object[]{ simIdToClusterId[ sidX ], simIdToClusterId[ sidY ], sim[ sidX ][ sidY ] };

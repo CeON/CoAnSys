@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.lang.Throwable;
 
 import org.apache.pig.EvalFunc;
 import org.apache.pig.data.DataBag;
@@ -60,14 +61,6 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 	@Override
 	public DataBag exec( Tuple input ) throws IOException {
 		
-		/*System.out.println( input.size() );
-		
-		for( int i = 0; i < input.size(); i++ )
-			System.out.println( input.get(i) );
-
-		System.out.println( "------------------" );*/
-		
-		
 		if ( input == null || input.size() == 0 ) return null;
 		try{
 			//bag: contribId,pozycja - po co?,sname,mapa: <extractor,bag: tuple ze stringiem>,
@@ -77,16 +70,14 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 			//co daje odpornosc na zmiany struktury calej tabeli
 			//ale to bym musial zmienic na poziomie generowania tabel (nie generowac z niepotrzebnymi danymi)
 
-		
 			DataBag contribs = (DataBag) input.get(0);  //biore bag'a z kontrybutorami
 			Iterator<Tuple> it = contribs.iterator();	//iterator po bag'u
 
+			//TODO: zamienic ponizej liste map na liste list, albo najlepiej tablice tablic..
 			List< Map<String,Object> > contribsT = new LinkedList< Map<String,Object> > ();
 			List< String > contribsId = new LinkedList<String>();
 
-			//Ziana koncepcji: do calculateAffinity powedruje lista map, a nie tablica tupli z bag'a
-			//(cale tuple sa tam niepotrzebne)
-			//+ jesli zmieni sie struktura tabeli, to musze wprowadzic zmiany tylko w exec
+
 			while ( it.hasNext() ) { //iteruje sie po bag'u, zrzucam bag'a do tablicy Tupli
 				Tuple t = it.next();
 				contribsId.add( (String) t.get(0) ); //biore contrId z Tupla
@@ -107,15 +98,26 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 				it = similarities.iterator();	//iterator po bag'u
 				while ( it.hasNext() ) { //iteruje sie po bag'u, zrzucam bag'a do tablicy Tupli
 					Tuple t = it.next();
-					int idX = t.getType(0);
-					int idY = t.getType(1);
 					
-					assert( idX > idY );
-					assert( contribsT.size() > idX );
+					int idX = (Integer) t.get(0);
+					int idY = (Integer) t.get(1);						
+					double simValue = (Double) t.get(2);
 					
-					double simValue = t.getType(2);
-					
-					sim[ idX ][ idY ] = simValue;
+					try {	
+						sim[ idX ][ idY ] = simValue;
+						
+					} catch ( java.lang.ArrayIndexOutOfBoundsException e ) {
+						
+						String m = "Out of bounds during sim init by values from input: " + "idX: " + idX + ", idY: " + idY + ", sim.length: " + sim.length + 
+								", contrib number: " + contribsT.size();
+						
+						if ( sim.length > idX )
+							m += ", sim[idX].length: " + sim[idX].length;
+
+						m+= "\n" + "Tuple debug: " + t.toString();
+
+						throw new Exception(m, e);
+					}
 				}			
 			}
 			
