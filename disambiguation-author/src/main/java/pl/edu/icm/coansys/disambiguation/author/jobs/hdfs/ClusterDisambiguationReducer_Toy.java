@@ -79,7 +79,8 @@ public class ClusterDisambiguationReducer_Toy extends Reducer<Text, TextTextArra
         persistReslutsInHBase(clusterMap, authorIds, context);
         finalRoutine();
     }
-
+    
+    // usage in reduce
     private boolean initialPreparations(Text key,
             Iterable<TextTextArrayMapWritable> values, Context context) {
         if ("".equals(key.toString())) {
@@ -130,7 +131,8 @@ public class ClusterDisambiguationReducer_Toy extends Reducer<Text, TextTextArra
         int sizeCount = ((setSizes.get(clusterGroupSize) == null) ? 0 : setSizes.get(clusterGroupSize)) + 1;
         setSizes.put(clusterGroupSize, sizeCount);
     }
-
+    
+    //usage in reduce
     protected double[][] calculateAffinity() {
         double[][] sim = new double[featuresMapsList.size()][];
         for (int i = 1; i < featuresMapsList.size(); i++) {

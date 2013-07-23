@@ -25,7 +25,7 @@ public class DisambiguatorFactory {
     
 	public Disambiguator create(FeatureInfo fi){
 		try {
-            return (Disambiguator) ReflectionUtil.forName(THIS_PACKAGE + "." + fi.getDisambiguatorName()).newInstance();
+            return (Disambiguator) Class.forName(THIS_PACKAGE + "." + fi.getDisambiguatorName()).newInstance();
         } catch (Exception ex) {
             Logger.getLogger(DisambiguatorFactory.class.getName()).log(Level.SEVERE, null, ex);
         }
