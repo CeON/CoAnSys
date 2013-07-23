@@ -118,6 +118,7 @@ EX = foreach DXB generate flatten( cIds ) as cId, uuid;
 -- -----------------------------------------------------
 R = union E1, E100, E1000, EX;
 -- R: {cId: chararray,uuid: chararray}
-DUMP R;
+-- S = ORDER R BY uuid,cId;
 
+DUMP R;
 -- store R into '$dc_m_hdfs_outputContribs'; 

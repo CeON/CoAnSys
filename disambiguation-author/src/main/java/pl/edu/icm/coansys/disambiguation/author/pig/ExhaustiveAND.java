@@ -74,6 +74,7 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 			Iterator<Tuple> it = contribs.iterator();	//iterator po bag'u
 
 			//TODO: zamienic ponizej liste map na liste list, albo najlepiej tablice tablic..
+			//przy wyciaganiu mapy z tupla rzucic na odpowiednie
 			List< Map<String,Object> > contribsT = new LinkedList< Map<String,Object> > ();
 			List< String > contribsId = new LinkedList<String>();
 

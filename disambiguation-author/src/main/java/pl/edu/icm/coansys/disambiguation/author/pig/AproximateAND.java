@@ -117,8 +117,6 @@ public class AproximateAND extends EvalFunc<DataBag> {
 		//return new DefaultDataBag();
 	}
 
-	
-	//TODO Find & Union + calculate Affinity do osobnej klasy? sam nie wiem, bo teraz w aproximateAND i ExhaustiveAND to są różne twory
 	//Find & Union
 	//To call cluster id for each contributors from clusterAssicuiations tab - use find()!
 	private int clusterAssociations[], clusterSize[];
@@ -273,7 +271,7 @@ public class AproximateAND extends EvalFunc<DataBag> {
 	        ret.add(TupleFactory.getInstance().newTuple(Arrays.asList(to)));
         }
 
-		//bag z: { bag z dane jak na wejsciu aproximate odpowiadające kontrybutorom z poszczegolnych klastrow, bag z triple podobienstwami }
+		//bag with: { bag z dane jak na wejsciu aproximate odpowiadające kontrybutorom z poszczegolnych klastrow, bag with triple similarities }
     	return ret;
 	}
 }
