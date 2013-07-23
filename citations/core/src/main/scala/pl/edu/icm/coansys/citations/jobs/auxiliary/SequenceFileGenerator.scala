@@ -1,9 +1,6 @@
 package pl.edu.icm.coansys.citations.jobs.auxiliary
 
-import com.nicta.scoobi.core.DList
-import com.nicta.scoobi.Persist._
-import com.nicta.scoobi.InputsOutputs._
-import com.nicta.scoobi.application.ScoobiApp
+import com.nicta.scoobi.Scoobi._
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -85,6 +82,6 @@ object SequenceFileGenerator extends ScoobiApp {
                                |    </citation>
                                |</ref>
                                | """.stripMargin))
-    persist(convertToSequenceFile(pairs, outUri, overwrite = true))
+    persist(toSequenceFile(pairs, outUri, overwrite = true))
   }
 }
