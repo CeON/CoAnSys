@@ -3,14 +3,12 @@ package pl.edu.icm.coansys.disambiguation.author.pig;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.pig.EvalFunc;
 import org.apache.pig.data.DataBag;
 import org.apache.pig.data.DefaultDataBag;
@@ -21,7 +19,6 @@ import org.apache.pig.data.TupleFactory;
 import pl.edu.icm.coansys.disambiguation.author.auxil.StackTraceExtractor;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.DisambiguatorFactory;
 import pl.edu.icm.coansys.disambiguation.author.pig.PigDisambiguator;
-import pl.edu.icm.coansys.disambiguation.clustering.strategies.SingleLinkageHACStrategy_OnlyMax;
 import pl.edu.icm.coansys.disambiguation.features.Disambiguator;
 import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
 
@@ -56,7 +53,6 @@ public class AproximateAND extends EvalFunc<DataBag> {
         int index = -1;
         for ( FeatureInfo fi : featureInfos ){
         	if ( fi.getDisambiguatorName().equals("") ) continue;
-        	System.out.println( fi.getDisambiguatorName() );
         	index++;
         	Disambiguator d = ff.create(fi);
         	features[index] = new PigDisambiguator(d);
@@ -66,17 +62,15 @@ public class AproximateAND extends EvalFunc<DataBag> {
 	/*
 	 * Tuple: sname,{(contribId:chararray,contribPos:int,sname:chararray, metadata:map[{(chararray)}])},count
 	 */
-
-
 	@Override
 	public DataBag exec( Tuple input ) throws IOException {
 				
 		if ( input == null || input.size() == 0 ) return null;
 		try {
-			//bag: contribId,pozycja - po co?,sname,mapa: <extractor,bag: tuple ze stringiem>,
-			//opcjonalnie: bag: tuple ( int index w sim contrib X, int ..contrib Y, double sim value) 
+			//UWAGA: input aproximate musi byc taki sam jak exhaustive (bo z aproximate trafi do exhaustive wprost)
+			//bag: contribId, pozycja - po co (nie potrzebne ani w aproximate ani w exhaustive)?,sname,mapa: <extractor,bag: tuple ze stringiem>,
 			//TODO w razie nudy:
-			//wystarczyloby wrzucac do udf'a tylko (contrib id i mape z metadanymi) z datagroup
+			//wystarczyloby wrzucac do udf'a tylko (mape z metadanymi) z datagroup
 			//co daje odpornosc na zmiany struktury calej tabeli
 			//ale to bym musial zmienic na poziomie generowania tabel (nie generowac z niepotrzebnymi danymi)
 
@@ -99,7 +93,7 @@ public class AproximateAND extends EvalFunc<DataBag> {
 			
 			//inicjuje sim[][]
 			sim = new double[ N ][];
-			for ( int i = 1; i < contribsT.size(); i++ ) {
+			for ( int i = 1; i < N; i++ ) {
 				sim[i] = new double[i];
 				for ( int j = 0; j < i; j++ ) 
 					sim[i][j] = threshold;
@@ -123,19 +117,18 @@ public class AproximateAND extends EvalFunc<DataBag> {
 		//return new DefaultDataBag();
 	}
 
-	
-	//TODO Find & Union + calculate Affinity do osobnej klasy? sam nie wiem, bo teraz w aproximateAND i ExhaustiveAND to są różne twory
 	//Find & Union
-	private int tab[], ile[];
+	//To call cluster id for each contributors from clusterAssicuiations tab - use find()!
+	private int clusterAssociations[], clusterSize[];
 	
 	//finding cluster associations
 	// o( log*( n ) ) ~ o( 1 )
 	private int find( int a ) {
-		if ( tab[a] == a ) return a; 
-		int fa = find( tab[a] );
+		if ( clusterAssociations[a] == a ) return a; 
+		int fa = find( clusterAssociations[a] );
 		//w trakcie wedrowania po sciezce poprawiam przedstawiciela na tego na samym szczycie
 		//dzieki czemu sciezka jest rozbijana i tworzone sa bezposrednie polaczenia z przedstawicielem
-		tab[a] = fa; 
+		clusterAssociations[a] = fa; 
 		return fa;
 	}
 	
@@ -147,31 +140,31 @@ public class AproximateAND extends EvalFunc<DataBag> {
 		
 		if ( fa == fb ) return false; 
 		//wybieram wieksza unie i lacze przedstawicieli w jedna unie
-		if (ile[fa] <= ile[fb]) {
-			ile[fb] += ile[fa];
-			tab[fa] = fb; 
+		if (clusterSize[fa] <= clusterSize[fb]) {
+			clusterSize[fb] += clusterSize[fa];
+			clusterAssociations[fa] = fb; 
 		}
 		else {
-			ile[fa] += ile[fb];
-			tab[fb] = fa;
+			clusterSize[fa] += clusterSize[fb];
+			clusterAssociations[fb] = fa;
 		}
 		
 		return true;
 	}
 	
-	
 	private void calculateAffinityAndClustering( List< Map<String,Object> > contribsT ) throws Exception {
-		
 		//Find & Union init:		
-		tab = new int[N];
-		ile = new int[N];
+		clusterAssociations = new int[N];
+		clusterSize = new int[N];
 		
 		for ( int i = 0; i < N; i++ ) {
-			tab[i] = i;
-			ile[i] = 1; 
+			clusterAssociations[i] = i;
+			clusterSize[i] = 1; 
 		}
 		
-		//o( n^2 )
+		//o( n^2 * features.length ) 
+		//pomijam zlozonosc find bo ~ 1
+		//nadzieja jest taka, ze o( features.length ) wykona sie rzadko 
 		for ( int i = 1; i < N; i++ ) {
 			for ( int j = 0; j < i; j++ ) {
 				
@@ -201,7 +194,7 @@ public class AproximateAND extends EvalFunc<DataBag> {
 					sim[i][j] += partial;
 					
 					//prawdopodobnie Ci sami
-        			if ( sim[i][j] > 0 ) {
+        			if ( sim[i][j] >= 0 ) {
         				//lacze przedstawicieli i, j w jedna unie
         				union( i, j );
         				break;
@@ -214,6 +207,7 @@ public class AproximateAND extends EvalFunc<DataBag> {
 	// o( N )
 	protected List < Vector<Integer> > splitIntoClusters() {
 		
+		//TODO: moge wyzylowac i zamiast Vector uzyc tablice, bo z gory znam rozmiary klastrow (clasterSize[])
 		List < Vector<Integer> > clusters = new ArrayList < Vector< Integer > > ();
 		// cluster[ id klastra ] = vector  simId kontrybutorow
 		
@@ -235,7 +229,7 @@ public class AproximateAND extends EvalFunc<DataBag> {
 	}
 
 	//o ( N * max_cluster_size )
-	protected DataBag createResultingTuples( List < Vector<Integer> > clusters ) {
+	protected DataBag createResultingTuples( List < Vector<Integer> > clusters ) throws Exception {
     	
 		//IdGenerator idgenerator = new UuIdGenerator();
     	DataBag ret = new DefaultDataBag();
@@ -260,8 +254,11 @@ public class AproximateAND extends EvalFunc<DataBag> {
         		for ( int j = 0; j < i; j++ ) {
         			int sidY = cluster.get( j );
         			
-        			assert( sidX > sidY );
-        			assert( simIdToClusterId[ sidX ] > simIdToClusterId[ sidY ] );
+        			if ( sidX <= sidY ||  simIdToClusterId[ sidX ] <= simIdToClusterId[ sidY ] ) {
+        				String m = "Trying to write wrong data during create tuple: ";
+        				m += ", sidX: " + sidX + ", sidY: " + sidY + ", simIdToClusterId[ sidX ]: " + simIdToClusterId[ sidX ] + ", simIdToClusterId[ sidY ]: " + simIdToClusterId[ sidY ];
+        				throw new Exception( m );
+        			}
         			
         			if ( sim[ sidX ][ sidY ] != Double.NEGATIVE_INFINITY && sim[ sidX ][ sidY ] != Double.POSITIVE_INFINITY ) {
         				Object[] clusterTriple = new Object[]{ simIdToClusterId[ sidX ], simIdToClusterId[ sidY ], sim[ sidX ][ sidY ] };
@@ -274,7 +271,7 @@ public class AproximateAND extends EvalFunc<DataBag> {
 	        ret.add(TupleFactory.getInstance().newTuple(Arrays.asList(to)));
         }
 
-		//bag z: { bag z dane jak na wejsciu aproximate odpowiadające kontrybutorom z poszczegolnych klastrow, bag z triple podobienstwami }
+		//bag with: { bag z dane jak na wejsciu aproximate odpowiadające kontrybutorom z poszczegolnych klastrow, bag with triple similarities }
     	return ret;
 	}
 }

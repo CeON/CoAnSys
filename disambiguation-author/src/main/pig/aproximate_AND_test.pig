@@ -9,19 +9,19 @@
 %DEFAULT JARS '*.jar'
 %DEFAULT commonJarsPath 'lib/$JARS'
 
-%DEFAULT dc_m_hdfs_inputDocsData2 '../../test/resources/data.in' 
+%DEFAULT dc_m_hdfs_inputDocsData2 '../../test/resources/data2.in' 
 %DEFAULT time 20130709_1009
 %DEFAULT dc_m_hdfs_outputContribs disambiguation/outputContribs$time
 %DEFAULT dc_m_meth_extraction getBWBWFromHDFS
 %DEFAULT dc_m_meth_extraction_inner pl.edu.icm.coansys.pig.udf.RichSequenceFileLoader
-%DEFAULT dc_m_str_feature_info 'TitleDisambiguator#EX_TITLE#1#1,#EX_YEAR#0#1'
+%DEFAULT dc_m_str_feature_info 'TitleDisambiguator#EX_TITLE#1#1,YearDisambiguator#EX_YEAR#1#1'
 
 
 DEFINE keyTiKwAbsCatExtractor pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_MAP_WHEN_CATEG_LIM('en','removeall');
 -- DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_CONTRIBDATA_GIVENDATA();
 
 DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_CONTRIBDATA_GIVENDATA('$dc_m_str_feature_info');
-DEFINE aproximateAND pl.edu.icm.coansys.disambiguation.author.pig.AproximateAND('0.7','$dc_m_str_feature_info');
+DEFINE aproximateAND pl.edu.icm.coansys.disambiguation.author.pig.AproximateAND('-1.0','$dc_m_str_feature_info');
 DEFINE sinlgeAND pl.edu.icm.coansys.disambiguation.author.pig.SingleAND();
 DEFINE GenUUID pl.edu.icm.coansys.disambiguation.author.pig.GenUUID();
 -- -----------------------------------------------------
@@ -62,16 +62,6 @@ set pig.skewedjoin.reduce.memusage $pig_skewedjoin_reduce_memusage
 
 
 
---DEFINE exhaustiveAND pl.icm.edu.disambiguation('$params');
--- -----------------------------------------------------
--- -----------------------------------------------------
--- code section
--- -----------------------------------------------------
--- -----------------------------------------------------
---A1 = $dc_m_meth_extraction('$dc_m_hdfs_inputDocsData','$dc_m_meth_extraction_inner'); 
-
---A2 = sample A1 $dc_m_double_sample;
--- A2: {key: chararray,value: bytearray}
 
 B = load '$dc_m_hdfs_inputDocsData2' as (cId:chararray,cPos:int,sname:chararray,data:map[{(chararray)}]);
 
