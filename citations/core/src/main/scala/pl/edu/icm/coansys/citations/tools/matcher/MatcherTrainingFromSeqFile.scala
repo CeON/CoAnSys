@@ -42,7 +42,7 @@ object MatcherTrainingFromSeqFile {
             val cit = MatchableEntity.fromReferenceMetadata(refMeta)
             val featureVectors = (entity :: state.toList).map {
               ent =>
-                val features = measurer.featureVectorBuilder.getFeatureVector(ent, cit)
+                val features = measurer.featureVectorBuilder.calculateFeatureVectorValues((ent, cit))
                 (entity == ent, features)
             }
             val (_, newState) = state.enqueue(entity).dequeue

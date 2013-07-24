@@ -4,17 +4,15 @@
 
 package pl.edu.icm.coansys.citations.data
 
-import collection.JavaConversions._
 import feature_calculators._
-import pl.edu.icm.cermine.tools.classification.svm.SVMClassifier
-import pl.edu.icm.cermine.tools.classification.features.FeatureVectorBuilder
+import pl.edu.icm.coansys.citations.util.classification.features.FeatureVectorBuilder
+import pl.edu.icm.coansys.citations.util.SvmClassifier
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 class AdvancedSimilarityMeasurer {
-  val featureVectorBuilder = new FeatureVectorBuilder[MatchableEntity, MatchableEntity]
-  featureVectorBuilder.setFeatureCalculators(List(
+  val featureVectorBuilder = new FeatureVectorBuilder(List(
     AuthorMatchFactor,
     AuthorTrigramMatchFactor,
     AuthorTokenMatchFactor,
@@ -27,11 +25,10 @@ class AdvancedSimilarityMeasurer {
     YearMatchFactor,
     YearRawTextMatchFactor))
 
-  val classifier = new SVMClassifier[MatchableEntity, MatchableEntity, MatchingResult](featureVectorBuilder, classOf[MatchingResult]) {}
-  classifier.loadModelFromResources("/pl/edu/icm/coansys/citations/pubmedMatchingBetter.model", null)
+  val classifier = SvmClassifier.fromResource("/pl/edu/icm/coansys/citations/pubmedMatchingBetter.model")
 
   def similarity(e1: MatchableEntity, e2: MatchableEntity): Double =
-    classifier.predictProbabilities(e1, e2)(MatchingResult.Match)
+    classifier.predictProbabilities(featureVectorBuilder.calculateFeatureVectorValues((e1, e2)))(1)
 }
 
 
