@@ -16,7 +16,7 @@ import org.testng.annotations.Test;
 public class SmallTest{
 	
     private PigTest test;
-    private static Cluster cluster;
+    //private static Cluster cluster;
     public String[] script;
     
     private static final String PIG_SCRIPT_DIR = "src/main/pig/";
@@ -35,7 +35,7 @@ public class SmallTest{
 	        "commonJarsPath=.",
 	        "parallel=1"
 	};
-	
+	/*
     @BeforeClass
     public static void beforeClass() throws Exception {
         cluster = PigTest.getCluster();
@@ -45,7 +45,7 @@ public class SmallTest{
     public static void afterClass() throws Exception {
         cluster.delete(new Path("pigunit-input-overriden.txt"));
     }
-	
+	*/
 	@Test
 	public void smallTest() throws IOException, ParseException {
 		
