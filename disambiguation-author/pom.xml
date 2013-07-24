@@ -39,13 +39,13 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>commons</artifactId>
-            <version>${project.version}</version>
-        </dependency>  
-        <dependency>
-            <groupId>${project.groupId}</groupId>
             <artifactId>disambiguation</artifactId>
             <version>${project.version}</version>
         </dependency>
-    </dependencies>
+ 		<dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>antlr-runtime</artifactId>
+            <version>3.2</version>
+        </dependency>
+    </dependencies>        
 </project>
