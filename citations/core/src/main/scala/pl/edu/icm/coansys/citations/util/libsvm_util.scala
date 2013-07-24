@@ -9,8 +9,8 @@ object libsvm_util {
   /**
    * Converts a feature vector to the text line in LibSVM format.
    */
-  def featureVectorToLibSvmLine(fv: FeatureVector, label: Int): String = {
-    val features = (Stream.from(1) zip fv.getFeatures).map {
+  def featureVectorToLibSvmLine(fv: Array[Double], label: Int): String = {
+    val features = (Stream.from(1) zip fv).map {
       case (i, v) => i + ":" + v
     }.mkString(" ")
     label + " " + features
