@@ -6,7 +6,7 @@ package pl.edu.icm.coansys.citations.data
 
 import feature_calculators._
 import pl.edu.icm.coansys.citations.util.classification.features.FeatureVectorBuilder
-import pl.edu.icm.coansys.citations.util.SvmClassifier
+import pl.edu.icm.coansys.citations.util.classification.svm.SvmClassifier
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)

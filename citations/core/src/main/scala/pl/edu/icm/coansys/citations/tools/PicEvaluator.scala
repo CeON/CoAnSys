@@ -3,7 +3,8 @@ package pl.edu.icm.coansys.citations.tools
 import collection.JavaConversions._
 import pl.edu.icm.coansys.citations.util.sequencefile.ConvertingSequenceFileIterator
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper
-import pl.edu.icm.coansys.citations.util.{libsvm_util, misc, BytesConverter}
+import pl.edu.icm.coansys.citations.util.{misc, BytesConverter}
+import pl.edu.icm.coansys.citations.util.classification.svm.SvmClassifier.featureVectorValuesToLibSvmLine
 import pl.edu.icm.coansys.citations.data.{AdvancedSimilarityMeasurer, MatchingResult, SimilarityMeasurer, MatchableEntity}
 import scala.io.Source
 import pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue
@@ -219,7 +220,7 @@ object PicEvaluator {
         for ((src1, dst1) <- trainingGold.unzip._1) {
           for ((src2, dst2) <- trainingGold.unzip._1) {
             val fv = measurer.featureVectorBuilder.calculateFeatureVectorValues((parsed(src1), db(dst2)))
-            writer.write(libsvm_util.featureVectorToLibSvmLine(fv, if (dst1 == dst2) 1 else 0) + "\n")
+            writer.write(featureVectorValuesToLibSvmLine(fv, if (dst1 == dst2) 1 else 0) + "\n")
           }
         }
     }

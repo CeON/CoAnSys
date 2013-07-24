@@ -5,7 +5,8 @@ import com.nicta.scoobi.Scoobi._
 import org.apache.commons.lang.StringUtils
 import pl.edu.icm.coansys.citations.util.AugmentedDList.augmentDList
 import pl.edu.icm.coansys.citations.indices.EntityIndex
-import pl.edu.icm.coansys.citations.util.{libsvm_util, nlm, XPathEvaluator}
+import pl.edu.icm.coansys.citations.util.{nlm, XPathEvaluator}
+import pl.edu.icm.coansys.citations.util.classification.svm.SvmClassifier.featureVectorValuesToLibSvmLine
 import org.apache.commons.io.IOUtils
 import pl.edu.icm.coansys.citations.data.MatchableEntity
 import pl.edu.icm.coansys.citations.data.feature_calculators._
@@ -41,7 +42,7 @@ object HeuristicToSvmLight extends ScoobiApp {
         (Stream.continually(srcCit) zip dstDocs).map { case (src, (matching, dst)) =>
           val fv = featureVectorBuilder.calculateFeatureVectorValues((src, dst))
           val label = if (matching) 1 else 0
-          libsvm_util.featureVectorToLibSvmLine(fv, label)
+          featureVectorValuesToLibSvmLine(fv, label)
         }
       }
 
