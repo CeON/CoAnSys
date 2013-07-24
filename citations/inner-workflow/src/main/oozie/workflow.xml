@@ -198,7 +198,7 @@ Workflow properties:
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
             <prepare>
-                <delete path="${cit_workDir}/matching"/>
+                <delete path="${cit_outputSeqFile}"/>
             </prepare>
             <configuration>
                 <property>
@@ -234,7 +234,7 @@ Workflow properties:
                 </property>
                 <property>
                     <name>mapred.output.dir</name>
-                    <value>${cit_workDir}/matching</value>
+                    <value>${cit_outputSeqFile}</value>
                 </property>
                 <property>
                     <name>mapreduce.inputformat.class</name>
