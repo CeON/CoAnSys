@@ -8,7 +8,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.lang.Throwable;
 
 import org.apache.pig.EvalFunc;
 import org.apache.pig.data.DataBag;
@@ -58,6 +57,7 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 	 * Tuple: sname,{(contribId:chararray,contribPos:int,sname:chararray, metadata:map[{(chararray)}])},count
 	 */
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public DataBag exec( Tuple input ) throws IOException {
 		

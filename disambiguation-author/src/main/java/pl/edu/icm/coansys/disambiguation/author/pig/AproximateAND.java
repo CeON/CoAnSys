@@ -62,6 +62,7 @@ public class AproximateAND extends EvalFunc<DataBag> {
 	/*
 	 * Tuple: sname,{(contribId:chararray,contribPos:int,sname:chararray, metadata:map[{(chararray)}])},count
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public DataBag exec( Tuple input ) throws IOException {
 				
