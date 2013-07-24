@@ -8,8 +8,8 @@ import pl.edu.icm.coansys.citations.indices.EntityIndex
 import pl.edu.icm.coansys.citations.util.{libsvm_util, nlm, XPathEvaluator}
 import org.apache.commons.io.IOUtils
 import pl.edu.icm.coansys.citations.data.MatchableEntity
-import pl.edu.icm.cermine.tools.classification.features.FeatureVectorBuilder
 import pl.edu.icm.coansys.citations.data.feature_calculators._
+import pl.edu.icm.coansys.citations.util.classification.features.FeatureVectorBuilder
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -30,8 +30,7 @@ object HeuristicToSvmLight extends ScoobiApp {
         val srcCit = MatchableEntity.fromReferenceMetadata(ref)
         val dstDocs = ids.toList.map(id => (id == k, index.getEntityById("doc_" + id)))
 
-        val featureVectorBuilder = new FeatureVectorBuilder[MatchableEntity, MatchableEntity]
-        featureVectorBuilder.setFeatureCalculators(List(
+        val featureVectorBuilder = new FeatureVectorBuilder[(MatchableEntity, MatchableEntity)](List(
           AuthorTrigramMatchFactor,
           AuthorTokenMatchFactor,
           PagesMatchFactor,
@@ -40,7 +39,7 @@ object HeuristicToSvmLight extends ScoobiApp {
           YearMatchFactor))
 
         (Stream.continually(srcCit) zip dstDocs).map { case (src, (matching, dst)) =>
-          val fv = featureVectorBuilder.getFeatureVector(src, dst)
+          val fv = featureVectorBuilder.calculateFeatureVectorValues((src, dst))
           val label = if (matching) 1 else 0
           libsvm_util.featureVectorToLibSvmLine(fv, label)
         }
