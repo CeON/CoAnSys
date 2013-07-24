@@ -112,7 +112,6 @@ E1000 = foreach D1000B generate flatten( cIds ) as cId, uuid;
 DXA = foreach DX generate flatten( aproximateAND( datagroup ) ) as (datagroup, simTriples);
 DXB = foreach DXA generate flatten( exhaustiveAND( datagroup, simTriples ) ) as (uuid:chararray, cIds:chararray);
 EX = foreach DXB generate flatten( cIds ) as cId, uuid;
-
 -- -----------------------------------------------------
 -- RESOULT ----------------- ---------------------------
 -- -----------------------------------------------------
@@ -120,5 +119,5 @@ R = union E1, E100, E1000, EX;
 -- R: {cId: chararray,uuid: chararray}
 -- S = ORDER R BY uuid,cId;
 
-DUMP R;
--- store R into '$dc_m_hdfs_outputContribs'; 
+-- DUMP R;
+store R into '$dc_m_hdfs_outputContribs'; 
