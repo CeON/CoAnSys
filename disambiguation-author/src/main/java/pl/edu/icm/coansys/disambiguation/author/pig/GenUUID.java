@@ -11,7 +11,6 @@ import org.apache.pig.data.Tuple;
 
 import pl.edu.icm.coansys.disambiguation.idgenerators.IdGenerator;
 import pl.edu.icm.coansys.disambiguation.idgenerators.UuIdGenerator;
-import pl.edu.icm.synat.application.commons.id.UUIDGenerator;
 
 import java.util.Date;
 import java.util.Iterator;
