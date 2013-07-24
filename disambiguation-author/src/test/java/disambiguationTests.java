@@ -99,7 +99,7 @@ public class disambiguationTests {
 //		//assertArrayEquals( expected, output );	
 //	}
 //
-	@Test
+//	@Test
 	public void newDisambiguation() throws IOException, ParseException {
 		
 		final String disamScriptPath = "src/main/pig/new_disambiguation.pig";
