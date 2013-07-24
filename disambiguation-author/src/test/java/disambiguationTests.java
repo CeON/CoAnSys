@@ -1,23 +1,13 @@
 
 
-import static org.junit.Assert.*;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Scanner;
 
-import org.apache.pig.data.DataByteArray;
-import org.apache.pig.data.DefaultTuple;
-import org.apache.pig.data.Tuple;
 import org.apache.pig.pigunit.PigTest;
 import org.apache.pig.tools.parameters.ParseException;
-import org.junit.Test;
-
-import pl.edu.icm.coansys.disambiguation.author.pig.AproximateAND;
-import pl.edu.icm.coansys.models.DocumentProtos.Author;
-import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 
 public class disambiguationTests {
 	
@@ -99,7 +89,7 @@ public class disambiguationTests {
 //		//assertArrayEquals( expected, output );	
 //	}
 //
-	@Test
+//	@Test
 	public void newDisambiguation() throws IOException, ParseException {
 		
 		final String disamScriptPath = "src/main/pig/new_disambiguation.pig";
