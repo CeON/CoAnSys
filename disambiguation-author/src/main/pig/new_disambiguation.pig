@@ -15,11 +15,12 @@
 %DEFAULT dc_m_meth_extraction getBWBWFromHDFS
 %DEFAULT dc_m_meth_extraction_inner pl.edu.icm.coansys.pig.udf.RichSequenceFileLoader
 %DEFAULT dc_m_str_feature_info 'TitleDisambiguator#EX_TITLE#1#1,YearDisambiguator#EX_YEAR#1#1'
+%DEFAULT threshold '-1.0'
 
 DEFINE keyTiKwAbsCatExtractor pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_MAP_WHEN_CATEG_LIM('en','removeall');
 DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_CONTRIBDATA_GIVENDATA('$dc_m_str_feature_info');
-DEFINE exhaustiveAND pl.edu.icm.coansys.disambiguation.author.pig.ExhaustiveAND('-1.0','$dc_m_str_feature_info');
-DEFINE aproximateAND pl.edu.icm.coansys.disambiguation.author.pig.AproximateAND('-1.0','$dc_m_str_feature_info');
+DEFINE exhaustiveAND pl.edu.icm.coansys.disambiguation.author.pig.ExhaustiveAND('$threshold','$dc_m_str_feature_info');
+DEFINE aproximateAND pl.edu.icm.coansys.disambiguation.author.pig.AproximateAND('$threshold','$dc_m_str_feature_info');
 DEFINE sinlgeAND pl.edu.icm.coansys.disambiguation.author.pig.SingleAND();
 DEFINE GenUUID pl.edu.icm.coansys.disambiguation.author.pig.GenUUID();
 -- -----------------------------------------------------
@@ -37,7 +38,7 @@ REGISTER '$commonJarsPath'
 -- import section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
-IMPORT 'AUXIL_docsim.macros.def.pig';
+--IMPORT 'AUXIL_docsim.macros.def.pig'; -- TODO: unnecessery import, also coauthos_pairs.pigm nacris.pig
 IMPORT 'AUXIL_macros.def.pig';
 -- -----------------------------------------------------
 -- -----------------------------------------------------
@@ -64,11 +65,11 @@ set pig.skewedjoin.reduce.memusage $pig_skewedjoin_reduce_memusage
 -- -----------------------------------------------------
 A1 = $dc_m_meth_extraction('$dc_m_hdfs_inputDocsData','$dc_m_meth_extraction_inner'); 
 -- A2: {key: chararray,value: bytearray}
--- A2 = sample A1 $dc_m_double_sample;
+A2 = sample A1 $dc_m_double_sample;
 
 -- z kazdego dokumentu (rekordu tabeli wejsciowe) tworze rekordy z kontrybutorami
 -- TODO: wlasciwie tego contribPos tutaj juz nie potrzebujemy, poniewaz wyciagamy tam cId (a do tego byla potrzeba pozcyja) => mozna by zmienic EXTRACT_GIVEN_DATA
-B = foreach A1 generate flatten(snameDocumentMetaExtractor($1)) as (cId:chararray, contribPos:int, sname:chararray, metadata:map[{(chararray)}]); 
+B = foreach A2 generate flatten(snameDocumentMetaExtractor($1)) as (cId:chararray, contribPos:int, sname:chararray, metadata:map[{(chararray)}]); 
 C = group B by sname;
 -- D: {sname: chararray, datagroup: {(cId: chararray,cPos: int,sname: chararray,data: map[{(val_0: chararray)}])}, count: long}
 D = foreach C generate group as sname, B as datagroup, COUNT(B) as count;
