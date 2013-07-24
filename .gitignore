@@ -24,3 +24,6 @@ target/
 *.crc
 *part-r-00000
 _SUCCESS
+
+#secret test data
+*_secret.*

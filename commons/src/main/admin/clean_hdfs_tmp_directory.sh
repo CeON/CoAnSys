@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# This script probably removes old directories containing new files. To be checked.
+# See clean_hdfs_tmp_directory.py which removes only old files and directories containing old files.
+
 DAYS=$1
 DIFF_TIME=$((86400 * $DAYS))
 

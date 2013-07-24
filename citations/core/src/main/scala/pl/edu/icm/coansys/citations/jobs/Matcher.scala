@@ -12,9 +12,8 @@ import pl.edu.icm.coansys.citations.indices.{EntityIndex, AuthorIndex}
 import pl.edu.icm.coansys.citations.util.{MyScoobiApp, misc, BytesConverter}
 import pl.edu.icm.coansys.citations.data._
 import feature_calculators._
-import pl.edu.icm.cermine.tools.classification.features.FeatureVectorBuilder
 import scala.Some
-import collection.JavaConversions._
+import pl.edu.icm.coansys.citations.util.classification.features.FeatureVectorBuilder
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -106,16 +105,16 @@ object Matcher extends MyScoobiApp {
     extractGoodMatches(addHeuristic(citations, authorIndexUri), keyIndexUri).mapWithResource(new EntityIndex(keyIndexUri)) {
       case (index, (citation, (entityId, similarity))) =>
         val entity = index.getEntityById(entityId)
-        val featureVectorBuilder = new FeatureVectorBuilder[MatchableEntity, MatchableEntity]
-        featureVectorBuilder.setFeatureCalculators(List(
+        val featureVectorBuilder = new FeatureVectorBuilder[(MatchableEntity, MatchableEntity)](List(
           AuthorTrigramMatchFactor,
           AuthorTokenMatchFactor,
           PagesMatchFactor,
           SourceMatchFactor,
           TitleMatchFactor,
           YearMatchFactor))
-        val fv = featureVectorBuilder.getFeatureVector(citation, entity)
-        (citation.toReferenceString + " : " + entity.toReferenceString + " : " + similarity + " : " + fv.dump() + "\n")
+        val fv = featureVectorBuilder.calculateFeatureVectorValues((citation, entity))
+        citation.toReferenceString + " : " + entity.toReferenceString + " : " + similarity + " : " +
+          fv.mkString(" ") + "\n"
     }
   }
 

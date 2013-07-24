@@ -12,7 +12,7 @@ import pl.edu.icm.coansys.commons.scala.automatic_resource_management.using
 import collection.immutable.Queue
 import java.io.{File, FileWriter}
 import pl.edu.icm.coansys.citations.util.sequencefile.ConvertingSequenceFileIterator
-import pl.edu.icm.coansys.citations.util.libsvm_util.featureVectorToLibSvmLine
+import pl.edu.icm.coansys.citations.util.classification.svm.SvmClassifier.featureVectorValuesToLibSvmLine
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -42,7 +42,7 @@ object MatcherTrainingFromSeqFile {
             val cit = MatchableEntity.fromReferenceMetadata(refMeta)
             val featureVectors = (entity :: state.toList).map {
               ent =>
-                val features = measurer.featureVectorBuilder.getFeatureVector(ent, cit)
+                val features = measurer.featureVectorBuilder.calculateFeatureVectorValues((ent, cit))
                 (entity == ent, features)
             }
             val (_, newState) = state.enqueue(entity).dequeue
@@ -51,7 +51,7 @@ object MatcherTrainingFromSeqFile {
         val lines = featureVectors.map {
           case (equal, fv) =>
             val label = if (equal) 1 else 0
-            featureVectorToLibSvmLine(fv, label)
+            featureVectorValuesToLibSvmLine(fv, label)
         }
         using(new FileWriter(new File(outPath))) {
           writer =>

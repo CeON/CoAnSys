@@ -22,7 +22,7 @@ object automatic_resource_management {
         try {
           actualResource.close()
         } catch {
-          case _ => //intentionally left blank
+          case _: Throwable => //intentionally left blank
         }
       }
     }
