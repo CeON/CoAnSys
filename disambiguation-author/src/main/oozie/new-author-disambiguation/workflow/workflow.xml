@@ -7,9 +7,9 @@
         <pig>
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
-            <prepare>
+            <!--<prepare>
                 <delete path="${dc_m_hdfs_outputContribs}"/>
-            </prepare>
+            </prepare>-->
             <configuration>
                 <!-- This is required for new api usage -->
                 <property>
@@ -39,7 +39,7 @@
             <param>dc_m_str_feature_info=${dc_m_str_feature_info}</param>
             <param>threshold=${threshold}</param>
         </pig>
-        <ok to='send-email'/>
+        <ok to='end'/>
         <error to='kill'/>
     </action>
 
