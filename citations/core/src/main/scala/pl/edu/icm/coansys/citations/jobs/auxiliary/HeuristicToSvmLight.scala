@@ -1,11 +1,10 @@
 package pl.edu.icm.coansys.citations.jobs.auxiliary
 
-import collection.JavaConversions._
 import com.nicta.scoobi.Scoobi._
 import org.apache.commons.lang.StringUtils
 import pl.edu.icm.coansys.citations.util.AugmentedDList.augmentDList
 import pl.edu.icm.coansys.citations.indices.EntityIndex
-import pl.edu.icm.coansys.citations.util.{nlm, XPathEvaluator}
+import pl.edu.icm.coansys.citations.util.{MyScoobiApp, nlm, XPathEvaluator}
 import pl.edu.icm.coansys.citations.util.classification.svm.SvmClassifier.featureVectorValuesToLibSvmLine
 import org.apache.commons.io.IOUtils
 import pl.edu.icm.coansys.citations.data.MatchableEntity
@@ -15,7 +14,7 @@ import pl.edu.icm.coansys.citations.util.classification.features.FeatureVectorBu
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
-object HeuristicToSvmLight extends ScoobiApp {
+object HeuristicToSvmLight extends MyScoobiApp {
   def run() {
     val indexUri = args(0)
     val inUri = args(1)
