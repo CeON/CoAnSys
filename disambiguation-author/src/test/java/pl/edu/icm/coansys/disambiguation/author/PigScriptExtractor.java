@@ -10,7 +10,7 @@ import org.apache.hadoop.io.IOUtils;
 
 public class PigScriptExtractor {
 
-    private static String[] skipPrefixes = {"REGISTER", "register", "IMPORT", "import", "SET","set","DESCRIBE","describe","--"};
+    private static String[] skipPrefixes = {"REGISTER", "register", "IMPORT", "import"};
 
     public static LinkedList<String> extract(String filename) throws FileNotFoundException, IOException {
 
