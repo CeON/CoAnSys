@@ -14,6 +14,8 @@ import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
 import org.apache.pig.impl.logicalLayer.FrontendException;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.edu.icm.coansys.classification.documents.auxil.StackTraceExtractor;
 
 /**
@@ -21,18 +23,22 @@ import pl.edu.icm.coansys.classification.documents.auxil.StackTraceExtractor;
 * @author pdendek
 */
 public class THRES_FOR_CATEG2 extends EvalFunc<Tuple>{
+    
+        private static final Logger logger = LoggerFactory.getLogger(THRES_FOR_CATEG2.class);
 
 	@Override
 	public Schema outputSchema(Schema p_input){
 		try{
-			return Schema.generateNestedSchema(DataType.TUPLE, 
+                    return Schema.generateNestedSchema(DataType.TUPLE, 
 					DataType.CHARARRAY, DataType.INTEGER, DataType.DOUBLE);
 		}catch(FrontendException e){
-			throw new IllegalStateException(e);
+                    logger.error("Error in creating output schema:", e);
+                    throw new IllegalStateException(e);
 		}
 	}
 
 	//C1: {categ: chararray,count: long,occ_pos: long,occ_neg: long}
+        @Override
 	public Tuple exec(Tuple input) throws IOException {
 		if (input == null || input.size() == 0)
 			return null;
@@ -56,20 +62,18 @@ public class THRES_FOR_CATEG2 extends EvalFunc<Tuple>{
 
 			int thres = -1;
 			double bestF1 = 0;
-			
-			
+	
 			for(int i = 1; i<num;i++){
 				int TP = countLess(i,pos);
-				int TN = countEqMore(i,pos);
 				int FP = countLess(i,neg);
 				int FN = countEqMore(i,neg);
-				double F1 = countF1(TP,TN,FP,FN);
+				double F1 = countF1(TP,FP,FN);
 				if(F1>bestF1){
 					thres = i;
 					bestF1 = F1;
 				}
 			}
-			System.out.println("Calculated the best threshold");
+			logger.info("Calculated the best threshold");
 			if(thres!=-1){
 				Object[] to = new Object[]{categ,thres, bestF1};
 		        return TupleFactory.getInstance().newTuple(Arrays.asList(to));
@@ -77,19 +81,15 @@ public class THRES_FOR_CATEG2 extends EvalFunc<Tuple>{
 				return null;
 			}
 		}catch(Exception e){
-			// Throwing an exception will cause the task to fail.
-            throw new IOException("Caught exception processing input row:\n"
+                    logger.error("Error in processing input row:", e);
+                    throw new IOException("Caught exception processing input row:\n"
             		+ StackTraceExtractor.getStackTrace(e));
 		} 
 	}
 
-	private double countF1(int tp, int tn, int fp, int fn) {
-		double denominator = (tp+fp);
-		double p = denominator!=0 ? tp/denominator : Double.POSITIVE_INFINITY;
-		denominator = (tp+fn);
-		double r = denominator!=0 ? tp/denominator : Double.POSITIVE_INFINITY;
-		denominator = p!=Double.POSITIVE_INFINITY && r!=Double.POSITIVE_INFINITY ? (p+r) : -1;
-		return denominator!=0 ? 2*(p*r)/denominator :0;
+	private double countF1(int tp, int fp, int fn) {
+            int denominator = Math.max(0, 2 * Math.max(0, tp) + Math.max(0, fn) + Math.max(0, fp));
+            return denominator!=0 ? (double)(2 * tp)/(double)denominator : 0;
 	}
 
 	private int countEqMore(int curr, long[] posc) {
