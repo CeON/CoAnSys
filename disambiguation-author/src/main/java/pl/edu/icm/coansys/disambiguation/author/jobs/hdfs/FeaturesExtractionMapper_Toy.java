@@ -56,7 +56,7 @@ public class FeaturesExtractionMapper_Toy extends Mapper<BytesWritable, BytesWri
         return extractors;
     }
 
-    private static List<FeatureInfo> getFeaturesInfos(String feature) {
+    /*private static List<FeatureInfo> getFeaturesInfos(String feature) {
         List<FeatureInfo> ret = new ArrayList<FeatureInfo>();
         String[] finfos = feature.split(",");
         for (String finfo : finfos) {
@@ -74,7 +74,7 @@ public class FeaturesExtractionMapper_Toy extends Mapper<BytesWritable, BytesWri
             }
         }
         return ret;
-    }
+    }*/
 
     @Override
     protected void map(BytesWritable skey, BytesWritable metadataProto, Context context) throws IOException, InterruptedException {
