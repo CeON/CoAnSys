@@ -15,7 +15,7 @@ echo "Copying required libaries to ${TASK}/lib"
 cp /usr/lib/pig/pig-*-cdh*.jar ${WORKFLOW_LOCAL_LIB_DIR}
 cp ../../../../commons/target/commons-*-SNAPSHOT.jar  ${WORKFLOW_LOCAL_LIB_DIR}
 cp ../../../../importers/target/importers-*-SNAPSHOT.jar ${WORKFLOW_LOCAL_LIB_DIR}
-cp ../../../../disambiguation-author/target/disambiguation-author-*-SNAPSHOT.jar ${WORKFLOW_LOCAL_LIB_DIR}
+cp ../../../../disambiguation-author/target/disambiguation-author-*-SNAPSHOT*.jar ${WORKFLOW_LOCAL_LIB_DIR}
 cp ../../../../disambiguation/target/disambiguation-*-SNAPSHOT.jar ${WORKFLOW_LOCAL_LIB_DIR}
 
 echo "Copying required pig scripts to ${TASK}"

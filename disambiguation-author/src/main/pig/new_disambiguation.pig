@@ -9,7 +9,7 @@
 %DEFAULT JARS '*.jar'
 %DEFAULT commonJarsPath 'lib/$JARS'
 
-%DEFAULT dc_m_hdfs_inputDocsData /srv/bwndata/seqfile/bazekon-20130314.sf 
+%DEFAULT dc_m_hdfs_inputDocsData /srv/bwndata/seqfile/bazekon-20130314.sf
 %DEFAULT time 20130709_1009
 %DEFAULT dc_m_hdfs_outputContribs disambiguation/outputContribs$time
 %DEFAULT dc_m_meth_extraction getBWBWFromHDFS
@@ -29,10 +29,15 @@ DEFINE GenUUID pl.edu.icm.coansys.disambiguation.author.pig.GenUUID();
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 REGISTER /usr/lib/hbase/lib/zookeeper.jar
-REGISTER /usr/lib/hbase/hbase-*-cdh4.*-security.jar 
+REGISTER /usr/lib/hbase/hbase-*-cdh4.*-security.jar
 REGISTER /usr/lib/hbase/lib/guava-11.0.2.jar
 
 REGISTER '$commonJarsPath'
+
+--REGISTER /user/mwos/workflows/new-author-disambiguation/workflow/lib/disambiguation-author-1.3-SNAPSHOT.jar
+--REGISTER lib/disambiguation-author-1.3-SNAPSHOT.jar
+--REGISTER disambiguation-author-1.3-SNAPSHOT.jar
+
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- import section
@@ -62,13 +67,14 @@ set pig.skewedjoin.reduce.memusage $pig_skewedjoin_reduce_memusage
 -- code section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
-A1 = $dc_m_meth_extraction('$dc_m_hdfs_inputDocsData','$dc_m_meth_extraction_inner'); 
+
+A1 = $dc_m_meth_extraction('$dc_m_hdfs_inputDocsData','$dc_m_meth_extraction_inner');
 -- A2: {key: chararray,value: bytearray}
 A2 = sample A1 $dc_m_double_sample;
 
 -- z kazdego dokumentu (rekordu tabeli wejsciowe) tworze rekordy z kontrybutorami
 -- TODO: wlasciwie tego contribPos tutaj juz nie potrzebujemy, poniewaz wyciagamy tam cId (a do tego byla potrzeba pozcyja) => mozna by zmienic EXTRACT_GIVEN_DATA
-B = foreach A2 generate flatten(snameDocumentMetaExtractor($1)) as (cId:chararray, contribPos:int, sname:chararray, metadata:map[{(chararray)}]); 
+B = foreach A2 generate flatten(snameDocumentMetaExtractor($1)) as (cId:chararray, contribPos:int, sname:chararray, metadata:map[{(chararray)}]);
 C = group B by sname;
 -- D: {sname: chararray, datagroup: {(cId: chararray,cPos: int,sname: chararray,data: map[{(val_0: chararray)}])}, count: long}
 D = foreach C generate group as sname, B as datagroup, COUNT(B) as count;
@@ -89,7 +95,7 @@ E1 = foreach D1A generate cId as cId, FLATTEN(GenUUID(TOBAG(cId))) as uuid;
 -- SMALL GRUPS OF CONTRIBUTORS -------------------------
 -- -----------------------------------------------------
 D100A = foreach D100 generate flatten( exhaustiveAND( datagroup ) ) as (uuid:chararray, cIds:chararray);
--- z flatten: 
+-- z flatten:
 -- UUID_1, {key_1, key_2, key_3}
 -- UUID_4, {key_4}
 -- bez flatten:
@@ -120,4 +126,5 @@ R = union E1, E100, E1000, EX;
 -- S = ORDER R BY uuid,cId;
 
 -- DUMP R;
-store R into '$dc_m_hdfs_outputContribs'; 
+store R into '$dc_m_hdfs_outputContribs';
+

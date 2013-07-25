@@ -38,6 +38,8 @@
             <param>dc_m_hdfs_outputContribs=${dc_m_hdfs_outputContribs}</param>
             <!--param>dc_m_str_feature_info=${dc_m_str_feature_info}</param-->
             <param>threshold=${threshold}</param>
+            <file>AUXIL_macros.def.pig</file>
+            <!--archive>/user/mwos/workflows/new-author-disambiguation/workflow/lib/disambiguation-author-1.3-SNAPSHOT.jar</archive-->
         </pig>
         <ok to='end'/>
         <error to='kill'/>
