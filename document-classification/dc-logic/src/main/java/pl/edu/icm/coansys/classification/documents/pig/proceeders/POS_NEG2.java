@@ -19,7 +19,7 @@ import pl.edu.icm.coansys.classification.documents.auxil.StackTraceExtractor;
 */
 public class POS_NEG2 extends EvalFunc<DataBag>{
 	
-	private class Pair<X,Y>{
+	private static class Pair<X,Y>{
 		X x;
 		Y y;
 		
