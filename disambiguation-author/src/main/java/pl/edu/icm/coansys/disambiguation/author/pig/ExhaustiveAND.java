@@ -27,7 +27,7 @@ import pl.edu.icm.coansys.disambiguation.idgenerators.UuIdGenerator;
 public class ExhaustiveAND extends EvalFunc<DataBag> {
 
 	private double threshold;
-	private final double NOT_CALCULATED = Double.NEGATIVE_INFINITY;	
+	private static final double NOT_CALCULATED = Double.NEGATIVE_INFINITY;	
 	private PigDisambiguator[] features;
 	private List<FeatureInfo> featureInfos;
 	private double sim[][];
