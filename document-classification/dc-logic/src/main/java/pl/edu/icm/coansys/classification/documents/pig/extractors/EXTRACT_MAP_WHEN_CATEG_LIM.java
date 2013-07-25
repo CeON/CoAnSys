@@ -111,7 +111,8 @@ public class EXTRACT_MAP_WHEN_CATEG_LIM extends EvalFunc<Map> {
         String docTitle;
         String docAbstract;
 
-        if ((docTitle = extractLangTitle(dm)) == null) {
+        docTitle = extractLangTitle(dm);
+        if (docTitle  == null) {
             return null;
         }
         docAbstract = extractLangAbstract(dm);

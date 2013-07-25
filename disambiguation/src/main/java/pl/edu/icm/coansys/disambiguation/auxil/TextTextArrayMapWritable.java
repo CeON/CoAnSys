@@ -6,7 +6,6 @@ package pl.edu.icm.coansys.disambiguation.auxil;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.List;
 
 import org.apache.hadoop.io.MapWritable;
@@ -19,7 +18,7 @@ import org.apache.hadoop.io.Writable;
  * @version 1.0
  * @since 2012-08-07
  */
-public class TextTextArrayMapWritable implements Writable, Serializable {
+public class TextTextArrayMapWritable implements Writable {
 
     private MapWritable map = new MapWritable();
     private Text key = new Text();
