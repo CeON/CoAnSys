@@ -7,7 +7,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 import org.apache.pig.EvalFunc;
 import org.apache.pig.data.DataBag;
@@ -18,7 +17,6 @@ import org.apache.pig.data.TupleFactory;
 
 import pl.edu.icm.coansys.disambiguation.author.auxil.StackTraceExtractor;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.DisambiguatorFactory;
-import pl.edu.icm.coansys.disambiguation.author.pig.PigDisambiguator;
 import pl.edu.icm.coansys.disambiguation.features.Disambiguator;
 import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
 
@@ -103,7 +101,7 @@ public class AproximateAND extends EvalFunc<DataBag> {
 			calculateAffinityAndClustering( contribsT );
 			
 			//clusterList[ cluster_id ] = { contribs in cluster.. }
-	        List < Vector<Integer> >  clusterList = splitIntoClusters();
+	        List < ArrayList<Integer> >  clusterList = splitIntoClusters();
 	        
 	        //zwraca bag: Tuple z (Obiektem z (String (UUID) i bag: { Tuple z ( String (contrib ID) ) } ) )
 	        return createResultingTuples( clusterList );
@@ -205,22 +203,22 @@ public class AproximateAND extends EvalFunc<DataBag> {
 	}
 
 	// o( N )
-	protected List < Vector<Integer> > splitIntoClusters() {
+	protected List < ArrayList<Integer> > splitIntoClusters() {
 		
 		//TODO: moge wyzylowac i zamiast Vector uzyc tablice, bo z gory znam rozmiary klastrow (clasterSize[])
-		List < Vector<Integer> > clusters = new ArrayList < Vector< Integer > > ();
+		List < ArrayList<Integer> > clusters = new ArrayList < ArrayList< Integer > > ();
 		// cluster[ id klastra ] = vector  simId kontrybutorow
 		
 		
 		for( int i = 0; i < N; i++ )
-			clusters.add( new Vector<Integer> () );
+			clusters.add( new ArrayList<Integer> () );
 		
         for ( int i = 0; i < N; i++ ) {
             clusters.get( find( i ) ).add( i );
         }
         
         //pozbywam sie pustych klastrow
-        List < Vector<Integer> > ret = new ArrayList < Vector< Integer > > ();
+        List < ArrayList<Integer> > ret = new ArrayList < ArrayList< Integer > > ();
 		for( int i = 0; i < N; i++ )
 			if ( !clusters.get( i ).isEmpty() )
 				ret.add( clusters.get( i ) );
@@ -229,14 +227,14 @@ public class AproximateAND extends EvalFunc<DataBag> {
 	}
 
 	//o ( N * max_cluster_size )
-	protected DataBag createResultingTuples( List < Vector<Integer> > clusters ) throws Exception {
+	protected DataBag createResultingTuples( List < ArrayList<Integer> > clusters ) throws Exception {
     	
 		//IdGenerator idgenerator = new UuIdGenerator();
     	DataBag ret = new DefaultDataBag();
     	int simIdToClusterId[] = new int[ sim.length ];
     	
     	//iteruje po klastrach
-    	for ( Vector<Integer> cluster: clusters ) {
+    	for ( ArrayList<Integer> cluster: clusters ) {
         	
         	DataBag contribDatas = new DefaultDataBag();
         	DataBag similarities = new DefaultDataBag();

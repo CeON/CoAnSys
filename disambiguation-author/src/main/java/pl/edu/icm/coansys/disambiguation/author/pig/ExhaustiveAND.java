@@ -8,7 +8,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.lang.Throwable;
 
 import org.apache.pig.EvalFunc;
 import org.apache.pig.data.DataBag;
@@ -18,7 +17,6 @@ import org.apache.pig.data.TupleFactory;
 
 import pl.edu.icm.coansys.disambiguation.author.auxil.StackTraceExtractor;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.DisambiguatorFactory;
-import pl.edu.icm.coansys.disambiguation.author.pig.PigDisambiguator;
 import pl.edu.icm.coansys.disambiguation.clustering.strategies.SingleLinkageHACStrategy_OnlyMax;
 import pl.edu.icm.coansys.disambiguation.features.Disambiguator;
 import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
