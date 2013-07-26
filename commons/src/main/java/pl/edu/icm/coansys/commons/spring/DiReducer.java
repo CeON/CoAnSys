@@ -21,8 +21,8 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 public final class DiReducer<KEYIN, VALUEIN, KEYOUT, VALUEOUT> extends Reducer<KEYIN, VALUEIN, KEYOUT, VALUEOUT> {
 
     
-    public static String DI_REDUCE_SERVICE_BEAN_NAME = "diReduceServiceBeanName";
-    public static String DI_REDUCE_APPLICATION_CONTEXT_PATH = "diReduceApplicationContextPath";
+    public static final String DI_REDUCE_SERVICE_BEAN_NAME = "diReduceServiceBeanName";
+    public static final String DI_REDUCE_APPLICATION_CONTEXT_PATH = "diReduceApplicationContextPath";
     
     
     private DiReduceService<KEYIN, VALUEIN, KEYOUT, VALUEOUT> diReduceService;

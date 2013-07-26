@@ -141,47 +141,47 @@ public class PorterStemmer {
      */
     private final int m() {
         int n = 0;
-        int i = 0;
+        int ii = 0;
         while (true) {
-            if (i > j) {
+            if (ii > j) {
                 return n;
             }
-            if (!cons(i)) {
+            if (!cons(ii)) {
                 break;
             }
-            i++;
+            ii++;
         }
-        i++;
+        ii++;
         while (true) {
             while (true) {
-                if (i > j) {
+                if (ii > j) {
                     return n;
                 }
-                if (cons(i)) {
+                if (cons(ii)) {
                     break;
                 }
-                i++;
+                ii++;
             }
-            i++;
+            ii++;
             n++;
             while (true) {
-                if (i > j) {
+                if (ii > j) {
                     return n;
                 }
-                if (!cons(i)) {
+                if (!cons(ii)) {
                     break;
                 }
-                i++;
+                ii++;
             }
-            i++;
+            ii++;
         }
     }
 
     /* vowelinstem() is true <=> 0,...j contains a vowel */
     private final boolean vowelinstem() {
-        int i;
-        for (i = 0; i <= j; i++) {
-            if (!cons(i)) {
+        int ii;
+        for (ii = 0; ii <= j; ii++) {
+            if (!cons(ii)) {
                 return true;
             }
         }
@@ -226,8 +226,8 @@ public class PorterStemmer {
         if (o < 0) {
             return false;
         }
-        for (int i = 0; i < l; i++) {
-            if (b[o + i] != s.charAt(i)) {
+        for (int ii = 0; ii < l; ii++) {
+            if (b[o + ii] != s.charAt(ii)) {
                 return false;
             }
         }
@@ -240,8 +240,8 @@ public class PorterStemmer {
     private final void setto(String s) {
         int l = s.length();
         int o = j + 1;
-        for (int i = 0; i < l; i++) {
-            b[o + i] = s.charAt(i);
+        for (int ii = 0; ii < l; ii++) {
+            b[o + ii] = s.charAt(ii);
         }
         k = j + l;
     }
@@ -423,6 +423,8 @@ public class PorterStemmer {
                     r("log");
                     break;
                 }
+            default:
+                break;
         }
     }
 
@@ -464,6 +466,8 @@ public class PorterStemmer {
                     r("");
                     break;
                 }
+                break;
+            default:
                 break;
         }
     }

@@ -20,17 +20,12 @@ import org.apache.hadoop.util.ToolRunner;
 public class SequenceFileKeysSampler implements Tool {
 
     private Configuration conf;
-    private final String OUTPUT_KEYS_FILE_NAME_KEY = "output.keys.file.name";
-    private final String OUTPUT_KEYS_FILE_NAME_DEFAULT_VALUE = "keys";
-    private final String SAMPLER_FREQUENCY_KEY = "sampler.frequency";
-    private final float SAMPLER_FREQUENCY_DEFAULT_VALUE = 0.1f;
-    private final String SAMPLER_NUM_SAMPLES_KEY = "sampler.num.samples";
-    private final int SAMPLER_NUM_SAMPLES_DEFAULT_VALUE = 1000;
-    
-    private static final String[] DEFAULT_ARGS = {
-        "/home/akawa/Documents/git-projects/CoAnSys/importers/src/main/bash/noncompressed.sf",
-        "20",
-    };
+    private static final String OUTPUT_KEYS_FILE_NAME_KEY = "output.keys.file.name";
+    private static final String OUTPUT_KEYS_FILE_NAME_DEFAULT_VALUE = "keys";
+    private static final String SAMPLER_FREQUENCY_KEY = "sampler.frequency";
+    private static final float SAMPLER_FREQUENCY_DEFAULT_VALUE = 0.1f;
+    private static final String SAMPLER_NUM_SAMPLES_KEY = "sampler.num.samples";
+    private static final int SAMPLER_NUM_SAMPLES_DEFAULT_VALUE = 1000;
 
     @Override
     public void setConf(Configuration conf) {
@@ -47,7 +42,7 @@ public class SequenceFileKeysSampler implements Tool {
 
         if (args.length < 2) {
             usage("Wrong number of arguments: " + args.length);
-            System.exit(-1);
+            return(-1);
         }
         
         String sequenceFileInput = args[0];

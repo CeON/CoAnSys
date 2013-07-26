@@ -133,6 +133,8 @@ public final class StringTools {
                     decimal = processDecimal(1, lastNumber, decimal);
                     lastNumber = 1;
                     break;
+                default:
+                    break;
             }
         }
         return decimal;
@@ -146,10 +148,10 @@ public final class StringTools {
         if (value==null || !value.contains(" ")) {
             return value;
         }
-        String number = value.substring(value.lastIndexOf(" ")).trim();
+        String number = value.substring(value.lastIndexOf(' ')).trim();
         if (isRomanNumber(number)) {
             int decimalNumber = romanToDecimal(number);
-            return value.substring(0, value.lastIndexOf(" ")+1) + decimalNumber;
+            return value.substring(0, value.lastIndexOf(' ')+1) + decimalNumber;
         }
         
         return value;
@@ -165,9 +167,9 @@ public final class StringTools {
         if (value==null || !value.contains(" ")) {
             return value;
         }
-        String number = value.substring(value.lastIndexOf(" ")).trim().toUpperCase();
+        String number = value.substring(value.lastIndexOf(' ')).trim().toUpperCase();
         if (isEngWordNumber(number)) {
-            return value.substring(0, value.lastIndexOf(" ")+1) + wordToDecimal.get(number);
+            return value.substring(0, value.lastIndexOf(' ')+1) + wordToDecimal.get(number);
         }
         
         return value;

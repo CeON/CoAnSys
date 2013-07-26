@@ -113,6 +113,7 @@ public class TfidfJob_Proto implements Tool {
      * { return String.format("%010d", i);
     }
      */
+    @Override
     public void setConf(Configuration conf) {
         this.conf = conf;
     }

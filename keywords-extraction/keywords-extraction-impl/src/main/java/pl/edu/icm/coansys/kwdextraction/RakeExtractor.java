@@ -73,7 +73,7 @@ public class RakeExtractor {
             }
         } catch (IOException ex) {
             logger.error("Unable to load stopwords: " + ex);
-            throw new RuntimeException(ex);
+            throw new IllegalArgumentException(ex);
         }
     }
 
