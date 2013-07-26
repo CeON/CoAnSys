@@ -16,7 +16,7 @@ import org.apache.hadoop.io.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.edu.icm.coansys.commons.java.PorterStemmer;
-import pl.edu.icm.coansys.disambiguation.auxil.DiacriticsRemover;
+import pl.edu.icm.coansys.commons.java.DiacriticsRemover;
 import pl.edu.icm.coansys.disambiguation.auxil.LoggingInDisambiguation;
 import pl.edu.icm.coansys.disambiguation.auxil.TextArrayWritable;
 import pl.edu.icm.coansys.disambiguation.auxil.TextTextArrayMapWritable;

@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.ExtractorFactory;
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.AuthorBased;
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DocumentBased;
-import pl.edu.icm.coansys.disambiguation.auxil.DiacriticsRemover;
+import pl.edu.icm.coansys.commons.java.DiacriticsRemover;
 import pl.edu.icm.coansys.disambiguation.auxil.LoggingInDisambiguation;
 import pl.edu.icm.coansys.disambiguation.auxil.TextTextArrayMapWritable;
 import pl.edu.icm.coansys.disambiguation.features.Extractor;

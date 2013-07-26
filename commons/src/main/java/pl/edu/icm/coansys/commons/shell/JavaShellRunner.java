@@ -1,6 +1,9 @@
 /*
  * (C) 2010-2012 ICM UW. All rights reserved.
  */
+/*
+ * (C) 2010-2012 ICM UW. All rights reserved.
+ */
 package pl.edu.icm.coansys.commons.shell;
 
 import java.io.BufferedReader;
@@ -16,7 +19,7 @@ import org.slf4j.LoggerFactory;
  * @author akawa
  */
 
-public class JavaShellRunner {
+public final class JavaShellRunner {
 
     private static Logger logger = LoggerFactory.getLogger(JavaShellRunner.class);
 

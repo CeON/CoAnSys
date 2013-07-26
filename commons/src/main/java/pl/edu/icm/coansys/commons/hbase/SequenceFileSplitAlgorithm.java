@@ -1,13 +1,12 @@
+/*
+ * (C) 2010-2012 ICM UW. All rights reserved.
+ */
 package pl.edu.icm.coansys.commons.hbase;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.hbase.util.RegionSplitter.SplitAlgorithm;
 import org.apache.hadoop.io.IOUtils;

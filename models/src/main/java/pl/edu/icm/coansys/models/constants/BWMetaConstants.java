@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * @author pdendek
  */
-public class BWMetaConstants {
+public final class BWMetaConstants {
 
     private BWMetaConstants() {
     }
