@@ -16,7 +16,7 @@ import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
 import org.slf4j.LoggerFactory;
 
-import pl.edu.icm.coansys.disambiguation.author.auxil.StackTraceExtractor;
+import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.DisambiguatorFactory;
 import pl.edu.icm.coansys.disambiguation.clustering.strategies.SingleLinkageHACStrategy_OnlyMax;
 import pl.edu.icm.coansys.disambiguation.features.Disambiguator;

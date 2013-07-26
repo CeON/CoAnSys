@@ -6,7 +6,7 @@ import org.apache.pig.EvalFunc;
 import org.apache.pig.data.DataByteArray;
 import org.apache.pig.data.Tuple;
 
-import pl.edu.icm.coansys.disambiguation.author.auxil.StackTraceExtractor;
+import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 
 public class GetContributors extends EvalFunc<String> {

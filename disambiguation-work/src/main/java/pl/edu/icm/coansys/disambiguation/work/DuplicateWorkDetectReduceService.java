@@ -1,5 +1,6 @@
 package pl.edu.icm.coansys.disambiguation.work;
 
+import pl.edu.icm.coansys.commons.java.DocumentWrapperUtils;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;

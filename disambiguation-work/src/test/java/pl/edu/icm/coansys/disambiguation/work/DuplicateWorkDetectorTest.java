@@ -1,5 +1,6 @@
 package pl.edu.icm.coansys.disambiguation.work;
 
+import pl.edu.icm.coansys.commons.java.DocumentWrapperUtils;
 import java.io.File;
 import java.net.URL;
 import java.util.List;
@@ -15,7 +16,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.edu.icm.coansys.disambiguation.work.tool.Bw2ProtoFileUtils;
+import pl.edu.icm.coansys.commons.java.Bw2ProtoFileUtils;
 import pl.edu.icm.coansys.disambiguation.work.tool.DuplicateGenerator;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
 
