@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Random;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.Text;
@@ -19,7 +18,6 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.DisambiguatorFactory;
-import pl.edu.icm.coansys.disambiguation.auxil.LoggingInDisambiguation;
 import pl.edu.icm.coansys.disambiguation.auxil.TextTextArrayMapWritable;
 import pl.edu.icm.coansys.disambiguation.clustering.strategies.SingleLinkageHACStrategy_OnlyMax;
 import pl.edu.icm.coansys.disambiguation.features.Disambiguator;
@@ -35,7 +33,7 @@ import pl.edu.icm.coansys.disambiguation.idgenerators.UuIdGenerator;
  */
 public class ClusterDisambiguationReducer_Toy extends Reducer<Text, TextTextArrayMapWritable, Text, Text> {
 
-    private static Logger logger = Logger.getLogger(LoggingInDisambiguation.class);
+    private static Logger logger = Logger.getLogger(ClusterDisambiguationReducer_Toy.class);
     private String reducerId = new Date().getTime() + "_" + Math.random();
     private double threshold;
     private List<FeatureInfo> featureInfos;

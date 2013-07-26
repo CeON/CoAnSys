@@ -12,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.classification.documents.auxil.StringListIntListWritable;
-import pl.edu.icm.coansys.disambiguation.auxil.LoggingInDisambiguation;
 import pl.edu.icm.coansys.disambiguation.auxil.TextArrayWritable;
 import pl.edu.icm.coansys.disambiguation.auxil.TextTextArrayMapWritable;
 
@@ -24,7 +23,7 @@ import pl.edu.icm.coansys.disambiguation.auxil.TextTextArrayMapWritable;
  */
 public class WordPerDocCountMapper extends Mapper<TextArrayWritable, IntWritable, Text, StringListIntListWritable> {
 
-	private static Logger logger = LoggerFactory.getLogger(LoggingInDisambiguation.class);
+	private static Logger logger = LoggerFactory.getLogger(WordPerDocCountMapper.class);
     
     @Override
     /**

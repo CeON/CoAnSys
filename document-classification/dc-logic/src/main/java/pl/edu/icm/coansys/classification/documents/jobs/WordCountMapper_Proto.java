@@ -17,7 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.edu.icm.coansys.commons.java.PorterStemmer;
 import pl.edu.icm.coansys.commons.java.DiacriticsRemover;
-import pl.edu.icm.coansys.disambiguation.auxil.LoggingInDisambiguation;
 import pl.edu.icm.coansys.disambiguation.auxil.TextArrayWritable;
 import pl.edu.icm.coansys.disambiguation.auxil.TextTextArrayMapWritable;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
@@ -33,7 +32,7 @@ import pl.edu.icm.coansys.models.constants.HBaseConstant;
  */
 public class WordCountMapper_Proto extends TableMapper<TextArrayWritable, IntWritable> {
 
-	private static Logger logger = LoggerFactory.getLogger(LoggingInDisambiguation.class);
+	private static Logger logger = LoggerFactory.getLogger(WordCountMapper_Proto.class);
 	private final static IntWritable one = new IntWritable(1);
 	private Text key = null;
     
