@@ -1,5 +1,6 @@
 package pl.edu.icm.coansys.disambiguation.work.tool;
 
+import pl.edu.icm.coansys.commons.java.StringTools;
 import junit.framework.Assert;
 
 import org.junit.Before;

@@ -30,7 +30,7 @@ public class PigDisambiguator extends Disambiguator{
 	
 	//pytanie z cyklu poznajemy swiat: czy przypadkiem nie jest tak, ze polimorfizm tutaj nie zadziala
 	//tak jak jest tu oczekiwane?
-	public double calculateAffinity(Object f1, Object f2) throws Exception {
+	public double calculateAffinity(Object f1, Object f2) throws ExecException {
 		if(f1 instanceof Tuple && f2 instanceof Tuple ){
 			return calculateAffinity((Tuple) f1, (Tuple) f2);
 		}else if(f1 instanceof DataBag && f2 instanceof DataBag ){
@@ -38,7 +38,7 @@ public class PigDisambiguator extends Disambiguator{
 		}else if(f1 instanceof String && f2 instanceof String ){
 			return calculateAffinity((String) f1, (String) f2);
 		}else{
-			throw new Exception("data type "+ f1.getClass()+" unsupported in calculateAffinity");
+			throw new IllegalArgumentException("data type "+ f1.getClass()+" unsupported in calculateAffinity");
 		}
 	}
 	

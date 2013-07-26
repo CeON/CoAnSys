@@ -23,7 +23,6 @@ import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.disambiguation.author.constants.HBaseConstants;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.DisambiguatorFactory;
-import pl.edu.icm.coansys.disambiguation.auxil.LoggingInDisambiguation;
 import pl.edu.icm.coansys.disambiguation.auxil.TextTextArrayMapWritable;
 import pl.edu.icm.coansys.disambiguation.clustering.strategies.SingleLinkageHACStrategy_OnlyMax;
 import pl.edu.icm.coansys.disambiguation.features.Disambiguator;
@@ -39,7 +38,7 @@ import pl.edu.icm.coansys.disambiguation.idgenerators.UuIdGenerator;
  */
 public class ClusterDisambiguationReducer_Toy extends Reducer<Text, TextTextArrayMapWritable, ImmutableBytesWritable, Put> {
 
-	private static Logger logger = LoggerFactory.getLogger(LoggingInDisambiguation.class);
+	private static Logger logger = LoggerFactory.getLogger(ClusterDisambiguationReducer_Toy.class);
 	private String reducerId = new Date().getTime() + "_" + Math.random();
 	
 	private double threshold;

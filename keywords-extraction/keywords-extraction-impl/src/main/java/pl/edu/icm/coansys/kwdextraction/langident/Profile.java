@@ -9,6 +9,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -78,7 +80,7 @@ public class Profile {
      * @param stream Stream to read profile from
      */
     public Profile(final InputStream stream) throws IOException {
-        this(new InputStreamReader(stream));
+        this(new InputStreamReader(stream, Charset.forName("UTF-8")));
     }
 
     /**
@@ -115,8 +117,8 @@ public class Profile {
         }
     }
 
-    public void store(final OutputStream stream) {
-        final PrintStream printStream = new PrintStream(stream);
+    public void store(final OutputStream stream) throws UnsupportedEncodingException {
+        final PrintStream printStream = new PrintStream(stream, false, "UTF-8");
         for (final String gram : data) {
             printStream.println(gram);
         }

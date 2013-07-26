@@ -42,13 +42,17 @@ import org.apache.hadoop.io.WritableComparable;
 			List<String> tsl = this.toStringList();
 			int val = tsl.size() - osl.size();
 			if(val == 0){
-				if(osl.containsAll(tsl)) return 0;
+				if(osl.containsAll(tsl)) {
+                                    return 0;
+                                }
 				else{
 					Iterator<String> io = osl.iterator();
 					Iterator<String> it = tsl.iterator();
 					for(;it.hasNext();){
 						val = it.next().compareTo(io.next());
-						if(val != 0) return val;
+						if(val != 0) {
+                                                    return val;
+                                                }
 					}
 				}
 			}else{

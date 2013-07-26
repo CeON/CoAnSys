@@ -9,13 +9,15 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.pig.EvalFunc;
+import org.apache.pig.backend.executionengine.ExecException;
 import org.apache.pig.data.DataBag;
 import org.apache.pig.data.DefaultDataBag;
 import org.apache.pig.data.DefaultTuple;
 import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
+import org.slf4j.LoggerFactory;
 
-import pl.edu.icm.coansys.disambiguation.author.auxil.StackTraceExtractor;
+import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.DisambiguatorFactory;
 import pl.edu.icm.coansys.disambiguation.features.Disambiguator;
 import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
@@ -34,7 +36,7 @@ public class AproximateAND extends EvalFunc<DataBag> {
 	private Tuple datain[];
 	private int N;
 	//TODO: możliwie pozamieniac listy na tablice
-
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(AproximateAND.class);
 
 	public AproximateAND(String threshold, String featureDescription){
 		this.threshold = Double.parseDouble(threshold);
@@ -97,8 +99,10 @@ public class AproximateAND extends EvalFunc<DataBag> {
 			sim = new double[ N ][];
 			for ( int i = 1; i < N; i++ ) {
 				sim[i] = new double[i];
-				for ( int j = 0; j < i; j++ )
+
+				for ( int j = 0; j < i; j++ ) {
 					sim[i][j] = threshold;
+                }
 			}
 
 			//obliczam sim[][]
@@ -112,8 +116,8 @@ public class AproximateAND extends EvalFunc<DataBag> {
 
 		}catch(Exception e){
 			// Throwing an exception will cause the task to fail.
-			throw new IOException("Caught exception processing input row:\n"
-					+ StackTraceExtractor.getStackTrace(e));
+			logger.error("Caught exception processing input row:\n" + StackTraceExtractor.getStackTrace(e));
+				return null;
 		}
 
 		//return new DefaultDataBag();
@@ -154,8 +158,8 @@ public class AproximateAND extends EvalFunc<DataBag> {
 		return true;
 	}
 
-	private void calculateAffinityAndClustering( List< Map<String,Object> > contribsT ) throws Exception {
-		//Find & Union init:
+	private void calculateAffinityAndClustering( List< Map<String,Object> > contribsT ) throws ExecException {
+		//Find & Union init:		
 		clusterAssociations = new int[N];
 		clusterSize = new int[N];
 
@@ -223,15 +227,17 @@ public class AproximateAND extends EvalFunc<DataBag> {
 
         //pozbywam sie pustych klastrow
         List < ArrayList<Integer> > ret = new ArrayList < ArrayList< Integer > > ();
-		for( int i = 0; i < N; i++ )
-			if ( !clusters.get( i ).isEmpty() )
+		for( int i = 0; i < N; i++ ) {
+			if ( !clusters.get( i ).isEmpty() ) {
 				ret.add( clusters.get( i ) );
-
+                        }
+                }
 		return ret;
 	}
 
 	//o ( N * max_cluster_size )
-	protected DataBag createResultingTuples( List < ArrayList<Integer> > clusters ) throws Exception {
+
+	protected DataBag createResultingTuples( List < ArrayList<Integer> > clusters ) {
 		//IdGenerator idgenerator = new UuIdGenerator();
     	DataBag ret = new DefaultDataBag();
     	int simIdToClusterId[] = new int[ sim.length ];
@@ -257,7 +263,7 @@ public class AproximateAND extends EvalFunc<DataBag> {
         			if ( sidX <= sidY ||  simIdToClusterId[ sidX ] <= simIdToClusterId[ sidY ] ) {
         				String m = "Trying to write wrong data during create tuple: ";
         				m += ", sidX: " + sidX + ", sidY: " + sidY + ", simIdToClusterId[ sidX ]: " + simIdToClusterId[ sidX ] + ", simIdToClusterId[ sidY ]: " + simIdToClusterId[ sidY ];
-        				throw new Exception( m );
+        				throw new IllegalArgumentException( m );
         			}
 
         			if ( sim[ sidX ][ sidY ] != Double.NEGATIVE_INFINITY && sim[ sidX ][ sidY ] != Double.POSITIVE_INFINITY ) {

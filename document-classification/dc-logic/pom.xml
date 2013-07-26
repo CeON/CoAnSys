@@ -21,7 +21,7 @@
 					<include>**/1_*.pig</include>
 					<include>**/2_*.pig</include>
 				</includes>
-				<targetPath>${build.directory}/classes/pig-main</targetPath>
+				<targetPath>${project.build.directory}/classes/pig-main</targetPath>
 			</resource>
 			<resource>
 				<directory>src/main/pig</directory>
@@ -32,7 +32,7 @@
 					<include>**/SIM_*.pig</include>
 					<include>**/MODEL_*.pig</include>
 				</includes>
-				<targetPath>${build.directory}/classes/pig-macros</targetPath>
+				<targetPath>${project.build.directory}/classes/pig-macros</targetPath>
 			</resource>
 		</resources>
 	</build>

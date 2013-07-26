@@ -16,8 +16,7 @@ import org.apache.log4j.Logger;
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.ExtractorFactory;
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.AuthorBased;
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DocumentBased;
-import pl.edu.icm.coansys.disambiguation.auxil.DiacriticsRemover;
-import pl.edu.icm.coansys.disambiguation.auxil.LoggingInDisambiguation;
+import pl.edu.icm.coansys.commons.java.DiacriticsRemover;
 import pl.edu.icm.coansys.disambiguation.auxil.TextTextArrayMapWritable;
 import pl.edu.icm.coansys.disambiguation.features.Extractor;
 import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
@@ -33,7 +32,7 @@ import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 @SuppressWarnings("rawtypes")
 public class FeaturesExtractionMapper_Toy extends Mapper<BytesWritable, BytesWritable, Text, TextTextArrayMapWritable> {
 
-    private static Logger logger = Logger.getLogger(LoggingInDisambiguation.class);
+    private static Logger logger = Logger.getLogger(FeaturesExtractionMapper_Toy.class);
     private List<FeatureInfo> featureInfos;
     private List<Extractor> featureExtractors;
 

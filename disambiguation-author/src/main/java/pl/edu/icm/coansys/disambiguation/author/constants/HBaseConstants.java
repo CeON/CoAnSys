@@ -9,7 +9,7 @@ package pl.edu.icm.coansys.disambiguation.author.constants;
  * @version 1.0
  * @since 2012-08-07
  */
-public class HBaseConstants {
+public final class HBaseConstants {
 
     private HBaseConstants() {
     }

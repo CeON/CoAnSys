@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
@@ -19,8 +20,7 @@ import org.slf4j.LoggerFactory;
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.ExtractorFactory;
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.AuthorBased;
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DocumentBased;
-import pl.edu.icm.coansys.disambiguation.auxil.DiacriticsRemover;
-import pl.edu.icm.coansys.disambiguation.auxil.LoggingInDisambiguation;
+import pl.edu.icm.coansys.commons.java.DiacriticsRemover;
 import pl.edu.icm.coansys.disambiguation.auxil.TextTextArrayMapWritable;
 import pl.edu.icm.coansys.disambiguation.features.Extractor;
 import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
@@ -37,27 +37,21 @@ import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 @SuppressWarnings("rawtypes")
 public class FeaturesExtractionMapper_Toy extends TableMapper<Text, TextTextArrayMapWritable> {
 
-    private static Logger logger = LoggerFactory.getLogger(LoggingInDisambiguation.class);
-    public List<FeatureInfo> featureInfos;
-    public List<Extractor> featureExtractors;
+    private static Logger logger = LoggerFactory.getLogger(FeaturesExtractionMapper_Toy.class);
+    private List<FeatureInfo> featureInfos;
+    private List<Extractor> featureExtractors;
 
     @Override
     public void setup(Context context) throws IOException, InterruptedException {
         String fdescription = context.getConfiguration().get("FEATURE_DESCRIPTION");
         if (fdescription != null) {
             featureInfos = FeatureInfo.parseFeatureInfoString(fdescription);
-            featureExtractors = getFeatureExtractor(featureInfos);
+            featureExtractors = new ArrayList<Extractor>();
+            ExtractorFactory fe = new ExtractorFactory();
+            for (FeatureInfo fi : featureInfos) {
+                featureExtractors.add(fe.create(fi));
+            }
         }
-    }
-
-    private List<Extractor> getFeatureExtractor(List<FeatureInfo> inputfeatureInfos) {
-        List<Extractor> featureExtractors = new ArrayList<Extractor>();
-        ExtractorFactory fe = new ExtractorFactory();
-
-        for (FeatureInfo fi : inputfeatureInfos) {
-            featureExtractors.add(fe.create(fi));
-        }
-        return featureExtractors;
     }
 
     @Override
@@ -107,8 +101,7 @@ public class FeaturesExtractionMapper_Toy extends TableMapper<Text, TextTextArra
         featureName2FeatureValuesMap.put("authId", authId);
     }
 
-    protected void createDocumentBasedFeatureMap(
-            HashMap<String, List<String>> docBasedFeature, DocumentMetadata dm) {
+    protected void createDocumentBasedFeatureMap(Map<String, List<String>> docBasedFeature, DocumentMetadata dm) {
         //(1) extract all document-based features, 
         //[which will be passes to the object authorId2FeatureMap]
         int firstIndex = -1;
@@ -121,7 +114,7 @@ public class FeaturesExtractionMapper_Toy extends TableMapper<Text, TextTextArra
         }
     }
 
-    protected void createFeatureMapForOneAuthor(HashMap<String, List<String>> docBasedFeature,
+    protected void createFeatureMapForOneAuthor(Map<String, List<String>> docBasedFeature,
             DocumentMetadata dm, String authId,
             TextTextArrayMapWritable featureName2FeatureValuesMap) {
 
