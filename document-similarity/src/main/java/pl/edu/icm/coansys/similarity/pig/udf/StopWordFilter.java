@@ -13,7 +13,7 @@ public class StopWordFilter extends EvalFunc<Boolean> {
     @Override
     public Boolean exec(Tuple input) throws IOException {
         if (input == null || input.size() == 0) {
-            return null;
+            return false;
         }
         try {
             String word = (String) input.get(0);

@@ -40,9 +40,8 @@ import org.apache.hadoop.io.WritableComparable;
 		public int compareTo(TextArrayWritable o) {
 			List<String> osl = o.toStringList();
 			List<String> tsl = this.toStringList();
-			int val = 0;
-			
-			if((val = tsl.size() - osl.size()) == 0){
+			int val = tsl.size() - osl.size();
+			if(val == 0){
 				if(osl.containsAll(tsl)) return 0;
 				else{
 					Iterator<String> io = osl.iterator();

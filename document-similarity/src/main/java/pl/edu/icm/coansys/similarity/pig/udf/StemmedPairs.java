@@ -30,7 +30,7 @@ public class StemmedPairs extends EvalFunc<DataBag> {
             return null;
         }
     }
-    private final String SPACE = " ";
+    private static final String SPACE = " ";
 
     public List<String> getStemmedPairs(final String text) throws IOException {
         String tmp  = text.toLowerCase();

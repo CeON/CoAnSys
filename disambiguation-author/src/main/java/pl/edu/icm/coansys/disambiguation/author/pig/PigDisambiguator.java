@@ -3,9 +3,9 @@
  */
 package pl.edu.icm.coansys.disambiguation.author.pig;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
 
 import org.apache.pig.backend.executionengine.ExecException;
 import org.apache.pig.data.DataBag;
@@ -57,17 +57,17 @@ public class PigDisambiguator extends Disambiguator{
 	}
 	
 	// TODO zajrzec do artykulu, jak nie bedzie info to spytac Piotra czy warto uzyc equalize
-	@SuppressWarnings("unused")
+	/*@SuppressWarnings("unused")
 	private String equalize( String str ) {
 		str = str.replace( ",", "" );
 		str = str.replace( ".", "" );
 		str = str.toLowerCase();
 		return str;
-	}
+	}*/
 	
 	public double calculateAffinity(String f1, String f2) {
-		ArrayList <String> fl1 = (ArrayList<String>) Arrays.asList( f1.split(" ") );
-		ArrayList <String> fl2 = (ArrayList<String>) Arrays.asList( f2.split(" ") );
+		List <String> fl1 = Arrays.asList( f1.split(" ") );
+		List <String> fl2 = Arrays.asList( f2.split(" ") );
 		return d.calculateAffinity( fl1, fl2 );
 	}
 	
@@ -75,6 +75,7 @@ public class PigDisambiguator extends Disambiguator{
 	 * 
 	 * @return {@link PigDisambiguator} id.
 	 */
+        @Override
 	public String getName(){
 		return d.getName();
 	}

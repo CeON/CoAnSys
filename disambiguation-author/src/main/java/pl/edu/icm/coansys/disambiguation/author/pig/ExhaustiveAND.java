@@ -14,13 +14,11 @@ import org.apache.pig.data.DataBag;
 import org.apache.pig.data.DefaultDataBag;
 import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.disambiguation.author.auxil.StackTraceExtractor;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.DisambiguatorFactory;
-import pl.edu.icm.coansys.disambiguation.author.pig.PigDisambiguator;
-import pl.edu.icm.coansys.disambiguation.auxil.LoggingInDisambiguation;
+
 import pl.edu.icm.coansys.disambiguation.clustering.strategies.SingleLinkageHACStrategy_OnlyMax;
 import pl.edu.icm.coansys.disambiguation.features.Disambiguator;
 import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
@@ -30,12 +28,13 @@ import pl.edu.icm.coansys.disambiguation.idgenerators.UuIdGenerator;
 public class ExhaustiveAND extends EvalFunc<DataBag> {
 
 	private double threshold;
-	private final double NOT_CALCULATED = Double.NEGATIVE_INFINITY;
+
+	private static final double NOT_CALCULATED = Double.NEGATIVE_INFINITY;	
 	private PigDisambiguator[] features;
 	private List<FeatureInfo> featureInfos;
 	private double sim[][];
-	private static Logger logger = LoggerFactory.getLogger(LoggingInDisambiguation.class);
-	//private int rekords = 0, nulls = 0;
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ExhaustiveAND.class);
+
 
 	public ExhaustiveAND(String threshold, String featureDescription){
 		this.threshold = Double.parseDouble(threshold);
@@ -142,8 +141,8 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 	        //zwraca bag: Tuple z (Obiektem z (String (UUID) i bag: { Tuple z ( String (contrib ID) ) } ) )
 		}catch(Exception e){
 			// Throwing an exception will cause the task to fail.
-			throw new IOException("Caught exception processing input row:\n"
-					+ StackTraceExtractor.getStackTrace(e));
+			logger.error("Caught exception processing input row:\n" + StackTraceExtractor.getStackTrace(e));
+                        return null;
 		}
 
 		//return new DefaultDataBag();
