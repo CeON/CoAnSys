@@ -5,7 +5,7 @@ import pl.edu.icm.coansys.citations.util.sequencefile.ConvertingSequenceFileIter
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper
 import pl.edu.icm.coansys.citations.util.{misc, BytesConverter}
 import pl.edu.icm.coansys.citations.util.classification.svm.SvmClassifier.featureVectorValuesToLibSvmLine
-import pl.edu.icm.coansys.citations.data.{AdvancedSimilarityMeasurer, MatchingResult, SimilarityMeasurer, MatchableEntity}
+import pl.edu.icm.coansys.citations.data.{MatchingResult, SimilarityMeasurer, MatchableEntity}
 import scala.io.Source
 import pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue
 import pl.edu.icm.cermine.tools.classification.svm.SVMClassifier
@@ -143,7 +143,6 @@ object PicEvaluator {
   }
 
   def printMatching() {
-    val measurer = new AdvancedSimilarityMeasurer
     for ((src, dst) <- gold if dst != "") {
       if (parsed.contains(src) && db.contains(dst)) {
         println(parsed(src).toDebugString)

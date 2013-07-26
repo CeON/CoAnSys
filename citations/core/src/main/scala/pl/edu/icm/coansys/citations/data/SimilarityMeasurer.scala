@@ -11,15 +11,8 @@ import pl.edu.icm.coansys.citations.util.classification.svm.SvmClassifier
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
-class SimilarityMeasurer {
-  val featureVectorBuilder = new FeatureVectorBuilder(List(
-    AuthorTrigramMatchFactor,
-    AuthorTokenMatchFactor,
-    PagesMatchFactor,
-    SourceMatchFactor,
-    TitleMatchFactor,
-    YearMatchFactor))
-
+class SimilarityMeasurer(val featureVectorBuilder:FeatureVectorBuilder[(MatchableEntity, MatchableEntity)] =
+                           SimilarityMeasurer.simpleFvBuilder) {
   val classifier = SvmClassifier.fromResource("/pl/edu/icm/coansys/citations/weakMatching.model")
 
   def similarity(e1: MatchableEntity, e2: MatchableEntity): Double =
@@ -27,6 +20,27 @@ class SimilarityMeasurer {
 }
 
 object SimilarityMeasurer {
+  val simpleFvBuilder = new FeatureVectorBuilder(List(
+    AuthorTrigramMatchFactor,
+    AuthorTokenMatchFactor,
+    PagesMatchFactor,
+    SourceMatchFactor,
+    TitleMatchFactor,
+    YearMatchFactor))
+
+  val advancedFvBuilder = new FeatureVectorBuilder(List(
+    AuthorMatchFactor,
+    AuthorTrigramMatchFactor,
+    AuthorTokenMatchFactor,
+    PagesMatchFactor,
+    PagesRawTextMatchFactor,
+    SourceMatchFactor,
+    SourceRawTextMatchFactor,
+    TitleMatchFactor,
+    TitleTokenMatchFactor,
+    YearMatchFactor,
+    YearRawTextMatchFactor))
+
   def main(args: Array[String]) {
     val measurer = new SimilarityMeasurer
     val doc1 = MatchableEntity.fromParameters("1", "Jan Kowalski", "J. App. Phis.", "Some random title", "120-126", "2010")
