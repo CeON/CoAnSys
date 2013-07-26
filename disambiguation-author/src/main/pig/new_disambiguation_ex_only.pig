@@ -16,10 +16,10 @@
 %DEFAULT dc_m_str_feature_info 'TitleDisambiguator#EX_TITLE#1#1,YearDisambiguator#EX_YEAR#1#1'
 %DEFAULT threshold '-1.0'
 
-DEFINE keyTiKwAbsCatExtractor pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_MAP_WHEN_CATEG_LIM('en','removeall');
+--DEFINE keyTiKwAbsCatExtractor pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_MAP_WHEN_CATEG_LIM('en','removeall');
 DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_CONTRIBDATA_GIVENDATA('$dc_m_str_feature_info');
 DEFINE exhaustiveAND pl.edu.icm.coansys.disambiguation.author.pig.ExhaustiveAND('$threshold','$dc_m_str_feature_info');
-DEFINE aproximateAND pl.edu.icm.coansys.disambiguation.author.pig.AproximateAND('$threshold','$dc_m_str_feature_info');
+--DEFINE aproximateAND pl.edu.icm.coansys.disambiguation.author.pig.AproximateAND('$threshold','$dc_m_str_feature_info');
 DEFINE GenUUID pl.edu.icm.coansys.disambiguation.author.pig.GenUUID();
 -- -----------------------------------------------------
 -- -----------------------------------------------------
@@ -68,9 +68,8 @@ D = foreach C generate group as sname, B as datagroup, COUNT(B) as count;
 
 split D into
 	D1 if count == 1,
-	D100 if (count > 1 and count < 100),
-	D1000 if (count >= 100 and count < 1000),
-	DX if count >= 1000;
+	D100 if (count > 1);
+
 -- -----------------------------------------------------
 -- SINGLE CONTRIBUTORS ---------------------------------
 -- -----------------------------------------------------
@@ -91,24 +90,9 @@ D100A = foreach D100 generate flatten( exhaustiveAND( datagroup ) ) as (uuid:cha
 -- gdzie key_* to klucze kontrybutorow (autorow dokumentow) w metadanych
 E100 = foreach D100A generate flatten( cIds ) as cId, uuid;
 -- -----------------------------------------------------
--- BIG GRUPS OF CONTRIBUTORS ---------------------------
--- -----------------------------------------------------
--- D1000A: {datagroup: NULL,simTriples: NULL}
-D1000A = foreach D1000 generate flatten( aproximateAND( datagroup ) ) as (datagroup, simTriples);
--- D1000B: {uuid: chararray,cIds: chararray}
-D1000B = foreach D1000A generate flatten( exhaustiveAND( datagroup, simTriples ) ) as (uuid:chararray, cIds:chararray);
--- E1000: {cId: chararray,uuid: chararray}
-E1000 = foreach D1000B generate flatten( cIds ) as cId, uuid;
--- -----------------------------------------------------
--- REALLY BIG GRUPS OF CONTRIBUTORS ---------------------------
--- -----------------------------------------------------
-DXA = foreach DX generate flatten( aproximateAND( datagroup ) ) as (datagroup, simTriples);
-DXB = foreach DXA generate flatten( exhaustiveAND( datagroup, simTriples ) ) as (uuid:chararray, cIds:chararray);
-EX = foreach DXB generate flatten( cIds ) as cId, uuid;
--- -----------------------------------------------------
 -- RESOULT ----------------- ---------------------------
 -- -----------------------------------------------------
-R = union E1, E100, E1000, EX;
+R = union E1, E100;
 -- R: {cId: chararray,uuid: chararray}
 -- S = ORDER R BY uuid,cId;
 

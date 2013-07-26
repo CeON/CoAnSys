@@ -11,7 +11,7 @@
 
 %DEFAULT dc_m_hdfs_inputDocsData /srv/bwndata/seqfile/bazekon-20130314.sf
 %DEFAULT time 20130709_1009
-%DEFAULT dc_m_hdfs_outputContribs disambiguation/outputContribs$time
+%DEFAULT dc_m_hdfs_outputContribs tmp/
 %DEFAULT dc_m_meth_extraction_inner pl.edu.icm.coansys.pig.udf.RichSequenceFileLoader
 %DEFAULT dc_m_str_feature_info 'TitleDisambiguator#EX_TITLE#1#1,YearDisambiguator#EX_YEAR#1#1'
 %DEFAULT threshold '-1.0'
@@ -20,6 +20,7 @@ DEFINE keyTiKwAbsCatExtractor pl.edu.icm.coansys.classification.documents.pig.ex
 DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_CONTRIBDATA_GIVENDATA('$dc_m_str_feature_info');
 DEFINE exhaustiveAND pl.edu.icm.coansys.disambiguation.author.pig.ExhaustiveAND('$threshold','$dc_m_str_feature_info');
 DEFINE aproximateAND pl.edu.icm.coansys.disambiguation.author.pig.AproximateAND('$threshold','$dc_m_str_feature_info');
+DEFINE sinlgeAND pl.edu.icm.coansys.disambiguation.author.pig.SingleAND();
 DEFINE GenUUID pl.edu.icm.coansys.disambiguation.author.pig.GenUUID();
 -- -----------------------------------------------------
 -- -----------------------------------------------------
@@ -59,8 +60,6 @@ A1 = LOAD '$dc_m_hdfs_inputDocsData' USING $dc_m_meth_extraction_inner('org.apac
 -- A2: {key: chararray,value: bytearray}
 A2 = sample A1 $dc_m_double_sample;
 
--- z kazdego dokumentu (rekordu tabeli wejsciowe) tworze rekordy z kontrybutorami
--- TODO: wlasciwie tego contribPos tutaj juz nie potrzebujemy, poniewaz wyciagamy tam cId (a do tego byla potrzeba pozcyja) => mozna by zmienic EXTRACT_GIVEN_DATA
 B = foreach A2 generate flatten(snameDocumentMetaExtractor($1)) as (cId:chararray, contribPos:int, sname:chararray, metadata:map[{(chararray)}]);
 C = group B by sname;
 -- D: {sname: chararray, datagroup: {(cId: chararray,cPos: int,sname: chararray,data: map[{(val_0: chararray)}])}, count: long}
@@ -71,47 +70,9 @@ split D into
 	D100 if (count > 1 and count < 100),
 	D1000 if (count >= 100 and count < 1000),
 	DX if count >= 1000;
--- -----------------------------------------------------
--- SINGLE CONTRIBUTORS ---------------------------------
--- -----------------------------------------------------
--- dla kontrybutorow D1: splaszczamy databagi (ktore przeciez maja po jednym elemencie) i od razu generujemy co trzeba
-D1A = foreach D1 generate flatten( datagroup );-- as (cId:chararray, contribPos:int, sname:chararray, metadata:map);
--- E1: {cId: chararray,uuid: chararray}
-E1 = foreach D1A generate cId as cId, FLATTEN(GenUUID(TOBAG(cId))) as uuid;
--- -----------------------------------------------------
--- SMALL GRUPS OF CONTRIBUTORS -------------------------
--- -----------------------------------------------------
-D100A = foreach D100 generate flatten( exhaustiveAND( datagroup ) ) as (uuid:chararray, cIds:chararray);
--- z flatten:
--- UUID_1, {key_1, key_2, key_3}
--- UUID_4, {key_4}
--- bez flatten:
--- UUID_1,				 UUID_2, UUID_3
--- {key_1, key_2, key_3},{key_4},{key_5, key_6}
--- gdzie key_* to klucze kontrybutorow (autorow dokumentow) w metadanych
-E100 = foreach D100A generate flatten( cIds ) as cId, uuid;
--- -----------------------------------------------------
--- BIG GRUPS OF CONTRIBUTORS ---------------------------
--- -----------------------------------------------------
--- D1000A: {datagroup: NULL,simTriples: NULL}
-D1000A = foreach D1000 generate flatten( aproximateAND( datagroup ) ) as (datagroup, simTriples);
--- D1000B: {uuid: chararray,cIds: chararray}
-D1000B = foreach D1000A generate flatten( exhaustiveAND( datagroup, simTriples ) ) as (uuid:chararray, cIds:chararray);
--- E1000: {cId: chararray,uuid: chararray}
-E1000 = foreach D1000B generate flatten( cIds ) as cId, uuid;
--- -----------------------------------------------------
--- REALLY BIG GRUPS OF CONTRIBUTORS ---------------------------
--- -----------------------------------------------------
-DXA = foreach DX generate flatten( aproximateAND( datagroup ) ) as (datagroup, simTriples);
-DXB = foreach DXA generate flatten( exhaustiveAND( datagroup, simTriples ) ) as (uuid:chararray, cIds:chararray);
-EX = foreach DXB generate flatten( cIds ) as cId, uuid;
--- -----------------------------------------------------
--- RESOULT ----------------- ---------------------------
--- -----------------------------------------------------
-R = union E1, E100, E1000, EX;
--- R: {cId: chararray,uuid: chararray}
--- S = ORDER R BY uuid,cId;
 
--- DUMP R;
-store R into '$dc_m_hdfs_outputContribs';
-
+-- store here, remember to delete path in workflow after joining / merge
+store D1 into '$dc_m_hdfs_outputContribs/D1';
+store D100 into '$dc_m_hdfs_outputContribs/D100';
+store D1000 into '$dc_m_hdfs_outputContribs/D1000';
+store DX into '$dc_m_hdfs_outputContribs/DX';

@@ -1,4 +1,4 @@
-<workflow-app name='new-author-disambiguation' xmlns="uri:oozie:workflow:0.2">
+<workflow-app name='${subproject}' xmlns="uri:oozie:workflow:0.2">
 <!--
  (C) 2010-2012 ICM UW. All rights reserved.
 -->
@@ -31,15 +31,13 @@
                     <value>${hbaseZookeeperQuorum}</value>
                 </property>
             </configuration>
-            <script>${pigScriptsDir}/new_disambiguation.pig</script>
+            <script>${pigScriptsDir}/new_disambiguation_ex_only.pig</script>
             <param>commonJarsPath=${commonJarsPath}</param>
             <param>dc_m_double_sample=${dc_m_double_sample}</param>
             <param>dc_m_hdfs_inputDocsData=${dc_m_hdfs_inputDocsData}</param>
             <param>dc_m_hdfs_outputContribs=${dc_m_hdfs_outputContribs}</param>
             <!--param>dc_m_str_feature_info=${dc_m_str_feature_info}</param-->
             <param>threshold=${threshold}</param>
-            <file>AUXIL_macros.def.pig</file>
-            <!--archive>/user/mwos/workflows/new-author-disambiguation/workflow/lib/disambiguation-author-1.3-SNAPSHOT.jar</archive-->
         </pig>
         <ok to='end'/>
         <error to='kill'/>

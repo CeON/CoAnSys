@@ -14,10 +14,13 @@ import org.apache.pig.data.DataBag;
 import org.apache.pig.data.DefaultDataBag;
 import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.disambiguation.author.auxil.StackTraceExtractor;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.DisambiguatorFactory;
 import pl.edu.icm.coansys.disambiguation.author.pig.PigDisambiguator;
+import pl.edu.icm.coansys.disambiguation.auxil.LoggingInDisambiguation;
 import pl.edu.icm.coansys.disambiguation.clustering.strategies.SingleLinkageHACStrategy_OnlyMax;
 import pl.edu.icm.coansys.disambiguation.features.Disambiguator;
 import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
@@ -27,10 +30,12 @@ import pl.edu.icm.coansys.disambiguation.idgenerators.UuIdGenerator;
 public class ExhaustiveAND extends EvalFunc<DataBag> {
 
 	private double threshold;
-	private final double NOT_CALCULATED = Double.NEGATIVE_INFINITY;	
+	private final double NOT_CALCULATED = Double.NEGATIVE_INFINITY;
 	private PigDisambiguator[] features;
 	private List<FeatureInfo> featureInfos;
 	private double sim[][];
+	private static Logger logger = LoggerFactory.getLogger(LoggingInDisambiguation.class);
+	//private int rekords = 0, nulls = 0;
 
 	public ExhaustiveAND(String threshold, String featureDescription){
 		this.threshold = Double.parseDouble(threshold);
@@ -54,23 +59,26 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 	}
 
 	/*
-	 * Tuple: sname,{(contribId:chararray,contribPos:int,sname:chararray, metadata:map[{(chararray)}])},count
+	 * Tuple: {(contribId:chararray,contribPos:int,sname:chararray, metadata:map[{(chararray)}])}
 	 */
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public DataBag exec( Tuple input ) throws IOException {
-		
+
 		if ( input == null || input.size() == 0 ) return null;
 		try{
 			//bag: contribId,pozycja - po co?,sname,mapa: <extractor,bag: tuple ze stringiem>,
-			//opcjonalnie: bag: tuple ( int index w sim contrib X, int ..contrib Y, double sim value) 
+			//opcjonalnie: bag: tuple ( int index w sim contrib X, int ..contrib Y, double sim value)
 			//TODO w razie nudy:
 			//wystarczyloby wrzucac do udf'a tylko (contrib id i mape z metadanymi) z datagroup
 			//co daje odpornosc na zmiany struktury calej tabeli
 			//ale to bym musial zmienic na poziomie generowania tabel (nie generowac z niepotrzebnymi danymi)
 
 			DataBag contribs = (DataBag) input.get(0);  //biore bag'a z kontrybutorami
+
+			if ( contribs == null || contribs.size() == 0 ) return null;
+
 			Iterator<Tuple> it = contribs.iterator();	//iterator po bag'u
 
 			//TODO: zamienic ponizej liste map na liste list, albo najlepiej tablice tablic..
@@ -84,34 +92,34 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 				contribsId.add( (String) t.get(0) ); //biore contrId z Tupla
 				contribsT.add( (Map<String, Object>) t.get(3) );
 			}
-			
+
 			//inicjuje sim[][]
 			sim = new double[ contribsT.size() ][];
 			for ( int i = 1; i < contribsT.size(); i++ ) {
 				sim[i] = new double[i];
-				for ( int j = 0; j < i; j++ ) 
+				for ( int j = 0; j < i; j++ )
 					sim[i][j] = NOT_CALCULATED;
 			}
-				
+
 			//jesli podano sim do inicjacji:
-			if ( input.size() == 2 ) {			
+			if ( input.size() == 2 ) {
 				DataBag similarities = (DataBag) input.get(1);  //biore bag'a z wyliczonymi podobienstwami
 				it = similarities.iterator();	//iterator po bag'u
 				while ( it.hasNext() ) { //iteruje sie po bag'u, zrzucam bag'a do tablicy Tupli
 					Tuple t = it.next();
-					
+
 					int idX = (Integer) t.get(0);
-					int idY = (Integer) t.get(1);						
+					int idY = (Integer) t.get(1);
 					double simValue = (Double) t.get(2);
-					
-					try {	
+
+					try {
 						sim[ idX ][ idY ] = simValue;
-						
+
 					} catch ( java.lang.ArrayIndexOutOfBoundsException e ) {
-						
-						String m = "Out of bounds during sim init by values from input: " + "idX: " + idX + ", idY: " + idY + ", sim.length: " + sim.length + 
+
+						String m = "Out of bounds during sim init by values from input: " + "idX: " + idX + ", idY: " + idY + ", sim.length: " + sim.length +
 								", contrib number: " + contribsT.size();
-						
+
 						if ( sim.length > idX )
 							m += ", sim[idX].length: " + sim[idX].length;
 
@@ -119,9 +127,9 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 
 						throw new Exception(m, e);
 					}
-				}			
+				}
 			}
-			
+
 			//obliczam sim[][]
 			calculateAffinity ( contribsT );
 
@@ -137,7 +145,7 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 			throw new IOException("Caught exception processing input row:\n"
 					+ StackTraceExtractor.getStackTrace(e));
 		}
-		
+
 		//return new DefaultDataBag();
 	}
 
@@ -152,13 +160,13 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 
 		for ( int i = 1; i < contribsT.size(); i++ ) {
 			for ( int j = 0; j < i; j++ ) {
-				
+
 				//jesli wartosc jest obliczona, to nie obliczam ponownie
 				if( sim[i][j] != NOT_CALCULATED ) continue;
 				sim[i][j] = threshold;
-				
+
 				for ( int d = 0; d < features.length; d++ ){
-					
+
 					FeatureInfo featureInfo = featureInfos.get(d);
 
 					//ponizsze implikuje nie stworzenie obiektu disambiguatora
@@ -175,7 +183,7 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 					double partial = features[d].calculateAffinity( oA, oB );
 					partial = partial / featureInfo.getMaxValue() * featureInfo.getWeight();
 					sim[i][j] += partial;
-					
+
 					//na pewno ci sami, wiec przerywam
         			if ( sim[i][j] >= 0 ) break;
 				}
@@ -188,7 +196,7 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 		//pod dany klaster id (clusterAssociation) wrzucamy id kontrybutorow
 		Map<Integer, List<String>> clusterMap = new HashMap<Integer, List<String>>();
 		//TODO: mapa na np liste jak w aproximate
-		
+
         for (int i = 0; i < clusterAssociation.length; i++) {
             addToMap(clusterMap, clusterAssociation[i], authorIds.get(i));
         }
