@@ -10,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.Map;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -52,7 +53,7 @@ public final class JavaShellRunner {
     private static void printOutputStream(Process proces) throws IOException {
         BufferedReader in = null;
         try{
-            in = new BufferedReader(new InputStreamReader(proces.getInputStream()));
+            in = new BufferedReader(new InputStreamReader(proces.getInputStream(), Charset.forName("UTF-8")));
             String resultLine;
             while ((resultLine = in.readLine()) != null) {
                 System.out.println(resultLine);
