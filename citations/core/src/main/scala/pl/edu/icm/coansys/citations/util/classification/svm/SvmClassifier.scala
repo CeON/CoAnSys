@@ -35,7 +35,7 @@ object SvmClassifier {
   /**
    * Converts a feature vector to the text line in LibSVM format.
    */
-  def featureVectorValuesToLibSvmLine(fv: Array[Double], label: Int): String = {
+  def featureVectorValuesToLibSvmLine(fv: Iterable[Double], label: Int): String = {
     val features = (Stream.from(1) zip fv).map {
       case (i, v) => i + ":" + v
     }.mkString(" ")
