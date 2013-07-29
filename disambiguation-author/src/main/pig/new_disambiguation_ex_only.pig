@@ -59,8 +59,6 @@ A1 = LOAD '$dc_m_hdfs_inputDocsData' USING $dc_m_meth_extraction_inner('org.apac
 -- A2: {key: chararray,value: bytearray}
 A2 = sample A1 $dc_m_double_sample;
 
--- z kazdego dokumentu (rekordu tabeli wejsciowe) tworze rekordy z kontrybutorami
--- TODO: wlasciwie tego contribPos tutaj juz nie potrzebujemy, poniewaz wyciagamy tam cId (a do tego byla potrzeba pozcyja) => mozna by zmienic EXTRACT_GIVEN_DATA
 B = foreach A2 generate flatten(snameDocumentMetaExtractor($1)) as (cId:chararray, contribPos:int, sname:chararray, metadata:map[{(chararray)}]);
 C = group B by sname;
 -- D: {sname: chararray, datagroup: {(cId: chararray,cPos: int,sname: chararray,data: map[{(val_0: chararray)}])}, count: long}
@@ -73,7 +71,6 @@ split D into
 -- -----------------------------------------------------
 -- SINGLE CONTRIBUTORS ---------------------------------
 -- -----------------------------------------------------
--- dla kontrybutorow D1: splaszczamy databagi (ktore przeciez maja po jednym elemencie) i od razu generujemy co trzeba
 D1A = foreach D1 generate flatten( datagroup );-- as (cId:chararray, contribPos:int, sname:chararray, metadata:map);
 -- E1: {cId: chararray,uuid: chararray}
 E1 = foreach D1A generate cId as cId, FLATTEN(GenUUID(TOBAG(cId))) as uuid;
@@ -81,13 +78,6 @@ E1 = foreach D1A generate cId as cId, FLATTEN(GenUUID(TOBAG(cId))) as uuid;
 -- SMALL GRUPS OF CONTRIBUTORS -------------------------
 -- -----------------------------------------------------
 D100A = foreach D100 generate flatten( exhaustiveAND( datagroup ) ) as (uuid:chararray, cIds:chararray);
--- z flatten:
--- UUID_1, {key_1, key_2, key_3}
--- UUID_4, {key_4}
--- bez flatten:
--- UUID_1,				 UUID_2, UUID_3
--- {key_1, key_2, key_3},{key_4},{key_5, key_6}
--- gdzie key_* to klucze kontrybutorow (autorow dokumentow) w metadanych
 E100 = foreach D100A generate flatten( cIds ) as cId, uuid;
 -- -----------------------------------------------------
 -- RESOULT ----------------- ---------------------------

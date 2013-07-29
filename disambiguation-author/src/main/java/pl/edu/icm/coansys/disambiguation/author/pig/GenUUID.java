@@ -30,7 +30,6 @@ public class GenUUID extends EvalFunc< String > {
      * for whom we want find unique id
      * @returns String UUID
      */		
-	//TODO: na wejsciu DateBag nie pojedyncza Tupla, na wykscoi DateBag z String
 	@Override
 	public String exec( Tuple input ) throws IOException {
 		DataBag db = (DataBag) input.get(0);

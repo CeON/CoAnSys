@@ -22,11 +22,6 @@ import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.Disambig
 import pl.edu.icm.coansys.disambiguation.features.Disambiguator;
 import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
 
-// zmiany w stosunku do pierwotnego Exhaustive:
-// - poslugiwanie sie nadanymi identyfikatorami int zamiast string dla kazdego kontrybutora
-// zamiana mapy na tablice - zbicie log'a + porownywanie stringow / ich hashy, ktore trzeba generowac jest dluzsze
-
-
 public class AproximateAND extends EvalFunc<DataBag> {
 
 	private double threshold;
@@ -35,7 +30,7 @@ public class AproximateAND extends EvalFunc<DataBag> {
 	private double sim[][];
 	private Tuple datain[];
 	private int N;
-	//TODO: możliwie pozamieniac listy na tablice
+	//TODO: change lists to arrays where possible
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(AproximateAND.class);
 
 	public AproximateAND(String threshold, String featureDescription){
@@ -59,8 +54,11 @@ public class AproximateAND extends EvalFunc<DataBag> {
         }
 	}
 
-	/*
-	 * Tuple: sname,{(contribId:chararray,contribPos:int,sname:chararray, metadata:map[{(chararray)}])},count
+	
+	/**
+	 * @param Tuple (sname:chararray,{(contribId:chararray,contribPos:int,
+	 * sname:chararray, metadata:map[{(chararray)}])},count:int)
+	 * @see org.apache.pig.EvalFunc#exec(org.apache.pig.data.Tuple)
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
@@ -68,34 +66,34 @@ public class AproximateAND extends EvalFunc<DataBag> {
 
 		if ( input == null || input.size() == 0 ) return null;
 		try {
-			//UWAGA: input aproximate musi byc taki sam jak exhaustive (bo z aproximate trafi do exhaustive wprost)
-			//bag: contribId, pozycja - po co (nie potrzebne ani w aproximate ani w exhaustive)?,sname,mapa: <extractor,bag: tuple ze stringiem>,
-			//TODO w razie nudy:
-			//wystarczyloby wrzucac do udf'a tylko (mape z metadanymi) z datagroup
-			//co daje odpornosc na zmiany struktury calej tabeli
-			//ale to bym musial zmienic na poziomie generowania tabel (nie generowac z niepotrzebnymi danymi)
+			//TODO optional:
+			//it would be enough to take as argument only map bag with datagroup.
+			//In that case this  function would be proof against table changes.
+			//This change should be done during generating tables in pig script.
 
-
-			DataBag contribs = (DataBag) input.get(0);  //biore bag'a z kontrybutorami
+			DataBag contribs = (DataBag) input.get(0);  //taking bag with contribs
 
 			if ( contribs == null || contribs.size() == 0 ) return null;
 
-			Iterator<Tuple> it = contribs.iterator();	//iterator po bag'u
-			datain = new DefaultTuple[ (int) contribs.size() ];
+			Iterator<Tuple> it = contribs.iterator();
+			N = (int) contribs.size();
 
-			List< Map<String,Object> > contribsT = new LinkedList< Map<String,Object> > ();
+			datain = new DefaultTuple[ N ];
+
+			List< Map<String,Object> > contribsT = 
+					new LinkedList< Map<String,Object> > ();
 
 			int k = 0;
-			while ( it.hasNext() ) { //iteruje sie po bag'u, zrzucam bag'a do tablicy Tupli
+			//iterating through bag, dumping bug to Tuple array
+			while ( it.hasNext() ) { 
 				Tuple t = it.next();
 				datain[ k++ ] = t;
-				contribsT.add( (Map<String, Object>) t.get(3) ); //do contribs wedruje mapa z featurami
-				//TODO: zrzucic mape na liste, bo disambiguatory tworze po kolei tak jak sa w mapie, wiec po cechach tez bede iterowal sie po kolei
+				contribsT.add( (Map<String, Object>) t.get(3) ); //map with features
+				//TODO: change map to list (disambiguators are created one by one 
+				//as feature does, so both of them will be iterated in the same order).
 			}
 
-			N = contribsT.size();
-
-			//inicjuje sim[][]
+			//sim[][] init
 			sim = new double[ N ][];
 			for ( int i = 1; i < N; i++ ) {
 				sim[i] = new double[i];
@@ -105,26 +103,24 @@ public class AproximateAND extends EvalFunc<DataBag> {
                 }
 			}
 
-			//obliczam sim[][]
+			//sim[][] calculating
 			calculateAffinityAndClustering( contribsT );
 
 			//clusterList[ cluster_id ] = { contribs in cluster.. }
 	        List < ArrayList<Integer> >  clusterList = splitIntoClusters();
 	        
-	        //zwraca bag: Tuple z (Obiektem z (String (UUID) i bag: { Tuple z ( String (contrib ID) ) } ) )
+	        //bag: Tuple with (Object with (String (UUID), bag: { Tuple with ( String (contrib ID) ) } ) )
 	        return createResultingTuples( clusterList );
 
 		}catch(Exception e){
-			// Throwing an exception will cause the task to fail.
+			// Throwing an exception would cause the task to fail.
 			logger.error("Caught exception processing input row:\n" + StackTraceExtractor.getStackTrace(e));
 				return null;
 		}
-
-		//return new DefaultDataBag();
 	}
 
 	//Find & Union
-	//To call cluster id for each contributors from clusterAssicuiations tab - use find()!
+	//USE find() to call cluster id for each contributors from clusterAssicuiations tab!
 	private int clusterAssociations[], clusterSize[];
 
 	//finding cluster associations
@@ -132,20 +128,20 @@ public class AproximateAND extends EvalFunc<DataBag> {
 	private int find( int a ) {
 		if ( clusterAssociations[a] == a ) return a;
 		int fa = find( clusterAssociations[a] );
-		//w trakcie wedrowania po sciezce poprawiam przedstawiciela na tego na samym szczycie
-		//dzieki czemu sciezka jest rozbijana i tworzone sa bezposrednie polaczenia z przedstawicielem
+		//Correcting cluster associations to the top one during traversing along the path.
+		//Path is splited and straight connection with representative of union (cluster id) is made.
 		clusterAssociations[a] = fa;
 		return fa;
 	}
 
-	//cluster reprezentants union
+	//cluster representatives union
 	//o( 1 )
 	private boolean union( int a, int b ) {
 		int fa = find( a );
 		int fb = find( b );
 
 		if ( fa == fb ) return false;
-		//wybieram wieksza unie i lacze przedstawicieli w jedna unie
+		//choosing bigger cluster, union representatives in one cluster
 		if (clusterSize[fa] <= clusterSize[fb]) {
 			clusterSize[fb] += clusterSize[fa];
 			clusterAssociations[fa] = fb;
@@ -169,12 +165,13 @@ public class AproximateAND extends EvalFunc<DataBag> {
 		}
 
 		//o( n^2 * features.length )
-		//pomijam zlozonosc find bo ~ 1
-		//nadzieja jest taka, ze o( features.length ) wykona sie rzadko
+		//Skipping complexity of find because of its low complexity
+		//The heuristic is that o( features.length ) would executed less frequently.
 		for ( int i = 1; i < N; i++ ) {
 			for ( int j = 0; j < i; j++ ) {
 
-				//jesli są już z sobą w uni, to zakladam, ze są to ci sami i nie wyliczam dokladnej wartosci dla tej pary:
+				//if i,j are already in one union, we say they are identical
+				//and do not calculate precise similarity value
 				if ( find( i ) == find( j ) ) {
 					sim[i][j] = Double.POSITIVE_INFINITY;
 					continue;
@@ -184,14 +181,15 @@ public class AproximateAND extends EvalFunc<DataBag> {
 
 					FeatureInfo featureInfo = featureInfos.get(d);
 
-					//ponizsze implikuje nie stworzenie obiektu disambiguatora
-					//pod features[d]
+					//the following gives sure, that disambiguator features[d]
+					//does not exist
 					if ( featureInfo.getDisambiguatorName().equals("") ) continue;
 
-					//pobieranie wartosci (cech) spod danego klucza (nazwy ekstraktora = nazwa cechy)
-					//w contribsT.get(i) siedzi interesujaca nas mapa
-					//de facto Object = DataBag.
-					//Biore z i'tej mapy (zbioru cech i'tego kontrybutora) Bag wartości danej cechy:
+					//Taking features from each keys (name of extractor = feature name)
+					//In contribsT.get(i) there is map we need.
+					//From this map (collection of i'th contributor's features)
+					//we take Bah with value of given feature.
+					//Here we have sure that following Object = DateBag.
 					Object oA = contribsT.get(i).get( featureInfo.getFeatureExtractorName() );
 					Object oB = contribsT.get(j).get( featureInfo.getFeatureExtractorName() );
 
@@ -199,9 +197,9 @@ public class AproximateAND extends EvalFunc<DataBag> {
 					partial = partial / featureInfo.getMaxValue() * featureInfo.getWeight();
 					sim[i][j] += partial;
 
-					//prawdopodobnie Ci sami
+					//potentially the same contributors
         			if ( sim[i][j] >= 0 ) {
-        				//lacze przedstawicieli i, j w jedna unie
+        				//so we union them in one cluster
         				union( i, j );
         				break;
         			}
@@ -213,9 +211,9 @@ public class AproximateAND extends EvalFunc<DataBag> {
 	// o( N )
 	protected List < ArrayList<Integer> > splitIntoClusters() {
 		
-		//TODO: moge wyzylowac i zamiast Vector uzyc tablice, bo z gory znam rozmiary klastrow (clasterSize[])
+		//TODO: change to arrrays, because we know clusters' sizes (clasterSize[])
 		List < ArrayList<Integer> > clusters = new ArrayList < ArrayList< Integer > > ();
-		// cluster[ id klastra ] = vector  simId kontrybutorow
+		// cluster[ id klastra ] =  array with contributors' simIds 
 
 
 		for( int i = 0; i < N; i++ )
@@ -225,7 +223,7 @@ public class AproximateAND extends EvalFunc<DataBag> {
             clusters.get( find( i ) ).add( i );
         }
 
-        //pozbywam sie pustych klastrow
+        //skipping empty clusters
         List < ArrayList<Integer> > ret = new ArrayList < ArrayList< Integer > > ();
 		for( int i = 0; i < N; i++ ) {
 			if ( !clusters.get( i ).isEmpty() ) {
@@ -236,18 +234,17 @@ public class AproximateAND extends EvalFunc<DataBag> {
 	}
 
 	//o ( N * max_cluster_size )
-
 	protected DataBag createResultingTuples( List < ArrayList<Integer> > clusters ) {
 		//IdGenerator idgenerator = new UuIdGenerator();
     	DataBag ret = new DefaultDataBag();
     	int simIdToClusterId[] = new int[ sim.length ];
 
-    	//iteruje po klastrach
+    	//iterating through clusters
     	for ( ArrayList<Integer> cluster: clusters ) {
         	DataBag contribDatas = new DefaultDataBag();
         	DataBag similarities = new DefaultDataBag();
 
-        	// iteruje po kontrybutorach w klastrze (znajdują sie tam simId)
+        	//iterating through contribs (theirs simId) in cluster
         	for ( int i = 0; i < cluster.size(); i++ ) {
 
         		int sidX = cluster.get( i );
@@ -255,7 +252,7 @@ public class AproximateAND extends EvalFunc<DataBag> {
         		simIdToClusterId[ sidX ] = i;
         		contribDatas.add( datain[ sidX ] );
 
-        		//dodaje do wyniku wartosci podobienst dla faktycznie obliczonych
+        		//adding precise calculated similarity values
         		//o( cluster_size )
         		for ( int j = 0; j < i; j++ ) {
         			int sidY = cluster.get( j );
@@ -278,6 +275,8 @@ public class AproximateAND extends EvalFunc<DataBag> {
         }
 
 		//bag with: { bag z dane jak na wejsciu aproximate odpowiadające kontrybutorom z poszczegolnych klastrow, bag with triple similarities }
+    	//bag with: { bag with date as in input but ordered by clusters, bag with triple similarities }
+    
     	return ret;
 	}
 }

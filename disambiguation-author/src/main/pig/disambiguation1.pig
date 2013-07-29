@@ -60,7 +60,6 @@ D1 = LOAD '$dc_m_hdfs_inputDocsData' as (sname: chararray, datagroup: {(cId: cha
 -- -----------------------------------------------------
 -- SINGLE CONTRIBUTORS ---------------------------------
 -- -----------------------------------------------------
--- dla kontrybutorow D1: splaszczamy databagi (ktore przeciez maja po jednym elemencie) i od razu generujemy co trzeba
 D1A = foreach D1 generate flatten( datagroup );-- as (cId:chararray, contribPos:int, sname:chararray, metadata:map);
 -- E1: {cId: chararray,uuid: chararray}
 E1 = foreach D1A generate cId as cId, FLATTEN(GenUUID(TOBAG(cId))) as uuid;

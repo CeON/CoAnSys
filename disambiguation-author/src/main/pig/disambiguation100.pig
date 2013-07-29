@@ -60,13 +60,6 @@ D100 = LOAD '$dc_m_hdfs_inputDocsData' as (sname:chararray, datagroup:{(cId:char
 -- SMALL GRUPS OF CONTRIBUTORS -------------------------
 -- -----------------------------------------------------
 D100A = foreach D100 generate flatten( exhaustiveAND( datagroup ) ) as (uuid:chararray, cIds:chararray);
--- z flatten:
--- UUID_1, {key_1, key_2, key_3}
--- UUID_4, {key_4}
--- bez flatten:
--- UUID_1,				 UUID_2, UUID_3
--- {key_1, key_2, key_3},{key_4},{key_5, key_6}
--- gdzie key_* to klucze kontrybutorow (autorow dokumentow) w metadanych
 E100 = foreach D100A generate flatten( cIds ) as cId, uuid;
 
 store E100 into '$dc_m_hdfs_outputContribs';

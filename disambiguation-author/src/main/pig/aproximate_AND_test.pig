@@ -58,8 +58,6 @@ C = group B by sname;
 D = foreach C generate group as sname, B as datagroup, COUNT(B) as count;
 -- D: {sname: chararray, datagroup: {(cId: chararray,cPos: int,sname: chararray,data: map[{(val_0: chararray)}])}, count: long}
 
--- dump D;
--- patrzy na ostatnia kolumne w D (ilosc kontrybutorow o tym samym sname)
 E = foreach D generate flatten( aproximateAND( datagroup ) );
 
 store E into '$dc_m_hdfs_outputContribs';
