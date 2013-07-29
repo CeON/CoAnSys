@@ -17,7 +17,7 @@
 %DEFAULT threshold '-1.0'
 
 -- DEFINE keyTiKwAbsCatExtractor pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_MAP_WHEN_CATEG_LIM('en','removeall');
-DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_CONTRIBDATA_GIVENDATA('$dc_m_str_feature_info');
+DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_CONTRIBDATA_GIVENDATA('$dc_m_str_feature_info','en');
 DEFINE exhaustiveAND pl.edu.icm.coansys.disambiguation.author.pig.ExhaustiveAND('$threshold','$dc_m_str_feature_info');
 DEFINE aproximateAND pl.edu.icm.coansys.disambiguation.author.pig.AproximateAND('$threshold','$dc_m_str_feature_info');
 DEFINE GenUUID pl.edu.icm.coansys.disambiguation.author.pig.GenUUID();
@@ -57,6 +57,7 @@ set pig.skewedjoin.reduce.memusage $pig_skewedjoin_reduce_memusage
 
 A1 = LOAD '$dc_m_hdfs_inputDocsData' USING $dc_m_meth_extraction_inner('org.apache.hadoop.io.BytesWritable', 'org.apache.hadoop.io.BytesWritable') as (key:chararray, value:bytearray);
 -- A2: {key: chararray,value: bytearray}
+-- TODO: odsiac null'e
 A2 = sample A1 $dc_m_double_sample;
 
 -- z kazdego dokumentu (rekordu tabeli wejsciowe) tworze rekordy z kontrybutorami

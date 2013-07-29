@@ -20,8 +20,8 @@ public class EX_TITLE extends DisambiguationExtractor {
 		DocumentMetadata dm = (DocumentMetadata) o;
 		
 		DataBag db = new DefaultDataBag();
-		Tuple t = TupleFactory.getInstance().newTuple(dm.getBasicMetadata().
-						getTitleList().get(0).getText());
+		Tuple t = TupleFactory.getInstance().newTuple( normalizeExtracted( 
+				dm.getBasicMetadata().getTitleList().get(0).getText() ) );
 		db.add( t );
 		
 		return db;
@@ -35,13 +35,15 @@ public class EX_TITLE extends DisambiguationExtractor {
 		
         for ( TextWithLanguage title : dm.getBasicMetadata().getTitleList() ) {
             if ( lang.equalsIgnoreCase( title.getLanguage()) ) {
-        		Tuple t = TupleFactory.getInstance().newTuple( title.getText() );
+        		Tuple t = TupleFactory.getInstance().newTuple( 
+        				normalizeExtracted( title.getText() ) );
         		db.add( t );
         		return db;
             }
         }
         
         //TODO: Is possible, that one document has more than one title in given language?
+        //What action should be expected in that case?
         
         logger.info("No title IN GIVEN LANG (" + lang + ") out of " 
         		+ dm.getBasicMetadata().getTitleCount() + " titles!");

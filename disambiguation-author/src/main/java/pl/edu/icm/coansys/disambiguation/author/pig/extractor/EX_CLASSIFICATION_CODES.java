@@ -16,7 +16,8 @@ public class EX_CLASSIFICATION_CODES extends DisambiguationExtractor{
 		
 		for(ClassifCode cc : dm.getBasicMetadata().getClassifCodeList()){ 
 			for(String s : cc.getValueList()){
-				db.add( TupleFactory.getInstance().newTuple( s ) );
+				db.add( TupleFactory.getInstance().newTuple( 
+						normalizeExtracted( s ) ) );
 			}
 		}
 			

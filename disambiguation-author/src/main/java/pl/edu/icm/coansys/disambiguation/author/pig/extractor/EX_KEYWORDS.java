@@ -20,7 +20,8 @@ public class EX_KEYWORDS extends DisambiguationExtractor  {
 		
 		for ( KeywordsList k : dm.getKeywordsList() ){
 			for ( String s : k.getKeywordsList() ){
-				db.add(TupleFactory.getInstance().newTuple(s));
+				db.add(TupleFactory.getInstance().newTuple(
+						normalizeExtracted( s ) ));
 			}
 		}
 			
@@ -36,7 +37,8 @@ public class EX_KEYWORDS extends DisambiguationExtractor  {
 		for ( KeywordsList k : dm.getKeywordsList() ){
 			if ( k.getLanguage().equalsIgnoreCase( lang ) ) {
 				for ( String s : k.getKeywordsList() ){
-					db.add(TupleFactory.getInstance().newTuple(s));
+					db.add(TupleFactory.getInstance().newTuple(
+							normalizeExtracted( s ) ));
 				}
 				return db;
 			}
