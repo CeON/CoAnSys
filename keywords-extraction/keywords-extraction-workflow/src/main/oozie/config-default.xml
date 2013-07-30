@@ -1,4 +1,5 @@
 <configuration>
+<<<<<<< HEAD
   <property>
     <name>EXTRACTION_OPTION</name>
     <value>CONTENT_AND_ABSTRACT</value>
@@ -9,4 +10,8 @@
     <value>en</value>
     <description>Supported languages: en, pl, fr</description>
   </property>
+	<property>
+		<name>DFS_SOCKET_CLIENT_TIMEOUT</name>
+		<value>120000</value>
+	</property>
 </configuration>
