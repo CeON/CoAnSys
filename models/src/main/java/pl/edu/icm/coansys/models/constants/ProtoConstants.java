@@ -6,7 +6,7 @@ package pl.edu.icm.coansys.models.constants;
 /**
  * @author pdendek
  */
-public class ProtoConstants {
+public final class ProtoConstants {
 
     private ProtoConstants() {
     }

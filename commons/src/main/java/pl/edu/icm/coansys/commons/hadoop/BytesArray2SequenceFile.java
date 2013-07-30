@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Artur Czeczko <a.czeczko@icm.edu.pl>
  */
-public class BytesArray2SequenceFile {
+public final class BytesArray2SequenceFile {
 
     private BytesArray2SequenceFile() {
     }

@@ -14,7 +14,7 @@ import pl.edu.icm.coansys.commons.oozie.OozieWorkflowUtils;
  *
  * @author akawa
  */
-public class HBaseTableUtils {
+public final class HBaseTableUtils {
 
     private static final String CMD_EXIST = "EXIST";
     private static final String CMD_DROP = "DROP";

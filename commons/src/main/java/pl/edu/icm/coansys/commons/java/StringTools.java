@@ -1,8 +1,8 @@
-package pl.edu.icm.coansys.disambiguation.work.tool;
+package pl.edu.icm.coansys.commons.java;
 
 import java.util.Map;
 
-import pl.edu.icm.coansys.disambiguation.auxil.DiacriticsRemover;
+import pl.edu.icm.coansys.commons.java.DiacriticsRemover;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
