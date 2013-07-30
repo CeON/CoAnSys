@@ -37,6 +37,7 @@
             <param>dc_m_double_sample=${dc_m_double_sample}</param>
             <param>dc_m_hdfs_inputDocsData=${dc_m_hdfs_inputDocsData}</param>
             <param>dc_m_hdfs_outputContribs=${dc_tmp_path}</param>
+            <param>lang=${lang}</param>
         </pig>
         <ok to='forking'/>
         <error to='kill'/>

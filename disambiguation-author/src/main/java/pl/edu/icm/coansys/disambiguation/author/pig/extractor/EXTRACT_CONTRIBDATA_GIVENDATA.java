@@ -107,7 +107,10 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
             //potencjalnie bedzie do tego potrzebna osobna petla.
             Object[] retObj = new Object[des.length];
             
-            if ( language != null ){
+            if ( language != null 
+            		&& !language.equalsIgnoreCase("all") 
+            		&& !language.equalsIgnoreCase("null")
+            		&& !language.equals("") ) {
             	for ( int i = 0; i < des.length; i++ ){
             		retObj[i] = des[ i ].extract( dm, language );
             		if ( retObj[i] == null ) {
