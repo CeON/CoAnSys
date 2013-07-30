@@ -2,9 +2,11 @@
   <property>
     <name>EXTRACTION_OPTION</name>
     <value>CONTENT_AND_ABSTRACT</value>
+    <description>Possible values: CONTENT, ABSTRACT, CONTENT_AND_ABSTRACT</description>
   </property>
   <property>
     <name>EXTRACTION_LANGUAGE</name>
     <value>en</value>
+    <description>Supported languages: en, pl, fr</description>
   </property>
 </configuration>
