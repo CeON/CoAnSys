@@ -1,4 +1,4 @@
-<workflow-app xmlns="uri:oozie:workflow:0.1" name="logs-analysis-wf">
+<workflow-app xmlns="uri:oozie:workflow:0.1" name="keywords-extraction-wf">
     <start to="keyword-extraction" />
     <action name="keyword-extraction">
         <map-reduce>
