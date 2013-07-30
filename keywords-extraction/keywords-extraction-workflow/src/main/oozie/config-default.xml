@@ -1,10 +1,14 @@
 <configuration>
-  <property>
-    <name>EXTRACTION_OPTION</name>
-    <value>CONTENT_AND_ABSTRACT</value>
-  </property>
-  <property>
-    <name>EXTRACTION_LANGUAGE</name>
-    <value>en</value>
-  </property>
+	<property>
+		<name>EXTRACTION_OPTION</name>
+		<value>CONTENT_AND_ABSTRACT</value>
+	</property>
+	<property>
+		<name>EXTRACTION_LANGUAGE</name>
+		<value>en</value>
+	</property>
+	<property>
+		<name>DFS_SOCKET_CLIENT_TIMEOUT</name>
+		<value>120000</value>
+	</property>
 </configuration>
