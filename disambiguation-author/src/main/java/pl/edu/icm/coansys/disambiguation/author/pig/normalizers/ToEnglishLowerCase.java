@@ -11,5 +11,4 @@ public class ToEnglishLowerCase implements PigNormalizer {
 		tmp = tmp.replaceAll("[^a-z 0-9]", " ").replaceAll(" ++", " ");
 		return tmp;
 	}
-
 }

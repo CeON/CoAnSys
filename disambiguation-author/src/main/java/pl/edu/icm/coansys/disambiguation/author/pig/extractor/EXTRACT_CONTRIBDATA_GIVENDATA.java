@@ -133,7 +133,8 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
             //stworzenie torby zawierajacej tuple z informacjami 
             //o wszystkich kontrybutorach z danego dokumentu
             for ( int i = 0; i < authors.size(); i++ ) {
-                String sname = authors.get( i ).getSurname();
+                //TODO: ? pig normalization on surnames ?
+            	String sname = authors.get( i ).getSurname();
                 String cId = authors.get( i ).getKey();
                 Object[] to = new Object[]{ cId, i, sname, map };
                 Tuple t = TupleFactory.getInstance().newTuple(Arrays.asList( to ));

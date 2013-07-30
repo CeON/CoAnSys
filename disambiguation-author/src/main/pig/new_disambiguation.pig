@@ -62,7 +62,10 @@ A2 = sample A1 $dc_m_double_sample;
 
 -- From each documents (each record of given table), we are creating records for each contributor
 -- TODO: we do not need contribPos no more. Change EXTRACT_GIVEN_DATA 
-B = foreach A2 generate flatten(snameDocumentMetaExtractor($1)) as (cId:chararray, contribPos:int, sname:chararray, metadata:map[{(chararray)}]);
+B1 = foreach A2 generate flatten(snameDocumentMetaExtractor($1)) as (cId:chararray, contribPos:int, sname:chararray, metadata:map[{(chararray)}]);
+
+B = FILTER B1 BY cId is not null;
+
 C = group B by sname;
 -- D: {sname: chararray, datagroup: {(cId: chararray,cPos: int,sname: chararray,data: map[{(val_0: chararray)}])}, count: long}
 D = foreach C generate group as sname, B as datagroup, COUNT(B) as count;

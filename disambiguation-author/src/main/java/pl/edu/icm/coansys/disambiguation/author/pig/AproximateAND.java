@@ -40,7 +40,7 @@ public class AproximateAND extends EvalFunc<DataBag> {
 
         int featureNum = 0;
         for ( FeatureInfo fi : featureInfos ){
-        	if(!fi.getDisambiguatorName().equals("")) featureNum++;
+        	if ( !fi.getDisambiguatorName().equals("") ) featureNum++;
         }
 
         this.features = new PigDisambiguator[featureNum];
@@ -114,7 +114,8 @@ public class AproximateAND extends EvalFunc<DataBag> {
 
 		}catch(Exception e){
 			// Throwing an exception would cause the task to fail.
-			logger.error("Caught exception processing input row:\n" + StackTraceExtractor.getStackTrace(e));
+			logger.error("Caught exception processing input row:\n" 
+						+ StackTraceExtractor.getStackTrace(e));
 				return null;
 		}
 	}
@@ -228,8 +229,8 @@ public class AproximateAND extends EvalFunc<DataBag> {
 		for( int i = 0; i < N; i++ ) {
 			if ( !clusters.get( i ).isEmpty() ) {
 				ret.add( clusters.get( i ) );
-                        }
-                }
+			}
+		}
 		return ret;
 	}
 
@@ -263,9 +264,12 @@ public class AproximateAND extends EvalFunc<DataBag> {
         				throw new IllegalArgumentException( m );
         			}
 
-        			if ( sim[ sidX ][ sidY ] != Double.NEGATIVE_INFINITY && sim[ sidX ][ sidY ] != Double.POSITIVE_INFINITY ) {
-        				Object[] clusterTriple = new Object[]{ simIdToClusterId[ sidX ], simIdToClusterId[ sidY ], sim[ sidX ][ sidY ] };
-        				similarities.add( TupleFactory.getInstance().newTuple( Arrays.asList( clusterTriple ) ) );
+        			if ( sim[ sidX ][ sidY ] != Double.NEGATIVE_INFINITY 
+        					&& sim[ sidX ][ sidY ] != Double.POSITIVE_INFINITY ) {
+        				Object[] clusterTriple = 
+        						new Object[]{ simIdToClusterId[ sidX ], simIdToClusterId[ sidY ], sim[ sidX ][ sidY ] };
+        				similarities.add( TupleFactory.getInstance().newTuple( 
+        						Arrays.asList( clusterTriple ) ) );
         			}
         		}
         	}
@@ -274,7 +278,6 @@ public class AproximateAND extends EvalFunc<DataBag> {
 	        ret.add(TupleFactory.getInstance().newTuple(Arrays.asList(to)));
         }
 
-		//bag with: { bag z dane jak na wejsciu aproximate odpowiadające kontrybutorom z poszczegolnych klastrow, bag with triple similarities }
     	//bag with: { bag with date as in input but ordered by clusters, bag with triple similarities }
     
     	return ret;
