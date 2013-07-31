@@ -1,5 +1,4 @@
 <configuration>
-<<<<<<< HEAD
   <property>
     <name>EXTRACTION_OPTION</name>
     <value>CONTENT_AND_ABSTRACT</value>
