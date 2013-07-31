@@ -13,11 +13,16 @@ import pl.edu.icm.coansys.citations.util.hdfs
 import com.nicta.scoobi.Scoobi._
 import scala.Some
 import org.apache.commons.io.FileUtils
+import java.io.IOException
+import org.slf4j.LoggerFactory
+import pl.edu.icm.coansys.citations.tools.hadoop.PubMedToSeqFile
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 class SimpleIndex[K <: WritableComparable[_] : Manifest, V <: Writable : Manifest](val indexFileUri: String, val useDistributedCache: Boolean) {
+  private val logger = LoggerFactory.getLogger(SimpleIndex.getClass)
+
   val conf = new Configuration()
   val reader =
   if (useDistributedCache) {
@@ -25,7 +30,13 @@ class SimpleIndex[K <: WritableComparable[_] : Manifest, V <: Writable : Manifes
     val indexPathCandidates = new java.io.File(".").listFiles().map(_.getCanonicalPath).filter(_.endsWith(indexFileUri + "/" + MapFile.INDEX_FILE_NAME))
     if (indexPathCandidates.length > 0) {
       val indexPath = new java.io.File(indexPathCandidates.head).getParent
-      FileUtils.moveFile(new java.io.File(indexPath, MapFile.INDEX_FILE_NAME), new java.io.File(path, MapFile.INDEX_FILE_NAME))
+      try {
+        FileUtils.moveFile(
+          new java.io.File(indexPath, MapFile.INDEX_FILE_NAME),
+          new java.io.File(path, MapFile.INDEX_FILE_NAME))
+      } catch {
+        case e: IOException => logger.warn("Possible error when moving a index file", e)
+      }
     }
     new MapFile.Reader(new Path("file://" + path), conf)
   } else {

@@ -8,8 +8,11 @@ import org.apache.pig.backend.executionengine.ExecException;
 import org.apache.pig.data.DataBag;
 import org.apache.pig.data.Tuple;
 
-public class ToList {
-	public static List execute(DataBag db){
+public final class ToList {
+    
+    private ToList() {}
+    
+    public static List execute(DataBag db){
 		Iterator<Tuple> it = db.iterator();
 		
 		List ret = new LinkedList();

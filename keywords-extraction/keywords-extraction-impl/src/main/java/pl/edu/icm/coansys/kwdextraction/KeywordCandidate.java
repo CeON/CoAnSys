@@ -3,6 +3,7 @@
  */
 package pl.edu.icm.coansys.kwdextraction;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -50,7 +51,7 @@ public class KeywordCandidate {
         return counter;
     }
 
-    public static class ScoreComparator implements Comparator<KeywordCandidate> {
+    public static class ScoreComparator implements Comparator<KeywordCandidate>, Serializable {
 
         @Override
         public int compare(KeywordCandidate o1, KeywordCandidate o2) {

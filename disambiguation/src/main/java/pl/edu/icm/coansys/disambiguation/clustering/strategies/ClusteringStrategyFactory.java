@@ -14,7 +14,7 @@ import com.sun.el.util.ReflectionUtil;
  * @version 1.0
  * @since 2012-08-07
  */
-public class ClusteringStrategyFactory {
+public final class ClusteringStrategyFactory {
 
     private static final String THIS_PACKAGE = new ClusteringStrategyFactory().getClass().getPackage().getName();
 

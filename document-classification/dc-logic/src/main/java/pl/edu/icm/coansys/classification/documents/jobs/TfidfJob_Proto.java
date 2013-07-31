@@ -25,7 +25,6 @@ import org.apache.hadoop.util.ToolRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.edu.icm.coansys.classification.documents.auxil.LoggingInClassification;
 import pl.edu.icm.coansys.classification.documents.auxil.StringListIntListWritable;
 import pl.edu.icm.coansys.disambiguation.auxil.TextArrayWritable;
 import pl.edu.icm.coansys.models.constants.HBaseConstant;
@@ -41,7 +40,7 @@ public class TfidfJob_Proto implements Tool {
      *
      */
 
-    private static Logger logger = LoggerFactory.getLogger(LoggingInClassification.class);
+    private static Logger logger = LoggerFactory.getLogger(TfidfJob_Proto.class);
     private Configuration conf;
     /*
      *
@@ -113,6 +112,7 @@ public class TfidfJob_Proto implements Tool {
      * { return String.format("%010d", i);
     }
      */
+    @Override
     public void setConf(Configuration conf) {
         this.conf = conf;
     }

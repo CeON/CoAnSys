@@ -1,5 +1,6 @@
 package pl.edu.icm.coansys.disambiguation.work;
 
+import pl.edu.icm.coansys.commons.java.DocumentWrapperUtils;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;

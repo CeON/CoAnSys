@@ -11,7 +11,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.edu.icm.coansys.disambiguation.auxil.LoggingInDisambiguation;
 /**
  * {@link FeatureInfo} is an information container binding data about associated {@link Extractor} and {@link Disambiguator}.
  * {@link FeatureInfo} may be passed either 
@@ -29,7 +28,7 @@ import pl.edu.icm.coansys.disambiguation.auxil.LoggingInDisambiguation;
  */
 public class FeatureInfo {
 	
-	private static Logger logger = LoggerFactory.getLogger(LoggingInDisambiguation.class);
+	private static Logger logger = LoggerFactory.getLogger(FeatureInfo.class);
 	
 	/**
 	 * A name of a {@link Disambiguator}.

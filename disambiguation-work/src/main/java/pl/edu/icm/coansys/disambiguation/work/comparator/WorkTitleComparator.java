@@ -1,15 +1,15 @@
 package pl.edu.icm.coansys.disambiguation.work.comparator;
 
-import static pl.edu.icm.coansys.disambiguation.work.tool.StringTools.getTrailingInteger;
-import static pl.edu.icm.coansys.disambiguation.work.tool.StringTools.inLevenshteinDistance;
-import static pl.edu.icm.coansys.disambiguation.work.tool.StringTools.normalize;
-import static pl.edu.icm.coansys.disambiguation.work.tool.StringTools.replaceLastRomanNumberToDecimal;
-import static pl.edu.icm.coansys.disambiguation.work.tool.StringTools.replaceLastWordNumberToDecimal;
+import static pl.edu.icm.coansys.commons.java.StringTools.getTrailingInteger;
+import static pl.edu.icm.coansys.commons.java.StringTools.inLevenshteinDistance;
+import static pl.edu.icm.coansys.commons.java.StringTools.normalize;
+import static pl.edu.icm.coansys.commons.java.StringTools.replaceLastRomanNumberToDecimal;
+import static pl.edu.icm.coansys.commons.java.StringTools.replaceLastWordNumberToDecimal;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import pl.edu.icm.coansys.disambiguation.work.DocumentWrapperUtils;
+import pl.edu.icm.coansys.commons.java.DocumentWrapperUtils;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
 
 @Service("workTitleComparator")

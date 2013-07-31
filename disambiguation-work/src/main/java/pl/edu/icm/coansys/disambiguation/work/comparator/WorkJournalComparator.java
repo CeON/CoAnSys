@@ -1,7 +1,7 @@
 package pl.edu.icm.coansys.disambiguation.work.comparator;
 
-import static pl.edu.icm.coansys.disambiguation.work.tool.StringTools.inLevenshteinDistance;
-import static pl.edu.icm.coansys.disambiguation.work.tool.StringTools.normalize;
+import static pl.edu.icm.coansys.commons.java.StringTools.inLevenshteinDistance;
+import static pl.edu.icm.coansys.commons.java.StringTools.normalize;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
