@@ -10,6 +10,9 @@ import pl.edu.icm.coansys.citations.data.WireFormats._
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 object CsvForAnalystsGenerator extends MyScoobiApp {
+  def enquote(s: String) =
+    '"' + s.replaceAll("\"", "\"\"") + '"'
+
   def run() {
     val documentsUrl = args(0)
     val matchingUrl = args(1)
@@ -48,11 +51,11 @@ object CsvForAnalystsGenerator extends MyScoobiApp {
 
     val stage2 = stage1.joinLeft(destDocuments).mapFlatten {
       case (destId, ((srcjournal, srcDoc, pos, rawCit), Some((authors, title, dstjournal, year)))) =>
-        Some((srcjournal, srcDoc, pos, rawCit, destId, authors, title, dstjournal, year))
+        Some(List(srcjournal, srcDoc, pos, rawCit, destId, authors, title, dstjournal, year).map(enquote).mkString(","))
       case _ => None
     }
 
-    persist(stage2.toDelimitedTextFile(outUrl, ",", overwrite = true))
+    persist(stage2.toTextFile(outUrl, overwrite = true))
 
   }
 }
