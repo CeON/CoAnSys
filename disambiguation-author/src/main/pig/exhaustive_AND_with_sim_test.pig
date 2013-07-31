@@ -53,13 +53,9 @@ set pig.skewedjoin.reduce.memusage $pig_skewedjoin_reduce_memusage
 SET debug 'off'
 
 
-B = load '$dc_m_hdfs_inputDocsData' as (cId:chararray,cPos:int,sname:chararray,data:map[{(chararray)}]);
+A = load '$dc_m_hdfs_inputDocsData' as (datagroup:{(cId:chararray, contribPos:int, sname:chararray, metadata:map[{(chararray)}])},simTriples:{(x:int,y:int,sim:double)});
+--A = load '$dc_m_hdfs_inputDocsData' as ({(chararray, int, chararray, map[{(chararray)}])},{(x:int,y:int,sim:double)});
+--A = load '$dc_m_hdfs_inputDocsData' as (datagroup,simTriples);
 
-C = group B by sname;
-
-D = foreach C generate group as sname, B as datagroup, COUNT(B) as count;
--- D: {sname: chararray, datagroup: {(cId: chararray,cPos: int,sname: chararray,data: map[{(val_0: chararray)}])}, count: long}
-
--- dump D;
-E = foreach D generate exhaustiveAND( datagroup );
-dump E;
+B = foreach A generate flatten( exhaustiveAND( datagroup, simTriples ) ) as (uuid:chararray, cIds:chararray);
+store B into '$dc_m_hdfs_outputContribs';

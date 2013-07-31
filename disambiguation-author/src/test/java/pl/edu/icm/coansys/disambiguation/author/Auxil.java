@@ -22,8 +22,21 @@ public class Auxil {
 		}
 		return f;
 	}
+
+	public static File folderExist( String folderPathString ) throws FileNotFoundException {
+		File f = new File( folderPathString );
+		
+		if( !f.isDirectory() ) {
+			String m = "Cannot find folder: ";
+			m += "\n\t relative path: " + folderPathString;
+			m += "\n\t absolut path: " + f.getAbsolutePath();
+			
+			throw new FileNotFoundException( m );
+		}
+		return f;
+	}	
 	
-	public static String[] readTestToStringArray( final String filePath ) throws FileNotFoundException {
+	public static String[] readTableToStringArray( final String filePath ) throws FileNotFoundException {
 		List <String> ret = new LinkedList<String>();	
 		File file = new File( filePath );
 		in = new Scanner( file );
@@ -35,4 +48,17 @@ public class Auxil {
 		return ret.toArray( new String[]{} );
 	}
 	
+    public static List<String> getTestCaseNames( String folderAbsolutePath ) {
+        File fileFolder = new File( folderAbsolutePath );
+        LinkedList<String> res = new LinkedList<String>();
+        
+        for ( final File fileEntry : fileFolder.listFiles() ) {
+            String name = fileEntry.getName();
+            if ( name.endsWith( ".in" ) ) {
+                String s = name.substring( 0, name.indexOf( ".in" ) );
+                res.add(s);
+            }
+        }
+        return res;
+    }
 }

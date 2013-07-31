@@ -7,6 +7,25 @@ import java.util.List;
 import org.apache.pig.pigunit.PigTest;
 import org.apache.pig.tools.parameters.ParseException;
 
+/*
+ * Note: PigUnit require output schemes like after dumped, not stored,
+ * while input contrarywise.
+ * 
+ * Differences: 
+ * STORE: 
+ * - elements (main columns) in record separated by "\t" not ","
+ * - no "(" and ")" around elements (all main columns) in record
+ * DUMP:
+ * - contrary to STORE (each record is recognize as tuple, not as columns)
+ * 
+ * Example records after:
+ * STORE:
+ * {(some String, some number),(str, num)}	{(first string in bag), (second)}
+ * DUMP:
+ * ( {(some String, some number),(str, num)}, {(first string in bag), (second)} )
+ */
+
+
 public class PigScriptTester {
 
     private String PIG_SCRIPT_DIR = "";
@@ -40,6 +59,7 @@ public class PigScriptTester {
     	//running each test case
     	for ( String test : tests ) {
     		//checking test files existing
+    		//NOTE: Input file schemes 
     		in = testsFolder + test + ".in";
     		Auxil.fileExist( in );
     		out = testsFolder + test + ".out";
