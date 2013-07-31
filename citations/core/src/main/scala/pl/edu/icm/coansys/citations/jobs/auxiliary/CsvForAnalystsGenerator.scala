@@ -20,7 +20,7 @@ object CsvForAnalystsGenerator extends MyScoobiApp {
     val citations = documents.mapFlatten { doc =>
       val journal = doc.getDocumentMetadata.getBasicMetadata.getJournal
       doc.getDocumentMetadata.getReferenceList.map { ref =>
-        val id = "cit_" + ref.getSourceDocKey + "_" + ref.getPosition
+        val id = "cit_" + doc.getRowId + "_" + ref.getPosition
         (id, (journal, ref.getRawCitationText))
       }
     }
@@ -52,7 +52,7 @@ object CsvForAnalystsGenerator extends MyScoobiApp {
       case _ => None
     }
 
-    persist(stage2.toDelimitedTextFile(outUrl, ","))
+    persist(stage2.toDelimitedTextFile(outUrl, ",", overwrite = true))
 
   }
 }
