@@ -1,3 +1,6 @@
+/*
+ * (C) 2010-2012 ICM UW. All rights reserved.
+ */
 package pl.edu.icm.coansys.commons.hbase;
 
 import java.io.File;
@@ -19,7 +22,6 @@ import org.apache.hadoop.mapreduce.Mapper.Context;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
-import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
@@ -132,7 +134,7 @@ public class SequenceFileKeysSamplerMR implements Tool {
         if (args.length < 2) {
             usage("Wrong number of arguments: " + args.length);
             ToolRunner.printGenericCommandUsage(System.err);
-            System.exit(-1);
+            return(-1);
         }
 
         return createParitionFile(args[0], args[1]);

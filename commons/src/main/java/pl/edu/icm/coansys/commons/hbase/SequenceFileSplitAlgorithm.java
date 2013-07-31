@@ -1,3 +1,6 @@
+/*
+ * (C) 2010-2012 ICM UW. All rights reserved.
+ */
 package pl.edu.icm.coansys.commons.hbase;
 
 import java.io.BufferedReader;
@@ -7,6 +10,7 @@ import java.util.List;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.hbase.util.RegionSplitter.SplitAlgorithm;
 import org.apache.hadoop.io.IOUtils;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -16,6 +20,7 @@ public class SequenceFileSplitAlgorithm implements SplitAlgorithm {
 
     private static final String SPLIT_KEY_FILENAME_PROPERTY_NAME = "split.region.keys.file.name";
     public static final String SPLIT_KEY_FILE_DV = "keys";
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(SequenceFileSplitAlgorithm.class);
 
     @Override
     public byte[] split(byte[] bytes, byte[] bytes1) {
@@ -36,6 +41,8 @@ public class SequenceFileSplitAlgorithm implements SplitAlgorithm {
                 regions.add(Bytes.toBytes(line));
             }
         } catch (Exception ex) {
+            logger.error("Exception occured while reading file " + splitKeysFile, ex);
+            return null;
         } finally {
             IOUtils.closeStream(input);
         }

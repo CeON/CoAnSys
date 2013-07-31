@@ -12,7 +12,7 @@ import org.apache.pig.data.*;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
 import pl.edu.icm.coansys.commons.java.PorterStemmer;
 import pl.edu.icm.coansys.commons.java.StopWordsRemover;
-import pl.edu.icm.coansys.disambiguation.auxil.DiacriticsRemover;
+import pl.edu.icm.coansys.commons.java.DiacriticsRemover;
 
 public class StemmedPairs extends EvalFunc<DataBag> {
 
@@ -30,7 +30,7 @@ public class StemmedPairs extends EvalFunc<DataBag> {
             return null;
         }
     }
-    private final String SPACE = " ";
+    private static final String SPACE = " ";
 
     public List<String> getStemmedPairs(final String text) throws IOException {
         String tmp  = text.toLowerCase();

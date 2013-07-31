@@ -1,7 +1,7 @@
 /*
  * (C) 2010-2012 ICM UW. All rights reserved.
  */
-package pl.edu.icm.coansys.disambiguation.auxil;
+package pl.edu.icm.coansys.commons.java;
 
 import java.text.Normalizer;
 import java.util.HashMap;
@@ -31,7 +31,7 @@ import org.apache.commons.lang.StringUtils;
  * @author Lukasz Bolikowski (bolo@icm.edu.pl)
  *
  */
-public class DiacriticsRemover {
+public final class DiacriticsRemover {
 
     private DiacriticsRemover() {
     }

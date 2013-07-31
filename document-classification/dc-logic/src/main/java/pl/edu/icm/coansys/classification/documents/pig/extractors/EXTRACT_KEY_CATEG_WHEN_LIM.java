@@ -16,8 +16,10 @@ import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
 import org.apache.pig.impl.logicalLayer.FrontendException;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import pl.edu.icm.coansys.classification.documents.auxil.StackTraceExtractor;
+import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
 import pl.edu.icm.coansys.models.DocumentProtos.ClassifCode;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 
@@ -26,6 +28,8 @@ import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 * @author pdendek
 */
 public class EXTRACT_KEY_CATEG_WHEN_LIM extends EvalFunc<Tuple>{
+    
+        private static final Logger logger = LoggerFactory.getLogger(EXTRACT_KEY_CATEG_WHEN_LIM.class);
 
 	@Override
 	public Schema outputSchema(Schema p_input){
@@ -33,10 +37,12 @@ public class EXTRACT_KEY_CATEG_WHEN_LIM extends EvalFunc<Tuple>{
 			return Schema.generateNestedSchema(DataType.TUPLE, 
 					DataType.CHARARRAY, DataType.BAG, DataType.INTEGER );
 		}catch(FrontendException e){
-			throw new IllegalStateException(e);
+                    logger.error("Error in creating output schema:", e);
+		    throw new IllegalStateException(e);
 		}
 	}
 	
+        @Override
 	public Tuple exec(Tuple input) throws IOException {
 		if (input == null || input.size() == 0)
 			return null;
@@ -47,39 +53,31 @@ public class EXTRACT_KEY_CATEG_WHEN_LIM extends EvalFunc<Tuple>{
 				obj = (DataByteArray) input.get(1);
 				
 			}catch(Exception e){
-				System.out.println("Trying to read field proto");
-				System.out.println("Failure!");
-				e.printStackTrace();
-				throw e;
+                            logger.error("Error in reading field proto:", e);
+                            throw e;
 			}
 			
 			try{
 				limnum = (Integer) input.get(2);
 			}catch(Exception e){
-				System.out.println("Trying to read baglimit");
-				System.out.println("Failure!");
-				e.printStackTrace();
-				throw e;
+                            logger.error("Error in reading baglimit:", e);	
+                            throw e;
 			}
 			
 			DataByteArray dba = null;
 			try{
 				dba = (DataByteArray) obj;	
 			}catch(Exception e){
-				System.out.println("Trying to cast Object ("+input.getType(1)+") to DataByteArray");
-				System.out.println("Failure!");
-				e.printStackTrace();
-				throw e;
+                            logger.error("Error in casting Object ("+input.getType(1)+") to DataByteArray:", e);	
+                            throw e;
 			}
 			
 			DocumentMetadata dm = null;
 			try{
 				dm = DocumentMetadata.parseFrom(dba.get());
 			}catch(Exception e){
-				System.out.println("Trying to read ByteArray to DocumentMetadata");
-				System.out.println("Failure!");
-				e.printStackTrace();
-				throw e;
+                            logger.error("Error in reading ByteArray to DocumentMetadata:", e);	
+                            throw e;
 			}
 			 
 	        String key = dm.getKey();
@@ -97,8 +95,8 @@ public class EXTRACT_KEY_CATEG_WHEN_LIM extends EvalFunc<Tuple>{
 	        }
 	        return null;
 		}catch(Exception e){
-			// Throwing an exception will cause the task to fail.
-            throw new IOException("Caught exception processing input row:\n"
+                    logger.error("Error in processing input row:", e);	
+                    throw new IOException("Caught exception processing input row:\n"
             		+ StackTraceExtractor.getStackTrace(e));
 		}
 	}

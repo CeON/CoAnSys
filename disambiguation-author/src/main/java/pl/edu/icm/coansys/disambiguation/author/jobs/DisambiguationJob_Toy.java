@@ -22,7 +22,6 @@ import org.apache.hadoop.util.ToolRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.edu.icm.coansys.disambiguation.auxil.LoggingInDisambiguation;
 import pl.edu.icm.coansys.disambiguation.auxil.TextTextArrayMapWritable;
 import pl.edu.icm.coansys.models.constants.HBaseConstant;
 
@@ -39,7 +38,7 @@ public class DisambiguationJob_Toy implements Tool {
      * Inner fields
      *
      */
-    private static Logger logger = LoggerFactory.getLogger(LoggingInDisambiguation.class);
+    private static Logger logger = LoggerFactory.getLogger(DisambiguationJob_Toy.class);
     private Configuration conf;
     /*
      *

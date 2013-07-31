@@ -3,9 +3,9 @@
  */
 package pl.edu.icm.coansys.disambiguation.author.pig;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
 
 import org.apache.pig.backend.executionengine.ExecException;
 import org.apache.pig.data.DataBag;
@@ -30,7 +30,7 @@ public class PigDisambiguator extends Disambiguator{
 	
 	//pytanie z cyklu poznajemy swiat: czy przypadkiem nie jest tak, ze polimorfizm tutaj nie zadziala
 	//tak jak jest tu oczekiwane?
-	public double calculateAffinity(Object f1, Object f2) throws Exception {
+	public double calculateAffinity(Object f1, Object f2) throws ExecException {
 		if(f1 instanceof Tuple && f2 instanceof Tuple ){
 			return calculateAffinity((Tuple) f1, (Tuple) f2);
 		}else if(f1 instanceof DataBag && f2 instanceof DataBag ){
@@ -38,7 +38,7 @@ public class PigDisambiguator extends Disambiguator{
 		}else if(f1 instanceof String && f2 instanceof String ){
 			return calculateAffinity((String) f1, (String) f2);
 		}else{
-			throw new Exception("data type "+ f1.getClass()+" unsupported in calculateAffinity");
+			throw new IllegalArgumentException("data type "+ f1.getClass()+" unsupported in calculateAffinity");
 		}
 	}
 	
@@ -57,17 +57,17 @@ public class PigDisambiguator extends Disambiguator{
 	}
 	
 	// TODO zajrzec do artykulu, jak nie bedzie info to spytac Piotra czy warto uzyc equalize
-	@SuppressWarnings("unused")
+	/*@SuppressWarnings("unused")
 	private String equalize( String str ) {
 		str = str.replace( ",", "" );
 		str = str.replace( ".", "" );
 		str = str.toLowerCase();
 		return str;
-	}
+	}*/
 	
 	public double calculateAffinity(String f1, String f2) {
-		ArrayList <String> fl1 = (ArrayList<String>) Arrays.asList( f1.split(" ") );
-		ArrayList <String> fl2 = (ArrayList<String>) Arrays.asList( f2.split(" ") );
+		List <String> fl1 = Arrays.asList( f1.split(" ") );
+		List <String> fl2 = Arrays.asList( f2.split(" ") );
 		return d.calculateAffinity( fl1, fl2 );
 	}
 	
@@ -75,6 +75,7 @@ public class PigDisambiguator extends Disambiguator{
 	 * 
 	 * @return {@link PigDisambiguator} id.
 	 */
+        @Override
 	public String getName(){
 		return d.getName();
 	}

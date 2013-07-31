@@ -7,7 +7,7 @@ package pl.edu.icm.coansys.models.constants;
 /**
  * @author pdendek
  */
-public class HBaseConstant {
+public final class HBaseConstant {
 
     private HBaseConstant() {
     }
