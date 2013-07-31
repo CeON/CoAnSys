@@ -10,7 +10,7 @@ import pl.edu.icm.coansys.commons.scala.strings
 import pl.edu.icm.coansys.disambiguation.auxil.DiacriticsRemover.removeDiacritics
 import pl.edu.icm.cermine.bibref.BibReferenceParser
 import pl.edu.icm.coansys.models.DocumentProtos.{DocumentMetadata, BasicMetadata, ReferenceMetadata}
-import pl.edu.icm.coansys.citations.data.CitationMatchingProtos.MatchableEntityData
+import pl.edu.icm.coansys.citations.data.CitationMatchingProtos.{KeyValue, MatchableEntityData}
 import pl.edu.icm.cermine.bibref.model.BibEntry
 import pl.edu.icm.coansys.citations.util.BytesConverter
 import com.nicta.scoobi.core.Grouping
@@ -137,6 +137,7 @@ object MatchableEntity {
     data.setTitle(getField(bibEntry, BibEntry.FIELD_TITLE))
     data.setPages(getField(bibEntry, BibEntry.FIELD_PAGES))
     data.setYear(getField(bibEntry, BibEntry.FIELD_YEAR))
+    data.addAuxiliary(KeyValue.newBuilder().setKey("rawText").setValue(rawText))
 
     new MatchableEntity(data.build())
   }
