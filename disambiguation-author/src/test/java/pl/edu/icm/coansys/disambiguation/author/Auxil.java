@@ -2,8 +2,14 @@ package pl.edu.icm.coansys.disambiguation.author;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Scanner;
 
 public class Auxil {
+	
+	private static Scanner in;
+
 	public static File fileExist( String filePathString ) throws FileNotFoundException {
 		File f = new File( filePathString );
 		
@@ -16,4 +22,17 @@ public class Auxil {
 		}
 		return f;
 	}
+	
+	public static String[] readTestToStringArray( final String filePath ) throws FileNotFoundException {
+		List <String> ret = new LinkedList<String>();	
+		File file = new File( filePath );
+		in = new Scanner( file );
+		
+		while ( in.hasNext() ) {
+			ret.add( in.nextLine() );
+		}
+		
+		return ret.toArray( new String[]{} );
+	}
+	
 }

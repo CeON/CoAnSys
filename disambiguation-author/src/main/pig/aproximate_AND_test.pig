@@ -9,13 +9,13 @@
 
 %DEFAULT commonJarsPath 'lib/*.jar'
 
-%DEFAULT dc_m_hdfs_inputDocsData2 '../../test/resources/data2.in'
+%DEFAULT dc_m_hdfs_inputDocsData '../../test/resources/data2.in'
 %DEFAULT time 20130709_1009
 %DEFAULT dc_m_hdfs_outputContribs disambiguation/outputContribs$time
 %DEFAULT dc_m_str_feature_info 'TitleDisambiguator#EX_TITLE#1#1,YearDisambiguator#EX_YEAR#1#1'
+%DEFAULT threshold '-1.0'
 
-
-DEFINE aproximateAND pl.edu.icm.coansys.disambiguation.author.pig.AproximateAND('-1.0','$dc_m_str_feature_info');
+DEFINE aproximateAND pl.edu.icm.coansys.disambiguation.author.pig.AproximateAND('$threshold', '$dc_m_str_feature_info');
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- register section
@@ -36,8 +36,9 @@ REGISTER '$commonJarsPath'
 -- set section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
-%DEFAULT dc_m_double_sample 1.0
-%DEFAULT parallel_param 16
+--%DEFAULT dc_m_double_sample 1.0
+
+%DEFAULT parallel_param 1
 %DEFAULT pig_tmpfilecompression_param true
 %DEFAULT pig_tmpfilecompression_codec_param gz
 %DEFAULT job_priority normal
@@ -51,7 +52,7 @@ set pig.cachedbag.memusage $pig_cachedbag_mem_usage
 set pig.skewedjoin.reduce.memusage $pig_skewedjoin_reduce_memusage
 
 
-B = load '$dc_m_hdfs_inputDocsData2' as (cId:chararray,cPos:int,sname:chararray,data:map[{(chararray)}]);
+B = load '$dc_m_hdfs_inputDocsData' as (cId:chararray,cPos:int,sname:chararray,data:map[{(chararray)}]);
 
 C = group B by sname;
 
