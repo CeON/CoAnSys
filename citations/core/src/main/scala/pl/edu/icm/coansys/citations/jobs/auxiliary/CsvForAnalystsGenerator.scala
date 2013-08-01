@@ -11,7 +11,7 @@ import pl.edu.icm.coansys.citations.data.WireFormats._
  */
 object CsvForAnalystsGenerator extends MyScoobiApp {
   def enquote(s: String) =
-    '"' + s.replaceAll("\"", "\"\"") + '"'
+    '"' + s.split(raw"\s+").mkString(" ").replaceAll("\"", "\"\"") + '"'
 
   def run() {
     val documentsUrl = args(0)
