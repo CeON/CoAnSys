@@ -4,10 +4,12 @@
 
 package pl.edu.icm.coansys.classification.documents.pig.extractors;
 
+import com.google.protobuf.InvalidProtocolBufferException;
 import java.io.IOException;
 import java.util.Arrays;
 
 import org.apache.pig.EvalFunc;
+import org.apache.pig.backend.executionengine.ExecException;
 import org.apache.pig.data.DataBag;
 import org.apache.pig.data.DataByteArray;
 import org.apache.pig.data.DataType;
@@ -52,14 +54,14 @@ public class EXTRACT_KEY_CATEG_WHEN_LIM extends EvalFunc<Tuple>{
 			try{
 				obj = (DataByteArray) input.get(1);
 				
-			}catch(Exception e){
+			}catch(ExecException e){
                             logger.error("Error in reading field proto:", e);
                             throw e;
 			}
 			
 			try{
 				limnum = (Integer) input.get(2);
-			}catch(Exception e){
+			}catch(ExecException e){
                             logger.error("Error in reading baglimit:", e);	
                             throw e;
 			}
@@ -67,7 +69,7 @@ public class EXTRACT_KEY_CATEG_WHEN_LIM extends EvalFunc<Tuple>{
 			DataByteArray dba = null;
 			try{
 				dba = (DataByteArray) obj;	
-			}catch(Exception e){
+			}catch(ClassCastException e){
                             logger.error("Error in casting Object ("+input.getType(1)+") to DataByteArray:", e);	
                             throw e;
 			}
@@ -75,7 +77,7 @@ public class EXTRACT_KEY_CATEG_WHEN_LIM extends EvalFunc<Tuple>{
 			DocumentMetadata dm = null;
 			try{
 				dm = DocumentMetadata.parseFrom(dba.get());
-			}catch(Exception e){
+			}catch(InvalidProtocolBufferException e){
                             logger.error("Error in reading ByteArray to DocumentMetadata:", e);	
                             throw e;
 			}

@@ -16,6 +16,8 @@ import org.apache.pig.data.DataByteArray;
 import org.apache.pig.data.DefaultDataBag;
 import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
 import pl.edu.icm.coansys.models.DocumentProtos.ClassifCode;
@@ -29,6 +31,8 @@ import pl.edu.icm.coansys.models.DocumentProtos.TextWithLanguage;
  */
 @SuppressWarnings("rawtypes")
 public class EXTRACT_MAP extends EvalFunc<Map> {
+    
+    private static final Logger logger = LoggerFactory.getLogger(EXTRACT_MAP.class);
 
     @Override
     public Map exec(Tuple input) throws IOException {
@@ -60,7 +64,7 @@ public class EXTRACT_MAP extends EvalFunc<Map> {
 
             return map;
         } catch (Exception e) {
-            // Throwing an exception will cause the task to fail.
+            logger.error("Error in processing input row:", e);
             throw new IOException("Caught exception processing input row:\n"
                     + StackTraceExtractor.getStackTrace(e));
         }
@@ -70,7 +74,6 @@ public class EXTRACT_MAP extends EvalFunc<Map> {
         DataBag db = new DefaultDataBag();
         for (ClassifCode code : classifCodeList) {
             for (String co_str : code.getValueList()) {
-//       		System.out.print(" "+co_str);
                 db.add(TupleFactory.getInstance().newTuple(co_str));
             }
         }

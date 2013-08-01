@@ -16,6 +16,8 @@ import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
 import org.apache.pig.impl.logicalLayer.FrontendException;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
 import pl.edu.icm.coansys.models.DocumentProtos.ClassifCode;
@@ -30,12 +32,15 @@ import pl.edu.icm.coansys.models.DocumentProtos.TextWithLanguage;
 @SuppressWarnings("rawtypes")
 public class EXTRACT_MAP_CATEGOCC extends EvalFunc<Tuple> {
 
+    private static final Logger logger = LoggerFactory.getLogger(EXTRACT_MAP_CATEGOCC.class);
+
     @Override
     public Schema outputSchema(Schema p_input) {
         try {
             return Schema.generateNestedSchema(DataType.TUPLE,
                     DataType.MAP, DataType.LONG);
         } catch (FrontendException e) {
+            logger.error("Error in creating output schema:", e);
             throw new IllegalStateException(e);
         }
     }
@@ -45,7 +50,7 @@ public class EXTRACT_MAP_CATEGOCC extends EvalFunc<Tuple> {
         try {
             DataByteArray protoMetadata = (DataByteArray) input.get(0);
             DocumentMetadata metadata = DocumentMetadata.parseFrom(protoMetadata.get());
-            
+
             String titles;
             String abstracts;
 
@@ -73,9 +78,9 @@ public class EXTRACT_MAP_CATEGOCC extends EvalFunc<Tuple> {
             Object[] to = new Object[]{map, num};
             return TupleFactory.getInstance().newTuple(Arrays.asList(to));
         } catch (Exception e) {
-        	// Throwing an exception will cause the task to fail.
+            logger.error("Error in processing input row:", e);
             throw new IOException("Caught exception processing input row:\n"
-            		+ StackTraceExtractor.getStackTrace(e));
+                    + StackTraceExtractor.getStackTrace(e));
         }
     }
 
@@ -83,7 +88,6 @@ public class EXTRACT_MAP_CATEGOCC extends EvalFunc<Tuple> {
         DataBag db = new DefaultDataBag();
         for (ClassifCode code : classifCodeList) {
             for (String co_str : code.getValueList()) {
-//       		System.out.print(" "+co_str);
                 db.add(TupleFactory.getInstance().newTuple(co_str));
             }
         }
