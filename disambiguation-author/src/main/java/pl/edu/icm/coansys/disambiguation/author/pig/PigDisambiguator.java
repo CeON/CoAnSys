@@ -22,7 +22,7 @@ import pl.edu.icm.coansys.disambiguation.features.Disambiguator;
  * @since 2012-08-07
  */
 public class PigDisambiguator extends Disambiguator{
-	Disambiguator d = null;
+	private Disambiguator d = null;
 	
 	public PigDisambiguator(Disambiguator d) {
 		this.d = d;

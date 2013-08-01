@@ -38,7 +38,7 @@ public class ExtractionJob implements Tool {
     private static final String ALGORITHM_NAME = "RAKE";
 
     private static final Logger logger = LoggerFactory.getLogger(ExtractionJob.class);
-    Configuration conf;
+    private Configuration conf;
 
     public static class ExtractMap extends Mapper<Writable, BytesWritable, Text, BytesWritable> {
 

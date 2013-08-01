@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
  * @version 1.0
  * @since 2012-08-07
  */
-public class SingleLinkageHACStrategy_LessThenZero_Or_Max extends SingleLinkageHACStrategy {
+public class SingleLinkageHACStrategy_LessThenZero_Or_Max extends SingleLinkageHACStrategy implements Cloneable {
 
     private static final Logger log = LoggerFactory.getLogger(SingleLinkageHACStrategy_LessThenZero_Or_Max.class);
 

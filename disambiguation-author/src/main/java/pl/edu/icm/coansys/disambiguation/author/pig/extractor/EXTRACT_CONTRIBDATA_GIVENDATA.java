@@ -34,7 +34,7 @@ import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
 public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 
     private static final Logger logger = LoggerFactory.getLogger(EXTRACT_CONTRIBDATA_GIVENDATA.class);
-    DisambiguationExtractor[] des = null;
+    private DisambiguationExtractor[] des = null;
 
     @Override
     public Schema outputSchema(Schema p_input) {
