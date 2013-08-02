@@ -11,7 +11,7 @@ import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.io.Text;
 import static org.testng.Assert.*;
 import org.testng.annotations.Test;
-import pl.edu.icm.coansys.models.KeywordExtractionProtos;
+import pl.edu.icm.coansys.models.DocumentProtos;
 import pl.edu.icm.oozierunner.OozieRunner;
 
 public class TestIT {
@@ -46,9 +46,8 @@ public class TestIT {
                 Text key = new Text();
                 BytesWritable value = new BytesWritable();
                 while (reader.next(key, value)) {
-                    KeywordExtractionProtos.ExtractedKeywords extractedKwds =
-                            KeywordExtractionProtos.ExtractedKeywords.parseFrom(value.copyBytes());
-                    actual = extractedKwds.getKeywordList();
+                    DocumentProtos.KeywordsList extractedKwds = DocumentProtos.KeywordsList.parseFrom(value.copyBytes());
+                    actual = extractedKwds.getKeywordsList();
                     records ++;
                 }
             }

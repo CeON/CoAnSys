@@ -4,6 +4,8 @@
 package pl.edu.icm.coansys.kwdextraction;
 
 import java.io.IOException;
+import java.util.Date;
+import java.util.List;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.BytesWritable;
@@ -19,7 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.edu.icm.coansys.models.DocumentProtos;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
-import pl.edu.icm.coansys.models.KeywordExtractionProtos.ExtractedKeywords;
+//import pl.edu.icm.coansys.models.KeywordExtractionProtos.ExtractedKeywords;
 
 /**
  *
@@ -28,15 +30,12 @@ import pl.edu.icm.coansys.models.KeywordExtractionProtos.ExtractedKeywords;
 public class ExtractionJob implements Tool {
 
     /*
-     * EXTRACTION_OPTION - i.e. CONTENT, ABSTRACT, CONTENT_AND_ABSTRACT
-     * EXTRACTION_LANGUAGE - "en", "pl", "fr". Only texts in this language will
-     * be processed.
+     * EXTRACTION_OPTION - i.e. CONTENT, ABSTRACT, CONTENT_AND_ABSTRACT EXTRACTION_LANGUAGE - "en", "pl", "fr". Only
+     * texts in this language will be processed.
      */
     private static final String EXTRACTION_OPTION = "EXTRACTION_OPTION";
     private static final String EXTRACTION_LANGUAGE = "EXTRACTION_LANGUAGE";
-
     private static final String ALGORITHM_NAME = "RAKE";
-
     private static final Logger logger = LoggerFactory.getLogger(ExtractionJob.class);
     private Configuration conf;
 
@@ -50,14 +49,24 @@ public class ExtractionJob implements Tool {
             String lang = conf.get(EXTRACTION_LANGUAGE);
 
             DocumentWrapper docWrapper = DocumentProtos.DocumentWrapper.parseFrom(value.copyBytes());
-            ExtractedKeywords.Builder kwdBuilder = ExtractedKeywords.newBuilder();
-            kwdBuilder.setAlgorithm(ALGORITHM_NAME);
-            kwdBuilder.setDocId(docWrapper.getRowId());
-            for (String keyword : new RakeExtractor(docWrapper, extractionOption, lang).getKeywords()) {
-                kwdBuilder.addKeyword(keyword);
-            }
-            if (kwdBuilder.getKeywordCount() > 0) {
-                context.write(new Text(docWrapper.getRowId()), new BytesWritable(kwdBuilder.build().toByteArray()));
+            RakeExtractor rakeExtractor = new RakeExtractor(docWrapper, extractionOption, lang);
+            List<String> keywords = rakeExtractor.getKeywords();
+
+            if (keywords.size() > 0) {
+                String docId = docWrapper.getDocumentMetadata().getKey();
+
+                DocumentProtos.KeywordsList.Builder kwdBuilder = DocumentProtos.KeywordsList.newBuilder();
+
+                DocumentProtos.ProvenanceInfo.Builder provenanceBuilder = DocumentProtos.ProvenanceInfo.newBuilder();
+                DocumentProtos.ProvenanceInfo.SingleProvenanceInfo.Builder singleProvenanceBuilder = DocumentProtos.ProvenanceInfo.SingleProvenanceInfo.newBuilder();
+                singleProvenanceBuilder.setLastModificationDate(new Date().getTime());
+                singleProvenanceBuilder.setLastModificationMarkerId(ALGORITHM_NAME);
+                provenanceBuilder.setCurrentProvenance(singleProvenanceBuilder);
+                kwdBuilder.setProvenance(provenanceBuilder);
+
+                kwdBuilder.addAllKeywords(keywords);
+
+                context.write(new Text(docId), new BytesWritable(kwdBuilder.build().toByteArray()));
             }
         }
     }
