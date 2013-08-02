@@ -115,7 +115,7 @@ public class AproximateAND extends EvalFunc<DataBag> {
             return createResultingTuples(clusterList);
 
         } catch (Exception e) {
-            logger.error("Error in creating output schema:", e);
+            logger.error("Caught exception processing input row:", e);
             throw new IOException("Caught exception processing input row:\n"
                     + StackTraceExtractor.getStackTrace(e));
         }
