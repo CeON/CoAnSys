@@ -1,4 +1,4 @@
-package pl.edu.icm.coansys.citations.tools
+package pl.edu.icm.coansys.citations.tools.pic
 
 import pl.edu.icm.coansys.citations.data.MatchableEntity
 import pl.edu.icm.coansys.commons.scala.strings

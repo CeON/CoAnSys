@@ -1,4 +1,4 @@
-package pl.edu.icm.coansys.citations.tools
+package pl.edu.icm.coansys.citations.tools.pic
 
 import collection.JavaConversions._
 import pl.edu.icm.coansys.citations.util.sequencefile.ConvertingSequenceFileIterator

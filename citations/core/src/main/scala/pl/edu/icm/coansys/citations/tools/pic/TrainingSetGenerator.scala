@@ -1,4 +1,4 @@
-package pl.edu.icm.coansys.citations.tools
+package pl.edu.icm.coansys.citations.tools.pic
 
 import java.io.{FileWriter, BufferedWriter, File}
 import pl.edu.icm.cermine.bibref.CRFBibReferenceParser
