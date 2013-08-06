@@ -70,7 +70,7 @@
 					<value>org.apache.hadoop.io.BytesWritable</value>
 				</property>
 				<property>
-					<name>EXTRACTION_OPTION</name>
+					<name>MAX_PDF_SIZE</name>
 					<value>${MAX_PDF_SIZE}</value>
 				</property>
 			</configuration>
