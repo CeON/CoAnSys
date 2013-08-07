@@ -91,6 +91,7 @@ public class NLMExtractionJob implements Tool {
                             nlmMediaBuilder.setKey(media.getKey());
                             nlmMediaBuilder.setSourceFilesize(nlmString.length());
                             nlmMediaBuilder.setContent(ByteString.copyFromUtf8(nlmString));
+                            nlmMediaBuilder.setMediaType(ProtoConstants.mediaTypeNlm);
 
                             DocumentProtos.ProvenanceInfo.Builder provenanceBuilder = DocumentProtos.ProvenanceInfo.newBuilder();
                             DocumentProtos.ProvenanceInfo.SingleProvenanceInfo.Builder signleProvenance =
