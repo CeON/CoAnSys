@@ -60,8 +60,6 @@ public class AproximateAND extends EvalFunc<DataBag> {
         
         timer = new Timer("logs/aproximate.stat");
         (new Thread( timer )).start();
-        //timer.turnOff();
-        //timer.addMonit("APROXIMATE-DATA-STATISTICS");
         timer.addMonit("id","contribs","clusters","calculated sims","time");
         timer.addMonit("S:", "=suma(B3:B1000000)", "=suma(C3:C1000000)", "=suma(D3:D1000000)","=suma(E3:E1000000)");
 	}
@@ -198,7 +196,9 @@ public class AproximateAND extends EvalFunc<DataBag> {
 					sim[i][j] = Double.POSITIVE_INFINITY;
 					continue;
 				}
-
+				
+				calculatedSimCounter++;
+				
 				for ( int d = 0; d < features.length; d++ ) {
 
 					FeatureInfo featureInfo = featureInfos.get(d);
