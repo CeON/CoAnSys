@@ -16,6 +16,8 @@ import pl.edu.icm.oozierunner.OozieRunner;
 
 public class TestIT {
 
+    private static final String TITLE_STRING = "<article-title>Eco-friendly methods of protecting flax against weeds</article-title>";
+
     @Test
     public void testTest1() throws Exception {
         OozieRunner or = new OozieRunner();
@@ -36,10 +38,12 @@ public class TestIT {
                 while (reader.next(key, value)) {
                     DocumentProtos.Media media = DocumentProtos.Media.parseFrom(value.copyBytes());
                     assertEquals(media.getMediaType(), ProtoConstants.mediaTypeNlm);
+                    String nlmString = media.getContent().toStringUtf8();
+                    assertTrue(nlmString.contains(TITLE_STRING));
                     records++;
                 }
             }
         }
-        //assertTrue(records > 0);
+        assertTrue(records > 0);
     }
 }
