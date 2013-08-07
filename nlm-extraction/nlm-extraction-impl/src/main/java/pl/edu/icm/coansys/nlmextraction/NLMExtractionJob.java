@@ -6,6 +6,7 @@ package pl.edu.icm.coansys.nlmextraction;
 import com.google.protobuf.ByteString;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.BytesWritable;
@@ -91,7 +92,13 @@ public class NLMExtractionJob implements Tool {
                             nlmMediaBuilder.setSourceFilesize(nlmString.length());
                             nlmMediaBuilder.setContent(ByteString.copyFromUtf8(nlmString));
 
-                            // TODO provenance
+                            DocumentProtos.ProvenanceInfo.Builder provenanceBuilder = DocumentProtos.ProvenanceInfo.newBuilder();
+                            DocumentProtos.ProvenanceInfo.SingleProvenanceInfo.Builder signleProvenance =
+                                    DocumentProtos.ProvenanceInfo.SingleProvenanceInfo.newBuilder();
+                            signleProvenance.setLastModificationDate(new Date().getTime());
+                            signleProvenance.setLastModificationMarkerId("Coansys NLM extraction (CERMINE)");
+                            provenanceBuilder.setCurrentProvenance(signleProvenance);
+                            nlmMediaBuilder.setProvenance(provenanceBuilder);
 
                             context.write(new Text(media.getKey()), new BytesWritable(nlmMediaBuilder.build().toByteArray()));
                         } catch (AnalysisException ex) {
