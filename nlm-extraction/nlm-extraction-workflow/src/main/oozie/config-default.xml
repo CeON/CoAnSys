@@ -1,0 +1,11 @@
+<configuration>
+  <property>
+    <name>MAX_PDF_SIZE</name>
+    <value>20</value>
+    <description>PDFs greater than MAX_PDF_SIZE (in MB) will be ignored</description>
+  </property>
+	<property>
+		<name>DFS_SOCKET_CLIENT_TIMEOUT</name>
+		<value>120000</value>
+	</property>
+</configuration>
