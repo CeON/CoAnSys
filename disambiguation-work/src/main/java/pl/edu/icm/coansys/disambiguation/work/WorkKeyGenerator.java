@@ -1,6 +1,7 @@
 package pl.edu.icm.coansys.disambiguation.work;
 
-import pl.edu.icm.coansys.disambiguation.work.tool.StringTools;
+import pl.edu.icm.coansys.commons.java.DocumentWrapperUtils;
+import pl.edu.icm.coansys.commons.java.StringTools;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
 
 

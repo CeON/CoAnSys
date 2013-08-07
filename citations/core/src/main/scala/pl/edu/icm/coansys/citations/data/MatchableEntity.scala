@@ -7,7 +7,7 @@ package pl.edu.icm.coansys.citations.data
 import collection.JavaConversions._
 import pl.edu.icm.coansys.citations.util.misc._
 import pl.edu.icm.coansys.commons.scala.strings
-import pl.edu.icm.coansys.disambiguation.auxil.DiacriticsRemover.removeDiacritics
+import pl.edu.icm.coansys.commons.java.DiacriticsRemover.removeDiacritics
 import pl.edu.icm.cermine.bibref.BibReferenceParser
 import pl.edu.icm.coansys.models.DocumentProtos.{DocumentMetadata, BasicMetadata, ReferenceMetadata}
 import pl.edu.icm.coansys.citations.data.CitationMatchingProtos.MatchableEntityData

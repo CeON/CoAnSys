@@ -1,3 +1,6 @@
+/*
+ * (C) 2010-2012 ICM UW. All rights reserved.
+ */
 package pl.edu.icm.coansys.commons.spring;
 
 import java.io.IOException;
@@ -20,8 +23,8 @@ public final class DiMapper<KEYIN, VALUEIN, KEYOUT, VALUEOUT> extends Mapper<KEY
     
     //private static Logger log = LoggerFactory.getLogger(DiMapper.class);
    
-    public static String DI_MAP_SERVICE_BEAN_NAME = "diMapServiceBeanName";
-    public static String DI_MAP_APPLICATION_CONTEXT_PATH = "diMapApplicationContextPath";
+    public static final String DI_MAP_SERVICE_BEAN_NAME = "diMapServiceBeanName";
+    public static final String DI_MAP_APPLICATION_CONTEXT_PATH = "diMapApplicationContextPath";
     
     
     private DiMapService<KEYIN, VALUEIN, KEYOUT, VALUEOUT> diMapService;

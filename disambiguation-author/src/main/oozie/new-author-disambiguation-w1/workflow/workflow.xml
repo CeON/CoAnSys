@@ -1,0 +1,63 @@
+<workflow-app name='${subproject}' xmlns="uri:oozie:workflow:0.2">
+<!--
+ (C) 2010-2012 ICM UW. All rights reserved.
+-->
+    <start to='disambiguation'/>
+    <action name='disambiguation'>
+        <pig>
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <!--<prepare>
+                <delete path="${dc_m_hdfs_outputContribs}"/>
+            </prepare>-->
+            <configuration>
+                <!-- This is required for new api usage -->
+                <property>
+                    <name>mapred.mapper.new-api</name>
+                    <value>true</value>
+                </property>
+                <property>
+                    <name>mapred.reducer.new-api</name>
+                    <value>true</value>
+                </property>
+
+                <!-- General job parameters -->
+                <property>
+                    <name>mapred.job.queue.name</name>
+                    <value>${queueName}</value>
+                </property>
+                <property>
+                    <name>hbase.zookeeper.quorum</name>
+                    <value>${hbaseZookeeperQuorum}</value>
+                </property>
+            </configuration>
+            <script>${pigScriptsDir}/new_disambiguation_ex_only.pig</script>
+            <param>commonJarsPath=${commonJarsPath}</param>
+            <param>dc_m_double_sample=${dc_m_double_sample}</param>
+            <param>dc_m_hdfs_inputDocsData=${dc_m_hdfs_inputDocsData}</param>
+            <param>dc_m_hdfs_outputContribs=${dc_m_hdfs_outputContribs}</param>
+            <!--param>dc_m_str_feature_info=${dc_m_str_feature_info}</param-->
+            <param>threshold=${threshold}</param>
+            <param>lang=${lang}</param>
+        </pig>
+        <ok to='end'/>
+        <error to='kill'/>
+    </action>
+
+    <action name='send-email'>
+        <email xmlns="uri:oozie:email-action:0.1">
+            <to>mwos@icm.edu.pl</to>
+            <cc>mwos@icm.edu.pl</cc>
+            <subject>Email notifications for ${wf:id()}</subject>
+            <body>The wf ${wf:id()} successfully completed.</body>
+        </email>
+        <ok to='end'/>
+        <error to='kill'/>
+    </action>
+
+    <kill name='kill'>
+        <message>Workflow failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+    </kill>
+
+    <end name='end'/>
+</workflow-app>

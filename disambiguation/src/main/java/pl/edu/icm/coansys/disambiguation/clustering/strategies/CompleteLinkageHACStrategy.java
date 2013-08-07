@@ -8,7 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
 
-import pl.edu.icm.coansys.disambiguation.auxil.Pair;
+import pl.edu.icm.coansys.commons.java.Pair;
 import pl.edu.icm.coansys.disambiguation.clustering.ClusterElement;
 
 /**

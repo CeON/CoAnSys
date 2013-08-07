@@ -4,6 +4,7 @@
 package pl.edu.icm.coansys.kwdextraction;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.text.BreakIterator;
 import java.util.Map.Entry;
 import java.util.*;
@@ -30,9 +31,9 @@ public class RakeExtractor {
     private enum Lang {
 
         // language code, stopwords path
-        PL("pl", "stopwords_pl.txt"),
-        FR("fr", "stopwords_fr.txt"),
-        EN("en", "stopwords_en.txt");
+        PL("pl", "stopwords/stopwords_pl.txt"),
+        FR("fr", "stopwords/stopwords_fr.txt"),
+        EN("en", "stopwords/stopwords_en.txt");
         private String langCode;
         private String stopwordsPath;
 
@@ -73,7 +74,7 @@ public class RakeExtractor {
             }
         } catch (IOException ex) {
             logger.error("Unable to load stopwords: " + ex);
-            throw new RuntimeException(ex);
+            throw new IllegalArgumentException(ex);
         }
     }
 
@@ -211,17 +212,14 @@ public class RakeExtractor {
     private static Set<String> loadStopwords(Lang lang) throws IOException {
         Set<String> result = new HashSet<String>();
 
-        InputStream stopwordsStream = null;
-        InputStreamReader isr = null;
+        InputStream stopwordsStream;
+        InputStreamReader isr;
         BufferedReader br = null;
-        try {
-            stopwordsStream = RakeExtractor.class.getClassLoader().getResourceAsStream(lang.stopwordsPath);
-        } catch (NullPointerException ex) {
-            stopwordsStream = RakeExtractor.class.getClassLoader().getResourceAsStream("/" + lang.stopwordsPath);
-        }
+
+        stopwordsStream = RakeExtractor.class.getClassLoader().getResourceAsStream(lang.stopwordsPath);
         
         try {
-            isr = new InputStreamReader(stopwordsStream);
+            isr = new InputStreamReader(stopwordsStream, Charset.forName("UTF-8"));
             br = new BufferedReader(isr);
 
             String stopword = br.readLine();

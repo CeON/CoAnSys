@@ -12,7 +12,9 @@ import org.apache.pig.EvalFunc;
 import org.apache.pig.data.*;
 import org.apache.pig.impl.logicalLayer.FrontendException;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
-import pl.edu.icm.coansys.classification.documents.auxil.StackTraceExtractor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
 import pl.edu.icm.coansys.models.DocumentProtos.ClassifCode;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.models.DocumentProtos.KeywordsList;
@@ -24,12 +26,15 @@ import pl.edu.icm.coansys.models.DocumentProtos.TextWithLanguage;
  */
 public class EXTRACT_KEY_TI_ABS_KW_CATEG_WHEN_CATEG extends EvalFunc<Tuple> {
 
+    private static final Logger logger = LoggerFactory.getLogger(EXTRACT_KEY_TI_ABS_KW_CATEG_WHEN_CATEG.class);
+    
     @Override
     public Schema outputSchema(Schema p_input) {
         try {
             return Schema.generateNestedSchema(DataType.TUPLE,
                     DataType.CHARARRAY, DataType.CHARARRAY, DataType.CHARARRAY, DataType.CHARARRAY, DataType.BAG, DataType.INTEGER);
         } catch (FrontendException e) {
+            logger.error("Error in creating output schema:", e);
             throw new IllegalStateException(e);
         }
     }
@@ -40,27 +45,15 @@ public class EXTRACT_KEY_TI_ABS_KW_CATEG_WHEN_CATEG extends EvalFunc<Tuple> {
             return null;
         }
         try {
-            Object obj = null;
-            
-            obj = input.get(1);
+            Object obj = input.get(1);
             if(!(obj instanceof DataByteArray)){
-            	System.out.println("Trying to cast Object (" + input.getType(1) + ") to DataByteArray");
-                System.out.println("Failure!");
-            	return null;
+            	logger.error("Error in casting Object (" + input.getType(1) + ") to DataByteArray");
+              	return null;
             }
             DataByteArray dba = (DataByteArray) obj;
 
-
-            DocumentMetadata dm = null;
-            try {
-                dm = DocumentMetadata.parseFrom(dba.get());
-            } catch (Exception e) {
-                System.out.println("Trying to read ByteArray to DocumentMetadata");
-                System.out.println("Failure!");
-                e.printStackTrace();
-                throw e;
-            }
-
+            DocumentMetadata dm = DocumentMetadata.parseFrom(dba.get());
+          
             String key = dm.getKey();
 
             DataBag db = new DefaultDataBag();
@@ -100,7 +93,7 @@ public class EXTRACT_KEY_TI_ABS_KW_CATEG_WHEN_CATEG extends EvalFunc<Tuple> {
             return null;
 
         } catch (Exception e) {
-            // Throwing an exception will cause the task to fail.
+            logger.error("Error in processing input row:", e);
             throw new IOException("Caught exception processing input row:\n"
                     + StackTraceExtractor.getStackTrace(e));
         }

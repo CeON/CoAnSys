@@ -28,9 +28,7 @@ public class PigDisambiguator extends Disambiguator{
 		this.d = d;
 	}
 	
-	//pytanie z cyklu poznajemy swiat: czy przypadkiem nie jest tak, ze polimorfizm tutaj nie zadziala
-	//tak jak jest tu oczekiwane?
-	public double calculateAffinity(Object f1, Object f2) throws Exception {
+	public double calculateAffinity(Object f1, Object f2) throws ExecException {
 		if(f1 instanceof Tuple && f2 instanceof Tuple ){
 			return calculateAffinity((Tuple) f1, (Tuple) f2);
 		}else if(f1 instanceof DataBag && f2 instanceof DataBag ){
@@ -38,7 +36,7 @@ public class PigDisambiguator extends Disambiguator{
 		}else if(f1 instanceof String && f2 instanceof String ){
 			return calculateAffinity((String) f1, (String) f2);
 		}else{
-			throw new Exception("data type "+ f1.getClass()+" unsupported in calculateAffinity");
+			throw new IllegalArgumentException("data type "+ f1.getClass()+" unsupported in calculateAffinity");
 		}
 	}
 	
@@ -56,15 +54,6 @@ public class PigDisambiguator extends Disambiguator{
 		return d.calculateAffinity(ToList.execute(f1), ToList.execute(f2));
 	}
 	
-	// TODO zajrzec do artykulu, jak nie bedzie info to spytac Piotra czy warto uzyc equalize
-	/*@SuppressWarnings("unused")
-	private String equalize( String str ) {
-		str = str.replace( ",", "" );
-		str = str.replace( ".", "" );
-		str = str.toLowerCase();
-		return str;
-	}*/
-	
 	public double calculateAffinity(String f1, String f2) {
 		List <String> fl1 = Arrays.asList( f1.split(" ") );
 		List <String> fl2 = Arrays.asList( f2.split(" ") );
@@ -75,7 +64,7 @@ public class PigDisambiguator extends Disambiguator{
 	 * 
 	 * @return {@link PigDisambiguator} id.
 	 */
-        @Override
+    @Override
 	public String getName(){
 		return d.getName();
 	}

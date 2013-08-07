@@ -12,7 +12,7 @@ import java.util.List;
  * @author pdendek
  *
  */
-public class StopWordsRemover {
+public final class StopWordsRemover {
 
     private static volatile List<String> stopwords;
 

@@ -38,12 +38,22 @@ public class ClusterElement implements Comparable<Object>{
         
 	@Override
 	public int compareTo(Object o2) {
-		if(o2==null) return 1;
-		if(!(o2 instanceof ClusterElement)) throw new ClassCastException("" +
+		if(o2==null) {
+                    return 1;
+                }
+		if(!(o2 instanceof ClusterElement)) {
+                    throw new ClassCastException("" +
 				"Comparison between "+this.getClass()+" and "+o2.getClass()+" is illegal!");
+                }
 		double count = this.sim-((ClusterElement)o2).sim; 
-		if(count>0) return 1;
-		else if(count==0) return 0;
-		else return -1;
+		if(count>0) {
+                    return 1;
+                }
+		else if(count==0) {
+                    return 0;
+                }
+		else {
+                    return -1;
+                }
 	}
 }

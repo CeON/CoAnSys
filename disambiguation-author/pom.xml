@@ -21,7 +21,7 @@
 				<includes>
 					<include>**/*.pig</include>
 				</includes>
-				<targetPath>${build.directory}/classes/pig</targetPath>
+				<targetPath>${project.build.directory}/classes/pig</targetPath>
 			</resource>
 		</resources>
 	</build>

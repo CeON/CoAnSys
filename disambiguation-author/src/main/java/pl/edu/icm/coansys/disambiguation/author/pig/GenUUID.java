@@ -12,7 +12,6 @@ import org.apache.pig.data.Tuple;
 import pl.edu.icm.coansys.disambiguation.idgenerators.IdGenerator;
 import pl.edu.icm.coansys.disambiguation.idgenerators.UuIdGenerator;
 
-import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -31,7 +30,6 @@ public class GenUUID extends EvalFunc< String > {
      * for whom we want find unique id
      * @returns String UUID
      */		
-	//TODO: na wejsciu DateBag nie pojedyncza Tupla, na wykscoi DateBag z String
 	@Override
 	public String exec( Tuple input ) throws IOException {
 		DataBag db = (DataBag) input.get(0);

@@ -19,7 +19,6 @@ import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 import org.apache.log4j.Logger;
 
-import pl.edu.icm.coansys.disambiguation.auxil.LoggingInDisambiguation;
 import pl.edu.icm.coansys.disambiguation.auxil.TextTextArrayMapWritable;
 
 /**
@@ -30,7 +29,7 @@ import pl.edu.icm.coansys.disambiguation.auxil.TextTextArrayMapWritable;
  */
 public class DisambiguationJob_Toy extends Configured implements Tool {
 
-    private static Logger logger = Logger.getLogger(LoggingInDisambiguation.class);
+    private static Logger logger = Logger.getLogger(DisambiguationJob_Toy.class);
     private Configuration conf;
     /*
      * Fields to be set

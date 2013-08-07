@@ -4,7 +4,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import pl.edu.icm.coansys.disambiguation.work.DocumentWrapperUtils;
+import pl.edu.icm.coansys.commons.java.DocumentWrapperUtils;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
 
 @Service("workYearComparator")

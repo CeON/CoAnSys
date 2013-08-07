@@ -17,7 +17,7 @@ import com.sun.el.util.ReflectionUtil;
  * @version 1.0
  * @since 2012-08-07
  */
-public class IdGeneratorFactory {
+public final class IdGeneratorFactory {
 
     private static final String THIS_PACKAGE = new IdGeneratorFactory().getClass().getPackage().getName();
 

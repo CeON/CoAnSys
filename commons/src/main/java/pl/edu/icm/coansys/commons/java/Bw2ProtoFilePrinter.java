@@ -1,4 +1,4 @@
-package pl.edu.icm.coansys.disambiguation.work.tool;
+package pl.edu.icm.coansys.commons.java;
 
 import static java.lang.System.out;
 

@@ -13,7 +13,7 @@ import org.apache.pig.data.DefaultDataBag;
 import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
 
-import pl.edu.icm.coansys.classification.documents.auxil.StackTraceExtractor;
+import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
 
 /**
  *

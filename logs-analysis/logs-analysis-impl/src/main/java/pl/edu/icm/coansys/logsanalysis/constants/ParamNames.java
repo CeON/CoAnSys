@@ -7,7 +7,10 @@ package pl.edu.icm.coansys.logsanalysis.constants;
  *
  * @author acz
  */
-public class ParamNames {
+public final class ParamNames {
+    
+    private ParamNames() {}
+    
     public static final String IP_PARAM = "ip";
     public static final String URL_PARAM = "url";
     public static final String REFERER_PARAM = "referrelUrl";

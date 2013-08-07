@@ -1,4 +1,4 @@
-package pl.edu.icm.coansys.disambiguation.work.tool;
+package pl.edu.icm.coansys.commons.java;
 
 import static java.lang.System.out;
 
@@ -15,7 +15,6 @@ import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.util.ReflectionUtils;
 
-import pl.edu.icm.coansys.disambiguation.work.DocumentWrapperUtils;
 import pl.edu.icm.coansys.models.DocumentProtos;
 import pl.edu.icm.coansys.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
@@ -28,9 +27,9 @@ import com.google.common.collect.Lists;
  *
  */
 
-public class Bw2ProtoFileUtils {
+public final class Bw2ProtoFileUtils {
 
-    
+    private Bw2ProtoFileUtils() {}
     
     public static List<DocumentWrapper> readDocWrappers(String inputFileUri) {
         
@@ -84,12 +83,12 @@ public class Bw2ProtoFileUtils {
         
         StringBuilder sb = new StringBuilder();
         sb.append("-------------------------------------------\n");
-        sb.append("key    : " + key + "\n");
-        sb.append("rowid  : " + documentWrapper.getRowId() + "\n");
-        sb.append("title0 : " + DocumentWrapperUtils.getMainTitle(documentWrapper) + "\n");
-        sb.append("year   : " + DocumentWrapperUtils.getPublicationYear(documentWrapper) + "\n");
+        sb.append("key    : ").append(key).append("\n");
+        sb.append("rowid  : ").append(documentWrapper.getRowId()).append("\n");
+        sb.append("title0 : ").append(DocumentWrapperUtils.getMainTitle(documentWrapper)).append("\n");
+        sb.append("year   : ").append(DocumentWrapperUtils.getPublicationYear(documentWrapper)).append("\n");
         for (Author author : documentWrapper.getDocumentMetadata().getBasicMetadata().getAuthorList()) {
-            sb.append(author.getPositionNumber() + ". " + author.getName() + " " + author.getSurname() + "\n");
+            sb.append(author.getPositionNumber()).append(". ").append(author.getName()).append(" ").append(author.getSurname()).append("\n");
         }
         sb.append("\n");
         return sb.toString();
