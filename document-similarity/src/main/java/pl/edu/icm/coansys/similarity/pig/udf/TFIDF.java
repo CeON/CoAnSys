@@ -32,7 +32,7 @@ public class TFIDF extends EvalFunc<Double> {
             return getWeightedTFIDF(input);
         }
 
-        throw new RuntimeException("Unsupported type: " + type);
+        throw new IllegalArgumentException("Unsupported type: " + type);
     }
 
     private Double getTFIDF(Tuple tuple) throws IOException {

@@ -22,27 +22,28 @@ import pl.edu.icm.coansys.disambiguation.auxil.TextTextArrayMapWritable;
  */
 public class TfidfMapper extends Mapper<TextArrayWritable, StringListIntListWritable, Text, StringListIntListWritable> {
 
-	private static Logger logger = LoggerFactory.getLogger(TfidfMapper.class);
-    
+    private static Logger logger = LoggerFactory.getLogger(TfidfMapper.class);
+
     @Override
     /**
-     * (IN) accepts key-value pairs containing K:docId + word, V: the number of word occurences in the document + no. of all words in doc
-     * (OUT) emit key-value pairs containing K:word, V: docId + number of word occurences in the document + no. of all words in doc  
+     * (IN) accepts key-value pairs containing K:docId + word, V: the number of
+     * word occurrences in the document + no. of all words in doc (OUT) emit
+     * key-value pairs containing K:word, V: docId + number of word occurrences
+     * in the document + no. of all words in doc
      */
-    protected void map(TextArrayWritable docIdAndWord, StringListIntListWritable wcAndDocWc, Context context) throws IOException, InterruptedException { 
-        
-    	StringListIntListWritable slilw = new StringListIntListWritable();
-    	slilw.addAllInt(wcAndDocWc.getIntList());
-    	slilw.addString(docIdAndWord.toStringList().get(0));
-    	
-		context.write(new Text(docIdAndWord.toStringList().get(1)),slilw);
+    protected void map(TextArrayWritable docIdAndWord, StringListIntListWritable wcAndDocWc, Context context) throws IOException, InterruptedException {
+
+        StringListIntListWritable slilw = new StringListIntListWritable();
+        slilw.addAllInt(wcAndDocWc.getIntList());
+        slilw.addString(docIdAndWord.toStringList().get(0));
+
+        context.write(new Text(docIdAndWord.toStringList().get(1)), slilw);
 
     }
-    
-    
-	protected void logAllFeaturesExtractedForOneAuthor(String authId,
-			TextTextArrayMapWritable featureName2FeatureValuesMap) {
-		logger.debug("MAPPER: output key: " + authId);
-		logger.debug("MAPPER: output value: "+featureName2FeatureValuesMap);
-	}
+
+    protected void logAllFeaturesExtractedForOneAuthor(String authId,
+            TextTextArrayMapWritable featureName2FeatureValuesMap) {
+        logger.debug("MAPPER: output key: " + authId);
+        logger.debug("MAPPER: output value: " + featureName2FeatureValuesMap);
+    }
 }

@@ -53,7 +53,7 @@ public class HTableToSequenceFile implements Tool {
     public int run(String[] args) throws IOException, InterruptedException, ClassNotFoundException {
         if (args.length < 4) {
             System.err.println("Usage: HTableToSequenceFile <table_name> <column_family> <column_name> <sequence_file_path>");
-            System.exit(1);
+            return -1;
         }
         conf.set("COLUMN_FAMILY", args[1]);
         conf.set("COLUMN_NAME", args[2]);

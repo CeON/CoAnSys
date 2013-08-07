@@ -6,11 +6,8 @@ package pl.edu.icm.coansys.disambiguation.author.features.extractors;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DocumentBased;
-import pl.edu.icm.coansys.disambiguation.author.jobs.hdfs.DisambiguationJob_Toy;
 import pl.edu.icm.coansys.disambiguation.features.Extractor;
 import pl.edu.icm.coansys.models.DocumentProtos.ClassifCode;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
@@ -25,9 +22,6 @@ import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
  * @since 2012-08-07
  */
 public class DocumentProto2ClassifCodeExtractor implements Extractor<DocumentMetadata>, DocumentBased {
-
-    @SuppressWarnings("unused")
-    private static Logger logger = LoggerFactory.getLogger(new DisambiguationJob_Toy().getClass());
 
     @Override
     public List<String> extract(DocumentMetadata input, String... auxil) {

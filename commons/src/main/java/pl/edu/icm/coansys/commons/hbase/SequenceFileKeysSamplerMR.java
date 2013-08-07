@@ -37,7 +37,7 @@ public class SequenceFileKeysSamplerMR implements Tool {
     private static final int SAMPLE_SAMPLES_TOTAL_COUNT_DV = 20;
     private static final String SAMPLE_SAMPLES_PER_SPLIT = "sampler.samples.per.split";
     private static final int SAMPLE_SAMPLES_PER_SPLIT_DV = 100;
-    private static String[] DEFAULT_ARGS = {"/home/akawa/bwndata/sf/", "output-keys"};
+    private static final String[] DEFAULT_ARGS = {"/home/akawa/bwndata/sf/", "output-keys"};
 
     @Override
     public void setConf(Configuration conf) {

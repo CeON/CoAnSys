@@ -86,7 +86,7 @@ public class DuplicateWorkDetector extends Configured implements Tool {
         if (args.length < 2) {
             log.error("Missing arguments.");
             log.error("Usage: DuplicateWorkDetector inputFile outputDir");
-            System.exit(1);
+            return;
         }
         FileSystem hdfs = FileSystem.get(getConf());
         Path path = new Path(args[0]);

@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.Text;
@@ -56,30 +57,29 @@ public class FeaturesExtractionMapper_Toy extends Mapper<BytesWritable, BytesWri
     }
 
     /*private static List<FeatureInfo> getFeaturesInfos(String feature) {
-        List<FeatureInfo> ret = new ArrayList<FeatureInfo>();
-        String[] finfos = feature.split(",");
-        for (String finfo : finfos) {
-            String[] details = finfo.split("#");
-            if (details.length != 4) {
-                logger.error("Feature info does not contains enought data. "
-                        + "It should follow the pattern featureName#FeatureExtractorName"
-                        + "#Weight#MaxValue");
-                logger.error("FeatureInfo contains: " + finfo);
-                continue;
-            } else {
-                ret.add(new FeatureInfo(details[0], details[1],
-                        Double.parseDouble(details[2]),
-                        Integer.parseInt(details[3])));
-            }
-        }
-        return ret;
-    }*/
-
+     List<FeatureInfo> ret = new ArrayList<FeatureInfo>();
+     String[] finfos = feature.split(",");
+     for (String finfo : finfos) {
+     String[] details = finfo.split("#");
+     if (details.length != 4) {
+     logger.error("Feature info does not contains enought data. "
+     + "It should follow the pattern featureName#FeatureExtractorName"
+     + "#Weight#MaxValue");
+     logger.error("FeatureInfo contains: " + finfo);
+     continue;
+     } else {
+     ret.add(new FeatureInfo(details[0], details[1],
+     Double.parseDouble(details[2]),
+     Integer.parseInt(details[3])));
+     }
+     }
+     return ret;
+     }*/
     @Override
     protected void map(BytesWritable skey, BytesWritable metadataProto, Context context) throws IOException, InterruptedException {
         HashMap<String, List<String>> docBasedFeature = new HashMap<String, List<String>>();
         DocumentMetadata dm = DocumentMetadata.parseFrom(metadataProto.copyBytes());
-         
+
         //(1) extract all document-based features, 
         //[which will be passes to the object authorId2FeatureMap] 
         createDocumentBasedFeatureMap(docBasedFeature, dm);
@@ -121,7 +121,7 @@ public class FeaturesExtractionMapper_Toy extends Mapper<BytesWritable, BytesWri
     }
 
     protected void createDocumentBasedFeatureMap(
-            HashMap<String, List<String>> docBasedFeature, DocumentMetadata dm) {
+            Map<String, List<String>> docBasedFeature, DocumentMetadata dm) {
         //(1) extract all document-based features, 
         //[which will be passes to the object authorId2FeatureMap]
         int firstIndex = -1;
@@ -134,7 +134,7 @@ public class FeaturesExtractionMapper_Toy extends Mapper<BytesWritable, BytesWri
         }
     }
 
-    protected void createFeatureMapForOneAuthor(HashMap<String, List<String>> docBasedFeature,
+    protected void createFeatureMapForOneAuthor(Map<String, List<String>> docBasedFeature,
             DocumentMetadata dm, String authId,
             TextTextArrayMapWritable featureName2FeatureValuesMap) {
 

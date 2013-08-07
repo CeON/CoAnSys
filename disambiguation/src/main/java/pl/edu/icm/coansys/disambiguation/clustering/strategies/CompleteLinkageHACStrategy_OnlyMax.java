@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
  * @version 1.0
  * @since 2012-08-07
  */
-public class CompleteLinkageHACStrategy_OnlyMax extends CompleteLinkageHACStrategy {
+public class CompleteLinkageHACStrategy_OnlyMax extends CompleteLinkageHACStrategy implements Cloneable {
 
     private static final Logger log = LoggerFactory.getLogger(CompleteLinkageHACStrategy_OnlyMax.class);
 
