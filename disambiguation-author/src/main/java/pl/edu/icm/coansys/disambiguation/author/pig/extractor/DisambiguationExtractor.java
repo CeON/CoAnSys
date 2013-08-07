@@ -7,7 +7,7 @@ import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.ToEnglishLowerCa
 
 public abstract class DisambiguationExtractor {
 	
-	private PigNormalizer normalizers[];
+	PigNormalizer normalizers[];
 	
 	public DisambiguationExtractor() {
 		normalizers = new PigNormalizer[1];

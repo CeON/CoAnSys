@@ -22,6 +22,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
+import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.PigNormalizer;
+import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.ToEnglishLowerCase;
 import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
 import pl.edu.icm.coansys.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
@@ -36,6 +38,7 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
     private static final Logger logger = LoggerFactory.getLogger(EXTRACT_CONTRIBDATA_GIVENDATA.class);
     private DisambiguationExtractor[] des = null;
     private String language = null;
+    private PigNormalizer normalizer = new ToEnglishLowerCase();
     
     @Override
     public Schema outputSchema(Schema p_input) {
@@ -90,21 +93,19 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 
             DocumentWrapper dw = DocumentWrapper.parseFrom(dba.get());
 
-            //metadane dokumentu
+            //metadata
             DocumentMetadata dm = dw.getDocumentMetadata();
 
-            //torba wynikowa z tuplami  opisujacego kazdego kontrybutora
+            //result bag with tuples, which describes each contributor
             DataBag ret = new DefaultDataBag();
 
-            //lista autorow
+            //author list
             List<Author> authors =
                     dm.getBasicMetadata().getAuthorList();
             
-            //obiekty wynikowe tylko dla danych tyczacych sie dokumentu
-            //w dalszej czesci bedzie trzeba zgeneralizowac ten kod,
-            //zeby pozwalal tez na wyciaganie metadanych tyczacych sie danego kotrybutora
-            //(takich jak jego adres email, afiliacja, etc.).
-            //potencjalnie bedzie do tego potrzebna osobna petla.
+            //so far result objects have contained only data, which describes documents
+            //in future we will need to get data involving author's data (e.g. 
+            //email, institution, etc...). Probably we will need one more 'for'
             Object[] retObj = new Object[des.length];
             
             if ( language != null 
@@ -127,23 +128,22 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
             	}
             }
             
-            //dodawanie wyciagnietych danych odnosnie dokumentu i kontrybutora do mapy informacji
+            //adding to map extractor name and features' data, which we got above
             Map<String, Object> map = new HashMap<String, Object>();
             for ( int i = 0; i < des.length; i++ ){
                 map.put( des[i].getClass().getSimpleName(), retObj[i] );
             }
 
-            //stworzenie torby zawierajacej tuple z informacjami 
-            //o wszystkich kontrybutorach z danego dokumentu
+            //bag making tuples (one tuple for one contributor from document)
+            //with replicated metadata for
             for ( int i = 0; i < authors.size(); i++ ) {
-                //TODO: ? pig normalization on surnames ?
-            	String sname = authors.get( i ).getSurname();
+            	String sname = normalizer.normalize( authors.get( i ).getSurname() );
                 String cId = authors.get( i ).getKey();
                 Object[] to = new Object[]{ cId, i, sname, map };
                 Tuple t = TupleFactory.getInstance().newTuple(Arrays.asList( to ));
                 ret.add( t );
             }
-            //zwrocenie torby z wynikami
+
             return ret;
 
         } catch (Exception e) {
