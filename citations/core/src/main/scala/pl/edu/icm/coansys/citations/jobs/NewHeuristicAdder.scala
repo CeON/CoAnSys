@@ -3,9 +3,7 @@ package pl.edu.icm.coansys.citations.jobs
 import com.nicta.scoobi.Scoobi._
 import Reduction._
 import pl.edu.icm.coansys.citations.util.{misc, MyScoobiApp}
-import pl.edu.icm.coansys.citations.data.WireFormats._
 import pl.edu.icm.coansys.citations.data.MatchableEntity
-import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper
 import scala.util.Try
 
 /**
@@ -26,8 +24,7 @@ object NewHeuristicAdder extends MyScoobiApp {
     val outUrl = args(2)
 
     val entities = valueFromSequenceFile[MatchableEntity](entitiesUrl)
-    val db = valueFromSequenceFile[DocumentWrapper](dbUrl)
-    val entitiesDb = db.map(wrapper => MatchableEntity.fromDocumentMetadata(wrapper.getRowId, wrapper.getDocumentMetadata))
+    val entitiesDb = valueFromSequenceFile[MatchableEntity](dbUrl)
 
     val nameIndex = entitiesDb.mapFlatten {
       entity =>
