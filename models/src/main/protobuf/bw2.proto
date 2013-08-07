@@ -118,6 +118,7 @@ message Media {
 	optional string sourcePath = 5;
 	optional int64 sourceFilesize = 6;
 	optional string destinationPath = 7;
+	optional ProvenanceInfo provenance = 8;
 }
 
 // a container to pack multiple media entries in a single message (to store in one HBase cell)
