@@ -8,7 +8,7 @@ import org.apache.pig.pigunit.PigTest;
 import org.apache.pig.tools.parameters.ParseException;
 
 /*
- * Note: PigUnit require output schemes like after dumped, not stored,
+ * Note: PigUnit requires output schemes like after dumped, not stored,
  * while input contrarywise.
  * 
  * Differences: 

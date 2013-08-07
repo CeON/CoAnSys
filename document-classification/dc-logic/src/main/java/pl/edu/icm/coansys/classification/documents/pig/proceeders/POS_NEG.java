@@ -13,6 +13,8 @@ import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
 import org.apache.pig.impl.logicalLayer.FrontendException;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
 
@@ -22,12 +24,15 @@ import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
  */
 public class POS_NEG extends EvalFunc<Tuple> {
 
+    private static final Logger logger = LoggerFactory.getLogger(POS_NEG.class);
+
     @Override
     public Schema outputSchema(Schema p_input) {
         try {
             return Schema.generateNestedSchema(DataType.TUPLE,
                     DataType.CHARARRAY, DataType.CHARARRAY, DataType.INTEGER, DataType.INTEGER);
         } catch (FrontendException e) {
+            logger.error("Error in creating output schema:", e);
             throw new IllegalStateException(e);
         }
     }
@@ -74,6 +79,7 @@ public class POS_NEG extends EvalFunc<Tuple> {
             }
 
         } catch (Exception e) {
+            logger.error("Error in processing input row:", e);
             throw new IOException("Caught exception processing input row:\t"
                     + StackTraceExtractor.getStackTrace(e).replace("\n", "\t"));
         }

@@ -8,7 +8,7 @@ public class ToEnglishLowerCase implements PigNormalizer {
 	public String normalize( String text ) {
 		String tmp = text.toLowerCase();
 		tmp = DiacriticsRemover.removeDiacritics( tmp );
-		tmp = tmp.replaceAll("[^a-z 0-9]", " ").replaceAll(" ++", " ");
+		tmp = tmp.replaceAll("[^a-z 0-9] _\\-]", " ").replaceAll(" ++", " ");
 		return tmp;
 	}
 }

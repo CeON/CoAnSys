@@ -22,7 +22,6 @@ import pl.edu.icm.coansys.disambiguation.auxil.TextArrayWritable;
 public class WordPerDocCountReducer extends Reducer<Text, StringListIntListWritable, TextArrayWritable, StringListIntListWritable> {
 
     private static Logger logger = LoggerFactory.getLogger(WordPerDocCountReducer.class);
-    //protected String reducerId = new Date().getTime() + "_" + new Random().nextFloat();
 
     @Override
     public void setup(Context context) throws IOException, InterruptedException {
@@ -50,14 +49,12 @@ public class WordPerDocCountReducer extends Reducer<Text, StringListIntListWrita
             try {
                 context.write(
                         new TextArrayWritable(new Text[]{key,
-                            new Text(slilw.getStringList().get(0))}),
+                    new Text(slilw.getStringList().get(0))}),
                         out_slilw);
             } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                logger.error("Cought exception:", e);
             } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                logger.error("Cought exception:", e);
             }
         }
     }

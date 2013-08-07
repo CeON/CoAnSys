@@ -20,14 +20,13 @@ import java.util.List;
  * @author pdendek
  * @author mwos
  */
+public class GenUUID extends EvalFunc< String> {
 
-public class GenUUID extends EvalFunc< String > {
+    private IdGenerator idgenerator = new UuIdGenerator();
 
-	IdGenerator idgenerator = new UuIdGenerator();
-	
     /**
-     * @param Tuple input with one String - contributor name, 
-     * for whom we want find unique id
+     * @param Tuple input with DataBag with Strings - contributors' names, 
+     * for whom we want to find unique id
      * @returns String UUID
      */		
 	@Override
@@ -40,4 +39,5 @@ public class GenUUID extends EvalFunc< String > {
 		}
 		return idgenerator.genetareId(l);
 	}
+
 }

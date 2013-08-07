@@ -23,35 +23,33 @@ import pl.edu.icm.coansys.disambiguation.auxil.TextTextArrayMapWritable;
  */
 public class WordPerDocCountMapper extends Mapper<TextArrayWritable, IntWritable, Text, StringListIntListWritable> {
 
-	private static Logger logger = LoggerFactory.getLogger(WordPerDocCountMapper.class);
-    
+    private static Logger logger = LoggerFactory.getLogger(WordPerDocCountMapper.class);
+
     @Override
     /**
-     * (IN) accepts key-value pairs containing K:docId + word from this document, V: the number of word occurences
-     * (OUT) emit key-value pairs containing K:docId, V: word + its number of occurences in the document  
+     * (IN) accepts key-value pairs containing K:docId + word from this
+     * document, V: the number of word occurrences (OUT) emit key-value pairs
+     * containing K:docId, V: word + its number of occurrences in the document
      */
-    protected void map(TextArrayWritable docIdAndWord, IntWritable wc, Context context) { 
-        
-    	StringListIntListWritable slilw = new StringListIntListWritable();
-    	slilw.addInt(wc.get());
-    	slilw.addString(docIdAndWord.toStringList().get(1));
-        
-    	try {
-			context.write(new Text(docIdAndWord.toStringList().get(0)),
-					slilw);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+    protected void map(TextArrayWritable docIdAndWord, IntWritable wc, Context context) {
+
+        StringListIntListWritable slilw = new StringListIntListWritable();
+        slilw.addInt(wc.get());
+        slilw.addString(docIdAndWord.toStringList().get(1));
+
+        try {
+            context.write(new Text(docIdAndWord.toStringList().get(0)),
+                    slilw);
+        } catch (IOException e) {
+            logger.error("Cought exception:", e);
+        } catch (InterruptedException e) {
+            logger.error("Cought exception:", e);
+        }
     }
-    
-    
-	protected void logAllFeaturesExtractedForOneAuthor(String authId,
-			TextTextArrayMapWritable featureName2FeatureValuesMap) {
-		logger.debug("MAPPER: output key: " + authId);
-		logger.debug("MAPPER: output value: "+featureName2FeatureValuesMap);
-	}
+
+    protected void logAllFeaturesExtractedForOneAuthor(String authId,
+            TextTextArrayMapWritable featureName2FeatureValuesMap) {
+        logger.debug("MAPPER: output key: " + authId);
+        logger.debug("MAPPER: output value: " + featureName2FeatureValuesMap);
+    }
 }

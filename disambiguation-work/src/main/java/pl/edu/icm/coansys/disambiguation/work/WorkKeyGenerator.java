@@ -12,7 +12,7 @@ import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
  */
 abstract class WorkKeyGenerator {
     
-    private static int KEY_PART_LENGTH = 5;
+    private static final int KEY_PART_LENGTH = 5;
     
     
     private WorkKeyGenerator() {

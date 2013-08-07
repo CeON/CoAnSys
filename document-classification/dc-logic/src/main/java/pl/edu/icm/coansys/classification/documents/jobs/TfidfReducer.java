@@ -10,8 +10,6 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.classification.documents.auxil.StringListIntListWritable;
 import pl.edu.icm.coansys.disambiguation.auxil.TextArrayWritable;
@@ -24,8 +22,6 @@ import pl.edu.icm.coansys.disambiguation.auxil.TextArrayWritable;
  */
 public class TfidfReducer extends Reducer<Text, StringListIntListWritable, TextArrayWritable, DoubleWritable> {
 
-    private static Logger logger = LoggerFactory.getLogger(TfidfReducer.class);
-    //protected String reducerId = new Date().getTime() + "_" + new Random().nextFloat();
     private int docs_num = 1;
 
     @Override
@@ -43,16 +39,16 @@ public class TfidfReducer extends Reducer<Text, StringListIntListWritable, TextA
      */
     public void reduce(Text key, Iterable<StringListIntListWritable> values, Context context) throws IOException, InterruptedException {
 
-    	int docsWithTerm = 0;
+        int docsWithTerm = 0;
         for (Iterator<StringListIntListWritable> it = values.iterator(); it.hasNext();) {
-    		docsWithTerm++;
+            docsWithTerm++;
         }
 
-        double idf = Math.log(docs_num/(double)docsWithTerm);
+        double idf = Math.log(docs_num / (double) docsWithTerm);
 
         for (final StringListIntListWritable v : values) {
             double tf = (double) (v.getIntList().get(0)) / (double) (v.getIntList().get(1));
-            context.write(new TextArrayWritable(new Text[]{new Text(v.getStringList().get(0)),key}),new DoubleWritable(tf * idf));
+            context.write(new TextArrayWritable(new Text[]{new Text(v.getStringList().get(0)), key}), new DoubleWritable(tf * idf));
         }
     }
 }

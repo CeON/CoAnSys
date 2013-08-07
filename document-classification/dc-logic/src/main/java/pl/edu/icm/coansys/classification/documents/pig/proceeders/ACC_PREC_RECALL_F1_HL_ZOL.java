@@ -15,6 +15,8 @@ import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
 import org.apache.pig.impl.logicalLayer.FrontendException;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
 
@@ -24,6 +26,8 @@ import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
  */
 public class ACC_PREC_RECALL_F1_HL_ZOL extends EvalFunc<Tuple> {
 
+    private static final Logger logger = LoggerFactory.getLogger(ACC_PREC_RECALL_F1_HL_ZOL.class);
+
     @Override
     public Schema outputSchema(Schema p_input) {
         try {
@@ -32,6 +36,7 @@ public class ACC_PREC_RECALL_F1_HL_ZOL extends EvalFunc<Tuple> {
                     DataType.INTEGER, DataType.INTEGER,
                     DataType.INTEGER, DataType.DOUBLE);
         } catch (FrontendException e) {
+            logger.error("Error in creating output schema:", e);
             throw new IllegalStateException(e);
         }
     }
@@ -68,9 +73,9 @@ public class ACC_PREC_RECALL_F1_HL_ZOL extends EvalFunc<Tuple> {
             Object[] obj = new Object[]{acc, p, r, f1, hl, zol};
             return TupleFactory.getInstance().newTuple(Arrays.asList(obj));
         } catch (Exception e) {
-        	// Throwing an exception will cause the task to fail.
+            logger.error("Error in processing input row:", e);
             throw new IOException("Caught exception processing input row:\n"
-            		+ StackTraceExtractor.getStackTrace(e));
+                    + StackTraceExtractor.getStackTrace(e));
         }
     }
 
