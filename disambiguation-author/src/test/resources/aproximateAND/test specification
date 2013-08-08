@@ -1,0 +1,4 @@
+data0: single record test
+data1: small union test, out: 1 cluster
+data2: in: ~35 contributors, out: 4 clusters, d* cluster with small amount of sim values, c* - lots sim values
+
