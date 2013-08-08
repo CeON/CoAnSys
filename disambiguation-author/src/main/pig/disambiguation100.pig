@@ -6,16 +6,21 @@
 -- default section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
+%DEFAULT JARS '*.jar'
+%DEFAULT commonJarsPath 'lib/$JARS'
 
-%DEFAULT commonJarsPath 'lib/*.jar'
-
-%DEFAULT dc_m_hdfs_inputDocsData '../../test/resources/data2.in'
+%DEFAULT dc_m_hdfs_inputDocsData tmp/D100
 %DEFAULT time 20130709_1009
 %DEFAULT dc_m_hdfs_outputContribs disambiguation/outputContribs$time
+-- %DEFAULT dc_m_meth_extraction_inner pl.edu.icm.coansys.pig.udf.RichSequenceFileLoader
 %DEFAULT dc_m_str_feature_info 'TitleDisambiguator#EX_TITLE#1#1,YearDisambiguator#EX_YEAR#1#1'
 %DEFAULT threshold '-1.0'
 
-DEFINE exhaustiveAND pl.edu.icm.coansys.disambiguation.author.pig.ExhaustiveAND('$threshold', '$dc_m_str_feature_info');
+-- DEFINE keyTiKwAbsCatExtractor pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_MAP_WHEN_CATEG_LIM('en','removeall');
+-- DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_CONTRIBDATA_GIVENDATA('$dc_m_str_feature_info');
+DEFINE exhaustiveAND pl.edu.icm.coansys.disambiguation.author.pig.ExhaustiveAND('$threshold','$dc_m_str_feature_info');
+-- DEFINE aproximateAND pl.edu.icm.coansys.disambiguation.author.pig.AproximateAND('$threshold','$dc_m_str_feature_info');
+-- DEFINE GenUUID pl.edu.icm.coansys.disambiguation.author.pig.GenUUID();
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- register section
@@ -28,17 +33,11 @@ REGISTER /usr/lib/hbase/lib/guava-11.0.2.jar
 REGISTER '$commonJarsPath'
 -- -----------------------------------------------------
 -- -----------------------------------------------------
--- import section
--- -----------------------------------------------------
--- -----------------------------------------------------
--- -----------------------------------------------------
--- -----------------------------------------------------
 -- set section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
---%DEFAULT dc_m_double_sample 1.0
-
-%DEFAULT parallel_param 1
+%DEFAULT dc_m_double_sample 1.0
+%DEFAULT parallel_param 16
 %DEFAULT pig_tmpfilecompression_param true
 %DEFAULT pig_tmpfilecompression_codec_param gz
 %DEFAULT job_priority normal
@@ -50,16 +49,18 @@ set pig.tmpfilecompression.codec $pig_tmpfilecompression_codec_param
 set job.priority $job_priority
 set pig.cachedbag.memusage $pig_cachedbag_mem_usage
 set pig.skewedjoin.reduce.memusage $pig_skewedjoin_reduce_memusage
-SET debug 'off'
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+-- code section
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+D100 = LOAD '$dc_m_hdfs_inputDocsData' as (sname:chararray, datagroup:{(cId:chararray, cPos:int, sname:chararray, data:map[{(chararray)}])}, count:long);
 
+-- -----------------------------------------------------
+-- SMALL GRUPS OF CONTRIBUTORS -------------------------
+-- -----------------------------------------------------
+D100A = foreach D100 generate flatten( exhaustiveAND( datagroup ) ) as (uuid:chararray, cIds:chararray);
+E100 = foreach D100A generate flatten( cIds ) as cId, uuid;
 
-B = load '$dc_m_hdfs_inputDocsData' as (cId:chararray,cPos:int,sname:chararray,data:map[{(chararray)}]);
+store E100 into '$dc_m_hdfs_outputContribs';
 
-C = group B by sname;
-
-D = foreach C generate group as sname, B as datagroup, COUNT(B) as count;
--- D: {sname: chararray, datagroup: {(cId: chararray,cPos: int,sname: chararray,data: map[{(val_0: chararray)}])}, count: long}
-
--- dump D;
-E = foreach D generate exhaustiveAND( datagroup );
-dump E;
