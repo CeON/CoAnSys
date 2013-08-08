@@ -73,6 +73,6 @@ object NewHeuristicAdder extends MyScoobiApp {
     }
     val titleMatched = titleTaggedEntities.join(titleIndex).values.map(x => (x, 1))
       .groupByKey[(MatchableEntity, String), Int].combine(Sum.int).filter(_._2 >= minMatchingTitleTokens).keys
-    (authorMatched ++ titleMatched).toSequenceFile(outUrl, overwrite = true)
+    persist((authorMatched ++ titleMatched).toSequenceFile(outUrl, overwrite = true))
   }
 }
