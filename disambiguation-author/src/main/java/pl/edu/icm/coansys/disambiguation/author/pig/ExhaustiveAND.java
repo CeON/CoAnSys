@@ -62,8 +62,6 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
         
         timer = new Timer("logs/exhaustive.stat");
 		(new Thread( timer )).start();
-
-        //timer.addMonit("EXHAUSTIVE-DATA-STATISTICS");
         timer.addMonit("id","contribs","clusters","calculated sims","time");
         timer.addMonit("S:", "=suma(B3:B1000000)", "=suma(C3:C1000000)", "=suma(D3:D1000000)","=suma(E3:E1000000)");
 	}
