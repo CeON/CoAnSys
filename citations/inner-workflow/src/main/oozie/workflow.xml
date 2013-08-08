@@ -110,7 +110,7 @@ Workflow properties:
             <arg>${cit_workDir}/author_index</arg>
         </java>
 
-        <ok to="add-heuristic"/>
+        <ok to="heuristic-type"/>
         <error to="fail"/>
     </action>
 
