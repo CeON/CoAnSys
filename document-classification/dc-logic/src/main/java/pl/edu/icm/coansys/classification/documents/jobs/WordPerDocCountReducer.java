@@ -1,6 +1,21 @@
 /*
- * (C) 2010-2012 ICM UW. All rights reserved.
+ * This file is part of CoAnSys project.
+ * Copyright (c) 2012-2013 ICM-UW
+ * 
+ * CoAnSys is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * CoAnSys is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Affero General Public License
+ * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
+
 package pl.edu.icm.coansys.classification.documents.jobs;
 
 import java.io.IOException;
@@ -22,7 +37,6 @@ import pl.edu.icm.coansys.disambiguation.auxil.TextArrayWritable;
 public class WordPerDocCountReducer extends Reducer<Text, StringListIntListWritable, TextArrayWritable, StringListIntListWritable> {
 
     private static Logger logger = LoggerFactory.getLogger(WordPerDocCountReducer.class);
-    //protected String reducerId = new Date().getTime() + "_" + new Random().nextFloat();
 
     @Override
     public void setup(Context context) throws IOException, InterruptedException {
@@ -50,14 +64,12 @@ public class WordPerDocCountReducer extends Reducer<Text, StringListIntListWrita
             try {
                 context.write(
                         new TextArrayWritable(new Text[]{key,
-                            new Text(slilw.getStringList().get(0))}),
+                    new Text(slilw.getStringList().get(0))}),
                         out_slilw);
             } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                logger.error("Cought exception:", e);
             } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                logger.error("Cought exception:", e);
             }
         }
     }

@@ -1,6 +1,21 @@
 /*
- * (C) 2010-2012 ICM UW. All rights reserved.
+ * This file is part of CoAnSys project.
+ * Copyright (c) 2012-2013 ICM-UW
+ * 
+ * CoAnSys is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * CoAnSys is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Affero General Public License
+ * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
+
 package pl.edu.icm.coansys.disambiguation.author.features.extractors;
 
 import java.util.ArrayList;
@@ -12,7 +27,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.AuthorBased;
-import pl.edu.icm.coansys.disambiguation.author.jobs.hdfs.DisambiguationJob_Toy;
 import pl.edu.icm.coansys.disambiguation.features.Extractor;
 import pl.edu.icm.coansys.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
@@ -28,7 +42,7 @@ import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
  */
 public class DocumentProto2EmailPrefixExtractor implements Extractor<DocumentMetadata>, AuthorBased {
 
-    private static Logger logger = LoggerFactory.getLogger(new DisambiguationJob_Toy().getClass());
+    private static Logger logger = LoggerFactory.getLogger(DocumentProto2EmailPrefixExtractor.class);
 
     @Override
     public List<String> extract(DocumentMetadata input, String... auxil) {

@@ -1,6 +1,21 @@
 /*
- * (C) 2010-2012 ICM UW. All rights reserved.
+ * This file is part of CoAnSys project.
+ * Copyright (c) 2012-2013 ICM-UW
+ * 
+ * CoAnSys is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * CoAnSys is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Affero General Public License
+ * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
+
 package pl.edu.icm.coansys.classification.documents.jobs;
 
 import java.io.IOException;
@@ -23,35 +38,33 @@ import pl.edu.icm.coansys.disambiguation.auxil.TextTextArrayMapWritable;
  */
 public class WordPerDocCountMapper extends Mapper<TextArrayWritable, IntWritable, Text, StringListIntListWritable> {
 
-	private static Logger logger = LoggerFactory.getLogger(WordPerDocCountMapper.class);
-    
+    private static Logger logger = LoggerFactory.getLogger(WordPerDocCountMapper.class);
+
     @Override
     /**
-     * (IN) accepts key-value pairs containing K:docId + word from this document, V: the number of word occurences
-     * (OUT) emit key-value pairs containing K:docId, V: word + its number of occurences in the document  
+     * (IN) accepts key-value pairs containing K:docId + word from this
+     * document, V: the number of word occurrences (OUT) emit key-value pairs
+     * containing K:docId, V: word + its number of occurrences in the document
      */
-    protected void map(TextArrayWritable docIdAndWord, IntWritable wc, Context context) { 
-        
-    	StringListIntListWritable slilw = new StringListIntListWritable();
-    	slilw.addInt(wc.get());
-    	slilw.addString(docIdAndWord.toStringList().get(1));
-        
-    	try {
-			context.write(new Text(docIdAndWord.toStringList().get(0)),
-					slilw);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+    protected void map(TextArrayWritable docIdAndWord, IntWritable wc, Context context) {
+
+        StringListIntListWritable slilw = new StringListIntListWritable();
+        slilw.addInt(wc.get());
+        slilw.addString(docIdAndWord.toStringList().get(1));
+
+        try {
+            context.write(new Text(docIdAndWord.toStringList().get(0)),
+                    slilw);
+        } catch (IOException e) {
+            logger.error("Cought exception:", e);
+        } catch (InterruptedException e) {
+            logger.error("Cought exception:", e);
+        }
     }
-    
-    
-	protected void logAllFeaturesExtractedForOneAuthor(String authId,
-			TextTextArrayMapWritable featureName2FeatureValuesMap) {
-		logger.debug("MAPPER: output key: " + authId);
-		logger.debug("MAPPER: output value: "+featureName2FeatureValuesMap);
-	}
+
+    protected void logAllFeaturesExtractedForOneAuthor(String authId,
+            TextTextArrayMapWritable featureName2FeatureValuesMap) {
+        logger.debug("MAPPER: output key: " + authId);
+        logger.debug("MAPPER: output value: " + featureName2FeatureValuesMap);
+    }
 }
