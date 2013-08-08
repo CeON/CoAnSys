@@ -1,3 +1,21 @@
+/*
+ * This file is part of CoAnSys project.
+ * Copyright (c) 2012-2013 ICM-UW
+ * 
+ * CoAnSys is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * CoAnSys is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Affero General Public License
+ * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package pl.edu.icm.coansys.disambiguation.author.pig.extractor;
 
 import org.apache.pig.data.DataBag;
@@ -7,16 +25,17 @@ import org.apache.pig.data.TupleFactory;
 import pl.edu.icm.coansys.models.DocumentProtos.ClassifCode;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 
-public class EX_CLASSIFICATION_CODES implements  DisambiguationExtractor {
+public class EX_CLASSIFICATION_CODES extends DisambiguationExtractor{
 	
 	@Override
-	public DataBag extract(Object o, Object... objects){
+	public DataBag extract( Object o, String lang ){
 		DocumentMetadata dm = (DocumentMetadata) o;
 		DataBag db = new DefaultDataBag();
 		
-		for(ClassifCode cc : dm.getBasicMetadata().getClassifCodeList()){
+		for(ClassifCode cc : dm.getBasicMetadata().getClassifCodeList()){ 
 			for(String s : cc.getValueList()){
-				db.add(TupleFactory.getInstance().newTuple(s));
+				db.add( TupleFactory.getInstance().newTuple( 
+						normalizeExtracted( s ) ) );
 			}
 		}
 			

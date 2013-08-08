@@ -1,6 +1,21 @@
 /*
- * (C) 2010-2012 ICM UW. All rights reserved.
+ * This file is part of CoAnSys project.
+ * Copyright (c) 2012-2013 ICM-UW
+ * 
+ * CoAnSys is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * CoAnSys is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Affero General Public License
+ * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
+
 package pl.edu.icm.coansys.disambiguation.author.pig;
 
 import java.util.Arrays;
@@ -28,8 +43,6 @@ public class PigDisambiguator extends Disambiguator{
 		this.d = d;
 	}
 	
-	//pytanie z cyklu poznajemy swiat: czy przypadkiem nie jest tak, ze polimorfizm tutaj nie zadziala
-	//tak jak jest tu oczekiwane?
 	public double calculateAffinity(Object f1, Object f2) throws ExecException {
 		if(f1 instanceof Tuple && f2 instanceof Tuple ){
 			return calculateAffinity((Tuple) f1, (Tuple) f2);
@@ -56,15 +69,6 @@ public class PigDisambiguator extends Disambiguator{
 		return d.calculateAffinity(ToList.execute(f1), ToList.execute(f2));
 	}
 	
-	// TODO zajrzec do artykulu, jak nie bedzie info to spytac Piotra czy warto uzyc equalize
-	/*@SuppressWarnings("unused")
-	private String equalize( String str ) {
-		str = str.replace( ",", "" );
-		str = str.replace( ".", "" );
-		str = str.toLowerCase();
-		return str;
-	}*/
-	
 	public double calculateAffinity(String f1, String f2) {
 		List <String> fl1 = Arrays.asList( f1.split(" ") );
 		List <String> fl2 = Arrays.asList( f2.split(" ") );
@@ -75,7 +79,7 @@ public class PigDisambiguator extends Disambiguator{
 	 * 
 	 * @return {@link PigDisambiguator} id.
 	 */
-        @Override
+    @Override
 	public String getName(){
 		return d.getName();
 	}
