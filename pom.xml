@@ -209,6 +209,7 @@
         <module>logs-analysis</module>
         <module>keywords-extraction</module>
         <module>models</module>
+        <module>nlm-extraction</module>
     </modules>
 
     <dependencies>

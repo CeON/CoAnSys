@@ -1,3 +1,21 @@
+/*
+ * This file is part of CoAnSys project.
+ * Copyright (c) 2012-2013 ICM-UW
+ * 
+ * CoAnSys is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * CoAnSys is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Affero General Public License
+ * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package pl.edu.icm.coansys.kwdextraction;
 
 import java.io.File;
@@ -11,7 +29,7 @@ import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.io.Text;
 import static org.testng.Assert.*;
 import org.testng.annotations.Test;
-import pl.edu.icm.coansys.models.KeywordExtractionProtos;
+import pl.edu.icm.coansys.models.DocumentProtos;
 import pl.edu.icm.oozierunner.OozieRunner;
 
 public class TestIT {
@@ -46,9 +64,8 @@ public class TestIT {
                 Text key = new Text();
                 BytesWritable value = new BytesWritable();
                 while (reader.next(key, value)) {
-                    KeywordExtractionProtos.ExtractedKeywords extractedKwds =
-                            KeywordExtractionProtos.ExtractedKeywords.parseFrom(value.copyBytes());
-                    actual = extractedKwds.getKeywordList();
+                    DocumentProtos.KeywordsList extractedKwds = DocumentProtos.KeywordsList.parseFrom(value.copyBytes());
+                    actual = extractedKwds.getKeywordsList();
                     records ++;
                 }
             }

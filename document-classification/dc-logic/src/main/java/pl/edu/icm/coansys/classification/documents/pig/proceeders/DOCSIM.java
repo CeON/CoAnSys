@@ -1,6 +1,21 @@
 /*
- * (C) 2010-2012 ICM UW. All rights reserved.
+ * This file is part of CoAnSys project.
+ * Copyright (c) 2012-2013 ICM-UW
+ * 
+ * CoAnSys is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * CoAnSys is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Affero General Public License
+ * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
+
 package pl.edu.icm.coansys.classification.documents.pig.proceeders;
 
 import java.io.IOException;
@@ -15,14 +30,18 @@ import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
 import org.apache.pig.impl.logicalLayer.FrontendException;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
 
 /**
-*
-* @author pdendek
-*/
+ *
+ * @author pdendek
+ */
 public class DOCSIM extends EvalFunc<Tuple> {
+
+    private static final Logger logger = LoggerFactory.getLogger(DOCSIM.class);
 
     @Override
     public Schema outputSchema(Schema p_input) {
@@ -30,10 +49,12 @@ public class DOCSIM extends EvalFunc<Tuple> {
             return Schema.generateNestedSchema(DataType.TUPLE,
                     DataType.CHARARRAY, DataType.CHARARRAY, DataType.DOUBLE);
         } catch (FrontendException e) {
+            logger.error("Error in creating output schema:", e);
             throw new IllegalStateException(e);
         }
     }
 
+    @Override
     public Tuple exec(Tuple input) throws IOException {
         if (input == null || input.size() == 0) {
             return null;
@@ -67,11 +88,11 @@ public class DOCSIM extends EvalFunc<Tuple> {
             hsA.retainAll(hsB);
 
             double numerator = 0;
-            
+
             for (String s : hsA) {
                 numerator += hmA.get(s) * hmB.get(s);
             }
-            
+
             double denominator = Math.sqrt(denominatorA) * Math.sqrt(denominatorB);
             double retVal = numerator / denominator;
 
@@ -82,18 +103,9 @@ public class DOCSIM extends EvalFunc<Tuple> {
                 return null;
             }
         } catch (Exception e) {
-        	// Throwing an exception will cause the task to fail.
+            logger.error("Error in processing input row:", e);
             throw new IOException("Caught exception processing input row:\n"
-            		+ StackTraceExtractor.getStackTrace(e));
+                    + StackTraceExtractor.getStackTrace(e));
         }
     }
-
-    /*
-     * private Map<String,Double> extractToMap(Tuple input, int bagIndex, int
-     * keyIndex, int valIndex) throws ExecException { HashMap<String,Double> hm
-     * = new HashMap<String,Double>(); for(Tuple t : (DataBag)
-     * input.get(bagIndex)) hm.put((String) t.get(keyIndex), (Double)
-     * t.get(valIndex)); return hm;
-	}
-     */
 }
