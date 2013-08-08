@@ -44,7 +44,7 @@ object NewHeuristicAdder extends MyScoobiApp {
       entity =>
         for {
           year <- approximateYear(entity.year)
-          author <- entity.normalisedAuthorTokens
+          author <- misc.lettersNormaliseTokenise(entity.author)
         } yield (author + year, entity)
     }
 
@@ -59,7 +59,7 @@ object NewHeuristicAdder extends MyScoobiApp {
       entity =>
         for {
           year <- approximateYear(entity.year)
-          title <- entity.title.split(raw"\s+")
+          title <- misc.lettersNormaliseTokenise(entity.title).take(indexedTitleTokens)
         } yield (title + year, entity)
     }
     implicit val grouping = new Grouping[(MatchableEntity, String)] {
