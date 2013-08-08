@@ -7,10 +7,10 @@ import org.apache.pig.data.TupleFactory;
 
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 
-public class EX_YEAR implements  DisambiguationExtractor {
+public class EX_YEAR extends DisambiguationExtractor {
 	
 	@Override
-	public DataBag extract(Object o, Object... objects){
+	public DataBag extract( Object o, String lang ) {
 		DocumentMetadata dm = (DocumentMetadata) o;
 		
 		DataBag db = new DefaultDataBag();
