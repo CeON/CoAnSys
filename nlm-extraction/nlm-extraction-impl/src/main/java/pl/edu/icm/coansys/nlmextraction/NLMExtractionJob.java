@@ -6,6 +6,7 @@ package pl.edu.icm.coansys.nlmextraction;
 import com.google.protobuf.ByteString;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.BytesWritable;
@@ -21,8 +22,10 @@ import org.jdom.Element;
 import org.jdom.output.XMLOutputter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.edu.icm.cermine.PdfBxStructureExtractor;
 import pl.edu.icm.cermine.PdfNLMContentExtractor;
 import pl.edu.icm.cermine.exception.AnalysisException;
+import pl.edu.icm.cermine.structure.DocstrumSegmenter;
 import pl.edu.icm.coansys.models.DocumentProtos;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
 import pl.edu.icm.coansys.models.DocumentProtos.Media;
@@ -80,6 +83,10 @@ public class NLMExtractionJob implements Tool {
                         InputStream pdfIS = media.getContent().newInput();
                         try {
                             PdfNLMContentExtractor nlmExtr = new PdfNLMContentExtractor();
+                            PdfBxStructureExtractor strExtractor = new PdfBxStructureExtractor();
+                            strExtractor.setPageSegmenter(new DocstrumSegmenter());
+                            nlmExtr.setStructureExtractor(strExtractor);
+
                             Element nlmContent = nlmExtr.extractContent(pdfIS);
 
                             XMLOutputter outp = new XMLOutputter();
@@ -90,8 +97,15 @@ public class NLMExtractionJob implements Tool {
                             nlmMediaBuilder.setKey(media.getKey());
                             nlmMediaBuilder.setSourceFilesize(nlmString.length());
                             nlmMediaBuilder.setContent(ByteString.copyFromUtf8(nlmString));
+                            nlmMediaBuilder.setMediaType(ProtoConstants.mediaTypeNlm);
 
-                            // TODO provenance
+                            DocumentProtos.ProvenanceInfo.Builder provenanceBuilder = DocumentProtos.ProvenanceInfo.newBuilder();
+                            DocumentProtos.ProvenanceInfo.SingleProvenanceInfo.Builder signleProvenance =
+                                    DocumentProtos.ProvenanceInfo.SingleProvenanceInfo.newBuilder();
+                            signleProvenance.setLastModificationDate(new Date().getTime());
+                            signleProvenance.setLastModificationMarkerId("Coansys NLM extraction (CERMINE)");
+                            provenanceBuilder.setCurrentProvenance(signleProvenance);
+                            nlmMediaBuilder.setProvenance(provenanceBuilder);
 
                             context.write(new Text(media.getKey()), new BytesWritable(nlmMediaBuilder.build().toByteArray()));
                         } catch (AnalysisException ex) {

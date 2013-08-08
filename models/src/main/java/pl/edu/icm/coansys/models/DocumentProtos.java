@@ -11799,6 +11799,11 @@ public final class DocumentProtos {
     // optional string destinationPath = 7;
     boolean hasDestinationPath();
     String getDestinationPath();
+    
+    // optional .ProvenanceInfo provenance = 8;
+    boolean hasProvenance();
+    pl.edu.icm.coansys.models.DocumentProtos.ProvenanceInfo getProvenance();
+    pl.edu.icm.coansys.models.DocumentProtos.ProvenanceInfoOrBuilder getProvenanceOrBuilder();
   }
   public static final class Media extends
       com.google.protobuf.GeneratedMessage
@@ -12009,6 +12014,19 @@ public final class DocumentProtos {
       }
     }
     
+    // optional .ProvenanceInfo provenance = 8;
+    public static final int PROVENANCE_FIELD_NUMBER = 8;
+    private pl.edu.icm.coansys.models.DocumentProtos.ProvenanceInfo provenance_;
+    public boolean hasProvenance() {
+      return ((bitField0_ & 0x00000080) == 0x00000080);
+    }
+    public pl.edu.icm.coansys.models.DocumentProtos.ProvenanceInfo getProvenance() {
+      return provenance_;
+    }
+    public pl.edu.icm.coansys.models.DocumentProtos.ProvenanceInfoOrBuilder getProvenanceOrBuilder() {
+      return provenance_;
+    }
+    
     private void initFields() {
       key_ = "";
       mediaType_ = "";
@@ -12017,6 +12035,7 @@ public final class DocumentProtos {
       sourcePath_ = "";
       sourceFilesize_ = 0L;
       destinationPath_ = "";
+      provenance_ = pl.edu.icm.coansys.models.DocumentProtos.ProvenanceInfo.getDefaultInstance();
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -12034,6 +12053,12 @@ public final class DocumentProtos {
       if (!hasContent()) {
         memoizedIsInitialized = 0;
         return false;
+      }
+      if (hasProvenance()) {
+        if (!getProvenance().isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
       }
       memoizedIsInitialized = 1;
       return true;
@@ -12062,6 +12087,9 @@ public final class DocumentProtos {
       }
       if (((bitField0_ & 0x00000040) == 0x00000040)) {
         output.writeBytes(7, getDestinationPathBytes());
+      }
+      if (((bitField0_ & 0x00000080) == 0x00000080)) {
+        output.writeMessage(8, provenance_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -12099,6 +12127,10 @@ public final class DocumentProtos {
       if (((bitField0_ & 0x00000040) == 0x00000040)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(7, getDestinationPathBytes());
+      }
+      if (((bitField0_ & 0x00000080) == 0x00000080)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(8, provenance_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -12216,6 +12248,7 @@ public final class DocumentProtos {
       }
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          getProvenanceFieldBuilder();
         }
       }
       private static Builder create() {
@@ -12238,6 +12271,12 @@ public final class DocumentProtos {
         bitField0_ = (bitField0_ & ~0x00000020);
         destinationPath_ = "";
         bitField0_ = (bitField0_ & ~0x00000040);
+        if (provenanceBuilder_ == null) {
+          provenance_ = pl.edu.icm.coansys.models.DocumentProtos.ProvenanceInfo.getDefaultInstance();
+        } else {
+          provenanceBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000080);
         return this;
       }
       
@@ -12304,6 +12343,14 @@ public final class DocumentProtos {
           to_bitField0_ |= 0x00000040;
         }
         result.destinationPath_ = destinationPath_;
+        if (((from_bitField0_ & 0x00000080) == 0x00000080)) {
+          to_bitField0_ |= 0x00000080;
+        }
+        if (provenanceBuilder_ == null) {
+          result.provenance_ = provenance_;
+        } else {
+          result.provenance_ = provenanceBuilder_.build();
+        }
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -12341,6 +12388,9 @@ public final class DocumentProtos {
         if (other.hasDestinationPath()) {
           setDestinationPath(other.getDestinationPath());
         }
+        if (other.hasProvenance()) {
+          mergeProvenance(other.getProvenance());
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
@@ -12357,6 +12407,12 @@ public final class DocumentProtos {
         if (!hasContent()) {
           
           return false;
+        }
+        if (hasProvenance()) {
+          if (!getProvenance().isInitialized()) {
+            
+            return false;
+          }
         }
         return true;
       }
@@ -12417,6 +12473,15 @@ public final class DocumentProtos {
             case 58: {
               bitField0_ |= 0x00000040;
               destinationPath_ = input.readBytes();
+              break;
+            }
+            case 66: {
+              pl.edu.icm.coansys.models.DocumentProtos.ProvenanceInfo.Builder subBuilder = pl.edu.icm.coansys.models.DocumentProtos.ProvenanceInfo.newBuilder();
+              if (hasProvenance()) {
+                subBuilder.mergeFrom(getProvenance());
+              }
+              input.readMessage(subBuilder, extensionRegistry);
+              setProvenance(subBuilder.buildPartial());
               break;
             }
           }
@@ -12648,6 +12713,96 @@ public final class DocumentProtos {
         bitField0_ |= 0x00000040;
         destinationPath_ = value;
         onChanged();
+      }
+      
+      // optional .ProvenanceInfo provenance = 8;
+      private pl.edu.icm.coansys.models.DocumentProtos.ProvenanceInfo provenance_ = pl.edu.icm.coansys.models.DocumentProtos.ProvenanceInfo.getDefaultInstance();
+      private com.google.protobuf.SingleFieldBuilder<
+          pl.edu.icm.coansys.models.DocumentProtos.ProvenanceInfo, pl.edu.icm.coansys.models.DocumentProtos.ProvenanceInfo.Builder, pl.edu.icm.coansys.models.DocumentProtos.ProvenanceInfoOrBuilder> provenanceBuilder_;
+      public boolean hasProvenance() {
+        return ((bitField0_ & 0x00000080) == 0x00000080);
+      }
+      public pl.edu.icm.coansys.models.DocumentProtos.ProvenanceInfo getProvenance() {
+        if (provenanceBuilder_ == null) {
+          return provenance_;
+        } else {
+          return provenanceBuilder_.getMessage();
+        }
+      }
+      public Builder setProvenance(pl.edu.icm.coansys.models.DocumentProtos.ProvenanceInfo value) {
+        if (provenanceBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          provenance_ = value;
+          onChanged();
+        } else {
+          provenanceBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000080;
+        return this;
+      }
+      public Builder setProvenance(
+          pl.edu.icm.coansys.models.DocumentProtos.ProvenanceInfo.Builder builderForValue) {
+        if (provenanceBuilder_ == null) {
+          provenance_ = builderForValue.build();
+          onChanged();
+        } else {
+          provenanceBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000080;
+        return this;
+      }
+      public Builder mergeProvenance(pl.edu.icm.coansys.models.DocumentProtos.ProvenanceInfo value) {
+        if (provenanceBuilder_ == null) {
+          if (((bitField0_ & 0x00000080) == 0x00000080) &&
+              provenance_ != pl.edu.icm.coansys.models.DocumentProtos.ProvenanceInfo.getDefaultInstance()) {
+            provenance_ =
+              pl.edu.icm.coansys.models.DocumentProtos.ProvenanceInfo.newBuilder(provenance_).mergeFrom(value).buildPartial();
+          } else {
+            provenance_ = value;
+          }
+          onChanged();
+        } else {
+          provenanceBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000080;
+        return this;
+      }
+      public Builder clearProvenance() {
+        if (provenanceBuilder_ == null) {
+          provenance_ = pl.edu.icm.coansys.models.DocumentProtos.ProvenanceInfo.getDefaultInstance();
+          onChanged();
+        } else {
+          provenanceBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000080);
+        return this;
+      }
+      public pl.edu.icm.coansys.models.DocumentProtos.ProvenanceInfo.Builder getProvenanceBuilder() {
+        bitField0_ |= 0x00000080;
+        onChanged();
+        return getProvenanceFieldBuilder().getBuilder();
+      }
+      public pl.edu.icm.coansys.models.DocumentProtos.ProvenanceInfoOrBuilder getProvenanceOrBuilder() {
+        if (provenanceBuilder_ != null) {
+          return provenanceBuilder_.getMessageOrBuilder();
+        } else {
+          return provenance_;
+        }
+      }
+      private com.google.protobuf.SingleFieldBuilder<
+          pl.edu.icm.coansys.models.DocumentProtos.ProvenanceInfo, pl.edu.icm.coansys.models.DocumentProtos.ProvenanceInfo.Builder, pl.edu.icm.coansys.models.DocumentProtos.ProvenanceInfoOrBuilder> 
+          getProvenanceFieldBuilder() {
+        if (provenanceBuilder_ == null) {
+          provenanceBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              pl.edu.icm.coansys.models.DocumentProtos.ProvenanceInfo, pl.edu.icm.coansys.models.DocumentProtos.ProvenanceInfo.Builder, pl.edu.icm.coansys.models.DocumentProtos.ProvenanceInfoOrBuilder>(
+                  provenance_,
+                  getParentForChildren(),
+                  isClean());
+          provenance_ = null;
+        }
+        return provenanceBuilder_;
       }
       
       // @@protoc_insertion_point(builder_scope:Media)
@@ -14037,16 +14192,16 @@ public final class DocumentProtos {
       "\rbasicMetadata\030\001 \002(\0132\016.BasicMetadata\022\024\n\014" +
       "sourceDocKey\030\002 \001(\t\022\020\n\010position\030\003 \001(\005\022\027\n\017",
       "rawCitationText\030\004 \001(\t\022\030\n\005extId\030\005 \003(\0132\t.K" +
-      "eyValue\"\221\001\n\005Media\022\013\n\003key\030\001 \002(\t\022\021\n\tmediaT" +
+      "eyValue\"\266\001\n\005Media\022\013\n\003key\030\001 \002(\t\022\021\n\tmediaT" +
       "ype\030\002 \002(\t\022\017\n\007content\030\003 \002(\014\022\022\n\ncollection" +
       "\030\004 \001(\t\022\022\n\nsourcePath\030\005 \001(\t\022\026\n\016sourceFile" +
-      "size\030\006 \001(\003\022\027\n\017destinationPath\030\007 \001(\t\"\'\n\016M" +
-      "ediaContainer\022\025\n\005media\030\001 \003(\0132\006.Media\"v\n\017" +
-      "DocumentWrapper\022\r\n\005rowId\030\001 \002(\t\022+\n\020docume" +
-      "ntMetadata\030\002 \001(\0132\021.DocumentMetadata\022\'\n\016m" +
-      "ediaContainer\030\003 \001(\0132\017.MediaContainerB+\n\031" +
-      "pl.edu.icm.coansys.modelsB\016DocumentProto",
-      "s"
+      "size\030\006 \001(\003\022\027\n\017destinationPath\030\007 \001(\t\022#\n\np" +
+      "rovenance\030\010 \001(\0132\017.ProvenanceInfo\"\'\n\016Medi" +
+      "aContainer\022\025\n\005media\030\001 \003(\0132\006.Media\"v\n\017Doc" +
+      "umentWrapper\022\r\n\005rowId\030\001 \002(\t\022+\n\020documentM" +
+      "etadata\030\002 \001(\0132\021.DocumentMetadata\022\'\n\016medi" +
+      "aContainer\030\003 \001(\0132\017.MediaContainerB+\n\031pl.",
+      "edu.icm.coansys.modelsB\016DocumentProtos"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -14146,7 +14301,7 @@ public final class DocumentProtos {
           internal_static_Media_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_Media_descriptor,
-              new java.lang.String[] { "Key", "MediaType", "Content", "Collection", "SourcePath", "SourceFilesize", "DestinationPath", },
+              new java.lang.String[] { "Key", "MediaType", "Content", "Collection", "SourcePath", "SourceFilesize", "DestinationPath", "Provenance", },
               pl.edu.icm.coansys.models.DocumentProtos.Media.class,
               pl.edu.icm.coansys.models.DocumentProtos.Media.Builder.class);
           internal_static_MediaContainer_descriptor =
