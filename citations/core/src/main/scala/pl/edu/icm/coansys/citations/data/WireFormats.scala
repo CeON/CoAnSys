@@ -20,11 +20,13 @@ package pl.edu.icm.coansys.citations.data
 
 import pl.edu.icm.coansys.citations.util.BytesConverter
 import pl.edu.icm.coansys.models.DocumentProtos.{BasicMetadata, DocumentWrapper}
+import pl.edu.icm.coansys.models.PICProtos
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 object WireFormats {
-  implicit val docConverter = new BytesConverter[DocumentWrapper](_.toByteArray, DocumentWrapper.parseFrom(_))
-  implicit val metaConverter = new BytesConverter[BasicMetadata](_.toByteArray, BasicMetadata.parseFrom(_))
+  implicit val docConverter = new BytesConverter[DocumentWrapper](_.toByteArray, DocumentWrapper.parseFrom)
+  implicit val metaConverter = new BytesConverter[BasicMetadata](_.toByteArray, BasicMetadata.parseFrom)
+  implicit val picConverter = new BytesConverter[PICProtos.PicOut](_.toByteArray, PICProtos.PicOut.parseFrom)
 }
