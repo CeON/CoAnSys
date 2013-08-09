@@ -19,16 +19,13 @@
 package pl.edu.icm.coansys.citations.data
 
 import collection.JavaConversions._
-import pl.edu.icm.coansys.citations.util.misc._
-import pl.edu.icm.coansys.commons.scala.strings
-import pl.edu.icm.coansys.commons.java.DiacriticsRemover.removeDiacritics
-import pl.edu.icm.cermine.bibref.BibReferenceParser
-import pl.edu.icm.coansys.models.DocumentProtos.{DocumentMetadata, BasicMetadata, ReferenceMetadata}
-import pl.edu.icm.coansys.citations.data.CitationMatchingProtos.MatchableEntityData
-import pl.edu.icm.cermine.bibref.model.BibEntry
-import pl.edu.icm.coansys.citations.util.BytesConverter
 import com.nicta.scoobi.core.Grouping
-import scala.Some
+import pl.edu.icm.cermine.bibref.BibReferenceParser
+import pl.edu.icm.cermine.bibref.model.BibEntry
+import pl.edu.icm.coansys.citations.data.CitationMatchingProtos.{KeyValue, MatchableEntityData}
+import pl.edu.icm.coansys.citations.util.{misc, BytesConverter}
+import pl.edu.icm.coansys.commons.java.DiacriticsRemover.removeDiacritics
+import pl.edu.icm.coansys.models.DocumentProtos.{DocumentMetadata, BasicMetadata, ReferenceMetadata}
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -49,16 +46,7 @@ class MatchableEntity(val data: MatchableEntityData) {
   def rawText = data.getAuxiliaryList.find(_.getKey == "rawText").map(x => removeDiacritics(x.getValue))
 
   def normalisedAuthorTokens: Iterable[String] =
-    tokensFromCermine(strings.lettersOnly(author))
-      .flatMap { tok =>
-        if (tok.length <= 3 && tok.forall(_.isUpper))
-          tok.toCharArray.map(_.toString)
-        else
-          Some(tok)
-      }
-      .filter(_.length > 1)
-      .map(_.toLowerCase)
-      .toSet
+    misc.lettersNormaliseTokenise(author).distinct
 
   def toReferenceString: String = List(author, title, source, pages, year).mkString("; ")
 
@@ -76,8 +64,8 @@ class MatchableEntity(val data: MatchableEntityData) {
 object MatchableEntity {
   implicit val converter =
     new BytesConverter[MatchableEntity](
-      (_.data.toByteArray),
-      (x => new MatchableEntity(MatchableEntityData.parseFrom(x))))
+      _.data.toByteArray,
+      x => new MatchableEntity(MatchableEntityData.parseFrom(x)))
 
   implicit val grouping = new Grouping[MatchableEntity] {
     def groupCompare(x: MatchableEntity, y: MatchableEntity) = scalaz.Ordering.fromInt(x.id compareTo y.id)
@@ -151,6 +139,7 @@ object MatchableEntity {
     data.setTitle(getField(bibEntry, BibEntry.FIELD_TITLE))
     data.setPages(getField(bibEntry, BibEntry.FIELD_PAGES))
     data.setYear(getField(bibEntry, BibEntry.FIELD_YEAR))
+    data.addAuxiliary(KeyValue.newBuilder().setKey("rawText").setValue(rawText))
 
     new MatchableEntity(data.build())
   }

@@ -16,7 +16,7 @@
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.edu.icm.coansys.citations.util
+package pl.edu.icm.coansys.citations.util.classification.svm
 
 import java.io._
 import libsvm._
@@ -49,4 +49,14 @@ object SvmClassifier {
 
   def fromReader(reader: Reader) =
     new SvmClassifier(svm.svm_load_model(new BufferedReader(reader)))
+
+  /**
+   * Converts a feature vector to the text line in LibSVM format.
+   */
+  def featureVectorValuesToLibSvmLine(fv: Iterable[Double], label: Int): String = {
+    val features = (Stream.from(1) zip fv).map {
+      case (i, v) => i + ":" + v
+    }.mkString(" ")
+    label + " " + features
+  }
 }
