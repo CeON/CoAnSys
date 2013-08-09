@@ -25,10 +25,10 @@ import pl.edu.icm.coansys.disambiguation.author.benchmark.Timer;
 
 public class AproximateAND extends EvalFunc<DataBag> {
 
-	private double threshold;
+	private float threshold;
 	private PigDisambiguator[] features;
 	private List<FeatureInfo> featureInfos;
-	private double sim[][];
+	private float sim[][];
 	private Tuple datain[];
 	private int N;
 	//TODO: change lists to arrays where possible
@@ -39,7 +39,7 @@ public class AproximateAND extends EvalFunc<DataBag> {
     private int timerPlayId = 0;
     
 	public AproximateAND(String threshold, String featureDescription){
-		this.threshold = Double.parseDouble(threshold);
+		this.threshold = Float.parseFloat(threshold);
         this.featureInfos = FeatureInfo.parseFeatureInfoString(featureDescription);
         DisambiguatorFactory ff = new DisambiguatorFactory();
 
@@ -109,9 +109,9 @@ public class AproximateAND extends EvalFunc<DataBag> {
 			}
 
 			//sim[][] init
-			sim = new double[ N ][];
+			sim = new float[ N ][];
 			for ( int i = 1; i < N; i++ ) {
-				sim[i] = new double[i];
+				sim[i] = new float[i];
 
 				for ( int j = 0; j < i; j++ ) {
 					sim[i][j] = threshold;
@@ -193,7 +193,7 @@ public class AproximateAND extends EvalFunc<DataBag> {
 				//if i,j are already in one union, we say they are identical
 				//and do not calculate precise similarity value
 				if ( find( i ) == find( j ) ) {
-					sim[i][j] = Double.POSITIVE_INFINITY;
+					sim[i][j] = Float.POSITIVE_INFINITY;
 					continue;
 				}
 				
@@ -233,9 +233,9 @@ public class AproximateAND extends EvalFunc<DataBag> {
 	// o( N )
 	protected List < ArrayList<Integer> > splitIntoClusters() {
 		
-		//TODO: change to arrrays, because we know clusters' sizes (clasterSize[])
+		//TODO: change to arrWays, because we know clusters' sizes (clasterSize[])
 		List < ArrayList<Integer> > clusters = new ArrayList < ArrayList< Integer > > ();
-		// cluster[ id klastra ] =  array with contributors' simIds 
+		// cluster[ cluster id ] =  array with contributors' simIds 
 
 
 		for( int i = 0; i < N; i++ )
@@ -285,8 +285,8 @@ public class AproximateAND extends EvalFunc<DataBag> {
         				throw new IllegalArgumentException( m );
         			}
 
-        			if ( sim[ sidX ][ sidY ] != Double.NEGATIVE_INFINITY 
-        					&& sim[ sidX ][ sidY ] != Double.POSITIVE_INFINITY ) {
+        			if ( sim[ sidX ][ sidY ] != Float.NEGATIVE_INFINITY 
+        					&& sim[ sidX ][ sidY ] != Float.POSITIVE_INFINITY ) {
         				Object[] clusterTriple = 
         						new Object[]{ simIdToClusterId[ sidX ], simIdToClusterId[ sidY ], sim[ sidX ][ sidY ] };
         				similarities.add( TupleFactory.getInstance().newTuple( 

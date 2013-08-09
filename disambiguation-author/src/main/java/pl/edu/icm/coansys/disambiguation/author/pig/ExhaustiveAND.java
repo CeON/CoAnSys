@@ -28,12 +28,12 @@ import pl.edu.icm.coansys.disambiguation.idgenerators.UuIdGenerator;
 
 public class ExhaustiveAND extends EvalFunc<DataBag> {
 
-	private double threshold;
+	private float threshold;
 
-	private static final double NOT_CALCULATED = Double.NEGATIVE_INFINITY;	
+	private static final float NOT_CALCULATED = Float.NEGATIVE_INFINITY;	
 	private PigDisambiguator[] features;
 	private List<FeatureInfo> featureInfos;
-	private double sim[][];
+	private float sim[][];
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ExhaustiveAND.class);
     //benchmark 
     private Timer timer;
@@ -41,7 +41,7 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
     private int timerPlayId = 0;
 
 	public ExhaustiveAND(String threshold, String featureDescription){
-		this.threshold = Double.parseDouble(threshold);
+		this.threshold = Float.parseFloat(threshold);
         this.featureInfos = FeatureInfo.parseFeatureInfoString(featureDescription);
         DisambiguatorFactory ff = new DisambiguatorFactory();
 
@@ -72,8 +72,9 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 
 		if ( input == null || input.size() == 0 ) return null;
 		try{
+			
 			DataBag contribs = (DataBag) input.get(0);  
-
+			
 			if ( contribs == null || contribs.size() == 0 ) return null;
 			
 			//start benchmark
@@ -93,9 +94,9 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 				contribsT.add( (Map<String, Object>) t.get(3) );
 			}
 
-			sim = new double[ contribsT.size() ][];
+			sim = new float[ contribsT.size() ][];
 			for ( int i = 1; i < contribsT.size(); i++ ) {
-				sim[i] = new double[i];
+				sim[i] = new float[i];
 				for ( int j = 0; j < i; j++ )
 					sim[i][j] = NOT_CALCULATED;
 			}
@@ -112,7 +113,7 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 					
 					int idX = (Integer) t.get(0);
 					int idY = (Integer) t.get(1);
-					double simValue = (Double) t.get(2);
+					float simValue = (Float) t.get(2);
 
 					try {
 						sim[ idX ][ idY ] = simValue;

@@ -12,10 +12,10 @@ package pl.edu.icm.coansys.disambiguation.clustering;
  */
 
 public class ClusterElement implements Comparable<Object>{
-	private double sim;
+	private float sim;
 	private int index;
 	
-	public ClusterElement(double sim, int index){
+	public ClusterElement(float sim, int index){
 		this.sim=sim;
 		this.index=index;
 	}
@@ -28,11 +28,11 @@ public class ClusterElement implements Comparable<Object>{
             this.index = index;
         }
         
-        public double getSim() {
+        public float getSim() {
             return sim;
         }
 
-        public void setSim(double sim) {
+        public void setSim(float sim) {
             this.sim = sim;
         }
         

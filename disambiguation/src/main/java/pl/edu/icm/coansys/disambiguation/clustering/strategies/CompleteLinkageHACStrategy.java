@@ -37,7 +37,7 @@ public abstract class CompleteLinkageHACStrategy implements ClusteringStrategy {
      * one.
      */
     @Override
-    public int[] clusterize(double sim[][]) {
+    public int[] clusterize(float sim[][]) {
         ReversedClusterElement[][] C = new ReversedClusterElement[sim.length][];
         PriorityQueue<ReversedClusterElement> P[] = new PriorityQueue[sim.length];
         int[] I = new int[sim.length];
@@ -153,7 +153,7 @@ public abstract class CompleteLinkageHACStrategy implements ClusteringStrategy {
 
     protected ClusterElement argMaxElementWithConstraints(ClusterElement[] Cn,
             int[] I, int forbidden) {
-        double maxval = -1;
+        float maxval = -1;
         ClusterElement retEl = null;
         for (int i = 0; i < Cn.length; i++) {
             if (i == forbidden) {
@@ -170,12 +170,12 @@ public abstract class CompleteLinkageHACStrategy implements ClusteringStrategy {
         return retEl;
     }
 
-    protected abstract double SIM(double a, double b);
+    protected abstract float SIM(float a, float b);
 }
 
 class ReversedClusterElement extends ClusterElement {
 
-    public ReversedClusterElement(double sim, int index) {
+    public ReversedClusterElement(float sim, int index) {
         super(sim, index);
     }
 
@@ -188,7 +188,7 @@ class ReversedClusterElement extends ClusterElement {
             throw new ClassCastException(""
                     + "Comparison between " + this.getClass() + " and " + o2.getClass() + " is illegal!");
         }
-        double count = ((ClusterElement) o2).getSim() - this.getSim();
+        float count = ((ClusterElement) o2).getSim() - this.getSim();
         if (count > 0) {
             return -1;
         } else if (count == 0) {
