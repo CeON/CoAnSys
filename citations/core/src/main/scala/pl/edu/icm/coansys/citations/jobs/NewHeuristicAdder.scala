@@ -1,3 +1,20 @@
+/*
+ * This file is part of CoAnSys project.
+ * Copyright (c) 2012-2013 ICM-UW
+ *
+ * CoAnSys is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * CoAnSys is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public Licensealong with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package pl.edu.icm.coansys.citations.jobs
 
 import com.nicta.scoobi.Scoobi._
@@ -10,8 +27,8 @@ import scala.util.Try
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 object NewHeuristicAdder extends MyScoobiApp {
-  val minMatchingTitleTokens = 3
-  val indexedTitleTokens = 4
+  def minMatchingTitleTokens = 3
+  def indexedTitleTokens = 4
 
   def approximateYear(year: String) = for {
       diff <- -1 to 1
@@ -48,14 +65,14 @@ object NewHeuristicAdder extends MyScoobiApp {
         } yield (author + year, entity)
     }
 
-    val (matched, unmatched) = authorTaggedEntities.joinLeft(nameIndex).values.partition(_._2.isDefined)
-
-    val authorMatched = matched.map{
-      case (entity, Some(candId)) => (entity, candId)
-      case _ => throw new RuntimeException("It should never happen")
+    val authorMatched = authorTaggedEntities.joinLeft(nameIndex).values.mapFlatten {
+      case (entity, Some(candId)) => Some((entity, candId))
+      case _ => None
     }
 
-    val titleTaggedEntities = unmatched.keys.mapFlatten {
+    val unmatched = entities.diff(authorMatched.keys)
+
+    val titleTaggedEntities = unmatched.mapFlatten {
       entity =>
         for {
           year <- approximateYear(entity.year)
