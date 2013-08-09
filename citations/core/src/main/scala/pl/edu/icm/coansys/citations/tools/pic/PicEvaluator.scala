@@ -16,13 +16,14 @@
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.edu.icm.coansys.citations.tools
+package pl.edu.icm.coansys.citations.tools.pic
 
 import collection.JavaConversions._
 import pl.edu.icm.coansys.citations.util.sequencefile.ConvertingSequenceFileIterator
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper
-import pl.edu.icm.coansys.citations.util.{libsvm_util, misc, BytesConverter}
-import pl.edu.icm.coansys.citations.data.{AdvancedSimilarityMeasurer, MatchingResult, SimilarityMeasurer, MatchableEntity}
+import pl.edu.icm.coansys.citations.util.{misc, BytesConverter}
+import pl.edu.icm.coansys.citations.util.classification.svm.SvmClassifier.featureVectorValuesToLibSvmLine
+import pl.edu.icm.coansys.citations.data.{MatchingResult, SimilarityMeasurer, MatchableEntity}
 import scala.io.Source
 import pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue
 import pl.edu.icm.cermine.tools.classification.svm.SVMClassifier
@@ -42,28 +43,11 @@ object PicEvaluator {
   val unparsedUrl = "file:///C:/Users/matfed/Desktop/pic-eval/unparsed.seq"
   val heurUrl = "file:///C:/Users/matfed/Desktop/pic-eval/heur.seq"
   val goldPath = "C:\\Users\\matfed\\Desktop\\pic-eval\\citations-rewritten.csv"
-  val lines = using(Source.fromFile(goldPath)) {
-    source => source.getLines().toList
-  }
-  val gold = lines.map(_.split(',')).map(x => ("cit_" + x(0) + "_" + (x(1).toInt - 1), if (x.length == 3) x(2) else ""))
-  implicit val docConverter = new BytesConverter[DocumentWrapper](_.toByteArray, DocumentWrapper.parseFrom(_))
-  val db = {
-    implicit val strConverter = new BytesConverter[String](misc.uuidEncode, misc.uuidDecode)
-    ConvertingSequenceFileIterator.fromLocal[String, DocumentWrapper](dbUrl).toMap.mapValues(x => MatchableEntity.fromDocumentMetadata(x.getDocumentMetadata))
-  }
-  val parsedWithoutRaw = ConvertingSequenceFileIterator.fromLocal[String, MatchableEntity](parsedUrl).toMap
-  val unparsed = ConvertingSequenceFileIterator.fromLocal[String, String](unparsedUrl).toMap
-  val parsed = parsedWithoutRaw.mapValues {
-    ent =>
-      val builder = ent.data.toBuilder
-      builder.addAuxiliary(KeyValue.newBuilder().setKey("rawText").setValue(unparsed(ent.id)))
-      new MatchableEntity(builder.build())
-  }
 
-  val heur = ConvertingSequenceFileIterator.fromLocal[MatchableEntity, String](heurUrl)
-    .toList.map {
-    case (k, v) => (k.id, v)
-  }.groupBy(_._1).mapValues(_.unzip._2.toSet)
+  val gold = TempCommons.readPicGroundTruth(new File(goldPath))
+  val db = TempCommons.readDocumentsDatabase(dbUrl)
+  val parsed = TempCommons.readParsedCitations(parsedUrl, unparsedUrl)
+  val heur = TempCommons.readHeuristic(heurUrl)
 
 //  def getFeatures(fv: FeatureVector) = {
 //    fv.getFeatureNames.map(x => x -> fv.getFeatureValue(x).asInstanceOf[Double]).toMap
@@ -160,7 +144,6 @@ object PicEvaluator {
   }
 
   def printMatching() {
-    val measurer = new AdvancedSimilarityMeasurer
     for ((src, dst) <- gold if dst != "") {
       if (parsed.contains(src) && db.contains(dst)) {
         println(parsed(src).toDebugString)
@@ -200,7 +183,7 @@ object PicEvaluator {
 //  }
 
   def evalResults() {
-    val resultsPath = "C:\\Users\\matfed\\Desktop\\pic-eval\\results.txt"
+    val resultsPath = "C:\\Users\\matfed\\Desktop\\pic-eval\\results-heur-model.txt"
     val results =
       using(Source.fromFile(resultsPath)) {
         source => source.getLines().toList
@@ -222,8 +205,18 @@ object PicEvaluator {
     println(((resultSet & goldSet).size.toDouble/goldSet.size))
 
     val goldMap = goldSet.toMap
-    for ((src, dst) <- (resultSet diff goldSet)) {
-      println(src + " - was: " + dst + ", should be: " + goldMap.getOrElse(src, ""))
+    for ((src, dst) <- (goldSet diff resultSet)) {
+      //println(src + " - was: " + dst + ", should be: " + goldMap.getOrElse(src, ""))
+      println("haven't found " + src + " to " + dst)
+      if (!parsed.contains(src)) {
+        println("no entry for " + src)
+      } else if (!db.contains(dst)) {
+        println("no entry for " + dst)
+      } else {
+        println(parsed(src).toDebugString)
+        println(db(dst).toDebugString)
+        println(SimilarityMeasurer.advancedFvBuilder.calculateFeatureVectorValues((parsed(src), db(dst))).mkString(" "))
+      }
     }
   }
 
@@ -237,13 +230,13 @@ object PicEvaluator {
         for ((src1, dst1) <- trainingGold.unzip._1) {
           for ((src2, dst2) <- trainingGold.unzip._1) {
             val fv = measurer.featureVectorBuilder.calculateFeatureVectorValues((parsed(src1), db(dst2)))
-            writer.write(libsvm_util.featureVectorToLibSvmLine(fv, if (dst1 == dst2) 1 else 0) + "\n")
+            writer.write(featureVectorValuesToLibSvmLine(fv, if (dst1 == dst2) 1 else 0) + "\n")
           }
         }
     }
   }
 
   def main(args: Array[String]) {
-    default()
+    evalResults()
   }
 }

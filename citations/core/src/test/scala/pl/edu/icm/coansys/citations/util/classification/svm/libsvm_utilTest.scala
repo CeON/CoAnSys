@@ -16,17 +16,20 @@
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.edu.icm.coansys.citations.data
+package pl.edu.icm.coansys.citations.util.classification.svm
 
-import pl.edu.icm.coansys.citations.util.BytesConverter
-import pl.edu.icm.coansys.models.DocumentProtos.{BasicMetadata, DocumentWrapper}
-import pl.edu.icm.coansys.models.PICProtos
+import org.testng.annotations.Test
+import org.testng.Assert._
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
-object WireFormats {
-  implicit val docConverter = new BytesConverter[DocumentWrapper](_.toByteArray, DocumentWrapper.parseFrom)
-  implicit val metaConverter = new BytesConverter[BasicMetadata](_.toByteArray, BasicMetadata.parseFrom)
-  implicit val picConverter = new BytesConverter[PICProtos.PicOut](_.toByteArray, PICProtos.PicOut.parseFrom)
+class SvmClassifierTest {
+  @Test(groups = Array("fast"))
+  def featureVectorValuesToLibSvmLineTest() {
+    val fv = Array(1.0, 0.0)
+
+    val line = SvmClassifier.featureVectorValuesToLibSvmLine(fv, 1)
+    assertEquals(line, "1 1:1.0 2:0.0")
+  }
 }
