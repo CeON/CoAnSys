@@ -72,7 +72,7 @@
                 </property>
                 <property>
                     <name>cit_heuristic</name>
-                    <value>new</value>
+                    <value>old</value>
                 </property>
                 <property>
                     <name>cit_inputDestSeqFile</name>
