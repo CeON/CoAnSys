@@ -52,6 +52,6 @@ object OutputToPICProtosConverter extends MyScoobiApp {
         (srcId, builder.build())
     }
 
-    persist(protos.toSequenceFile(outUrl))
+    persist(protos.toSequenceFile(outUrl, overwrite = true))
   }
 }
