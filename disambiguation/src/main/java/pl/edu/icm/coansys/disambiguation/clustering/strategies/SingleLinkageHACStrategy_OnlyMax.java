@@ -17,7 +17,7 @@ public class SingleLinkageHACStrategy_OnlyMax extends SingleLinkageHACStrategy i
     private static final Logger log = LoggerFactory.getLogger(SingleLinkageHACStrategy_OnlyMax.class);
 
     public static void main(String[] args) {
-        double[][] in = {{}, {15}, {-46, -3}, {-2, -18, -20}, {-100, -100, -3, -200}};
+        float[][] in = {{}, {15}, {-46, -3}, {-2, -18, -20}, {-100, -100, -3, -200}};
         int[] out = new SingleLinkageHACStrategy_OnlyMax().clusterize(in);
         StringBuilder sb = new StringBuilder("");
         for (int i : out) {
@@ -28,7 +28,7 @@ public class SingleLinkageHACStrategy_OnlyMax extends SingleLinkageHACStrategy i
     }
 
     @Override
-    protected double SIM(double a, double b) {
+    protected float SIM(float a, float b) {
         return Math.max(a, b);
     }
 

@@ -143,5 +143,5 @@ public abstract class SingleLinkageHACStrategy implements ClusteringStrategy {
         return retEl;
     }
 
-    protected abstract double SIM(double a, double b);
+    protected abstract float SIM(float a, float b);
 }

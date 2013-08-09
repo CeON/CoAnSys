@@ -16,7 +16,7 @@ public class CompleteLinkageHACStrategy_OnlyMax extends CompleteLinkageHACStrate
     private static final Logger log = LoggerFactory.getLogger(CompleteLinkageHACStrategy_OnlyMax.class);
 
     public static void main(String[] args) {
-        double[][] in = {{}, {15}, {-46, -3}, {-2, -18, -20}, {-100, -100, -3, -200}};
+        float[][] in = {{}, {15}, {-46, -3}, {-2, -18, -20}, {-100, -100, -3, -200}};
         int[] out = new CompleteLinkageHACStrategy_OnlyMax().clusterize(in);
         StringBuilder sb = new StringBuilder("");
         for (int i : out) {
@@ -27,7 +27,7 @@ public class CompleteLinkageHACStrategy_OnlyMax extends CompleteLinkageHACStrate
     }
 
     @Override
-    protected double SIM(double a, double b) {
+    protected float SIM(float a, float b) {
         return Math.min(a, b);
     }
 
