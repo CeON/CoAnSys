@@ -26,6 +26,8 @@ import pl.edu.icm.coansys.citations.data.MatchableEntity
 import pl.edu.icm.cermine.bibref.parsing.tools.CitationUtils
 import pl.edu.icm.coansys.citations.util.AugmentedDList.augmentDList
 import pl.edu.icm.cermine.bibref.CRFBibReferenceParser
+import pl.edu.icm.coansys.commons.scala.strings
+import pl.edu.icm.coansys.commons.java.DiacriticsRemover
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -44,6 +46,24 @@ object misc {
       .map(_.toLowerCase)
       .toSet
   }
+
+  def lettersNormaliseTokenise(str: String) =
+    normaliseTokenise(strings.lettersOnly(str))
+
+  def digitsNormaliseTokenise(str: String) =
+    normaliseTokenise(strings.digitsOnly(str))
+
+  def normaliseTokenise(str: String) =
+    tokensFromCermine(DiacriticsRemover.removeDiacritics(str))
+      .flatMap {
+      tok =>
+        if (tok.length <= 3 && tok.forall(_.isUpper))
+          None
+        else
+          Some(tok)
+    }
+      .filter(_.length > 2)
+      .map(_.toLowerCase)
 
   def readCitationsFromDocumentsFromSeqFiles(uris: List[String], parserModel: String): DList[MatchableEntity] = {
     //implicit val documentConverter = new BytesConverter[DocumentMetadata](_.toByteArray, DocumentMetadata.parseFrom(_))

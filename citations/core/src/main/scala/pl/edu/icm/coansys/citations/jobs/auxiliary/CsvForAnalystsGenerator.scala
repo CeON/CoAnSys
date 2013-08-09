@@ -10,6 +10,9 @@ import pl.edu.icm.coansys.citations.data.WireFormats._
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 object CsvForAnalystsGenerator extends MyScoobiApp {
+  def enquote(s: String) =
+    '"' + s.split(raw"\s+").mkString(" ").replaceAll("\"", "\"\"") + '"'
+
   def run() {
     val documentsUrl = args(0)
     val matchingUrl = args(1)
@@ -25,16 +28,20 @@ object CsvForAnalystsGenerator extends MyScoobiApp {
       }
     }
 
-    val stage1 = matching.joinLeft(citations).mapFlatten {
-      case (citId, (dest, Some((journal, rawCit)))) =>
+    val stage1 = matching.joinRight(citations).map {
+      case (citId, (dest, (journal, rawCit))) =>
         val trimmedCit = citId.substring(4)
         val sep = trimmedCit.lastIndexOf("_")
         val srcDoc = trimmedCit.substring(0, sep)
         val pos = trimmedCit.substring(sep + 1)
-        val col = dest.indexOf(":")
-        val trimmedDest = dest.substring(col + 5)
-        Some((trimmedDest, (journal, srcDoc, pos, rawCit)))
-      case _ => None
+        val trimmedDest = dest match {
+          case Some(d) =>
+            val col = d.indexOf(":")
+            d.substring(col + 5)
+          case None =>
+            ""
+        }
+        (trimmedDest, (journal, srcDoc, pos, rawCit))
     }
 
     val destDocuments = documents.map {doc =>
@@ -48,11 +55,12 @@ object CsvForAnalystsGenerator extends MyScoobiApp {
 
     val stage2 = stage1.joinLeft(destDocuments).mapFlatten {
       case (destId, ((srcjournal, srcDoc, pos, rawCit), Some((authors, title, dstjournal, year)))) =>
-        Some((srcjournal, srcDoc, pos, rawCit, destId, authors, title, dstjournal, year))
-      case _ => None
+        Some(List(srcjournal, srcDoc, pos, rawCit, destId, authors, title, dstjournal, year).map(enquote).mkString(","))
+      case (destId, ((srcjournal, srcDoc, pos, rawCit), None)) =>
+        Some(List(srcjournal, srcDoc, pos, rawCit, destId, "", "", "", "").map(enquote).mkString(","))
     }
 
-    persist(stage2.toDelimitedTextFile(outUrl, ",", overwrite = true))
+    persist(stage2.toTextFile(outUrl, overwrite = true))
 
   }
 }

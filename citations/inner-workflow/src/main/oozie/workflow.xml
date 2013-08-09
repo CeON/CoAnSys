@@ -110,12 +110,34 @@ Workflow properties:
             <arg>${cit_workDir}/author_index</arg>
         </java>
 
-        <ok to="add-heuristic"/>
+        <ok to="heuristic-type"/>
         <error to="fail"/>
     </action>
-    <!--
-    <join name="generated-indices" to="do-matching"/>
-    -->
+
+    <decision name="heuristic-type">
+        <switch>
+            <case to="add-heuristic">${(empty cit_heuristic) || cit_heuristic eq "old"}</case>
+            <case to="add-new-heuristic">${cit_heuristic eq "new"}</case>
+            <default to="fail"/>
+        </switch>
+    </decision>
+
+    <action name="add-new-heuristic">
+        <java>
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <main-class>pl.edu.icm.coansys.citations.jobs.NewHeuristicAdder</main-class>
+            <arg>-fs</arg><arg>${nameNode}</arg>
+            <arg>-jt</arg><arg>${jobTracker}</arg>
+            <arg>${cit_workDir}/source_entities</arg>
+            <arg>${cit_workDir}/destination_entities</arg>
+            <arg>${cit_workDir}/source_entities_heur</arg>
+        </java>
+
+        <ok to="assess"/>
+        <error to="fail"/>
+    </action>
+
     <action name="add-heuristic">
         <map-reduce>
             <job-tracker>${jobTracker}</job-tracker>
