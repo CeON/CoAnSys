@@ -19,7 +19,7 @@ package pl.edu.icm.coansys.citations.jobs
 
 import com.nicta.scoobi.Scoobi._
 import pl.edu.icm.coansys.citations.data.entity_id.{DocEntityId, CitEntityId}
-import pl.edu.icm.coansys.citations.util.MyScoobiApp
+import pl.edu.icm.coansys.citations.util.{BytesConverter, MyScoobiApp}
 import pl.edu.icm.coansys.models.PICProtos
 
 /**
@@ -39,6 +39,7 @@ object OutputToPICProtosConverter extends MyScoobiApp {
         (srcId.sourceDocumentId, (srcId.position, dstId.documentId))
     }.groupByKey
 
+    implicit val converter = new BytesConverter[PICProtos.PicOut](_.toByteArray, PICProtos.PicOut.parseFrom)
     val protos = grouped.map {
       case (srcId, matching) =>
         val builder = PICProtos.PicOut.newBuilder()
@@ -48,7 +49,7 @@ object OutputToPICProtosConverter extends MyScoobiApp {
             PICProtos.Reference.newBuilder().setRefNum(pos).setDocId(id).build()
         }.foreach(builder.addRefs)
 
-        (srcId, builder.build().toByteArray)
+        (srcId, builder.build())
     }
 
     persist(protos.toSequenceFile(outUrl))
