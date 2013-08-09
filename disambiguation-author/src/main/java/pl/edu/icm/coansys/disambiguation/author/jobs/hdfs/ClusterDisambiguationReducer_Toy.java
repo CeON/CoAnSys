@@ -35,7 +35,7 @@ public class ClusterDisambiguationReducer_Toy extends Reducer<Text, TextTextArra
 
     private static Logger logger = Logger.getLogger(ClusterDisambiguationReducer_Toy.class);
     private String reducerId = new Date().getTime() + "_" + Math.random();
-    private double threshold;
+    private float threshold;
     private List<FeatureInfo> featureInfos;
     private Disambiguator[] features;
     private List<TextTextArrayMapWritable> featuresMapsList = new ArrayList<TextTextArrayMapWritable>();
@@ -51,7 +51,7 @@ public class ClusterDisambiguationReducer_Toy extends Reducer<Text, TextTextArra
 
         Configuration conf = context.getConfiguration();
 
-        threshold = Double.parseDouble(conf.getStrings("THRESHOLD")[0]);
+        threshold = Float.parseFloat(conf.getStrings("THRESHOLD")[0]);
         featureInfos = FeatureInfo.parseFeatureInfoString(conf.get("FEATURE_DESCRIPTION"));
 
         features = new Disambiguator[featureInfos.size()];
@@ -71,7 +71,7 @@ public class ClusterDisambiguationReducer_Toy extends Reducer<Text, TextTextArra
         if (initialPreparations(key, values, context)) {
             return;
         }
-        double[][] sim = calculateAffinity();
+        float[][] sim = calculateAffinity();
         int[] clusterAssociations = new SingleLinkageHACStrategy_OnlyMax().clusterize(sim);
         Map<Integer, List<String>> clusterMap = splitIntoMap(clusterAssociations, authorIds);
         persistReslutsInHBase(clusterMap, authorIds, context);
@@ -131,10 +131,10 @@ public class ClusterDisambiguationReducer_Toy extends Reducer<Text, TextTextArra
     }
     
     //usage in reduce
-    protected double[][] calculateAffinity() {
-        double[][] sim = new double[featuresMapsList.size()][];
+    protected float[][] calculateAffinity() {
+        float[][] sim = new float[featuresMapsList.size()][];
         for (int i = 1; i < featuresMapsList.size(); i++) {
-            sim[i] = new double[i];
+            sim[i] = new float[i];
             for (int j = 0; i < j; j++) {
                 sim[i][j] = threshold;
                 for (int findex = 0; findex < features.length; findex++) {
