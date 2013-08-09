@@ -28,7 +28,7 @@ public class disambiguationTests {
 
    		PST.run( "aproximateAND", "aproximate_AND_test.pig", "B", "E", params );
    	}
-   	
+  	
    	@Test(groups = {"fast"})
 	public void exhaustiveAND() throws IOException, ParseException {
 		

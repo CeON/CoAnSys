@@ -45,7 +45,7 @@ public class ClusterElement implements Comparable<Object>{
                     throw new ClassCastException("" +
 				"Comparison between "+this.getClass()+" and "+o2.getClass()+" is illegal!");
                 }
-		double count = this.sim-((ClusterElement)o2).sim; 
+		float count = this.sim-((ClusterElement)o2).sim; 
 		if(count>0) {
                     return 1;
                 }

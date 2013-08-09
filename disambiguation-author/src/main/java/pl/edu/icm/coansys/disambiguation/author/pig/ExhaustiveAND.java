@@ -134,7 +134,7 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 			}
 
 			calculateAffinity ( contribsT );
-
+			
 			// clusterAssociations[ index_kontrybutora ] = associated cluster id
 	        int[] clusterAssociations = new SingleLinkageHACStrategy_OnlyMax().clusterize( sim );
 

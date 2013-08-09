@@ -82,14 +82,14 @@ public abstract class SingleLinkageHACStrategy implements ClusteringStrategy {
             for (int i = 0; i < I.length; i++) {
                 if (I[i] == i && i != i1 && i != i2) {
                     if (i1 > i && i2 > i) {
-                        C[i1][i].setSim(SIM(C[i1][i].getSim(), C[i2][i].getSim()));
+                        C[i1][i].setSim( (float)SIM(C[i1][i].getSim(), C[i2][i].getSim()) );
                     } else if (i1 > i && i2 < i) {
-                        C[i1][i].setSim(SIM(C[i1][i].getSim(), C[i][i2].getSim()));
+                        C[i1][i].setSim( (float)SIM(C[i1][i].getSim(), C[i][i2].getSim()) );
                     } else if (i1 < i && i2 > i) {
-                        C[i][i1].setSim(SIM(C[i][i1].getSim(), C[i2][i].getSim()));
+                        C[i][i1].setSim( (float)SIM(C[i][i1].getSim(), C[i2][i].getSim()) );
                     } else //if(i1<i && i2<i)
                     {
-                        C[i][i1].setSim(SIM(C[i][i1].getSim(), C[i][i2].getSim()));
+                        C[i][i1].setSim( (float)SIM(C[i][i1].getSim(), C[i][i2].getSim()) );
                     }
                 }
                 if (I[i] == i2) {
@@ -143,5 +143,5 @@ public abstract class SingleLinkageHACStrategy implements ClusteringStrategy {
         return retEl;
     }
 
-    protected abstract float SIM(float a, float b);
+    protected abstract double SIM(double a, double b);
 }
