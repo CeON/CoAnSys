@@ -26,6 +26,11 @@
             <version>${scala.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.jsuereth</groupId>
+            <artifactId>scala-arm_2.10</artifactId>
+            <version>1.3</version>
+        </dependency>
+        <dependency>
             <groupId>com.nicta</groupId>
             <artifactId>scoobi_2.10</artifactId>
             <version>0.7.1-cdh4</version>
