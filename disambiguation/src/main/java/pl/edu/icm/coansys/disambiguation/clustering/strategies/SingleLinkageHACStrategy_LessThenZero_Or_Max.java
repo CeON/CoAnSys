@@ -32,7 +32,7 @@ public class SingleLinkageHACStrategy_LessThenZero_Or_Max extends SingleLinkageH
     private static final Logger log = LoggerFactory.getLogger(SingleLinkageHACStrategy_LessThenZero_Or_Max.class);
 
     public static void main(String[] args) {
-        double[][] in = {{}, {15}, {46, 3}, {2, -18, -20}, {-100, -100, 3, -200}};
+        float[][] in = {{}, {15}, {46, 3}, {2, -18, -20}, {-100, -100, 3, -200}};
         int[] out = new SingleLinkageHACStrategy_LessThenZero_Or_Max().clusterize(in);
         StringBuilder sb = new StringBuilder("");
         for (int i : out) {
@@ -43,11 +43,11 @@ public class SingleLinkageHACStrategy_LessThenZero_Or_Max extends SingleLinkageH
     }
 
     @Override
-    protected double SIM(double a, double b) {
+    protected float SIM(float a, float b) {
         return minMax(a, b);
     }
 
-    protected double minMax(double a, double b) {
+    protected float minMax(float a, float b) {
         if (a < 0 || b < 0) {
             return Math.min(a, b);
         } else {

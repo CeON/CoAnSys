@@ -34,6 +34,6 @@ public interface ClusteringStrategy extends Cloneable{
 	 * @return An array containing cluster numbers assigned to objects. 
 	 * Two objects sharing the same cluster number may be considered as the same one.  
 	 */
-    int[] clusterize(double[][] similarities);
+    int[] clusterize(float[][] similarities);
     
 }
