@@ -32,7 +32,7 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 
 	private static final float NOT_CALCULATED = Float.NEGATIVE_INFINITY;	
 	private PigDisambiguator[] features;
-	private List<FeatureInfo> featureInfos;
+	private FeatureInfo[] featureInfos;
 	private float sim[][];
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ExhaustiveAND.class);
     //benchmark 
@@ -42,23 +42,28 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 
 	public ExhaustiveAND(String threshold, String featureDescription){
 		this.threshold = Float.parseFloat(threshold);
-        this.featureInfos = FeatureInfo.parseFeatureInfoString(featureDescription);
+		
+		List<FeatureInfo> FIwithEmpties 
+			= FeatureInfo.parseFeatureInfoString(featureDescription);
+		List<FeatureInfo> FIFinall = new LinkedList<FeatureInfo>();
+		List<PigDisambiguator> FeaturesFinall = new LinkedList<PigDisambiguator>();
+		
         DisambiguatorFactory ff = new DisambiguatorFactory();
-
-        int featureNum = 0;
-        for ( FeatureInfo fi : featureInfos ){
-        	if(!fi.getDisambiguatorName().equals("")) featureNum++;
-        }
-
-        this.features = new PigDisambiguator[featureNum];
-
-        int index = -1;
-        for ( FeatureInfo fi : featureInfos ){
+        Disambiguator d;
+        
+        //separate features which are fully described and able to use
+        for ( FeatureInfo fi : FIwithEmpties ){
         	if ( fi.getDisambiguatorName().equals("") ) continue;
-        	index++;
-        	Disambiguator d = ff.create(fi);
-        	features[index] = new PigDisambiguator(d);
+        	if ( fi.getFeatureExtractorName().equals("") ) continue;
+        	d = ff.create(fi);
+        	if ( d == null ) continue;
+        	FIFinall.add( fi );
+        	FeaturesFinall.add( new PigDisambiguator( d ) );
         }
+        
+		this.featureInfos = FIFinall.toArray( new FeatureInfo[ FIFinall.size() ] );
+        this.features = 
+        		FeaturesFinall.toArray( new PigDisambiguator[ FIFinall.size() ] );
         
         timer = new Timer("logs/exhaustive.stat");
 		(new Thread( timer )).start();
@@ -162,16 +167,21 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 				sim[i][j] = threshold;
 
 				for ( int d = 0; d < features.length; d++ ){
-
-					FeatureInfo featureInfo = featureInfos.get(d);
-
-					if ( featureInfo.getDisambiguatorName().equals("") ) continue;
-
-					Object oA = contribsT.get(i).get( featureInfo.getFeatureExtractorName() );
-					Object oB = contribsT.get(j).get( featureInfo.getFeatureExtractorName() );
-		        	
+					//Taking features from each keys (name of extractor = feature name)
+					//In contribsT.get(i) there is map we need.
+					//From this map (collection of i'th contributor's features)
+					//we take Bag with value of given feature.
+					//Here we have sure that following Object = DateBag.
+					Object oA = contribsT.get(i).get( featureInfos[d].getFeatureExtractorName() );
+					Object oB = contribsT.get(j).get( featureInfos[d].getFeatureExtractorName() );
+					
+					if ( oA == null || oB == null ) continue;
+					
 					double partial = features[d].calculateAffinity( oA, oB );
-					partial = partial / featureInfo.getMaxValue() * featureInfo.getWeight();
+					
+					if ( featureInfos[d].getMaxValue() == 0 ) continue;
+					partial = partial / featureInfos[d].getMaxValue() 
+							* featureInfos[d].getWeight();
 					sim[i][j] += partial;
 
         			if ( sim[i][j] >= 0 ) break;
