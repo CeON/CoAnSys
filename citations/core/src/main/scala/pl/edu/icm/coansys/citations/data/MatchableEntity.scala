@@ -80,7 +80,8 @@ object MatchableEntity {
                      source: String = "",
                      title: String = "",
                      pages: String = "",
-                     year: String = ""): MatchableEntity = {
+                     year: String = "",
+                     rawText: String = ""): MatchableEntity = {
     val data = MatchableEntityData.newBuilder()
     data.setId(id)
     data.setAuthor(author)
@@ -88,6 +89,7 @@ object MatchableEntity {
     data.setTitle(title)
     data.setPages(pages)
     data.setYear(year)
+    data.addAuxiliary(KeyValue.newBuilder().setKey("rawText").setValue(rawText))
 
     new MatchableEntity(data.build())
   }

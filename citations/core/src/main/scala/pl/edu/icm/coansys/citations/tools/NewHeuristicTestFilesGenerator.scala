@@ -30,10 +30,10 @@ object NewHeuristicTestFilesGenerator {
     val entitiesUrl = args(1)
 
     for(writer <- managed(ConvertingSequenceFileWriter.fromLocal[String, MatchableEntity](entitiesUrl))) {
-      writer.append("cit_1", MatchableEntity.fromParameters(id = "cit_1", author="Kowalski", year="2000"))
-      writer.append("cit_2", MatchableEntity.fromParameters(id = "cit_2", author="Kowalski", year="2001"))
-      writer.append("cit_3", MatchableEntity.fromParameters(id = "cit_3", title="Tajemniczy artykuł naukowy", year="2000"))
-      writer.append("cit_4", MatchableEntity.fromParameters(id = "cit_4", title="Tajemniczy artykul naukowy", year="1999"))
+      writer.append("cit_1", MatchableEntity.fromParameters(id = "cit_1", author="Kowalski", year="2000", rawText="Kowalski 2000"))
+      writer.append("cit_2", MatchableEntity.fromParameters(id = "cit_2", author="Kowalski", year="2001", rawText="Kowalski 2001"))
+      writer.append("cit_3", MatchableEntity.fromParameters(id = "cit_3", title="Tajemniczy artykuł naukowy", year="2000", rawText="2000 Tajemniczy artykuł naukowy"))
+      writer.append("cit_4", MatchableEntity.fromParameters(id = "cit_4", title="Tajemniczy artykul naukowy", year="1999", rawText="1999 Tajemniczy artykul naukowy"))
     }
 
     for(writer <- managed(ConvertingSequenceFileWriter.fromLocal[String, MatchableEntity](dbUrl))) {
