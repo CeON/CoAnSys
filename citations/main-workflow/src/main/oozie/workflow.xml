@@ -72,7 +72,7 @@
                 </property>
                 <property>
                     <name>cit_heuristic</name>
-                    <value>new</value>
+                    <value>old</value>
                 </property>
                 <property>
                     <name>cit_inputDestSeqFile</name>
@@ -80,10 +80,24 @@
                 </property>
                 <property>
                     <name>cit_outputSeqFile</name>
-                    <value>${workingDir}/coansys/matching</value>
+                    <value>${workingDir}/matching</value>
                 </property>
             </configuration>
         </sub-workflow>
+        <ok to="output_converter"/>
+        <error to="fail"/>
+    </action>
+
+    <action name="output_converter">
+        <java>
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <main-class>pl.edu.icm.coansys.citations.jobs.OutputToPICProtosConverter</main-class>
+            <arg>-fs</arg><arg>${nameNode}</arg>
+            <arg>-jt</arg><arg>${jobTracker}</arg>
+            <arg>${workingDir}/matching</arg>
+            <arg>${outputSeqFile}</arg>
+        </java>
         <ok to="end"/>
         <error to="fail"/>
     </action>
