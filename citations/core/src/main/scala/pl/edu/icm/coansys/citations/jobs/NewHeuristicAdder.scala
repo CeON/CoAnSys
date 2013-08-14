@@ -46,23 +46,25 @@ object NewHeuristicAdder extends MyScoobiApp {
     val nameIndex = entitiesDb.mapFlatten {
       entity =>
         for {
-          author <- misc.lettersNormaliseTokenise(entity.author)
+          author <- misc.lettersNormaliseTokenise(entity.author).distinct
         } yield (author + entity.year, entity.id)
     }
 
     val titleIndex = entitiesDb.mapFlatten {
       entity =>
         for {
-          title <- misc.lettersNormaliseTokenise(entity.title).take(indexedTitleTokens)
+          title <- misc.lettersNormaliseTokenise(entity.title).take(indexedTitleTokens).distinct
         } yield (title + entity.year, entity.id)
     }
 
     val authorTaggedEntities = entities.mapFlatten {
       entity =>
+        val text = entity.rawText.getOrElse("")
         for {
-          year <- approximateYear(entity.year)
-          author <- misc.lettersNormaliseTokenise(entity.author)
-        } yield (author + year, entity)
+          year <- misc.digitsNormaliseTokenise(text)
+          approxYear <- approximateYear(year)
+          author <- misc.lettersNormaliseTokenise(text)
+        } yield (author + approxYear, entity)
     }
 
     val authorMatched = authorTaggedEntities.joinLeft(nameIndex).values.mapFlatten {
@@ -74,9 +76,11 @@ object NewHeuristicAdder extends MyScoobiApp {
 
     val titleTaggedEntities = unmatched.mapFlatten {
       entity =>
+        val text = entity.rawText.getOrElse("")
         for {
-          year <- approximateYear(entity.year)
-          title <- misc.lettersNormaliseTokenise(entity.title).take(indexedTitleTokens)
+          year <- misc.digitsNormaliseTokenise(text)
+          approxYear <- approximateYear(year)
+          title <- misc.lettersNormaliseTokenise(text)
         } yield (title + year, entity)
     }
     implicit val grouping = new Grouping[(MatchableEntity, String)] {
@@ -93,7 +97,7 @@ object NewHeuristicAdder extends MyScoobiApp {
       .groupByKey[(MatchableEntity, String), Int].combine(Sum.int).filter(_._2 >= minMatchingTitleTokens).keys
     persist(authorMatched.toSequenceFile(outUrl + "_authorMatched", overwrite = true))
     persist(titleMatched.toSequenceFile(outUrl + "_titleMatched", overwrite = true))
-    persist((fromSequenceFile[MatchableEntity, String](outUrl + "_authorMatched") ++ fromSequenceFile[MatchableEntity, String](outUrl + "_titleMatched")).toSequenceFile(outUrl, overwrite = true))
+    persist((fromSequenceFile[MatchableEntity, String](outUrl + "_authorMatched") ++ fromSequenceFile[MatchableEntity, String](outUrl + "_titleMatched")).distinct.toSequenceFile(outUrl, overwrite = true))
 //    persist((authorMatched ++ titleMatched).toSequenceFile(outUrl, overwrite = true))
   }
 }
