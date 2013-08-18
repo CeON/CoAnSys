@@ -53,7 +53,10 @@ public class EX_TITLE extends DisambiguationExtractor {
 		
         for ( TextWithLanguage title : dm.getBasicMetadata().getTitleList() ) {
             if ( lang.equalsIgnoreCase( title.getLanguage()) ) {
-        		Tuple t = TupleFactory.getInstance().newTuple( 
+        		//? TODO shouldn't we split title around spaces a normalizate
+            	//separated words? if yes - do it here, no in normalizer!
+            	
+            	Tuple t = TupleFactory.getInstance().newTuple( 
         				normalizeExtracted( title.getText() ) );
         		db.add( t );
         		return db;

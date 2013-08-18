@@ -18,11 +18,15 @@
 
 package pl.edu.icm.coansys.disambiguation.author;
 
-
+import org.testng.annotations.Test;
 import java.io.IOException;
 
 import org.apache.pig.tools.parameters.ParseException;
-import org.testng.annotations.Test;
+
+import pl.edu.icm.coansys.commons.java.DiacriticsRemover;
+import pl.edu.icm.coansys.disambiguation.author.pig.extractor.DisambiguationExtractor;
+import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.ToEnglishLowerCase;
+import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.ToHashCode;
 
 public class disambiguationTests {
 	
@@ -60,5 +64,34 @@ public class disambiguationTests {
    		PST.run( "exhaustiveAND", "exhaustive_AND_with_sim_test.pig", "A", "B", params );
    	}
    	
+
+   	@Test(groups = {"fast"})
+   	public void normalizers() {
+		String text = "é{(Zaaaażółć 'gęślą', \"jaź(ń)\"}]# æ 1234567890 !@#$%^&*() _+=?/>.<,-";
+		String diacRmExpected = "e{(zaaaazolc 'gesla', \"jaz(n)\"}]# ae 1234567890 !@#$%^&*() _+=?/>.<,-";
+		String toELCExpected = "e zaaaazolc gesla jaz n ae 1234567890 _ -";
+		Integer toHashExpected = -1486600746;
+		Integer DisExtrExpected = -1399651159;
+		Object a, b;
+		String tmp;
+		
+		// testing critical changes in DiacriticsRemover
+		tmp = DiacriticsRemover.removeDiacritics( text.toLowerCase() );
+		assert( tmp.equals(diacRmExpected) );
+		
+		// testing normalizers
+		a = (new ToEnglishLowerCase()).normalize( text );
+		assert( a.equals( toELCExpected ) );
+		b = (new ToEnglishLowerCase()).normalize( a );
+		assert( a.equals( b ) );
+		a = (new ToHashCode()).normalize( text );
+		assert( a.equals( toHashExpected ) );
+		a = (new ToHashCode()).normalize( (Object) text );
+		assert( a.equals( toHashExpected ) );
+		
+		// testing normalize tool, which is using after data extraction
+		a = DisambiguationExtractor.normalizeExtracted( text );
+		assert( a.equals( DisExtrExpected ) );
+   	}
 }
 

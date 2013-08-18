@@ -35,13 +35,13 @@ public final class ToList {
     private ToList() {
     }
 
-    public static List execute(DataBag db) {
+    public static List<Object> execute( DataBag db ) {
         Iterator<Tuple> it = db.iterator();
+        List<Object> ret = new LinkedList<Object>();
 
-        List ret = new LinkedList();
-        while (it.hasNext()) {
+        while ( it.hasNext() ) {
             try {
-                ret.add(it.next().get(0));
+                ret.add( it.next().get(0) );
             } catch (ExecException e) {
                 logger.error("Caught exception:", e);
             }

@@ -23,10 +23,19 @@ import pl.edu.icm.coansys.commons.java.DiacriticsRemover;
 public class ToEnglishLowerCase implements PigNormalizer {
 
 	@Override
-	public String normalize( String text ) {
-		String tmp = text.toLowerCase();
+	public Object normalize( Object text ) {
+		
+		String tmp;
+		
+		if ( text instanceof String ) {
+			tmp = (String) text; 
+		} else {
+			tmp = text.toString();
+		}
+		
+		tmp = tmp.toLowerCase();
 		tmp = DiacriticsRemover.removeDiacritics( tmp );
-		tmp = tmp.replaceAll("[^a-z 0-9] _\\-]", " ").replaceAll(" ++", " ");
+		tmp = tmp.replaceAll("[^a-z 0-9 _\\-]", " ").replaceAll(" ++", " ");
 		return tmp;
 	}
 }

@@ -48,7 +48,6 @@ public class AproximateAND extends EvalFunc<DataBag> {
 	private float sim[][];
 	private Tuple datain[];
 	private int N;
-	//TODO: change lists to arrays where possible
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(AproximateAND.class);
     //benchmark staff
     private Timer timer;

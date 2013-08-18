@@ -24,8 +24,6 @@ import java.util.logging.Logger;
 import pl.edu.icm.coansys.disambiguation.features.Disambiguator;
 import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
 
-import com.sun.el.util.ReflectionUtil;
-
 /**
  * The factory for building {@link Disambiguator}s from the package "pl.edu.icm.coansys.disambiguation.author.features.disambiguators"
  * using description {@link FeatureInfo}.

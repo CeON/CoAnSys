@@ -201,7 +201,8 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 					partial = partial / featureInfos[d].getMaxValue() 
 							* featureInfos[d].getWeight();
 					sim[i][j] += partial;
-
+					
+					//? :
         			if ( sim[i][j] >= 0 ) break;
 				}
 			}

@@ -44,10 +44,10 @@ public class PigDisambiguator extends Disambiguator{
 	}
 	
 	public double calculateAffinity(Object f1, Object f2) throws ExecException {
-		if(f1 instanceof Tuple && f2 instanceof Tuple ){
-			return calculateAffinity((Tuple) f1, (Tuple) f2);
-		}else if(f1 instanceof DataBag && f2 instanceof DataBag ){
+		if(f1 instanceof DataBag && f2 instanceof DataBag ){
 			return calculateAffinity((DataBag) f1, (DataBag) f2);
+		}else if(f1 instanceof Tuple && f2 instanceof Tuple ){
+			return calculateAffinity((Tuple) f1, (Tuple) f2);	 
 		}else if(f1 instanceof String && f2 instanceof String ){
 			return calculateAffinity((String) f1, (String) f2);
 		}else{
@@ -56,22 +56,26 @@ public class PigDisambiguator extends Disambiguator{
 	}
 	
 	public double calculateAffinity(Tuple f1, Tuple f2) throws ExecException {
-		LinkedList<String> fl1 = new LinkedList<String>();
+		LinkedList<Object> fl1 = new LinkedList<Object>();
 		fl1.add( (String) f1.get(0) );
-		LinkedList<String> fl2 = new LinkedList<String>();
+		LinkedList<Object> fl2 = new LinkedList<Object>();
 		fl2.add( (String) f2.get(0) );
 		
 		return d.calculateAffinity(fl1, fl2);
 	}
 	
 
-	public double calculateAffinity(DataBag f1, DataBag f2) {
-		return d.calculateAffinity(ToList.execute(f1), ToList.execute(f2));
+	public double calculateAffinity( DataBag f1, DataBag f2 ) {
+		return d.calculateAffinity( ToList.execute( f1 ), ToList.execute( f2 ) );
 	}
 	
-	public double calculateAffinity(String f1, String f2) {
-		List <String> fl1 = Arrays.asList( f1.split(" ") );
-		List <String> fl2 = Arrays.asList( f2.split(" ") );
+	public double calculateAffinity( String f1, String f2 ) {
+		Object[] f1str = f1.split(" ");
+		Object[] f2str = f2.split(" ");
+		
+		List <Object> fl1 = Arrays.asList( f1str );
+		List <Object> fl2 = Arrays.asList( f2str );
+		
 		return d.calculateAffinity( fl1, fl2 );
 	}
 	

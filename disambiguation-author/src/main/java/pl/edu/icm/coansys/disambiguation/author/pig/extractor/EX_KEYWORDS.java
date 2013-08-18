@@ -38,8 +38,8 @@ public class EX_KEYWORDS extends DisambiguationExtractor  {
 		
 		for ( KeywordsList k : dm.getKeywordsList() ){
 			for ( String s : k.getKeywordsList() ){
-				db.add(TupleFactory.getInstance().newTuple(
-						normalizeExtracted( s ) ));
+				db.add( TupleFactory.getInstance().newTuple(
+						normalizeExtracted( s ) ) );
 			}
 		}
 			
