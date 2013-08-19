@@ -81,8 +81,9 @@ object NewHeuristicAdder extends MyScoobiApp {
           year <- misc.digitsNormaliseTokenise(text)
           approxYear <- approximateYear(year)
           title <- misc.lettersNormaliseTokenise(text)
-        } yield (title + year, entity)
+        } yield (title + approxYear, entity)
     }
+
     implicit val grouping = new Grouping[(MatchableEntity, String)] {
       def groupCompare(x: (MatchableEntity, String), y: (MatchableEntity, String)) = {
         val res = scalaz.Ordering.fromInt(x._1.id compareTo y._1.id)
