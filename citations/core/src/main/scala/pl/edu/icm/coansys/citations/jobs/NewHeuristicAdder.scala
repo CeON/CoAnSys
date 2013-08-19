@@ -22,6 +22,7 @@ import Reduction._
 import pl.edu.icm.coansys.citations.util.{misc, MyScoobiApp}
 import pl.edu.icm.coansys.citations.data.MatchableEntity
 import scala.util.Try
+import pl.edu.icm.coansys.citations.tools.pic.TempCommons
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -46,14 +47,14 @@ object NewHeuristicAdder extends MyScoobiApp {
     val nameIndex = entitiesDb.mapFlatten {
       entity =>
         for {
-          author <- misc.lettersNormaliseTokenise(entity.author).distinct
+          author <- misc.lettersNormaliseTokenise(entity.author).filterNot(TempCommons.stopWords).distinct
         } yield (author + entity.year, entity.id)
     }
 
     val titleIndex = entitiesDb.mapFlatten {
       entity =>
         for {
-          title <- misc.lettersNormaliseTokenise(entity.title).take(indexedTitleTokens).distinct
+          title <- misc.lettersNormaliseTokenise(entity.title).filterNot(TempCommons.stopWords).take(indexedTitleTokens).distinct
         } yield (title + entity.year, entity.id)
     }
 
