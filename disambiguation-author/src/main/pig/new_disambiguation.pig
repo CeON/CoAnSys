@@ -15,7 +15,7 @@
 %DEFAULT dc_m_meth_extraction_inner pl.edu.icm.coansys.pig.udf.RichSequenceFileLoader
 %DEFAULT dc_m_str_feature_info 'TitleDisambiguator#EX_TITLE#1#1,YearDisambiguator#EX_YEAR#1#1'
 %DEFAULT threshold '-1.0'
-%DEFAULT lang 'pl'
+%DEFAULT lang 'en'
 
 -- DEFINE keyTiKwAbsCatExtractor pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_MAP_WHEN_CATEG_LIM('en','removeall');
 DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_CONTRIBDATA_GIVENDATA('$dc_m_str_feature_info','$lang');
@@ -73,7 +73,7 @@ B1 = foreach A2 generate flatten(snameDocumentMetaExtractor($1)) as (cId:chararr
 B = FILTER B1 BY cId is not null;
 
 C = group B by sname;
--- D: {sname: chararray, datagroup: {(cId: chararray,cPos: int,sname: chararray,data: map[{(val_0: chararray)}])}, count: long}
+-- D: {sname: chararray, datagroup: {(cId: chararray,cPos: int,sname: int,data: map[{(val_0: int)}])}, count: long}
 D = foreach C generate group as sname, B as datagroup, COUNT(B) as count;
 
 split D into
@@ -85,7 +85,7 @@ split D into
 -- SINGLE CONTRIBUTORS ---------------------------------
 -- -----------------------------------------------------
 -- for single contributors (D1): flatenning databags (there is only one contrib in it) and generate resoult at once
-D1A = foreach D1 generate flatten( datagroup );-- as (cId:chararray, contribPos:int, sname:chararray, metadata:map);
+D1A = foreach D1 generate flatten( datagroup );-- as (cId:chararray, contribPos:int, sname:int, metadata:map);
 -- E1: {cId: chararray,uuid: chararray}
 E1 = foreach D1A generate cId as cId, FLATTEN(GenUUID(TOBAG(cId))) as uuid;
 -- -----------------------------------------------------
