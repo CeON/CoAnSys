@@ -27,6 +27,9 @@ import org.apache.hadoop.fs.Path
 import java.io.File
 
 /**
+ * ScoobiApp variant that doesn't add to Distributed Cache jars that are already there.
+ * Will become obsolete with Scoobi 0.8, as it will be a default behaviour there.
+ *
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 abstract class MyScoobiApp extends ScoobiApp {

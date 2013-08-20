@@ -23,6 +23,8 @@ import pl.edu.icm.coansys.models.DocumentProtos._
 import org.w3c.dom.Node
 
 /**
+ * NLM to DocumentProtos conversion functions.
+ *
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 object nlm {
