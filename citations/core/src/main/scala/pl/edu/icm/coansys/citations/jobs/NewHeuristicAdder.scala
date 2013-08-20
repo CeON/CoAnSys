@@ -97,8 +97,8 @@ object NewHeuristicAdder extends MyScoobiApp {
     
     val titleMatched = titleTaggedEntities.join(titleIndex).values.map(x => (x, 1))
       .groupByKey[(MatchableEntity, String), Int].combine(Sum.int).filter(_._2 >= minMatchingTitleTokens).keys
-    persist(authorMatched.toSequenceFile(outUrl + "_authorMatched", overwrite = true))
-    persist(titleMatched.toSequenceFile(outUrl + "_titleMatched", overwrite = true))
+    persist(authorMatched.distinct.toSequenceFile(outUrl + "_authorMatched", overwrite = true))
+    persist(titleMatched.distinct.toSequenceFile(outUrl + "_titleMatched", overwrite = true))
     persist((fromSequenceFile[MatchableEntity, String](outUrl + "_authorMatched") ++ fromSequenceFile[MatchableEntity, String](outUrl + "_titleMatched")).distinct.toSequenceFile(outUrl, overwrite = true))
 //    persist((authorMatched ++ titleMatched).toSequenceFile(outUrl, overwrite = true))
   }
