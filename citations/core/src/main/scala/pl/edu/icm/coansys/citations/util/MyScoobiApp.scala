@@ -1,6 +1,6 @@
 /*
  * This file is part of CoAnSys project.
- * Copyright (c) 20012-2013 ICM-UW
+ * Copyright (c) 2012-2013 ICM-UW
  * 
  * CoAnSys is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -27,6 +27,9 @@ import org.apache.hadoop.fs.Path
 import java.io.File
 
 /**
+ * ScoobiApp variant that doesn't add to Distributed Cache jars that are already there.
+ * Will become obsolete with Scoobi 0.8, as it will be a default behaviour there.
+ *
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 abstract class MyScoobiApp extends ScoobiApp {

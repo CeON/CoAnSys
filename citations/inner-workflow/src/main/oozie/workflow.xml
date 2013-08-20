@@ -1,23 +1,64 @@
 <!--
-  ~ (C) 2010-2012 ICM UW. All rights reserved.
+  ~ This file is part of CoAnSys project.
+  ~ Copyright (c) 2012-2013 ICM-UW
+  ~
+  ~ CoAnSys is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ CoAnSys is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<!--
+<workflow-app xmlns="uri:oozie:workflow:0.4" name="citation-matching-inner-wf">
+    <parameters>
+        <property>
+            <name>cit_workDir</name>
+            <description>workflow working directory</description>
+        </property>
+        <property>
+            <name>jobTracker</name>
+        </property>
+        <property>
+            <name>nameNode</name>
+        </property>
+        <property>
+            <name>queueName</name>
+            <value>default</value>
+        </property>
+        <property>
+            <name>cit_inputSrcSeqFile</name>
+            <description>
+                source file containing citations to be matched in (CitId as Text, $cit_inputSrcFormat) format
+            </description>
+        </property>
+        <property>
+            <name>cit_inputSrcFormat</name>
+            <value>Raw</value>
+            <description>either BasicMetadata or Raw</description>
+        </property>
+        <property>
+            <name>cit_heuristic</name>
+            <value>Old</value>
+        </property>
+        <property>
+            <name>cit_inputDestSeqFile</name>
+            <description>
+                documents the citations will be matched against in (DocId as Text, BasicMetadata as Bytes) format
+            </description>
+        </property>
+        <property>
+            <name>cit_outputSeqFile</name>
+            <description>the matching in (CitId as Text, DocId as Text) format</description>
+        </property>
+    </parameters>
 
-Workflow properties:
-
- - cit_workDir - workflow working directory
- - jobTracker
- - nameNode
- - queueName
- - cit_inputSrcSeqFile - source file containing citations to be matched in (CitId as Text, $cit_inputSrcFormat) format
- - cit_inputSrcFormat - either BasicMetadata or Raw
- - cit_inputDestSeqFile - documents the citations will be matched against in (DocId as Text, BasicMetadata as Bytes) format
- - cit_outputSeqFile - the matching in (CitId as Text, DocId as Text) format.
-
--->
-
-<workflow-app xmlns="uri:oozie:workflow:0.1" name="citation-matching-inner-wf">
     <start to="prelude"/>
     <!--<start to="add-heuristic"/>-->
     <action name="prelude">
@@ -43,8 +84,10 @@ Workflow properties:
             <name-node>${nameNode}</name-node>
             <main-class>pl.edu.icm.coansys.citations.jobs.ReferencesToEntitiesConverter</main-class>
             <arg>-Dmapred.max.split.size=500000</arg>
-            <arg>-fs</arg><arg>${nameNode}</arg>
-            <arg>-jt</arg><arg>${jobTracker}</arg>
+            <arg>-fs</arg>
+            <arg>${nameNode}</arg>
+            <arg>-jt</arg>
+            <arg>${jobTracker}</arg>
             <arg>${cit_inputSrcSeqFile}</arg>
             <arg>${cit_workDir}/source_entities</arg>
         </java>
@@ -58,8 +101,10 @@ Workflow properties:
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
             <main-class>pl.edu.icm.coansys.citations.jobs.BasicMetadataToEntitiesConverter</main-class>
-            <arg>-fs</arg><arg>${nameNode}</arg>
-            <arg>-jt</arg><arg>${jobTracker}</arg>
+            <arg>-fs</arg>
+            <arg>${nameNode}</arg>
+            <arg>-jt</arg>
+            <arg>${jobTracker}</arg>
             <arg>${cit_inputSrcSeqFile}</arg>
             <arg>${cit_workDir}/source_entities</arg>
         </java>
@@ -73,8 +118,10 @@ Workflow properties:
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
             <main-class>pl.edu.icm.coansys.citations.jobs.BasicMetadataToEntitiesConverter</main-class>
-            <arg>-fs</arg><arg>${nameNode}</arg>
-            <arg>-jt</arg><arg>${jobTracker}</arg>
+            <arg>-fs</arg>
+            <arg>${nameNode}</arg>
+            <arg>-jt</arg>
+            <arg>${jobTracker}</arg>
             <arg>${cit_inputDestSeqFile}</arg>
             <arg>${cit_workDir}/destination_entities</arg>
         </java>
@@ -88,8 +135,10 @@ Workflow properties:
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
             <main-class>pl.edu.icm.coansys.citations.jobs.IndexBuilder</main-class>
-            <arg>-fs</arg><arg>${nameNode}</arg>
-            <arg>-jt</arg><arg>${jobTracker}</arg>
+            <arg>-fs</arg>
+            <arg>${nameNode}</arg>
+            <arg>-jt</arg>
+            <arg>${jobTracker}</arg>
             <arg>-key</arg>
             <arg>${cit_workDir}/destination_entities</arg>
             <arg>${cit_workDir}/key_index</arg>
@@ -103,19 +152,45 @@ Workflow properties:
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
             <main-class>pl.edu.icm.coansys.citations.jobs.IndexBuilder</main-class>
-            <arg>-fs</arg><arg>${nameNode}</arg>
-            <arg>-jt</arg><arg>${jobTracker}</arg>
+            <arg>-fs</arg>
+            <arg>${nameNode}</arg>
+            <arg>-jt</arg>
+            <arg>${jobTracker}</arg>
             <arg>-author</arg>
             <arg>${cit_workDir}/destination_entities</arg>
             <arg>${cit_workDir}/author_index</arg>
         </java>
 
-        <ok to="add-heuristic"/>
+        <ok to="heuristic-type"/>
         <error to="fail"/>
     </action>
-    <!--
-    <join name="generated-indices" to="do-matching"/>
-    -->
+
+    <decision name="heuristic-type">
+        <switch>
+            <case to="add-heuristic">${cit_heuristic eq "Old"}</case>
+            <case to="add-new-heuristic">${cit_heuristic eq "New"}</case>
+            <default to="fail"/>
+        </switch>
+    </decision>
+
+    <action name="add-new-heuristic">
+        <java>
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <main-class>pl.edu.icm.coansys.citations.jobs.NewHeuristicAdder</main-class>
+            <arg>-fs</arg>
+            <arg>${nameNode}</arg>
+            <arg>-jt</arg>
+            <arg>${jobTracker}</arg>
+            <arg>${cit_workDir}/source_entities</arg>
+            <arg>${cit_workDir}/destination_entities</arg>
+            <arg>${cit_workDir}/source_entities_heur</arg>
+        </java>
+
+        <ok to="assess"/>
+        <error to="fail"/>
+    </action>
+
     <action name="add-heuristic">
         <map-reduce>
             <job-tracker>${jobTracker}</job-tracker>
@@ -198,7 +273,7 @@ Workflow properties:
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
             <prepare>
-                <delete path="${cit_workDir}/matching"/>
+                <delete path="${cit_outputSeqFile}"/>
             </prepare>
             <configuration>
                 <property>
@@ -234,7 +309,7 @@ Workflow properties:
                 </property>
                 <property>
                     <name>mapred.output.dir</name>
-                    <value>${cit_workDir}/matching</value>
+                    <value>${cit_outputSeqFile}</value>
                 </property>
                 <property>
                     <name>mapreduce.inputformat.class</name>

@@ -1,6 +1,6 @@
 /*
  * This file is part of CoAnSys project.
- * Copyright (c) 20012-2013 ICM-UW
+ * Copyright (c) 2012-2013 ICM-UW
  * 
  * CoAnSys is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -26,7 +26,7 @@ import pl.edu.icm.coansys.commons.scala.automatic_resource_management.using
 import collection.immutable.Queue
 import java.io.{File, FileWriter}
 import pl.edu.icm.coansys.citations.util.sequencefile.ConvertingSequenceFileIterator
-import pl.edu.icm.coansys.citations.util.libsvm_util.featureVectorToLibSvmLine
+import pl.edu.icm.coansys.citations.util.classification.svm.SvmClassifier.featureVectorValuesToLibSvmLine
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -65,7 +65,7 @@ object MatcherTrainingFromSeqFile {
         val lines = featureVectors.map {
           case (equal, fv) =>
             val label = if (equal) 1 else 0
-            featureVectorToLibSvmLine(fv, label)
+            featureVectorValuesToLibSvmLine(fv, label)
         }
         using(new FileWriter(new File(outPath))) {
           writer =>

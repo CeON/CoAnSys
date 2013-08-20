@@ -1,6 +1,6 @@
 /*
  * This file is part of CoAnSys project.
- * Copyright (c) 20012-2013 ICM-UW
+ * Copyright (c) 2012-2013 ICM-UW
  * 
  * CoAnSys is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -18,12 +18,12 @@
 
 package pl.edu.icm.coansys.citations.jobs.auxiliary
 
-import collection.JavaConversions._
 import com.nicta.scoobi.Scoobi._
 import org.apache.commons.lang.StringUtils
 import pl.edu.icm.coansys.citations.util.AugmentedDList.augmentDList
 import pl.edu.icm.coansys.citations.indices.EntityIndex
-import pl.edu.icm.coansys.citations.util.{libsvm_util, nlm, XPathEvaluator}
+import pl.edu.icm.coansys.citations.util.{MyScoobiApp, nlm, XPathEvaluator}
+import pl.edu.icm.coansys.citations.util.classification.svm.SvmClassifier.featureVectorValuesToLibSvmLine
 import org.apache.commons.io.IOUtils
 import pl.edu.icm.coansys.citations.data.MatchableEntity
 import pl.edu.icm.coansys.citations.data.feature_calculators._
@@ -32,7 +32,7 @@ import pl.edu.icm.coansys.citations.util.classification.features.FeatureVectorBu
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
-object HeuristicToSvmLight extends ScoobiApp {
+object HeuristicToSvmLight extends MyScoobiApp {
   def run() {
     val indexUri = args(0)
     val inUri = args(1)
@@ -59,7 +59,7 @@ object HeuristicToSvmLight extends ScoobiApp {
         (Stream.continually(srcCit) zip dstDocs).map { case (src, (matching, dst)) =>
           val fv = featureVectorBuilder.calculateFeatureVectorValues((src, dst))
           val label = if (matching) 1 else 0
-          libsvm_util.featureVectorToLibSvmLine(fv, label)
+          featureVectorValuesToLibSvmLine(fv, label)
         }
       }
 
