@@ -38,7 +38,7 @@ public class disambiguationTests {
 
     private PigScriptTester PST = new PigScriptTester( PIG_SCRIPT_DIR, TEST_DIR );
 
-   	@Test(groups = {"fast"})
+    @Test(groups = {"fast"})
 	public void aproximateAND() throws IOException, ParseException {
 		
 		String[] params = {
@@ -93,5 +93,6 @@ public class disambiguationTests {
 		a = DisambiguationExtractor.normalizeExtracted( text );
 		assert( a.equals( DisExtrExpected ) );
    	}
+   	
 }
 

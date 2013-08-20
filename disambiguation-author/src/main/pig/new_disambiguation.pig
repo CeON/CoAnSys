@@ -20,7 +20,8 @@
 -- DEFINE keyTiKwAbsCatExtractor pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_MAP_WHEN_CATEG_LIM('en','removeall');
 DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_CONTRIBDATA_GIVENDATA('$dc_m_str_feature_info','$lang');
 DEFINE exhaustiveAND pl.edu.icm.coansys.disambiguation.author.pig.ExhaustiveAND('$threshold','$dc_m_str_feature_info');
-DEFINE aproximateAND pl.edu.icm.coansys.disambiguation.author.pig.AproximateAND('$threshold','$dc_m_str_feature_info');
+DEFINE aproximateAND pl.edu.icm.coansys.disambiguation.author.pig.AproximateAND('$threshold','$dc_m_str_feature_info','true');
+DEFINE aproximateANDmonster pl.edu.icm.coansys.disambiguation.author.pig.AproximateAND('$threshold','$dc_m_str_feature_info','false');
 DEFINE GenUUID pl.edu.icm.coansys.disambiguation.author.pig.GenUUID();
 -- -----------------------------------------------------
 -- -----------------------------------------------------
@@ -112,7 +113,7 @@ E1000 = foreach D1000B generate flatten( cIds ) as cId, uuid;
 -- -----------------------------------------------------
 -- REALLY BIG GRUPS OF CONTRIBUTORS ---------------------------
 -- -----------------------------------------------------
-DXA = foreach DX generate flatten( aproximateAND( datagroup ) ) as (datagroup, simTriples);
+DXA = foreach DX generate flatten( aproximateANDmonster( datagroup ) ) as (datagroup, simTriples);
 DXB = foreach DXA generate flatten( exhaustiveAND( datagroup, simTriples ) ) as (uuid:chararray, cIds:chararray);
 EX = foreach DXB generate flatten( cIds ) as cId, uuid;
 -- -----------------------------------------------------

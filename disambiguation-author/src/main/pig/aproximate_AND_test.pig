@@ -15,7 +15,7 @@
 %DEFAULT dc_m_str_feature_info 'TitleDisambiguator#EX_TITLE#1#1,YearDisambiguator#EX_YEAR#1#1'
 %DEFAULT threshold '-1.0'
 
-DEFINE aproximateAND pl.edu.icm.coansys.disambiguation.author.pig.AproximateAND('$threshold', '$dc_m_str_feature_info');
+DEFINE aproximateAND pl.edu.icm.coansys.disambiguation.author.pig.AproximateAND('$threshold', '$dc_m_str_feature_info','true');
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- register section

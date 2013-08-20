@@ -59,13 +59,17 @@ public abstract class CompleteLinkageHACStrategy implements ClusteringStrategy {
         List<Pair<Integer, Integer>> A = new LinkedList<Pair<Integer, Integer>>();
 
         //N
-        for (int n = 0; n < sim.length; n++) {
+        //HINT: n was from 0. Does not make any sense - look line 65 ("C[n] = new ReversedClusterElement[n]")
+        //Besides sim[n] array is empty (equals null), so line 68...
+        for (int n = 1; n < sim.length; n++) {
             C[n] = new ReversedClusterElement[n];
             //N
             for (int i = 0; i < n; i++) {
                 C[n][i] = new ReversedClusterElement(sim[n][i], i);
             }
             //NlogN
+            P[n] = new PriorityQueue<ReversedClusterElement>();
+            //ReversedClusterElements ordered by sim values
             P[n].addAll(Arrays.asList(C[n]));
             I[n] = 1;
         }
@@ -74,11 +78,20 @@ public abstract class CompleteLinkageHACStrategy implements ClusteringStrategy {
         //N
         for (int n = 1; n < sim.length; n++) {
             //N
-            i1 = argMaxSequenceIndexExcludeSame(P, I);
+        	//HINT: we get crash in first for cycle, because we get here i1 = 0, 
+        	//and now look line 94 "i2 = I[ P[i1].poll().getIndex() ];"
+        	i1 = argMaxSequenceIndexExcludeSame(P, I);
             if (i1 == -1) {
                 continue;
             }
-            i2 = I[P[i1].poll().getIndex()];
+            /*System.out.println( "I.length " + I.length );
+            System.out.println( "i1 " + i1 );
+            System.out.println( "P.length " + P.length );
+            System.out.println( P[i1] );
+            System.out.println( "P[i1].size() " + P[i1].size() );*/
+            
+            //HINT: when i1 = 0, we call P[i1].something, but P[ 0 ] = null -> NullPointerException
+            i2 = I[ P[i1].poll().getIndex() ];
             if (i1 == i2) {
                 continue;
             }
