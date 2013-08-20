@@ -22,6 +22,7 @@ import Reduction._
 import pl.edu.icm.coansys.citations.util.{misc, MyScoobiApp}
 import pl.edu.icm.coansys.citations.data.MatchableEntity
 import scala.util.Try
+import pl.edu.icm.coansys.citations.tools.pic.TempCommons
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -46,23 +47,25 @@ object NewHeuristicAdder extends MyScoobiApp {
     val nameIndex = entitiesDb.mapFlatten {
       entity =>
         for {
-          author <- misc.lettersNormaliseTokenise(entity.author)
+          author <- misc.lettersNormaliseTokenise(entity.author).filterNot(TempCommons.stopWords).distinct
         } yield (author + entity.year, entity.id)
     }
 
     val titleIndex = entitiesDb.mapFlatten {
       entity =>
         for {
-          title <- misc.lettersNormaliseTokenise(entity.title).take(indexedTitleTokens)
+          title <- misc.lettersNormaliseTokenise(entity.title).filterNot(TempCommons.stopWords).take(indexedTitleTokens).distinct
         } yield (title + entity.year, entity.id)
     }
 
     val authorTaggedEntities = entities.mapFlatten {
       entity =>
+        val text = entity.rawText.getOrElse("")
         for {
-          year <- approximateYear(entity.year)
-          author <- misc.lettersNormaliseTokenise(entity.author)
-        } yield (author + year, entity)
+          year <- misc.digitsNormaliseTokenise(text)
+          approxYear <- approximateYear(year)
+          author <- misc.lettersNormaliseTokenise(text)
+        } yield (author + approxYear, entity)
     }
 
     val authorMatched = authorTaggedEntities.joinLeft(nameIndex).values.mapFlatten {
@@ -74,11 +77,14 @@ object NewHeuristicAdder extends MyScoobiApp {
 
     val titleTaggedEntities = unmatched.mapFlatten {
       entity =>
+        val text = entity.rawText.getOrElse("")
         for {
-          year <- approximateYear(entity.year)
-          title <- misc.lettersNormaliseTokenise(entity.title).take(indexedTitleTokens)
-        } yield (title + year, entity)
+          year <- misc.digitsNormaliseTokenise(text)
+          approxYear <- approximateYear(year)
+          title <- misc.lettersNormaliseTokenise(text)
+        } yield (title + approxYear, entity)
     }
+
     implicit val grouping = new Grouping[(MatchableEntity, String)] {
       def groupCompare(x: (MatchableEntity, String), y: (MatchableEntity, String)) = {
         val res = scalaz.Ordering.fromInt(x._1.id compareTo y._1.id)
@@ -88,8 +94,12 @@ object NewHeuristicAdder extends MyScoobiApp {
           res
       }
     }
+    
     val titleMatched = titleTaggedEntities.join(titleIndex).values.map(x => (x, 1))
       .groupByKey[(MatchableEntity, String), Int].combine(Sum.int).filter(_._2 >= minMatchingTitleTokens).keys
-    (authorMatched ++ titleMatched).toSequenceFile(outUrl, overwrite = true)
+    persist(authorMatched.toSequenceFile(outUrl + "_authorMatched", overwrite = true))
+    persist(titleMatched.toSequenceFile(outUrl + "_titleMatched", overwrite = true))
+    persist((fromSequenceFile[MatchableEntity, String](outUrl + "_authorMatched") ++ fromSequenceFile[MatchableEntity, String](outUrl + "_titleMatched")).distinct.toSequenceFile(outUrl, overwrite = true))
+//    persist((authorMatched ++ titleMatched).toSequenceFile(outUrl, overwrite = true))
   }
 }
