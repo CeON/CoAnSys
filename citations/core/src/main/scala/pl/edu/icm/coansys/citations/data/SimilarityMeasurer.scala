@@ -26,8 +26,8 @@ import pl.edu.icm.coansys.citations.util.classification.svm.SvmClassifier
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 class SimilarityMeasurer(val featureVectorBuilder:FeatureVectorBuilder[(MatchableEntity, MatchableEntity)] =
-                           SimilarityMeasurer.simpleFvBuilder) {
-  val classifier = SvmClassifier.fromResource("/pl/edu/icm/coansys/citations/weakMatching.model")
+                           SimilarityMeasurer.advancedFvBuilder) {
+  val classifier = SvmClassifier.fromResource("/pl/edu/icm/coansys/citations/coraHeurBal.model")
 
   def similarity(e1: MatchableEntity, e2: MatchableEntity): Double =
     classifier.predictProbabilities(featureVectorBuilder.calculateFeatureVectorValues((e1, e2)))(1)
