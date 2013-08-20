@@ -19,6 +19,8 @@
 package pl.edu.icm.coansys.citations.util
 
 /**
+ * Helper functions and classes for comparing string similarity.
+ *
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 object ngrams {
