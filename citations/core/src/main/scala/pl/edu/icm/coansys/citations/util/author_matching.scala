@@ -23,6 +23,8 @@ import pl.edu.icm.coansys.commons.scala.collections
 import annotation.tailrec
 
 /**
+ * An object supplying a fancy author matching method, v. arXiv:1303.6906 [cs.IR].
+ *
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 object author_matching {
