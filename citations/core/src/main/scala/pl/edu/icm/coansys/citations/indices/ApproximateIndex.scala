@@ -1,5 +1,19 @@
 /*
- * (C) 2010-2012 ICM UW. All rights reserved.
+ * This file is part of CoAnSys project.
+ * Copyright (c) 20012-2013 ICM-UW
+ * 
+ * CoAnSys is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * CoAnSys is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Affero General Public License
+ * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package pl.edu.icm.coansys.citations.indices
@@ -9,9 +23,8 @@ import org.apache.hadoop.io.{Writable, Text}
 import collection.mutable.ListBuffer
 import com.nicta.scoobi.core.DList
 import com.nicta.scoobi.io.sequence.SeqSchema
-import com.nicta.scoobi.Persist.persist
-import com.nicta.scoobi.InputsOutputs.convertToSequenceFile
-import com.nicta.scoobi.application.ScoobiConfiguration
+import com.nicta.scoobi.io.sequence.SequenceOutput.toSequenceFile
+import com.nicta.scoobi.Scoobi._
 import pl.edu.icm.coansys.citations.data.MatchableEntity
 import pl.edu.icm.coansys.citations.util.{hdfs, BytesIterable, misc}
 
@@ -108,7 +121,7 @@ object ApproximateIndex {
       type SeqType = BytesIterable
       val mf = manifest[BytesIterable]
     }
-    persist(convertToSequenceFile(indexEntries(documents), indexFile))
+    persist(toSequenceFile(indexEntries(documents), indexFile))
     hdfs.mergeSeqs(indexFile)
     hdfs.convertSeqToMap(indexFile)
   }

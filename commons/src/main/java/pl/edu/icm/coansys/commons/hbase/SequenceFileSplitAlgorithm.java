@@ -1,3 +1,21 @@
+/*
+ * This file is part of CoAnSys project.
+ * Copyright (c) 20012-2013 ICM-UW
+ * 
+ * CoAnSys is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * CoAnSys is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Affero General Public License
+ * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package pl.edu.icm.coansys.commons.hbase;
 
 import java.io.BufferedReader;
@@ -7,6 +25,7 @@ import java.util.List;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.hbase.util.RegionSplitter.SplitAlgorithm;
 import org.apache.hadoop.io.IOUtils;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -16,6 +35,7 @@ public class SequenceFileSplitAlgorithm implements SplitAlgorithm {
 
     private static final String SPLIT_KEY_FILENAME_PROPERTY_NAME = "split.region.keys.file.name";
     public static final String SPLIT_KEY_FILE_DV = "keys";
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(SequenceFileSplitAlgorithm.class);
 
     @Override
     public byte[] split(byte[] bytes, byte[] bytes1) {
@@ -36,6 +56,8 @@ public class SequenceFileSplitAlgorithm implements SplitAlgorithm {
                 regions.add(Bytes.toBytes(line));
             }
         } catch (Exception ex) {
+            logger.error("Exception occured while reading file " + splitKeysFile, ex);
+            return null;
         } finally {
             IOUtils.closeStream(input);
         }

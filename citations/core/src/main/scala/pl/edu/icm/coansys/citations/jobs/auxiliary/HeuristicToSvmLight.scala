@@ -1,18 +1,33 @@
+/*
+ * This file is part of CoAnSys project.
+ * Copyright (c) 20012-2013 ICM-UW
+ * 
+ * CoAnSys is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * CoAnSys is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Affero General Public License
+ * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package pl.edu.icm.coansys.citations.jobs.auxiliary
 
 import collection.JavaConversions._
-import com.nicta.scoobi.application.ScoobiApp
-import com.nicta.scoobi.Scoobi
-import com.nicta.scoobi.InputsOutputs._
-import com.nicta.scoobi.Persist._
+import com.nicta.scoobi.Scoobi._
 import org.apache.commons.lang.StringUtils
 import pl.edu.icm.coansys.citations.util.AugmentedDList.augmentDList
 import pl.edu.icm.coansys.citations.indices.EntityIndex
-import pl.edu.icm.coansys.citations.util.{libsvm, nlm, XPathEvaluator}
+import pl.edu.icm.coansys.citations.util.{libsvm_util, nlm, XPathEvaluator}
 import org.apache.commons.io.IOUtils
 import pl.edu.icm.coansys.citations.data.MatchableEntity
-import pl.edu.icm.cermine.tools.classification.features.FeatureVectorBuilder
 import pl.edu.icm.coansys.citations.data.feature_calculators._
+import pl.edu.icm.coansys.citations.util.classification.features.FeatureVectorBuilder
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -23,7 +38,7 @@ object HeuristicToSvmLight extends ScoobiApp {
     val inUri = args(1)
     val outUri = args(2)
 
-    val results = Scoobi.convertFromSequenceFile[String, String](inUri)
+    val results = fromSequenceFile[String, String](inUri)
       .flatMapWithResource(new EntityIndex(indexUri)) { case (index, (k, v)) =>
         val parts = v.split("\n", 2)
         val ids = parts(0).split(" ").filterNot(StringUtils.isEmpty).map(_.substring(4)).toSet + k
@@ -33,8 +48,7 @@ object HeuristicToSvmLight extends ScoobiApp {
         val srcCit = MatchableEntity.fromReferenceMetadata(ref)
         val dstDocs = ids.toList.map(id => (id == k, index.getEntityById("doc_" + id)))
 
-        val featureVectorBuilder = new FeatureVectorBuilder[MatchableEntity, MatchableEntity]
-        featureVectorBuilder.setFeatureCalculators(List(
+        val featureVectorBuilder = new FeatureVectorBuilder[(MatchableEntity, MatchableEntity)](List(
           AuthorTrigramMatchFactor,
           AuthorTokenMatchFactor,
           PagesMatchFactor,
@@ -43,9 +57,9 @@ object HeuristicToSvmLight extends ScoobiApp {
           YearMatchFactor))
 
         (Stream.continually(srcCit) zip dstDocs).map { case (src, (matching, dst)) =>
-          val fv = featureVectorBuilder.getFeatureVector(src, dst)
+          val fv = featureVectorBuilder.calculateFeatureVectorValues((src, dst))
           val label = if (matching) 1 else 0
-          libsvm.featureVectorToLibSvmLine(fv, label)
+          libsvm_util.featureVectorToLibSvmLine(fv, label)
         }
       }
 

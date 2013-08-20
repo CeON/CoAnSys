@@ -1,6 +1,21 @@
 /*
- * (C) 2010-2012 ICM UW. All rights reserved.
+ * This file is part of CoAnSys project.
+ * Copyright (c) 20012-2013 ICM-UW
+ * 
+ * CoAnSys is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * CoAnSys is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Affero General Public License
+ * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
+
 package pl.edu.icm.coansys.disambiguation.author.jobs.hdfs;
 
 import java.io.IOException;
@@ -10,7 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Random;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.Text;
@@ -19,7 +33,6 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.DisambiguatorFactory;
-import pl.edu.icm.coansys.disambiguation.auxil.LoggingInDisambiguation;
 import pl.edu.icm.coansys.disambiguation.auxil.TextTextArrayMapWritable;
 import pl.edu.icm.coansys.disambiguation.clustering.strategies.SingleLinkageHACStrategy_OnlyMax;
 import pl.edu.icm.coansys.disambiguation.features.Disambiguator;
@@ -35,9 +48,9 @@ import pl.edu.icm.coansys.disambiguation.idgenerators.UuIdGenerator;
  */
 public class ClusterDisambiguationReducer_Toy extends Reducer<Text, TextTextArrayMapWritable, Text, Text> {
 
-    private static Logger logger = Logger.getLogger(LoggingInDisambiguation.class);
+    private static Logger logger = Logger.getLogger(ClusterDisambiguationReducer_Toy.class);
     private String reducerId = new Date().getTime() + "_" + Math.random();
-    private double threshold;
+    private float threshold;
     private List<FeatureInfo> featureInfos;
     private Disambiguator[] features;
     private List<TextTextArrayMapWritable> featuresMapsList = new ArrayList<TextTextArrayMapWritable>();
@@ -53,7 +66,7 @@ public class ClusterDisambiguationReducer_Toy extends Reducer<Text, TextTextArra
 
         Configuration conf = context.getConfiguration();
 
-        threshold = Double.parseDouble(conf.getStrings("THRESHOLD")[0]);
+        threshold = Float.parseFloat(conf.getStrings("THRESHOLD")[0]);
         featureInfos = FeatureInfo.parseFeatureInfoString(conf.get("FEATURE_DESCRIPTION"));
 
         features = new Disambiguator[featureInfos.size()];
@@ -73,7 +86,7 @@ public class ClusterDisambiguationReducer_Toy extends Reducer<Text, TextTextArra
         if (initialPreparations(key, values, context)) {
             return;
         }
-        double[][] sim = calculateAffinity();
+        float[][] sim = calculateAffinity();
         int[] clusterAssociations = new SingleLinkageHACStrategy_OnlyMax().clusterize(sim);
         Map<Integer, List<String>> clusterMap = splitIntoMap(clusterAssociations, authorIds);
         persistReslutsInHBase(clusterMap, authorIds, context);
@@ -133,10 +146,10 @@ public class ClusterDisambiguationReducer_Toy extends Reducer<Text, TextTextArra
     }
     
     //usage in reduce
-    protected double[][] calculateAffinity() {
-        double[][] sim = new double[featuresMapsList.size()][];
+    protected float[][] calculateAffinity() {
+        float[][] sim = new float[featuresMapsList.size()][];
         for (int i = 1; i < featuresMapsList.size(); i++) {
-            sim[i] = new double[i];
+            sim[i] = new float[i];
             for (int j = 0; i < j; j++) {
                 sim[i][j] = threshold;
                 for (int findex = 0; findex < features.length; findex++) {

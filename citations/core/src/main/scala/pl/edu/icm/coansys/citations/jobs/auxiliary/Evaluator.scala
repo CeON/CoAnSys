@@ -1,20 +1,29 @@
+/*
+ * This file is part of CoAnSys project.
+ * Copyright (c) 20012-2013 ICM-UW
+ * 
+ * CoAnSys is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * CoAnSys is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Affero General Public License
+ * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package pl.edu.icm.coansys.citations.jobs.auxiliary
 
-import collection.JavaConversions._
-import com.nicta.scoobi.application.ScoobiApp
-import com.nicta.scoobi.Scoobi
-import com.nicta.scoobi.InputsOutputs._
-import com.nicta.scoobi.Persist._
+import com.nicta.scoobi.Scoobi._
 import org.apache.commons.lang.StringUtils
 import pl.edu.icm.coansys.citations.util.AugmentedDList.augmentDList
-import pl.edu.icm.coansys.citations.indices.{AuthorIndex, EntityIndex}
-import pl.edu.icm.coansys.citations.util.{NoOpClose, libsvm, nlm, XPathEvaluator}
+import pl.edu.icm.coansys.citations.util.{NoOpClose, nlm, XPathEvaluator}
 import org.apache.commons.io.IOUtils
 import pl.edu.icm.coansys.citations.data.{SimilarityMeasurer, MatchableEntity}
-import pl.edu.icm.cermine.tools.classification.features.FeatureVectorBuilder
-import pl.edu.icm.coansys.citations.data.feature_calculators._
-import com.nicta.scoobi.core.DList
-import pl.edu.icm.coansys.citations.util.matching._
 import com.nicta.scoobi.lib.Relational
 
 /**
@@ -26,8 +35,8 @@ object Evaluator extends ScoobiApp {
     val inUri = args(1)
     val outUri = args(2)
 
-    val indexList = Scoobi.convertFromSequenceFile[String, MatchableEntity](indexUri)
-    val heuristic = Scoobi.convertFromSequenceFile[String, String](inUri)
+    val indexList = fromSequenceFile[String, MatchableEntity](indexUri)
+    val heuristic = fromSequenceFile[String, String](inUri)
     // citId->citData
     val citations = heuristic.map {
       case (k, v) =>

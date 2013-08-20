@@ -1,6 +1,21 @@
 /*
- * (C) 2010-2012 ICM UW. All rights reserved.
+ * This file is part of CoAnSys project.
+ * Copyright (c) 20012-2013 ICM-UW
+ * 
+ * CoAnSys is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * CoAnSys is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Affero General Public License
+ * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
+
 package pl.edu.icm.coansys.disambiguation.clustering;
 
 /**
@@ -12,10 +27,10 @@ package pl.edu.icm.coansys.disambiguation.clustering;
  */
 
 public class ClusterElement implements Comparable<Object>{
-	private double sim;
+	private float sim;
 	private int index;
 	
-	public ClusterElement(double sim, int index){
+	public ClusterElement(float sim, int index){
 		this.sim=sim;
 		this.index=index;
 	}
@@ -28,22 +43,32 @@ public class ClusterElement implements Comparable<Object>{
             this.index = index;
         }
         
-        public double getSim() {
+        public float getSim() {
             return sim;
         }
 
-        public void setSim(double sim) {
+        public void setSim(float sim) {
             this.sim = sim;
         }
         
 	@Override
 	public int compareTo(Object o2) {
-		if(o2==null) return 1;
-		if(!(o2 instanceof ClusterElement)) throw new ClassCastException("" +
+		if(o2==null) {
+                    return 1;
+                }
+		if(!(o2 instanceof ClusterElement)) {
+                    throw new ClassCastException("" +
 				"Comparison between "+this.getClass()+" and "+o2.getClass()+" is illegal!");
-		double count = this.sim-((ClusterElement)o2).sim; 
-		if(count>0) return 1;
-		else if(count==0) return 0;
-		else return -1;
+                }
+		float count = this.sim-((ClusterElement)o2).sim; 
+		if(count>0) {
+                    return 1;
+                }
+		else if(count==0) {
+                    return 0;
+                }
+		else {
+                    return -1;
+                }
 	}
 }

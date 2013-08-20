@@ -22,7 +22,6 @@
         <protobuf.java.version>2.4.1</protobuf.java.version>
         <testng.version>6.5.2</testng.version>
         <maven.surefire.plugin.version>2.12.3</maven.surefire.plugin.version>
-        <bwmeta.version>2.2.0</bwmeta.version>
         <spring.version>3.2.0.RELEASE</spring.version>
         <oozie-maven-plugin.version>1.1-SNAPSHOT</oozie-maven-plugin.version>
         <oozie-runner.version>1.1-SNAPSHOT</oozie-runner.version>
@@ -210,6 +209,7 @@
         <module>logs-analysis</module>
         <module>keywords-extraction</module>
         <module>models</module>
+        <module>nlm-extraction</module>
     </modules>
 
     <dependencies>
@@ -219,11 +219,6 @@
             <version>${testng.version}</version>
             <scope>test</scope>
             <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>pl.edu.icm.bwmeta</groupId>
-            <artifactId>bwmeta</artifactId>
-            <version>${bwmeta.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.hadoop</groupId>

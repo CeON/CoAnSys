@@ -1,12 +1,28 @@
 /*
- * (C) 2010-2012 ICM UW. All rights reserved.
+ * This file is part of CoAnSys project.
+ * Copyright (c) 20012-2013 ICM-UW
+ * 
+ * CoAnSys is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * CoAnSys is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Affero General Public License
+ * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
+
 package pl.edu.icm.coansys.commons.shell;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.Map;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -16,7 +32,7 @@ import org.slf4j.LoggerFactory;
  * @author akawa
  */
 
-public class JavaShellRunner {
+public final class JavaShellRunner {
 
     private static Logger logger = LoggerFactory.getLogger(JavaShellRunner.class);
 
@@ -49,7 +65,7 @@ public class JavaShellRunner {
     private static void printOutputStream(Process proces) throws IOException {
         BufferedReader in = null;
         try{
-            in = new BufferedReader(new InputStreamReader(proces.getInputStream()));
+            in = new BufferedReader(new InputStreamReader(proces.getInputStream(), Charset.forName("UTF-8")));
             String resultLine;
             while ((resultLine = in.readLine()) != null) {
                 System.out.println(resultLine);

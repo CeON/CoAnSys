@@ -1,9 +1,24 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * This file is part of CoAnSys project.
+ * Copyright (c) 20012-2013 ICM-UW
+ * 
+ * CoAnSys is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * CoAnSys is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Affero General Public License
+ * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
+
 package pl.edu.icm.coansys.commons.hbase;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.Properties;
 import org.apache.hadoop.filecache.DistributedCache;
@@ -17,12 +32,12 @@ import pl.edu.icm.coansys.commons.oozie.OozieWorkflowUtils;
  *
  * @author akawa
  */
-public class IncrementalLoadConfigurator {
+public final class IncrementalLoadConfigurator {
 
     private IncrementalLoadConfigurator() {
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws IOException {
 
         String tableName = args[0];
 

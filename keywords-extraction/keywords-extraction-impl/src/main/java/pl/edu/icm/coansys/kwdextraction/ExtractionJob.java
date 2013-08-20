@@ -1,9 +1,26 @@
 /*
- * (C) 2010-2012 ICM UW. All rights reserved.
+ * This file is part of CoAnSys project.
+ * Copyright (c) 20012-2013 ICM-UW
+ * 
+ * CoAnSys is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * CoAnSys is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Affero General Public License
+ * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
+
 package pl.edu.icm.coansys.kwdextraction;
 
 import java.io.IOException;
+import java.util.Date;
+import java.util.List;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.BytesWritable;
@@ -19,7 +36,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.edu.icm.coansys.models.DocumentProtos;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
-import pl.edu.icm.coansys.models.KeywordExtractionProtos.ExtractedKeywords;
+//import pl.edu.icm.coansys.models.KeywordExtractionProtos.ExtractedKeywords;
 
 /**
  *
@@ -28,17 +45,14 @@ import pl.edu.icm.coansys.models.KeywordExtractionProtos.ExtractedKeywords;
 public class ExtractionJob implements Tool {
 
     /*
-     * EXTRACTION_OPTION - i.e. CONTENT, ABSTRACT, CONTENT_AND_ABSTRACT
-     * EXTRACTION_LANGUAGE - "en", "pl", "fr". Only texts in this language will
-     * be processed.
+     * EXTRACTION_OPTION - i.e. CONTENT, ABSTRACT, CONTENT_AND_ABSTRACT EXTRACTION_LANGUAGE - "en", "pl", "fr". Only
+     * texts in this language will be processed.
      */
     private static final String EXTRACTION_OPTION = "EXTRACTION_OPTION";
     private static final String EXTRACTION_LANGUAGE = "EXTRACTION_LANGUAGE";
-
     private static final String ALGORITHM_NAME = "RAKE";
-
     private static final Logger logger = LoggerFactory.getLogger(ExtractionJob.class);
-    Configuration conf;
+    private Configuration conf;
 
     public static class ExtractMap extends Mapper<Writable, BytesWritable, Text, BytesWritable> {
 
@@ -50,20 +64,30 @@ public class ExtractionJob implements Tool {
             String lang = conf.get(EXTRACTION_LANGUAGE);
 
             DocumentWrapper docWrapper = DocumentProtos.DocumentWrapper.parseFrom(value.copyBytes());
-            ExtractedKeywords.Builder kwdBuilder = ExtractedKeywords.newBuilder();
-            kwdBuilder.setAlgorithm(ALGORITHM_NAME);
-            kwdBuilder.setDocId(docWrapper.getRowId());
-            for (String keyword : new RakeExtractor(docWrapper, extractionOption, lang).getKeywords()) {
-                kwdBuilder.addKeyword(keyword);
-            }
-            if (kwdBuilder.getKeywordCount() > 0) {
-                context.write(new Text(docWrapper.getRowId()), new BytesWritable(kwdBuilder.build().toByteArray()));
+            RakeExtractor rakeExtractor = new RakeExtractor(docWrapper, extractionOption, lang);
+            List<String> keywords = rakeExtractor.getKeywords();
+
+            if (keywords.size() > 0) {
+                String docId = docWrapper.getDocumentMetadata().getKey();
+
+                DocumentProtos.KeywordsList.Builder kwdBuilder = DocumentProtos.KeywordsList.newBuilder();
+
+                DocumentProtos.ProvenanceInfo.Builder provenanceBuilder = DocumentProtos.ProvenanceInfo.newBuilder();
+                DocumentProtos.ProvenanceInfo.SingleProvenanceInfo.Builder singleProvenanceBuilder = DocumentProtos.ProvenanceInfo.SingleProvenanceInfo.newBuilder();
+                singleProvenanceBuilder.setLastModificationDate(new Date().getTime());
+                singleProvenanceBuilder.setLastModificationMarkerId(ALGORITHM_NAME);
+                provenanceBuilder.setCurrentProvenance(singleProvenanceBuilder);
+                kwdBuilder.setProvenance(provenanceBuilder);
+
+                kwdBuilder.addAllKeywords(keywords);
+
+                context.write(new Text(docId), new BytesWritable(kwdBuilder.build().toByteArray()));
             }
         }
     }
 
     @Override
-    public int run(String[] args) throws Exception {
+    public int run(String[] args) throws IOException, InterruptedException, ClassNotFoundException {
         if (args.length < 4) {
             logger.error("Usage: ExtractionJob <input_seqfile> <output_dir> <extractionOption> <language>");
             logger.error("  extractionOption must be one of the following:");

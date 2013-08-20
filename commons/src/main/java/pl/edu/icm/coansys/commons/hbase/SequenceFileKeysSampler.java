@@ -1,3 +1,21 @@
+/*
+ * This file is part of CoAnSys project.
+ * Copyright (c) 20012-2013 ICM-UW
+ * 
+ * CoAnSys is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * CoAnSys is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Affero General Public License
+ * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package pl.edu.icm.coansys.commons.hbase;
 
 import java.io.IOException;
@@ -20,17 +38,12 @@ import org.apache.hadoop.util.ToolRunner;
 public class SequenceFileKeysSampler implements Tool {
 
     private Configuration conf;
-    private final String OUTPUT_KEYS_FILE_NAME_KEY = "output.keys.file.name";
-    private final String OUTPUT_KEYS_FILE_NAME_DEFAULT_VALUE = "keys";
-    private final String SAMPLER_FREQUENCY_KEY = "sampler.frequency";
-    private final float SAMPLER_FREQUENCY_DEFAULT_VALUE = 0.1f;
-    private final String SAMPLER_NUM_SAMPLES_KEY = "sampler.num.samples";
-    private final int SAMPLER_NUM_SAMPLES_DEFAULT_VALUE = 1000;
-    
-    private static final String[] DEFAULT_ARGS = {
-        "/home/akawa/Documents/git-projects/CoAnSys/importers/src/main/bash/noncompressed.sf",
-        "20",
-    };
+    private static final String OUTPUT_KEYS_FILE_NAME_KEY = "output.keys.file.name";
+    private static final String OUTPUT_KEYS_FILE_NAME_DEFAULT_VALUE = "keys";
+    private static final String SAMPLER_FREQUENCY_KEY = "sampler.frequency";
+    private static final float SAMPLER_FREQUENCY_DEFAULT_VALUE = 0.1f;
+    private static final String SAMPLER_NUM_SAMPLES_KEY = "sampler.num.samples";
+    private static final int SAMPLER_NUM_SAMPLES_DEFAULT_VALUE = 1000;
 
     @Override
     public void setConf(Configuration conf) {
@@ -43,11 +56,11 @@ public class SequenceFileKeysSampler implements Tool {
     }
 
     @Override
-    public int run(String[] args) throws Exception {
+    public int run(String[] args) throws IOException, ClassNotFoundException, InterruptedException  {
 
         if (args.length < 2) {
             usage("Wrong number of arguments: " + args.length);
-            System.exit(-1);
+            return(-1);
         }
         
         String sequenceFileInput = args[0];

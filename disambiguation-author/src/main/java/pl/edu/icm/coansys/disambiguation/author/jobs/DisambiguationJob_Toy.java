@@ -1,8 +1,24 @@
 /*
- * (C) 2010-2012 ICM UW. All rights reserved.
+ * This file is part of CoAnSys project.
+ * Copyright (c) 20012-2013 ICM-UW
+ * 
+ * CoAnSys is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * CoAnSys is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Affero General Public License
+ * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
+
 package pl.edu.icm.coansys.disambiguation.author.jobs;
 
+import java.io.IOException;
 import java.lang.management.ManagementFactory;
 
 import org.apache.hadoop.conf.Configuration;
@@ -21,7 +37,6 @@ import org.apache.hadoop.util.ToolRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.edu.icm.coansys.disambiguation.auxil.LoggingInDisambiguation;
 import pl.edu.icm.coansys.disambiguation.auxil.TextTextArrayMapWritable;
 import pl.edu.icm.coansys.models.constants.HBaseConstant;
 
@@ -38,7 +53,7 @@ public class DisambiguationJob_Toy implements Tool {
      * Inner fields
      *
      */
-    private static Logger logger = LoggerFactory.getLogger(LoggingInDisambiguation.class);
+    private static Logger logger = LoggerFactory.getLogger(DisambiguationJob_Toy.class);
     private Configuration conf;
     /*
      *
@@ -165,7 +180,7 @@ public class DisambiguationJob_Toy implements Tool {
      *
      */
     @Override
-    public int run(String[] args) throws Exception {
+    public int run(String[] args) throws IOException, InterruptedException, ClassNotFoundException {
 
         String[] otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();
         parseArgs(otherArgs);

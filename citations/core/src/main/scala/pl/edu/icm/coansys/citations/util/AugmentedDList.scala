@@ -1,5 +1,19 @@
 /*
- * (C) 2010-2012 ICM UW. All rights reserved.
+ * This file is part of CoAnSys project.
+ * Copyright (c) 20012-2013 ICM-UW
+ * 
+ * CoAnSys is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * CoAnSys is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Affero General Public License
+ * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package pl.edu.icm.coansys.citations.util
@@ -19,7 +33,7 @@ class AugmentedDList[A](dlist: DList[A]) {
    */
   def mapWithResource[T <: {def close()}, B: Manifest : WireFormat](resource: => T)(block: (T, A) => B): DList[B] = {
     dlist.parallelDo(new DoFn[A, B] {
-      var res = null.asInstanceOf[T]
+      private var res = null.asInstanceOf[T]
 
       def setup() {
         res = resource
@@ -40,14 +54,14 @@ class AugmentedDList[A](dlist: DList[A]) {
    */
   def flatMapWithResource[T <: {def close()}, C: Manifest : WireFormat](resource: => T)(block: (T, A) => Iterable[C]): DList[C] = {
     dlist.parallelDo(new DoFn[A, C] {
-      var res = null.asInstanceOf[T]
+      private var res = null.asInstanceOf[T]
 
       def setup() {
         res = resource
       }
 
       def process(input: A, emitter: Emitter[C]) {
-        block(res, input).foreach(emitter.emit(_))
+        block(res, input).foreach(emitter.emit)
       }
 
       def cleanup(emitter: Emitter[C]) {

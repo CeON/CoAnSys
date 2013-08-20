@@ -1,6 +1,21 @@
 /*
- * (C) 2010-2012 ICM UW. All rights reserved.
+ * This file is part of CoAnSys project.
+ * Copyright (c) 20012-2013 ICM-UW
+ * 
+ * CoAnSys is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * CoAnSys is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Affero General Public License
+ * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
+
 package pl.edu.icm.coansys.kwdextraction.langident;
 
 import java.io.IOException;
@@ -9,6 +24,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -78,7 +95,7 @@ public class Profile {
      * @param stream Stream to read profile from
      */
     public Profile(final InputStream stream) throws IOException {
-        this(new InputStreamReader(stream));
+        this(new InputStreamReader(stream, Charset.forName("UTF-8")));
     }
 
     /**
@@ -115,8 +132,8 @@ public class Profile {
         }
     }
 
-    public void store(final OutputStream stream) {
-        final PrintStream printStream = new PrintStream(stream);
+    public void store(final OutputStream stream) throws UnsupportedEncodingException {
+        final PrintStream printStream = new PrintStream(stream, false, "UTF-8");
         for (final String gram : data) {
             printStream.println(gram);
         }

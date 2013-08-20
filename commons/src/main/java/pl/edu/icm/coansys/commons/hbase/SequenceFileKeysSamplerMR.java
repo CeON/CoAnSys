@@ -1,3 +1,21 @@
+/*
+ * This file is part of CoAnSys project.
+ * Copyright (c) 20012-2013 ICM-UW
+ * 
+ * CoAnSys is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * CoAnSys is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Affero General Public License
+ * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package pl.edu.icm.coansys.commons.hbase;
 
 import java.io.File;
@@ -19,7 +37,6 @@ import org.apache.hadoop.mapreduce.Mapper.Context;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
-import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
@@ -35,7 +52,7 @@ public class SequenceFileKeysSamplerMR implements Tool {
     private static final int SAMPLE_SAMPLES_TOTAL_COUNT_DV = 20;
     private static final String SAMPLE_SAMPLES_PER_SPLIT = "sampler.samples.per.split";
     private static final int SAMPLE_SAMPLES_PER_SPLIT_DV = 100;
-    private static String[] DEFAULT_ARGS = {"/home/akawa/bwndata/sf/", "output-keys"};
+    private static final String[] DEFAULT_ARGS = {"/home/akawa/bwndata/sf/", "output-keys"};
 
     @Override
     public void setConf(Configuration conf) {
@@ -127,12 +144,12 @@ public class SequenceFileKeysSamplerMR implements Tool {
     }
 
     @Override
-    public int run(String[] args) throws Exception {
+    public int run(String[] args) throws IOException, ClassNotFoundException, InterruptedException {
 
         if (args.length < 2) {
             usage("Wrong number of arguments: " + args.length);
             ToolRunner.printGenericCommandUsage(System.err);
-            System.exit(-1);
+            return(-1);
         }
 
         return createParitionFile(args[0], args[1]);

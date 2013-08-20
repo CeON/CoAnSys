@@ -1,6 +1,21 @@
 /*
- * (C) 2010-2012 ICM UW. All rights reserved.
+ * This file is part of CoAnSys project.
+ * Copyright (c) 20012-2013 ICM-UW
+ * 
+ * CoAnSys is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * CoAnSys is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Affero General Public License
+ * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
+
 package pl.edu.icm.coansys.disambiguation.clustering.strategies;
 
 import java.util.Arrays;
@@ -8,7 +23,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
 
-import pl.edu.icm.coansys.disambiguation.auxil.Pair;
+import pl.edu.icm.coansys.commons.java.Pair;
 import pl.edu.icm.coansys.disambiguation.clustering.ClusterElement;
 
 /**
@@ -37,7 +52,7 @@ public abstract class CompleteLinkageHACStrategy implements ClusteringStrategy {
      * one.
      */
     @Override
-    public int[] clusterize(double sim[][]) {
+    public int[] clusterize(float sim[][]) {
         ReversedClusterElement[][] C = new ReversedClusterElement[sim.length][];
         PriorityQueue<ReversedClusterElement> P[] = new PriorityQueue[sim.length];
         int[] I = new int[sim.length];
@@ -153,7 +168,7 @@ public abstract class CompleteLinkageHACStrategy implements ClusteringStrategy {
 
     protected ClusterElement argMaxElementWithConstraints(ClusterElement[] Cn,
             int[] I, int forbidden) {
-        double maxval = -1;
+        float maxval = -1;
         ClusterElement retEl = null;
         for (int i = 0; i < Cn.length; i++) {
             if (i == forbidden) {
@@ -170,12 +185,12 @@ public abstract class CompleteLinkageHACStrategy implements ClusteringStrategy {
         return retEl;
     }
 
-    protected abstract double SIM(double a, double b);
+    protected abstract float SIM(float a, float b);
 }
 
 class ReversedClusterElement extends ClusterElement {
 
-    public ReversedClusterElement(double sim, int index) {
+    public ReversedClusterElement(float sim, int index) {
         super(sim, index);
     }
 
@@ -188,7 +203,7 @@ class ReversedClusterElement extends ClusterElement {
             throw new ClassCastException(""
                     + "Comparison between " + this.getClass() + " and " + o2.getClass() + " is illegal!");
         }
-        double count = ((ClusterElement) o2).getSim() - this.getSim();
+        float count = ((ClusterElement) o2).getSim() - this.getSim();
         if (count > 0) {
             return -1;
         } else if (count == 0) {

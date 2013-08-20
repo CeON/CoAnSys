@@ -1,6 +1,21 @@
 /*
- * (C) 2010-2012 ICM UW. All rights reserved.
+ * This file is part of CoAnSys project.
+ * Copyright (c) 20012-2013 ICM-UW
+ * 
+ * CoAnSys is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * CoAnSys is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Affero General Public License
+ * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
+
 package pl.edu.icm.coansys.disambiguation.auxil;
 
 import java.util.Arrays;
@@ -40,16 +55,19 @@ import org.apache.hadoop.io.WritableComparable;
 		public int compareTo(TextArrayWritable o) {
 			List<String> osl = o.toStringList();
 			List<String> tsl = this.toStringList();
-			int val = 0;
-			
-			if((val = tsl.size() - osl.size()) == 0){
-				if(osl.containsAll(tsl)) return 0;
+			int val = tsl.size() - osl.size();
+			if(val == 0){
+				if(osl.containsAll(tsl)) {
+                                    return 0;
+                                }
 				else{
 					Iterator<String> io = osl.iterator();
 					Iterator<String> it = tsl.iterator();
 					for(;it.hasNext();){
 						val = it.next().compareTo(io.next());
-						if(val != 0) return val;
+						if(val != 0) {
+                                                    return val;
+                                                }
 					}
 				}
 			}else{

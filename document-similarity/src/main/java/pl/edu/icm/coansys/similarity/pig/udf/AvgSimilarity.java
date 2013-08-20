@@ -1,7 +1,21 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * This file is part of CoAnSys project.
+ * Copyright (c) 20012-2013 ICM-UW
+ * 
+ * CoAnSys is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * CoAnSys is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Affero General Public License
+ * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
+
 package pl.edu.icm.coansys.similarity.pig.udf;
 
 /**
@@ -42,8 +56,7 @@ public class AvgSimilarity extends EvalFunc<Double> {
      * and produces the similarity for documents: doc1key and doc2key
      * based on single keyword
      */
-    private Double getDocumentsKeywordSimilarity(Tuple input) {
-        try {
+    private Double getDocumentsKeywordSimilarity(Tuple input) throws ExecException {
             String keyword = (String) input.get(0);
             String doc1Key = (String) input.get(1);
             double doc1KeywordWeight = (Double) input.get(2);
@@ -51,16 +64,13 @@ public class AvgSimilarity extends EvalFunc<Double> {
             double doc2KeywordWeight = (Double) input.get(4);
 
             return simFunct.getDocumentsKeywordSimilarity(keyword, doc1Key, doc1KeywordWeight, doc2Key, doc2KeywordWeight);
-        } catch (ExecException ex) {
-            throw new RuntimeException("Error while calculation of getDocumentsKeywordSimilarity", ex);
-        }
+       
     }
 
     /*
      * Takes input as a bag of <similarity> and produces the combined similarity.
      */
-    private Double getDocumentsKeywordsCombinedSimilarity(Tuple input) {
-        try {
+    private Double getDocumentsKeywordsCombinedSimilarity(Tuple input) throws ExecException {
             DataBag bag1 = (DataBag) input.get(0);
             String doc1Key = (String) bag1.iterator().next().get(0);
             DataBag bag2 = (DataBag) input.get(1);
@@ -76,10 +86,6 @@ public class AvgSimilarity extends EvalFunc<Double> {
             }
 
             return simFunct.getDocumentsTotalSimilarity(doc1Key, doc2Key, list);
-
-        } catch (ExecException ex) {
-            throw new RuntimeException("Error while calculation of getDocumentsKeywordsCombinedSimilarity", ex);
-        }
     }
 
     @Override
@@ -89,7 +95,7 @@ public class AvgSimilarity extends EvalFunc<Double> {
         } else if (type.equals(DOCUMENTS_KEYWORDS_COMBINED_SIMILARITY)) {
             return getDocumentsKeywordsCombinedSimilarity(input);
         }
-        throw new RuntimeException("Unsupported type: " + type);
+        throw new IllegalArgumentException("Unsupported type: " + type);
     }
     
     @Override

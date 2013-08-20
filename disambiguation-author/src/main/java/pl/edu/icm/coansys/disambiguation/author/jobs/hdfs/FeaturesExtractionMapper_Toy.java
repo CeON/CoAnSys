@@ -1,12 +1,28 @@
 /*
- * (C) 2010-2012 ICM UW. All rights reserved.
+ * This file is part of CoAnSys project.
+ * Copyright (c) 20012-2013 ICM-UW
+ * 
+ * CoAnSys is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * CoAnSys is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Affero General Public License
+ * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
+
 package pl.edu.icm.coansys.disambiguation.author.jobs.hdfs;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.Text;
@@ -16,8 +32,7 @@ import org.apache.log4j.Logger;
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.ExtractorFactory;
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.AuthorBased;
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DocumentBased;
-import pl.edu.icm.coansys.disambiguation.auxil.DiacriticsRemover;
-import pl.edu.icm.coansys.disambiguation.auxil.LoggingInDisambiguation;
+import pl.edu.icm.coansys.commons.java.DiacriticsRemover;
 import pl.edu.icm.coansys.disambiguation.auxil.TextTextArrayMapWritable;
 import pl.edu.icm.coansys.disambiguation.features.Extractor;
 import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
@@ -33,7 +48,7 @@ import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 @SuppressWarnings("rawtypes")
 public class FeaturesExtractionMapper_Toy extends Mapper<BytesWritable, BytesWritable, Text, TextTextArrayMapWritable> {
 
-    private static Logger logger = Logger.getLogger(LoggingInDisambiguation.class);
+    private static Logger logger = Logger.getLogger(FeaturesExtractionMapper_Toy.class);
     private List<FeatureInfo> featureInfos;
     private List<Extractor> featureExtractors;
 
@@ -56,31 +71,30 @@ public class FeaturesExtractionMapper_Toy extends Mapper<BytesWritable, BytesWri
         return extractors;
     }
 
-    private static List<FeatureInfo> getFeaturesInfos(String feature) {
-        List<FeatureInfo> ret = new ArrayList<FeatureInfo>();
-        String[] finfos = feature.split(",");
-        for (String finfo : finfos) {
-            String[] details = finfo.split("#");
-            if (details.length != 4) {
-                logger.error("Feature info does not contains enought data. "
-                        + "It should follow the pattern featureName#FeatureExtractorName"
-                        + "#Weight#MaxValue");
-                logger.error("FeatureInfo contains: " + finfo);
-                continue;
-            } else {
-                ret.add(new FeatureInfo(details[0], details[1],
-                        Double.parseDouble(details[2]),
-                        Integer.parseInt(details[3])));
-            }
-        }
-        return ret;
-    }
-
+    /*private static List<FeatureInfo> getFeaturesInfos(String feature) {
+     List<FeatureInfo> ret = new ArrayList<FeatureInfo>();
+     String[] finfos = feature.split(",");
+     for (String finfo : finfos) {
+     String[] details = finfo.split("#");
+     if (details.length != 4) {
+     logger.error("Feature info does not contains enought data. "
+     + "It should follow the pattern featureName#FeatureExtractorName"
+     + "#Weight#MaxValue");
+     logger.error("FeatureInfo contains: " + finfo);
+     continue;
+     } else {
+     ret.add(new FeatureInfo(details[0], details[1],
+     Double.parseDouble(details[2]),
+     Integer.parseInt(details[3])));
+     }
+     }
+     return ret;
+     }*/
     @Override
     protected void map(BytesWritable skey, BytesWritable metadataProto, Context context) throws IOException, InterruptedException {
         HashMap<String, List<String>> docBasedFeature = new HashMap<String, List<String>>();
         DocumentMetadata dm = DocumentMetadata.parseFrom(metadataProto.copyBytes());
-         
+
         //(1) extract all document-based features, 
         //[which will be passes to the object authorId2FeatureMap] 
         createDocumentBasedFeatureMap(docBasedFeature, dm);
@@ -122,7 +136,7 @@ public class FeaturesExtractionMapper_Toy extends Mapper<BytesWritable, BytesWri
     }
 
     protected void createDocumentBasedFeatureMap(
-            HashMap<String, List<String>> docBasedFeature, DocumentMetadata dm) {
+            Map<String, List<String>> docBasedFeature, DocumentMetadata dm) {
         //(1) extract all document-based features, 
         //[which will be passes to the object authorId2FeatureMap]
         int firstIndex = -1;
@@ -135,7 +149,7 @@ public class FeaturesExtractionMapper_Toy extends Mapper<BytesWritable, BytesWri
         }
     }
 
-    protected void createFeatureMapForOneAuthor(HashMap<String, List<String>> docBasedFeature,
+    protected void createFeatureMapForOneAuthor(Map<String, List<String>> docBasedFeature,
             DocumentMetadata dm, String authId,
             TextTextArrayMapWritable featureName2FeatureValuesMap) {
 

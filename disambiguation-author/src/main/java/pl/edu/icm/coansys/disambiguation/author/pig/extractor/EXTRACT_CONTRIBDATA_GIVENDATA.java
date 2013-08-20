@@ -1,5 +1,19 @@
 /*
- * (C) 2010-2012 ICM UW. All rights reserved.
+ * This file is part of CoAnSys project.
+ * Copyright (c) 20012-2013 ICM-UW
+ * 
+ * CoAnSys is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * CoAnSys is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Affero General Public License
+ * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package pl.edu.icm.coansys.disambiguation.author.pig.extractor;
@@ -19,137 +33,138 @@ import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
 import org.apache.pig.impl.logicalLayer.FrontendException;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import pl.edu.icm.coansys.disambiguation.author.auxil.StackTraceExtractor;
+import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
+import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.PigNormalizer;
+import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.ToEnglishLowerCase;
+import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
 import pl.edu.icm.coansys.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
 
 /**
-*
-* @author pdendek
-*/
-public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag>{
+ *
+ * @author pdendek
+ */
+public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 
-	DisambiguationExtractor[] des = null;
-	
-	@Override
-	public Schema outputSchema(Schema p_input){
-		try{
-			return Schema.generateNestedSchema(DataType.BAG);
-		}catch(FrontendException e){
-			throw new IllegalStateException(e);
-		}
-	}
-	
-	public EXTRACT_CONTRIBDATA_GIVENDATA(String s){
-		
-		String[] features = s.split(",");
-		
-		for ( String f : features ) {
-			
-			
-		}
-		
-		//TODO dopisz wyciaganie DisambiguationExtractor'ow (czyli NazwyEkstraktora) z wejsciowego string'a w postaci 
-		// NazwaFeaturea#NazwaEkstraktora#WagaFeature'a#WartoscMaxymala[,NazwaFeaturea#NazwaEkstraktora#WagaFeature'a#WartoscMaxymala]*
-		// i dodawanie tego do tablicy des tak jak w konstruktorze EXTRACT_CONTRIBDATA_GIVENDATA()
-	}
-	
-	public EXTRACT_CONTRIBDATA_GIVENDATA(){
-		try {
-			des = new DisambiguationExtractor[1];
-			Class c = Class.forName("pl.edu.icm.coansys.disambiguation.author.pig.extractor.EX_KEYWORDS");
-			des[0] = (DisambiguationExtractor) c.newInstance();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			// dopisz rzutanie wyjatku korzystajac ze StackTraceExtractora tak jak w EXTRACT_SNAME_DOCUMENT_METADATA 
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			// dopisz rzutanie wyjatku korzystajac ze StackTraceExtractora tak jak w EXTRACT_SNAME_DOCUMENT_METADATA			
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			// dopisz rzutanie wyjatku korzystajac ze StackTraceExtractora tak jak w EXTRACT_SNAME_DOCUMENT_METADATA			
-			e.printStackTrace();
-		}
-	}
-	
-	public DataBag exec(Tuple input) throws IOException {
-		
-	
-		if (input == null || input.size() == 0)
-			return null;
-		
-		try{		
-			DataByteArray dba = null;
-			try{
-				dba = (DataByteArray) input.get(0);	
-			}catch(Exception e){
-				System.out.println("Trying to cast Object ("+input.getType(0)
-						+") to DataByteArray");
-				System.out.println("Failure!");
-				e.printStackTrace();
-				throw e;
-			}
-			
-			DocumentWrapper dw = null;
-			try{
-				dw = DocumentWrapper.parseFrom( dba.get() );
-			}catch(Exception e){
-				System.out.println("Trying to read ByteArray to DocumentMetadata");
-				System.out.println("Failure!");
-				e.printStackTrace();
-				throw e;
-			}
-			
-			//metadane dokumentu
-			DocumentMetadata dm = dw.getDocumentMetadata();
+    private static final Logger logger = LoggerFactory.getLogger(EXTRACT_CONTRIBDATA_GIVENDATA.class);
+    private DisambiguationExtractor[] des = null;
+    private String language = null;
+    private PigNormalizer normalizer = new ToEnglishLowerCase();
+    
+    @Override
+    public Schema outputSchema(Schema p_input) {
+        try {
+            return Schema.generateNestedSchema(DataType.BAG);
+        } catch (FrontendException e) {
+            logger.error("Error in creating output schema:", e);
+            throw new IllegalStateException(e);
+        }
+    }
+    
+    private void setDisambiguationExtractor( String featureinfo ) throws 
+    		ClassNotFoundException, InstantiationException, IllegalAccessException {
+        
+    	List<FeatureInfo> features = FeatureInfo.parseFeatureInfoString( featureinfo );
+        des = new DisambiguationExtractor[features.size()];
 
-			//torba wynikowa z tuplami  opisujacego kazdego kontrybutora
-			DataBag ret = new DefaultDataBag();
+        for ( int i = 0; i < features.size(); i++ ){
+            Class<?> c = Class.forName("pl.edu.icm.coansys.disambiguation.author.pig.extractor." 
+            		+ features.get(i).getFeatureExtractorName());
+            des[i] = (DisambiguationExtractor) c.newInstance();
+        }
+    }
+    
+    public EXTRACT_CONTRIBDATA_GIVENDATA( String featureinfo ) throws 
+    		ClassNotFoundException, InstantiationException, IllegalAccessException {
+    	setDisambiguationExtractor( featureinfo );
+    }
+    
+    public EXTRACT_CONTRIBDATA_GIVENDATA( String featureinfo, String lang ) throws 
+    		ClassNotFoundException, InstantiationException, IllegalAccessException {
+    	setDisambiguationExtractor( featureinfo );
+    	language = lang;
+    }
+    
+    public EXTRACT_CONTRIBDATA_GIVENDATA() throws ClassNotFoundException, 
+    		InstantiationException, IllegalAccessException {
+        des = new DisambiguationExtractor[1];
+        Class<?> c = Class.forName("pl.edu.icm.coansys.disambiguation.author.pig.extractor.EX_TITLE");
+        des[0] = (DisambiguationExtractor) c.newInstance();
+    }
 
-			//lista autorow
-			List <Author> authors =  
-					dm.getBasicMetadata().getAuthorList();
-			
-			//obiekty wynikowe tylko dla danych tyczacych sie dokumentu
-			//w dalszej czesci bedzie trzeba zgeneralizowac ten kod,
-			//zeby pozwalal tez na wyciaganie metadanych tyczacych sie danego kotrybutora
-			//(takich jak jego adres email, afiliacja, etc.).
-			//potencjalnie bedzie do tego potrzebna osobna petla.
-			Object[] retObj = new Object[des.length];
-			int i=-1;
-			for(DisambiguationExtractor de : des){
-				i++;
-				retObj[i] = de.extract(dm);
-			}
-			
-			//dodawanie wyciagnietych danych odnosnie dokumentu i kontrybutora do mapy informacji
-			Map<String, Object> map = new HashMap<String, Object>();
-			i = -1;
-			for(DisambiguationExtractor de : des){
-				i++;
-				map.put(de.getClass().getSimpleName(), retObj[i]);
-			}
+    @Override
+    public DataBag exec(Tuple input) throws IOException {
+
+        if (input == null || input.size() == 0) {
+            return null;
+        }
+
+        try {
+            DataByteArray dba = (DataByteArray) input.get( 0 );
+
+            DocumentWrapper dw = DocumentWrapper.parseFrom(dba.get());
+
+            //metadata
+            DocumentMetadata dm = dw.getDocumentMetadata();
+
+            //result bag with tuples, which describes each contributor
+            DataBag ret = new DefaultDataBag();
+
+            //author list
+            List<Author> authors =
+                    dm.getBasicMetadata().getAuthorList();
             
-			//stworzenie torby zawierajacej tuple z informacjami 
-			//o wszystkich kontrybutorach z danego dokumentu
-			for (i = 0; i < authors.size(); i++ ){
-				String sname = authors.get(i).getSurname();
-				String cId = authors.get(i).getKey();
-				Object[] to = new Object[]{cId, i, sname, map};
-				Tuple t = TupleFactory.getInstance().newTuple(Arrays.asList(to));
-				ret.add(t);
-			}
-	        //zwrocenie torby z wynikami
-	        return ret;
-			
-		}catch(Exception e){
-			// Throwing an exception will cause the task to fail.
+            //so far result objects have contained only data, which describes documents
+            //in future we will need to get data involving author's data (e.g. 
+            //email, institution, etc...). Probably we will need one more 'for'
+            Object[] retObj = new Object[des.length];
+            
+            if ( language != null 
+            		&& !language.equalsIgnoreCase("all") 
+            		&& !language.equalsIgnoreCase("null")
+            		&& !language.equals("") ) {
+            	for ( int i = 0; i < des.length; i++ ){
+            		retObj[i] = des[ i ].extract( dm, language );
+            		if ( retObj[i] == null ) {
+                        logger.info("Uncomplete or no metadata IN GIVEN LANG (" 
+                        		+ language + "). Ignoring document with key: \"" 
+                        		+ dm.getKey() + "\"!");
+                        return null;
+            		}
+            	}
+        	}
+            else {
+            	for ( int i = 0; i < des.length; i++ ) {
+            		retObj[i] = des[ i ].extract( dm );
+            	}
+            }
+            
+            //adding to map extractor name and features' data, which we got above
+            Map<String, Object> map = new HashMap<String, Object>();
+            for ( int i = 0; i < des.length; i++ ){
+                map.put( des[i].getClass().getSimpleName(), retObj[i] );
+            }
+
+            //bag making tuples (one tuple for one contributor from document)
+            //with replicated metadata for
+            for ( int i = 0; i < authors.size(); i++ ) {
+            	String sname = normalizer.normalize( authors.get( i ).getSurname() );
+                String cId = authors.get( i ).getKey();
+                Object[] to = new Object[]{ cId, i, sname, map };
+                Tuple t = TupleFactory.getInstance().newTuple(Arrays.asList( to ));
+                ret.add( t );
+            }
+
+            return ret;
+
+        } catch (Exception e) {
+            logger.error("Error in processing input row:", e);
             throw new IOException("Caught exception processing input row:\n"
-            		+ StackTraceExtractor.getStackTrace(e));
-		}
-	}
+                    + StackTraceExtractor.getStackTrace(e));
+        }
+    }
 }
