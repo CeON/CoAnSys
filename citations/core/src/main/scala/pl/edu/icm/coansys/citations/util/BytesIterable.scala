@@ -22,6 +22,11 @@ import java.io.DataInput
 import java.io.DataOutput
 import org.apache.hadoop.io.Writable
 
+/**
+ * A Writable for storing iterables of byte arrays, e.g. containing serialised protobuf objects.
+ *
+ * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
+ */
 class BytesIterable(var iterable: Iterable[Array[Byte]]) extends Writable {
   def this() = this(Nil)
 

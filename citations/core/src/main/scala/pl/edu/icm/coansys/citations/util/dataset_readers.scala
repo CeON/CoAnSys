@@ -34,6 +34,8 @@ import scala.collection.JavaConversions._
 import pl.edu.icm.cermine.bibref.transformers.BibEntryToNLMElementConverter
 
 /**
+ * Readers for popular datasets.
+ *
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 object dataset_readers {
