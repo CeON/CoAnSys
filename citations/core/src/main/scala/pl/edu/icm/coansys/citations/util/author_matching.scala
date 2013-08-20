@@ -1,6 +1,6 @@
 /*
  * This file is part of CoAnSys project.
- * Copyright (c) 20012-2013 ICM-UW
+ * Copyright (c) 2012-2013 ICM-UW
  * 
  * CoAnSys is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,6 +23,8 @@ import pl.edu.icm.coansys.commons.scala.collections
 import annotation.tailrec
 
 /**
+ * An object supplying a fancy author matching method, v. arXiv:1303.6906 [cs.IR].
+ *
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 object author_matching {

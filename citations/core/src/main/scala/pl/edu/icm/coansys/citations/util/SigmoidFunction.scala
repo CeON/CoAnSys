@@ -1,6 +1,6 @@
 /*
  * This file is part of CoAnSys project.
- * Copyright (c) 20012-2013 ICM-UW
+ * Copyright (c) 2012-2013 ICM-UW
  * 
  * CoAnSys is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,7 +24,7 @@ import math.exp
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
-class SigmoidFunction(val alpha: Double, val beta: Double, val yOffset: Double = 0.0) extends Function1[Double, Double] {
+class SigmoidFunction(val alpha: Double, val beta: Double, val yOffset: Double = 0.0) extends ((Double) => Double) {
   def apply(x: Double): Double =
     1.0 / (1.0 + exp(-(alpha * x + beta))) + yOffset
 }

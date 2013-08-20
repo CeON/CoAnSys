@@ -1,6 +1,6 @@
 /*
  * This file is part of CoAnSys project.
- * Copyright (c) 20012-2013 ICM-UW
+ * Copyright (c) 2012-2013 ICM-UW
  * 
  * CoAnSys is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -24,6 +24,8 @@ import java.io.{DataInput, DataOutput}
 import org.apache.hadoop.io.BytesWritable
 
 /**
+ * Class implementing Scoobi WireFormat and SeqSchema given serializer and deserializer functions.
+ *
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 class BytesConverter[T](serializer: T => Array[Byte], deserializer: Array[Byte] => T) extends WireFormat[T] with SeqSchema[T] {

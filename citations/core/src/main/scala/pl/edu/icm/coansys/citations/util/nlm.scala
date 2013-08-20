@@ -1,6 +1,6 @@
 /*
  * This file is part of CoAnSys project.
- * Copyright (c) 20012-2013 ICM-UW
+ * Copyright (c) 2012-2013 ICM-UW
  * 
  * CoAnSys is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -23,6 +23,8 @@ import pl.edu.icm.coansys.models.DocumentProtos._
 import org.w3c.dom.Node
 
 /**
+ * NLM to DocumentProtos conversion functions.
+ *
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 object nlm {

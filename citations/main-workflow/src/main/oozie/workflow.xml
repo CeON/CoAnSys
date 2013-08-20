@@ -1,8 +1,51 @@
 <!--
-  ~ (C) 2010-2012 ICM UW. All rights reserved.
+  ~ This file is part of CoAnSys project.
+  ~ Copyright (c) 2012-2013 ICM-UW
+  ~
+  ~ CoAnSys is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ CoAnSys is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<workflow-app xmlns="uri:oozie:workflow:0.3" name="citation-matching-wf">
+<workflow-app xmlns="uri:oozie:workflow:0.4" name="citation-matching-wf">
+    <parameters>
+        <property>
+            <name>masterNode</name>
+        </property>
+        <property>
+            <name>nameNode</name>
+        </property>
+        <property>
+            <name>jobTracker</name>
+        </property>
+        <property>
+            <name>queueName</name>
+            <value>default</value>
+        </property>
+        <property>
+            <name>workingDir</name>
+        </property>
+        <property>
+            <name>inputSeqFile</name>
+        </property>
+        <property>
+            <name>outputSeqFile</name>
+        </property>
+        <property>
+            <name>heuristic</name>
+            <value>Old</value>
+        </property>
+    </parameters>
+
     <start to="prelude"/>
 
     <action name="prelude">
@@ -71,15 +114,33 @@
                     <value>Raw</value>
                 </property>
                 <property>
+                    <name>cit_heuristic</name>
+                    <value>${heuristic}</value>
+                </property>
+                <property>
                     <name>cit_inputDestSeqFile</name>
                     <value>${workingDir}/destination_entities</value>
                 </property>
                 <property>
                     <name>cit_outputSeqFile</name>
-                    <value>${workingDir}/coansys/matching</value>
+                    <value>${workingDir}/matching</value>
                 </property>
             </configuration>
         </sub-workflow>
+        <ok to="output_converter"/>
+        <error to="fail"/>
+    </action>
+
+    <action name="output_converter">
+        <java>
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <main-class>pl.edu.icm.coansys.citations.jobs.OutputToPICProtosConverter</main-class>
+            <arg>-fs</arg><arg>${nameNode}</arg>
+            <arg>-jt</arg><arg>${jobTracker}</arg>
+            <arg>${workingDir}/matching</arg>
+            <arg>${outputSeqFile}</arg>
+        </java>
         <ok to="end"/>
         <error to="fail"/>
     </action>

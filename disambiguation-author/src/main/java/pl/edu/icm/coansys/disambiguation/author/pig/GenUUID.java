@@ -1,6 +1,6 @@
 /*
  * This file is part of CoAnSys project.
- * Copyright (c) 20012-2013 ICM-UW
+ * Copyright (c) 2012-2013 ICM-UW
  * 
  * CoAnSys is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
@@ -26,7 +26,6 @@ import org.apache.pig.data.Tuple;
 
 import pl.edu.icm.coansys.disambiguation.idgenerators.IdGenerator;
 import pl.edu.icm.coansys.disambiguation.idgenerators.UuIdGenerator;
-
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -39,6 +38,8 @@ public class GenUUID extends EvalFunc< String> {
 
     private IdGenerator idgenerator = new UuIdGenerator();
 
+	IdGenerator idgenerator = new UuIdGenerator();
+	
     /**
      * @param Tuple input with DataBag with Strings - contributors' names, 
      * for whom we want to find unique id
