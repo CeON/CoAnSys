@@ -58,13 +58,15 @@ public class EX_KEYWORDS extends DisambiguationExtractorDocument  {
 					db.add(TupleFactory.getInstance().newTuple(
 							normalizeExtracted( s ) ));
 				}
-				return db;
+				//return db;
 			}
 		}
         
-		logger.info("No keywords IN GIVEN LANG (" + lang + ") out of " 
-				+ dm.getKeywordsCount() + " keywords!");
-		
-		return null;
+		if ( db.size() == 0) {
+			logger.info("No keywords IN GIVEN LANG (" + lang + ") out of " 
+					+ dm.getKeywordsCount() + " keywords!");
+			//return null;
+		}
+		return db;
 	}
 }

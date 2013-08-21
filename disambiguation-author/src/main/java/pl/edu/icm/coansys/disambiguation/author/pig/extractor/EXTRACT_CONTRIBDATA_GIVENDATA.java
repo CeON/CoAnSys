@@ -75,7 +75,8 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
         String ExtractorAuthorClassName = new DisambiguationExtractorAuthor().getClass().getSimpleName();
         
         for ( int i = 0; i < features.size(); i++ ){
-            Class<?> c = Class.forName( "pl.edu.icm.coansys.disambiguation.author.pig.extractor." 
+            //TODO add try/catch block for exception 
+        	Class<?> c = Class.forName( "pl.edu.icm.coansys.disambiguation.author.pig.extractor." 
             		+ features.get(i).getFeatureExtractorName() );
             
             String currentClassName = c.getSuperclass().getSimpleName();
@@ -168,18 +169,18 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
                 finalMap = new HashMap<String, Object>(map);
                 
                 //put author metadata into finalMap
-                extractedAuthorObj = new Object[des4Author.size()];
+                extractedAuthorObj = new Object[ des4Author.size() ];
                 if ( checkLanguage() ) 
                 	for ( int j = 0; j < des4Author.size(); j++ )
-                		extractedAuthorObj[i] = des4Author.get( j ).extract( dm, i, language );
+                		extractedAuthorObj[j] = des4Author.get( j ).extract( dm, i, language );
                 else 
                 	for ( int j = 0; j < des4Author.size(); j++ ) 
-                		extractedAuthorObj[i] = des4Author.get( j ).extract( dm, i );
+                		extractedAuthorObj[j] = des4Author.get( j ).extract( dm, i );
 
                 //adding to map extractor name and features' data
                 for ( int j = 0; j < des4Author.size(); j++ ) {
                 	if ( extractedAuthorObj[j] == null ) continue;
-                	finalMap.put( des4Author.get( j ).getClass().getSimpleName(), extractedAuthorObj[i] );
+                	finalMap.put( des4Author.get( j ).getClass().getSimpleName(), extractedAuthorObj[j] );
                 }
                 extractedAuthorObj = null;
     		
