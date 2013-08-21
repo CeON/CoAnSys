@@ -101,7 +101,7 @@ public abstract class CompleteLinkageHACStrategy implements ClusteringStrategy {
             //N
             RelaxedPair rp = argMaxSequenceIndexExcludeSame(P, I);
             if (rp == null) {
-                return new int[]{0};
+                break;
             }
             i1 = rp.a;
             i2 = rp.b;            
@@ -178,6 +178,7 @@ public abstract class CompleteLinkageHACStrategy implements ClusteringStrategy {
     protected RelaxedPair argMaxSequenceIndexExcludeSame(PriorityQueue[] priorityQueue, int[] I) throws Exception {
         ClusterElement max = null;
         int maxTmp_index = -1;
+        float maxSim = Float.MIN_VALUE;
         for (int i = 1; i < priorityQueue.length; i++) {
             if (I[i] != 1) {
                 continue;
@@ -185,12 +186,14 @@ public abstract class CompleteLinkageHACStrategy implements ClusteringStrategy {
             if(priorityQueue[i] == null || priorityQueue[i].size()==0) continue;
             ClusterElement el = (ClusterElement) priorityQueue[i].peek();
             if (max == null || el.getSim() > max.getSim()) {
+            	maxSim = el.getSim();
                 max = el;
                 maxTmp_index = i;
             }
         }
         if(max == null) throw new Exception("No next pair have been selected. " +
         		"This situation should not occure, please inspect code");
+        if(maxSim<0) return null;
         int maxEl_index = max.getIndex(); 
         RelaxedPair rp = maxTmp_index > maxEl_index ? 
         		new RelaxedPair(maxTmp_index,maxEl_index) : 
