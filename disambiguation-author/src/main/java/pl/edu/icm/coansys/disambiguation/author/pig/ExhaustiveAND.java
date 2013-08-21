@@ -187,6 +187,7 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 
 	private void calculateAffinity( List< Map<String,Object> > contribsT ) throws Exception {
 
+		// N^2 / 2 * features number - already calculated sim values
 		for ( int i = 1; i < contribsT.size(); i++ ) {
 			for ( int j = 0; j < i; j++ ) {
 
@@ -211,9 +212,6 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 					partial = partial / featureInfos[d].getMaxValue() 
 							* featureInfos[d].getWeight();
 					sim[i][j] += partial;
-					
-					//? :
-        			if ( sim[i][j] >= 0 ) break;
 				}
 			}
 		}
