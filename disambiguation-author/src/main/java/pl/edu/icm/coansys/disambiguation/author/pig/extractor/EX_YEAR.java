@@ -25,7 +25,7 @@ import org.apache.pig.data.TupleFactory;
 
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 
-public class EX_YEAR extends DisambiguationExtractor {
+public class EX_YEAR extends DisambiguationExtractorDocument {
 	
 	@Override
 	public DataBag extract( Object o, String lang ) {

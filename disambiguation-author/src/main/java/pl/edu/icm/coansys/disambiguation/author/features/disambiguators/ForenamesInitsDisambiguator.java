@@ -16,26 +16,21 @@
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.edu.icm.coansys.disambiguation.author.pig.extractor;
+package pl.edu.icm.coansys.disambiguation.author.features.disambiguators;
 
-import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.PigNormalizer;
-import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.ToEnglishLowerCase;
-import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.ToHashCode;
+import pl.edu.icm.coansys.disambiguation.features.Disambiguator;
 
-public class DisambiguationExtractor {
-	
-	static PigNormalizer normalizers[] = {
-		new ToEnglishLowerCase(), 
-		new ToHashCode()
-	};
-	
-	static public Object normalizeExtracted( String extracted ) {
-		Object tmp = extracted;
-		for ( PigNormalizer pn: normalizers ) {
-			tmp = pn.normalize( tmp );
-		}
-		return tmp;
+/**
+ * 
+ * @author pdendek
+ * @version 1.0
+ * @since 2012-08-07
+ */
+public class ForenamesInitsDisambiguator extends Disambiguator{
+
+	@Override
+	public String getName() {
+		return ForenamesInitsDisambiguator.class.getSimpleName();
 	}
 
 }
-	

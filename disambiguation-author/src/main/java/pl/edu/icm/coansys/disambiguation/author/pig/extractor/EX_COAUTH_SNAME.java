@@ -26,17 +26,16 @@ import org.apache.pig.data.TupleFactory;
 import pl.edu.icm.coansys.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 
-public class EX_COAUTH_SNAME extends DisambiguationExtractor{
+public class EX_COAUTH_SNAME extends DisambiguationExtractorAuthor {
 	
 	@Override
-	public DataBag extract( Object o, String lang ){
+	public DataBag extract( Object o, int fakeIndex, String lang ){
 		TupleFactory tf = TupleFactory.getInstance();
 		DocumentMetadata dm = (DocumentMetadata) o;
 		DataBag db = new DefaultDataBag();
 		
-		int fakeIndex = 0;		
 		for(Author a : dm.getBasicMetadata().getAuthorList()){
-			if(a.getPositionNumber()==fakeIndex){
+			if( a.getPositionNumber() == fakeIndex ){
 				continue;
 			}
 			Tuple t = tf.newTuple();

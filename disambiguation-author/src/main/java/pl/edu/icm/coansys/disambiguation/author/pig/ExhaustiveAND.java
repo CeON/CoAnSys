@@ -211,12 +211,12 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 					Object oB = contribsT.get(j).get( featureInfos[d].getFeatureExtractorName() );
 					
 					if ( oA == null || oB == null ) continue;
+					if ( featureInfos[d].getMaxValue() == 0 ) continue;
 					
 					double partial = features[d].calculateAffinity( oA, oB );
-					
-					if ( featureInfos[d].getMaxValue() == 0 ) continue;
 					partial = partial / featureInfos[d].getMaxValue() 
 							* featureInfos[d].getWeight();
+					
 					sim[i][j] += partial;
 				}
 			}

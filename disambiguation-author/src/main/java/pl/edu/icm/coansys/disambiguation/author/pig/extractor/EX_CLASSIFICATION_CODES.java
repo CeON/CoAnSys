@@ -25,7 +25,7 @@ import org.apache.pig.data.TupleFactory;
 import pl.edu.icm.coansys.models.DocumentProtos.ClassifCode;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 
-public class EX_CLASSIFICATION_CODES extends DisambiguationExtractor{
+public class EX_CLASSIFICATION_CODES extends DisambiguationExtractorDocument{
 	
 	@Override
 	public DataBag extract( Object o, String lang ){
