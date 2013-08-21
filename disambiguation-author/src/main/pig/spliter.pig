@@ -34,7 +34,8 @@
 DEFINE keyTiKwAbsCatExtractor pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_MAP_WHEN_CATEG_LIM('en','removeall');
 DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_CONTRIBDATA_GIVENDATA('$dc_m_str_feature_info','$lang');
 DEFINE exhaustiveAND pl.edu.icm.coansys.disambiguation.author.pig.ExhaustiveAND('$threshold','$dc_m_str_feature_info');
-DEFINE aproximateAND pl.edu.icm.coansys.disambiguation.author.pig.AproximateAND('$threshold','$dc_m_str_feature_info');
+DEFINE aproximateAND pl.edu.icm.coansys.disambiguation.author.pig.AproximateAND('$threshold','$dc_m_str_feature_info','true');
+DEFINE aproximateXxlAND pl.edu.icm.coansys.disambiguation.author.pig.AproximateAND('$threshold','$dc_m_str_feature_info', 'false');
 DEFINE sinlgeAND pl.edu.icm.coansys.disambiguation.author.pig.SingleAND();
 DEFINE GenUUID pl.edu.icm.coansys.disambiguation.author.pig.GenUUID();
 -- -----------------------------------------------------
@@ -75,7 +76,7 @@ A1 = LOAD '$dc_m_hdfs_inputDocsData' USING $dc_m_meth_extraction_inner('org.apac
 -- A2: {key: chararray,value: bytearray}
 A2 = sample A1 $dc_m_double_sample;
 
-B1 = foreach A2 generate flatten(snameDocumentMetaExtractor($1)) as (cId:chararray, contribPos:int, sname:chararray, metadata:map[{(chararray)}]);
+B1 = foreach A2 generate flatten(snameDocumentMetaExtractor($1)) as (cId:chararray, sname:int, metadata:map[{(int)}]);
 
 B = FILTER B1 BY cId is not null;
 
@@ -85,9 +86,9 @@ D = foreach C generate group as sname, B as datagroup, COUNT(B) as count;
 
 split D into
 	D1 if count == 1,
-	D100 if (count > 1 and count < 100),
-	D1000 if (count >= 100 and count < 1000),
-	DX if count >= 1000;
+	D100 if (count > 1 and count < 500),
+	D1000 if (count >= 500 and count < 3000),
+	DX if count >= 3000;
 
 -- store here, remember to delete path in workflow after joining / merge
 store D1 into '$dc_m_hdfs_outputContribs/D1';

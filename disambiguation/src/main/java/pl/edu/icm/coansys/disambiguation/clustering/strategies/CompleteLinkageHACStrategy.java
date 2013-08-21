@@ -105,6 +105,7 @@ public abstract class CompleteLinkageHACStrategy implements ClusteringStrategy {
             }
             i1 = rp.a;
             i2 = rp.b;            
+
             if (i1 == i2) {
                 throw new Exception("Self-similarity detected! " +
                 		"As it is considered impossible please investigate code for inconsistencies.");

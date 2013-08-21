@@ -37,8 +37,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
-import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.PigNormalizer;
-import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.ToEnglishLowerCase;
 import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
 import pl.edu.icm.coansys.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
@@ -53,7 +51,6 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
     private static final Logger logger = LoggerFactory.getLogger(EXTRACT_CONTRIBDATA_GIVENDATA.class);
     private DisambiguationExtractor[] des = null;
     private String language = null;
-    private PigNormalizer normalizer = new ToEnglishLowerCase();
     
     @Override
     public Schema outputSchema(Schema p_input) {
@@ -107,10 +104,12 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
             DataByteArray dba = (DataByteArray) input.get( 0 );
 
             DocumentWrapper dw = DocumentWrapper.parseFrom(dba.get());
-
+            dba = null;
+            
             //metadata
             DocumentMetadata dm = dw.getDocumentMetadata();
-
+            dw = null;
+            
             //result bag with tuples, which describes each contributor
             DataBag ret = new DefaultDataBag();
 
@@ -139,26 +138,35 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
         	}
             else {
             	for ( int i = 0; i < des.length; i++ ) {
+            		//returning DataBag
             		retObj[i] = des[ i ].extract( dm );
             	}
             }
+            dm = null;
             
             //adding to map extractor name and features' data, which we got above
             Map<String, Object> map = new HashMap<String, Object>();
-            for ( int i = 0; i < des.length; i++ ){
+            for ( int i = 0; i < des.length; i++ ) {
                 map.put( des[i].getClass().getSimpleName(), retObj[i] );
             }
-
+            retObj = null;
+            
             //bag making tuples (one tuple for one contributor from document)
             //with replicated metadata for
             for ( int i = 0; i < authors.size(); i++ ) {
-            	String sname = normalizer.normalize( authors.get( i ).getSurname() );
+            	String sname = authors.get( i ).getSurname();
+            	
+            	//here we have sure that Object = Integer
+            	Object normalizedSname = 
+            			DisambiguationExtractor.normalizeExtracted( sname );
                 String cId = authors.get( i ).getKey();
-                Object[] to = new Object[]{ cId, i, sname, map };
+
+                Object[] to = new Object[]{ cId, normalizedSname, map };
                 Tuple t = TupleFactory.getInstance().newTuple(Arrays.asList( to ));
                 ret.add( t );
             }
-
+            map = null;
+            
             return ret;
 
         } catch (Exception e) {

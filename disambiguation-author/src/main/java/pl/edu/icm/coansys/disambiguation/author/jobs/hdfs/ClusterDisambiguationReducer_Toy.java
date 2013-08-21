@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -159,9 +160,17 @@ public class ClusterDisambiguationReducer_Toy extends Reducer<Text, TextTextArra
                     Disambiguator feature = features[findex];
                     FeatureInfo featureInfo = featureInfos.get(findex);
 
-                    double partial = feature.calculateAffinity(
-                            a.getStringList(feature.getName()),
-                            b.getStringList(feature.getName()));
+                    List <Object> f1 = new LinkedList <Object>();
+        			List <Object> f2 = new LinkedList <Object>();
+
+        			for ( String str : a.getStringList(feature.getName()) ) 
+        				f1.add(str);
+
+        			for ( String str : b.getStringList(feature.getName()) ) 
+        				f2.add(str);
+
+        			double partial = feature.calculateAffinity( f1, f2 );
+
                     partial = partial / featureInfo.getMaxValue() * featureInfo.getWeight();
                     sim[i][j] += partial;
                     if (sim[i][j] > 0) {

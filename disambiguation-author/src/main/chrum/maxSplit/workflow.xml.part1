@@ -116,7 +116,7 @@
 
 
 # BEG:FORK_MERGE name=forkedAND node_after_join=end error=kill
-@andMode@ 1 100 1000
+@andMode@ 1 100 1000 X
 	@PREAMBULE@
 	@WF-2@
 	@POSTAMBULE@

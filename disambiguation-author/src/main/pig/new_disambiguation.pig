@@ -29,12 +29,13 @@
 %DEFAULT dc_m_meth_extraction_inner pl.edu.icm.coansys.pig.udf.RichSequenceFileLoader
 %DEFAULT dc_m_str_feature_info 'TitleDisambiguator#EX_TITLE#1#1,YearDisambiguator#EX_YEAR#1#1'
 %DEFAULT threshold '-1.0'
-%DEFAULT lang 'pl'
+%DEFAULT lang 'en'
 
 -- DEFINE keyTiKwAbsCatExtractor pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_MAP_WHEN_CATEG_LIM('en','removeall');
 DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_CONTRIBDATA_GIVENDATA('$dc_m_str_feature_info','$lang');
 DEFINE exhaustiveAND pl.edu.icm.coansys.disambiguation.author.pig.ExhaustiveAND('$threshold','$dc_m_str_feature_info');
-DEFINE aproximateAND pl.edu.icm.coansys.disambiguation.author.pig.AproximateAND('$threshold','$dc_m_str_feature_info');
+DEFINE aproximateAND pl.edu.icm.coansys.disambiguation.author.pig.AproximateAND('$threshold','$dc_m_str_feature_info','true');
+DEFINE aproximateANDmonster pl.edu.icm.coansys.disambiguation.author.pig.AproximateAND('$threshold','$dc_m_str_feature_info','false');
 DEFINE GenUUID pl.edu.icm.coansys.disambiguation.author.pig.GenUUID();
 -- -----------------------------------------------------
 -- -----------------------------------------------------
@@ -82,12 +83,12 @@ A2 = sample A1 $dc_m_double_sample;
 
 -- From each documents (each record of given table), we are creating records for each contributor
 -- TODO: we do not need contribPos no more. Change EXTRACT_GIVEN_DATA 
-B1 = foreach A2 generate flatten(snameDocumentMetaExtractor($1)) as (cId:chararray, contribPos:int, sname:chararray, metadata:map[{(chararray)}]);
+B1 = foreach A2 generate flatten(snameDocumentMetaExtractor($1)) as (cId:chararray, sname:int, metadata:map[{(int)}]);
 
 B = FILTER B1 BY cId is not null;
 
 C = group B by sname;
--- D: {sname: chararray, datagroup: {(cId: chararray,cPos: int,sname: chararray,data: map[{(val_0: chararray)}])}, count: long}
+-- D: {sname: chararray, datagroup: {(cId: chararray,sname: int,data: map[{(val_0: int)}])}, count: long}
 D = foreach C generate group as sname, B as datagroup, COUNT(B) as count;
 
 split D into
@@ -99,7 +100,7 @@ split D into
 -- SINGLE CONTRIBUTORS ---------------------------------
 -- -----------------------------------------------------
 -- for single contributors (D1): flatenning databags (there is only one contrib in it) and generate resoult at once
-D1A = foreach D1 generate flatten( datagroup );-- as (cId:chararray, contribPos:int, sname:chararray, metadata:map);
+D1A = foreach D1 generate flatten( datagroup );-- as (cId:chararray, contribPos:int, sname:int, metadata:map);
 -- E1: {cId: chararray,uuid: chararray}
 E1 = foreach D1A generate cId as cId, FLATTEN(GenUUID(TOBAG(cId))) as uuid;
 -- -----------------------------------------------------
@@ -126,7 +127,7 @@ E1000 = foreach D1000B generate flatten( cIds ) as cId, uuid;
 -- -----------------------------------------------------
 -- REALLY BIG GRUPS OF CONTRIBUTORS ---------------------------
 -- -----------------------------------------------------
-DXA = foreach DX generate flatten( aproximateAND( datagroup ) ) as (datagroup, simTriples);
+DXA = foreach DX generate flatten( aproximateANDmonster( datagroup ) ) as (datagroup, simTriples);
 DXB = foreach DXA generate flatten( exhaustiveAND( datagroup, simTriples ) ) as (uuid:chararray, cIds:chararray);
 EX = foreach DXB generate flatten( cIds ) as cId, uuid;
 -- -----------------------------------------------------

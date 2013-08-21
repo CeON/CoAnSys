@@ -66,8 +66,8 @@ set pig.cachedbag.memusage $pig_cachedbag_mem_usage
 set pig.skewedjoin.reduce.memusage $pig_skewedjoin_reduce_memusage
 SET debug 'off'
 
-
-B = load '$dc_m_hdfs_inputDocsData' as (cId:chararray,cPos:int,sname:chararray,data:map[{(chararray)}]);
+-- Note, that for testing sname and data in map are here as chararray not int (as we are going to use normally)
+B = load '$dc_m_hdfs_inputDocsData' as (cId:chararray,sname:chararray,data:map[{(chararray)}]);
 
 C = group B by sname;
 

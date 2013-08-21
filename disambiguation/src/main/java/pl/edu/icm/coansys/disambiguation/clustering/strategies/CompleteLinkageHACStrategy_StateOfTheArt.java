@@ -41,6 +41,7 @@ public class CompleteLinkageHACStrategy_StateOfTheArt extends CompleteLinkageHAC
         }
         sb.append("\n");
         log.info(sb.toString());
+        //1	3	4	4	4
     }
 
     @Override

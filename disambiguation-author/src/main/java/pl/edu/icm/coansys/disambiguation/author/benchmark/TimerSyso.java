@@ -1,7 +1,7 @@
 /*
  * This file is part of CoAnSys project.
- * Copyright (c) 2012-2013 ICM-UW
- * 
+ * Copyright (c) 20012-2013 ICM-UW
+ *
  * CoAnSys is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -18,57 +18,33 @@
 
 package pl.edu.icm.coansys.disambiguation.author.benchmark;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.slf4j.LoggerFactory;
 
 
-public class Timer implements Runnable  {
+public class TimerSyso implements Runnable  {
 
 	private long start;
 	private long ac;
 
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(Timer.class);
-    private PrintWriter statistics = null;
-    private String logPath;
 	private boolean started = false;
+	private String logPath;
     private List<String> monitBuffor = new LinkedList<String> ();
 
 	private void init() {
-
-		File f = new File( logPath );
-		int suf = 0;
-		String newLogPath = logPath;
-
-		while ( f.exists() ) {
-			newLogPath = logPath + "_" + suf;
-			f = new File( newLogPath );
-			suf++;
+		started = true;
+		logger.info( "Writing statistics into standard output." );
+			
+		for ( String monit: monitBuffor ) {
+			System.out.println( monit );
 		}
-
-		try {
-			statistics = new PrintWriter( newLogPath );
-			started = true;
-
-			for ( String monit: monitBuffor ) {
-				statistics.println( monit );
-			}
-			statistics.flush();
-			logger.info( "Writing time statistics into file (absolute path): " + f.getAbsolutePath() );
-
-		} catch ( FileNotFoundException e ) {
-			logger.warn( "Unable to write time statistics in file: " + newLogPath + ". Absolute path: " + f.getAbsolutePath() );
-		}
-
-
 	}
 
-	public Timer( String logPath ) {
-		this.logPath = logPath;
+	public TimerSyso( String logName ) {
+		this.logPath = logName;
 	}
 
 	private long currentTime() {
@@ -118,8 +94,7 @@ public class Timer implements Runnable  {
 			monitBuffor.add( monit.toString() );
 		}
 		else {
-			statistics.println( monit.toString() );
-			statistics.flush();
+			System.out.println( monit.toString() );
 		}
 	}
 	public void addCheckpoint( Object...monits ) {

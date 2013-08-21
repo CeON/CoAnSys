@@ -66,8 +66,8 @@ set pig.cachedbag.memusage $pig_cachedbag_mem_usage
 set pig.skewedjoin.reduce.memusage $pig_skewedjoin_reduce_memusage
 SET debug 'off'
 
-
-A = load '$dc_m_hdfs_inputDocsData' as (datagroup:{(cId:chararray, contribPos:int, sname:chararray, metadata:map[{(chararray)}])},simTriples:{(x:int,y:int,sim:float)});
+-- Note, that for testing sname and data in map are here as chararray not int (as we are going to use normally)
+A = load '$dc_m_hdfs_inputDocsData' as (datagroup:{(cId:chararray, sname:chararray, metadata:map[{(chararray)}])},simTriples:{(x:int,y:int,sim:float)});
 --A = load '$dc_m_hdfs_inputDocsData' as ({(chararray, int, chararray, map[{(chararray)}])},{(x:int,y:int,sim:double)});
 --A = load '$dc_m_hdfs_inputDocsData' as (datagroup,simTriples);
 

@@ -75,7 +75,7 @@ set dfs.client.socket-timeout 60000
 A1 = LOAD '$dc_m_hdfs_inputDocsData' USING $dc_m_meth_extraction_inner('org.apache.hadoop.io.BytesWritable', 'org.apache.hadoop.io.BytesWritable') as (key:chararray, value:bytearray);
 --A2 = limit A1 1;
 --A2 = sample A1 $dc_m_double_sample;
-A3 = foreach A2 generate flatten(snameDocumentMetaExtractor($1)) as (cId:chararray, contribPos:int, sname:chararray, metadata:map[{(chararray)}]);
+A3 = foreach A2 generate flatten(snameDocumentMetaExtractor($1)) as (cId:chararray, sname:chararray, metadata:map[{(chararray)}]);
 A4 = FILTER A3 BY cId is not null;
 A = group A4 by sname;
 B = foreach A generate *;
