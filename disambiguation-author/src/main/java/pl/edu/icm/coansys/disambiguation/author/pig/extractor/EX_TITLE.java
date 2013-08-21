@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 
-public class EX_TITLE extends DisambiguationExtractor {
+public class EX_TITLE extends DisambiguationExtractorDocument {
 	
     private static final Logger logger = LoggerFactory.getLogger( EX_TITLE.class );
 

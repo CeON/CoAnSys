@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.models.DocumentProtos.KeywordsList;
 
-public class EX_KEYWORDS extends DisambiguationExtractor  {
+public class EX_KEYWORDS extends DisambiguationExtractorDocument  {
 	
     private static final Logger logger = LoggerFactory.getLogger( EX_KEYWORDS.class );
 	

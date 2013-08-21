@@ -29,19 +29,18 @@ import pl.edu.icm.coansys.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.models.DocumentProtos.KeyValue;
 
-public class EX_PERSON_ID extends DisambiguationExtractor{
+public class EX_PERSON_ID extends DisambiguationExtractorAuthor{
 	
 	private static final Logger logger = LoggerFactory.getLogger( EX_PERSON_ID.class );
 	public static final String PERSON_ID_KEY_NAME = "personPbnId";
 	
 	@Override
-	public DataBag extract( Object o, String lang ){
+	public DataBag extract( Object o, int fakeIndex, String lang ){
 		TupleFactory tf = TupleFactory.getInstance();
 		DocumentMetadata dm = (DocumentMetadata) o;
 		DataBag db = new DefaultDataBag();
 		Tuple t = tf.newTuple();
 		
-		int fakeIndex = 0;
 		Author a = dm.getBasicMetadata().getAuthor(fakeIndex);
 		
 		for(KeyValue kv : a.getExtIdList()){

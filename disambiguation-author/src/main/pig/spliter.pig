@@ -85,10 +85,10 @@ C = group B by sname;
 D = foreach C generate group as sname, B as datagroup, COUNT(B) as count;
 
 split D into
-	D1 if count == 1,
-	D100 if (count > 1 and count < 500),
-	D1000 if (count >= 500 and count < 3000),
-	DX if count >= 3000;
+        D1 if count == 1,
+        D100 if (count > 1 and count < 100),
+        D1000 if (count >= 100 and count < 300),
+        DX if count >= 300;
 
 -- store here, remember to delete path in workflow after joining / merge
 store D1 into '$dc_m_hdfs_outputContribs/D1';

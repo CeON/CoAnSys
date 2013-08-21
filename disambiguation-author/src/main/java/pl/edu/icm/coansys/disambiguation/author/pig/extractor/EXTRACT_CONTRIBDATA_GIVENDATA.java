@@ -19,6 +19,7 @@
 package pl.edu.icm.coansys.disambiguation.author.pig.extractor;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -49,7 +50,9 @@ import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
 public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 
     private static final Logger logger = LoggerFactory.getLogger(EXTRACT_CONTRIBDATA_GIVENDATA.class);
-    private DisambiguationExtractor[] des = null;
+    private List< DisambiguationExtractorDocument> des4Doc = new ArrayList< DisambiguationExtractorDocument >();
+    private List< DisambiguationExtractorAuthor > des4Author  = new ArrayList< DisambiguationExtractorAuthor >();
+    
     private String language = null;
     
     @Override
@@ -66,12 +69,24 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
     		ClassNotFoundException, InstantiationException, IllegalAccessException {
         
     	List<FeatureInfo> features = FeatureInfo.parseFeatureInfoString( featureinfo );
-        des = new DisambiguationExtractor[features.size()];
-
+        
+        String ExtractorDocClassName = new DisambiguationExtractorDocument().getClass().getName();
+        String ExtractorAuthorClassName = new DisambiguationExtractorAuthor().getClass().getName();
+        
         for ( int i = 0; i < features.size(); i++ ){
             Class<?> c = Class.forName("pl.edu.icm.coansys.disambiguation.author.pig.extractor." 
             		+ features.get(i).getFeatureExtractorName());
-            des[i] = (DisambiguationExtractor) c.newInstance();
+            
+            String currentClassName = c.getClass().getSuperclass().getName();
+            
+            if ( currentClassName.equals( ExtractorDocClassName ) ) {
+            	des4Doc.add( (DisambiguationExtractorDocument) c.newInstance() );
+            } else if ( currentClassName.equals( ExtractorAuthorClassName ) ) {
+            	des4Author.add( (DisambiguationExtractorAuthor) c.newInstance() );
+            } else {
+            	logger.warn( "Cannot create extractor: " 
+            			+ currentClassName + ". Does not match to any superclass." );
+            }
         }
     }
     
@@ -86,13 +101,13 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
     	language = lang;
     }
     
-    public EXTRACT_CONTRIBDATA_GIVENDATA() throws ClassNotFoundException, 
-    		InstantiationException, IllegalAccessException {
-        des = new DisambiguationExtractor[1];
-        Class<?> c = Class.forName("pl.edu.icm.coansys.disambiguation.author.pig.extractor.EX_TITLE");
-        des[0] = (DisambiguationExtractor) c.newInstance();
+    private boolean checkLanguage() {
+    	return ( language != null 
+        		&& !language.equalsIgnoreCase("all") 
+        		&& !language.equalsIgnoreCase("null")
+        		&& !language.equals("") );
     }
-
+    
     @Override
     public DataBag exec(Tuple input) throws IOException {
 
@@ -110,46 +125,34 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
             DocumentMetadata dm = dw.getDocumentMetadata();
             dw = null;
             
-            //result bag with tuples, which describes each contributor
+            //result bag with tuples, which des4Doccribes each contributor
             DataBag ret = new DefaultDataBag();
 
             //author list
             List<Author> authors =
                     dm.getBasicMetadata().getAuthorList();
             
-            //so far result objects have contained only data, which describes documents
-            //in future we will need to get data involving author's data (e.g. 
-            //email, institution, etc...). Probably we will need one more 'for'
-            Object[] retObj = new Object[des.length];
-            
-            if ( language != null 
-            		&& !language.equalsIgnoreCase("all") 
-            		&& !language.equalsIgnoreCase("null")
-            		&& !language.equals("") ) {
-            	for ( int i = 0; i < des.length; i++ ){
-            		retObj[i] = des[ i ].extract( dm, language );
-            		if ( retObj[i] == null ) {
-                        logger.info("Uncomplete or no metadata IN GIVEN LANG (" 
-                        		+ language + "). Ignoring document with key: \"" 
-                        		+ dm.getKey() + "\"!");
-                        return null;
-            		}
-            	}
-        	}
-            else {
-            	for ( int i = 0; i < des.length; i++ ) {
-            		//returning DataBag
-            		retObj[i] = des[ i ].extract( dm );
-            	}
-            }
-            dm = null;
-            
-            //adding to map extractor name and features' data, which we got above
+            //in Object[] arrays we are storing DataBags from extractors
+            Object[] extractedDocObj = new Object[des4Doc.size()];
+            Object[] extractedAuthorObj;
             Map<String, Object> map = new HashMap<String, Object>();
-            for ( int i = 0; i < des.length; i++ ) {
-                map.put( des[i].getClass().getSimpleName(), retObj[i] );
+            Map<String, Object> finalMap;
+            
+            
+            if ( checkLanguage() ) 
+            	for ( int i = 0; i < des4Doc.size(); i++ )
+            		extractedDocObj[i] = des4Doc.get( i ).extract( dm, language );
+            else 
+            	for ( int i = 0; i < des4Doc.size(); i++ ) 
+            		extractedDocObj[i] = des4Doc.get( i ).extract( dm );
+            
+            //adding to map extractor name and features' data
+            for ( int i = 0; i < des4Doc.size(); i++ ) {
+            	if ( extractedDocObj[i] == null ) continue;
+            	map.put( des4Doc.get( i ).getClass().getSimpleName(), extractedDocObj[i] );
             }
-            retObj = null;
+            extractedDocObj = null;
+
             
             //bag making tuples (one tuple for one contributor from document)
             //with replicated metadata for
@@ -161,11 +164,31 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
             			DisambiguationExtractor.normalizeExtracted( sname );
                 String cId = authors.get( i ).getKey();
 
-                Object[] to = new Object[]{ cId, normalizedSname, map };
+                finalMap = new HashMap<String, Object>(map);
+                
+                //put author metadata into finalMap
+                extractedAuthorObj = new Object[des4Author.size()];
+                if ( checkLanguage() ) 
+                	for ( int j = 0; j < des4Author.size(); j++ )
+                		extractedAuthorObj[i] = des4Author.get( j ).extract( dm, i, language );
+                else 
+                	for ( int j = 0; j < des4Author.size(); j++ ) 
+                		extractedAuthorObj[i] = des4Author.get( j ).extract( dm, i );
+
+                //adding to map extractor name and features' data
+                for ( int j = 0; j < des4Author.size(); j++ ) {
+                	if ( extractedAuthorObj[j] == null ) continue;
+                	finalMap.put( des4Author.get( j ).getClass().getSimpleName(), extractedAuthorObj[i] );
+                }
+                extractedAuthorObj = null;
+    		
+                
+                Object[] to = new Object[]{ cId, normalizedSname, finalMap };
                 Tuple t = TupleFactory.getInstance().newTuple(Arrays.asList( to ));
                 ret.add( t );
             }
             map = null;
+            dm = null;
             
             return ret;
 
