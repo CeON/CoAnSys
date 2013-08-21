@@ -1,0 +1,23 @@
+DOCUMENTS METADATA:
+
+ClassifCodeDisambiguator#EX_CLASSIFICATION_CODES#1#1,
+KeyphraseDisambiguator#EX_KEYPHRASES#1#1,
+KeywordDisambiguator#EX_KEYWORDS#1#1,
+TitleSplitDisambiguator#EX_TITLE_SPLIT#1#1,
+YearDisambiguator#EX_YEAR#1#1,
+TitleDisambiguator#EX_TITLE#1#1,	
+
+	
+AUTHORS METADATA:
+CoAuthorsSnameDisambiguator#EX_COAUTH_SNAME#1#1,
+ForenamesInitsDisambiguator#EX_FORENAMES_INITS#1#1,	
+PersonIdDisambiguator#EX_PERSON_ID#1#1,
+EmailDisambiguator#EX_EMAIL#1#1,
+EmailPrefixDisambiguator#EX_EAMIL_PREFIX#1#1,
+
+
+in one line:
+'ClassifCodeDisambiguator#EX_CLASSIFICATION_CODES#1#1,KeyphraseDisambiguator#EX_KEYPHRASES#1#1,KeywordDisambiguator#EX_KEYWORDS#1#1,TitleSplitDisambiguator#EX_TITLE_SPLIT#1#1,YearDisambiguator#EX_YEAR#1#1,TitleDisambiguator#EX_TITLE#1#1,CoAuthorsSnameDisambiguator#EX_COAUTH_SNAME#1#1,ForenamesInitsDisambiguator#EX_FORENAMES_INITS#1#1,PersonIdDisambiguator#EX_PERSON_ID#1#1,EmailDisambiguator#EX_EMAIL#1#1,EmailPrefixDisambiguator#EX_EAMIL_PREFIX#1#1'
+
+most important:
+'ClassifCodeDisambiguator#EX_CLASSIFICATION_CODES#1#1,KeyphraseDisambiguator#EX_KEYPHRASES#1#1,KeywordDisambiguator#EX_KEYWORDS#1#1,CoAuthorsSnameDisambiguator#EX_COAUTH_SNAME#1#1'

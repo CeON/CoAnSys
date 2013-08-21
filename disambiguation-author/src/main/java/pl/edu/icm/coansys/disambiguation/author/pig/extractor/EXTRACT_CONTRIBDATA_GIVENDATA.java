@@ -46,6 +46,7 @@ import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
 /**
  *
  * @author pdendek
+ * @author mwos
  */
 public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 
@@ -70,14 +71,14 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
         
     	List<FeatureInfo> features = FeatureInfo.parseFeatureInfoString( featureinfo );
         
-        String ExtractorDocClassName = new DisambiguationExtractorDocument().getClass().getName();
-        String ExtractorAuthorClassName = new DisambiguationExtractorAuthor().getClass().getName();
+        String ExtractorDocClassName = new DisambiguationExtractorDocument().getClass().getSimpleName();
+        String ExtractorAuthorClassName = new DisambiguationExtractorAuthor().getClass().getSimpleName();
         
         for ( int i = 0; i < features.size(); i++ ){
-            Class<?> c = Class.forName("pl.edu.icm.coansys.disambiguation.author.pig.extractor." 
-            		+ features.get(i).getFeatureExtractorName());
+            Class<?> c = Class.forName( "pl.edu.icm.coansys.disambiguation.author.pig.extractor." 
+            		+ features.get(i).getFeatureExtractorName() );
             
-            String currentClassName = c.getClass().getSuperclass().getName();
+            String currentClassName = c.getSuperclass().getSimpleName();
             
             if ( currentClassName.equals( ExtractorDocClassName ) ) {
             	des4Doc.add( (DisambiguationExtractorDocument) c.newInstance() );
