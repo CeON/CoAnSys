@@ -76,7 +76,7 @@ A1 = LOAD '$dc_m_hdfs_inputDocsData' USING $dc_m_meth_extraction_inner('org.apac
 -- A2: {key: chararray,value: bytearray}
 A2 = sample A1 $dc_m_double_sample;
 
-B1 = foreach A2 generate flatten(snameDocumentMetaExtractor($1)) as (cId:chararray, contribPos:int, sname:int, metadata:map[{(int)}]);
+B1 = foreach A2 generate flatten(snameDocumentMetaExtractor($1)) as (cId:chararray, sname:int, metadata:map[{(int)}]);
 
 B = FILTER B1 BY cId is not null;
 
@@ -86,8 +86,8 @@ D = foreach C generate group as sname, B as datagroup, COUNT(B) as count;
 
 split D into
 	D1 if count == 1,
-	D100 if (count > 1 and count < 1000),
-	D1000 if (count >= 1000 and count < 3000),
+	D100 if (count > 1 and count < 500),
+	D1000 if (count >= 500 and count < 3000),
 	DX if count >= 3000;
 
 -- store here, remember to delete path in workflow after joining / merge

@@ -68,7 +68,7 @@ set pig.skewedjoin.reduce.memusage $pig_skewedjoin_reduce_memusage
 -- code section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
-D100 = LOAD '$dc_m_hdfs_inputDocsData' as (sname:chararray, datagroup:{(cId:chararray, cPos:int, sname:int, data:map[{(int)}])}, count:long);
+D100 = LOAD '$dc_m_hdfs_inputDocsData' as (sname:chararray, datagroup:{(cId:chararray, sname:int, data:map[{(int)}])}, count:long);
 
 -- -----------------------------------------------------
 -- SMALL GRUPS OF CONTRIBUTORS -------------------------

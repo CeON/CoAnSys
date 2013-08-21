@@ -75,7 +75,7 @@ set dfs.client.socket-timeout 60000
 -- code section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
-D1000 = LOAD '$dc_m_hdfs_inputDocsData' as (sname:chararray, datagroup:{(cId:chararray, cPos:int, sname:int, data:map[{(int)}])}, count:long);
+D1000 = LOAD '$dc_m_hdfs_inputDocsData' as (sname:chararray, datagroup:{(cId:chararray, sname:int, data:map[{(int)}])}, count:long);
 
 -- -----------------------------------------------------
 -- BIG GRUPS OF CONTRIBUTORS ---------------------------

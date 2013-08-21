@@ -93,8 +93,8 @@ public class AproximateAND extends EvalFunc<DataBag> {
 
 	
 	/**
-	 * @param Tuple (sname:chararray or int,{(contribId:chararray,contribPos:int,
-	 * sname:chararray or int, metadata:map[{(chararray or int)}])},count:int)
+	 * @param Tuple with bag: 
+	 * {(contribId:chararray, sname:chararray or int, metadata:map[{(chararray or int)}])}
 	 * @see org.apache.pig.EvalFunc#exec(org.apache.pig.data.Tuple)
 	 */
 	@SuppressWarnings("unchecked")
@@ -133,7 +133,7 @@ public class AproximateAND extends EvalFunc<DataBag> {
 			while ( it.hasNext() ) { 
 				Tuple t = it.next();
 				datain[ k++ ] = t;
-				contribsT.add( (Map<String, Object>) t.get(3) ); //map with features
+				contribsT.add( (Map<String, Object>) t.get(2) ); //map with features
 				//TODO: ?change map to list (disambiguators are created one by one 
 				//as feature does, so both of them will be iterated in the same order).
 				//change map to databag in pig script? (memory for keys with 

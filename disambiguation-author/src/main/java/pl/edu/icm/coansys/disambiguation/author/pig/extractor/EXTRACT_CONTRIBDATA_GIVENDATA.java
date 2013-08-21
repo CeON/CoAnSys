@@ -161,7 +161,7 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
             			DisambiguationExtractor.normalizeExtracted( sname );
                 String cId = authors.get( i ).getKey();
 
-                Object[] to = new Object[]{ cId, i, normalizedSname, map };
+                Object[] to = new Object[]{ cId, normalizedSname, map };
                 Tuple t = TupleFactory.getInstance().newTuple(Arrays.asList( to ));
                 ret.add( t );
             }

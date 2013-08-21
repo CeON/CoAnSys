@@ -91,7 +91,13 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
         //timer.addMonit("alg","id","contribs","clusters","calculated sims","time");
         //timer.addMonit("exh","S:", "=suma(B3:B1000000)", "=suma(C3:C1000000)", "=suma(D3:D1000000)","=suma(E3:E1000000)");
 	}
-
+	
+	/**
+	 * @param Tuple with: 
+	 * bag: {(contribId:chararray, sname:chararray or int, metadata:map[{(chararray or int)}])}, 
+	 * <optional similarities bag: {(contrib_index_A:int, contrib_index_B:int, sim_value:float)} >
+	 * @see org.apache.pig.EvalFunc#exec(org.apache.pig.data.Tuple)
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public DataBag exec( Tuple input ) throws IOException {
@@ -118,8 +124,8 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 			int k = 0;
 			while ( it.hasNext() ) { 
 				Tuple t = it.next();
-				contribsId[ k++ ] = (String) t.get(0); //biore contrId z Tupla
-				contribsT.add( (Map<String, Object>) t.get(3) );
+				contribsId[ k++ ] = (String) t.get(0); //getting contrib id from tuple
+				contribsT.add( (Map<String, Object>) t.get(2) ); //getting map with features
 			}
 
 			sim = new float[ contribsT.size() ][];
