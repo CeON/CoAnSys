@@ -38,8 +38,6 @@ public class GenUUID extends EvalFunc< String> {
 
     private IdGenerator idgenerator = new UuIdGenerator();
 
-	IdGenerator idgenerator = new UuIdGenerator();
-	
     /**
      * @param Tuple input with DataBag with Strings - contributors' names, 
      * for whom we want to find unique id
