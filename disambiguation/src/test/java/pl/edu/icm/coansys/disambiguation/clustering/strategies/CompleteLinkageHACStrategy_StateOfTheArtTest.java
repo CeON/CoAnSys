@@ -27,6 +27,6 @@ public class CompleteLinkageHACStrategy_StateOfTheArtTest {
         for (int i : out) {
             sb.append(i).append(" ");
         }
-        Assert.assertEquals("Elements are not correctly assigned","1 3 4 4 4 ",sb.toString());
+        Assert.assertEquals("Elements are not correctly assigned","1 1 2 3 4 ",sb.toString());
 	}
 }
