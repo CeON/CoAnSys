@@ -51,6 +51,15 @@ public class ClusterElement implements Comparable<Object>{
             this.sim = sim;
         }
         
+    public String toString(){
+    	StringBuilder sb = new StringBuilder("(index=");
+    	sb.append(index);
+    	sb.append(", sim=");
+    	sb.append(sim);
+    	sb.append(")");
+    	return sb.toString();
+    }
+        
 	@Override
 	public int compareTo(Object o2) {
 		if(o2==null) {

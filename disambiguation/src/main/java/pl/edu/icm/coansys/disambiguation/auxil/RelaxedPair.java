@@ -15,26 +15,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
+package pl.edu.icm.coansys.disambiguation.auxil;
 
-package pl.edu.icm.coansys.disambiguation.clustering.strategies;
-
-
-/**
- * A method for clustering objects, which similarity is described in affinity matrix.
- *   
- * @author pdendek
- * @version 1.0
- * @since 2012-08-07
- */
-public interface ClusteringStrategy extends Cloneable{
-	/**
-	 * 
-	 * @param similarities A lower triangular matrix contains affinities between objects, 
-	 * where a positive value inclines similarity and a negative value reflects dissimilarity level.   
-	 * @return An array containing cluster numbers assigned to objects. 
-	 * Two objects sharing the same cluster number may be considered as the same one.  
-	 * @throws Exception 
-	 */
-    int[] clusterize(float[][] similarities) throws Exception;
-    
+public class RelaxedPair{
+	public int a;
+	public int b;
+	
+	public RelaxedPair(int a, int b){
+		this.a = a;
+		this.b = b;
+	}
 }

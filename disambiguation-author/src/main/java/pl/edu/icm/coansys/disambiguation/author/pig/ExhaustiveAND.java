@@ -38,7 +38,7 @@ import pl.edu.icm.coansys.disambiguation.author.benchmark.TimerSyso;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.DisambiguatorFactory;
 
 import pl.edu.icm.coansys.disambiguation.clustering.strategies.ClusteringStrategy;
-import pl.edu.icm.coansys.disambiguation.clustering.strategies.CompleteLinkageHACStrategy_OnlyMax;
+import pl.edu.icm.coansys.disambiguation.clustering.strategies.CompleteLinkageHACStrategy_StateOfTheArt;
 import pl.edu.icm.coansys.disambiguation.clustering.strategies.SingleLinkageHACStrategy_OnlyMax;
 import pl.edu.icm.coansys.disambiguation.features.Disambiguator;
 import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;

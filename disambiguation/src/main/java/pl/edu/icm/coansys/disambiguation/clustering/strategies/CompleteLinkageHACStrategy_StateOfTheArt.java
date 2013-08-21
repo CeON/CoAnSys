@@ -23,16 +23,18 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author pdendek
- * @version 1.0
- * @since 2012-08-07
+ * version 1.0, since 2012-08-07
+ *
+ * version 1.1, since 2013-08-20
+ * changes: corrections in clustering element matrix and priority queues handling. 
  */
-public class CompleteLinkageHACStrategy_OnlyMax extends CompleteLinkageHACStrategy implements Cloneable {
+public class CompleteLinkageHACStrategy_StateOfTheArt extends CompleteLinkageHACStrategy implements Cloneable {
 
-    private static final Logger log = LoggerFactory.getLogger(CompleteLinkageHACStrategy_OnlyMax.class);
+    private static final Logger log = LoggerFactory.getLogger(CompleteLinkageHACStrategy_StateOfTheArt.class);
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         float[][] in = {{}, {15}, {-46, -3}, {-2, -18, -20}, {-100, -100, -3, -200}};
-        int[] out = new CompleteLinkageHACStrategy_OnlyMax().clusterize(in);
+        int[] out = new CompleteLinkageHACStrategy_StateOfTheArt().clusterize(in);
         StringBuilder sb = new StringBuilder("");
         for (int i : out) {
             sb.append(i).append("\t");
@@ -49,6 +51,6 @@ public class CompleteLinkageHACStrategy_OnlyMax extends CompleteLinkageHACStrate
     @Override
     public Object clone() throws CloneNotSupportedException {
         super.clone();
-        return new CompleteLinkageHACStrategy_OnlyMax();
+        return new CompleteLinkageHACStrategy_StateOfTheArt();
     }
 }
