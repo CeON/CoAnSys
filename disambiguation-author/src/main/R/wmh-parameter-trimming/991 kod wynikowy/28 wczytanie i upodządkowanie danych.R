@@ -1,0 +1,48 @@
+# read.csv(file, header = FALSE, sep = "", quote = "\"'",
+#           dec = ".", row.names, col.names,
+#           as.is = !stringsAsFactors,
+#           na.strings = "NA", colClasses = NA, nrows = -1,
+#           skip = 0, check.names = TRUE, fill = !blank.lines.skip,
+#           strip.white = FALSE, blank.lines.skip = TRUE,
+#           comment.char = "#",
+#           allowEscapes = FALSE, flush = FALSE,
+#           stringsAsFactors = default.stringsAsFactors(),
+#           fileEncoding = "", encoding = "unknown", text)
+
+papapapath <- paste(getwd(),"/WMH/00 badania/01 import wskazówek do CSV/and_9135418604463356.csv")
+file <- read.csv(file=papapapath,header=T, quote="\"",sep=" ")
+#Order data by "id"
+f2 <- file[with(file, order(id)), ]
+# View(f2)
+#Delete additional column f2$row.names is not needed,
+#it is only phantom column, not seen in the data frame
+
+#Cast -1 to NA
+#changing -1 to NA
+# fna <- f2
+# max <- 
+# for(i in 2:(ncol(f2)-1)){
+#    fna = fna[fna[,i]==-1,i]=NA
+# }
+# head(fna)
+# summary(fna)
+#Usuwamy niepotrzebne wskazówki (w pełni nullowe, bądź bardzo nullowe)
+f3 <-f2
+f3$f0 <- NULL
+f3$f1 <- NULL
+f3$f5 <- NULL
+f3$f6 <- NULL
+
+#Sprawdzamy czy są jakieś wartości błędne, np. dla roku różnica więsza niż 1000lat, 1999, bo to znaczy, że jeden rok był błędnie zerem
+tmp <- f3[,]
+# tmp
+f3 <- f3[   f3$f7<1000    , ]
+d <- f3[,-1]
+# summary(f3)
+rm(f2,f3,file,tmp)
+
+# Pozostałe w grze wskazówki
+#3CoContribution        
+#4CoClassif
+#5CoKeywordPhrase
+#8Year

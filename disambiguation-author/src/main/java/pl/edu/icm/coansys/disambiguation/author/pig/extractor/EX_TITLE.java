@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 
-public class EX_TITLE extends DisambiguationExtractor {
+public class EX_TITLE extends DisambiguationExtractorDocument {
 	
     private static final Logger logger = LoggerFactory.getLogger( EX_TITLE.class );
 
@@ -53,19 +53,21 @@ public class EX_TITLE extends DisambiguationExtractor {
 		
         for ( TextWithLanguage title : dm.getBasicMetadata().getTitleList() ) {
             if ( lang.equalsIgnoreCase( title.getLanguage()) ) {
-        		Tuple t = TupleFactory.getInstance().newTuple( 
+            	Tuple t = TupleFactory.getInstance().newTuple( 
         				normalizeExtracted( title.getText() ) );
         		db.add( t );
-        		return db;
+        		//TODO ?: Is possible, that one document has more than one title in given language?
+                //What action should be expected in that case?
+        		//return db;
             }
         }
         
-        //TODO: Is possible, that one document has more than one title in given language?
-        //What action should be expected in that case?
-        
-        logger.info("No title IN GIVEN LANG (" + lang + ") out of " 
+ 		if ( db.size() == 0) {   
+			logger.info("No title IN GIVEN LANG (" + lang + ") out of " 
         		+ dm.getBasicMetadata().getTitleCount() + " titles!");
-        
-        return null;
+			//return null;
+		}
+ 		
+ 		return db;
 	}
 }
