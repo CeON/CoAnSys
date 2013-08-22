@@ -22,10 +22,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Random;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.client.Put;
@@ -56,7 +56,7 @@ public class ClusterDisambiguationReducer_Toy extends Reducer<Text, TextTextArra
 	private static Logger logger = LoggerFactory.getLogger(ClusterDisambiguationReducer_Toy.class);
 	private String reducerId = new Date().getTime() + "_" + Math.random();
 	
-	private double threshold;
+	private float threshold;
 	private List<FeatureInfo> featureInfos;
 	private Disambiguator[] features;
     
@@ -70,7 +70,7 @@ public class ClusterDisambiguationReducer_Toy extends Reducer<Text, TextTextArra
 
         Configuration conf = context.getConfiguration();
         
-        threshold = Double.parseDouble(conf.getStrings("THRESHOLD")[0]);
+        threshold = Float.parseFloat(conf.getStrings("THRESHOLD")[0]);
         featureInfos = FeatureInfo.parseFeatureInfoString
         	(conf.get("FEATURE_DESCRIPTION"));
         	
@@ -89,7 +89,7 @@ public class ClusterDisambiguationReducer_Toy extends Reducer<Text, TextTextArra
     		Context context) throws IOException, InterruptedException {
     	
     	if(initialPreparations(key, values, context)) return;
-        double[][] sim = calculateAffinity();
+        float[][] sim = calculateAffinity();
         int[] clusterAssociations = new SingleLinkageHACStrategy_OnlyMax().clusterize(sim);
         Map<Integer,List<String>> clusterMap = splitIntoMap(clusterAssociations, authorIds);
         persistReslutsInHBase(clusterMap, authorIds, context);
@@ -154,10 +154,10 @@ public class ClusterDisambiguationReducer_Toy extends Reducer<Text, TextTextArra
         setSizes.put(clusterGroupSize, sizeCount);
 	}
 
-	protected double[][] calculateAffinity() {
-		double[][] sim = new double[featuresMapsList.size()][];
+	protected float[][] calculateAffinity() {
+		float[][] sim = new float[featuresMapsList.size()][];
         for(int i=1;i<featuresMapsList.size();i++){
-        	sim[i] = new double[i];
+        	sim[i] = new float[i];
         	for(int j=0;i<j;j++){
         		sim[i][j]=threshold;
         		for(int findex = 0; findex < features.length; findex++){
@@ -167,9 +167,17 @@ public class ClusterDisambiguationReducer_Toy extends Reducer<Text, TextTextArra
         			Disambiguator feature = features[findex];
         			FeatureInfo featureInfo = featureInfos.get(findex);
         			
-        			double partial = feature.calculateAffinity(
-        					a.getStringList(feature.getName()),
-        					b.getStringList(feature.getName()));
+        			List <Object> f1 = new LinkedList <Object>();
+        			List <Object> f2 = new LinkedList <Object>();
+
+        			for ( String str : a.getStringList(feature.getName()) ) 
+        				f1.add(str);
+
+        			for ( String str : b.getStringList(feature.getName()) ) 
+        				f2.add(str);
+
+        			double partial = feature.calculateAffinity( f1, f2 );
+        			
         			partial = partial/featureInfo.getMaxValue()*featureInfo.getWeight();
         			sim[i][j]+=partial;
         			if(sim[i][j]>0) break;

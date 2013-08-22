@@ -93,6 +93,8 @@ public class PigScriptTester {
     		}catch( junit.framework.ComparisonFailure e ) {
     			//noting test fail information
     			fails.add( "- " + test + ": " + e.getMessage() + "\n" );
+    		}catch( Exception e ){
+    			fails.add( "- " + test + ": " + e.toString() + "\n" );
     		}
     	}
 		

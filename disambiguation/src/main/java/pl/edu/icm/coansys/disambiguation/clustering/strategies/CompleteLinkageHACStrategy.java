@@ -19,11 +19,12 @@
 package pl.edu.icm.coansys.disambiguation.clustering.strategies;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
 
-import pl.edu.icm.coansys.commons.java.Pair;
+import pl.edu.icm.coansys.disambiguation.auxil.RelaxedPair;
 import pl.edu.icm.coansys.disambiguation.clustering.ClusterElement;
 
 /**
@@ -33,7 +34,15 @@ import pl.edu.icm.coansys.disambiguation.clustering.ClusterElement;
  * @since 2012-08-07
  */
 public abstract class CompleteLinkageHACStrategy implements ClusteringStrategy {
-
+	
+	Comparator<ClusterElement> mainComparator = new Comparator<ClusterElement>(){
+		@Override
+		public int compare(ClusterElement r1,
+				ClusterElement r2) {
+			return (int)r2.compareTo(r1);
+		}
+	};
+	
     /**
      * The method proceeding complete-linkage hierarchical agglomerative
      * clustering over an objects' affinity matrix with the O(N^2*logN)
@@ -50,23 +59,39 @@ public abstract class CompleteLinkageHACStrategy implements ClusteringStrategy {
      * @return An array containing cluster numbers assigned to objects. Two
      * objects sharing the same cluster number may be considered as the same
      * one.
+     * @throws Exception 
      */
     @Override
-    public int[] clusterize(double sim[][]) {
-        ReversedClusterElement[][] C = new ReversedClusterElement[sim.length][];
-        PriorityQueue<ReversedClusterElement> P[] = new PriorityQueue[sim.length];
+    public int[] clusterize(float sim[][]) throws Exception {
+    	
+    	if(sim.length==1) return new int[]{0};
+    	if(sim.length==2){
+    		if(sim[1][0]>0){
+    			return new int[]{0,0};
+    		}
+    		else{
+    			return new int[]{0,1};
+    		}
+    	}
+    	
+        ClusterElement[][] C = new ClusterElement[sim.length][];
+        PriorityQueue<ClusterElement> P[] = new PriorityQueue[sim.length];
+        int[] finalClusters = new int[sim.length];
         int[] I = new int[sim.length];
-        List<Pair<Integer, Integer>> A = new LinkedList<Pair<Integer, Integer>>();
+        List<RelaxedPair> A = new LinkedList<RelaxedPair>();
 
         //N
         for (int n = 0; n < sim.length; n++) {
-            C[n] = new ReversedClusterElement[n];
+            C[n] = new ClusterElement[n];
             //N
             for (int i = 0; i < n; i++) {
-                C[n][i] = new ReversedClusterElement(sim[n][i], i);
+                C[n][i] = new ClusterElement(sim[n][i], i);
             }
             //NlogN
-            P[n].addAll(Arrays.asList(C[n]));
+            if(n!=0){
+            	P[n] = new PriorityQueue<ClusterElement>(4,mainComparator);
+                P[n].addAll(Arrays.asList(C[n]));
+            }
             I[n] = 1;
         }
 
@@ -74,18 +99,21 @@ public abstract class CompleteLinkageHACStrategy implements ClusteringStrategy {
         //N
         for (int n = 1; n < sim.length; n++) {
             //N
-            i1 = argMaxSequenceIndexExcludeSame(P, I);
-            if (i1 == -1) {
-                continue;
+            RelaxedPair rp = argMaxSequenceIndexExcludeSame(P, I);
+            if (rp == null) {
+                break;
             }
-            i2 = I[P[i1].poll().getIndex()];
+            i1 = rp.a;
+            i2 = rp.b;            
+
             if (i1 == i2) {
-                continue;
+                throw new Exception("Self-similarity detected! " +
+                		"As it is considered impossible please investigate code for inconsistencies.");
             }
 
-            A.add(new Pair<Integer, Integer>(Math.min(i1, i2), Math.max(i1, i2)));
+            A.add(new RelaxedPair(i2,i1));
             I[i2] = 0;
-            P[i1] = new PriorityQueue<ReversedClusterElement>();
+            P[i2] = null;
 
             for (int i = 0; i < P.length; i++) {
                 if (I[i] != 1) {
@@ -95,8 +123,10 @@ public abstract class CompleteLinkageHACStrategy implements ClusteringStrategy {
                     continue;
                 }
 
-                P[i].remove(C[i][i1]);
-                P[i].remove(C[i][i2]);
+                if(i>i1)
+                	P[i].remove(C[i][i1]);
+                if(i>i2)
+                	P[i].remove(C[i][i2]);
 
                 if (i1 > i) {
                     P[i1].add(c_i_i1_recalc(C, i, i1, i2));
@@ -109,11 +139,12 @@ public abstract class CompleteLinkageHACStrategy implements ClusteringStrategy {
         for (int i = 0; i < I.length; i++) {
             I[i] = i;
         }
-        for (Pair<Integer, Integer> p : A) {
-            I[p.getY()] = p.getX();
-        }
-        for (int i = I.length - 1; i >= 0; i--) {
-            I[i] = getFinalClusterId(I, i);
+        for (RelaxedPair p : A) {
+        	int tmp = p.a;
+        	while(I[tmp]!=tmp){
+        		tmp=I[tmp];
+        	}
+            I[tmp] = p.b;
         }
 
         return I;
@@ -126,8 +157,8 @@ public abstract class CompleteLinkageHACStrategy implements ClusteringStrategy {
         return getFinalClusterId(I, I[i]);
     }
 
-    private ReversedClusterElement c_i_i1_recalc(ReversedClusterElement[][] C, int i, int i1, int i2) {
-        ReversedClusterElement el;
+    private ClusterElement c_i_i1_recalc(ClusterElement[][] C, int i, int i1, int i2) {
+        ClusterElement el;
         if (i1 > i && i2 > i) {
             el = C[i1][i];
             el.setSim(SIM(C[i1][i].getSim(), C[i2][i].getSim()));
@@ -144,31 +175,36 @@ public abstract class CompleteLinkageHACStrategy implements ClusteringStrategy {
         return el;
     }
 
-    protected int argMaxSequenceIndexExcludeSame(PriorityQueue[] priorityQueue, int[] I) {
-        if (priorityQueue.length <= 1) {
-            return -1;
-        }
-        if (priorityQueue.length == 2) {
-            return ((ReversedClusterElement) priorityQueue[1].peek()).getIndex();
-        }
-
-        ReversedClusterElement max = (ReversedClusterElement) priorityQueue[1].peek();
-
+    protected RelaxedPair argMaxSequenceIndexExcludeSame(PriorityQueue[] priorityQueue, int[] I) throws Exception {
+        ClusterElement max = null;
+        int maxTmp_index = -1;
+        float maxSim = Float.MIN_VALUE;
         for (int i = 1; i < priorityQueue.length; i++) {
             if (I[i] != 1) {
                 continue;
             }
-            ReversedClusterElement el = (ReversedClusterElement) priorityQueue[i].peek();
-            if (el.getSim() > max.getSim()) {
+            if(priorityQueue[i] == null || priorityQueue[i].size()==0) continue;
+            ClusterElement el = (ClusterElement) priorityQueue[i].peek();
+            if (max == null || el.getSim() > max.getSim()) {
+            	maxSim = el.getSim();
                 max = el;
+                maxTmp_index = i;
             }
         }
-        return max.getIndex();
+        if(max == null) throw new Exception("No next pair have been selected. " +
+        		"This situation should not occure, please inspect code");
+        if(maxSim<0) return null;
+        int maxEl_index = max.getIndex(); 
+        RelaxedPair rp = maxTmp_index > maxEl_index ? 
+        		new RelaxedPair(maxTmp_index,maxEl_index) : 
+        			new RelaxedPair(maxEl_index,maxTmp_index);
+        priorityQueue[rp.a].poll();
+        return rp;
     }
 
     protected ClusterElement argMaxElementWithConstraints(ClusterElement[] Cn,
             int[] I, int forbidden) {
-        double maxval = -1;
+        float maxval = -1;
         ClusterElement retEl = null;
         for (int i = 0; i < Cn.length; i++) {
             if (i == forbidden) {
@@ -185,31 +221,6 @@ public abstract class CompleteLinkageHACStrategy implements ClusteringStrategy {
         return retEl;
     }
 
-    protected abstract double SIM(double a, double b);
+    protected abstract float SIM(float a, float b);
 }
 
-class ReversedClusterElement extends ClusterElement {
-
-    public ReversedClusterElement(double sim, int index) {
-        super(sim, index);
-    }
-
-    @Override
-    public int compareTo(Object o2) {
-        if (o2 == null) {
-            return -1;
-        }
-        if (!(o2 instanceof ClusterElement)) {
-            throw new ClassCastException(""
-                    + "Comparison between " + this.getClass() + " and " + o2.getClass() + " is illegal!");
-        }
-        double count = ((ClusterElement) o2).getSim() - this.getSim();
-        if (count > 0) {
-            return -1;
-        } else if (count == 0) {
-            return 0;
-        } else {
-            return 1;
-        }
-    }
-}

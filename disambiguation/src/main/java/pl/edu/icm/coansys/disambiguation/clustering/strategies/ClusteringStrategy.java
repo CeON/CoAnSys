@@ -33,7 +33,8 @@ public interface ClusteringStrategy extends Cloneable{
 	 * where a positive value inclines similarity and a negative value reflects dissimilarity level.   
 	 * @return An array containing cluster numbers assigned to objects. 
 	 * Two objects sharing the same cluster number may be considered as the same one.  
+	 * @throws Exception 
 	 */
-    int[] clusterize(double[][] similarities);
+    int[] clusterize(float[][] similarities) throws Exception;
     
 }
