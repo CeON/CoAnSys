@@ -15,9 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package pl.edu.icm.coansys.classification.documents.pig.proceeders;
-
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -33,93 +31,93 @@ import org.slf4j.LoggerFactory;
 import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
 
 /**
-*
-* @author pdendek
-*/
-public class THRES_FOR_CATEG2 extends EvalFunc<Tuple>{
-    
-        private static final Logger logger = LoggerFactory.getLogger(THRES_FOR_CATEG2.class);
+ *
+ * @author pdendek
+ */
+public class THRES_FOR_CATEG2 extends EvalFunc<Tuple> {
 
-	@Override
-	public Schema outputSchema(Schema p_input){
-		try{
-                    return Schema.generateNestedSchema(DataType.TUPLE, 
-					DataType.CHARARRAY, DataType.INTEGER, DataType.DOUBLE);
-		}catch(FrontendException e){
-                    logger.error("Error in creating output schema:", e);
-                    throw new IllegalStateException(e);
-		}
-	}
+    private static final Logger logger = LoggerFactory.getLogger(THRES_FOR_CATEG2.class);
 
-	//C1: {categ: chararray,count: long,occ_pos: long,occ_neg: long}
-        @Override
-	public Tuple exec(Tuple input) throws IOException {
-		if (input == null || input.size() == 0)
-			return null;
-		try{
-			Integer num = (Integer) input.get(0);
-			String categ = (String) input.get(1);
-			DataBag db = (DataBag) input.get(2);
-			
-			long[] pos = new long[num+1];//no of neighbours +1 for 0 count
-			long[] neg = new long[num+1];
-			Arrays.fill(pos, 0);
-			Arrays.fill(neg, 0);
-			for(Tuple t : db){
-				int i  = (Integer)t.get(1);
-				long i1 = (Long)t.get(2);
-				long i2 = (Long)t.get(3);
-				
-				pos[i]= i1;
-				neg[i]= i2;
-			}
+    @Override
+    public Schema outputSchema(Schema p_input) {
+        try {
+            return Schema.generateNestedSchema(DataType.TUPLE,
+                    DataType.CHARARRAY, DataType.INTEGER, DataType.DOUBLE);
+        } catch (FrontendException e) {
+            logger.error("Error in creating output schema:", e);
+            throw new IllegalStateException(e);
+        }
+    }
 
-			int thres = -1;
-			double bestF1 = 0;
-	
-			for(int i = 1; i<num;i++){
-				int TP = countLess(i,pos);
-				int FP = countLess(i,neg);
-				int FN = countEqMore(i,neg);
-				double F1 = countF1(TP,FP,FN);
-				if(F1>bestF1){
-					thres = i;
-					bestF1 = F1;
-				}
-			}
-			logger.info("Calculated the best threshold");
-			if(thres!=-1){
-				Object[] to = new Object[]{categ,thres, bestF1};
-		        return TupleFactory.getInstance().newTuple(Arrays.asList(to));
-			}else{
-				return null;
-			}
-		}catch(Exception e){
-                    logger.error("Error in processing input row:", e);
-                    throw new IOException("Caught exception processing input row:\n"
-            		+ StackTraceExtractor.getStackTrace(e));
-		} 
-	}
+    //C1: {categ: chararray,count: long,occ_pos: long,occ_neg: long}
+    @Override
+    public Tuple exec(Tuple input) throws IOException {
+        if (input == null || input.size() == 0) {
+            return null;
+        }
+        try {
+            Integer num = (Integer) input.get(0);
+            String categ = (String) input.get(1);
+            DataBag db = (DataBag) input.get(2);
 
-	private double countF1(int tp, int fp, int fn) {
-            int denominator = Math.max(0, 2 * Math.max(0, tp) + Math.max(0, fn) + Math.max(0, fp));
-            return denominator!=0 ? (double)(2 * tp)/(double)denominator : 0;
-	}
+            long[] pos = new long[num + 1];//no of neighbours +1 for 0 count
+            long[] neg = new long[num + 1];
+            Arrays.fill(pos, 0);
+            Arrays.fill(neg, 0);
+            for (Tuple t : db) {
+                int i = (Integer) t.get(1);
+                long i1 = (Long) t.get(2);
+                long i2 = (Long) t.get(3);
 
-	private int countEqMore(int curr, long[] posc) {
-		int ret = 0;
-		for(int i = curr; i<posc.length; i++) {
-                    ret+=posc[i];
+                pos[i] = i1;
+                neg[i] = i2;
+            }
+
+            int thres = -1;
+            double bestF1 = 0;
+
+            for (int i = 1; i < num; i++) {
+                int TP = countLess(i, pos);
+                int FP = countLess(i, neg);
+                int FN = countEqMore(i, neg);
+                double F1 = countF1(TP, FP, FN);
+                if (F1 > bestF1) {
+                    thres = i;
+                    bestF1 = F1;
                 }
-		return ret;
-	}
+            }
+            logger.info("Calculated the best threshold");
+            if (thres != -1) {
+                Object[] to = new Object[]{categ, thres, bestF1};
+                return TupleFactory.getInstance().newTuple(Arrays.asList(to));
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            logger.error("Error in processing input row:", e);
+            throw new IOException("Caught exception processing input row:\n"
+                    + StackTraceExtractor.getStackTrace(e));
+        }
+    }
 
-	private int countLess(int curr, long[] posc) {
-		int ret = 0;
-		for(int i = 0; i<curr; i++) {
-                    ret+=posc[i];
-                }
-		return ret;
-	}
+    private double countF1(int tp, int fp, int fn) {
+        int denominator = Math.max(0, 2 * Math.max(0, tp) + Math.max(0, fn) + Math.max(0, fp));
+        return denominator != 0 ? (double) (2 * tp) / (double) denominator : 0;
+    }
 
+    private int countEqMore(int curr, long[] posc) {
+        int ret = 0;
+        for (int i = curr; i < posc.length; i++) {
+            ret += posc[i];
+        }
+        return ret;
+    }
+
+    private int countLess(int curr, long[] posc) {
+        int ret = 0;
+        for (int i = 0; i < curr; i++) {
+            ret += posc[i];
+        }
+        return ret;
+    }
 }

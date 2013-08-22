@@ -45,7 +45,7 @@ public abstract class SingleLinkageHACStrategy implements ClusteringStrategy {
      * one.
      */
     @Override
-    public int[] clusterize(double sim[][]) {
+    public int[] clusterize(float sim[][]) {
         int[] I = new int[sim.length];
         ClusterElement[] nearBestMatch = new ClusterElement[sim.length];
 
@@ -54,7 +54,7 @@ public abstract class SingleLinkageHACStrategy implements ClusteringStrategy {
         for (int n = 0; n < sim.length; n++) {
             C[n] = new ClusterElement[n];
 
-            double maxSim = -1;
+            float maxSim = -1;
             if (C[n].length != 0) {
                 maxSim = sim[n][0];
             }
@@ -89,7 +89,7 @@ public abstract class SingleLinkageHACStrategy implements ClusteringStrategy {
             if (i1 == i2) {
                 continue;
             }
-            double simil = (i1 > i2) ? C[i1][i2].getSim() : C[i2][i1].getSim();
+            float simil = (i1 > i2) ? C[i1][i2].getSim() : C[i2][i1].getSim();
             if (simil < 0) {
                 return I;
             }
@@ -97,14 +97,14 @@ public abstract class SingleLinkageHACStrategy implements ClusteringStrategy {
             for (int i = 0; i < I.length; i++) {
                 if (I[i] == i && i != i1 && i != i2) {
                     if (i1 > i && i2 > i) {
-                        C[i1][i].setSim(SIM(C[i1][i].getSim(), C[i2][i].getSim()));
+                        C[i1][i].setSim( SIM(C[i1][i].getSim(), C[i2][i].getSim()) );
                     } else if (i1 > i && i2 < i) {
-                        C[i1][i].setSim(SIM(C[i1][i].getSim(), C[i][i2].getSim()));
+                        C[i1][i].setSim( SIM(C[i1][i].getSim(), C[i][i2].getSim()) );
                     } else if (i1 < i && i2 > i) {
-                        C[i][i1].setSim(SIM(C[i][i1].getSim(), C[i2][i].getSim()));
+                        C[i][i1].setSim( SIM(C[i][i1].getSim(), C[i2][i].getSim()) );
                     } else //if(i1<i && i2<i)
                     {
-                        C[i][i1].setSim(SIM(C[i][i1].getSim(), C[i][i2].getSim()));
+                        C[i][i1].setSim( SIM(C[i][i1].getSim(), C[i][i2].getSim()) );
                     }
                 }
                 if (I[i] == i2) {
@@ -118,7 +118,7 @@ public abstract class SingleLinkageHACStrategy implements ClusteringStrategy {
     }
 
     protected int argMaxSequenceIndexExcludeSame(ClusterElement[] nearBestMatch, int[] I) {
-        double maxval = Double.NEGATIVE_INFINITY;
+        float maxval = Float.NEGATIVE_INFINITY;
         int maxvalindex = -1;
 
         for (int i = 0; i < nearBestMatch.length; i++) {
@@ -141,7 +141,7 @@ public abstract class SingleLinkageHACStrategy implements ClusteringStrategy {
 
     protected ClusterElement argMaxElementWithConstraints(ClusterElement[] Cn,
             int[] I, int forbidden) {
-        double maxval = -1;
+        float maxval = -1;
         ClusterElement retEl = null;
         for (int i = 0; i < Cn.length; i++) {
             if (i == forbidden) {
@@ -158,5 +158,5 @@ public abstract class SingleLinkageHACStrategy implements ClusteringStrategy {
         return retEl;
     }
 
-    protected abstract double SIM(double a, double b);
+    protected abstract float SIM(float a, float b);
 }

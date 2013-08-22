@@ -1,0 +1,125 @@
+<!--
+  This file is part of CoAnSys project.
+  Copyright (c) 2012-2013 ICM-UW
+  
+  CoAnSys is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Affero General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  CoAnSys is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU Affero General Public License for more details.
+  
+  You should have received a copy of the GNU Affero General Public License
+  along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
+-->
+<!-- ============================================================= -->
+<!-- ========================== OOZIE-GENERAL ==================== -->
+<!-- ============================================================= -->
+
+# BEG:REPLACE @OOZIE-START@
+<workflow-app name='${subproject}' xmlns="uri:oozie:workflow:0.2">
+	<start to='split'/>
+# END:REPLACE
+
+# BEG:REPLACE @OOZIE-END@
+
+	<action name='send-email'>
+        <email xmlns="uri:oozie:email-action:0.1">
+            <to>mwos@icm.edu.pl</to>
+            <cc>mwos@icm.edu.pl</cc>
+            <subject>Email notifications for ${wf:id()}</subject>
+            <body>The wf ${wf:id()} successfully completed.</body>
+        </email>
+        <ok to='end'/>
+        <error to='kill'/>
+    </action>
+
+	<kill name="kill">
+		<message>Workflow failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+	</kill>
+	<end name="end"/>
+</workflow-app>
+# END:REPLACE
+<!-- ============================================================= -->
+<!-- ========================== CONFIG =========================== -->
+<!-- ============================================================= -->
+# BEG:REPLACE @PREAMBULE@
+        <pig>
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <!--<prepare>
+                <delete path="${dc_m_hdfs_outputContribs}"/>
+            </prepare>-->
+            <configuration>
+                <!-- This is required for new api usage -->
+                <property>
+                    <name>mapred.mapper.new-api</name>
+                    <value>true</value>
+                </property>
+                <property>
+                    <name>mapred.reducer.new-api</name>
+                    <value>true</value>
+                </property>
+
+                <!-- General job parameters -->
+                <property>
+                    <name>mapred.job.queue.name</name>
+                    <value>${queueName}</value>
+                </property>
+                <property>
+                    <name>hbase.zookeeper.quorum</name>
+                    <value>${hbaseZookeeperQuorum}</value>
+                </property>
+            </configuration>
+# END:REPLACE
+
+# BEG:REPLACE @POSTAMBULE@
+        </pig>
+# END:REPLACE
+
+<!-- ====================================================================== -->
+<!-- ===================== WF-1 =========================================== -->
+<!-- ====================================================================== -->
+# BEG:REPLACE @WF-1@
+            <script>${pigScriptsDir}/spliter.pig</script>
+            <param>commonJarsPath=${commonJarsPath}</param>
+            <param>dc_m_double_sample=${dc_m_double_sample}</param>
+            <param>dc_m_hdfs_inputDocsData=${dc_m_hdfs_inputDocsData}</param>
+            <param>dc_m_hdfs_outputContribs=${dc_tmp_path}</param>
+            <param>lang=${lang}</param>
+# END:REPLACE 
+<!-- ====================================================================== -->
+<!-- ===================== WF-2 =========================================== -->
+<!-- ====================================================================== -->
+# BEG:REPLACE @WF-2@
+            <script>${pigScriptsDir}/disambiguation@andMode@.pig</script>
+            <param>commonJarsPath=${commonJarsPath}</param>
+            <param>dc_m_double_sample=1.0</param>
+            <param>dc_m_hdfs_inputDocsData=${dc_tmp_path}/D@andMode@</param>
+            <param>dc_m_hdfs_outputContribs=${dc_m_hdfs_outputContribs}/part@andMode@</param>
+# END:REPLACE 
+
+<!-- ===================================================================== -->
+<!-- ================= NORMAL CODE SINCE HERE ============================ -->
+<!-- ===================================================================== -->
+
+@OOZIE-START@
+
+# BEG:ACTION name=split ok=forkedAND error=kill
+	@PREAMBULE@
+	@WF-1@
+	@POSTAMBULE@
+# END:ACTION
+
+
+# BEG:FORK_MERGE name=forkedAND node_after_join=end error=kill
+@andMode@ 1 100 1000 X
+	@PREAMBULE@
+	@WF-2@
+	@POSTAMBULE@
+# END:FORK_MERGE
+
+@OOZIE-END@

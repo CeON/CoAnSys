@@ -28,8 +28,9 @@
 %DEFAULT dc_m_hdfs_outputContribs disambiguation/outputContribs$time
 %DEFAULT dc_m_str_feature_info 'TitleDisambiguator#EX_TITLE#1#1,YearDisambiguator#EX_YEAR#1#1'
 %DEFAULT threshold '-1.0'
+%DEFAULT statistics 'true'
 
-DEFINE exhaustiveAND pl.edu.icm.coansys.disambiguation.author.pig.ExhaustiveAND('$threshold', '$dc_m_str_feature_info');
+DEFINE exhaustiveAND pl.edu.icm.coansys.disambiguation.author.pig.ExhaustiveAND('$threshold', '$dc_m_str_feature_info','$statistics');
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- register section
@@ -66,10 +67,8 @@ set pig.cachedbag.memusage $pig_cachedbag_mem_usage
 set pig.skewedjoin.reduce.memusage $pig_skewedjoin_reduce_memusage
 SET debug 'off'
 
-
-A = load '$dc_m_hdfs_inputDocsData' as (datagroup:{(cId:chararray, contribPos:int, sname:chararray, metadata:map[{(chararray)}])},simTriples:{(x:int,y:int,sim:double)});
---A = load '$dc_m_hdfs_inputDocsData' as ({(chararray, int, chararray, map[{(chararray)}])},{(x:int,y:int,sim:double)});
---A = load '$dc_m_hdfs_inputDocsData' as (datagroup,simTriples);
+-- Note, that for testing sname and data in map are here as chararray not int (as we are going to use normally)
+A = load '$dc_m_hdfs_inputDocsData' as (datagroup:{(cId:chararray, sname:chararray, metadata:map[{(chararray)}])},simTriples:{(x:int,y:int,sim:float)});
 
 B = foreach A generate flatten( exhaustiveAND( datagroup, simTriples ) ) as (uuid:chararray, cIds:chararray);
 store B into '$dc_m_hdfs_outputContribs';

@@ -29,11 +29,13 @@
 -- %DEFAULT dc_m_meth_extraction_inner pl.edu.icm.coansys.pig.udf.RichSequenceFileLoader
 %DEFAULT dc_m_str_feature_info 'TitleDisambiguator#EX_TITLE#1#1,YearDisambiguator#EX_YEAR#1#1'
 %DEFAULT threshold '-1.0'
+%DEFAULT aproximate_remember_sim 'true'
+%DEFAULT statistics 'true'
 
 -- DEFINE keyTiKwAbsCatExtractor pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_MAP_WHEN_CATEG_LIM('en','removeall');
 -- DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_CONTRIBDATA_GIVENDATA('$dc_m_str_feature_info');
-DEFINE exhaustiveAND pl.edu.icm.coansys.disambiguation.author.pig.ExhaustiveAND('$threshold','$dc_m_str_feature_info');
-DEFINE aproximateAND pl.edu.icm.coansys.disambiguation.author.pig.AproximateAND('$threshold','$dc_m_str_feature_info');
+DEFINE exhaustiveAND pl.edu.icm.coansys.disambiguation.author.pig.ExhaustiveAND('$threshold','$dc_m_str_feature_info','$statistics');
+DEFINE aproximateAND pl.edu.icm.coansys.disambiguation.author.pig.AproximateAND('$threshold','$dc_m_str_feature_info','$aproximate_remember_sim','$statistics');
 -- DEFINE GenUUID pl.edu.icm.coansys.disambiguation.author.pig.GenUUID();
 -- -----------------------------------------------------
 -- -----------------------------------------------------
@@ -57,18 +59,24 @@ REGISTER '$commonJarsPath'
 %DEFAULT job_priority normal
 %DEFAULT pig_cachedbag_mem_usage 0.1
 %DEFAULT pig_skewedjoin_reduce_memusage 0.3
+%DEFAULT mapredChildJavaOpts -Xmx8000m
+
 set default_parallel $parallel_param
 set pig.tmpfilecompression $pig_tmpfilecompression_param
 set pig.tmpfilecompression.codec $pig_tmpfilecompression_codec_param
 set job.priority $job_priority
 set pig.cachedbag.memusage $pig_cachedbag_mem_usage
 set pig.skewedjoin.reduce.memusage $pig_skewedjoin_reduce_memusage
+set mapred.child.java.opts $mapredChildJavaOpts
+-- ulimit must be more than two times the heap size value ! 
+-- set mapred.child.ulimit unlimited
+set dfs.client.socket-timeout 60000
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- code section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
-D1000 = LOAD '$dc_m_hdfs_inputDocsData' as (sname:chararray, datagroup:{(cId:chararray, cPos:int, sname:chararray, data:map[{(chararray)}])}, count:long);
+D1000 = LOAD '$dc_m_hdfs_inputDocsData' as (sname:chararray, datagroup:{(cId:chararray, sname:int, data:map[{(int)}])}, count:long);
 
 -- -----------------------------------------------------
 -- BIG GRUPS OF CONTRIBUTORS ---------------------------

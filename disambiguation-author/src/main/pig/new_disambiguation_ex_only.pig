@@ -30,11 +30,13 @@
 %DEFAULT dc_m_str_feature_info 'TitleDisambiguator#EX_TITLE#1#1,YearDisambiguator#EX_YEAR#1#1'
 %DEFAULT threshold '-1.0'
 %DEFAULT lang 'pl'
+%DEFAULT statistics 'true'
+%DEFAULT aproximate_remember_sim 'true'
 
 --DEFINE keyTiKwAbsCatExtractor pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_MAP_WHEN_CATEG_LIM('en','removeall');
 DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_CONTRIBDATA_GIVENDATA('$dc_m_str_feature_info','$lang');
-DEFINE exhaustiveAND pl.edu.icm.coansys.disambiguation.author.pig.ExhaustiveAND('$threshold','$dc_m_str_feature_info');
---DEFINE aproximateAND pl.edu.icm.coansys.disambiguation.author.pig.AproximateAND('$threshold','$dc_m_str_feature_info');
+DEFINE exhaustiveAND pl.edu.icm.coansys.disambiguation.author.pig.ExhaustiveAND('$threshold','$dc_m_str_feature_info','$statistics');
+--DEFINE aproximateAND pl.edu.icm.coansys.disambiguation.author.pig.AproximateAND('$threshold','$dc_m_str_feature_info','$aproximate_remember_sim','$statistics');
 DEFINE GenUUID pl.edu.icm.coansys.disambiguation.author.pig.GenUUID();
 -- -----------------------------------------------------
 -- -----------------------------------------------------
@@ -74,12 +76,12 @@ A1 = LOAD '$dc_m_hdfs_inputDocsData' USING $dc_m_meth_extraction_inner('org.apac
 -- A2: {key: chararray,value: bytearray}
 A2 = sample A1 $dc_m_double_sample;
 
-B1 = foreach A2 generate flatten(snameDocumentMetaExtractor($1)) as (cId:chararray, contribPos:int, sname:chararray, metadata:map[{(chararray)}]);
+B1 = foreach A2 generate flatten(snameDocumentMetaExtractor($1)) as (cId:chararray, sname:int, metadata:map[{(int)}]);
 
 B = FILTER B1 BY cId is not null;
 
 C = group B by sname;
--- D: {sname: chararray, datagroup: {(cId: chararray,cPos: int,sname: chararray,data: map[{(val_0: chararray)}])}, count: long}
+-- D: {sname: chararray, datagroup: {(cId: chararray,sname: chararray,data: map[{(val_0: int)}])}, count: long}
 D = foreach C generate group as sname, B as datagroup, COUNT(B) as count;
 
 split D into
@@ -89,7 +91,7 @@ split D into
 -- -----------------------------------------------------
 -- SINGLE CONTRIBUTORS ---------------------------------
 -- -----------------------------------------------------
-D1A = foreach D1 generate flatten( datagroup );-- as (cId:chararray, contribPos:int, sname:chararray, metadata:map);
+D1A = foreach D1 generate flatten( datagroup );-- as (cId:chararray, sname:int, metadata:map);
 -- E1: {cId: chararray,uuid: chararray}
 E1 = foreach D1A generate cId as cId, FLATTEN(GenUUID(TOBAG(cId))) as uuid;
 -- -----------------------------------------------------

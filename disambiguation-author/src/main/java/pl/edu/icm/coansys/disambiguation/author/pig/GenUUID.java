@@ -26,7 +26,6 @@ import org.apache.pig.data.Tuple;
 
 import pl.edu.icm.coansys.disambiguation.idgenerators.IdGenerator;
 import pl.edu.icm.coansys.disambiguation.idgenerators.UuIdGenerator;
-
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;

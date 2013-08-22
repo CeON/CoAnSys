@@ -83,6 +83,7 @@
             <param>dc_m_double_sample=1.0</param>
             <param>dc_m_hdfs_inputDocsData=${dc_tmp_path}/D1</param>
             <param>dc_m_hdfs_outputContribs=${dc_m_hdfs_outputContribs}/part1</param>
+            <param>statistics=${statistics}</param>
         </pig>
         <ok to='joining'/>
         <error to='kill'/>
@@ -122,6 +123,7 @@
             <param>dc_m_hdfs_inputDocsData=${dc_tmp_path}/D100</param>
             <param>dc_m_hdfs_outputContribs=${dc_m_hdfs_outputContribs}/part2</param>
             <param>threshold=${threshold}</param>
+            <param>statistics=${statistics}</param>
         </pig>
         <ok to='joining'/>
         <error to='kill'/>
@@ -161,6 +163,9 @@
             <param>dc_m_hdfs_inputDocsData=${dc_tmp_path}/D1000</param>
             <param>dc_m_hdfs_outputContribs=${dc_m_hdfs_outputContribs}/part3</param>
             <param>threshold=${threshold}</param>
+            <param>mapredChildJavaOpts=${mapredChildJavaOpts_D1000}</param>
+            <param>aproximate_remember_sim=${aproximate_remember_sim_D1000}</param>
+            <param>statistics=${statistics}</param>
         </pig>
         <ok to='joining'/>
         <error to='kill'/>
@@ -201,6 +206,9 @@
             <param>dc_m_hdfs_inputDocsData=${dc_tmp_path}/DX</param>
             <param>dc_m_hdfs_outputContribs=${dc_m_hdfs_outputContribs}/part4</param>
             <param>threshold=${threshold}</param>
+            <param>mapredChildJavaOpts=${mapredChildJavaOpts_DX}</param>
+            <param>aproximate_remember_sim=${aproximate_remember_sim_DX}</param>
+            <param>statistics=${statistics}</param>
         </pig>
         <ok to='joining'/>
         <error to='kill'/>

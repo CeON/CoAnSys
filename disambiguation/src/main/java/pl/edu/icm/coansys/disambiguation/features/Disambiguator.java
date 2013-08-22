@@ -37,7 +37,7 @@ public abstract class Disambiguator {
 	 * @return value reflecting affinity between owners. 
 	 * In the basic implementation this value is a size of an intersection between feature values' lists 
 	 */
-	public double calculateAffinity(List<String> f1, List<String> f2) {
+	public double calculateAffinity( List<Object> f1, List<Object> f2 ) {
 		f1.retainAll(f2);
 		return f1.size();
 	}

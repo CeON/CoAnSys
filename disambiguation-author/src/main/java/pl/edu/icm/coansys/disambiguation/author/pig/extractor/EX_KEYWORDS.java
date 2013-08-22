@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.models.DocumentProtos.KeywordsList;
 
-public class EX_KEYWORDS extends DisambiguationExtractor  {
+public class EX_KEYWORDS extends DisambiguationExtractorDocument  {
 	
     private static final Logger logger = LoggerFactory.getLogger( EX_KEYWORDS.class );
 	
@@ -38,8 +38,8 @@ public class EX_KEYWORDS extends DisambiguationExtractor  {
 		
 		for ( KeywordsList k : dm.getKeywordsList() ){
 			for ( String s : k.getKeywordsList() ){
-				db.add(TupleFactory.getInstance().newTuple(
-						normalizeExtracted( s ) ));
+				db.add( TupleFactory.getInstance().newTuple(
+						normalizeExtracted( s ) ) );
 			}
 		}
 			
@@ -58,13 +58,15 @@ public class EX_KEYWORDS extends DisambiguationExtractor  {
 					db.add(TupleFactory.getInstance().newTuple(
 							normalizeExtracted( s ) ));
 				}
-				return db;
+				//return db;
 			}
 		}
         
-		logger.info("No keywords IN GIVEN LANG (" + lang + ") out of " 
-				+ dm.getKeywordsCount() + " keywords!");
-		
-		return null;
+		if ( db.size() == 0) {
+			logger.info("No keywords IN GIVEN LANG (" + lang + ") out of " 
+					+ dm.getKeywordsCount() + " keywords!");
+			//return null;
+		}
+		return db;
 	}
 }
