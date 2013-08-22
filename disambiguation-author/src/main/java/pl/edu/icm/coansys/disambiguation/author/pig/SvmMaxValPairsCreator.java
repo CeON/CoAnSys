@@ -35,6 +35,12 @@ import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.Disambig
 import pl.edu.icm.coansys.disambiguation.features.Disambiguator;
 import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
 
+/**
+ * Flow (constructor and exec method) similar to ExhaustiveAND 
+ * 
+ * @author pdendek
+ *
+ */
 public class SvmMaxValPairsCreator  extends EvalFunc<Tuple> {
 
 	private static final Logger logger = LoggerFactory.getLogger(SvmMaxValPairsCreator.class);
@@ -53,37 +59,39 @@ public class SvmMaxValPairsCreator  extends EvalFunc<Tuple> {
 	private FeatureInfo[] featureInfos;
 
 	public SvmMaxValPairsCreator(String featureDescription){
-		
 		List<FeatureInfo> FIwithEmpties 
 			= FeatureInfo.parseFeatureInfoString(featureDescription);
 		List<FeatureInfo> FIFinall = new LinkedList<FeatureInfo>();
 		List<PigDisambiguator> FeaturesFinall = new LinkedList<PigDisambiguator>();
-		
-        DisambiguatorFactory ff = new DisambiguatorFactory();
-        Disambiguator d;
-        
-        //separate features which are fully described and able to use
-        for ( FeatureInfo fi : FIwithEmpties ){
-        	if ( fi.getDisambiguatorName().equals("") ) continue;
-        	if ( fi.getFeatureExtractorName().equals("") ) continue;
-        	d = ff.create(fi);
-        	if ( d == null ) continue;
-        	FIFinall.add( fi );
-        	FeaturesFinall.add( new PigDisambiguator( d ) );
-        }
+	
+		DisambiguatorFactory ff = new DisambiguatorFactory();
+		Disambiguator d;
+    
+		//separate features which are fully described and able to use
+		for ( FeatureInfo fi : FIwithEmpties ){
+			if ( fi.getDisambiguatorName().equals("") ) continue;
+			if ( fi.getFeatureExtractorName().equals("") ) continue;
+			d = ff.create(fi);
+			if ( d == null ) continue;
+			FIFinall.add( fi );
+			FeaturesFinall.add( new PigDisambiguator( d ) );
+		}
+    
+		this.featureInfos = FIFinall.toArray( new FeatureInfo[ FIFinall.size() ] );
+		this.features = FeaturesFinall.toArray( new PigDisambiguator[ FIFinall.size() ] );
 	}
     
 	@SuppressWarnings("unchecked")
 	@Override
 	public Tuple exec(Tuple tuple) throws IOException {
 		//tuple.get(0);//sname
-		//tuple.get(1);//cId1
+		String c1 = (String) tuple.get(1);//cId1
 		Map<String, Object> m1 = (Map<String, Object>) tuple.get(2);//map1
 		//tuple.get(3);//sname
-		//tuple.get(4);//cId2
+		String c2 = (String) tuple.get(4);//cId2
 		Map<String, Object> m2 = (Map<String, Object>) tuple.get(5);//map2
 		
-		int[] a = new int[features.length]; 
+		int[] a = new int[features.length+2]; 
 		
 		for ( int d = 0; d < features.length; d++ ){
 			Object oA = m1.get( featureInfos[d].getFeatureExtractorName() );
@@ -97,6 +105,8 @@ public class SvmMaxValPairsCreator  extends EvalFunc<Tuple> {
 		}
 		
 		Tuple t = TupleFactory.getInstance().newTuple();
+		t.append(c1);
+		t.append(c2);
 		for(int e : a){
 			t.append(e);
 		}
