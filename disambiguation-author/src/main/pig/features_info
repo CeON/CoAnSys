@@ -23,14 +23,15 @@ Note: needs EX_EMAIL_PREFIX, without:
 
 
 most important in one line:
-CS
+CS -1.66*10^(-5)
 CC
 KP
-KW
+KW 3,69*10^(-5)
 
-'CoAuthorsSnameDisambiguatorFullList#EX_AUTH_SNAMES#-0.079095511#8,
+'CoAuthorsSnameDisambiguatorFullList#EX_AUTH_SNAMES#−0,0000166#8,
 ClassifCodeDisambiguator#EX_CLASSIFICATION_CODES#0.99#12,
 KeyphraseDisambiguator#EX_KEYWORDS_SPLIT#0.99#22,
-KeywordDisambiguator#EX_KEYWORDS#0.001459754#40'
+KeywordDisambiguator#EX_KEYWORDS#0,0000369#40'
 
+'CoAuthorsSnameDisambiguatorFullList#EX_AUTH_SNAMES#−0.0000166#8,ClassifCodeDisambiguator#EX_CLASSIFICATION_CODES#0.99#12,KeyphraseDisambiguator#EX_KEYWORDS_SPLIT#0.99#22,KeywordDisambiguator#EX_KEYWORDS#0.0000369#40'
 
