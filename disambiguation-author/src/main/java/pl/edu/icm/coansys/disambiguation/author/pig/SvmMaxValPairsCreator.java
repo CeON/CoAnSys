@@ -31,6 +31,7 @@ import org.apache.pig.impl.logicalLayer.schema.Schema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.DisambiguatorFactory;
 import pl.edu.icm.coansys.disambiguation.features.Disambiguator;
 import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
@@ -84,6 +85,7 @@ public class SvmMaxValPairsCreator  extends EvalFunc<Tuple> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public Tuple exec(Tuple tuple) throws IOException {
+		try{
 		String c1 = (String) tuple.get(0);//cId1
 		//tuple.get(1);//sname
 		Map<String, Object> m1 = (Map<String, Object>) tuple.get(2);//map1
@@ -112,6 +114,10 @@ public class SvmMaxValPairsCreator  extends EvalFunc<Tuple> {
 		}
 		
 		return t;
+		}catch(Exception e){
+			logger.error(StackTraceExtractor.getStackTrace(e));
+			throw new IOException(e);
+		}
 	}
 
 }
