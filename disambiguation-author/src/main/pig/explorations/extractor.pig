@@ -23,16 +23,16 @@
 %DEFAULT JARS '*.jar'
 %DEFAULT commonJarsPath 'lib/$JARS'
 
-%DEFAULT dc_m_hdfs_inputDocsData tmp/D1000
-%DEFAULT time 20130709_1009
-%DEFAULT dc_m_hdfs_outputContribs disambiguation/outputContribs$time
-%DEFAULT dc_m_str_feature_info 'TitleDisambiguator#EX_TITLE#1#1,YearDisambiguator#EX_YEAR#1#1'
-%DEFAULT threshold '-1.0'
-%DEFAULT aproximate_remember_sim 'true'
-%DEFAULT statistics 'true'
+%DEFAULT dc_m_hdfs_inputDocsData /srv/bwndata/seqfile/springer-metadata/springer-20120419-springer0*.sq
+%DEFAULT time 0
+%DEFAULT dc_m_hdfs_outputContribs extracted/springer$time
+%DEFAULT dc_m_meth_extraction_inner pl.edu.icm.coansys.pig.udf.RichSequenceFileLoader
+%DEFAULT dc_m_str_feature_info 'CoAuthorsSnameDisambiguatorFullList#EX_AUTH_SNAMES#−0.0000166#8,ClassifCodeDisambiguator#EX_CLASSIFICATION_CODES#0.99#12,KeyphraseDisambiguator#EX_KEYWORDS_SPLIT#0.99#22,KeywordDisambiguator#EX_KEYWORDS#0.0000369#40'
+%DEFAULT lang 'pl'
+--%DEFAULT statistics 'true'
 
-DEFINE exhaustiveAND pl.edu.icm.coansys.disambiguation.author.pig.ExhaustiveAND('$threshold','$dc_m_str_feature_info','$statistics');
-DEFINE aproximateAND pl.edu.icm.coansys.disambiguation.author.pig.AproximateAND('$threshold','$dc_m_str_feature_info','$aproximate_remember_sim','$statistics');
+DEFINE keyTiKwAbsCatExtractor pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_MAP_WHEN_CATEG_LIM('en','removeall');
+DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_CONTRIBDATA_GIVENDATA('$dc_m_str_feature_info','$lang');
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- register section
@@ -55,33 +55,30 @@ REGISTER '$commonJarsPath'
 %DEFAULT job_priority normal
 %DEFAULT pig_cachedbag_mem_usage 0.1
 %DEFAULT pig_skewedjoin_reduce_memusage 0.3
-%DEFAULT mapredChildJavaOpts -Xmx8000m
-
 set default_parallel $parallel_param
 set pig.tmpfilecompression $pig_tmpfilecompression_param
 set pig.tmpfilecompression.codec $pig_tmpfilecompression_codec_param
 set job.priority $job_priority
 set pig.cachedbag.memusage $pig_cachedbag_mem_usage
 set pig.skewedjoin.reduce.memusage $pig_skewedjoin_reduce_memusage
-set mapred.child.java.opts $mapredChildJavaOpts
--- ulimit must be more than two times the heap size value ! 
--- set mapred.child.ulimit unlimited
-set dfs.client.socket-timeout 60000
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- code section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
-D1000 = LOAD '$dc_m_hdfs_inputDocsData' as (sname:chararray, datagroup:{(cId:chararray, sname:int, data:map[{(int)}])}, count:long);
 
--- -----------------------------------------------------
--- BIG GRUPS OF CONTRIBUTORS ---------------------------
--- -----------------------------------------------------
--- D1000A: {datagroup: NULL,simTriples: NULL}
-D1000A = foreach D1000 generate flatten( aproximateAND( datagroup ) ) as (datagroup, simTriples);
--- D1000B: {uuid: chararray,cIds: chararray}
-D1000B = foreach D1000A generate flatten( exhaustiveAND( datagroup, simTriples ) ) as (uuid:chararray, cIds:chararray);
--- E1000: {cId: chararray,uuid: chararray}
-E1000 = foreach D1000B generate flatten( cIds ) as cId, uuid;
+A1 = LOAD '$dc_m_hdfs_inputDocsData' USING $dc_m_meth_extraction_inner('org.apache.hadoop.io.BytesWritable', 'org.apache.hadoop.io.BytesWritable') as (key:chararray, value:bytearray);
+-- A2: {key: chararray,value: bytearray}
+A2 = sample A1 $dc_m_double_sample;
 
-store E1000 into '$dc_m_hdfs_outputContribs';
+B1 = foreach A2 generate flatten(snameDocumentMetaExtractor($1)) as (cId:chararray, sname:int, metadata:map[{(int)}]);
+
+B = FILTER B1 BY cId is not null;
+
+C = group B by sname;
+-- D: {sname: chararray, datagroup: {(cId: chararray,sname: chararray,data: map[{(val_0: chararray)}])}, count: long}
+D = foreach C generate group as sname, B as datagroup, COUNT(B) as count;
+
+E = ORDER D by count;
+store E into '$dc_m_hdfs_outputContribs';
+
