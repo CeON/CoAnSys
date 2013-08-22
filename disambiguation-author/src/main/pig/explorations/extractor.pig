@@ -1,7 +1,7 @@
 --
 -- This file is part of CoAnSys project.
 -- Copyright (c) 2012-2013 ICM-UW
--- 
+--
 -- CoAnSys is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU Affero General Public License as published by
 -- the Free Software Foundation, either version 3 of the License, or
@@ -11,7 +11,7 @@
 -- but WITHOUT ANY WARRANTY; without even the implied warranty of
 -- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 -- GNU Affero General Public License for more details.
--- 
+--
 -- You should have received a copy of the GNU Affero General Public License
 -- along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
 --
@@ -49,7 +49,7 @@ REGISTER '$commonJarsPath'
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 %DEFAULT dc_m_double_sample 1.0
-%DEFAULT parallel_param 16
+%DEFAULT parallel_param 30
 %DEFAULT pig_tmpfilecompression_param true
 %DEFAULT pig_tmpfilecompression_codec_param gz
 %DEFAULT job_priority normal

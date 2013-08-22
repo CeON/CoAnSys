@@ -21,7 +21,7 @@
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 %DEFAULT JARS '*.jar'
-%DEFAULT commonJarsPath 'lib/$JARS'
+%DEFAULT commonJarsPath '../lib/$JARS'
 
 %DEFAULT dc_m_hdfs_inputDocsData extracted/springer0
 %DEFAULT time 0
@@ -49,7 +49,7 @@ REGISTER '$commonJarsPath'
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 %DEFAULT dc_m_double_sample 1.0
-%DEFAULT parallel_param 16
+%DEFAULT parallel_param 30
 %DEFAULT pig_tmpfilecompression_param true
 %DEFAULT pig_tmpfilecompression_codec_param gz
 %DEFAULT job_priority normal
