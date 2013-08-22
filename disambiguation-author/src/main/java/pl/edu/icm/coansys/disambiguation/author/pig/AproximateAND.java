@@ -170,9 +170,23 @@ public class AproximateAND extends EvalFunc<DataBag> {
 			if ( isStatistics ) {				
 				Collections.sort( clustersSizes );
 				int biggestCluster = clustersSizes.get( clustersSizes.size()-1 );
-				//timer.addMonit("alg", "id","contribs","clusters","calculated sims","max cluster size","clusters' sizes list","time [s]");
+
 				//stopping timer for current play (not thread)
-				timer.stop( "APR", timerPlayId, N, finalClusterNumber, 
+				/* STATISTICS DESCRIPTION:
+				 * ## this algorithm name, 
+				 * ## is sim matrix created and some sim values stored , 
+				 * ## aproximate execution id,
+				 * ## number of contribs, 
+				 * ## clusters number after aproximate,
+				 * ## calculated sim values which are stored 
+				 * (note that it doesn't count all calculated - only stored, e.g. 
+				 * if 2 contributors are not in the same cluster, 
+				 * their sim value would not be stored.)
+				 * ## size of biggest cluster after aproximate
+				 * ## clusters' sizes list
+				 * ## time [s]
+				 */
+				timer.stop( "APR", rememberSim, timerPlayId, N, finalClusterNumber, 
 		        		calculatedSimCounter, biggestCluster, clustersSizes.toString() );
 			}
 			
