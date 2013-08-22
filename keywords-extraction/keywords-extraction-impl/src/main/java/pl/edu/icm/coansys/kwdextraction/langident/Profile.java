@@ -15,7 +15,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package pl.edu.icm.coansys.kwdextraction.langident;
 
 import java.io.IOException;
@@ -36,27 +35,27 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 /**
-* @author Lukasz Bolikowski (bolo@icm.edu.pl)
-* @author Gra <Gołębiewski Radosław A.> r.golebiewski@icm.edu.pl
-*/
+ * @author Lukasz Bolikowski (bolo@icm.edu.pl)
+ * @author Gra <Gołębiewski Radosław A.> r.golebiewski@icm.edu.pl
+ */
 public class Profile {
+
     protected static final char SEPARATION_CHAR = ' ';
     protected static final String UNTERLINE_STRING = "_";
     protected static final String SPACE_STRING = " ";
     protected static final String EMPTY_STRING = "";
     protected static final String LETTERS = "; letters: ";
     protected static final String PROCESSED_WORDS = "Processed words: ";
-
     private static final Logger LOG = LoggerFactory.getLogger(Profile.class);
-
     public static final int PROFILE_CUTOFF = 400;
     public static final int MAX_GRAM = 5;
-
     private List<String> data = new ArrayList<String>(PROFILE_CUTOFF);
     private Map<String, Integer> hash = new HashMap<String, Integer>(PROFILE_CUTOFF);
 
     private static class TreeElement implements Comparable<TreeElement> {
+
         private final String s;
         private final int c;
 
@@ -66,32 +65,34 @@ public class Profile {
         }
 
         @Override
-		public int compareTo(final Profile.TreeElement o) {
+        public int compareTo(final Profile.TreeElement o) {
             final TreeElement lhs = this;
             final TreeElement rhs = o;//(TreeElement)
 
-            if (lhs.c > rhs.c)
-				return -1;
-            if (lhs.c < rhs.c)
-				return 1;
+            if (lhs.c > rhs.c) {
+                return -1;
+            }
+            if (lhs.c < rhs.c) {
+                return 1;
+            }
 
             return lhs.s.compareTo(rhs.s);
         }
 
-		@Override
-		public int hashCode() {
-			return HashCodeBuilder.reflectionHashCode(this);
-		}
+        @Override
+        public int hashCode() {
+            return HashCodeBuilder.reflectionHashCode(this);
+        }
 
-		@Override
-		public boolean equals(Object obj) {
-			return EqualsBuilder.reflectionEquals(this, obj);
-		}
-
+        @Override
+        public boolean equals(Object obj) {
+            return EqualsBuilder.reflectionEquals(this, obj);
+        }
     }
 
     /**
      * Reads profile from a stream.
+     *
      * @param stream Stream to read profile from
      */
     public Profile(final InputStream stream) throws IOException {
@@ -100,11 +101,12 @@ public class Profile {
 
     /**
      * Reads profile from a reader.
+     *
      * @param reader Reader to read profile from
      */
     public Profile(final Reader reader) throws IOException {
         data = new ArrayList<String>(PROFILE_CUTOFF);
-        hash = new HashMap<String,Integer>(PROFILE_CUTOFF);
+        hash = new HashMap<String, Integer>(PROFILE_CUTOFF);
 
         boolean noEOF = true;
         char buf[] = new char[1];
@@ -114,12 +116,12 @@ public class Profile {
             StringBuilder gram = new StringBuilder();
             // String gram = EMPTY_STRING;
             int r = reader.read(buf);
-            while (r == 1 && ! new String(buf).matches("\\s")) {
+            while (r == 1 && !new String(buf).matches("\\s")) {
                 gram.append(buf[0]);
                 r = reader.read(buf);
             }
 
-			if (!EMPTY_STRING.equals(gram.toString())) {
+            if (!EMPTY_STRING.equals(gram.toString())) {
                 data.add(gram.toString());
                 hash.put(gram.toString(), Integer.valueOf(seq++));
             }
@@ -141,11 +143,12 @@ public class Profile {
 
     private void addGram(final Map<String, Integer> grams, final String g) {
         final Integer c = grams.get(g);
-		grams.put(g, Integer.valueOf((c == null) ? 1 : c.intValue() + 1));
+        grams.put(g, Integer.valueOf((c == null) ? 1 : c.intValue() + 1));
     }
 
     /**
      * Generates profile from a text.
+     *
      * @param text Text to profile
      */
     public Profile(final String txt) {
@@ -194,7 +197,7 @@ public class Profile {
         for (int i = 0; i < newSize; i++) {
             final TreeElement te = ts.first();
             data.add(te.s);
-			hash.put(data.get(i), Integer.valueOf(i));
+            hash.put(data.get(i), Integer.valueOf(i));
             ts.remove(te);
         }
     }
@@ -220,7 +223,7 @@ public class Profile {
     }
 
     @Override
-	public String toString() {
+    public String toString() {
         final StringBuilder builder = new StringBuilder();
         for (final String gram : data) {
             builder.append(gram);

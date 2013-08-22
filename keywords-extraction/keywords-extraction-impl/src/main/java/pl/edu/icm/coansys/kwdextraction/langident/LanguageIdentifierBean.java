@@ -15,7 +15,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package pl.edu.icm.coansys.kwdextraction.langident;
 
 import java.io.IOException;
@@ -28,43 +27,40 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 /**
-* Language identification bean.  Guesses the language of a provided text
-* by performing N-gram profile comparison.
-* 
+ * Language identification bean. Guesses the language of a provided text by
+ * performing N-gram profile comparison.
+ * 
 * @author Lukasz Bolikowski (bolo@icm.edu.pl)
-* @author Gra <Gołębiewski Radosław A.> r.golebiewski@icm.edu.pl
-*/
+ * @author Gra <Gołębiewski Radosław A.> r.golebiewski@icm.edu.pl
+ */
 public class LanguageIdentifierBean implements LanguageIdentifier {
+
     private static final double UNCERTAINTY_THRESHOLD_INIT_VALUE = 0.05;
-
     private static final Logger LOG = LoggerFactory.getLogger(LanguageIdentifierBean.class);
-
     private static final String LOG_WITH_OVERLAP = " with overlap ";
     private static final String LOG_IDENTIFIED = "Identified ";
-    private static final String LANGUAGE_IDENTIFIER_BEAN_CREATED_WITH_FOLLOWING_PROFILES
-        = "LanguageIdentifierBean created with following profiles: ";
+    private static final String LANGUAGE_IDENTIFIER_BEAN_CREATED_WITH_FOLLOWING_PROFILES = "LanguageIdentifierBean created with following profiles: ";
     private static final String LOG_SEPARATOR = ", ";
-    private static final String WILL_NOT_BE_CREATED_BECAUSE_ITS_LANGUAGE_DOES_NOT_BELONG_TO_SPECIFIED_LANGUAGE_SET
-        = "] will not be created because its language does not belong to specified language set";
+    private static final String WILL_NOT_BE_CREATED_BECAUSE_ITS_LANGUAGE_DOES_NOT_BELONG_TO_SPECIFIED_LANGUAGE_SET = "] will not be created because its language does not belong to specified language set";
     private static final String PROFILE_S = "Profile(s) [";
-    private static final String IS_NOT_AVAILABLE_FOR_LANGUAGE_IDENTIFICATION
-        = "] is not available for language identification";
+    private static final String IS_NOT_AVAILABLE_FOR_LANGUAGE_IDENTIFICATION = "] is not available for language identification";
     private static final String LANGUAGE = "Language [";
     private static final String IS_NOT_VALID_ISO_639_1_LANGUAGE_CODE = "] is not valid ISO 639-1 language code";
     private static final String LANGUAGES_PROPERTY_NAME = "languages";
     private static final String CANNOT_FIND_RESOURCE = "Cannot find resource ";
-    private static final String PROFILE_PROPERTIES
-        = "pl/edu/icm/coansys/kwdextraction/langident/profiles.properties";
+    private static final String PROFILE_PROPERTIES = "pl/edu/icm/coansys/kwdextraction/langident/profiles.properties";
     private static final String PROFILE_PREFIX = "pl/edu/icm/coansys/kwdextraction/langident/profile/";
     private static final String PROFILE_SUFFIX = ".txt";
-
     public static final String LANG_NONE = "**";
-
-    /** Language profiles.  Language codes as key, profiles as value. */
+    /**
+     * Language profiles. Language codes as key, profiles as value.
+     */
     private Map<LangVariant, Profile> profiles = new HashMap<LangVariant, Profile>();
-
-    /** Profile overlap lower than this threshold will be ignored. */
+    /**
+     * Profile overlap lower than this threshold will be ignored.
+     */
     private double uncertaintyThreshold = UNCERTAINTY_THRESHOLD_INIT_VALUE;
 
     public void setUncertaintyThreshold(final double uncertaintyThreshold) {
@@ -80,7 +76,8 @@ public class LanguageIdentifierBean implements LanguageIdentifier {
     }
 
     /**
-     * Creates language identifier bean with profiles created only for specified languages.
+     * Creates language identifier bean with profiles created only for specified
+     * languages.
      */
     public LanguageIdentifierBean(final String[] availableLanguages) throws IOException {
         initialize(availableLanguages);
@@ -88,17 +85,16 @@ public class LanguageIdentifierBean implements LanguageIdentifier {
 
     /**
      * Loads language profiles.
-     * 
+     *
      * @throws IOException
      */
     private void initialize(final String[] predefinedLanguages) throws IOException {
-        final InputStream indexStream
-            = LanguageIdentifierBean.class.getClassLoader().getResourceAsStream(PROFILE_PROPERTIES);
+        final InputStream indexStream = LanguageIdentifierBean.class.getClassLoader().getResourceAsStream(PROFILE_PROPERTIES);
 
-        if (indexStream == null)
-			throw new IOException(CANNOT_FIND_RESOURCE + PROFILE_PROPERTIES);
-
-        final Properties props = new Properties(); 
+        if (indexStream == null) {
+            throw new IOException(CANNOT_FIND_RESOURCE + PROFILE_PROPERTIES);
+        }
+        final Properties props = new Properties();
         props.load(indexStream);
 
         final String tmp = props.getProperty(LANGUAGES_PROPERTY_NAME);
@@ -115,7 +111,7 @@ public class LanguageIdentifierBean implements LanguageIdentifier {
         makeProfilesMap(languages);
         Arrays.sort(languages);
         LOG.info(LANGUAGE_IDENTIFIER_BEAN_CREATED_WITH_FOLLOWING_PROFILES
-                +StringUtils.join(languages, LOG_SEPARATOR));
+                + StringUtils.join(languages, LOG_SEPARATOR));
     }
 
     @Override
@@ -130,15 +126,17 @@ public class LanguageIdentifierBean implements LanguageIdentifier {
     @Override
     public String classify(final String text) {
         final LangVariant lv = classifyVariant(text);
-        if (null == lv)
-			return LANG_NONE;
+        if (null == lv) {
+            return LANG_NONE;
+        }
         return lv.getLang();
     }
 
     @Override
     public LangVariant classifyVariant(final String text) {
-        if (null == text)
-			return null;
+        if (null == text) {
+            return null;
+        }
 
         final Profile textProfile = new Profile(text);
 
@@ -152,16 +150,16 @@ public class LanguageIdentifierBean implements LanguageIdentifier {
     }
 
     public static class LangVariant implements Serializable {
+
         private static final String LANG_VARIANT_SPLIT_PATTERN = "\\.";
-
         private static final long serialVersionUID = 4522179133152273109L;
-
         private String lang;
         private String variant;
 
         public LangVariant(final String langVariant) {
-            if (null == langVariant)
-				throw new CategorizationException("Null pointer exception");
+            if (null == langVariant) {
+                throw new CategorizationException("Null pointer exception");
+            }
             lang = langVariant;
             variant = null;
 
@@ -187,7 +185,7 @@ public class LanguageIdentifierBean implements LanguageIdentifier {
 
         @Override
         public int hashCode() {
-        	return HashCodeBuilder.reflectionHashCode(this);
+            return HashCodeBuilder.reflectionHashCode(this);
         }
 
         @Override
@@ -197,8 +195,9 @@ public class LanguageIdentifierBean implements LanguageIdentifier {
 
         @Override
         public String toString() {
-            if (null == variant)
-				return lang;
+            if (null == variant) {
+                return lang;
+            }
             return lang + '.' + variant;
         }
     }
@@ -206,8 +205,9 @@ public class LanguageIdentifierBean implements LanguageIdentifier {
     protected void validateLanguages(String[] languages) {
         for (final String lv : languages) {
             final String lang = new LangVariant(lv).getLang();
-            if ( ! LanguagesIso639_1.isValid(lang))
-				throw new CategorizationException("["+lang+IS_NOT_VALID_ISO_639_1_LANGUAGE_CODE);
+            if (!LanguagesIso639_1.isValid(lang)) {
+                throw new CategorizationException("[" + lang + IS_NOT_VALID_ISO_639_1_LANGUAGE_CODE);
+            }
         }
     }
 
@@ -226,11 +226,10 @@ public class LanguageIdentifierBean implements LanguageIdentifier {
                 for (final String profile : profilesList) {
                     profileSet.add(profile);
                 }
-            }
-            else {
+            } else {
                 String profilesStr = StringUtils.join(profilesList, LOG_SEPARATOR);
-                LOG.info(PROFILE_S+profilesStr
-                        +WILL_NOT_BE_CREATED_BECAUSE_ITS_LANGUAGE_DOES_NOT_BELONG_TO_SPECIFIED_LANGUAGE_SET);
+                LOG.info(PROFILE_S + profilesStr
+                        + WILL_NOT_BE_CREATED_BECAUSE_ITS_LANGUAGE_DOES_NOT_BELONG_TO_SPECIFIED_LANGUAGE_SET);
                 langVariantMap.remove(entry.getKey());
             }
         }
@@ -242,8 +241,8 @@ public class LanguageIdentifierBean implements LanguageIdentifier {
         for (final String language : predefinedLanguages) {
             final String lang = LanguagesIso639_1.checkAndNormalize(language);
             predefinedLangSet.add(lang);
-            if( ! langVariantMap.containsKey(lang)) {
-                LOG.warn(LANGUAGE+lang+IS_NOT_AVAILABLE_FOR_LANGUAGE_IDENTIFICATION);
+            if (!langVariantMap.containsKey(lang)) {
+                LOG.warn(LANGUAGE + lang + IS_NOT_AVAILABLE_FOR_LANGUAGE_IDENTIFICATION);
             }
         }
     }
@@ -269,8 +268,9 @@ public class LanguageIdentifierBean implements LanguageIdentifier {
             final String resource = PROFILE_PREFIX + langVariant.toLowerCase(Locale.ENGLISH) + PROFILE_SUFFIX;
             final InputStream profileStream = LanguageIdentifierBean.class.getClassLoader()
                     .getResourceAsStream(resource);
-            if (profileStream == null)
-				throw new IOException(CANNOT_FIND_RESOURCE + resource);
+            if (profileStream == null) {
+                throw new IOException(CANNOT_FIND_RESOURCE + resource);
+            }
             profiles.put(lv, new Profile(profileStream));
         }
     }
