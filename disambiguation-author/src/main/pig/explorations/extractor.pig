@@ -21,7 +21,7 @@
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 %DEFAULT JARS '*.jar'
-%DEFAULT commonJarsPath 'lib/$JARS'
+%DEFAULT commonJarsPath '../lib/$JARS'
 
 %DEFAULT dc_m_hdfs_inputDocsData /srv/bwndata/seqfile/springer-metadata/springer-20120419-springer0*.sq
 %DEFAULT time 0
