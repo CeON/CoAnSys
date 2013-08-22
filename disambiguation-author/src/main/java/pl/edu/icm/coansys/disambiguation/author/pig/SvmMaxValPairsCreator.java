@@ -84,11 +84,11 @@ public class SvmMaxValPairsCreator  extends EvalFunc<Tuple> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public Tuple exec(Tuple tuple) throws IOException {
-		//tuple.get(0);//sname
-		String c1 = (String) tuple.get(1);//cId1
+		String c1 = (String) tuple.get(0);//cId1
+		//tuple.get(1);//sname
 		Map<String, Object> m1 = (Map<String, Object>) tuple.get(2);//map1
-		//tuple.get(3);//sname
-		String c2 = (String) tuple.get(4);//cId2
+		String c2 = (String) tuple.get(3);//cId2
+		//tuple.get(4);//sname
 		Map<String, Object> m2 = (Map<String, Object>) tuple.get(5);//map2
 		
 		int[] a = new int[features.length+2]; 
