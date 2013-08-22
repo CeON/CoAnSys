@@ -18,67 +18,33 @@
 
 package pl.edu.icm.coansys.disambiguation.author.benchmark;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import org.slf4j.LoggerFactory;
 
 
 public class TimerSyso implements Runnable  {
 
 	private long start;
-	private long ac;
 
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(Timer.class);
-	private boolean started = false;
-	private String logPath;
-    private List<String> monitBuffor = new LinkedList<String> ();
 
-	private void init() {
-		started = true;
-		logger.info( "Writing statistics into standard output." );
-			
-		for ( String monit: monitBuffor ) {
-			System.out.println( monit );
-		}
-	}
-
-	public TimerSyso( String logName ) {
-		this.logPath = logName;
-	}
-
+    public TimerSyso() {
+    	logger.info( "Writing statistics into standard output." );
+    }
+    
 	private long currentTime() {
 		return System.nanoTime();
 	}
 
 	@Override
 	public void run() {
-		start = currentTime(); //nano time
-		ac = 0;
 	}
 
 	public void play() {
 		start = currentTime(); //nano time
-
-		if ( !started ) {
-			init();
-		}
 	}
 
 	public void stop( Object...monits ) {
 		addCheckpoint( monits );
-		start = -1;
-		ac = 0;
-	}
-
-	public void pause( Object...monits ) {
-		addCheckpoint( monits );
-		ac += currentTime() - start;
-		start = -1;
-	}
-
-	public void pause() {
-		ac += currentTime() - start;
 		start = -1;
 	}
 
@@ -90,20 +56,24 @@ public class TimerSyso implements Runnable  {
 			monit.append("\t");
 		}
 
-		if ( !started ) {
-			monitBuffor.add( monit.toString() );
-		}
-		else {
-			System.out.println( monit.toString() );
-		}
+		System.out.println( monit.toString() );
 	}
+	
 	public void addCheckpoint( Object...monits ) {
-		long t = currentTime() - start + ac;
+		long t = currentTime() - start;
 		Object[] nm = new Object[ monits.length + 1 ];
+		boolean isTimeAdded = false;
 		for ( int i = 0; i < monits.length; i++ ) {
-			nm[i] = monits[i];
+			if (  monits[i].equals("#time") ) {
+				nm[i] = t;
+				isTimeAdded = true;
+			} else {
+				nm[i] = monits[i];
+			}
 		}
-		nm[ monits.length ] = t;
+		if( !isTimeAdded ) {
+			nm[ monits.length ] = (t / 60.0);
+		}
 		addMonit( nm );
 	}
 }

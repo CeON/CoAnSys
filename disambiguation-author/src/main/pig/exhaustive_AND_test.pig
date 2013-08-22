@@ -28,8 +28,9 @@
 %DEFAULT dc_m_hdfs_outputContribs disambiguation/outputContribs$time
 %DEFAULT dc_m_str_feature_info 'TitleDisambiguator#EX_TITLE#1#1,YearDisambiguator#EX_YEAR#1#1'
 %DEFAULT threshold '-1.0'
+%DEFAULT statistics 'true'
 
-DEFINE exhaustiveAND pl.edu.icm.coansys.disambiguation.author.pig.ExhaustiveAND('$threshold', '$dc_m_str_feature_info');
+DEFINE exhaustiveAND pl.edu.icm.coansys.disambiguation.author.pig.ExhaustiveAND('$threshold', '$dc_m_str_feature_info','$statistics');
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- register section
@@ -72,7 +73,7 @@ B = load '$dc_m_hdfs_inputDocsData' as (cId:chararray,sname:chararray,data:map[{
 C = group B by sname;
 
 D = foreach C generate group as sname, B as datagroup, COUNT(B) as count;
--- D: {sname: chararray, datagroup: {(cId: chararray,cPos: int,sname: chararray,data: map[{(val_0: chararray)}])}, count: long}
+-- D: {sname: chararray, datagroup: {(cId: chararray,sname: chararray,data: map[{(val_0: chararray)}])}, count: long}
 
 -- dump D;
 E = foreach D generate exhaustiveAND( datagroup );
