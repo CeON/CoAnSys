@@ -88,8 +88,12 @@ public class SvmMaxValPairsCreator  extends EvalFunc<Tuple> {
 		for ( int d = 0; d < features.length; d++ ){
 			Object oA = m1.get( featureInfos[d].getFeatureExtractorName() );
 			Object oB = m2.get( featureInfos[d].getFeatureExtractorName() );
-			if ( oA == null || oB == null ) a[d]=0;
-			a[d] = (int)features[d].calculateAffinity( oA, oB );
+			if ( oA == null || oB == null ) {
+                            a[d] = 0;
+                        }
+                        else {
+                            a[d] = (int)features[d].calculateAffinity( oA, oB );
+                        }
 		}
 		
 		if(a[a.length-1]==0){

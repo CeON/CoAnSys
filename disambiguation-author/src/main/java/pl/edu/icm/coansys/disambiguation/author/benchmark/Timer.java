@@ -21,8 +21,11 @@ package pl.edu.icm.coansys.disambiguation.author.benchmark;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.slf4j.LoggerFactory;
 
@@ -51,7 +54,8 @@ public class Timer implements Runnable  {
 		}
 
 		try {
-			statistics = new PrintWriter( newLogPath );
+                        statistics = new PrintWriter( newLogPath, "UTF-8" );
+                   
 			started = true;
 
 			for ( String monit: monitBuffor ) {
@@ -62,7 +66,10 @@ public class Timer implements Runnable  {
 
 		} catch ( FileNotFoundException e ) {
 			logger.warn( "Unable to write time statistics in file: " + newLogPath + ". Absolute path: " + f.getAbsolutePath() );
-		}
+		
+                } catch (UnsupportedEncodingException ex) {
+                        logger.error("UnsupportedEncodingException");
+                }
 
 
 	}

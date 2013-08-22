@@ -32,7 +32,7 @@ public class SvmNormalizedPairsCreator  extends EvalFunc<Tuple> {
 
 	private static final Logger logger = LoggerFactory.getLogger(SvmNormalizedPairsCreator.class);
 			
-	float[] featureMaxVal = null;
+	private float[] featureMaxVal = null;
 
 	public SvmNormalizedPairsCreator(String maxValsString){
 		String[] mvs = maxValsString.split(",");

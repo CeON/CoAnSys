@@ -24,7 +24,7 @@ import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.ToHashCode;
 
 public class DisambiguationExtractor {
 	
-	static PigNormalizer normalizers[] = {
+	static private PigNormalizer normalizers[] = {
 		new ToEnglishLowerCase(), 
 		new ToHashCode()
 	};
