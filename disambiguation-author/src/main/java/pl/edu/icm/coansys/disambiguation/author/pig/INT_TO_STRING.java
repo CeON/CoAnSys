@@ -52,7 +52,7 @@ public class INT_TO_STRING extends EvalFunc<Tuple> {
 		
 		for(int i = 0; i<size;i++){
 			if(i==toStringIndex){
-				t.append(Integer.parseInt((String)input.get(i)));
+				t.append(((Integer)input.get(i)).toString());
 			}else{
 				t.append(input.get(i));
 			}
