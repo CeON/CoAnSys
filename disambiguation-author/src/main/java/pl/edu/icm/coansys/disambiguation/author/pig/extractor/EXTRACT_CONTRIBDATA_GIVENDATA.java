@@ -79,15 +79,16 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
         	Class<?> c = Class.forName( "pl.edu.icm.coansys.disambiguation.author.pig.extractor." 
             		+ features.get(i).getFeatureExtractorName() );
             
-            String currentClassName = c.getSuperclass().getSimpleName();
+            String currentSuperClassName = c.getSuperclass().getSimpleName();
             
-            if ( currentClassName.equals( ExtractorDocClassName ) ) {
+            if ( currentSuperClassName.equals( ExtractorDocClassName ) ) {
             	des4Doc.add( (DisambiguationExtractorDocument) c.newInstance() );
-            } else if ( currentClassName.equals( ExtractorAuthorClassName ) ) {
+            } else if ( currentSuperClassName.equals( ExtractorAuthorClassName ) ) {
             	des4Author.add( (DisambiguationExtractorAuthor) c.newInstance() );
             } else {
             	logger.warn( "Cannot create extractor: " 
-            			+ currentClassName + ". Does not match to any superclass." );
+            			+ c.getSimpleName() + ". Its superclass: " 
+            			+ currentSuperClassName + " does not match to any superclass." );
             }
         }
     }
