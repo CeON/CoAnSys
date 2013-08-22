@@ -24,7 +24,7 @@ import java.io.IOException;
 import org.apache.pig.tools.parameters.ParseException;
 
 import pl.edu.icm.coansys.commons.java.DiacriticsRemover;
-import pl.edu.icm.coansys.disambiguation.author.pig.extractor.DisambiguationExtractor;
+import pl.edu.icm.coansys.disambiguation.author.pig.extractor.DisambiguationExtractorDocument;
 import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.ToEnglishLowerCase;
 import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.ToHashCode;
 
@@ -90,7 +90,7 @@ public class disambiguationTests {
 		assert( a.equals( toHashExpected ) );
 		
 		// testing normalize tool, which is using after data extraction
-		a = DisambiguationExtractor.normalizeExtracted( text );
+		a = DisambiguationExtractorDocument.normalizeExtracted( text );
 		assert( a.equals( DisExtrExpected ) );
    	}
    	

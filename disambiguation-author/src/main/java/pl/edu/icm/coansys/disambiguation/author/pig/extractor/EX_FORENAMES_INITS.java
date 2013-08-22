@@ -26,15 +26,14 @@ import org.apache.pig.data.TupleFactory;
 import pl.edu.icm.coansys.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 
-public class EX_FORENAMES_INITS extends DisambiguationExtractor{
+public class EX_FORENAMES_INITS extends DisambiguationExtractorAuthor{
 	
 	@Override
-	public DataBag extract( Object o, String lang ){
+	public DataBag extract( Object o, int fakeIndex, String lang ){
 		TupleFactory tf = TupleFactory.getInstance();
 		DocumentMetadata dm = (DocumentMetadata) o;
 		DataBag db = new DefaultDataBag();
 		
-		int fakeIndex = 0;
 		Author a = dm.getBasicMetadata().getAuthor(fakeIndex);
 		String[] fs = a.getForenames().split("[\\W]+");
 		StringBuilder sb = new StringBuilder();

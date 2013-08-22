@@ -18,24 +18,18 @@
 
 package pl.edu.icm.coansys.disambiguation.author.pig.extractor;
 
-import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.PigNormalizer;
-import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.ToEnglishLowerCase;
-import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.ToHashCode;
+import org.apache.pig.data.DataBag;
 
-public class DisambiguationExtractor {
+public class DisambiguationExtractorAuthor extends DisambiguationExtractor {
 	
-	static PigNormalizer normalizers[] = {
-		new ToEnglishLowerCase(), 
-		new ToHashCode()
-	};
-	
-	static public Object normalizeExtracted( String extracted ) {
-		Object tmp = extracted;
-		for ( PigNormalizer pn: normalizers ) {
-			tmp = pn.normalize( tmp );
-		}
-		return tmp;
+	public DataBag extract( Object o, int authorIndex, String lang ) {
+		return null;
 	}
 
+	public DataBag extract( Object o, int authorIndex ) {
+		return extract( o, authorIndex, null );
+	}
+	
+	
 }
 	

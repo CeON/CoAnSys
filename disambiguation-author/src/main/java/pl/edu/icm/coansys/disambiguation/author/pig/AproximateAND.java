@@ -273,7 +273,9 @@ public class AproximateAND extends EvalFunc<DataBag> {
 				//potentially the same contributors
 				if ( simil >= 0 ) {
 					union( i, j );
-					calculatedSimCounter++;
+
+					//benchmark
+					if ( rememberSim ) calculatedSimCounter++;
 				}
 				
 				if ( rememberSim ) {

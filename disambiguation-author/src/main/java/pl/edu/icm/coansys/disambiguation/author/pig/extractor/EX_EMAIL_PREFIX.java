@@ -25,10 +25,10 @@ import org.apache.pig.data.TupleFactory;
 import pl.edu.icm.coansys.models.DocumentProtos.ClassifCode;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 
-public class EX_EMAIL_PREFIX extends DisambiguationExtractor{
+public class EX_EMAIL_PREFIX extends DisambiguationExtractorAuthor{
 	
 	@Override
-	public DataBag extract( Object o, String lang ){
+	public DataBag extract( Object o, int fakeindex, String lang ){
 		throw new UnsupportedOperationException();
 //		
 //		DocumentMetadata dm = (DocumentMetadata) o;

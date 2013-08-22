@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 
-public class EX_TITLE_SPLIT extends DisambiguationExtractor {
+public class EX_TITLE_SPLIT extends DisambiguationExtractorDocument {
 	
     private static final Logger logger = LoggerFactory.getLogger( EX_TITLE_SPLIT.class );
 
@@ -39,11 +39,12 @@ public class EX_TITLE_SPLIT extends DisambiguationExtractor {
 		
 		DataBag db = new DefaultDataBag();
 		
-		String[] normals = normalizeExtracted( 
-				dm.getBasicMetadata().getTitleList().get(0).getText() ).split("[\\W]+");
+		String[] normals = 
+				dm.getBasicMetadata().getTitleList().get(0).getText().split("[\\W]+");
 		
-		for(String s : normals){
-			Tuple t = TupleFactory.getInstance().newTuple( s );
+		for(String s : normals) {
+			Tuple t = TupleFactory.getInstance().newTuple( 
+					normalizeExtracted( s ) );
 			db.add( t );
 		}
 		
@@ -58,23 +59,23 @@ public class EX_TITLE_SPLIT extends DisambiguationExtractor {
 		
         for ( TextWithLanguage title : dm.getBasicMetadata().getTitleList() ) {
             if ( lang.equalsIgnoreCase( title.getLanguage()) ) {
-            	String[] normals = normalizeExtracted( title.getText() ).split("[\\W]+");
+            	String[] normals = title.getText().split("[\\W]+");
             	for(String s : normals){
             		if(s.length()==0){
             			continue;
             		}
-            		Tuple t = TupleFactory.getInstance().newTuple(s);
+            		Tuple t = TupleFactory.getInstance().newTuple( 
+            				normalizeExtracted( s ) );
             		db.add( t );
             	}
         		return db;
             }
         }
         
-        //TODO: Is possible, that one document has more than one title in given language?
-        //What action should be expected in that case?
-        
-        logger.info("No title IN GIVEN LANG (" + lang + ") out of " 
-        		+ dm.getBasicMetadata().getTitleCount() + " titles!");
+        if ( db.size() == 0 ){
+        	logger.info("No title IN GIVEN LANG (" + lang + ") out of " 
+        			+ dm.getBasicMetadata().getTitleCount() + " titles!");
+        }
         
         return null;
 	}
