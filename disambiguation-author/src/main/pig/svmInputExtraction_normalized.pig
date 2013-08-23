@@ -26,7 +26,7 @@
 %DEFAULT dc_m_hdfs_inputDocsData /srv/bwndata/seqfile/bazekon-20130314.sf
 %DEFAULT time 20130709_1009
 %DEFAULT dc_m_hdfs_output svmInput/outputTime$time
-%DEFAULT dc_m_meth_extraction_inner pl.edu.icm.coansys.pig.udf.RichSequenceFileLoader
+%DEFAULT dc_m_meth_extraction_inner pl.edu.icm.coansys.commons.pig.udf.RichSequenceFileLoader
 %DEFAULT threshold '-1.0'
 %DEFAULT lang 'en'
 %DEFAULT featureWeights '1,2,3,4,5,6,7,8,9'

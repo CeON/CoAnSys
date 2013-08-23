@@ -30,7 +30,7 @@
 %DEFAULT dc_c_sim cosine
 %DEFAULT dc_c_neigh 5
 %DEFAULT dc_c_meth_extraction getBWBWFromHDFS
-%DEFAULT dc_c_meth_extraction_inner pl.edu.icm.coansys.importers.pig.udf.RichSequenceFileLoader
+%DEFAULT dc_c_meth_extraction_inner pl.edu.icm.coansys.commons.pig.udf.RichSequenceFileLoader
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- define section

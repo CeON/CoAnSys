@@ -27,7 +27,7 @@
 %DEFAULT time 20130709_1009
 %DEFAULT dc_m_hdfs_outputContribs disambiguation/outputContribs$time
 %DEFAULT dc_m_meth_extraction getBWBWFromHDFS
-%DEFAULT dc_m_meth_extraction_inner pl.edu.icm.coansys.pig.udf.RichSequenceFileLoader
+%DEFAULT dc_m_meth_extraction_inner pl.edu.icm.coansys.commons.pig.udf.RichSequenceFileLoader
 %DEFAULT dc_m_str_feature_info 'TitleDisambiguator#EX_TITLE#1#1,YearDisambiguator#EX_YEAR#1#1'
 
 DEFINE keyTiKwAbsCatExtractor pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_MAP_WHEN_CATEG_LIM('en','removeall');
@@ -75,7 +75,7 @@ set pig.skewedjoin.reduce.memusage $pig_skewedjoin_reduce_memusage
 -- code section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
-A1 = LOAD '$dc_m_hdfs_inputDocsData' USING pl.edu.icm.coansys.pig.udf.RichSequenceFileLoader('org.apache.hadoop.io.BytesWritable', 'org.apache.hadoop.io.BytesWritable') as (key:chararray, value:bytearray);
+A1 = LOAD '$dc_m_hdfs_inputDocsData' USING pl.edu.icm.coansys.commons.pig.udf.RichSequenceFileLoader('org.apache.hadoop.io.BytesWritable', 'org.apache.hadoop.io.BytesWritable') as (key:chararray, value:bytearray);
 describe A1;
 --A1 = order A1 by key; --bug in Pig
 A2 = limit A1 3;
