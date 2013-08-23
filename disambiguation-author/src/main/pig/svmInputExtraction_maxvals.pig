@@ -26,7 +26,7 @@
 %DEFAULT dc_m_hdfs_inputDocsData /srv/bwndata/seqfile/bazekon-20130314.sf
 %DEFAULT time 20130709_1009
 %DEFAULT dc_m_hdfs_output svmInput/outputTime$time
-%DEFAULT dc_m_meth_extraction_inner pl.edu.icm.coansys.pig.udf.RichSequenceFileLoader
+%DEFAULT dc_m_meth_extraction_inner pl.edu.icm.coansys.commons.pig.udf.RichSequenceFileLoader
 %DEFAULT dc_m_str_feature_info 'ClassificationCodeDisambiguator#EX_CLASSIFICATION_CODES#1#1,EmailDisambiguator#EX_EMAIL#1#1,EmailPrefixDisambiguator#EX_EAMIL_PREFIX#1#1,TitleSplitDisambiguator#EX_TITLE_SPLIT#1#1,KeyWordsDisambiguator#EX_KEYWORDS#1#1,KeyPhrasesDisambiguator#EX_KEYPHRASES#1#1,YearDisambiguator#EX_YEAR#1#1,CoAuthorsSnameDisambiguator#EX_COAUTH_SNAME#1#1,#EX_PERSON_ID#1#1'
 %DEFAULT threshold '-1.0'
 %DEFAULT lang 'en'
