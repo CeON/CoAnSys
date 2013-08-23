@@ -15,7 +15,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package pl.edu.icm.coansys.disambiguation.author.jobs.hdfs;
 
 import java.io.IOException;
@@ -93,7 +92,7 @@ public class ClusterDisambiguationReducer_Toy extends Reducer<Text, TextTextArra
         persistReslutsInHBase(clusterMap, authorIds, context);
         finalRoutine();
     }
-    
+
     // usage in reduce
     private boolean initialPreparations(Text key,
             Iterable<TextTextArrayMapWritable> values, Context context) {
@@ -145,7 +144,7 @@ public class ClusterDisambiguationReducer_Toy extends Reducer<Text, TextTextArra
         int sizeCount = ((setSizes.get(clusterGroupSize) == null) ? 0 : setSizes.get(clusterGroupSize)) + 1;
         setSizes.put(clusterGroupSize, sizeCount);
     }
-    
+
     //usage in reduce
     protected float[][] calculateAffinity() {
         float[][] sim = new float[featuresMapsList.size()][];
@@ -160,16 +159,18 @@ public class ClusterDisambiguationReducer_Toy extends Reducer<Text, TextTextArra
                     Disambiguator feature = features[findex];
                     FeatureInfo featureInfo = featureInfos.get(findex);
 
-                    List <Object> f1 = new LinkedList <Object>();
-        			List <Object> f2 = new LinkedList <Object>();
+                    List<Object> f1 = new LinkedList<Object>();
+                    List<Object> f2 = new LinkedList<Object>();
 
-        			for ( String str : a.getStringList(feature.getName()) ) 
-        				f1.add(str);
+                    for (String str : a.getStringList(feature.getName())) {
+                        f1.add(str);
+                    }
 
-        			for ( String str : b.getStringList(feature.getName()) ) 
-        				f2.add(str);
+                    for (String str : b.getStringList(feature.getName())) {
+                        f2.add(str);
+                    }
 
-        			double partial = feature.calculateAffinity( f1, f2 );
+                    double partial = feature.calculateAffinity(f1, f2);
 
                     partial = partial / featureInfo.getMaxValue() * featureInfo.getWeight();
                     sim[i][j] += partial;

@@ -15,7 +15,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package pl.edu.icm.coansys.disambiguation.author.pig;
 
 import java.io.IOException;
@@ -46,13 +45,12 @@ import pl.edu.icm.coansys.disambiguation.idgenerators.UuIdGenerator;
 
 public class ExhaustiveAND extends EvalFunc<DataBag> {
 
-	private float threshold;
-
-	private static final float NOT_CALCULATED = Float.NEGATIVE_INFINITY;	
-	private PigDisambiguator[] features;
-	private FeatureInfo[] featureInfos;
-	private float sim[][];
-	private int N;
+    private float threshold;
+    private static final float NOT_CALCULATED = Float.NEGATIVE_INFINITY;
+    private PigDisambiguator[] features;
+    private FeatureInfo[] featureInfos;
+    private float sim[][];
+    private int N;
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ExhaustiveAND.class);
     //benchmark 
     private boolean isStatistics = false;
@@ -62,26 +60,31 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
     private int finalClusterNumber = 0;
     private boolean gotSim = false;
 
-	public ExhaustiveAND(String threshold, String featureDescription, String printStatistics ) {
-		this.threshold = Float.parseFloat(threshold);
-		this.isStatistics = Boolean.parseBoolean( printStatistics );
-		
-		List<FeatureInfo> FIwithEmpties 
-			= FeatureInfo.parseFeatureInfoString(featureDescription);
-		List<FeatureInfo> FIFinall = new LinkedList<FeatureInfo>();
-		List<PigDisambiguator> FeaturesFinall = new LinkedList<PigDisambiguator>();
-		
+    public ExhaustiveAND(String threshold, String featureDescription, String printStatistics) {
+        this.threshold = Float.parseFloat(threshold);
+        this.isStatistics = Boolean.parseBoolean(printStatistics);
+
+        List<FeatureInfo> FIwithEmpties = FeatureInfo.parseFeatureInfoString(featureDescription);
+        List<FeatureInfo> FIFinall = new LinkedList<FeatureInfo>();
+        List<PigDisambiguator> FeaturesFinall = new LinkedList<PigDisambiguator>();
+
         DisambiguatorFactory ff = new DisambiguatorFactory();
         Disambiguator d;
-        
+
         //separate features which are fully described and able to use
-        for ( FeatureInfo fi : FIwithEmpties ){
-        	if ( fi.getDisambiguatorName().equals("") ) continue;
-        	if ( fi.getFeatureExtractorName().equals("") ) continue;
-        	d = ff.create(fi);
-        	if ( d == null ) continue;
-        	FIFinall.add( fi );
-        	FeaturesFinall.add( new PigDisambiguator( d ) );
+        for (FeatureInfo fi : FIwithEmpties) {
+            if (fi.getDisambiguatorName().equals("")) {
+                continue;
+            }
+            if (fi.getFeatureExtractorName().equals("")) {
+                continue;
+            }
+            d = ff.create(fi);
+            if (d == null) {
+                continue;
+            }
+            FIFinall.add(fi);
+            FeaturesFinall.add(new PigDisambiguator(d));
         }
         
 		this.featureInfos = FIFinall.toArray( new FeatureInfo[ FIFinall.size() ] );
@@ -127,13 +130,8 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 				contribsT.add( (Map<String, Object>) t.get(2) ); //getting map with features
 			}
 
-			sim = new float[ contribsT.size() ][];
-			for ( int i = 1; i < contribsT.size(); i++ ) {
-				sim[i] = new float[i];
-				for ( int j = 0; j < i; j++ )
-					sim[i][j] = NOT_CALCULATED;
-			}
-
+			clearSimInit();
+			
 			//if we got sim values to init
 			if ( input.size() == 2 ) {
 				//benchamrk
@@ -155,15 +153,19 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 
 					} catch ( java.lang.ArrayIndexOutOfBoundsException e ) {
 
-						String m = "Out of bounds during sim init by values from input: " + "idX: " + idX + ", idY: " + idY + ", sim.length: " + sim.length +
-								", contrib number: " + contribsT.size();
+						String m = "Out of bounds during sim init by values from input: " 
+								+ "idX: " + idX + ", idY: " + idY + ", sim.length: " 
+								+ sim.length + ", contrib number: " + contribsT.size();
 
 						if ( sim.length > idX )
 							m += ", sim[idX].length: " + sim[idX].length;
 
-						m+= "\n" + "Tuple debug: " + t.toString();
-
-						throw new Exception(m, e);
+						m += "\n" + "During processing tuple: " + t.toString();
+						
+						logger.error(m, e);
+						logger.info("Leaving all sim values for record");
+						
+						clearSimInit();
 					}
 				}
 			}
@@ -204,11 +206,20 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 		}catch(Exception e){
 			// Throwing an exception would cause the task to fail.
 			logger.error("Caught exception processing input row:\n" + StackTraceExtractor.getStackTrace(e));
-                        return null;
+			return null;
 		}
 	}
-
-	private void calculateAffinity( List< Map<String,Object> > contribsT ) throws Exception {
+	
+	private void clearSimInit() {
+		sim = new float[ N ][];
+		for ( int i = 1; i < N; i++ ) {
+			sim[i] = new float[i];
+			for ( int j = 0; j < i; j++ )
+				sim[i][j] = NOT_CALCULATED;
+		}
+	}
+	
+	private void calculateAffinity( List< Map<String,Object> > contribsT ){
 
 		// N^2 / 2 * features number - already calculated sim values
 		for ( int i = 1; i < contribsT.size(); i++ ) {
@@ -227,8 +238,12 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 					Object oA = contribsT.get(i).get( featureInfos[d].getFeatureExtractorName() );
 					Object oB = contribsT.get(j).get( featureInfos[d].getFeatureExtractorName() );
 					
-					if ( oA == null || oB == null ) continue;
-					if ( featureInfos[d].getMaxValue() == 0 ) continue;
+					if ( oA == null || oB == null ){
+						continue;
+					}
+					if ( featureInfos[d].getMaxValue() == 0 ){
+						continue;
+					}
 					
 					double partial = features[d].calculateAffinity( oA, oB );
 					partial = partial / featureInfos[d].getMaxValue() 
@@ -252,55 +267,58 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
         	clusterSize[ clusterAssociation[i] ]++;
         }
         //reserving memory
-		for( int i = 0; i < N; i++ ) {
-			if ( clusterSize[i] > 0 )
-				clusters[i] = new int[ clusterSize[i] ];
-			else
-				clusters[i] = null;
-			
-			//benchmark
-			finalClusterNumber += ( clusterSize[i] == 0 )?0:1;
-			
-			index[i] = 0;
-		}
-		//filling clusters
-		int id;
-        for ( int i = 0; i < N; i++ ) {
-        	id = clusterAssociation[ i ];
-        	clusters[ id ][ index[id] ] = i;
-            index[ id ]++;
+        for (int i = 0; i < N; i++) {
+            if (clusterSize[i] > 0) {
+                clusters[i] = new int[clusterSize[i]];
+            } else {
+                clusters[i] = null;
+            }
+
+            //benchmark
+            finalClusterNumber += (clusterSize[i] == 0) ? 0 : 1;
+
+            index[i] = 0;
+        }
+        //filling clusters
+        int id;
+        for (int i = 0; i < N; i++) {
+            id = clusterAssociation[ i];
+            clusters[ id][ index[id]] = i;
+            index[ id]++;
         }
 
-		return clusters;
-	}
+        return clusters;
+    }
 
-	protected DataBag createResultingTuples( int[][] clusters, String[] authorIds ) {
-    	IdGenerator idgenerator = new UuIdGenerator();
+    protected DataBag createResultingTuples(int[][] clusters, String[] authorIds) {
+        IdGenerator idgenerator = new UuIdGenerator();
 
-    	DataBag ret = new DefaultDataBag();
-    	DataBag contribs;
-    	List<String> contribKeys;
+        DataBag ret = new DefaultDataBag();
+        DataBag contribs;
+        List<String> contribKeys;
 
-    	// o( N )
-      	// iterating through clusters
-    	for ( int i = 0; i < clusters.length; i++ ) {
-    		//skipping empty clusters
-    		if ( clusters[i] == null || clusters[i].length == 0 ) continue;
-    	
-    		contribKeys = new ArrayList<String>();
-        	contribs = new DefaultDataBag();
-    		
-        	for ( int id : clusters[i] ) {
-        		contribKeys.add( authorIds[ id ] );
-        		contribs.add( TupleFactory.getInstance().newTuple( authorIds[ id ] ) );
-        	}
-    	
-    		String clusterId = idgenerator.genetareId( contribKeys );
-        	
-    		Object[] to = new Object[]{ clusterId,contribs };
-	        ret.add( TupleFactory.getInstance().newTuple(Arrays.asList(to)) );
-    	}
+        // o( N )
+        // iterating through clusters
+        for (int i = 0; i < clusters.length; i++) {
+            //skipping empty clusters
+            if (clusters[i] == null || clusters[i].length == 0) {
+                continue;
+            }
 
-    	return ret;
-	}
+            contribKeys = new ArrayList<String>();
+            contribs = new DefaultDataBag();
+
+            for (int id : clusters[i]) {
+                contribKeys.add(authorIds[ id]);
+                contribs.add(TupleFactory.getInstance().newTuple(authorIds[ id]));
+            }
+
+            String clusterId = idgenerator.genetareId(contribKeys);
+
+            Object[] to = new Object[]{clusterId, contribs};
+            ret.add(TupleFactory.getInstance().newTuple(Arrays.asList(to)));
+        }
+
+        return ret;
+    }
 }

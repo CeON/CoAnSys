@@ -15,7 +15,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package pl.edu.icm.coansys.disambiguation.clustering.strategies;
 
 import java.util.Arrays;
@@ -34,15 +33,15 @@ import pl.edu.icm.coansys.disambiguation.clustering.ClusterElement;
  * @since 2012-08-07
  */
 public abstract class CompleteLinkageHACStrategy implements ClusteringStrategy {
-	
-	Comparator<ClusterElement> mainComparator = new Comparator<ClusterElement>(){
-		@Override
-		public int compare(ClusterElement r1,
-				ClusterElement r2) {
-			return (int)r2.compareTo(r1);
-		}
-	};
-	
+
+    private Comparator<ClusterElement> mainComparator = new Comparator<ClusterElement>() {
+        @Override
+        public int compare(ClusterElement r1,
+                ClusterElement r2) {
+            return (int) r2.compareTo(r1);
+        }
+    };
+
     /**
      * The method proceeding complete-linkage hierarchical agglomerative
      * clustering over an objects' affinity matrix with the O(N^2*logN)
@@ -59,24 +58,24 @@ public abstract class CompleteLinkageHACStrategy implements ClusteringStrategy {
      * @return An array containing cluster numbers assigned to objects. Two
      * objects sharing the same cluster number may be considered as the same
      * one.
-     * @throws Exception 
+     * @throws Exception
      */
     @Override
-    public int[] clusterize(float sim[][]) throws Exception {
-    	
-    	if(sim.length==1) return new int[]{0};
-    	if(sim.length==2){
-    		if(sim[1][0]>0){
-    			return new int[]{0,0};
-    		}
-    		else{
-    			return new int[]{0,1};
-    		}
-    	}
-    	
+    public int[] clusterize(float sim[][]) {
+
+        if (sim.length == 1) {
+            return new int[]{0};
+        }
+        if (sim.length == 2) {
+            if (sim[1][0] > 0) {
+                return new int[]{0, 0};
+            } else {
+                return new int[]{0, 1};
+            }
+        }
+
         ClusterElement[][] C = new ClusterElement[sim.length][];
         PriorityQueue<ClusterElement> P[] = new PriorityQueue[sim.length];
-        int[] finalClusters = new int[sim.length];
         int[] I = new int[sim.length];
         List<RelaxedPair> A = new LinkedList<RelaxedPair>();
 
@@ -88,8 +87,8 @@ public abstract class CompleteLinkageHACStrategy implements ClusteringStrategy {
                 C[n][i] = new ClusterElement(sim[n][i], i);
             }
             //NlogN
-            if(n!=0){
-            	P[n] = new PriorityQueue<ClusterElement>(4,mainComparator);
+            if (n != 0) {
+                P[n] = new PriorityQueue<ClusterElement>(4, mainComparator);
                 P[n].addAll(Arrays.asList(C[n]));
             }
             I[n] = 1;
@@ -104,14 +103,14 @@ public abstract class CompleteLinkageHACStrategy implements ClusteringStrategy {
                 break;
             }
             i1 = rp.a;
-            i2 = rp.b;            
+            i2 = rp.b;
 
             if (i1 == i2) {
-                throw new Exception("Self-similarity detected! " +
-                		"As it is considered impossible please investigate code for inconsistencies.");
+                throw new InternalError("Self-similarity detected! "
+                        + "As it is considered impossible please investigate code for inconsistencies.");
             }
 
-            A.add(new RelaxedPair(i2,i1));
+            A.add(new RelaxedPair(i2, i1));
             I[i2] = 0;
             P[i2] = null;
 
@@ -123,10 +122,12 @@ public abstract class CompleteLinkageHACStrategy implements ClusteringStrategy {
                     continue;
                 }
 
-                if(i>i1)
-                	P[i].remove(C[i][i1]);
-                if(i>i2)
-                	P[i].remove(C[i][i2]);
+                if (i > i1) {
+                    P[i].remove(C[i][i1]);
+                }
+                if (i > i2) {
+                    P[i].remove(C[i][i2]);
+                }
 
                 if (i1 > i) {
                     P[i1].add(c_i_i1_recalc(C, i, i1, i2));
@@ -140,22 +141,22 @@ public abstract class CompleteLinkageHACStrategy implements ClusteringStrategy {
             I[i] = i;
         }
         for (RelaxedPair p : A) {
-        	int tmp = p.a;
-        	while(I[tmp]!=tmp){
-        		tmp=I[tmp];
-        	}
+            int tmp = p.a;
+            while (I[tmp] != tmp) {
+                tmp = I[tmp];
+            }
             I[tmp] = p.b;
         }
 
         return I;
     }
 
-    private int getFinalClusterId(int[] I, int i) {
+    /*private int getFinalClusterId(int[] I, int i) {
         if (I[i] == i) {
             return I[i];
         }
         return getFinalClusterId(I, I[i]);
-    }
+    }*/
 
     private ClusterElement c_i_i1_recalc(ClusterElement[][] C, int i, int i1, int i2) {
         ClusterElement el;
@@ -175,7 +176,7 @@ public abstract class CompleteLinkageHACStrategy implements ClusteringStrategy {
         return el;
     }
 
-    protected RelaxedPair argMaxSequenceIndexExcludeSame(PriorityQueue[] priorityQueue, int[] I) throws Exception {
+    protected RelaxedPair argMaxSequenceIndexExcludeSame(PriorityQueue[] priorityQueue, int[] I) {
         ClusterElement max = null;
         int maxTmp_index = -1;
         float maxSim = Float.MIN_VALUE;
@@ -183,21 +184,27 @@ public abstract class CompleteLinkageHACStrategy implements ClusteringStrategy {
             if (I[i] != 1) {
                 continue;
             }
-            if(priorityQueue[i] == null || priorityQueue[i].size()==0) continue;
+            if (priorityQueue[i] == null || priorityQueue[i].size() == 0) {
+                continue;
+            }
             ClusterElement el = (ClusterElement) priorityQueue[i].peek();
             if (max == null || el.getSim() > max.getSim()) {
-            	maxSim = el.getSim();
+                maxSim = el.getSim();
                 max = el;
                 maxTmp_index = i;
             }
         }
-        if(max == null) throw new Exception("No next pair have been selected. " +
-        		"This situation should not occure, please inspect code");
-        if(maxSim<0) return null;
-        int maxEl_index = max.getIndex(); 
-        RelaxedPair rp = maxTmp_index > maxEl_index ? 
-        		new RelaxedPair(maxTmp_index,maxEl_index) : 
-        			new RelaxedPair(maxEl_index,maxTmp_index);
+        if (max == null) {
+            throw new InternalError("No next pair have been selected. "
+                    + "This situation should not occure, please inspect code");
+        }
+        if (maxSim < 0) {
+            return null;
+        }
+        int maxEl_index = max.getIndex();
+        RelaxedPair rp = maxTmp_index > maxEl_index
+                ? new RelaxedPair(maxTmp_index, maxEl_index)
+                : new RelaxedPair(maxEl_index, maxTmp_index);
         priorityQueue[rp.a].poll();
         return rp;
     }
@@ -223,4 +230,3 @@ public abstract class CompleteLinkageHACStrategy implements ClusteringStrategy {
 
     protected abstract float SIM(float a, float b);
 }
-
