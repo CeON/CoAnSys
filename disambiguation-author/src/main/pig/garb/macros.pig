@@ -19,25 +19,25 @@
 -- load BWMeta documents form sequence files stored in hdfs
 -------------------------------------------------------
 DEFINE load_bwndata_hdfs(inputPath) RETURNS doc {
-        raw_bytes = LOAD '$inputPath' USING pl.edu.icm.coansys.importers.pig.udf.RichSequenceFileLoader();
+        raw_bytes = LOAD '$inputPath' USING pl.edu.icm.coansys.commons.pig.udf.RichSequenceFileLoader();
         raw_doc = FOREACH raw_bytes GENERATE
-                        pl.edu.icm.coansys.importers.pig.udf.BytesToDataByteArray($0) AS rowkey,
-                        FLATTEN(pl.edu.icm.coansys.importers.pig.udf.DocumentProtoPartsTupler($1)) AS (docId, mproto, cproto);
+                        pl.edu.icm.coansys.commons.pig.udf.BytesToDataByteArray($0) AS rowkey,
+                        FLATTEN(pl.edu.icm.coansys.commons.pig.udf.DocumentProtoPartsTupler($1)) AS (docId, mproto, cproto);
 
-        $doc = FOREACH raw_doc GENERATE rowkey, pl.edu.icm.coansys.importers.pig.udf.DocumentProtobufBytesToTuple(mproto, cproto) AS document;
+        $doc = FOREACH raw_doc GENERATE rowkey, pl.edu.icm.coansys.commons.pig.udf.DocumentProtobufBytesToTuple(mproto, cproto) AS document;
 };
 
 -------------------------------------------------------
 -- load BWMeta metadata form sequence files stored in hdfs
 -------------------------------------------------------
 DEFINE load_bwndata_metadata_hdfs(inputPath) RETURNS meta {
-        raw_bytes = LOAD '$inputPath' USING pl.edu.icm.coansys.importers.pig.udf.RichSequenceFileLoader();
+        raw_bytes = LOAD '$inputPath' USING pl.edu.icm.coansys.commons.pig.udf.RichSequenceFileLoader();
         raw_meta = FOREACH raw_bytes GENERATE
-                        pl.edu.icm.coansys.importers.pig.udf.BytesToDataByteArray($0) AS rowkey,
-                        pl.edu.icm.coansys.importers.pig.udf.BytesToDataByteArray($1) AS mproto;
+                        pl.edu.icm.coansys.commons.pig.udf.BytesToDataByteArray($0) AS rowkey,
+                        pl.edu.icm.coansys.commons.pig.udf.BytesToDataByteArray($1) AS mproto;
 
         $meta = FOREACH raw_meta
-                GENERATE rowkey, pl.edu.icm.coansys.importers.pig.udf.DocumentProtobufBytesToTuple(mproto) AS document;
+                GENERATE rowkey, pl.edu.icm.coansys.commons.pig.udf.DocumentProtobufBytesToTuple(mproto) AS document;
 };
 
 
@@ -50,7 +50,7 @@ DEFINE load_bwndata(tableName) RETURNS doc {
 		AS (rowkey: bytearray, cproto: bytearray, mproto: bytearray);
 	
 	$doc = FOREACH raw_doc 
-                GENERATE rowkey, pl.edu.icm.coansys.importers.pig.udf.DocumentProtobufBytesToTuple(mproto, cproto) AS document;
+                GENERATE rowkey, pl.edu.icm.coansys.commons.pig.udf.DocumentProtobufBytesToTuple(mproto, cproto) AS document;
 };
 
 -------------------------------------------------------
@@ -62,7 +62,7 @@ DEFINE load_bwndata_metadata(tableName) RETURNS doc {
 		AS (rowkey: bytearray, mproto: bytearray);
 	
 	$doc = FOREACH raw_doc 
-                GENERATE rowkey, pl.edu.icm.coansys.importers.pig.udf.DocumentProtobufBytesToTuple(mproto) AS document;
+                GENERATE rowkey, pl.edu.icm.coansys.commons.pig.udf.DocumentProtobufBytesToTuple(mproto) AS document;
 };
 
 -------------------------------------------------------

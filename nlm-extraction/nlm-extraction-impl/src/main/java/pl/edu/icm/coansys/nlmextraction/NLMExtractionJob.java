@@ -134,7 +134,7 @@ public class NLMExtractionJob implements Tool {
 
     @Override
     public int run(String[] args) throws IOException, InterruptedException, ClassNotFoundException {
-        if (args.length < 4) {
+        if (args.length < 3) {
             logger.error("Usage: NLMExtractionJob <input_seqfile> <output_dir> <max_PDF_size>");
             logger.error("  (max_PDF_size -- size in MB; greater files will be ignored)");
             return 1;
