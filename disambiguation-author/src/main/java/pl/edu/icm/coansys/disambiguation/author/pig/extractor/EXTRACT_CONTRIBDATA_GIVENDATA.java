@@ -15,7 +15,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package pl.edu.icm.coansys.disambiguation.author.pig.extractor;
 
 import java.io.IOException;
@@ -51,11 +50,10 @@ import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
 public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 
     private static final Logger logger = LoggerFactory.getLogger(EXTRACT_CONTRIBDATA_GIVENDATA.class);
-    private List< DisambiguationExtractorDocument> des4Doc = new ArrayList< DisambiguationExtractorDocument >();
-    private List< DisambiguationExtractorAuthor > des4Author  = new ArrayList< DisambiguationExtractorAuthor >();
-    
+    private List< DisambiguationExtractorDocument> des4Doc = new ArrayList< DisambiguationExtractorDocument>();
+    private List< DisambiguationExtractorAuthor> des4Author = new ArrayList< DisambiguationExtractorAuthor>();
     private String language = null;
-    
+
     @Override
     public Schema outputSchema(Schema p_input) {
         try {
@@ -67,7 +65,7 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
     }
     
     private void setDisambiguationExtractor( String featureinfo ) throws 
-    		ClassNotFoundException, InstantiationException, IllegalAccessException {
+    	Exception {
         
     	List<FeatureInfo> features = FeatureInfo.parseFeatureInfoString( featureinfo );
         
@@ -75,41 +73,59 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
         String ExtractorAuthorClassName = new DisambiguationExtractorAuthor().getClass().getSimpleName();
         
         for ( int i = 0; i < features.size(); i++ ){
-            //TODO add try/catch block for exception 
-        	Class<?> c = Class.forName( "pl.edu.icm.coansys.disambiguation.author.pig.extractor." 
-            		+ features.get(i).getFeatureExtractorName() );
+        	String currentClassName = "pl.edu.icm.coansys.disambiguation.author.pig.extractor." 
+					+ features.get(i).getFeatureExtractorName();
+        	
+        	// creating extractor with given name
+        	Class<?> c = null;
+			try {
+				c = Class.forName( currentClassName );
+			} catch (ClassNotFoundException e) {
+				//e.printStackTrace();
+				String m = "Cannot find class for create: " + currentClassName;
+				logger.error( m + StackTraceExtractor.getStackTrace(e) );
+				throw new ClassNotFoundException( m, e );
+			}
             
-            String currentClassName = c.getSuperclass().getSimpleName();
+			// recognition of extractor type
+            String currentSuperClassName = c.getSuperclass().getSimpleName();
             
-            if ( currentClassName.equals( ExtractorDocClassName ) ) {
-            	des4Doc.add( (DisambiguationExtractorDocument) c.newInstance() );
-            } else if ( currentClassName.equals( ExtractorAuthorClassName ) ) {
-            	des4Author.add( (DisambiguationExtractorAuthor) c.newInstance() );
-            } else {
-            	logger.warn( "Cannot create extractor: " 
-            			+ currentClassName + ". Does not match to any superclass." );
+            try {
+	            if ( currentSuperClassName.equals( ExtractorDocClassName ) ) {
+	            	des4Doc.add( (DisambiguationExtractorDocument) c.newInstance() );
+	            } else if ( currentSuperClassName.equals( ExtractorAuthorClassName ) ) {
+	            	des4Author.add( (DisambiguationExtractorAuthor) c.newInstance() );
+	            } else {
+	            	String m = "Cannot create extractor: " 
+	            			+ c.getSimpleName() + ". Its superclass: " 
+	            			+ currentSuperClassName + " does not match to any superclass.";
+	            	throw new Exception( m );
+	            }
+            } catch( Exception e ) {
+            	logger.error( StackTraceExtractor.getStackTrace(e) );
+            	throw e;
             }
         }
     }
     
     public EXTRACT_CONTRIBDATA_GIVENDATA( String featureinfo ) throws 
-    		ClassNotFoundException, InstantiationException, IllegalAccessException {
+    		Exception {
     	setDisambiguationExtractor( featureinfo );
     }
     
     public EXTRACT_CONTRIBDATA_GIVENDATA( String featureinfo, String lang ) throws 
-    		ClassNotFoundException, InstantiationException, IllegalAccessException {
+    		Exception {
     	setDisambiguationExtractor( featureinfo );
     	language = lang;
     }
-    
+
     private boolean checkLanguage() {
-    	return ( language != null 
-        		&& !language.equalsIgnoreCase("all") 
-        		&& !language.equalsIgnoreCase("null")
-        		&& !language.equals("") );
+        return (language != null
+                && !language.equalsIgnoreCase("all")
+                && !language.equalsIgnoreCase("null")
+                && !language.equals(""));
     }
-    
+
     @Override
     public DataBag exec(Tuple input) throws IOException {
 
@@ -118,80 +134,90 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
         }
 
         try {
-            DataByteArray dba = (DataByteArray) input.get( 0 );
+            DataByteArray dba = (DataByteArray) input.get(0);
 
             DocumentWrapper dw = DocumentWrapper.parseFrom(dba.get());
             dba = null;
-            
+
             //metadata
             DocumentMetadata dm = dw.getDocumentMetadata();
             dw = null;
-            
+
             //result bag with tuples, which des4Doccribes each contributor
             DataBag ret = new DefaultDataBag();
 
             //author list
             List<Author> authors =
                     dm.getBasicMetadata().getAuthorList();
-            
+
             //in Object[] arrays we are storing DataBags from extractors
             Object[] extractedDocObj = new Object[des4Doc.size()];
             Object[] extractedAuthorObj;
             Map<String, Object> map = new HashMap<String, Object>();
             Map<String, Object> finalMap;
-            
-            
-            if ( checkLanguage() ) 
-            	for ( int i = 0; i < des4Doc.size(); i++ )
-            		extractedDocObj[i] = des4Doc.get( i ).extract( dm, language );
-            else 
-            	for ( int i = 0; i < des4Doc.size(); i++ ) 
-            		extractedDocObj[i] = des4Doc.get( i ).extract( dm );
-            
+
+
+            if (checkLanguage()) {
+                for (int i = 0; i < des4Doc.size(); i++) {
+                    extractedDocObj[i] = des4Doc.get(i).extract(dm, language);
+                }
+            } else {
+                for (int i = 0; i < des4Doc.size(); i++) {
+                    extractedDocObj[i] = des4Doc.get(i).extract(dm);
+                }
+            }
+
             //adding to map extractor name and features' data
-            for ( int i = 0; i < des4Doc.size(); i++ ) {
-            	if ( extractedDocObj[i] == null ) continue;
-            	map.put( des4Doc.get( i ).getClass().getSimpleName(), extractedDocObj[i] );
+            for (int i = 0; i < des4Doc.size(); i++) {
+                if (extractedDocObj[i] == null) {
+                    continue;
+                }
+                map.put(des4Doc.get(i).getClass().getSimpleName(), extractedDocObj[i]);
             }
             extractedDocObj = null;
 
-            
+
             //bag making tuples (one tuple for one contributor from document)
             //with replicated metadata for
-            for ( int i = 0; i < authors.size(); i++ ) {
-            	String sname = authors.get( i ).getSurname();
-            	
-            	//here we have sure that Object = Integer
-            	Object normalizedSname = 
-            			DisambiguationExtractor.normalizeExtracted( sname );
-                String cId = authors.get( i ).getKey();
+            for (int i = 0; i < authors.size(); i++) {
+                String sname = authors.get(i).getSurname();
+
+                //here we have sure that Object = Integer
+                Object normalizedSname =
+                        DisambiguationExtractor.normalizeExtracted(sname);
+                String cId = authors.get(i).getKey();
 
                 finalMap = new HashMap<String, Object>(map);
-                
+
                 //put author metadata into finalMap
-                extractedAuthorObj = new Object[ des4Author.size() ];
-                if ( checkLanguage() ) 
-                	for ( int j = 0; j < des4Author.size(); j++ )
-                		extractedAuthorObj[j] = des4Author.get( j ).extract( dm, i, language );
-                else 
-                	for ( int j = 0; j < des4Author.size(); j++ ) 
-                		extractedAuthorObj[j] = des4Author.get( j ).extract( dm, i );
+                extractedAuthorObj = new Object[des4Author.size()];
+                if (checkLanguage()) {
+                    for (int j = 0; j < des4Author.size(); j++) {
+                        extractedAuthorObj[j] = des4Author.get(j).extract(dm, i, language);
+                    }
+                } else {
+                    for (int j = 0; j < des4Author.size(); j++) {
+                        extractedAuthorObj[j] = des4Author.get(j).extract(dm, i);
+                    }
+                }
 
                 //adding to map extractor name and features' data
-                for ( int j = 0; j < des4Author.size(); j++ ) {
-                	if ( extractedAuthorObj[j] == null ) continue;
-                	finalMap.put( des4Author.get( j ).getClass().getSimpleName(), extractedAuthorObj[j] );
+                for (int j = 0; j < des4Author.size(); j++) {
+                    if (extractedAuthorObj[j] == null) {
+                        continue;
+                    }
+                    finalMap.put(des4Author.get(j).getClass().getSimpleName(), extractedAuthorObj[j]);
                 }
                 extractedAuthorObj = null;
-    		
-                
-                Object[] to = new Object[]{ cId, normalizedSname, finalMap };
-                Tuple t = TupleFactory.getInstance().newTuple(Arrays.asList( to ));
-                ret.add( t );
+
+
+                Object[] to = new Object[]{cId, normalizedSname, finalMap};
+                Tuple t = TupleFactory.getInstance().newTuple(Arrays.asList(to));
+                ret.add(t);
             }
             map = null;
             dm = null;
-            
+
             return ret;
 
         } catch (Exception e) {

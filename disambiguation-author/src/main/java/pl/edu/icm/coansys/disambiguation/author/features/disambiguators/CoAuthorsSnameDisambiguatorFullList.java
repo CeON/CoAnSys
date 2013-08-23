@@ -16,37 +16,30 @@
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.edu.icm.coansys.disambiguation.features;
+package pl.edu.icm.coansys.disambiguation.author.features.disambiguators;
 
 import java.util.List;
 
+import pl.edu.icm.coansys.disambiguation.features.Disambiguator;
+
 /**
- * A heuristic for assessing whether two objects, described by two lists of feature values,
- * are similar or not.    
- * 
- * @author pdendek
+ * Disambiguator for contributors with the same sname. It requires placing their 
+ * own sname on the list of authors.
+ * @author mwos
  * @version 1.0
  * @since 2012-08-07
  */
-public class Disambiguator {
-	
-	/**
-	 * 
-	 * @param f1 list of feature values associated with the first owner
-	 * @param f2 list of feature values associated with the second owner
-	 * @return value reflecting affinity between owners. 
-	 * In the basic implementation this value is a size of an intersection between feature values' lists 
-	 */
-	public double calculateAffinity( List<Object> f1, List<Object> f2 ) {
-		f1.retainAll(f2);
-		return f1.size();
+public class CoAuthorsSnameDisambiguatorFullList extends Disambiguator{
+
+	@Override
+	public String getName() {
+		return CoAuthorsSnameDisambiguatorFullList.class.getSimpleName();
 	}
 	
-	/**
-	 * 
-	 * @return {@link Disambiguator} id.
-	 */
-	public String getName() {
-		return Disambiguator.class.getSimpleName();
+	@Override
+	public double calculateAffinity( List<Object> f1, List<Object> f2 ) {
+		f1.retainAll(f2);
+		int size = f1.size();
+		return ( size > 0 ) ? (size-1) : 0;
 	}
 }

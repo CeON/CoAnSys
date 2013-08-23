@@ -38,6 +38,7 @@
             <param>dc_m_hdfs_inputDocsData=${dc_m_hdfs_inputDocsData}</param>
             <param>dc_m_hdfs_outputContribs=${dc_tmp_path}</param>
             <param>lang=${lang}</param>
+            <param>dc_m_str_feature_info=${dc_m_str_feature_info}</param>
         </pig>
         <ok to='forking'/>
         <error to='kill'/>
@@ -84,6 +85,7 @@
             <param>dc_m_hdfs_inputDocsData=${dc_tmp_path}/D1</param>
             <param>dc_m_hdfs_outputContribs=${dc_m_hdfs_outputContribs}/part1</param>
             <param>statistics=${statistics}</param>
+            <param>dc_m_str_feature_info=${dc_m_str_feature_info}</param>
         </pig>
         <ok to='joining'/>
         <error to='kill'/>
@@ -124,6 +126,7 @@
             <param>dc_m_hdfs_outputContribs=${dc_m_hdfs_outputContribs}/part2</param>
             <param>threshold=${threshold}</param>
             <param>statistics=${statistics}</param>
+            <param>dc_m_str_feature_info=${dc_m_str_feature_info}</param>
         </pig>
         <ok to='joining'/>
         <error to='kill'/>
@@ -166,6 +169,7 @@
             <param>mapredChildJavaOpts=${mapredChildJavaOpts_D1000}</param>
             <param>aproximate_remember_sim=${aproximate_remember_sim_D1000}</param>
             <param>statistics=${statistics}</param>
+            <param>dc_m_str_feature_info=${dc_m_str_feature_info}</param>
         </pig>
         <ok to='joining'/>
         <error to='kill'/>
@@ -209,6 +213,7 @@
             <param>mapredChildJavaOpts=${mapredChildJavaOpts_DX}</param>
             <param>aproximate_remember_sim=${aproximate_remember_sim_DX}</param>
             <param>statistics=${statistics}</param>
+            <param>dc_m_str_feature_info=${dc_m_str_feature_info}</param>
         </pig>
         <ok to='joining'/>
         <error to='kill'/>

@@ -18,7 +18,6 @@
 
 package pl.edu.icm.coansys.disambiguation.author.pig;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -28,7 +27,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.pig.EvalFunc;
-import org.apache.pig.backend.executionengine.ExecException;
 import org.apache.pig.data.DataBag;
 import org.apache.pig.data.DefaultDataBag;
 import org.apache.pig.data.DefaultTuple;
@@ -60,7 +58,7 @@ public class AproximateAND extends EvalFunc<DataBag> {
     private int finalClusterNumber = 0;
     private List<Integer>clustersSizes;
     
-	public AproximateAND( String threshold, String featureDescription, String rememberSim, String printStatistics ){
+	public AproximateAND( String threshold, String featureDescription, String rememberSim, String printStatistics ) throws Exception{
 		this.threshold = Float.parseFloat(threshold);
 		this.rememberSim = Boolean.parseBoolean( rememberSim );
 		this.isStatistics = Boolean.parseBoolean( printStatistics );
@@ -75,20 +73,31 @@ public class AproximateAND extends EvalFunc<DataBag> {
         
         //separate features which are fully described and able to use
         for ( FeatureInfo fi : FIwithEmpties ) {
-        	if ( fi.getDisambiguatorName().equals("") ) continue;
-        	if ( fi.getFeatureExtractorName().equals("") ) continue;
-        	d = ff.create(fi);
-        	if ( d == null ) continue;
-        	FIFinall.add( fi );
-        	FeaturesFinall.add( new PigDisambiguator( d ) );
+            if ( fi.getDisambiguatorName().equals("") ) {
+                //creating default disambugiator
+            	d = new Disambiguator();
+            	logger.info("Empty disambiguator name. Creating default disambiguator for this feature.");
+            }
+            if ( fi.getFeatureExtractorName().equals("") ) {
+            	logger.error("Empty extractor name in feature info. Leaving this feature.");
+            	throw new Exception("Empty extractor name.");
+            	//continue;
+            }
+            d = ff.create( fi );
+            if ( d == null ) {
+            	//creating default disambugiator
+            	//d = new Disambiguator();
+            	logger.error("Cannot create disambugiator from given feature info.");
+            	throw new Exception("Cannot create disambugiator from given feature info.");
+            }
+            FIFinall.add( fi );
+            FeaturesFinall.add( new PigDisambiguator( d ) );
         }
         
 		this.featureInfos = FIFinall.toArray( new FeatureInfo[ FIFinall.size() ] );
         this.features = 
         		FeaturesFinall.toArray( new PigDisambiguator[ FIFinall.size() ] );
 	}
-
-	
 	
 	/**
 	 * @param Tuple with bag: 
@@ -97,7 +106,7 @@ public class AproximateAND extends EvalFunc<DataBag> {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public DataBag exec( Tuple input ) throws IOException {
+	public DataBag exec( Tuple input ) /*throws IOException*/ {
 
 		if ( input == null || input.size() == 0 ) return null;
 		try {
@@ -142,7 +151,16 @@ public class AproximateAND extends EvalFunc<DataBag> {
 				//we'll need boolean ( which feature is used, which not ).
 				// UP: rather do not do this, because we will lose 
 				// universality of data ability (for example, if EXTRACT_CONTRIB_GIVENDATA
-				// extracts more features than we use in aproximate, there would be crash)
+				// extracts more features than we use in aproximate
+				// OR in some records some features will be omitted (because of e.g. being empty) 
+				// there would be crash)
+				
+				// the thing we can do for sure is to speed up extractors name (keys) 
+				// searching in map by: getting hashCodes of extractors names
+				// and do map<Int, Object> OR 
+				// use identifiers for extractors 
+				// (starting in extract_contribdata_givendata), what would be even better
+				// (because one character get 1B, hashCode 4b).
 			}
 
 			//sim[][] init
@@ -170,9 +188,23 @@ public class AproximateAND extends EvalFunc<DataBag> {
 			if ( isStatistics ) {				
 				Collections.sort( clustersSizes );
 				int biggestCluster = clustersSizes.get( clustersSizes.size()-1 );
-				//timer.addMonit("alg", "id","contribs","clusters","calculated sims","max cluster size","clusters' sizes list","time [s]");
+
 				//stopping timer for current play (not thread)
-				timer.stop( "APR", timerPlayId, N, finalClusterNumber, 
+				/* STATISTICS DESCRIPTION:
+				 * ## this algorithm name, 
+				 * ## is sim matrix created and some sim values stored , 
+				 * ## aproximate execution id,
+				 * ## number of contribs, 
+				 * ## clusters number after aproximate,
+				 * ## calculated sim values which are stored 
+				 * (note that it doesn't count all calculated - only stored, e.g. 
+				 * if 2 contributors are not in the same cluster, 
+				 * their sim value would not be stored.)
+				 * ## size of biggest cluster after aproximate
+				 * ## clusters' sizes list
+				 * ## time [s]
+				 */
+				timer.stop( "APR", rememberSim, timerPlayId, N, finalClusterNumber, 
 		        		calculatedSimCounter, biggestCluster, clustersSizes.toString() );
 			}
 			
@@ -183,7 +215,7 @@ public class AproximateAND extends EvalFunc<DataBag> {
 			// Throwing an exception would cause the task to fail.
 			logger.error("Caught exception processing input row:\n" 
 						+ StackTraceExtractor.getStackTrace(e));
-				return null;
+			return null;
 		}
 	}
 
@@ -226,7 +258,7 @@ public class AproximateAND extends EvalFunc<DataBag> {
 		return true;
 	}
 
-	private void calculateAffinityAndClustering( List< Map<String,Object> > contribsT ) throws ExecException {
+	private void calculateAffinityAndClustering( List< Map<String,Object> > contribsT ) {
 		//Find & Union init:		
 		clusterAssociations = new int[N];
 		clusterSize = new int[N];
@@ -263,8 +295,12 @@ public class AproximateAND extends EvalFunc<DataBag> {
 					Object oA = contribsT.get(i).get( featureInfos[d].getFeatureExtractorName() );
 					Object oB = contribsT.get(j).get( featureInfos[d].getFeatureExtractorName() );
 					
-					if ( oA == null || oB == null ) continue;
-					if ( featureInfos[d].getMaxValue() == 0 ) continue;
+					if ( oA == null || oB == null ){
+						continue;
+					}
+					if ( featureInfos[d].getMaxValue() == 0 ){
+						continue;
+					}
 					
 					partial = features[d].calculateAffinity( oA, oB );
 					
@@ -296,7 +332,7 @@ public class AproximateAND extends EvalFunc<DataBag> {
 		
 		//features = null;
 		//featureInfos = null;
-		contribsT = null;
+		//contribsT = null;
 	}
 
 	// o( N )

@@ -21,6 +21,7 @@ package pl.edu.icm.coansys.disambiguation.author.benchmark;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -51,7 +52,8 @@ public class Timer implements Runnable  {
 		}
 
 		try {
-			statistics = new PrintWriter( newLogPath );
+                        statistics = new PrintWriter( newLogPath, "UTF-8" );
+                   
 			started = true;
 
 			for ( String monit: monitBuffor ) {
@@ -62,7 +64,10 @@ public class Timer implements Runnable  {
 
 		} catch ( FileNotFoundException e ) {
 			logger.warn( "Unable to write time statistics in file: " + newLogPath + ". Absolute path: " + f.getAbsolutePath() );
-		}
+		
+                } catch (UnsupportedEncodingException ex) {
+                        logger.error("UnsupportedEncodingException");
+                }
 
 
 	}
@@ -125,8 +130,10 @@ public class Timer implements Runnable  {
 	public void addCheckpoint( Object...monits ) {
 		long t = currentTime() - start + ac;
 		Object[] nm = new Object[ monits.length + 1 ];
-		for ( int i = 0; i < monits.length; i++ ) {
-			nm[i] = monits[i];
+		int i = 0;
+		for ( Object monit: monits ) {
+			nm[i] = monit;
+			i++;
 		}
 		nm[ monits.length ] = t;
 		addMonit( nm );
