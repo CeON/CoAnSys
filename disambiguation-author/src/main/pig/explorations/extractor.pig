@@ -23,7 +23,7 @@
 %DEFAULT JARS '*.jar'
 %DEFAULT commonJarsPath '../lib/$JARS'
 
-%DEFAULT dc_m_hdfs_inputDocsData /srv/bwndata/seqfile/springer/springer-20120419-springer02.sq extractor.pig
+%DEFAULT dc_m_hdfs_inputDocsData /srv/bwndata/seqfile/springer/springer-20120419-springer02.sq 
 %DEFAULT time 0
 %DEFAULT dc_m_hdfs_outputContribs extracted/springer$time
 %DEFAULT dc_m_meth_extraction_inner pl.edu.icm.coansys.pig.udf.RichSequenceFileLoader
