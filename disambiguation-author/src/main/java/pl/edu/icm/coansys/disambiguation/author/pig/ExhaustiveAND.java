@@ -17,7 +17,6 @@
  */
 package pl.edu.icm.coansys.disambiguation.author.pig;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -60,11 +59,12 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
     private int finalClusterNumber = 0;
     private boolean gotSim = false;
 
-    public ExhaustiveAND(String threshold, String featureDescription, String printStatistics) {
+    public ExhaustiveAND(String threshold, String featureDescription, String printStatistics) throws Exception {
         this.threshold = Float.parseFloat(threshold);
         this.isStatistics = Boolean.parseBoolean(printStatistics);
 
-        List<FeatureInfo> FIwithEmpties = FeatureInfo.parseFeatureInfoString(featureDescription);
+        List<FeatureInfo> FIwithEmpties 
+        	= FeatureInfo.parseFeatureInfoString(featureDescription);
         List<FeatureInfo> FIFinall = new LinkedList<FeatureInfo>();
         List<PigDisambiguator> FeaturesFinall = new LinkedList<PigDisambiguator>();
 
@@ -72,19 +72,26 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
         Disambiguator d;
 
         //separate features which are fully described and able to use
-        for (FeatureInfo fi : FIwithEmpties) {
-            if (fi.getDisambiguatorName().equals("")) {
-                continue;
+        for ( FeatureInfo fi : FIwithEmpties ) {
+            if ( fi.getDisambiguatorName().equals("") ) {
+                //creating default disambugiator
+            	d = new Disambiguator();
+            	logger.info("Empty disambiguator name. Creating default disambiguator for this feature.");
             }
-            if (fi.getFeatureExtractorName().equals("")) {
-                continue;
+            if ( fi.getFeatureExtractorName().equals("") ) {
+            	logger.error("Empty extractor name in feature info. Leaving this feature.");
+            	throw new Exception("Empty extractor name.");
+            	//continue;
             }
-            d = ff.create(fi);
-            if (d == null) {
-                continue;
+            d = ff.create( fi );
+            if ( d == null ) {
+            	//creating default disambugiator
+            	//d = new Disambiguator();
+            	logger.error("Cannot create disambugiator from given feature info.");
+            	throw new Exception("Cannot create disambugiator from given feature info.");
             }
-            FIFinall.add(fi);
-            FeaturesFinall.add(new PigDisambiguator(d));
+            FIFinall.add( fi );
+            FeaturesFinall.add( new PigDisambiguator( d ) );
         }
         
 		this.featureInfos = FIFinall.toArray( new FeatureInfo[ FIFinall.size() ] );
@@ -100,7 +107,7 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public DataBag exec( Tuple input ) throws IOException {
+	public DataBag exec( Tuple input ) {
 
 		if ( input == null || input.size() == 0 ) return null;
 		try{
