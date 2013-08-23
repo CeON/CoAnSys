@@ -3,7 +3,7 @@
     <parent>
         <groupId>pl.edu.icm.coansys</groupId>
         <artifactId>coansys</artifactId>
-        <version>1.3-SNAPSHOT</version>
+        <version>1.3</version>
     </parent>
     
     <artifactId>disambiguation-work</artifactId>
