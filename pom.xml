@@ -361,7 +361,7 @@
             <name>YADDA project repository</name>
             <url>http://maven.icm.edu.pl/artifactory/repo</url>
         </repository>
-        <repository>
+<!--        <repository>
             <id>cloudera</id>
             <name>Cloudera hadoop repository</name>
             <url>https://repository.cloudera.com/artifactory/cloudera-repos/</url>
@@ -375,7 +375,7 @@
             <id>nicta-scoobi</id>
             <name>Scoobi repository</name>
             <url>http://nicta.github.com/scoobi/releases/</url>
-        </repository>
+        </repository>-->
     </repositories>
     <pluginRepositories>
         <pluginRepository>
