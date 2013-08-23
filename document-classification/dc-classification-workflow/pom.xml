@@ -4,7 +4,7 @@
     <parent>
 		<groupId>pl.edu.icm.coansys</groupId>
         <artifactId>document-classification</artifactId>
-        <version>1.3</version>
+        <version>1.4-SNAPSHOT</version>
     </parent>
     
     <artifactId>dc-classification-workflow</artifactId>
