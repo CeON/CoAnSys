@@ -26,7 +26,7 @@
 %DEFAULT dc_m_hdfs_neighs /tmp/dataNeight
 %DEFAULT dc_m_int_folds 5
 %DEFAULT dc_m_meth_extraction getBWBWFromHDFS
-%DEFAULT dc_m_meth_extraction_inner pl.edu.icm.coansys.importers.pig.udf.RichSequenceFileLoader
+%DEFAULT dc_m_meth_extraction_inner pl.edu.icm.coansys.commons.pig.udf.RichSequenceFileLoader
 
 DEFINE keyTiKwAbsCatExtractor pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_MAP_WHEN_CATEG_LIM('en','removeall');
 DEFINE documentMetaExtractor pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_DOCUMENT_METADATA();
