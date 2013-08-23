@@ -53,6 +53,7 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
     private List< DisambiguationExtractorDocument> des4Doc = new ArrayList< DisambiguationExtractorDocument>();
     private List< DisambiguationExtractorAuthor> des4Author = new ArrayList< DisambiguationExtractorAuthor>();
     private String language = null;
+    private boolean skipEmptyFeatures = false; 
 
     @Override
     public Schema outputSchema(Schema p_input) {
@@ -118,7 +119,14 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
     	setDisambiguationExtractor( featureinfo );
     	language = lang;
     }
-
+    
+    public EXTRACT_CONTRIBDATA_GIVENDATA( String featureinfo, String lang, String skipEmptyFeatures ) throws 
+    		Exception {
+    	setDisambiguationExtractor( featureinfo );
+    	language = lang;
+    	this.skipEmptyFeatures = Boolean.parseBoolean( skipEmptyFeatures );
+    }
+    
     private boolean checkLanguage() {
         return (language != null
                 && !language.equalsIgnoreCase("all")
@@ -150,11 +158,11 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
             List<Author> authors =
                     dm.getBasicMetadata().getAuthorList();
 
-            //in Object[] arrays we are storing DataBags from extractors
-            Object[] extractedDocObj = new Object[des4Doc.size()];
-            Object[] extractedAuthorObj;
-            Map<String, Object> map = new HashMap<String, Object>();
-            Map<String, Object> finalMap;
+            //in arrays we are storing DataBags from extractors
+            DataBag[] extractedDocObj = new DataBag[des4Doc.size()];
+            DataBag[] extractedAuthorObj;
+            Map<String, DataBag> map = new HashMap<String, DataBag>();
+            Map<String, DataBag> finalMap;
 
 
             if (checkLanguage()) {
@@ -169,7 +177,10 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 
             //adding to map extractor name and features' data
             for (int i = 0; i < des4Doc.size(); i++) {
-                if (extractedDocObj[i] == null) {
+                if ( extractedDocObj[i] == null ) {
+                    continue;
+                }
+                if ( extractedDocObj[i].size() == 0 && skipEmptyFeatures ) {
                     continue;
                 }
                 map.put(des4Doc.get(i).getClass().getSimpleName(), extractedDocObj[i]);
@@ -187,10 +198,10 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
                         DisambiguationExtractor.normalizeExtracted(sname);
                 String cId = authors.get(i).getKey();
 
-                finalMap = new HashMap<String, Object>(map);
+                finalMap = new HashMap<String, DataBag>(map);
 
                 //put author metadata into finalMap
-                extractedAuthorObj = new Object[des4Author.size()];
+                extractedAuthorObj = new DataBag[des4Author.size()];
                 if (checkLanguage()) {
                     for (int j = 0; j < des4Author.size(); j++) {
                         extractedAuthorObj[j] = des4Author.get(j).extract(dm, i, language);
@@ -204,6 +215,9 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
                 //adding to map extractor name and features' data
                 for (int j = 0; j < des4Author.size(); j++) {
                     if (extractedAuthorObj[j] == null) {
+                        continue;
+                    }
+                    if ( extractedAuthorObj[i].size() == 0 && skipEmptyFeatures ) {
                         continue;
                     }
                     finalMap.put(des4Author.get(j).getClass().getSimpleName(), extractedAuthorObj[j]);

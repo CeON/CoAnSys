@@ -52,6 +52,7 @@ public class EX_KEYWORDS extends DisambiguationExtractorDocument  {
 		DocumentMetadata dm = (DocumentMetadata) o;
 		DataBag db = new DefaultDataBag();
 		
+
 		for ( KeywordsList k : dm.getKeywordsList() ){
 			if ( k.getLanguage().equalsIgnoreCase( lang ) ) {
 				for ( String s : k.getKeywordsList() ){
@@ -62,6 +63,7 @@ public class EX_KEYWORDS extends DisambiguationExtractorDocument  {
 			}
 		}
         
+		
 		if ( db.size() == 0) {
 			logger.info("No keywords IN GIVEN LANG (" + lang + ") out of " 
 					+ dm.getKeywordsCount() + " keywords!");

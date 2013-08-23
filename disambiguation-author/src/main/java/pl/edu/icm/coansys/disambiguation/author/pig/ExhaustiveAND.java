@@ -90,6 +90,12 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
             	logger.error("Cannot create disambugiator from given feature info.");
             	throw new Exception("Cannot create disambugiator from given feature info.");
             }
+			//wrong max value (would cause dividing by zero)
+			if ( fi.getMaxValue() == 0 ){
+				logger.warn( "Incorrect max value for feature: " + fi.getFeatureExtractorName() + ". Max value cannot equal 0." );
+				throw new Exception("Incorrect max value for feature: " + fi.getFeatureExtractorName() + ". Max value cannot equal 0.");
+			}
+			
             FIFinall.add( fi );
             FeaturesFinall.add( new PigDisambiguator( d ) );
         }
@@ -108,14 +114,14 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public DataBag exec( Tuple input ) {
-
+		
 		if ( input == null || input.size() == 0 ) return null;
 		try{
 			
 			DataBag contribs = (DataBag) input.get(0);  
 			
 			if ( contribs == null || contribs.size() == 0 ) return null;
-			
+
 			//start benchmark
 			if ( isStatistics ) {
 				timer.play();
@@ -136,7 +142,7 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 				contribsId[ k++ ] = (String) t.get(0); //getting contrib id from tuple
 				contribsT.add( (Map<String, Object>) t.get(2) ); //getting map with features
 			}
-
+			
 			clearSimInit();
 			
 			//if we got sim values to init
@@ -213,6 +219,7 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 		}catch(Exception e){
 			// Throwing an exception would cause the task to fail.
 			logger.error("Caught exception processing input row:\n" + StackTraceExtractor.getStackTrace(e));
+			System.out.println("DUUUPAAAAAAAAAAAA " + StackTraceExtractor.getStackTrace(e) );
 			return null;
 		}
 	}
@@ -227,7 +234,9 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 	}
 	
 	private void calculateAffinity( List< Map<String,Object> > contribsT ){
-
+		
+		Map<String,Object>mA,mB;
+		
 		// N^2 / 2 * features number - already calculated sim values
 		for ( int i = 1; i < contribsT.size(); i++ ) {
 			for ( int j = 0; j < i; j++ ) {
@@ -242,13 +251,18 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 					//From this map (collection of i'th contributor's features)
 					//we take Bag with value of given feature.
 					//Here we have sure that following Object = DateBag.
-					Object oA = contribsT.get(i).get( featureInfos[d].getFeatureExtractorName() );
-					Object oB = contribsT.get(j).get( featureInfos[d].getFeatureExtractorName() );
+					mA = contribsT.get(i);
+					mB = contribsT.get(j);
 					
-					if ( oA == null || oB == null ){
+					//probably map is empty for some contrib
+					if ( mA == null || mB == null ){
 						continue;
 					}
-					if ( featureInfos[d].getMaxValue() == 0 ){
+				
+					Object oA = mA.get( featureInfos[d].getFeatureExtractorName() );
+					Object oB = mB.get( featureInfos[d].getFeatureExtractorName() );
+					
+					if ( oA == null || oB == null ){
 						continue;
 					}
 					
