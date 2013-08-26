@@ -34,19 +34,19 @@ public class EX_FORENAMES_INITS extends DisambiguationExtractorAuthor{
 		DocumentMetadata dm = (DocumentMetadata) o;
 		DataBag db = new DefaultDataBag();
 		
-		Author a = dm.getBasicMetadata().getAuthor(fakeIndex);
+		Author a = dm.getBasicMetadata().getAuthor( fakeIndex );
 		String[] fs = a.getForenames().split("[\\W]+");
 		StringBuilder sb = new StringBuilder();
 		
-		for(int i = 0;i<fs.length;i++){
-			if(fs[i].length()>0){
-				sb.append(fs[i].substring(0, 1));
+		for ( int i = 0; i < fs.length; i++ ){
+			if( fs[i].length() > 0 ){
+				sb.append( fs[i].substring(0, 1) );
 			}
 		}
 			
 		Tuple t = tf.newTuple();
-		t.append(normalizeExtracted(sb.toString()));
-		db.add(t);
+		t.append( normalizeExtracted( sb.toString() ) );
+		db.add( t );
 		
 		return db;
 	}

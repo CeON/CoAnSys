@@ -33,7 +33,7 @@ public class EX_TITLE extends DisambiguationExtractorDocument {
 	
     private static final Logger logger = LoggerFactory.getLogger( EX_TITLE.class );
 
-	@Override
+	/*@Override
 	public DataBag extract( Object o ) {
 		DocumentMetadata dm = (DocumentMetadata) o;
 		
@@ -43,7 +43,7 @@ public class EX_TITLE extends DisambiguationExtractorDocument {
 		db.add( t );
 		
 		return db;
-	}    
+	} */   
     
 	@Override
 	public DataBag extract( Object o, String lang ) {
@@ -52,12 +52,10 @@ public class EX_TITLE extends DisambiguationExtractorDocument {
 		DataBag db = new DefaultDataBag();
 		
         for ( TextWithLanguage title : dm.getBasicMetadata().getTitleList() ) {
-            if ( lang.equalsIgnoreCase( title.getLanguage()) ) {
+            if ( lang == null || lang.equalsIgnoreCase( title.getLanguage()) ) {
             	Tuple t = TupleFactory.getInstance().newTuple( 
         				normalizeExtracted( title.getText() ) );
         		db.add( t );
-        		//TODO ?: Is possible, that one document has more than one title in given language?
-                //What action should be expected in that case?
         		//return db;
             }
         }
