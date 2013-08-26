@@ -24,8 +24,6 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.slf4j.LoggerFactory;
 
@@ -132,8 +130,10 @@ public class Timer implements Runnable  {
 	public void addCheckpoint( Object...monits ) {
 		long t = currentTime() - start + ac;
 		Object[] nm = new Object[ monits.length + 1 ];
-		for ( int i = 0; i < monits.length; i++ ) {
-			nm[i] = monits[i];
+		int i = 0;
+		for ( Object monit: monits ) {
+			nm[i] = monit;
+			i++;
 		}
 		nm[ monits.length ] = t;
 		addMonit( nm );

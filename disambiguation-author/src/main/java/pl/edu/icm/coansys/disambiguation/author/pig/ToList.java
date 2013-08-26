@@ -43,7 +43,7 @@ public final class ToList {
             try {
                 ret.add( it.next().get(0) );
             } catch (ExecException e) {
-                logger.error("Caught exception:", e);
+                logger.error("Caught exception (probably empty tuple in bag found):", e);
             }
         }
 
