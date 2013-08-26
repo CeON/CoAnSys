@@ -1,7 +1,7 @@
 /*
  * This file is part of CoAnSys project.
  * Copyright (c) 2012-2013 ICM-UW
- * 
+ *
  * CoAnSys is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -11,7 +11,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Affero General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -53,7 +53,7 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
     private List< DisambiguationExtractorDocument> des4Doc = new ArrayList< DisambiguationExtractorDocument>();
     private List< DisambiguationExtractorAuthor> des4Author = new ArrayList< DisambiguationExtractorAuthor>();
     private String language = null;
-    private boolean skipEmptyFeatures = false; 
+    public boolean skipEmptyFeatures = false;
 
     @Override
     public Schema outputSchema(Schema p_input) {
@@ -64,19 +64,19 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
             throw new IllegalStateException(e);
         }
     }
-    
-    private void setDisambiguationExtractor( String featureinfo ) throws 
+
+    private void setDisambiguationExtractor( String featureinfo ) throws
     	Exception {
-        
+
     	List<FeatureInfo> features = FeatureInfo.parseFeatureInfoString( featureinfo );
-        
+
         String ExtractorDocClassName = new DisambiguationExtractorDocument().getClass().getSimpleName();
         String ExtractorAuthorClassName = new DisambiguationExtractorAuthor().getClass().getSimpleName();
-        
+
         for ( int i = 0; i < features.size(); i++ ){
-        	String currentClassName = "pl.edu.icm.coansys.disambiguation.author.pig.extractor." 
+        	String currentClassName = "pl.edu.icm.coansys.disambiguation.author.pig.extractor."
 					+ features.get(i).getFeatureExtractorName();
-        	
+
         	// creating extractor with given name
         	Class<?> c = null;
 			try {
@@ -87,18 +87,18 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 				logger.error( m + StackTraceExtractor.getStackTrace(e) );
 				throw new ClassNotFoundException( m, e );
 			}
-            
+
 			// recognition of extractor type
             String currentSuperClassName = c.getSuperclass().getSimpleName();
-            
+
             try {
 	            if ( currentSuperClassName.equals( ExtractorDocClassName ) ) {
 	            	des4Doc.add( (DisambiguationExtractorDocument) c.newInstance() );
 	            } else if ( currentSuperClassName.equals( ExtractorAuthorClassName ) ) {
 	            	des4Author.add( (DisambiguationExtractorAuthor) c.newInstance() );
 	            } else {
-	            	String m = "Cannot create extractor: " 
-	            			+ c.getSimpleName() + ". Its superclass: " 
+	            	String m = "Cannot create extractor: "
+	            			+ c.getSimpleName() + ". Its superclass: "
 	            			+ currentSuperClassName + " does not match to any superclass.";
 	            	throw new Exception( m );
 	            }
@@ -108,25 +108,25 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
             }
         }
     }
-    
-    public EXTRACT_CONTRIBDATA_GIVENDATA( String featureinfo ) throws 
+
+    public EXTRACT_CONTRIBDATA_GIVENDATA( String featureinfo ) throws
     		Exception {
     	setDisambiguationExtractor( featureinfo );
     }
-    
-    public EXTRACT_CONTRIBDATA_GIVENDATA( String featureinfo, String lang ) throws 
+
+    public EXTRACT_CONTRIBDATA_GIVENDATA( String featureinfo, String lang ) throws
     		Exception {
     	setDisambiguationExtractor( featureinfo );
     	language = lang;
     }
-    
-    public EXTRACT_CONTRIBDATA_GIVENDATA( String featureinfo, String lang, String skipEmptyFeatures ) throws 
+
+    public EXTRACT_CONTRIBDATA_GIVENDATA( String featureinfo, String lang, String skipEmptyFeatures ) throws
     		Exception {
     	setDisambiguationExtractor( featureinfo );
     	language = lang;
     	this.skipEmptyFeatures = Boolean.parseBoolean( skipEmptyFeatures );
     }
-    
+
     private boolean checkLanguage() {
         return (language != null
                 && !language.equalsIgnoreCase("all")

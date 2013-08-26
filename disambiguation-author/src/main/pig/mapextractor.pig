@@ -21,10 +21,10 @@
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 %DEFAULT JARS '*.jar'
-%DEFAULT commonJarsPath '../lib/$JARS'
+%DEFAULT commonJarsPath 'lib/$JARS'
 
--- %DEFAULT dc_m_hdfs_inputDocsData /srv/bwndata/seqfile/springer/springer-20120419-springer03.sq 
-%DEFAULT dc_m_hdfs_inputDocsData /srv/bwndata/seqfile/bazekon-20130314.sf
+%DEFAULT dc_m_hdfs_inputDocsData /srv/bwndata/seqfile/springer/springer-20120419-springer03.sq
+-- %DEFAULT dc_m_hdfs_inputDocsData /srv/bwndata/seqfile/bazekon-20130314.sf
 %DEFAULT time 0
 %DEFAULT dc_m_hdfs_outputContribs extracted/test$time
 %DEFAULT dc_m_meth_extraction_inner pl.edu.icm.coansys.pig.udf.RichSequenceFileLoader
@@ -49,7 +49,7 @@ REGISTER '$commonJarsPath'
 -- set section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
-%DEFAULT dc_m_double_sample 0.2
+%DEFAULT dc_m_double_sample 1.0
 %DEFAULT parallel_param 16
 %DEFAULT pig_tmpfilecompression_param true
 %DEFAULT pig_tmpfilecompression_codec_param gz
@@ -64,7 +64,7 @@ set job.priority $job_priority
 set pig.cachedbag.memusage $pig_cachedbag_mem_usage
 set pig.skewedjoin.reduce.memusage $pig_skewedjoin_reduce_memusage
 set mapred.child.java.opts $mapredChildJavaOpts
--- ulimit must be more than two times the heap size value ! 
+-- ulimit must be more than two times the heap size value !
 -- set mapred.child.ulimit unlimited
 set dfs.client.socket-timeout 60000
 -- -----------------------------------------------------
@@ -83,13 +83,14 @@ B1 = foreach A2 generate flatten(snameDocumentMetaExtractor($1)) as metadata:map
 -- B = FILTER B1 BY cId is not null;
 
 
-B = foreach B1 generate metadata#'EX_TITLE', metadata#'EX_CLASSIFICATION_CODES', metadata#EX_KEYWORDS;
+B = foreach B1 generate metadata#'EX_TITLE', metadata#'EX_CLASSIFICATION_CODES', metadata#'EX_KEYWORDS';
 DESCRIBE B;
 
 C = group B all;
 DESCRIBE C;
 
---D = 
+D = foreach C generate SUM(B.$0), SUM(B.$1), SUM(B.$2);
+DESCRIBE D;
 
-store C into '$dc_m_hdfs_outputContribs';
+store D into '$dc_m_hdfs_outputContribs';
 
