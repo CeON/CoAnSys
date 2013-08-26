@@ -23,7 +23,7 @@
 %DEFAULT JARS '*.jar'
 %DEFAULT commonJarsPath '../lib/$JARS'
 
-%DEFAULT dc_m_hdfs_inputDocsData /srv/bwndata/seqfile/springer-metadata/springer-20120419-springer0*.sq
+%DEFAULT dc_m_hdfs_inputDocsData /srv/bwndata/seqfile/springer/springer-20120419-springer03.sq 
 %DEFAULT time 0
 %DEFAULT dc_m_hdfs_outputContribs extracted/springer$time
 %DEFAULT dc_m_meth_extraction_inner pl.edu.icm.coansys.pig.udf.RichSequenceFileLoader
@@ -49,18 +49,23 @@ REGISTER '$commonJarsPath'
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 %DEFAULT dc_m_double_sample 1.0
-%DEFAULT parallel_param 30
+%DEFAULT parallel_param 50
 %DEFAULT pig_tmpfilecompression_param true
 %DEFAULT pig_tmpfilecompression_codec_param gz
 %DEFAULT job_priority normal
 %DEFAULT pig_cachedbag_mem_usage 0.1
 %DEFAULT pig_skewedjoin_reduce_memusage 0.3
+%DEFAULT mapredChildJavaOpts -Xmx8000m
 set default_parallel $parallel_param
 set pig.tmpfilecompression $pig_tmpfilecompression_param
 set pig.tmpfilecompression.codec $pig_tmpfilecompression_codec_param
 set job.priority $job_priority
 set pig.cachedbag.memusage $pig_cachedbag_mem_usage
 set pig.skewedjoin.reduce.memusage $pig_skewedjoin_reduce_memusage
+set mapred.child.java.opts $mapredChildJavaOpts
+-- ulimit must be more than two times the heap size value ! 
+-- set mapred.child.ulimit unlimited
+set dfs.client.socket-timeout 60000
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- code section
@@ -69,7 +74,8 @@ set pig.skewedjoin.reduce.memusage $pig_skewedjoin_reduce_memusage
 
 A1 = LOAD '$dc_m_hdfs_inputDocsData' USING $dc_m_meth_extraction_inner('org.apache.hadoop.io.BytesWritable', 'org.apache.hadoop.io.BytesWritable') as (key:chararray, value:bytearray);
 -- A2: {key: chararray,value: bytearray}
-A2 = sample A1 $dc_m_double_sample;
+-- A2 = sample A1 $dc_m_double_sample;
+A2 = LIMIT A1 1000;
 
 B1 = foreach A2 generate flatten(snameDocumentMetaExtractor($1)) as (cId:chararray, sname:int, metadata:map[{(int)}]);
 

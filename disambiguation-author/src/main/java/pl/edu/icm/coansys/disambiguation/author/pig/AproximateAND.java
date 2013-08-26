@@ -90,6 +90,12 @@ public class AproximateAND extends EvalFunc<DataBag> {
             	logger.error("Cannot create disambugiator from given feature info.");
             	throw new Exception("Cannot create disambugiator from given feature info.");
             }
+			//wrong max value (would cause dividing by zero)
+			if ( fi.getMaxValue() == 0 ){
+				logger.warn( "Incorrect max value for feature: " + fi.getFeatureExtractorName() + ". Max value cannot equal 0." );
+				throw new Exception("Incorrect max value for feature: " + fi.getFeatureExtractorName() + ". Max value cannot equal 0.");
+			}
+            
             FIFinall.add( fi );
             FeaturesFinall.add( new PigDisambiguator( d ) );
         }
@@ -272,6 +278,8 @@ public class AproximateAND extends EvalFunc<DataBag> {
 		//Skipping complexity of find because of its low complexity
 		//The heuristic is that o( features.length ) would executed less frequently.
 		double partial, simil;
+		Map<String,Object>mA,mB;
+		
 		for ( int i = 1; i < N; i++ ) {
 			for ( int j = 0; j < i; j++ ) {
 
@@ -292,13 +300,20 @@ public class AproximateAND extends EvalFunc<DataBag> {
 					//From this map (collection of i'th contributor's features)
 					//we take Bag with value of given feature.
 					//Here we have sure that following Object = DateBag.
-					Object oA = contribsT.get(i).get( featureInfos[d].getFeatureExtractorName() );
-					Object oB = contribsT.get(j).get( featureInfos[d].getFeatureExtractorName() );
 					
-					if ( oA == null || oB == null ){
+					mA = contribsT.get(i);
+					mB = contribsT.get(j);
+					
+					//probably map is empty for some contrib
+					if ( mA == null || mB == null ){
 						continue;
 					}
-					if ( featureInfos[d].getMaxValue() == 0 ){
+				
+					Object oA = mA.get( featureInfos[d].getFeatureExtractorName() );
+					Object oB = mB.get( featureInfos[d].getFeatureExtractorName() );
+					
+					//probably feature does not exist for some contrib
+					if ( oA == null || oB == null ){
 						continue;
 					}
 					

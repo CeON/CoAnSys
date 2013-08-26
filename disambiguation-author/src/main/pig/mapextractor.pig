@@ -15,25 +15,25 @@
 -- You should have received a copy of the GNU Affero General Public License
 -- along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
 --
-
--- testing exhaustiveAND without similarities from aproximate
-
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- default section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 %DEFAULT JARS '*.jar'
-%DEFAULT commonJarsPath '../lib/$JARS'
+%DEFAULT commonJarsPath 'lib/$JARS'
 
-%DEFAULT dc_m_hdfs_inputDocsData extracted/springer0
+%DEFAULT dc_m_hdfs_inputDocsData /srv/bwndata/seqfile/springer/springer-20120419-springer03.sq
+-- %DEFAULT dc_m_hdfs_inputDocsData /srv/bwndata/seqfile/bazekon-20130314.sf
 %DEFAULT time 0
-%DEFAULT dc_m_hdfs_outputContribs exploration/exhaustive$time
-%DEFAULT dc_m_str_feature_info 'CoAuthorsSnameDisambiguatorFullList#EX_AUTH_SNAMES#-0.0000166#8,ClassifCodeDisambiguator#EX_CLASSIFICATION_CODES#0.99#12,KeyphraseDisambiguator#EX_KEYWORDS_SPLIT#0.99#22,KeywordDisambiguator#EX_KEYWORDS#0.0000369#40'
-%DEFAULT threshold '-1.0'
-%DEFAULT statistics 'true'
+%DEFAULT dc_m_hdfs_outputContribs extracted/test$time
+%DEFAULT dc_m_meth_extraction_inner pl.edu.icm.coansys.pig.udf.RichSequenceFileLoader
+%DEFAULT dc_m_str_feature_info 'TitleDisambiguator#EX_TITLE#1#1,CoAuthorsSnameDisambiguatorFullList#EX_AUTH_SNAMES#-0.0000166#8,ClassifCodeDisambiguator#EX_CLASSIFICATION_CODES#0.99#12,KeywordDisambiguator#EX_KEYWORDS#0.0000369#40'
+%DEFAULT lang 'all'
+--%DEFAULT statistics 'true'
 
-DEFINE exhaustiveAND pl.edu.icm.coansys.disambiguation.author.pig.ExhaustiveAND('$threshold','$dc_m_str_feature_info','$statistics');
+-- DEFINE keyTiKwAbsCatExtractor pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_MAP_WHEN_CATEG_LIM('$lang','removeall');
+DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_DOCUMENTDATA_GIVENDATA('$dc_m_str_feature_info','$lang','false');
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- register section
@@ -50,14 +50,13 @@ REGISTER '$commonJarsPath'
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 %DEFAULT dc_m_double_sample 1.0
-%DEFAULT parallel_param 30
+%DEFAULT parallel_param 16
 %DEFAULT pig_tmpfilecompression_param true
 %DEFAULT pig_tmpfilecompression_codec_param gz
 %DEFAULT job_priority normal
 %DEFAULT pig_cachedbag_mem_usage 0.1
 %DEFAULT pig_skewedjoin_reduce_memusage 0.3
 %DEFAULT mapredChildJavaOpts -Xmx8000m
-
 set default_parallel $parallel_param
 set pig.tmpfilecompression $pig_tmpfilecompression_param
 set pig.tmpfilecompression.codec $pig_tmpfilecompression_codec_param
@@ -65,7 +64,7 @@ set job.priority $job_priority
 set pig.cachedbag.memusage $pig_cachedbag_mem_usage
 set pig.skewedjoin.reduce.memusage $pig_skewedjoin_reduce_memusage
 set mapred.child.java.opts $mapredChildJavaOpts
--- ulimit must be more than two times the heap size value ! 
+-- ulimit must be more than two times the heap size value !
 -- set mapred.child.ulimit unlimited
 set dfs.client.socket-timeout 60000
 -- -----------------------------------------------------
@@ -73,13 +72,25 @@ set dfs.client.socket-timeout 60000
 -- code section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
-D100 = LOAD '$dc_m_hdfs_inputDocsData' as (sname:chararray, datagroup:{(cId:chararray, sname:int, data:map[{(int)}])}, count:long);
 
--- -----------------------------------------------------
--- SMALL GRUPS OF CONTRIBUTORS -------------------------
--- -----------------------------------------------------
-D100A = foreach D100 generate flatten( exhaustiveAND( datagroup ) ) as (uuid:chararray, cIds:chararray);
-E100 = foreach D100A generate flatten( cIds ) as cId, uuid;
+A1 = LOAD '$dc_m_hdfs_inputDocsData' USING $dc_m_meth_extraction_inner('org.apache.hadoop.io.BytesWritable', 'org.apache.hadoop.io.BytesWritable') as (key:chararray, value:bytearray);
+-- A2: {key: chararray,value: bytearray}
+A2 = sample A1 $dc_m_double_sample;
+--A2 = LIMIT A1 1000;
 
-store E100 into '$dc_m_hdfs_outputContribs';
+B1 = foreach A2 generate flatten(snameDocumentMetaExtractor($1)) as metadata:map[int];
+
+-- B = FILTER B1 BY cId is not null;
+
+
+B = foreach B1 generate metadata#'EX_TITLE', metadata#'EX_CLASSIFICATION_CODES', metadata#'EX_KEYWORDS';
+DESCRIBE B;
+
+C = group B all;
+DESCRIBE C;
+
+D = foreach C generate SUM(B.$0), SUM(B.$1), SUM(B.$2);
+DESCRIBE D;
+
+store D into '$dc_m_hdfs_outputContribs';
 
