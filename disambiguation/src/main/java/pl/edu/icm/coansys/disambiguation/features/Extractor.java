@@ -34,5 +34,5 @@ public interface Extractor<Input> {
 	 * @param auxil information for filtering input data for specific part, e.g. an email associated with a concrete author.
 	 * @return list of feature values.
 	 */
-	public List<String> extract(Input input, String... auxil);
+	 List<String> extract(Input input, String... auxil);
 }
