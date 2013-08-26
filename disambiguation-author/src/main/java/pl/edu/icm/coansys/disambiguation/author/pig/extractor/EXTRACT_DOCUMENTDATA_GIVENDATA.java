@@ -183,7 +183,9 @@ public class EXTRACT_DOCUMENTDATA_GIVENDATA extends EvalFunc<Map<String,Object>>
                 if ( extractedDocObj[i].size() == 0 && skipEmptyFeatures ) {
                     continue;
                 }
-                map.put( des4Doc.get(i).getClass().getSimpleName(), (int) extractedDocObj[i].size() );
+                
+                int size = ( (int) extractedDocObj[i].size() > 0 ) ? 1 : 0; 
+                map.put( des4Doc.get(i).getClass().getSimpleName(), size );
             }
             extractedDocObj = null;
 

@@ -38,32 +38,35 @@ public class EX_KEYWORDS extends DisambiguationExtractorDocument  {
 		
 		for ( KeywordsList k : dm.getKeywordsList() ){
 			for ( String s : k.getKeywordsList() ){
-				db.add( TupleFactory.getInstance().newTuple(
-						normalizeExtracted( s ) ) );
+				if ( !Auxil.isClassifCode( s ) ) {
+					db.add(TupleFactory.getInstance().newTuple(
+							normalizeExtracted( s ) ));
+				}
 			}
 		}
 			
 		return db;		
 	}
-
+	
 	@Override
 	public DataBag extract( Object o, String lang ) {
 		
 		DocumentMetadata dm = (DocumentMetadata) o;
 		DataBag db = new DefaultDataBag();
 		
-
+		
 		for ( KeywordsList k : dm.getKeywordsList() ){
 			if ( k.getLanguage().equalsIgnoreCase( lang ) ) {
 				for ( String s : k.getKeywordsList() ){
-					db.add(TupleFactory.getInstance().newTuple(
-							normalizeExtracted( s ) ));
+					if ( !Auxil.isClassifCode( s ) ) {
+						db.add(TupleFactory.getInstance().newTuple(
+								normalizeExtracted( s ) ));
+					}
 				}
 				//return db;
 			}
 		}
         
-		
 		if ( db.size() == 0) {
 			logger.info("No keywords IN GIVEN LANG (" + lang + ") out of " 
 					+ dm.getKeywordsCount() + " keywords!");

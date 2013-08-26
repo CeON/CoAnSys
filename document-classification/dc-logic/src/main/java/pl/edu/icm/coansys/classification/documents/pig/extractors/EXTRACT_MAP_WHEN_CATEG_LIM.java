@@ -210,7 +210,7 @@ public class EXTRACT_MAP_WHEN_CATEG_LIM extends EvalFunc<Map> {
         return new Pair<String, DataBag>(Joiner.on(" ").join(kws), db);
     }
 
-    private boolean isClassifCode(String str) {
+    static public boolean isClassifCode(String str) {
         if (isMSc(str)) {
             return true;
         } else {
@@ -218,7 +218,7 @@ public class EXTRACT_MAP_WHEN_CATEG_LIM extends EvalFunc<Map> {
         }
     }
 
-    private boolean isMSc(String str) {
+    static public boolean isMSc(String str) {
         return str.toUpperCase().matches("[0-9][0-9][A-Z][0-9][0-9]");
     }
 
