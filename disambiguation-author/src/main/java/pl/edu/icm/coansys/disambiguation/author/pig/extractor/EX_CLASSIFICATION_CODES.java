@@ -45,7 +45,7 @@ public class EX_CLASSIFICATION_CODES extends DisambiguationExtractorDocument{
 		for ( KeywordsList k : dm.getKeywordsList() ){
 			if ( lang == null || k.getLanguage().equalsIgnoreCase( lang ) ) {
 				for ( String s : k.getKeywordsList() ){
-					if ( Auxil.isClassifCode( s ) ) {
+					if ( isClassifCode( s ) ) {
 						db.add(TupleFactory.getInstance().newTuple(
 								normalizeExtracted( s ) ));
 					}
