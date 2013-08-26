@@ -22,7 +22,6 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.pig.backend.executionengine.ExecException;
 import org.apache.pig.data.DataBag;
 import org.apache.pig.data.Tuple;
 
@@ -43,7 +42,7 @@ public class PigDisambiguator extends Disambiguator{
 		this.d = d;
 	}
 	
-	public double calculateAffinity(Object f1, Object f2) throws ExecException {
+	public double calculateAffinity(Object f1, Object f2) {
 		if(f1 instanceof DataBag && f2 instanceof DataBag ){
 			return calculateAffinity((DataBag) f1, (DataBag) f2);
 		}else if(f1 instanceof Tuple && f2 instanceof Tuple ){
@@ -51,16 +50,20 @@ public class PigDisambiguator extends Disambiguator{
 		}else if(f1 instanceof String && f2 instanceof String ){
 			return calculateAffinity((String) f1, (String) f2);
 		}else{
-			throw new IllegalArgumentException("data type "+ f1.getClass()+" unsupported in calculateAffinity");
+			throw new IllegalArgumentException("data type "+ f1.getClass()
+					+ " or " + f2.getClass() +" unsupported in calculateAffinity");
 		}
 	}
 	
-	public double calculateAffinity(Tuple f1, Tuple f2) throws ExecException {
+	public double calculateAffinity(Tuple f1, Tuple f2) {
 		LinkedList<Object> fl1 = new LinkedList<Object>();
-		fl1.add( (String) f1.get(0) );
+		for( Object o : f1 ) {
+			fl1.add( o );
+		}
 		LinkedList<Object> fl2 = new LinkedList<Object>();
-		fl2.add( (String) f2.get(0) );
-		
+		for( Object o : f2 ) {
+			fl2.add( o );
+		}
 		return d.calculateAffinity(fl1, fl2);
 	}
 	
@@ -70,8 +73,8 @@ public class PigDisambiguator extends Disambiguator{
 	}
 	
 	public double calculateAffinity( String f1, String f2 ) {
-		Object[] f1str = f1.split(" ");
-		Object[] f2str = f2.split(" ");
+		Object[] f1str = f1.split("[\\W]+");
+		Object[] f2str = f2.split("[\\W]+");
 		
 		List <Object> fl1 = Arrays.asList( f1str );
 		List <Object> fl2 = Arrays.asList( f2str );

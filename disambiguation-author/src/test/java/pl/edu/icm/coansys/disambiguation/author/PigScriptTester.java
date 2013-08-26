@@ -25,6 +25,8 @@ import java.util.List;
 import org.apache.pig.pigunit.PigTest;
 import org.apache.pig.tools.parameters.ParseException;
 
+import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
+
 /*
  * Note: PigUnit requires output schemes like after dumped, not stored,
  * while input contrarywise.
@@ -92,9 +94,9 @@ public class PigScriptTester {
             	//Note, that loading input in pig script also works (while storing output not)
     		}catch( junit.framework.ComparisonFailure e ) {
     			//noting test fail information
-    			fails.add( "- " + test + ": " + e.getMessage() + "\n" );
+    			fails.add( "- " + test + ": " + e.getMessage() + "\n" + "For more information look at console logs." );
     		}catch( Exception e ){
-    			fails.add( "- " + test + ": " + e.toString() + "\n" );
+    			fails.add( "- " + test + ": " + StackTraceExtractor.getStackTrace(e) + "\n" );
     		}
     	}
 		

@@ -93,7 +93,7 @@ public class FeatureInfo {
     		}
     	}
     	//Descending sort
-    	Collections.sort(ret, new Comparator() {
+    	Collections.sort(ret, new Comparator<Object>() {
             @Override
             public int compare(Object o1, Object o2) {
                 if (o1 == null && o2 == null) {
