@@ -81,9 +81,11 @@ public class DuplicateWorkDetector extends Configured implements Tool {
         
         job.setMapperClass(DiMapper.class);
         job.setReducerClass(DiReducer.class);
-        
+
+        job.setMapOutputKeyClass(Text.class);
+        job.setMapOutputValueClass(BytesWritable.class);
         job.setOutputKeyClass(Text.class);
-        job.setOutputValueClass(BytesWritable.class);
+        job.setOutputValueClass(Text.class);
         
         job.setInputFormatClass(SequenceFileInputFormat.class);
         SequenceFileInputFormat.addInputPath(job, new Path(inputFile));
