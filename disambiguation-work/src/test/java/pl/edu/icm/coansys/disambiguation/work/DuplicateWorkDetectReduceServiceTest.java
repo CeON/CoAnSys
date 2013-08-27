@@ -54,7 +54,7 @@ public class DuplicateWorkDetectReduceServiceTest {
     
     private List<DocumentWrapper> documents = Lists.newArrayList();
     @SuppressWarnings("unchecked")
-    private Reducer<Text, BytesWritable, Text, BytesWritable>.Context context = Mockito.mock(Context.class);
+    private Reducer<Text, BytesWritable, Text, Text>.Context context = Mockito.mock(Context.class);
     
     @Before
     public void setUp() throws Exception {

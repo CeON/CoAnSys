@@ -34,9 +34,8 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.edu.icm.coansys.commons.java.Bw2ProtoFileUtils;
+import pl.edu.icm.coansys.commons.hadoop.SequenceFileUtils;
 import pl.edu.icm.coansys.disambiguation.work.tool.DuplicateGenerator;
-import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
 
 
 public class DuplicateWorkDetectorTest {
@@ -63,13 +62,7 @@ public class DuplicateWorkDetectorTest {
     
     @Test
     public void test() throws Exception {
-        List<DocumentWrapper> docWrappers = Bw2ProtoFileUtils.readDocWrappers(outputDir+"/part-r-00000");
-        for (DocumentWrapper doc : docWrappers) {
-            log.info(DocumentWrapperUtils.getMainTitle(doc));
-        }
-        Assert.assertEquals(6, docWrappers.size());
-       
+        List<String> docIds = SequenceFileUtils.readTexts(outputDir+"/part-r-00000");
+        Assert.assertEquals(6, docIds.size());
     }
-
-    
 }
