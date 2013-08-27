@@ -47,7 +47,7 @@ import com.google.common.collect.Maps;
  */
 
 @Service("duplicateWorkDetectReduceService")
-public class DuplicateWorkDetectReduceService implements DiReduceService<Text, BytesWritable, Text, BytesWritable> {
+public class DuplicateWorkDetectReduceService implements DiReduceService<Text, BytesWritable, Text, Text> {
     
     //@SuppressWarnings("unused")
     private static Logger log = LoggerFactory.getLogger(DuplicateWorkDetectReduceService.class);
@@ -61,7 +61,7 @@ public class DuplicateWorkDetectReduceService implements DiReduceService<Text, B
     //******************** DiReduceService Implementation ********************
     
     @Override
-    public void reduce(Text key, Iterable<BytesWritable> values, Reducer<Text, BytesWritable, Text, BytesWritable>.Context context) throws IOException, InterruptedException {
+    public void reduce(Text key, Iterable<BytesWritable> values, Reducer<Text, BytesWritable, Text, Text>.Context context) throws IOException, InterruptedException {
         
         List<DocumentWrapper> documents = DocumentWrapperUtils.extractDocumentWrappers(key, values);
         
@@ -86,7 +86,7 @@ public class DuplicateWorkDetectReduceService implements DiReduceService<Text, B
      * @param level the recursive depth of the method used to generate a proper key of the passed documents. The greater the level the longer (and more unique) the
      * generated key.
      */
-    void process(Text key,  Reducer<Text, BytesWritable, Text, BytesWritable>.Context context,  List<DocumentWrapper> documents, int level, int maxNumberOfDocuments) throws IOException, InterruptedException {
+    void process(Text key,  Reducer<Text, BytesWritable, Text, Text>.Context context,  List<DocumentWrapper> documents, int level, int maxNumberOfDocuments) throws IOException, InterruptedException {
         String dashes = getDashes(level);
         log.info(dashes+ "start process, key: {}, number of documents: {}", key.toString(), documents.size());
         if (documents.size()<2) {
@@ -147,13 +147,13 @@ public class DuplicateWorkDetectReduceService implements DiReduceService<Text, B
 
 
     
-    private void saveDuplicatesToContext(Map<Integer, Set<DocumentWrapper>> sameWorksMap, Text key, Reducer<Text, BytesWritable, Text, BytesWritable>.Context context)
+    private void saveDuplicatesToContext(Map<Integer, Set<DocumentWrapper>> sameWorksMap, Text key, Reducer<Text, BytesWritable, Text, Text>.Context context)
             throws IOException, InterruptedException {
         
         for (Map.Entry<Integer, Set<DocumentWrapper>> entry : sameWorksMap.entrySet()) {
             String sameWorksKey = key.toString() + "_" + entry.getKey();
             for (DocumentWrapper doc : entry.getValue()) {
-                context.write(new Text(sameWorksKey), new BytesWritable(doc.toByteArray()));
+                context.write(new Text(sameWorksKey), new Text(doc.getRowId()));
             }
         }
         
