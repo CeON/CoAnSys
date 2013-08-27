@@ -194,10 +194,6 @@ public class EXTRACT_DOCUMENTDATA_GIVENDATA extends EvalFunc<Map<String,Object>>
             		extractedAuthorObj[j].addAll( des4Author.get(j).extract(dm, i) );
             	}
             }
-            
-            System.out.println( "TUUUUUUUUUUUUUUUUTAJAJAJAJAJAJAJAJAJAJ! " );
-            System.out.println( des4Author.size() );
-            
             //adding to map
             for (int j = 0; j < des4Author.size(); j++) {
                 int size = ( (int) extractedAuthorObj[j].size() > 0 ) ? 1 : 0; 

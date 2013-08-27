@@ -31,7 +31,12 @@
             <groupId>pl.edu.icm.coansys</groupId>
             <version>1.4-SNAPSHOT</version>
             <artifactId>models</artifactId>
-        </dependency>          
+        </dependency>
+		<dependency>
+			<groupId>org.reflections</groupId>
+			<artifactId>reflections</artifactId>
+			<version>0.9.9-RC1</version>
+		</dependency>          
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>commons</artifactId>

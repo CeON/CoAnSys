@@ -29,7 +29,7 @@ import pl.edu.icm.coansys.models.DocumentProtos.KeywordsList;
 
 public class EX_KEYWORDS extends DisambiguationExtractorDocument  {
 	
-    private static final Logger logger = LoggerFactory.getLogger( EX_KEYWORDS.class );
+    //private static final Logger logger = LoggerFactory.getLogger( EX_KEYWORDS.class );
 	
 	@Override
 	public DataBag extract( Object o ){
@@ -44,7 +44,10 @@ public class EX_KEYWORDS extends DisambiguationExtractorDocument  {
 				}
 			}
 		}
-			
+		/*if ( db.size() == 0) {
+			logger.info("No keywords IN ALL LANG out of " 
+					+ dm.getKeywordsCount() + " keywords!");
+		}*/	
 		return db;		
 	}
 	
@@ -63,15 +66,13 @@ public class EX_KEYWORDS extends DisambiguationExtractorDocument  {
 								normalizeExtracted( s ) ));
 					}
 				}
-				//return db;
 			}
 		}
         
-		if ( db.size() == 0) {
+		/*if ( db.size() == 0) {
 			logger.info("No keywords IN GIVEN LANG (" + lang + ") out of " 
 					+ dm.getKeywordsCount() + " keywords!");
-			//return null;
-		}
+		}*/
 		return db;
 	}
 }
