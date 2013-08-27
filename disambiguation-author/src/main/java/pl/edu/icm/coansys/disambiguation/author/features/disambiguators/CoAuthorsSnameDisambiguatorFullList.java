@@ -16,15 +16,30 @@
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.edu.icm.coansys.logsanalysis.metrics;
+package pl.edu.icm.coansys.disambiguation.author.features.disambiguators;
 
-import pl.edu.icm.coansys.models.LogsProtos;
+import java.util.List;
+
+import pl.edu.icm.coansys.disambiguation.features.Disambiguator;
 
 /**
- *
- * @author Artur Czeczko <a.czeczko@icm.edu.pl>
+ * Disambiguator for contributors with the same sname. It requires placing their 
+ * own sname on the list of authors.
+ * @author mwos
+ * @version 1.0
+ * @since 2012-08-07
  */
-public interface UsageWeight {
-    long getWeight(LogsProtos.LogsMessage message);
-    
+public class CoAuthorsSnameDisambiguatorFullList extends Disambiguator{
+
+	@Override
+	public String getName() {
+		return CoAuthorsSnameDisambiguatorFullList.class.getSimpleName();
+	}
+	
+	@Override
+	public double calculateAffinity( List<Object> f1, List<Object> f2 ) {
+		f1.retainAll(f2);
+		int size = f1.size();
+		return ( size > 0 ) ? (size-1) : 0;
+	}
 }

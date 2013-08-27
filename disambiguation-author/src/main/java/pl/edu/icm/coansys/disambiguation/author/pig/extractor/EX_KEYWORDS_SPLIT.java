@@ -18,6 +18,9 @@
 
 package pl.edu.icm.coansys.disambiguation.author.pig.extractor;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.apache.pig.data.DataBag;
 import org.apache.pig.data.DefaultDataBag;
 import org.apache.pig.data.TupleFactory;
@@ -27,22 +30,28 @@ import org.slf4j.LoggerFactory;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.models.DocumentProtos.KeywordsList;
 
-public class EX_KEYWORDS extends DisambiguationExtractorDocument  {
+public class EX_KEYWORDS_SPLIT extends DisambiguationExtractorDocument  {
 	
-    private static final Logger logger = LoggerFactory.getLogger( EX_KEYWORDS.class );
+    private static final Logger logger = LoggerFactory.getLogger( EX_KEYWORDS_SPLIT.class );
 	
 	@Override
 	public DataBag extract( Object o ){
 		DocumentMetadata dm = (DocumentMetadata) o;
 		DataBag db = new DefaultDataBag();
+		Set<Object> set = new HashSet<Object>();
 		
 		for ( KeywordsList k : dm.getKeywordsList() ){
-			for ( String s : k.getKeywordsList() ){
-				db.add( TupleFactory.getInstance().newTuple(
-						normalizeExtracted( s ) ) );
+			for ( String keyphrase : k.getKeywordsList() ){
+				for ( String word : keyphrase.split("[\\W]+") ){
+					set.add( normalizeExtracted( word ) );
+				}
 			}
 		}
-			
+		
+		for ( Object single : set.toArray() ) {
+			db.add( TupleFactory.getInstance().newTuple( single ) );
+		}
+		
 		return db;		
 	}
 
@@ -51,18 +60,22 @@ public class EX_KEYWORDS extends DisambiguationExtractorDocument  {
 		
 		DocumentMetadata dm = (DocumentMetadata) o;
 		DataBag db = new DefaultDataBag();
+		Set<Object> set = new HashSet<Object>();
 		
-
 		for ( KeywordsList k : dm.getKeywordsList() ){
 			if ( k.getLanguage().equalsIgnoreCase( lang ) ) {
-				for ( String s : k.getKeywordsList() ){
-					db.add(TupleFactory.getInstance().newTuple(
-							normalizeExtracted( s ) ));
-				}
+				for ( String keyphrase : k.getKeywordsList() ){
+					for ( String word : keyphrase.split("[\\W]+") ){
+						set.add( normalizeExtracted( word ) );
+					}
+				}				
 				//return db;
 			}
 		}
         
+		for ( Object single : set.toArray() ) {
+			db.add( TupleFactory.getInstance().newTuple( single ) );
+		}
 		
 		if ( db.size() == 0) {
 			logger.info("No keywords IN GIVEN LANG (" + lang + ") out of " 

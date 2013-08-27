@@ -1,4 +1,4 @@
-source(paste(getwd(),"/R_AND/linear.R", sep=""))
+source(paste(getwd(),"linear.R", sep="/"))
 
 x1 = seq(1,6,by=1)
 x2 = runif(6)/1000

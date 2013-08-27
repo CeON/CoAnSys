@@ -28,7 +28,7 @@ import java.util.List;
  * @version 1.0
  * @since 2012-08-07
  */
-public abstract class Disambiguator {
+public class Disambiguator {
 	
 	/**
 	 * 
@@ -46,5 +46,7 @@ public abstract class Disambiguator {
 	 * 
 	 * @return {@link Disambiguator} id.
 	 */
-	public abstract String getName();
+	public String getName() {
+		return Disambiguator.class.getSimpleName();
+	}
 }

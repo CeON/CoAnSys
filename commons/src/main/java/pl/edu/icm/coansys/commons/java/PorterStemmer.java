@@ -111,6 +111,7 @@ public class PorterStemmer {
      * reference to the internal buffer can be retrieved by getResultBuffer and
      * getResultLength (which is generally more efficient.)
      */
+    @Override
     public String toString() {
         return new String(b, 0, i_end);
     }
@@ -132,7 +133,7 @@ public class PorterStemmer {
     }
 
     /* cons(i) is true <=> b[i] is a consonant. */
-    private final boolean cons(int i) {
+    private boolean cons(int i) {
         switch (b[i]) {
             case 'a':
             case 'e':
@@ -157,7 +158,7 @@ public class PorterStemmer {
      <c>vcvcvc<v> gives 3
      ....
      */
-    private final int m() {
+    private int m() {
         int n = 0;
         int ii = 0;
         while (true) {
@@ -196,7 +197,7 @@ public class PorterStemmer {
     }
 
     /* vowelinstem() is true <=> 0,...j contains a vowel */
-    private final boolean vowelinstem() {
+    private boolean vowelinstem() {
         int ii;
         for (ii = 0; ii <= j; ii++) {
             if (!cons(ii)) {
@@ -207,7 +208,7 @@ public class PorterStemmer {
     }
 
     /* doublec(j) is true <=> j,(j-1) contain a double consonant. */
-    private final boolean doublec(int j) {
+    private boolean doublec(int j) {
         if (j < 1) {
             return false;
         }
@@ -225,7 +226,7 @@ public class PorterStemmer {
      snow, box, tray.
 
      */
-    private final boolean cvc(int i) {
+    private boolean cvc(int i) {
         if (i < 2 || !cons(i) || cons(i - 1) || !cons(i - 2)) {
             return false;
         }
@@ -238,7 +239,7 @@ public class PorterStemmer {
         return true;
     }
 
-    private final boolean ends(String s) {
+    private boolean ends(String s) {
         int l = s.length();
         int o = k - l + 1;
         if (o < 0) {
@@ -255,7 +256,7 @@ public class PorterStemmer {
 
     /* setto(s) sets (j+1),...k to the characters in the string s, readjusting
      k. */
-    private final void setto(String s) {
+    private void setto(String s) {
         int l = s.length();
         int o = j + 1;
         for (int ii = 0; ii < l; ii++) {
@@ -265,7 +266,7 @@ public class PorterStemmer {
     }
 
     /* r(s) is used further down. */
-    private final void r(String s) {
+    private void r(String s) {
         if (m() > 0) {
             setto(s);
         }
@@ -292,7 +293,7 @@ public class PorterStemmer {
      meetings  ->  meet
 
      */
-    private final void step1() {
+    private void step1() {
         if (b[k] == 's') {
             if (ends("sses")) {
                 k -= 2;
@@ -329,7 +330,7 @@ public class PorterStemmer {
     }
 
     /* step2() turns terminal y to i when there is another vowel in the stem. */
-    private final void step2() {
+    private void step2() {
         if (ends("y") && vowelinstem()) {
             b[k] = 'i';
         }
@@ -338,7 +339,7 @@ public class PorterStemmer {
     /* step3() maps double suffices to single ones. so -ization ( = -ize plus
      -ation) maps to -ize etc. note that the string before the suffix must give
      m() > 0. */
-    private final void step3() {
+    private void step3() {
         if (k == 0) {
             return;
         } /* For Bug 1 */ switch (b[k - 1]) {
@@ -447,7 +448,7 @@ public class PorterStemmer {
     }
 
     /* step4() deals with -ic-, -full, -ness etc. similar strategy to step3. */
-    private final void step4() {
+    private void step4() {
         switch (b[k]) {
             case 'e':
                 if (ends("icate")) {
@@ -491,7 +492,7 @@ public class PorterStemmer {
     }
 
     /* step5() takes off -ant, -ence etc., in context <c>vcvc<v>. */
-    private final void step5() {
+    private void step5() {
         if (k == 0) {
             return;
         } /* for Bug 1 */ switch (b[k - 1]) {
@@ -588,7 +589,7 @@ public class PorterStemmer {
     }
 
     /* step6() removes a final -e if m() > 1. */
-    private final void step6() {
+    private void step6() {
         j = k;
         if (b[k] == 'e') {
             int a = m();
