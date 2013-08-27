@@ -50,4 +50,9 @@ public class EX_FORENAMES_INITS extends DisambiguationExtractorAuthor{
 		
 		return db;
 	}
+	
+	@Override
+	public String getId() {
+		return "5";
+	}
 }

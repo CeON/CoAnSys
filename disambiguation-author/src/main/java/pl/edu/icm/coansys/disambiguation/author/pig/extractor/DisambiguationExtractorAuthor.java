@@ -29,7 +29,5 @@ public class DisambiguationExtractorAuthor extends DisambiguationExtractor {
 	public DataBag extract( Object o, int authorIndex ) {
 		return extract( o, authorIndex, null );
 	}
-	
-	
 }
 	

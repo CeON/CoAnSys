@@ -264,31 +264,6 @@ public class AproximateAND extends EvalFunc<DataBag> {
 		return true;
 	}
 	
-	private Object getFeatureFromContribFeatureList( List< Map<String,Object> > contribsT, 
-			int contribIndex, int featureIndex ) {
-		Map<String,Object> featuresMap;
-		featuresMap = contribsT.get( contribIndex );
-		
-		//probably map is empty for some contrib
-		if ( featuresMap == null ){
-			return null;
-		}
-		
-		String featureName = featureInfos[ featureIndex ].getFeatureExtractorName();
-		Object o = featuresMap.get( featureName );
-		
-		//converting extractor name to opposite type
-		/*if ( o == null ) {
-			o = featuresMap.get( exFactory.convertExtractorName( featureName ) );
-		}*/
-		
-		//if still - probably feature does not exist for this contrib
-		if ( o == null ){
-			return null;
-		}
-		return o;
-	}
-	
 	private void calculateAffinityAndClustering( List< Map<String,Object> > contribsT ) {
 		//Find & Union init:		
 		clusterAssociations = new int[N];

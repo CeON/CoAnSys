@@ -60,4 +60,9 @@ public class EX_PERSON_ID extends DisambiguationExtractorAuthor{
 		db.add( t );
 		return db;
 	}
+
+	@Override
+	public String getId() {
+		return "8";
+	}
 }

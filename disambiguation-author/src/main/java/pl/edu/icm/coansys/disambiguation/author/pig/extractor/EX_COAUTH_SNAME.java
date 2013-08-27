@@ -45,4 +45,9 @@ public class EX_COAUTH_SNAME extends DisambiguationExtractorAuthor {
 		
 		return db;
 	}
+
+	@Override
+	public String getId() {
+		return "2";
+	}
 }

@@ -75,4 +75,9 @@ public class EX_KEYWORDS extends DisambiguationExtractorDocument  {
 		}*/
 		return db;
 	}
+
+	@Override
+	public String getId() {
+		return "7";
+	}
 }

@@ -39,4 +39,9 @@ public class EX_EMAIL extends DisambiguationExtractorAuthor {
 		db.add(t);
 		return db;
 	}
+
+	@Override
+	public String getId() {
+		return "4";
+	}
 }

@@ -25,6 +25,7 @@ import org.apache.pig.tools.parameters.ParseException;
 
 import pl.edu.icm.coansys.commons.java.DiacriticsRemover;
 import pl.edu.icm.coansys.disambiguation.author.pig.extractor.DisambiguationExtractorDocument;
+import pl.edu.icm.coansys.disambiguation.author.pig.extractor.DisambiguationExtractorFactory;
 import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.ToEnglishLowerCase;
 import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.ToHashCode;
 
@@ -94,5 +95,46 @@ public class disambiguationTests {
 		assert( a.equals( DisExtrExpected ) );
    	}
    	
+   	@Test(groups = {"fast"})
+   	public void extractorsFactory() throws Exception {
+   		
+   		DisambiguationExtractorFactory factory = new DisambiguationExtractorFactory();
+   		
+   		String[] extractors = {
+   			   	"EX_AUTH_SNAMES",
+   			   	"EX_KEYWORDS_SPLIT",
+   			   	"EX_EMAIL",
+   			   	"EX_YEAR",
+   			   	"EX_TITLE",
+   			   	"EX_TITLE_SPLIT",
+   			   	"EX_PERSON_ID",
+   			   	"EX_KEYWORDS",
+   			   	"EX_COAUTH_SNAME",
+   			   	"EX_CLASSIFICATION_CODES",
+   			   	"EX_FORENAMES_INITS",
+   			   	"EX_EMAIL_PREFIX" 
+   		};
+   		String[] ids = {
+   				"0",
+   				"6",
+   				"4",
+   				"B",
+   				"A",
+   				"9",
+   				"8",
+   				"7",
+   				"2",
+   				"1",
+   				"5",
+   				"3"
+   		};
+   		
+   		assert ( ids.length == extractors.length );
+   		
+   		for ( int i = 0; i < extractors.length; i++ ) {
+   			assert( factory.convertToExId( extractors[i] ).equals( ids[i] ) );
+   			assert( factory.convertToExName( ids[i] ).equals( extractors[i] ) );
+   		}
+   	}
 }
 

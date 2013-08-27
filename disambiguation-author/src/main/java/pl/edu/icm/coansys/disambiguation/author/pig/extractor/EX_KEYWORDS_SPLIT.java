@@ -84,4 +84,9 @@ public class EX_KEYWORDS_SPLIT extends DisambiguationExtractorDocument  {
 		}
 		return db;
 	}
+	
+	@Override
+	public String getId() {
+		return "6";
+	}
 }

@@ -48,6 +48,11 @@ public class DisambiguationExtractor {
 	static public boolean isMSc(String str) {
 		return str.toUpperCase().matches("[0-9][0-9][A-Z][0-9][0-9]");
 	}
-
+	
+	//to re-implement in each extractor
+	public String getId() {
+		return null;
+	}
+	
 }
 	

@@ -55,4 +55,9 @@ public class EX_CLASSIFICATION_CODES extends DisambiguationExtractorDocument{
 			
 		return db;		
 	}
+
+	@Override
+	public String getId() {
+		return "1";
+	}
 }

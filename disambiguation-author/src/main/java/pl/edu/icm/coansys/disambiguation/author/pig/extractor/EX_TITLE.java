@@ -68,4 +68,9 @@ public class EX_TITLE extends DisambiguationExtractorDocument {
  		
  		return db;
 	}
+
+	@Override
+	public String getId() {
+		return "A";
+	}
 }

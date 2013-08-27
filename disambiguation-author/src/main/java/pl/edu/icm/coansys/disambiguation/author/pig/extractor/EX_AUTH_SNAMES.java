@@ -42,4 +42,9 @@ public class EX_AUTH_SNAMES extends DisambiguationExtractorDocument {
 		
 		return db;
 	}
+
+	@Override
+	public String getId() {
+		return "0";
+	}
 }
