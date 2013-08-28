@@ -28,10 +28,11 @@
 %DEFAULT dc_m_hdfs_outputContribs disambiguation/outputContribs$time
 %DEFAULT dc_m_str_feature_info 'TitleDisambiguator#EX_TITLE#1#1,YearDisambiguator#EX_YEAR#1#1'
 %DEFAULT threshold '-1.0'
+%DEFAULT use_extractor_id_instead_name 'false'
 %DEFAULT statistics 'true'
 %DEFAULT aproximate_remember_sim 'true'
 
-DEFINE aproximateAND pl.edu.icm.coansys.disambiguation.author.pig.AproximateAND('$threshold', '$dc_m_str_feature_info','$aproximate_remember_sim','$statistics');
+DEFINE aproximateAND pl.edu.icm.coansys.disambiguation.author.pig.AproximateAND('$threshold', '$dc_m_str_feature_info','$aproximate_remember_sim','$use_extractor_id_instead_name','$statistics');
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- register section

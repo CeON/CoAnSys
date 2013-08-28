@@ -52,7 +52,7 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
     private float sim[][];
     private int N;
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ExhaustiveAND.class);
-    private boolean useIdsForExtractors = true;
+    private boolean useIdsForExtractors = false;
     DisambiguationExtractorFactory extrFactory = new DisambiguationExtractorFactory();
     //benchmark 
     private boolean isStatistics = false;
@@ -62,8 +62,9 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
     private int finalClusterNumber = 0;
     private boolean gotSim = false;
 
-    public ExhaustiveAND(String threshold, String featureDescription, String printStatistics) throws Exception {
+    public ExhaustiveAND(String threshold, String featureDescription, String useIdsForExtractors, String printStatistics) throws Exception {
         this.threshold = Float.parseFloat(threshold);
+		this.useIdsForExtractors = Boolean.parseBoolean( useIdsForExtractors );
         this.isStatistics = Boolean.parseBoolean(printStatistics);
 
         List<FeatureInfo> FIwithEmpties 
@@ -99,7 +100,7 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 				throw new Exception("Incorrect max value for feature: " + fi.getFeatureExtractorName() + ". Max value cannot equal 0.");
 			}
             
-			if ( useIdsForExtractors ) {
+			if ( this.useIdsForExtractors ) {
 				fi.setFeatureExtractorName( 
 						extrFactory.toExId( fi.getFeatureExtractorName() ) );
 			}

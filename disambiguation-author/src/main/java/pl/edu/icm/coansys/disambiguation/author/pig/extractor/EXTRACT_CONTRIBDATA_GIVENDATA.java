@@ -56,7 +56,7 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
     						des4AuthorNameOrId = new ArrayList< String >();
     private String language = null;
     private boolean skipEmptyFeatures = false;
-    private boolean useIdsForExtractors = true;
+    private boolean useIdsForExtractors = false;
     private DisambiguationExtractorFactory extrFactory = new DisambiguationExtractorFactory();
 
     @Override
@@ -117,17 +117,27 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 
     public EXTRACT_CONTRIBDATA_GIVENDATA( String featureinfo, String lang ) throws
     		Exception {
+    	this.language = lang;
     	setDisambiguationExtractor( featureinfo );
-    	language = lang;
     }
 
     public EXTRACT_CONTRIBDATA_GIVENDATA( String featureinfo, String lang, String skipEmptyFeatures ) throws
     		Exception {
-    	setDisambiguationExtractor( featureinfo );
-    	language = lang;
+    	this.language = lang;
     	this.skipEmptyFeatures = Boolean.parseBoolean( skipEmptyFeatures );
+    	setDisambiguationExtractor( featureinfo );
     }
 
+    public EXTRACT_CONTRIBDATA_GIVENDATA( String featureinfo, String lang, String skipEmptyFeatures, String useIdsForExtractors ) throws
+	Exception {
+    	this.language = lang;
+    	this.skipEmptyFeatures = Boolean.parseBoolean( skipEmptyFeatures );
+    	this.useIdsForExtractors = Boolean.parseBoolean( useIdsForExtractors );
+    	setDisambiguationExtractor( featureinfo );
+    }
+
+    
+    
     private boolean checkLanguage() {
         return (language != null
                 && !language.equalsIgnoreCase("all")

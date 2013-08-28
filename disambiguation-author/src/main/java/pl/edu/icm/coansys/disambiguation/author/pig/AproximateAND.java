@@ -51,7 +51,7 @@ public class AproximateAND extends EvalFunc<DataBag> {
 	private int N;
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(AproximateAND.class);
     private boolean rememberSim = true;
-    private boolean useIdsForExtractors = true;
+    private boolean useIdsForExtractors = false;
     DisambiguationExtractorFactory extrFactory = new DisambiguationExtractorFactory();
     //benchmark staff
     private boolean isStatistics = false;
@@ -61,11 +61,12 @@ public class AproximateAND extends EvalFunc<DataBag> {
     private int finalClusterNumber = 0;
     private List<Integer>clustersSizes;
     
-	public AproximateAND( String threshold, String featureDescription, String rememberSim, String printStatistics ) throws Exception{
+	public AproximateAND( String threshold, String featureDescription, String rememberSim, String useIdsForExtractors, String printStatistics ) throws Exception{
 		this.threshold = Float.parseFloat(threshold);
 		this.rememberSim = Boolean.parseBoolean( rememberSim );
+		this.useIdsForExtractors = Boolean.parseBoolean( useIdsForExtractors );
 		this.isStatistics = Boolean.parseBoolean( printStatistics );
-			
+		
 		List<FeatureInfo> FIwithEmpties 
 			= FeatureInfo.parseFeatureInfoString(featureDescription);
 		List<FeatureInfo> FIFinall = new LinkedList<FeatureInfo>();
@@ -99,7 +100,7 @@ public class AproximateAND extends EvalFunc<DataBag> {
 				throw new Exception("Incorrect max value for feature: " + fi.getFeatureExtractorName() + ". Max value cannot equal 0.");
 			}
             
-			if ( useIdsForExtractors ) {
+			if ( this.useIdsForExtractors ) {
 				fi.setFeatureExtractorName( 
 						extrFactory.toExId( fi.getFeatureExtractorName() ) );
 			}

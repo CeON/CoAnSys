@@ -28,9 +28,10 @@
 %DEFAULT dc_m_hdfs_outputContribs disambiguation/outputContribs$time
 %DEFAULT dc_m_str_feature_info 'TitleDisambiguator#EX_TITLE#1#1,YearDisambiguator#EX_YEAR#1#1'
 %DEFAULT threshold '-1.0'
+%DEFAULT use_extractor_id_instead_name 'false'
 %DEFAULT statistics 'true'
 
-DEFINE exhaustiveAND pl.edu.icm.coansys.disambiguation.author.pig.ExhaustiveAND('$threshold', '$dc_m_str_feature_info','$statistics');
+DEFINE exhaustiveAND pl.edu.icm.coansys.disambiguation.author.pig.ExhaustiveAND('$threshold', '$dc_m_str_feature_info','$use_extractor_id_instead_name','$statistics');
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- register section

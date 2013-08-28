@@ -1,7 +1,7 @@
 --
 -- This file is part of CoAnSys project.
 -- Copyright (c) 2012-2013 ICM-UW
--- 
+--
 -- CoAnSys is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU Affero General Public License as published by
 -- the Free Software Foundation, either version 3 of the License, or
@@ -11,7 +11,7 @@
 -- but WITHOUT ANY WARRANTY; without even the implied warranty of
 -- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 -- GNU Affero General Public License for more details.
--- 
+--
 -- You should have received a copy of the GNU Affero General Public License
 -- along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
 --
@@ -28,9 +28,10 @@
 %DEFAULT dc_m_hdfs_outputContribs disambiguation/outputContribs$time
 %DEFAULT dc_m_str_feature_info 'TitleDisambiguator#EX_TITLE#1#1,YearDisambiguator#EX_YEAR#1#1'
 %DEFAULT threshold '-1.0'
+%DEFAULT use_extractor_id_instead_name 'true'
 %DEFAULT statistics 'true'
 
-DEFINE exhaustiveAND pl.edu.icm.coansys.disambiguation.author.pig.ExhaustiveAND('$threshold','$dc_m_str_feature_info','$statistics');
+DEFINE exhaustiveAND pl.edu.icm.coansys.disambiguation.author.pig.ExhaustiveAND('$threshold','$dc_m_str_feature_info','$use_extractor_id_instead_name','$statistics');
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- register section
