@@ -46,10 +46,11 @@ public class FeaturesCheck extends EvalFunc< Boolean > {
 	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(FeaturesCheck.class);
     private float threshold;
 	private boolean useIdsForExtractors;
-	private String printStatistics;
+	private DisambiguationExtractorFactory extrFactory = new DisambiguationExtractorFactory();
+    //benchmark
 	private boolean isStatistics;
-    private DisambiguationExtractorFactory extrFactory = new DisambiguationExtractorFactory();
-
+    private static int skipedContribCounter = 0;
+	
 	/**
      * @param Tuple input with cid, sname, map with features
 	 * @throws Exception 
@@ -162,7 +163,23 @@ public class FeaturesCheck extends EvalFunc< Boolean > {
 			}
 		}
 		
+		if ( isStatistics ) {
+			//System.out.println( "FCH\t" +  cid + "\t" + sname + "\t" );
+			logger.info("Skipping " + (++skipedContribCounter) + " contrib: cid = " + cid + ", sname = " + sname + ". Not enough features." );
+		}
+		
 		return false;
 	}
-
 }
+
+
+
+
+
+
+
+
+
+
+
+

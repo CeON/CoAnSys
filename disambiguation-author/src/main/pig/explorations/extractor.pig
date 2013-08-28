@@ -54,7 +54,7 @@ REGISTER '$commonJarsPath'
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 %DEFAULT dc_m_double_sample 1.0
-%DEFAULT parallel_param 55
+%DEFAULT parallel_param 85
 %DEFAULT pig_tmpfilecompression_param true
 %DEFAULT pig_tmpfilecompression_codec_param gz
 %DEFAULT job_priority normal
@@ -79,8 +79,8 @@ set dfs.client.socket-timeout 60000
 
 A1 = LOAD '$dc_m_hdfs_inputDocsData' USING $dc_m_meth_extraction_inner('org.apache.hadoop.io.BytesWritable', 'org.apache.hadoop.io.BytesWritable') as (key:chararray, value:bytearray);
 -- A2: {key: chararray,value: bytearray}
--- A2 = sample A1 $dc_m_double_sample;
-A2 = LIMIT A1 10;
+A2 = sample A1 $dc_m_double_sample;
+-- A2 = LIMIT A1 10;
 
 B1 = foreach A2 generate flatten(snameDocumentMetaExtractor($1)) as (cId:chararray, sname:int, metadata:map[{(int)}]);
 
