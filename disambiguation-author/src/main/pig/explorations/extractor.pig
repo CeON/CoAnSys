@@ -29,12 +29,14 @@
 %DEFAULT dc_m_hdfs_outputContribs extracted/springer$time
 %DEFAULT dc_m_meth_extraction_inner pl.edu.icm.coansys.commons.pig.udf.RichSequenceFileLoader
 %DEFAULT dc_m_str_feature_info 'CoAuthorsSnameDisambiguatorFullList#EX_AUTH_SNAMES#-0.0000166#8,ClassifCodeDisambiguator#EX_CLASSIFICATION_CODES#0.99#12,KeyphraseDisambiguator#EX_KEYWORDS_SPLIT#0.99#22,KeywordDisambiguator#EX_KEYWORDS#0.0000369#40'
+%DEFAULT threshold '-1.0'
+%DEFAULT use_extractor_id_instead_name 'true'
+%DEFAULT statistics 'true'
 %DEFAULT lang 'all'
---%DEFAULT statistics 'true'
 
 -- DEFINE keyTiKwAbsCatExtractor pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_MAP_WHEN_CATEG_LIM('$lang','removeall');
 DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_CONTRIBDATA_GIVENDATA('$dc_m_str_feature_info','$lang');
-DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.FeaturesCheck('$threshold','$dc_m_str_feature_info','$use_extractor_id_instead_name','$statistics');
+DEFINE featuresCheck pl.edu.icm.coansys.disambiguation.author.pig.FeaturesCheck('$threshold','$dc_m_str_feature_info','$use_extractor_id_instead_name','$statistics');
 
 -- -----------------------------------------------------
 -- -----------------------------------------------------
@@ -78,13 +80,13 @@ set dfs.client.socket-timeout 60000
 A1 = LOAD '$dc_m_hdfs_inputDocsData' USING $dc_m_meth_extraction_inner('org.apache.hadoop.io.BytesWritable', 'org.apache.hadoop.io.BytesWritable') as (key:chararray, value:bytearray);
 -- A2: {key: chararray,value: bytearray}
 -- A2 = sample A1 $dc_m_double_sample;
-A2 = LIMIT A1 1000;
+A2 = LIMIT A1 10;
 
 B1 = foreach A2 generate flatten(snameDocumentMetaExtractor($1)) as (cId:chararray, sname:int, metadata:map[{(int)}]);
 B2 = FILTER B1 BY cId is not null;
-B3 = FILTER B2 BY featuresCheck(cId, sname, metadata);
+B = FILTER B2 BY featuresCheck(cId, sname, metadata);
 
-C = group B3 by sname;
+C = group B by sname;
 -- D: {sname: chararray, datagroup: {(cId: chararray,sname: chararray,data: map[{(val_0: chararray)}])}, count: long}
 D = foreach C generate group as sname, B as datagroup, COUNT(B) as count;
 
