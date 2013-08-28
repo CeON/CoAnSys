@@ -23,6 +23,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
 
+import pl.edu.icm.coansys.disambiguation.auxil.RankedUnionFindPathCompressed;
 import pl.edu.icm.coansys.disambiguation.auxil.RelaxedPair;
 import pl.edu.icm.coansys.disambiguation.clustering.ClusterElement;
 
@@ -62,16 +63,18 @@ public abstract class CompleteLinkageHACStrategy implements ClusteringStrategy {
      */
     @Override
     public int[] clusterize(float sim[][]) {
-
+    	
+    	if (sim == null){
+    		throw new NullPointerException("You are kindly asked to provide similarity matrix that exists");
+    	}
         if (sim.length == 1) {
             return new int[]{0};
         }
         if (sim.length == 2) {
             if (sim[1][0] > 0) {
                 return new int[]{0, 0};
-            } else {
-                return new int[]{0, 1};
             }
+            return new int[]{0, 1};
         }
 
         ClusterElement[][] C = new ClusterElement[sim.length][];
@@ -136,19 +139,15 @@ public abstract class CompleteLinkageHACStrategy implements ClusteringStrategy {
                 }
             }
         }
-
-        for (int i = 0; i < I.length; i++) {
-            I[i] = i;
-        }
+        
+        RankedUnionFindPathCompressed rufpc = new RankedUnionFindPathCompressed(I.length);
+        
         for (RelaxedPair p : A) {
-            int tmp = p.a;
-            while (I[tmp] != tmp) {
-                tmp = I[tmp];
-            }
-            I[tmp] = p.b;
+        	rufpc.union(p.a, p.b);
         }
-
-        return I;
+        
+        rufpc.finalUnite();
+        return rufpc.getAssignmentArray();
     }
 
     /*private int getFinalClusterId(int[] I, int i) {
