@@ -132,8 +132,14 @@ public class disambiguationTests {
    		assert ( ids.length == extractors.length );
    		
    		for ( int i = 0; i < extractors.length; i++ ) {
-   			assert( factory.convertToExId( extractors[i] ).equals( ids[i] ) );
-   			assert( factory.convertToExName( ids[i] ).equals( extractors[i] ) );
+   			assert( factory.convertExNameToId( extractors[i] ).equals( ids[i] ) );
+   			assert( factory.convertExIdToName( ids[i] ).equals( extractors[i] ) );
+   			assert( factory.toExId( ids[i] ).equals( ids[i] ) );
+   			assert( factory.toExId( extractors[i] ).equals( ids[i] ) );
+   			assert( factory.toExName( ids[i] ).equals( extractors[i] ) );
+   			assert( factory.toExName( extractors[i] ).equals( extractors[i] ) );
+   			
+   			
    		}
    	}
 }
