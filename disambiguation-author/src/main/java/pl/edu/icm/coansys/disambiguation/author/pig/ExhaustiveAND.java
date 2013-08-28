@@ -53,7 +53,7 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
     private int N;
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ExhaustiveAND.class);
     private boolean useIdsForExtractors = false;
-    DisambiguationExtractorFactory extrFactory = new DisambiguationExtractorFactory();
+    private DisambiguationExtractorFactory extrFactory = new DisambiguationExtractorFactory();
     //benchmark 
     private boolean isStatistics = false;
     private TimerSyso timer = new TimerSyso();

@@ -52,7 +52,7 @@ public class AproximateAND extends EvalFunc<DataBag> {
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(AproximateAND.class);
     private boolean rememberSim = true;
     private boolean useIdsForExtractors = false;
-    DisambiguationExtractorFactory extrFactory = new DisambiguationExtractorFactory();
+    private DisambiguationExtractorFactory extrFactory = new DisambiguationExtractorFactory();
     //benchmark staff
     private boolean isStatistics = false;
     private TimerSyso timer = new TimerSyso();
@@ -137,7 +137,7 @@ public class AproximateAND extends EvalFunc<DataBag> {
 			//start benchmark
 			if ( isStatistics ) {
 				timer.play();
-				timer.addMonit("\n");
+				timer.addMonit(" ");
 				calculatedSimCounter = 0;
 				finalClusterNumber = 0;
 				timerPlayId++;
