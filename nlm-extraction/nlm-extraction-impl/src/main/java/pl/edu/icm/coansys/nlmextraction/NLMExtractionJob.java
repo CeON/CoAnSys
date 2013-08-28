@@ -15,10 +15,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package pl.edu.icm.coansys.nlmextraction;
 
 import com.google.protobuf.ByteString;
+import com.itextpdf.text.ExceptionConverter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
@@ -58,7 +58,7 @@ public class NLMExtractionJob implements Tool {
     private Configuration conf;
 
     public static class ExtractMap extends Mapper<Writable, BytesWritable, Text, BytesWritable> {
-        
+
         private long maxPdfSize = 0;
 
         @Override
@@ -76,14 +76,13 @@ public class NLMExtractionJob implements Tool {
             }
         }
 
-
-
         @Override
         protected void map(Writable key, BytesWritable value, Context context) throws IOException, InterruptedException {
 
             DocumentWrapper docWrapper = DocumentProtos.DocumentWrapper.parseFrom(value.copyBytes());
             MediaContainer mediaContainer = docWrapper.getMediaContainer();
             for (Media media : mediaContainer.getMediaList()) {
+                logger.info("Processing file " + media.getSourcePath());
                 if (ProtoConstants.mediaTypePdf.equals(media.getMediaType())) {
                     long fileSize;
                     if (media.hasSourceFilesize()) {
@@ -124,9 +123,14 @@ public class NLMExtractionJob implements Tool {
 
                             context.write(new Text(media.getKey()), new BytesWritable(nlmMediaBuilder.build().toByteArray()));
                         } catch (AnalysisException ex) {
-                            throw new IOException(ex);
+                            logger.warn("cannot process PDF " + media.getSourcePath(), ex);
+                        } catch (ExceptionConverter ex) {
+                            logger.warn("cannot process PDF (unknown colorspace?) " + media.getSourcePath(), ex);
                         }
                     }
+                    logger.info("Finished " + media.getSourcePath());
+                } else {
+                    logger.info("File " + media.getSourcePath() + " is not a PDF");
                 }
             }
         }
