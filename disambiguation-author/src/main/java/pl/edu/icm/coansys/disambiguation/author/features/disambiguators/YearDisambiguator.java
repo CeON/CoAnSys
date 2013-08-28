@@ -50,7 +50,7 @@ public class YearDisambiguator extends Disambiguator{
 		
 		//TODO funcion(int x) = something like 1 / Math.abs( b - a );
 		
-		return 0;
+		return ( a == b ) ? 1 : 0; //for now
 	}
 
 }
