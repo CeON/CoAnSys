@@ -33,7 +33,7 @@
 %DEFAULT use_extractor_id_instead_name 'true'
 %DEFAULT statistics 'true'
 %DEFAULT lang 'all'
-$DEFAULT skip_empty_features 'true'
+%DEFAULT skip_empty_features 'true'
 
 
 -- DEFINE keyTiKwAbsCatExtractor pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_MAP_WHEN_CATEG_LIM('$lang','removeall');
