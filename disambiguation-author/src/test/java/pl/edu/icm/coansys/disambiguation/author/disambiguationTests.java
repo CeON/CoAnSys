@@ -45,7 +45,7 @@ public class disambiguationTests {
 		String[] params = {
 				"dc_m_hdfs_inputDocsData=null",
 				"dc_m_hdfs_outputContribs=null",
-				"dc_m_str_feature_info=" + "'TitleDisambiguator#EX_TITLE#1#1,YearDisambiguator#EX_YEAR#1#1'",
+				"dc_m_str_feature_info=" + "'TitleDisambiguator#EX_TITLE#1#1,KeywordDisambiguator#EX_KEYWORDS#1#1'",
 				"threshold='-1.0'"
 			};
 
@@ -58,7 +58,7 @@ public class disambiguationTests {
 		String[] params = {
 				"dc_m_hdfs_inputDocsData=null",
 				"dc_m_hdfs_outputContribs=null",
-				"dc_m_str_feature_info=" + "'TitleDisambiguator#EX_TITLE#1#1,YearDisambiguator#EX_YEAR#1#1'",
+				"dc_m_str_feature_info=" + "'TitleDisambiguator#EX_TITLE#1#1,KeywordDisambiguator#EX_KEYWORDS#1#1'",
 				"threshold='-1.0'"
 			};
 
