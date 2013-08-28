@@ -106,7 +106,7 @@ public class DisambiguationExtractorFactory {
 	public DisambiguationExtractor create(FeatureInfo fi) throws InstantiationException, IllegalAccessException, ClassNotFoundException{
 		
 		String extractorName = toExName( fi.getFeatureExtractorName() );
-		String currentClassName = THIS_PACKAGE + extractorName;
+		String currentClassName = THIS_PACKAGE + "." + extractorName;
 
     	// creating extractor with given name
     	Class<?> c = null;

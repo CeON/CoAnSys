@@ -23,7 +23,7 @@
 %DEFAULT JARS '*.jar'
 %DEFAULT commonJarsPath '../lib/$JARS'
 
-%DEFAULT dc_m_hdfs_inputDocsData extracted/springer0
+%DEFAULT dc_m_hdfs_inputDocsData extracted/springerall1_noempty/part*
 %DEFAULT time 0
 %DEFAULT dc_m_hdfs_outputContribs exploration/aproximate$time
 %DEFAULT dc_m_str_feature_info 'CoAuthorsSnameDisambiguatorFullList#EX_AUTH_SNAMES#-0.0000166#8,ClassifCodeDisambiguator#EX_CLASSIFICATION_CODES#0.99#12,KeyphraseDisambiguator#EX_KEYWORDS_SPLIT#0.99#22,KeywordDisambiguator#EX_KEYWORDS#0.0000369#40'
@@ -72,7 +72,7 @@ set dfs.client.socket-timeout 60000
 -- code section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
-D1000 = LOAD '$dc_m_hdfs_inputDocsData' as (sname:chararray, datagroup:{(cId:chararray, sname:int, data:map[{(int)}])}, count:long);
+D1000 = LOAD '$dc_m_hdfs_inputDocsData' as (sname:int, datagroup:{(cId:chararray, sname:int, data:map[{(int)}])}, count:long);
 
 -- -----------------------------------------------------
 -- BIG GRUPS OF CONTRIBUTORS ---------------------------
