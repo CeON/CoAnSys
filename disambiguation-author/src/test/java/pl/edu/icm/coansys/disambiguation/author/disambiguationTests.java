@@ -65,7 +65,34 @@ public class disambiguationTests {
    		PST.run( "exhaustiveAND", "exhaustive_AND_with_sim_test.pig", "A", "B", params );
    	}
    	
+    @Test(groups = {"fast"})
+	public void aproximateAND_extrNameToId() throws IOException, ParseException {
+		
+		String[] params = {
+				"dc_m_hdfs_inputDocsData=null",
+				"dc_m_hdfs_outputContribs=null",
+				"dc_m_str_feature_info=" + "'TitleDisambiguator#EX_TITLE#1#1,KeywordDisambiguator#EX_KEYWORDS#1#1'",
+				"use_extractor_id_instead_name='true'",
+				"threshold='-1.0'"
+			};
 
+   		PST.run( "aproximateAND_extrNameToId", "aproximate_AND_test.pig", "B", "E", params );
+   	}
+   	
+    @Test(groups = {"fast"})
+	public void exhaustiveAND_extrNameToId() throws IOException, ParseException {
+		
+		String[] params = {
+				"dc_m_hdfs_inputDocsData=null",
+				"dc_m_hdfs_outputContribs=null",
+				"dc_m_str_feature_info=" + "'TitleDisambiguator#EX_TITLE#1#1,KeywordDisambiguator#EX_KEYWORDS#1#1'",
+				"use_extractor_id_instead_name='true'",
+				"threshold='-1.0'"
+			};
+
+   		PST.run( "exhaustiveAND_extrNameToId", "exhaustive_AND_with_sim_test.pig", "A", "B", params );
+   	}
+    
    	@Test(groups = {"fast"})
    	public void normalizers() {
 		String text = "é{(Zaaaażółć 'gęślą', \"jaź(ń)\"}]# æ 1234567890 !@#$%^&*() _+=?/>.<,-";
