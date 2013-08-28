@@ -24,6 +24,7 @@ import org.apache.pig.data.TupleFactory;
 
 import pl.edu.icm.coansys.models.DocumentProtos.ClassifCode;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
+import pl.edu.icm.coansys.models.DocumentProtos.KeywordsList;
 
 public class EX_CLASSIFICATION_CODES extends DisambiguationExtractorDocument{
 	
@@ -32,13 +33,31 @@ public class EX_CLASSIFICATION_CODES extends DisambiguationExtractorDocument{
 		DocumentMetadata dm = (DocumentMetadata) o;
 		DataBag db = new DefaultDataBag();
 		
+		//classification codes:
 		for(ClassifCode cc : dm.getBasicMetadata().getClassifCodeList()){ 
 			for(String s : cc.getValueList()){
 				db.add( TupleFactory.getInstance().newTuple( 
 						normalizeExtracted( s ) ) );
 			}
 		}
+		
+		//classification codes from keywords
+		for ( KeywordsList k : dm.getKeywordsList() ){
+			if ( lang == null || k.getLanguage().equalsIgnoreCase( lang ) ) {
+				for ( String s : k.getKeywordsList() ){
+					if ( isClassifCode( s ) ) {
+						db.add(TupleFactory.getInstance().newTuple(
+								normalizeExtracted( s ) ));
+					}
+				}
+			}
+		}
 			
 		return db;		
+	}
+
+	@Override
+	public String getId() {
+		return "1";
 	}
 }

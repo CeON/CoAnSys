@@ -25,6 +25,7 @@ import org.apache.pig.tools.parameters.ParseException;
 
 import pl.edu.icm.coansys.commons.java.DiacriticsRemover;
 import pl.edu.icm.coansys.disambiguation.author.pig.extractor.DisambiguationExtractorDocument;
+import pl.edu.icm.coansys.disambiguation.author.pig.extractor.DisambiguationExtractorFactory;
 import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.ToEnglishLowerCase;
 import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.ToHashCode;
 
@@ -44,7 +45,7 @@ public class disambiguationTests {
 		String[] params = {
 				"dc_m_hdfs_inputDocsData=null",
 				"dc_m_hdfs_outputContribs=null",
-				"dc_m_str_feature_info=" + "'TitleDisambiguator#EX_TITLE#1#1,YearDisambiguator#EX_YEAR#1#1'",
+				"dc_m_str_feature_info=" + "'TitleDisambiguator#EX_TITLE#1#1,KeywordDisambiguator#EX_KEYWORDS#1#1'",
 				"threshold='-1.0'"
 			};
 
@@ -57,14 +58,41 @@ public class disambiguationTests {
 		String[] params = {
 				"dc_m_hdfs_inputDocsData=null",
 				"dc_m_hdfs_outputContribs=null",
-				"dc_m_str_feature_info=" + "'TitleDisambiguator#EX_TITLE#1#1,YearDisambiguator#EX_YEAR#1#1'",
+				"dc_m_str_feature_info=" + "'TitleDisambiguator#EX_TITLE#1#1,KeywordDisambiguator#EX_KEYWORDS#1#1'",
 				"threshold='-1.0'"
 			};
 
    		PST.run( "exhaustiveAND", "exhaustive_AND_with_sim_test.pig", "A", "B", params );
    	}
    	
+    @Test(groups = {"fast"})
+	public void aproximateAND_extrNameToId() throws IOException, ParseException {
+		
+		String[] params = {
+				"dc_m_hdfs_inputDocsData=null",
+				"dc_m_hdfs_outputContribs=null",
+				"dc_m_str_feature_info=" + "'TitleDisambiguator#EX_TITLE#1#1,KeywordDisambiguator#EX_KEYWORDS#1#1'",
+				"use_extractor_id_instead_name='true'",
+				"threshold='-1.0'"
+			};
 
+   		PST.run( "aproximateAND_extrNameToId", "aproximate_AND_test.pig", "B", "E", params );
+   	}
+   	
+    @Test(groups = {"fast"})
+	public void exhaustiveAND_extrNameToId() throws IOException, ParseException {
+		
+		String[] params = {
+				"dc_m_hdfs_inputDocsData=null",
+				"dc_m_hdfs_outputContribs=null",
+				"dc_m_str_feature_info=" + "'TitleDisambiguator#EX_TITLE#1#1,KeywordDisambiguator#EX_KEYWORDS#1#1'",
+				"use_extractor_id_instead_name='true'",
+				"threshold='-1.0'"
+			};
+
+   		PST.run( "exhaustiveAND_extrNameToId", "exhaustive_AND_with_sim_test.pig", "A", "B", params );
+   	}
+    
    	@Test(groups = {"fast"})
    	public void normalizers() {
 		String text = "é{(Zaaaażółć 'gęślą', \"jaź(ń)\"}]# æ 1234567890 !@#$%^&*() _+=?/>.<,-";
@@ -94,5 +122,52 @@ public class disambiguationTests {
 		assert( a.equals( DisExtrExpected ) );
    	}
    	
+   	@Test(groups = {"fast"})
+   	public void extractorsFactory() throws Exception {
+   		
+   		DisambiguationExtractorFactory factory = new DisambiguationExtractorFactory();
+   		
+   		String[] extractors = {
+   			   	"EX_AUTH_SNAMES",
+   			   	"EX_KEYWORDS_SPLIT",
+   			   	"EX_EMAIL",
+   			   	"EX_YEAR",
+   			   	"EX_TITLE",
+   			   	"EX_TITLE_SPLIT",
+   			   	"EX_PERSON_ID",
+   			   	"EX_KEYWORDS",
+   			   	"EX_COAUTH_SNAME",
+   			   	"EX_CLASSIFICATION_CODES",
+   			   	"EX_FORENAMES_INITS",
+   			   	"EX_EMAIL_PREFIX" 
+   		};
+   		String[] ids = {
+   				"0",
+   				"6",
+   				"4",
+   				"B",
+   				"A",
+   				"9",
+   				"8",
+   				"7",
+   				"2",
+   				"1",
+   				"5",
+   				"3"
+   		};
+   		
+   		assert ( ids.length == extractors.length );
+   		
+   		for ( int i = 0; i < extractors.length; i++ ) {
+   			assert( factory.convertExNameToId( extractors[i] ).equals( ids[i] ) );
+   			assert( factory.convertExIdToName( ids[i] ).equals( extractors[i] ) );
+   			assert( factory.toExId( ids[i] ).equals( ids[i] ) );
+   			assert( factory.toExId( extractors[i] ).equals( ids[i] ) );
+   			assert( factory.toExName( ids[i] ).equals( extractors[i] ) );
+   			assert( factory.toExName( extractors[i] ).equals( extractors[i] ) );
+   			
+   			
+   		}
+   	}
 }
 

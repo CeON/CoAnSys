@@ -50,10 +50,14 @@ import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
 public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 
     private static final Logger logger = LoggerFactory.getLogger(EXTRACT_CONTRIBDATA_GIVENDATA.class);
-    private List< DisambiguationExtractorDocument> des4Doc = new ArrayList< DisambiguationExtractorDocument>();
-    private List< DisambiguationExtractorAuthor> des4Author = new ArrayList< DisambiguationExtractorAuthor>();
+    private List< DisambiguationExtractorDocument > des4Doc = new ArrayList< DisambiguationExtractorDocument>();
+    private List< DisambiguationExtractorAuthor > des4Author = new ArrayList< DisambiguationExtractorAuthor>();
+    private List< String > 	des4DocNameOrId = new ArrayList< String >(),
+    						des4AuthorNameOrId = new ArrayList< String >();
     private String language = null;
-    public boolean skipEmptyFeatures = false;
+    private boolean skipEmptyFeatures = false;
+    private boolean useIdsForExtractors = false;
+    private DisambiguationExtractorFactory extrFactory = new DisambiguationExtractorFactory();
 
     @Override
     public Schema outputSchema(Schema p_input) {
@@ -72,33 +76,30 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 
         String ExtractorDocClassName = new DisambiguationExtractorDocument().getClass().getSimpleName();
         String ExtractorAuthorClassName = new DisambiguationExtractorAuthor().getClass().getSimpleName();
-
+        DisambiguationExtractor extractor;
+        String currentClassNameOrId;
+        
         for ( int i = 0; i < features.size(); i++ ){
-        	String currentClassName = "pl.edu.icm.coansys.disambiguation.author.pig.extractor."
-					+ features.get(i).getFeatureExtractorName();
-
-        	// creating extractor with given name
-        	Class<?> c = null;
-			try {
-				c = Class.forName( currentClassName );
-			} catch (ClassNotFoundException e) {
-				//e.printStackTrace();
-				String m = "Cannot find class for create: " + currentClassName;
-				logger.error( m + StackTraceExtractor.getStackTrace(e) );
-				throw new ClassNotFoundException( m, e );
-			}
-
-			// recognition of extractor type
-            String currentSuperClassName = c.getSuperclass().getSimpleName();
-
+        	
+        	extractor = extrFactory.create( features.get(i) );
+        	String currentSuperClassName = extractor.getClass().getSuperclass().getSimpleName();
+        	if ( useIdsForExtractors ) {
+        		currentClassNameOrId = extrFactory.toExId( 
+        				extractor.getClass().getSimpleName() );
+        	} else {
+        		currentClassNameOrId = extractor.getClass().getSimpleName();
+        	}
+        	
             try {
 	            if ( currentSuperClassName.equals( ExtractorDocClassName ) ) {
-	            	des4Doc.add( (DisambiguationExtractorDocument) c.newInstance() );
+	            	des4Doc.add( (DisambiguationExtractorDocument) extractor );
+	            	des4DocNameOrId.add( currentClassNameOrId );
 	            } else if ( currentSuperClassName.equals( ExtractorAuthorClassName ) ) {
-	            	des4Author.add( (DisambiguationExtractorAuthor) c.newInstance() );
+	            	des4Author.add( (DisambiguationExtractorAuthor) extractor );
+	            	des4AuthorNameOrId.add( currentClassNameOrId );
 	            } else {
 	            	String m = "Cannot create extractor: "
-	            			+ c.getSimpleName() + ". Its superclass: "
+	            			+ extractor.getClass().getSimpleName() + ". Its superclass: "
 	            			+ currentSuperClassName + " does not match to any superclass.";
 	            	throw new Exception( m );
 	            }
@@ -116,17 +117,27 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 
     public EXTRACT_CONTRIBDATA_GIVENDATA( String featureinfo, String lang ) throws
     		Exception {
+    	this.language = lang;
     	setDisambiguationExtractor( featureinfo );
-    	language = lang;
     }
 
     public EXTRACT_CONTRIBDATA_GIVENDATA( String featureinfo, String lang, String skipEmptyFeatures ) throws
     		Exception {
-    	setDisambiguationExtractor( featureinfo );
-    	language = lang;
+    	this.language = lang;
     	this.skipEmptyFeatures = Boolean.parseBoolean( skipEmptyFeatures );
+    	setDisambiguationExtractor( featureinfo );
     }
 
+    public EXTRACT_CONTRIBDATA_GIVENDATA( String featureinfo, String lang, String skipEmptyFeatures, String useIdsForExtractors ) throws
+	Exception {
+    	this.language = lang;
+    	this.skipEmptyFeatures = Boolean.parseBoolean( skipEmptyFeatures );
+    	this.useIdsForExtractors = Boolean.parseBoolean( useIdsForExtractors );
+    	setDisambiguationExtractor( featureinfo );
+    }
+
+    
+    
     private boolean checkLanguage() {
         return (language != null
                 && !language.equalsIgnoreCase("all")
@@ -183,7 +194,8 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
                 if ( extractedDocObj[i].size() == 0 && skipEmptyFeatures ) {
                     continue;
                 }
-                map.put(des4Doc.get(i).getClass().getSimpleName(), extractedDocObj[i]);
+                
+                map.put( des4DocNameOrId.get(i), extractedDocObj[i]);
             }
             extractedDocObj = null;
 
@@ -220,7 +232,8 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
                     if ( extractedAuthorObj[i].size() == 0 && skipEmptyFeatures ) {
                         continue;
                     }
-                    finalMap.put(des4Author.get(j).getClass().getSimpleName(), extractedAuthorObj[j]);
+                    
+                    finalMap.put(des4AuthorNameOrId.get(j), extractedAuthorObj[j]);
                 }
                 extractedAuthorObj = null;
 

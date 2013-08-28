@@ -72,7 +72,7 @@ public class TimerSyso implements Runnable  {
 			}
 		}
 		if( !isTimeAdded ) {
-			nm[ monits.length ] = (t / 60.0);
+			nm[ monits.length ] = (t / 1000000000.0); //in sec
 		}
 		addMonit( nm );
 	}

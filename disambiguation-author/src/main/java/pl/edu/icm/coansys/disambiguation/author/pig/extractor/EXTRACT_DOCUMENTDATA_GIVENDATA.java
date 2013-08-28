@@ -19,7 +19,6 @@ package pl.edu.icm.coansys.disambiguation.author.pig.extractor;
 
 import java.io.IOException;
 import java.util.ArrayList;
-//import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,9 +27,8 @@ import org.apache.pig.EvalFunc;
 import org.apache.pig.data.DataBag;
 import org.apache.pig.data.DataByteArray;
 import org.apache.pig.data.DataType;
-//import org.apache.pig.data.DefaultDataBag;
+import org.apache.pig.data.DefaultDataBag;
 import org.apache.pig.data.Tuple;
-//import org.apache.pig.data.TupleFactory;
 import org.apache.pig.impl.logicalLayer.FrontendException;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
 import org.slf4j.Logger;
@@ -38,7 +36,7 @@ import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
 import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
-//import pl.edu.icm.coansys.models.DocumentProtos.Author;
+import pl.edu.icm.coansys.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
 
@@ -155,16 +153,17 @@ public class EXTRACT_DOCUMENTDATA_GIVENDATA extends EvalFunc<Map<String,Object>>
            // DataBag ret = new DefaultDataBag();
 
             //author list
-           // List<Author> authors =
-           //         dm.getBasicMetadata().getAuthorList();
+            List<Author> authors =
+                    dm.getBasicMetadata().getAuthorList();
 
             //in arrays we are storing DataBags from extractors
-            DataBag[] extractedDocObj = new DataBag[des4Doc.size()];
-           // DataBag[] extractedAuthorObj;
+            DataBag[] extractedDocObj = new DataBag[ des4Doc.size() ];
+            DataBag[] extractedAuthorObj = new DataBag[ des4Author.size() ];
+            
             Map<String, Object> map = new HashMap<String, Object>();
            // Map<String, DataBag> finalMap;
 
-
+            //DOCUMENT DATA EXTRACTINTG
             if (checkLanguage()) {
                 for (int i = 0; i < des4Doc.size(); i++) {
                     extractedDocObj[i] = des4Doc.get(i).extract(dm, language);
@@ -174,7 +173,6 @@ public class EXTRACT_DOCUMENTDATA_GIVENDATA extends EvalFunc<Map<String,Object>>
                     extractedDocObj[i] = des4Doc.get(i).extract(dm);
                 }
             }
-
             //adding to map extractor name and features' data
             for (int i = 0; i < des4Doc.size(); i++) {
                 if ( extractedDocObj[i] == null ) {
@@ -183,10 +181,25 @@ public class EXTRACT_DOCUMENTDATA_GIVENDATA extends EvalFunc<Map<String,Object>>
                 if ( extractedDocObj[i].size() == 0 && skipEmptyFeatures ) {
                     continue;
                 }
-                map.put( des4Doc.get(i).getClass().getSimpleName(), (int) extractedDocObj[i].size() );
+                
+                int size = ( (int) extractedDocObj[i].size() > 0 ) ? 1 : 0; 
+                map.put( des4Doc.get(i).getClass().getSimpleName(), size );
             }
             extractedDocObj = null;
 
+            //AUTHORS DATA EXTRACTINTG
+            for (int j = 0; j < des4Author.size(); j++) {
+            	extractedAuthorObj[j] = new DefaultDataBag();                
+            	for (int i = 0; i < authors.size(); i++) {
+            		extractedAuthorObj[j].addAll( des4Author.get(j).extract(dm, i) );
+            	}
+            }
+            //adding to map
+            for (int j = 0; j < des4Author.size(); j++) {
+                int size = ( (int) extractedAuthorObj[j].size() > 0 ) ? 1 : 0; 
+                map.put( des4Author.get(j).getClass().getSimpleName(), size );
+            }
+            
             /*
             //bag making tuples (one tuple for one contributor from document)
             //with replicated metadata for

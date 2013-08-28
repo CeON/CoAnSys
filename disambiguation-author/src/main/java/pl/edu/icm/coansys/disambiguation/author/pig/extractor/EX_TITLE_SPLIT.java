@@ -33,7 +33,7 @@ public class EX_TITLE_SPLIT extends DisambiguationExtractorDocument {
 	
     private static final Logger logger = LoggerFactory.getLogger( EX_TITLE_SPLIT.class );
 
-	@Override
+	/*@Override
 	public DataBag extract( Object o ) {
 		DocumentMetadata dm = (DocumentMetadata) o;
 		
@@ -49,7 +49,7 @@ public class EX_TITLE_SPLIT extends DisambiguationExtractorDocument {
 		}
 		
 		return db;
-	}    
+	} */   
     
 	@Override
 	public DataBag extract( Object o, String lang ) {
@@ -58,7 +58,7 @@ public class EX_TITLE_SPLIT extends DisambiguationExtractorDocument {
 		DataBag db = new DefaultDataBag();
 		
         for ( TextWithLanguage title : dm.getBasicMetadata().getTitleList() ) {
-            if ( lang.equalsIgnoreCase( title.getLanguage()) ) {
+            if ( lang == null || lang.equalsIgnoreCase( title.getLanguage() ) ) {
             	String[] normals = title.getText().split("[\\W]+");
             	for(String s : normals){
             		if(s.length()==0){
@@ -68,7 +68,7 @@ public class EX_TITLE_SPLIT extends DisambiguationExtractorDocument {
             				normalizeExtracted( s ) );
             		db.add( t );
             	}
-        		return db;
+        		//return db;
             }
         }
         
@@ -77,6 +77,11 @@ public class EX_TITLE_SPLIT extends DisambiguationExtractorDocument {
         			+ dm.getBasicMetadata().getTitleCount() + " titles!");
         }
         
-        return null;
+        return db;
+	}
+	
+	@Override
+	public String getId() {
+		return "9";
 	}
 }

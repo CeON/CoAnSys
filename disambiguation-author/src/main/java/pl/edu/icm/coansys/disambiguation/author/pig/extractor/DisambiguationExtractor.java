@@ -36,6 +36,23 @@ public class DisambiguationExtractor {
 		}
 		return tmp;
 	}
+	
+	static public boolean isClassifCode(String str) {
+		if (isMSc(str)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
+	static public boolean isMSc(String str) {
+		return str.toUpperCase().matches("[0-9][0-9][A-Z][0-9][0-9]");
+	}
+	
+	//to re-implement in each extractor
+	public String getId() {
+		return null;
+	}
+	
 }
 	

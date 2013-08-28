@@ -37,4 +37,9 @@ public class EX_YEAR extends DisambiguationExtractorDocument {
 		
 		return db;
 	}
+
+	@Override
+	public String getId() {
+		return "B";
+	}
 }

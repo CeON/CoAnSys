@@ -23,16 +23,23 @@
 %DEFAULT JARS '*.jar'
 %DEFAULT commonJarsPath '../lib/$JARS'
 
-%DEFAULT dc_m_hdfs_inputDocsData /srv/bwndata/seqfile/springer/springer-20120419-springer03.sq 
+%DEFAULT dc_m_hdfs_inputDocsData /srv/bwndata/seqfile/springer-metadata/springer-20120419-springer0*.sq
+
 %DEFAULT time 0
 %DEFAULT dc_m_hdfs_outputContribs extracted/springer$time
-%DEFAULT dc_m_meth_extraction_inner pl.edu.icm.coansys.pig.udf.RichSequenceFileLoader
+%DEFAULT dc_m_meth_extraction_inner pl.edu.icm.coansys.commons.pig.udf.RichSequenceFileLoader
 %DEFAULT dc_m_str_feature_info 'CoAuthorsSnameDisambiguatorFullList#EX_AUTH_SNAMES#-0.0000166#8,ClassifCodeDisambiguator#EX_CLASSIFICATION_CODES#0.99#12,KeyphraseDisambiguator#EX_KEYWORDS_SPLIT#0.99#22,KeywordDisambiguator#EX_KEYWORDS#0.0000369#40'
-%DEFAULT lang 'en'
---%DEFAULT statistics 'true'
+%DEFAULT threshold '-1.0'
+%DEFAULT use_extractor_id_instead_name 'true'
+%DEFAULT statistics 'true'
+%DEFAULT lang 'all'
+%DEFAULT skip_empty_features 'true'
+
 
 -- DEFINE keyTiKwAbsCatExtractor pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_MAP_WHEN_CATEG_LIM('$lang','removeall');
-DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_CONTRIBDATA_GIVENDATA('$dc_m_str_feature_info','$lang');
+DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_CONTRIBDATA_GIVENDATA('$dc_m_str_feature_info','$lang','$skip_empty_features','$use_extractor_id_instead_name');
+DEFINE featuresCheck pl.edu.icm.coansys.disambiguation.author.pig.FeaturesCheck('$threshold','$dc_m_str_feature_info','$use_extractor_id_instead_name','$statistics');
+
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- register section
@@ -49,7 +56,7 @@ REGISTER '$commonJarsPath'
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 %DEFAULT dc_m_double_sample 1.0
-%DEFAULT parallel_param 50
+%DEFAULT parallel_param 85
 %DEFAULT pig_tmpfilecompression_param true
 %DEFAULT pig_tmpfilecompression_codec_param gz
 %DEFAULT job_priority normal
@@ -66,6 +73,7 @@ set mapred.child.java.opts $mapredChildJavaOpts
 -- ulimit must be more than two times the heap size value ! 
 -- set mapred.child.ulimit unlimited
 set dfs.client.socket-timeout 60000
+set mapred.fairscheduler.pool bigjobs
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- code section
@@ -74,12 +82,13 @@ set dfs.client.socket-timeout 60000
 
 A1 = LOAD '$dc_m_hdfs_inputDocsData' USING $dc_m_meth_extraction_inner('org.apache.hadoop.io.BytesWritable', 'org.apache.hadoop.io.BytesWritable') as (key:chararray, value:bytearray);
 -- A2: {key: chararray,value: bytearray}
--- A2 = sample A1 $dc_m_double_sample;
-A2 = LIMIT A1 1000;
+A2 = sample A1 $dc_m_double_sample;
+-- A2 = LIMIT A1 10;
 
 B1 = foreach A2 generate flatten(snameDocumentMetaExtractor($1)) as (cId:chararray, sname:int, metadata:map[{(int)}]);
 
-B = FILTER B1 BY cId is not null;
+--B = FILTER B1 BY cId is not null;
+B = FILTER B1 BY (cId is not null) AND featuresCheck(cId, sname, metadata);
 
 C = group B by sname;
 -- D: {sname: chararray, datagroup: {(cId: chararray,sname: chararray,data: map[{(val_0: chararray)}])}, count: long}

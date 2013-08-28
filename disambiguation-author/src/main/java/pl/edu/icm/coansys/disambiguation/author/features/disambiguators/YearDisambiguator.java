@@ -18,6 +18,8 @@
 
 package pl.edu.icm.coansys.disambiguation.author.features.disambiguators;
 
+import java.util.List;
+
 import pl.edu.icm.coansys.disambiguation.features.Disambiguator;
 
 /**
@@ -31,6 +33,24 @@ public class YearDisambiguator extends Disambiguator{
 	@Override
 	public String getName() {
 		return YearDisambiguator.class.getSimpleName();
+	}
+	
+	@Override
+	public double calculateAffinity( List<Object> f1, List<Object> f2 ) {
+		
+		if ( f1.isEmpty() || f2.isEmpty() ) {
+			return 0;
+		}
+		Object first = f1.get(0);
+		Object second = f2.get(0);
+		
+		int a = Integer.parseInt( first.toString() );
+		int b = Integer.parseInt( second.toString() );
+		int dif = Math.abs( b - a );
+		
+		//TODO funcion(int x) = something like 1 / Math.abs( b - a );
+		
+		return ( a == b ) ? 1 : 0; //for now
 	}
 
 }

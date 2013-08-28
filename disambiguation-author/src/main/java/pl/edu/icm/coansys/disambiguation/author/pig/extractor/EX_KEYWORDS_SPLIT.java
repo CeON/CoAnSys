@@ -42,8 +42,10 @@ public class EX_KEYWORDS_SPLIT extends DisambiguationExtractorDocument  {
 		
 		for ( KeywordsList k : dm.getKeywordsList() ){
 			for ( String keyphrase : k.getKeywordsList() ){
-				for ( String word : keyphrase.split("[\\W]+") ){
-					set.add( normalizeExtracted( word ) );
+				if ( !isClassifCode( keyphrase ) ) {
+					for ( String word : keyphrase.split("[\\W]+") ){
+						set.add( normalizeExtracted( word ) );
+					}
 				}
 			}
 		}
@@ -65,11 +67,12 @@ public class EX_KEYWORDS_SPLIT extends DisambiguationExtractorDocument  {
 		for ( KeywordsList k : dm.getKeywordsList() ){
 			if ( k.getLanguage().equalsIgnoreCase( lang ) ) {
 				for ( String keyphrase : k.getKeywordsList() ){
-					for ( String word : keyphrase.split("[\\W]+") ){
-						set.add( normalizeExtracted( word ) );
+					if ( !isClassifCode( keyphrase ) ) {
+						for ( String word : keyphrase.split("[\\W]+") ){
+							set.add( normalizeExtracted( word ) );
+						}
 					}
 				}				
-				//return db;
 			}
 		}
         
@@ -83,5 +86,10 @@ public class EX_KEYWORDS_SPLIT extends DisambiguationExtractorDocument  {
 			//return null;
 		}
 		return db;
+	}
+	
+	@Override
+	public String getId() {
+		return "6";
 	}
 }

@@ -36,6 +36,7 @@ import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.DisambiguatorFactory;
+import pl.edu.icm.coansys.disambiguation.author.pig.extractor.DisambiguationExtractorFactory;
 import pl.edu.icm.coansys.disambiguation.features.Disambiguator;
 import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
 import pl.edu.icm.coansys.disambiguation.author.benchmark.TimerSyso;
@@ -50,6 +51,8 @@ public class AproximateAND extends EvalFunc<DataBag> {
 	private int N;
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(AproximateAND.class);
     private boolean rememberSim = true;
+    private boolean useIdsForExtractors = false;
+    private DisambiguationExtractorFactory extrFactory = new DisambiguationExtractorFactory();
     //benchmark staff
     private boolean isStatistics = false;
     private TimerSyso timer = new TimerSyso();
@@ -58,11 +61,12 @@ public class AproximateAND extends EvalFunc<DataBag> {
     private int finalClusterNumber = 0;
     private List<Integer>clustersSizes;
     
-	public AproximateAND( String threshold, String featureDescription, String rememberSim, String printStatistics ) throws Exception{
+	public AproximateAND( String threshold, String featureDescription, String rememberSim, String useIdsForExtractors, String printStatistics ) throws Exception{
 		this.threshold = Float.parseFloat(threshold);
 		this.rememberSim = Boolean.parseBoolean( rememberSim );
+		this.useIdsForExtractors = Boolean.parseBoolean( useIdsForExtractors );
 		this.isStatistics = Boolean.parseBoolean( printStatistics );
-			
+		
 		List<FeatureInfo> FIwithEmpties 
 			= FeatureInfo.parseFeatureInfoString(featureDescription);
 		List<FeatureInfo> FIFinall = new LinkedList<FeatureInfo>();
@@ -96,6 +100,11 @@ public class AproximateAND extends EvalFunc<DataBag> {
 				throw new Exception("Incorrect max value for feature: " + fi.getFeatureExtractorName() + ". Max value cannot equal 0.");
 			}
             
+			if ( this.useIdsForExtractors ) {
+				fi.setFeatureExtractorName( 
+						extrFactory.toExId( fi.getFeatureExtractorName() ) );
+			}
+			
             FIFinall.add( fi );
             FeaturesFinall.add( new PigDisambiguator( d ) );
         }
@@ -128,7 +137,7 @@ public class AproximateAND extends EvalFunc<DataBag> {
 			//start benchmark
 			if ( isStatistics ) {
 				timer.play();
-				timer.addMonit("\n");
+				timer.addMonit(" ");
 				calculatedSimCounter = 0;
 				finalClusterNumber = 0;
 				timerPlayId++;
@@ -263,7 +272,7 @@ public class AproximateAND extends EvalFunc<DataBag> {
 
 		return true;
 	}
-
+	
 	private void calculateAffinityAndClustering( List< Map<String,Object> > contribsT ) {
 		//Find & Union init:		
 		clusterAssociations = new int[N];

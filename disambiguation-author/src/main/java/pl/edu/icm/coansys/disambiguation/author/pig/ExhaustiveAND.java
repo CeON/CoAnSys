@@ -34,6 +34,7 @@ import org.slf4j.LoggerFactory;
 import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
 import pl.edu.icm.coansys.disambiguation.author.benchmark.TimerSyso;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.DisambiguatorFactory;
+import pl.edu.icm.coansys.disambiguation.author.pig.extractor.DisambiguationExtractorFactory;
 
 import pl.edu.icm.coansys.disambiguation.clustering.strategies.ClusteringStrategy;
 import pl.edu.icm.coansys.disambiguation.clustering.strategies.CompleteLinkageHACStrategy_StateOfTheArt;
@@ -51,6 +52,8 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
     private float sim[][];
     private int N;
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ExhaustiveAND.class);
+    private boolean useIdsForExtractors = false;
+    private DisambiguationExtractorFactory extrFactory = new DisambiguationExtractorFactory();
     //benchmark 
     private boolean isStatistics = false;
     private TimerSyso timer = new TimerSyso();
@@ -59,8 +62,9 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
     private int finalClusterNumber = 0;
     private boolean gotSim = false;
 
-    public ExhaustiveAND(String threshold, String featureDescription, String printStatistics) throws Exception {
+    public ExhaustiveAND(String threshold, String featureDescription, String useIdsForExtractors, String printStatistics) throws Exception {
         this.threshold = Float.parseFloat(threshold);
+		this.useIdsForExtractors = Boolean.parseBoolean( useIdsForExtractors );
         this.isStatistics = Boolean.parseBoolean(printStatistics);
 
         List<FeatureInfo> FIwithEmpties 
@@ -94,6 +98,11 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 			if ( fi.getMaxValue() == 0 ){
 				logger.warn( "Incorrect max value for feature: " + fi.getFeatureExtractorName() + ". Max value cannot equal 0." );
 				throw new Exception("Incorrect max value for feature: " + fi.getFeatureExtractorName() + ". Max value cannot equal 0.");
+			}
+            
+			if ( this.useIdsForExtractors ) {
+				fi.setFeatureExtractorName( 
+						extrFactory.toExId( fi.getFeatureExtractorName() ) );
 			}
 			
             FIFinall.add( fi );
