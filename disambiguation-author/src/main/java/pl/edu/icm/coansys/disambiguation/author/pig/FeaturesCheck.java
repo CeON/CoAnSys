@@ -45,10 +45,10 @@ public class FeaturesCheck extends EvalFunc< Boolean > {
 	private FeatureInfo[] featureInfos;
 	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(FeaturesCheck.class);
     private float threshold;
-	private boolean useIdsForExtractors;
+	private boolean useIdsForExtractors = false;
 	private DisambiguationExtractorFactory extrFactory = new DisambiguationExtractorFactory();
     //benchmark
-	private boolean isStatistics;
+	private boolean isStatistics = false;
     private static int skipedContribCounter = 0;
 	
 	/**
@@ -113,7 +113,9 @@ public class FeaturesCheck extends EvalFunc< Boolean > {
 	@Override
 	public Boolean exec( Tuple input ) {
 		
-		if ( input == null || input.size() == 0 ) return null;
+		if ( input == null || input.size() == 0 ) {
+			return null;
+		}
 		
 		String cid = null, sname = null;
 		Map<String,Object> featuresMap = null;
@@ -122,7 +124,7 @@ public class FeaturesCheck extends EvalFunc< Boolean > {
 			cid = input.get(0).toString();
 			sname = input.get(1).toString();
 			featuresMap = (Map<String, Object>) input.get(2);
-		} catch (ExecException e) {
+		} catch ( ExecException e ) {
 			// Throwing an exception would cause the task to fail.
 			logger.error("Caught exception processing input row:\n" 
 						+ StackTraceExtractor.getStackTrace(e));
@@ -135,7 +137,7 @@ public class FeaturesCheck extends EvalFunc< Boolean > {
 		}
 		
 		double partial = 0, simil = threshold;
-		for (int d = 0; d < features.length; d++) {
+		for ( int d = 0; d < features.length; d++ ) {
 			// Taking features from each keys (name of extractor = feature name)
 			// In contribsT.get(i) there is map we need.
 			// From this map (collection of i'th contributor's features)
@@ -146,11 +148,11 @@ public class FeaturesCheck extends EvalFunc< Boolean > {
 			Object o = featuresMap.get(featureInfos[d].getFeatureExtractorName());
 
 			// probably feature does not exist 
-			if (o == null ) {
+			if ( o == null ) {
 				continue;
 			}
 
-			partial = features[d].calculateAffinity(o, o);
+			partial = features[d].calculateAffinity( o, o );
 
 			partial = partial / featureInfos[d].getMaxValue()
 					* featureInfos[d].getWeight();

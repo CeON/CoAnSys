@@ -33,9 +33,11 @@
 %DEFAULT use_extractor_id_instead_name 'true'
 %DEFAULT statistics 'true'
 %DEFAULT lang 'all'
+$DEFAULT skip_empty_features 'true'
+
 
 -- DEFINE keyTiKwAbsCatExtractor pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_MAP_WHEN_CATEG_LIM('$lang','removeall');
-DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_CONTRIBDATA_GIVENDATA('$dc_m_str_feature_info','$lang');
+DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_CONTRIBDATA_GIVENDATA('$dc_m_str_feature_info','$lang','$skip_empty_features','$use_extractor_id_instead_name');
 DEFINE featuresCheck pl.edu.icm.coansys.disambiguation.author.pig.FeaturesCheck('$threshold','$dc_m_str_feature_info','$use_extractor_id_instead_name','$statistics');
 
 -- -----------------------------------------------------
@@ -71,6 +73,7 @@ set mapred.child.java.opts $mapredChildJavaOpts
 -- ulimit must be more than two times the heap size value ! 
 -- set mapred.child.ulimit unlimited
 set dfs.client.socket-timeout 60000
+set mapred.fairscheduler.pool bigjobs
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- code section

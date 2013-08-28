@@ -34,10 +34,11 @@
 %DEFAULT lang 'en'
 %DEFAULT statistics 'true'
 %DEFAULT aproximate_remember_sim 'true'
+$DEFAULT skip_empty_features 'true'
 
 
 -- DEFINE keyTiKwAbsCatExtractor pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_MAP_WHEN_CATEG_LIM('en','removeall');
-DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_CONTRIBDATA_GIVENDATA('$dc_m_str_feature_info','$lang');
+DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_CONTRIBDATA_GIVENDATA('$dc_m_str_feature_info','$lang','$skip_empty_features','$use_extractor_id_instead_name');
 DEFINE exhaustiveAND pl.edu.icm.coansys.disambiguation.author.pig.ExhaustiveAND('$threshold','$dc_m_str_feature_info','$use_extractor_id_instead_name','$statistics');
 DEFINE aproximateAND pl.edu.icm.coansys.disambiguation.author.pig.AproximateAND('$threshold', '$dc_m_str_feature_info','$aproximate_remember_sim','$use_extractor_id_instead_name','$statistics');
 DEFINE aproximateANDmonster pl.edu.icm.coansys.disambiguation.author.pig.AproximateAND('$threshold','$dc_m_str_feature_info','false','$use_extractor_id_instead_name','$statistics');
