@@ -8,6 +8,9 @@ import java.util.Set;
 import org.reflections.Reflections;
 import org.slf4j.LoggerFactory;
 
+import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
+import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
+
 public class DisambiguationExtractorFactory {
 
 
@@ -15,16 +18,14 @@ public class DisambiguationExtractorFactory {
 	
 	private Map<String,String> nameToId;
 	private Map<String,String> idToName;
-	
+	private final String THIS_PACKAGE = new DisambiguationExtractor().getClass().getPackage().getName();
 	
 	public DisambiguationExtractorFactory() throws Exception {
 		
 		nameToId = new HashMap<String,String>();
 		idToName = new IdentityHashMap<String,String>();
 		
-		String thisPackage = new DisambiguationExtractor().getClass().getPackage().getName();
-
-		Reflections reflections = new Reflections( thisPackage );    
+		Reflections reflections = new Reflections( THIS_PACKAGE );    
 		
 		Set<Class<? extends DisambiguationExtractor>> classes 
 			= reflections.getSubTypesOf( DisambiguationExtractor.class );
@@ -60,25 +61,64 @@ public class DisambiguationExtractorFactory {
 			idToName.put( eid, name );
 		}
 	}
-
+	
 	/*
 	 * Converting extractor name/id to opposite one.
 	 */
-	public String convertExtractorName( String feature ) {
+	public String convertExtractorNameOrIdToOpposite( String feature ) {
 		if ( feature.length() == 1 ) {
-			return convertToExName( feature );
+			return convertExIdToName( feature );
 		} else {
-			return convertToExId( feature );
+			return convertExNameToId( feature );
 		}
 	}
 
-	public String convertToExId( String extractorName ) {
+	public String convertExNameToId( String extractorName ) {
 		return nameToId.get( extractorName );
 	}
-
-	public String convertToExName( String extractorId ) {
+	
+	public String convertExIdToName( String extractorId ) {
 		return idToName.get( extractorId );
 	}
+
+	public String toExName( String extractorNameOrId ) {
+		String name = idToName.get( extractorNameOrId );
+		if ( name != null ) {
+			return name;
+		}
+		if (  nameToId.containsKey( extractorNameOrId ) ) {
+			return extractorNameOrId;		
+		}
+		return null;
+	}
 	
+	public String toExId( String extractorNameOrId ) {
+		String id = nameToId.get( extractorNameOrId );
+		if ( id != null ) {
+			return id;
+		}
+		if ( idToName.containsKey( extractorNameOrId ) ) {
+			return extractorNameOrId;		
+		}
+		return null;
+	}
 	
+	public DisambiguationExtractor create(FeatureInfo fi) throws InstantiationException, IllegalAccessException, ClassNotFoundException{
+		
+		String extractorName = toExName( fi.getFeatureExtractorName() );
+		String currentClassName = THIS_PACKAGE + extractorName;
+
+    	// creating extractor with given name
+    	Class<?> c = null;
+		try {
+			c = Class.forName( currentClassName );
+		} catch (ClassNotFoundException e) {
+			//e.printStackTrace();
+			String m = "Cannot find class for create: " + currentClassName;
+			logger.error( m + StackTraceExtractor.getStackTrace(e) );
+			throw new ClassNotFoundException( m, e );
+		}
+
+        return (DisambiguationExtractor) c.newInstance();
+	}
 }

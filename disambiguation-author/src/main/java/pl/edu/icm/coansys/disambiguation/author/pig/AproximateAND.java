@@ -36,6 +36,7 @@ import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.DisambiguatorFactory;
+import pl.edu.icm.coansys.disambiguation.author.pig.extractor.DisambiguationExtractorFactory;
 import pl.edu.icm.coansys.disambiguation.features.Disambiguator;
 import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
 import pl.edu.icm.coansys.disambiguation.author.benchmark.TimerSyso;
@@ -50,6 +51,8 @@ public class AproximateAND extends EvalFunc<DataBag> {
 	private int N;
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(AproximateAND.class);
     private boolean rememberSim = true;
+    private boolean useIdsForExtractors = true;
+    DisambiguationExtractorFactory extrFactory = new DisambiguationExtractorFactory();
     //benchmark staff
     private boolean isStatistics = false;
     private TimerSyso timer = new TimerSyso();
@@ -96,6 +99,11 @@ public class AproximateAND extends EvalFunc<DataBag> {
 				throw new Exception("Incorrect max value for feature: " + fi.getFeatureExtractorName() + ". Max value cannot equal 0.");
 			}
             
+			if ( useIdsForExtractors ) {
+				fi.setFeatureExtractorName( 
+						extrFactory.toExId( fi.getFeatureExtractorName() ) );
+			}
+			
             FIFinall.add( fi );
             FeaturesFinall.add( new PigDisambiguator( d ) );
         }
