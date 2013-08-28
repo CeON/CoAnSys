@@ -83,8 +83,9 @@ A1 = LOAD '$dc_m_hdfs_inputDocsData' USING $dc_m_meth_extraction_inner('org.apac
 A2 = LIMIT A1 10;
 
 B1 = foreach A2 generate flatten(snameDocumentMetaExtractor($1)) as (cId:chararray, sname:int, metadata:map[{(int)}]);
-B2 = FILTER B1 BY cId is not null;
-B = FILTER B2 BY featuresCheck(cId, sname, metadata);
+
+--B = FILTER B1 BY cId is not null;
+B = FILTER B1 BY (cId is not null) AND featuresCheck(cId, sname, metadata);
 
 C = group B by sname;
 -- D: {sname: chararray, datagroup: {(cId: chararray,sname: chararray,data: map[{(val_0: chararray)}])}, count: long}

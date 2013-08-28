@@ -24,6 +24,7 @@ import org.apache.pig.backend.executionengine.ExecException;
 import org.apache.pig.data.Tuple;
 import org.slf4j.LoggerFactory;
 
+import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.DisambiguatorFactory;
 import pl.edu.icm.coansys.disambiguation.author.pig.extractor.DisambiguationExtractorFactory;
 import pl.edu.icm.coansys.disambiguation.features.Disambiguator;
@@ -33,8 +34,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Verify that the author may be similar to someone by checking whether 
- * there is a minimum number of features.
+ * Verify that the author may be similar (comparable) to someone 
+ * by checking whether there is a minimum number of features.
  * 
  * @author mwos
  */
@@ -109,56 +110,59 @@ public class FeaturesCheck extends EvalFunc< Boolean > {
 	}
 	
 	@Override
-	public Boolean exec( Tuple input ) throws ExecException {
+	public Boolean exec( Tuple input ) {
 		
 		if ( input == null || input.size() == 0 ) return null;
 		
-		String cid = input.get(0).toString();
-		String sname = input.get(1).toString();
-		Map<String,Object> featuresMap = (Map<String, Object>) input.get(2);
+		String cid = null, sname = null;
+		Map<String,Object> featuresMap = null;
 		
-		//TODO calculate affinity with himself
-		/*
-		 * 				for ( int d = 0; d < features.length; d++ ) {
-					//Taking features from each keys (name of extractor = feature name)
-					//In contribsT.get(i) there is map we need.
-					//From this map (collection of i'th contributor's features)
-					//we take Bag with value of given feature.
-					//Here we have sure that following Object = DateBag.
-					
-					mA = contribsT.get(i);
-					mB = contribsT.get(j);
-					
-					//probably map is empty for some contrib
-					if ( mA == null || mB == null ){
-						continue;
-					}
-				
-					Object oA = mA.get( featureInfos[d].getFeatureExtractorName() );
-					Object oB = mB.get( featureInfos[d].getFeatureExtractorName() );
-					
-					//probably feature does not exist for some contrib
-					if ( oA == null || oB == null ){
-						continue;
-					}
-					
-					partial = features[d].calculateAffinity( oA, oB );
-					
-					partial = partial / featureInfos[d].getMaxValue() 
-							* featureInfos[d].getWeight();
-					
-					simil += partial;
+		try {
+			cid = input.get(0).toString();
+			sname = input.get(1).toString();
+			featuresMap = (Map<String, Object>) input.get(2);
+		} catch (ExecException e) {
+			// Throwing an exception would cause the task to fail.
+			logger.error("Caught exception processing input row:\n" 
+						+ StackTraceExtractor.getStackTrace(e));
+			return null;
+		}
 
-        			if ( simil >= 0 && !rememberSim ) {
-        				//because we do not remember sim values this time
-        				//we can break calculations
-        				break;
-        			}
-				}
-		 * 
-		 */
 		
-		return true;
+		if ( cid == null || sname == null || featuresMap == null ) {
+			return null;
+		}
+		
+		double partial = 0, simil = threshold;
+		for (int d = 0; d < features.length; d++) {
+			// Taking features from each keys (name of extractor = feature name)
+			// In contribsT.get(i) there is map we need.
+			// From this map (collection of i'th contributor's features)
+			// we take Bag with value of given feature.
+			// Here we have sure that following Object = DateBag.
+
+
+			Object o = featuresMap.get(featureInfos[d].getFeatureExtractorName());
+
+			// probably feature does not exist 
+			if (o == null ) {
+				continue;
+			}
+
+			partial = features[d].calculateAffinity(o, o);
+
+			partial = partial / featureInfos[d].getMaxValue()
+					* featureInfos[d].getWeight();
+
+			simil += partial;
+
+			//contributor is similar to himself so maybe comparable to other contributors
+			if ( simil >= 0 ) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 
 }
