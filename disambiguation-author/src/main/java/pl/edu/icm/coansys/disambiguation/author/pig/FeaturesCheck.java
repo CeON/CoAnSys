@@ -49,7 +49,8 @@ public class FeaturesCheck extends EvalFunc< Boolean > {
 	private DisambiguationExtractorFactory extrFactory = new DisambiguationExtractorFactory();
     //benchmark
 	private boolean isStatistics = false;
-    private static int skipedContribCounter = 0;
+    private static int skipedContribCounter = 0, allContribCounter = 0;
+    
 	
 	/**
      * @param Tuple input with cid, sname, map with features
@@ -114,7 +115,7 @@ public class FeaturesCheck extends EvalFunc< Boolean > {
 	public Boolean exec( Tuple input ) {
 		
 		if ( input == null || input.size() == 0 ) {
-			return null;
+			return false;
 		}
 		
 		String cid = null, sname = null;
@@ -128,13 +129,15 @@ public class FeaturesCheck extends EvalFunc< Boolean > {
 			// Throwing an exception would cause the task to fail.
 			logger.error("Caught exception processing input row:\n" 
 						+ StackTraceExtractor.getStackTrace(e));
-			return null;
+			return false;
 		}
 
 		
 		if ( cid == null || sname == null || featuresMap == null ) {
-			return null;
+			return false;
 		}
+		
+		allContribCounter++;
 		
 		double partial = 0, simil = threshold;
 		for ( int d = 0; d < features.length; d++ ) {
@@ -167,7 +170,9 @@ public class FeaturesCheck extends EvalFunc< Boolean > {
 		
 		if ( isStatistics ) {
 			//System.out.println( "FCH\t" +  cid + "\t" + sname + "\t" );
-			logger.info("Skipping " + (++skipedContribCounter) + " contrib: cid = " + cid + ", sname = " + sname + ". Not enough features." );
+			logger.info("Skipping " + (++skipedContribCounter) + " / " 
+					+ allContribCounter + " contrib: cid = " 
+					+ cid + ", sname = " + sname + ". Not enough features." );
 		}
 		
 		return false;
