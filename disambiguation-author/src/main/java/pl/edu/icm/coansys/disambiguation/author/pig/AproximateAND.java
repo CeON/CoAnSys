@@ -112,6 +112,11 @@ public class AproximateAND extends EvalFunc<DataBag> {
 		this.featureInfos = FIFinall.toArray( new FeatureInfo[ FIFinall.size() ] );
         this.features = 
         		FeaturesFinall.toArray( new PigDisambiguator[ FIFinall.size() ] );
+        
+        if ( this.isStatistics ) {
+        	timer.addMonit( "#NOTSTAT#", "alg", "is sim", "id", "N", "cl no",
+        			"sim cntr", "big clst", "time", "list of clusters' sizes" );
+        }
 	}
 	
 	/**
@@ -206,6 +211,7 @@ public class AproximateAND extends EvalFunc<DataBag> {
 
 				//stopping timer for current play (not thread)
 				/* STATISTICS DESCRIPTION:
+				 * ## #STAT# tag for parser
 				 * ## this algorithm name, 
 				 * ## is sim matrix created and some sim values stored , 
 				 * ## aproximate execution id,
@@ -219,8 +225,8 @@ public class AproximateAND extends EvalFunc<DataBag> {
 				 * ## clusters' sizes list
 				 * ## time [s]
 				 */
-				timer.stop( "APR", rememberSim, timerPlayId, N, finalClusterNumber, 
-		        		calculatedSimCounter, biggestCluster, clustersSizes.toString() );
+				timer.stop( "#STAT#", "APR", rememberSim, timerPlayId, N, finalClusterNumber,
+		        		calculatedSimCounter, biggestCluster, "#time", clustersSizes.toString() );
 			}
 			
 	        //bag: Tuple with (Object with (String (UUID), bag: { Tuple with ( String (contrib ID) ) } ) )
