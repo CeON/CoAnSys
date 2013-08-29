@@ -112,7 +112,12 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 		this.featureInfos = FIFinall.toArray( new FeatureInfo[ FIFinall.size() ] );
         this.features = 
         		FeaturesFinall.toArray( new PigDisambiguator[ FIFinall.size() ] );
-	}
+
+        if ( this.isStatistics ) {
+        	timer.addMonit( "#NOTSTAT#", "alg", "is sim", "id", "N", "cl no",
+        			"sim cntr", "big clst", "time", "list of clusters' sizes" );
+        }
+    }
 	
 	/**
 	 * @param Tuple with: 
@@ -210,6 +215,7 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 			if ( isStatistics ) {
 				//stopping timer for current play (not thread)
 				/* STATISTICS DESCRIPTION:
+				 * ## #STAT# tag for parser
 				 * ## this algorithm name, 
 				 * ## is some sim from aproximate, 
 				 * ## exhaustive execution id,
@@ -220,7 +226,7 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 				 * ## -
 				 * ## time [s]
 				 */
-				timer.stop( "exh", gotSim, timerPlayId, N, finalClusterNumber, calculatedSimCounter, "", "" );
+				timer.stop( "#STAT#", "exh", gotSim, timerPlayId, N, finalClusterNumber, calculatedSimCounter, "", "" );
 			}
 			
 	        return ret;

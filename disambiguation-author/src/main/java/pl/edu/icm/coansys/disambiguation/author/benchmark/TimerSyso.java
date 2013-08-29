@@ -52,15 +52,19 @@ public class TimerSyso implements Runnable  {
 
 		StringBuffer monit = new StringBuffer();
 		for ( Object o : monits ) {
-			monit.append( o.toString() );
-			monit.append("\t");
+			if ( o != null ) {
+				monit.append( o.toString() );
+				monit.append("\t");
+			}
 		}
 
 		System.out.println( monit.toString() );
 	}
 	
 	public void addCheckpoint( Object...monits ) {
-		long t = currentTime() - start;
+		long T = currentTime() - start;
+		double t = T / 1000000000.0;
+		
 		Object[] nm = new Object[ monits.length + 1 ];
 		boolean isTimeAdded = false;
 		for ( int i = 0; i < monits.length; i++ ) {
@@ -72,7 +76,7 @@ public class TimerSyso implements Runnable  {
 			}
 		}
 		if( !isTimeAdded ) {
-			nm[ monits.length ] = (t / 1000000000.0); //in sec
+			nm[ monits.length ] = t; //in sec
 		}
 		addMonit( nm );
 	}
