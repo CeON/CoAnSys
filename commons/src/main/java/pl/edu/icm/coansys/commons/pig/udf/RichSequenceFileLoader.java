@@ -339,7 +339,7 @@ public class RichSequenceFileLoader extends FileInputLoadFunc implements
 			translatePigDataTypeToWritable(t, 0, key);
 			translatePigDataTypeToWritable(t, 1, value);
 			writer.write(key, value);
-
+			LOG.debug("record with key ["+key+"] written");
 		} catch (Exception ex) {
 			String message = "Unable to write key/value pair to output, key: "
 					+ key.getClass() + ", value: " + value.getClass()
