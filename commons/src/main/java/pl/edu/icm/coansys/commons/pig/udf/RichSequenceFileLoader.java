@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
+
 package pl.edu.icm.coansys.commons.pig.udf;
 
 import java.io.IOException;
@@ -70,40 +71,30 @@ import org.apache.pig.impl.util.UDFContext;
  * types as keys or values: Text, IntWritable, LongWritable, FloatWritable,
  * DoubleWritable, BooleanWritable, ByteWritable, NullableTuple
  */
-public class RichSequenceFileLoader extends FileInputLoadFunc implements
-		StoreFuncInterface {
+public class RichSequenceFileLoader extends FileInputLoadFunc implements StoreFuncInterface {
 
-	private static final Log LOG = LogFactory
-			.getLog(RichSequenceFileLoader.class);
-	private SequenceFileRecordReader<Writable, Writable> reader;
-	private RecordWriter<Writable, Writable> writer;
-	private Writable key;
-	private Writable value;
-	private ArrayList<Object> mProtoTuple = null;
+	private static final Log LOG = LogFactory.getLog(RichSequenceFileLoader.class);
+	private ArrayList<Object> mProtoTuple = new ArrayList<Object>(2); 
+	private Configuration config = new Configuration();
 	private TupleFactory mTupleFactory = TupleFactory.getInstance();
 	private byte keyType = DataType.UNKNOWN;
 	private byte valType = DataType.UNKNOWN;
-	private Configuration config = new Configuration();
+	
+	private SequenceFileRecordReader<Writable,Writable> reader;
+	private RecordWriter<Writable,Writable> writer;
 	private Class<?> keyClass;
 	private Class<?> valueClass;
-
-	public RichSequenceFileLoader() {
-		mProtoTuple = new ArrayList<Object>(2);
+	private Writable key;
+	private Writable value;
+	
+	public RichSequenceFileLoader(){
 	}
 
-	public RichSequenceFileLoader(String keyClassName, String valueClassName)
-			throws ClassNotFoundException, IOException, InstantiationException,
-			IllegalAccessException {
-		this();
+	public RichSequenceFileLoader(String keyClassName, String valueClassName) throws ClassNotFoundException{
 		keyClass = config.getClassByName(keyClassName);
 		valueClass = config.getClassByName(valueClassName);
-
-		// key = (Writable) keyClass.newInstance();
-		key = (Writable) ReflectionUtils.newInstance(keyClass,
-				new Configuration());
-		// value = (Writable) valueClass.newInstance();
-		value = (Writable) ReflectionUtils.newInstance(valueClass,
-				new Configuration());
+		key = (Writable) ReflectionUtils.newInstance(keyClass,new Configuration());
+		value = (Writable) ReflectionUtils.newInstance(valueClass,new Configuration());
 	}
 
 	protected void setKeyType(Class<?> keyClass) throws BackendException {
@@ -162,16 +153,14 @@ public class RichSequenceFileLoader extends FileInputLoadFunc implements
 				DataByteArray dba = new DataByteArray();
 				dba.set(((BytesWritable) w).copyBytes());
 				return dba;
-			} else {
-				return ((DataByteArray) w);
 			}
+			return ((DataByteArray) w);
 		case DataType.GENERIC_WRITABLECOMPARABLE:
 			if (w instanceof NullableTuple) {
 				Tuple t = (Tuple) ((NullableTuple) w).getValueAsPigType();
 				return t.get(0);
-			} else {
-				return ((WritableComparable<?>) w);
 			}
+			return ((WritableComparable<?>) w);
 		case DataType.INTEGER:
 			return ((IntWritable) w).get();
 		case DataType.LONG:
@@ -182,8 +171,9 @@ public class RichSequenceFileLoader extends FileInputLoadFunc implements
 			return ((DoubleWritable) w).get();
 		case DataType.BYTE:
 			return ((ByteWritable) w).get();
+		default:
+			return null;
 		}
-		return null;
 	}
 
 	protected void translatePigDataTypeToWritable(Tuple t, int fieldNum,
@@ -334,17 +324,15 @@ public class RichSequenceFileLoader extends FileInputLoadFunc implements
 
 	@Override
 	public void putNext(Tuple t) throws ExecException, IOException {
-		try {
-
+		try{
 			translatePigDataTypeToWritable(t, 0, key);
 			translatePigDataTypeToWritable(t, 1, value);
 			writer.write(key, value);
-			LOG.debug("record with key ["+key+"] written");
-		} catch (Exception ex) {
+		}catch (Exception ex) {
 			String message = "Unable to write key/value pair to output, key: "
 					+ key.getClass() + ", value: " + value.getClass()
 					+ ", writer " + writer + " ex " + ex;
-			LOG.warn(message);
+			LOG.error(message);
 			throw new BackendException(message);
 		}
 	}
@@ -360,6 +348,7 @@ public class RichSequenceFileLoader extends FileInputLoadFunc implements
 
     @Override
     public void cleanupOnSuccess(String arg0, Job arg1) throws IOException {
-        StoreFunc.cleanupOnFailureImpl(arg0, arg1);
+        //be silent like a ninja - in ElephantBird the same implementation is provided ;)
     }
 }
+
