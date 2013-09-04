@@ -1,0 +1,6 @@
+<configuration>
+	<property>
+		<name>DFS_SOCKET_CLIENT_TIMEOUT</name>
+		<value>120000</value>
+	</property>
+</configuration>

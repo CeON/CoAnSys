@@ -1,0 +1,101 @@
+<workflow-app xmlns="uri:oozie:workflow:0.1" name="disambiguation-work-wf">
+    <start to="disambiguation-work" />
+<action name="disambiguation-work">
+		<map-reduce>
+			<job-tracker>${jobTracker}</job-tracker>
+			<name-node>${nameNode}</name-node>
+			<configuration>
+				<!-- This is required for new api usage -->
+				<property>
+					<name>mapred.mapper.new-api</name>
+					<value>true</value>
+				</property>
+				<property>
+					<name>mapred.reducer.new-api</name>
+					<value>true</value>
+				</property>
+				<property>
+					<name>mapred.input.dir</name>
+					<value>${workingDir}/hbase-sf-out/</value>
+				</property>
+				<property>
+					<name>mapred.output.dir</name>
+					<value>${workingDir}/dis-work-out/</value>
+				</property>
+				<property>
+					<name>mapreduce.map.class</name>
+					<value>pl.edu.icm.coansys.commons.spring.DiMapper</value>
+				</property>
+				<property>
+					<name>mapreduce.reduce.class</name>
+					<value>pl.edu.icm.coansys.commons.spring.DiReducer</value>
+				</property>
+				<property>
+					<name>mapred.map.tasks</name>
+					<value>6</value>
+				</property>
+				<property>
+					<name>mapred.reduce.tasks</name>
+					<value>8</value>
+				</property>
+				<property>
+					<name>mapred.job.queue.name</name>
+					<value>${queueName}</value>
+				</property>
+				<property>
+					<name>mapreduce.inputformat.class</name>
+					<value>org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat
+					</value>
+				</property>
+				<property>
+					<name>mapreduce.outputformat.class</name>
+					<value>org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat
+					</value>
+				</property>
+				<property>
+					<name>mapred.output.key.class</name>
+					<value>org.apache.hadoop.io.Text</value>
+				</property>
+				<property>
+					<name>mapred.output.value.class</name>
+					<value>org.apache.hadoop.io.BytesWritable</value>
+				</property>
+				<property>
+					<name>diMapApplicationContextPath</name>
+					<value>spring/applicationContext.xml</value>
+				</property>
+				<property>
+					<name>diMapServiceBeanName</name>
+					<value>duplicateWorkDetectMapService</value>
+				</property>
+				<property>
+					<name>diReduceApplicationContextPath</name>
+					<value>spring/applicationContext.xml</value>
+				</property>
+				<property>
+					<name>diReduceServiceBeanName</name>
+					<value>duplicateWorkDetectReduceService</value>
+				</property>
+				<property>
+					<name>dfs.client.socket-timeout</name>
+					<value>120000</value>
+				</property>
+				<property>
+					<name>mapred.task.timeout</name>
+					<value>1200000</value>
+				</property>
+				<property>
+					<name>mapred.child.java.opts</name>
+					<value>-Xmx4096m</value>
+				</property>
+			</configuration>
+		</map-reduce>
+		<ok to="finalize" />
+		<error to="finalize-error" />
+	</action>
+
+	<kill name="finalize-error">
+		<message>Workflow failed</message>
+	</kill>
+	<end name="finalize" />
+</workflow-app>
