@@ -122,7 +122,7 @@ object ApproximateIndex {
       val mf = manifest[BytesIterable]
     }
     persist(toSequenceFile(indexEntries(documents), indexFile))
-    hdfs.mergeSeqs(indexFile)
-    hdfs.convertSeqToMap(indexFile)
+    hdfs.mergeSeqs(indexFile)(conf)
+    hdfs.convertSeqToMap(indexFile)(conf)
   }
 }
