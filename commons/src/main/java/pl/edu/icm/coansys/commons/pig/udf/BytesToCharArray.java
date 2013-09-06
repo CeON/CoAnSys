@@ -32,7 +32,6 @@ public class BytesToCharArray extends EvalFunc<String> {
     @Override
     public String exec(Tuple input) throws IOException {
         byte[] bytes = (byte[]) input.get(0);
-        String s = Bytes.toString(bytes);
-        return s;
+        return Bytes.toString(bytes);
     }
 }
