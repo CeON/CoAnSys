@@ -26,7 +26,7 @@ import org.apache.hadoop.io.{WritableComparable, Writable, MapFile, SequenceFile
 import org.apache.hadoop.io.SequenceFile.Sorter
 
 /**
- * A collection of functions used to manipulate hdfs files
+ * A collection of functions used to manipulate hdfs files.
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 object hdfs {
@@ -34,8 +34,7 @@ object hdfs {
    * Reads from a SequenceFile its key and value types
    * @return a pair of key and value type
    */
-  def extractSeqTypes(uri: String): (Class[_], Class[_]) = {
-    val conf = new Configuration()
+  def extractSeqTypes(uri: String)(implicit conf: Configuration): (Class[_], Class[_]) = {
     val fs = FileSystem.get(URI.create(uri), conf)
     val path = new Path(uri)
     using(new SequenceFile.Reader(fs, path, conf)) {
@@ -49,8 +48,7 @@ object hdfs {
   /**
    * Converts SequenceFile to a MapFile.
    */
-  def convertSeqToMap(uri: String) {
-    val conf = new Configuration()
+  def convertSeqToMap(uri: String)(implicit conf: Configuration) {
     val fs = FileSystem.get(URI.create(uri), conf)
     val map = new Path(uri)
     val mapContents = fs.listStatus(map).head.getPath
@@ -63,8 +61,7 @@ object hdfs {
   /**
    * Merges and sorts all SequenceFiles in given directory.
    */
-  def mergeSeqs(uri: String) {
-    val conf = new Configuration()
+  def mergeSeqs(uri: String)(implicit conf: Configuration) {
     val fs = FileSystem.get(URI.create(uri), conf)
     val dir = new Path(uri)
     val paths: Array[Path] = fs.listStatus(dir).map(_.getPath).filterNot(_.getName.startsWith("_"))
