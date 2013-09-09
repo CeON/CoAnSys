@@ -45,7 +45,8 @@
         </property>
         <property>
             <name>cit_genAuthorIdxJavaOpts</name>
-            <value/>
+            <!-- we need to put something other than an empty string here to get a proper default value -->
+            <value>-showversion</value>
             <description>additional Java options for author index building phase</description>
         </property>
         <property>
