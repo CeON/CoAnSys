@@ -28,17 +28,13 @@ import org.apache.pig.EvalFunc;
 import org.apache.pig.data.DataBag;
 import org.apache.pig.data.DataByteArray;
 import org.apache.pig.data.DataType;
-//import org.apache.pig.data.DefaultDataBag;
 import org.apache.pig.data.Tuple;
-//import org.apache.pig.data.TupleFactory;
 import org.apache.pig.impl.logicalLayer.FrontendException;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
 import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
-//import pl.edu.icm.coansys.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
 
@@ -65,8 +61,7 @@ public class EXTRACT_DOCUMENTDATA_GIVENDATA extends EvalFunc<Map<String,Object>>
         }
     }
     
-    private void setDisambiguationExtractor( String featureinfo ) throws 
-    	Exception {
+    private void setDisambiguationExtractor( String featureinfo ) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
         
     	List<FeatureInfo> features = FeatureInfo.parseFeatureInfoString( featureinfo );
         
@@ -91,37 +86,31 @@ public class EXTRACT_DOCUMENTDATA_GIVENDATA extends EvalFunc<Map<String,Object>>
 			// recognition of extractor type
             String currentSuperClassName = c.getSuperclass().getSimpleName();
             
-            try {
-	            if ( currentSuperClassName.equals( ExtractorDocClassName ) ) {
-	            	des4Doc.add( (DisambiguationExtractorDocument) c.newInstance() );
-	            } else if ( currentSuperClassName.equals( ExtractorAuthorClassName ) ) {
-	            	des4Author.add( (DisambiguationExtractorAuthor) c.newInstance() );
-	            } else {
-	            	String m = "Cannot create extractor: " 
-	            			+ c.getSimpleName() + ". Its superclass: " 
-	            			+ currentSuperClassName + " does not match to any superclass.";
-	            	throw new Exception( m );
-	            }
-            } catch( Exception e ) {
-            	logger.error( StackTraceExtractor.getStackTrace(e) );
-            	throw e;
+            
+            if ( currentSuperClassName.equals( ExtractorDocClassName ) ) {
+                des4Doc.add( (DisambiguationExtractorDocument) c.newInstance() );
+            } else if ( currentSuperClassName.equals( ExtractorAuthorClassName ) ) {
+                des4Author.add( (DisambiguationExtractorAuthor) c.newInstance() );
+            } else {
+                String m = "Cannot create extractor: " 
+                                + c.getSimpleName() + ". Its superclass: " 
+                                + currentSuperClassName + " does not match to any superclass.";
+                throw new ClassNotFoundException( m );
             }
+            
         }
     }
     
-    public EXTRACT_DOCUMENTDATA_GIVENDATA( String featureinfo ) throws 
-    		Exception {
+    public EXTRACT_DOCUMENTDATA_GIVENDATA( String featureinfo ) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
     	setDisambiguationExtractor( featureinfo );
     }
     
-    public EXTRACT_DOCUMENTDATA_GIVENDATA( String featureinfo, String lang ) throws 
-    		Exception {
+    public EXTRACT_DOCUMENTDATA_GIVENDATA( String featureinfo, String lang ) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
     	setDisambiguationExtractor( featureinfo );
     	language = lang;
     }
     
-    public EXTRACT_DOCUMENTDATA_GIVENDATA( String featureinfo, String lang, String skipEmptyFeatures ) throws 
-    		Exception {
+    public EXTRACT_DOCUMENTDATA_GIVENDATA( String featureinfo, String lang, String skipEmptyFeatures ) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
     	setDisambiguationExtractor( featureinfo );
     	language = lang;
     	this.skipEmptyFeatures = Boolean.parseBoolean( skipEmptyFeatures );

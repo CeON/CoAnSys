@@ -15,7 +15,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package pl.edu.icm.coansys.disambiguation.author.pig.extractor;
 
 import org.apache.pig.data.DataBag;
@@ -29,32 +28,34 @@ import pl.edu.icm.coansys.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.models.DocumentProtos.KeyValue;
 
-public class EX_PERSON_ID extends DisambiguationExtractorAuthor{
-	
-	private static final Logger logger = LoggerFactory.getLogger( EX_PERSON_ID.class );
-	public static final String PERSON_ID_KEY_NAME = "personPbnId";
-	
-	@Override
-	public DataBag extract( Object o, int fakeIndex, String lang ){
-		TupleFactory tf = TupleFactory.getInstance();
-		DocumentMetadata dm = (DocumentMetadata) o;
-		DataBag db = new DefaultDataBag();
-		Tuple t = tf.newTuple();
-		
-		Author a = dm.getBasicMetadata().getAuthor(fakeIndex);
-		
-		for(KeyValue kv : a.getExtIdList()){
-			if(kv.getKey().equals(PERSON_ID_KEY_NAME)){
-				t.append(kv.getValue());
-				db.add(t);
-				break;
-			}
-		}
-		
-		if(t.size()>0) return db;
-		logger.info("no person id for the contributor "+a.getDocId()+"#"+a.getPositionNumber());
-		t.append(a.getDocId()+"#"+a.getPositionNumber());
-		db.add(t);
-		return db;
-	}
+public class EX_PERSON_ID extends DisambiguationExtractorAuthor {
+
+    private static final Logger logger = LoggerFactory.getLogger(EX_PERSON_ID.class);
+    public static final String PERSON_ID_KEY_NAME = "personPbnId";
+
+    @Override
+    public DataBag extract(Object o, int fakeIndex, String lang) {
+        TupleFactory tf = TupleFactory.getInstance();
+        DocumentMetadata dm = (DocumentMetadata) o;
+        DataBag db = new DefaultDataBag();
+        Tuple t = tf.newTuple();
+
+        Author a = dm.getBasicMetadata().getAuthor(fakeIndex);
+
+        for (KeyValue kv : a.getExtIdList()) {
+            if (kv.getKey().equals(PERSON_ID_KEY_NAME)) {
+                t.append(kv.getValue());
+                db.add(t);
+                break;
+            }
+        }
+
+        if (t.size() > 0) {
+            return db;
+        }
+        logger.info("no person id for the contributor " + a.getDocId() + "#" + a.getPositionNumber());
+        t.append(a.getDocId() + "#" + a.getPositionNumber());
+        db.add(t);
+        return db;
+    }
 }
