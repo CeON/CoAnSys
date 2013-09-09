@@ -44,6 +44,11 @@
             <description>either BasicMetadata or Raw</description>
         </property>
         <property>
+            <name>cit_genAuthorIdxJavaOpts</name>
+            <value/>
+            <description>additional Java options for author index building phase</description>
+        </property>
+        <property>
             <name>cit_heuristic</name>
             <value>Old</value>
         </property>
@@ -152,6 +157,7 @@
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
             <main-class>pl.edu.icm.coansys.citations.jobs.IndexBuilder</main-class>
+            <java-opts>${cit_genAuthorIdxJavaOpts}</java-opts>
             <arg>-fs</arg>
             <arg>${nameNode}</arg>
             <arg>-jt</arg>
