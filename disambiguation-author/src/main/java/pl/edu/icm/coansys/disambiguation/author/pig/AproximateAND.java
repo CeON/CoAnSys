@@ -333,9 +333,7 @@ public class AproximateAND extends EvalFunc<DataBag> {
 					}
 					
 					partial = features[d].calculateAffinity( oA, oB );
-					
-					partial = partial / featureInfos[d].getMaxValue() 
-							* featureInfos[d].getWeight();
+					partial = partial * featureInfos[d].getWeight();
 					
 					simil += partial;
 

@@ -18,7 +18,11 @@
 
 package pl.edu.icm.coansys.disambiguation.author.features.disambiguators;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
+import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.disambiguation.features.Disambiguator;
 
@@ -31,6 +35,9 @@ import pl.edu.icm.coansys.disambiguation.features.Disambiguator;
  */
 public class CoAuthorsSnameDisambiguatorFullList extends Disambiguator{
 
+    private static final org.slf4j.Logger logger 
+    	= LoggerFactory.getLogger( CoAuthorsSnameDisambiguatorFullList.class );
+    
 	@Override
 	public String getName() {
 		return CoAuthorsSnameDisambiguatorFullList.class.getSimpleName();
@@ -38,8 +45,30 @@ public class CoAuthorsSnameDisambiguatorFullList extends Disambiguator{
 	
 	@Override
 	public double calculateAffinity( List<Object> f1, List<Object> f2 ) {
-		f1.retainAll(f2);
-		int size = f1.size();
-		return ( size > 0 ) ? (size-1) : 0;
+		//(-2) because in both lists there is contributor name for whom we are 
+		//calculating similarity
+		
+		Set<Object> set = new HashSet<Object>( f1 );
+		set.addAll( f2 );
+		double sum = set.size();
+		if ( sum <= 0 ) {
+			logger.warn( "Negative or zero value of lists sum. Returning 0." );
+			//TODO: ? 0 or 1
+			return 0;
+		}
+		
+		f1.retainAll( f2 );
+		//because this cotributor is in intersection for sure, but we do not want
+		//to take him as co-author.
+		double intersection = f1.size() - 1;
+		
+		double resoult = intersection / sum;
+		
+		if ( resoult < 0 ) {
+			logger.warn( "Negative value of intersection. Returning 0." );
+			return 0;
+		}
+		
+		return resoult;
 	}
 }

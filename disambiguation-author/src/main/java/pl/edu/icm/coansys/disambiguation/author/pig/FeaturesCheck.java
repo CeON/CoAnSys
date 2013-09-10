@@ -134,6 +134,9 @@ public class FeaturesCheck extends EvalFunc< Boolean > {
 
 		
 		if ( cid == null || sname == null || featuresMap == null ) {
+			logger.info("Skipping " + (++skipedContribCounter) + " / " 
+					+ allContribCounter + " contrib: cid = " 
+					+ cid + ", sname = " + sname + ". Cid or sname or feature map with null value." );
 			return false;
 		}
 		
@@ -156,9 +159,7 @@ public class FeaturesCheck extends EvalFunc< Boolean > {
 			}
 
 			partial = features[d].calculateAffinity( o, o );
-
-			partial = partial / featureInfos[d].getMaxValue()
-					* featureInfos[d].getWeight();
+			partial = partial * featureInfos[d].getWeight();
 
 			simil += partial;
 
