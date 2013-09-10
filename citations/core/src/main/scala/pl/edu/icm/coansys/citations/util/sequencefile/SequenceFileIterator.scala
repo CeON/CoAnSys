@@ -26,19 +26,26 @@ import org.apache.hadoop.fs.Path
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 class SequenceFileIterator(reader: SequenceFile.Reader) extends Iterator[(Writable, Writable)] {
-  private val key = reader.getKeyClass.newInstance().asInstanceOf[Writable]
-  private val value = reader.getValueClass.newInstance().asInstanceOf[Writable]
+  private var key: Writable = null
+  private var value: Writable = null
   private var preloaded = false
+
+  private def readNext: Boolean = {
+    key = reader.getKeyClass.newInstance().asInstanceOf[Writable]
+    value = reader.getValueClass.newInstance().asInstanceOf[Writable]
+
+    reader.next(key, value)
+  }
 
   def hasNext =
     preloaded || {
-      preloaded = reader.next(key, value);
+      preloaded = readNext
       preloaded
     }
 
   def next(): (Writable, Writable) = {
     if (!preloaded) {
-      reader.next(key, value)
+      readNext
     }
     else {
       preloaded = false
