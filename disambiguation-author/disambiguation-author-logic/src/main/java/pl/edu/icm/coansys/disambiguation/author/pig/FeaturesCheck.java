@@ -19,18 +19,11 @@
 package pl.edu.icm.coansys.disambiguation.author.pig;
 
 
-import org.apache.pig.EvalFunc;
 import org.apache.pig.backend.executionengine.ExecException;
 import org.apache.pig.data.Tuple;
 import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
-import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.DisambiguatorFactory;
-import pl.edu.icm.coansys.disambiguation.author.pig.extractor.DisambiguationExtractorFactory;
-import pl.edu.icm.coansys.disambiguation.features.Disambiguator;
-import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -39,14 +32,9 @@ import java.util.Map;
  * 
  * @author mwos
  */
-public class FeaturesCheck extends EvalFunc< Boolean > {
+public class FeaturesCheck extends AND<Boolean> {
 
-	private PigDisambiguator[] features;
-	private FeatureInfo[] featureInfos;
 	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(FeaturesCheck.class);
-    private float threshold;
-	private boolean useIdsForExtractors = false;
-	private DisambiguationExtractorFactory extrFactory = new DisambiguationExtractorFactory();
     //benchmark
 	private boolean isStatistics = false;
     private static int skipedContribCounter = 0, allContribCounter = 0;
@@ -60,55 +48,8 @@ public class FeaturesCheck extends EvalFunc< Boolean > {
      */
 	
 	public FeaturesCheck( String threshold, String featureDescription, String useIdsForExtractors, String printStatistics ) throws Exception {
-		this.threshold = Float.parseFloat(threshold);
-		this.useIdsForExtractors = Boolean.parseBoolean( useIdsForExtractors );
+		super( logger, threshold, featureDescription, useIdsForExtractors );
 		this.isStatistics = Boolean.parseBoolean( printStatistics );
-		
-		List<FeatureInfo> FIwithEmpties 
-			= FeatureInfo.parseFeatureInfoString(featureDescription);
-		List<FeatureInfo> FIFinall = new LinkedList<FeatureInfo>();
-		List<PigDisambiguator> FeaturesFinall = new LinkedList<PigDisambiguator>();
-		
-        DisambiguatorFactory ff = new DisambiguatorFactory();
-        Disambiguator d;
-        
-        //separate features which are fully described and able to use
-        for ( FeatureInfo fi : FIwithEmpties ) {
-            if ( fi.getDisambiguatorName().equals("") ) {
-                //creating default disambugiator
-            	d = new Disambiguator();
-            	logger.info("Empty disambiguator name. Creating default disambiguator for this feature.");
-            }
-            if ( fi.getFeatureExtractorName().equals("") ) {
-            	logger.error("Empty extractor name in feature info. Leaving this feature.");
-            	throw new Exception("Empty extractor name.");
-            	//continue;
-            }
-            d = ff.create( fi );
-            if ( d == null ) {
-            	//creating default disambugiator
-            	//d = new Disambiguator();
-            	logger.error("Cannot create disambugiator from given feature info.");
-            	throw new Exception("Cannot create disambugiator from given feature info.");
-            }
-			//wrong max value (would cause dividing by zero)
-			if ( fi.getMaxValue() == 0 ){
-				logger.warn( "Incorrect max value for feature: " + fi.getFeatureExtractorName() + ". Max value cannot equal 0." );
-				throw new Exception("Incorrect max value for feature: " + fi.getFeatureExtractorName() + ". Max value cannot equal 0.");
-			}
-            
-			if ( this.useIdsForExtractors ) {
-				fi.setFeatureExtractorName( 
-						extrFactory.toExId( fi.getFeatureExtractorName() ) );
-			}
-			
-            FIFinall.add( fi );
-            FeaturesFinall.add( new PigDisambiguator( d ) );
-        }
-        
-		this.featureInfos = FIFinall.toArray( new FeatureInfo[ FIFinall.size() ] );
-        this.features = 
-        		FeaturesFinall.toArray( new PigDisambiguator[ FIFinall.size() ] );
 	}
 	
 	@Override
