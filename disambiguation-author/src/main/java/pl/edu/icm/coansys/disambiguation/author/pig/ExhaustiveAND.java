@@ -282,8 +282,7 @@ public class ExhaustiveAND extends EvalFunc<DataBag> {
 					}
 					
 					double partial = features[d].calculateAffinity( oA, oB );
-					partial = partial / featureInfos[d].getMaxValue() 
-							* featureInfos[d].getWeight();
+					partial = partial * featureInfos[d].getWeight();
 					
 					sim[i][j] += partial;
 				}

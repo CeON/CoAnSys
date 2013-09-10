@@ -156,9 +156,7 @@ public class FeaturesCheck extends EvalFunc< Boolean > {
 			}
 
 			partial = features[d].calculateAffinity( o, o );
-
-			partial = partial / featureInfos[d].getMaxValue()
-					* featureInfos[d].getWeight();
+			partial = partial * featureInfos[d].getWeight();
 
 			simil += partial;
 

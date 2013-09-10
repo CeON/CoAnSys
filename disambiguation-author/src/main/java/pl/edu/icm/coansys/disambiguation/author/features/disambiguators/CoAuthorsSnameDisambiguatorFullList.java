@@ -20,6 +20,8 @@ package pl.edu.icm.coansys.disambiguation.author.features.disambiguators;
 
 import java.util.List;
 
+import org.slf4j.LoggerFactory;
+
 import pl.edu.icm.coansys.disambiguation.features.Disambiguator;
 
 /**
@@ -31,6 +33,9 @@ import pl.edu.icm.coansys.disambiguation.features.Disambiguator;
  */
 public class CoAuthorsSnameDisambiguatorFullList extends Disambiguator{
 
+    private static final org.slf4j.Logger logger 
+    	= LoggerFactory.getLogger( CoAuthorsSnameDisambiguatorFullList.class );
+    
 	@Override
 	public String getName() {
 		return CoAuthorsSnameDisambiguatorFullList.class.getSimpleName();
@@ -38,8 +43,28 @@ public class CoAuthorsSnameDisambiguatorFullList extends Disambiguator{
 	
 	@Override
 	public double calculateAffinity( List<Object> f1, List<Object> f2 ) {
+		//(-2) because in both lists there is contributor name for whom we are 
+		//calculating similarity
+		double sum = f1.size() + f2.size() - 2;
+		
+		
 		f1.retainAll(f2);
-		int size = f1.size();
-		return ( size > 0 ) ? (size-1) : 0;
+		//because this cotributor is in intersection for sure, but we do not want
+		//to take him as co-author.
+		double intersection = f1.size() - 1;
+		
+		if ( sum <= 0 ) {
+			logger.warn( "Negative or zero value of lists sum." );
+			return 0;
+		}
+		
+		double resoult = intersection / sum;
+		
+		if ( resoult < 0 ) {
+			logger.warn( "Negative value of intersection." );
+			return 0;
+		}
+		
+		return resoult;
 	}
 }
