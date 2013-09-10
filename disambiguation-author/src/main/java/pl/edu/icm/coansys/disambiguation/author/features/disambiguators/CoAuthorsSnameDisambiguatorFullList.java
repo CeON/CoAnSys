@@ -18,7 +18,9 @@
 
 package pl.edu.icm.coansys.disambiguation.author.features.disambiguators;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.slf4j.LoggerFactory;
 
@@ -45,23 +47,25 @@ public class CoAuthorsSnameDisambiguatorFullList extends Disambiguator{
 	public double calculateAffinity( List<Object> f1, List<Object> f2 ) {
 		//(-2) because in both lists there is contributor name for whom we are 
 		//calculating similarity
-		double sum = f1.size() + f2.size() - 2;
 		
+		Set<Object> set = new HashSet<Object>( f1 );
+		set.addAll( f2 );
+		double sum = set.size();
+		if ( sum <= 0 ) {
+			logger.warn( "Negative or zero value of lists sum. Returning 0." );
+			//TODO: ? 0 or 1
+			return 0;
+		}
 		
-		f1.retainAll(f2);
+		f1.retainAll( f2 );
 		//because this cotributor is in intersection for sure, but we do not want
 		//to take him as co-author.
 		double intersection = f1.size() - 1;
 		
-		if ( sum <= 0 ) {
-			logger.warn( "Negative or zero value of lists sum." );
-			return 0;
-		}
-		
 		double resoult = intersection / sum;
 		
 		if ( resoult < 0 ) {
-			logger.warn( "Negative value of intersection." );
+			logger.warn( "Negative value of intersection. Returning 0." );
 			return 0;
 		}
 		
