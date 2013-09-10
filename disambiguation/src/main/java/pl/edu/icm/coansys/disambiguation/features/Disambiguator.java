@@ -18,7 +18,9 @@
 
 package pl.edu.icm.coansys.disambiguation.features;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.slf4j.LoggerFactory;
 
@@ -43,13 +45,22 @@ public class Disambiguator {
 	 * In the basic implementation this value is a size of an intersection between feature values' lists 
 	 */
 	public double calculateAffinity( List<Object> f1, List<Object> f2 ) {
-		double sum = f1.size() + f2.size();
-		f1.retainAll(f2);
-		double intersection = f1.size();
+		
+		//TODO: set, retain, add to: sorting list of int (hashes), iterating 
+		//through them and counting both of sum and intersection value.
+		
+		Set<Object> set = new HashSet<Object>( f1 );
+		set.addAll( f2 );
+		double sum = set.size();
 		if ( sum <= 0 ) {
-			logger.warn( "Negative or zero value of lists sum." );
+			logger.warn( "Negative or zero value of lists sum. Returning 0." );
+			//TODO: ? 0 or 1
 			return 0;
 		}
+		
+		f1.retainAll( f2 );
+		double intersection = f1.size();
+
 		return intersection / sum;
 	}
 	
