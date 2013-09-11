@@ -205,7 +205,6 @@
     <modules>
         <module>citations</module>
         <module>commons</module>
-        <module>commons-scala</module>
         <module>disambiguation</module>
         <module>disambiguation-author</module>
         <module>disambiguation-work</module>

@@ -18,6 +18,7 @@
 
 package pl.edu.icm.coansys.citations.tools.matcher
 
+import resource._
 import java.io.{FileWriter, FileInputStream, File}
 import io.Source
 import collection.JavaConversions._
@@ -28,8 +29,7 @@ import pl.edu.icm.coansys.citations.util.misc
 import pl.edu.icm.coansys.citations.util.misc.tokensFromCermine
 import pl.edu.icm.coansys.citations.util.ngrams.trigramSimilarity
 import pl.edu.icm.coansys.citations.util.ngrams.NgramStatistics
-import pl.edu.icm.coansys.commons.scala.strings._
-import pl.edu.icm.coansys.commons.scala.automatic_resource_management._
+import pl.edu.icm.ceon.scala_commons.strings._
 import collection.mutable
 
 /**
@@ -143,16 +143,14 @@ object LibSvmFileGenerator {
         svmLightLineFromFeatures(if (matches) 1 else 0, myFeatures(cit1, cit2))
     }
 
-    using(new FileWriter(outFile)) {
-      writer =>
-        lines.foreach(x => writer.write(x + "\n"))
+    for (writer <- managed(new FileWriter(outFile))) {
+      lines.foreach(x => writer.write(x + "\n"))
     }
 
-    using(new FileWriter(outMapFile)) {
-      writer =>
-        citationPairs.foreach {
-          case (_, (i, j), _, _) => writer.write(i + " " + j + "\n")
-        }
+    for (writer <- managed(new FileWriter(outMapFile))) {
+      citationPairs.foreach {
+        case (_, (i, j), _, _) => writer.write(i + " " + j + "\n")
+      }
     }
 
   }

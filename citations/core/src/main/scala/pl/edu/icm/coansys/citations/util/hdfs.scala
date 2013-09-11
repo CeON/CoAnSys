@@ -18,10 +18,10 @@
 
 package pl.edu.icm.coansys.citations.util
 
+import resource._
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.{Path, FileSystem}
 import java.net.URI
-import pl.edu.icm.coansys.commons.scala.automatic_resource_management._
 import org.apache.hadoop.io.{WritableComparable, Writable, MapFile, SequenceFile}
 import org.apache.hadoop.io.SequenceFile.Sorter
 
@@ -37,7 +37,7 @@ object hdfs {
   def extractSeqTypes(uri: String)(implicit conf: Configuration): (Class[_], Class[_]) = {
     val fs = FileSystem.get(URI.create(uri), conf)
     val path = new Path(uri)
-    using(new SequenceFile.Reader(fs, path, conf)) {
+    managed(new SequenceFile.Reader(fs, path, conf)).acquireAndGet {
       reader =>
         val keyClass = reader.getKeyClass
         val valueClass = reader.getValueClass

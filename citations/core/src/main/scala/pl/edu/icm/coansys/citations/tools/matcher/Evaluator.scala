@@ -19,7 +19,7 @@
 package pl.edu.icm.coansys.citations.tools.matcher
 
 import scala.io.Source
-import pl.edu.icm.coansys.commons.scala.collections.DisjointSet
+import pl.edu.icm.ceon.scala_commons.collections.DisjointSet
 
 
 object Evaluator {

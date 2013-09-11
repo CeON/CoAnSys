@@ -1,9 +1,9 @@
 package pl.edu.icm.coansys.citations.tools.pic
 
+import resource._
 import java.io.{FileWriter, BufferedWriter, File}
 import pl.edu.icm.coansys.citations.data.{MatchableEntity, SimilarityMeasurer}
 import pl.edu.icm.coansys.citations.util.classification.svm.SvmClassifier
-import pl.edu.icm.coansys.commons.scala.automatic_resource_management.using
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -18,16 +18,15 @@ object SvmFilesOnHeur {
 
   def writeFile(dbEntities: Iterable[MatchableEntity], gold: Iterable[(String, String)], file: File) {
     val heuristic = new NewHeuristic(dbEntities)
-    using(new BufferedWriter(new FileWriter(file))) {
-      writer =>
-        for {
-          (src, dst) <- gold if db.contains(dst) && parsed.contains(src)
-          srcEnt = parsed(src)
-          cand <- heuristic.getHeuristiclyMatching(srcEnt)
-          fv = SimilarityMeasurer.advancedFvBuilder.calculateFeatureVectorValues((srcEnt, db(cand.substring(4))))
-          line = SvmClassifier.featureVectorValuesToLibSvmLine(fv, if (cand.substring(4) == dst) 1 else 0)
-        } writer.append(line + "\n")
-    }
+    for {
+      writer <- managed(new BufferedWriter(new FileWriter(file)))
+      (src, dst) <- gold if db.contains(dst) && parsed.contains(src)
+      srcEnt = parsed(src)
+      cand <- heuristic.getHeuristiclyMatching(srcEnt)
+      fv = SimilarityMeasurer.advancedFvBuilder.calculateFeatureVectorValues((srcEnt, db(cand.substring(4))))
+      line = SvmClassifier.featureVectorValuesToLibSvmLine(fv, if (cand.substring(4) == dst) 1 else 0)
+    } writer.append(line + "\n")
+
   }
 
   def main(args: Array[String]) {

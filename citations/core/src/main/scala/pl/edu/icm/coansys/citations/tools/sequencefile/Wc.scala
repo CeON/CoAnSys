@@ -18,7 +18,7 @@
 
 package pl.edu.icm.coansys.citations.tools.sequencefile
 
-import pl.edu.icm.coansys.commons.scala.automatic_resource_management._
+import resource._
 import org.apache.hadoop.conf.Configuration
 import pl.edu.icm.coansys.citations.util.sequencefile.SequenceFileIterator
 
@@ -35,7 +35,7 @@ object Wc {
     }
 
     val inUri = args(0)
-    val count = using(SequenceFileIterator.fromUri(new Configuration(), inUri))(_.size)
+    val count = managed(SequenceFileIterator.fromUri(new Configuration(), inUri)).acquireAndGet(_.size)
     println(count + " records")
   }
 }

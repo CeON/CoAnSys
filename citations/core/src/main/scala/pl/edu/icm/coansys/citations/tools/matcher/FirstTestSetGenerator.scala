@@ -18,14 +18,14 @@
 
 package pl.edu.icm.coansys.citations.tools.matcher
 
+import resource._
 import io.{Codec, Source}
 import pl.edu.icm.coansys.citations.util.dataset_readers
 import pl.edu.icm.coansys.citations.tools.cermine.util.writeCitationsToXml
 import java.io._
 import util.Random
 import org.jdom.output.XMLOutputter
-import pl.edu.icm.coansys.commons.scala.automatic_resource_management._
-import pl.edu.icm.coansys.commons.scala.xml
+import pl.edu.icm.ceon.scala_commons.xml
 import pl.edu.icm.cermine.bibref.transformers.BibEntryToNLMElementConverter
 
 /**
@@ -55,8 +55,7 @@ object FirstTestSetGenerator {
         case (id, taggedCit) =>
           (id, xml.removeTags(taggedCit))
       }
-      using(new BufferedWriter(new FileWriter(outFile))) {
-        writer =>
+      for(writer <- managed(new BufferedWriter(new FileWriter(outFile)))) {
           untaggedCits foreach {
             case (id, cit) => writer.write(id.trim + " " + cit.trim + "\n")
           }

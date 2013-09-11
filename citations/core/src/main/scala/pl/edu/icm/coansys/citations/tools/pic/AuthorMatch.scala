@@ -5,7 +5,7 @@ import java.io.File
 import pl.edu.icm.coansys.citations.util.misc._
 import pl.edu.icm.coansys.commons.java.DiacriticsRemover
 import java.util.Locale
-import pl.edu.icm.coansys.commons.scala.strings
+import pl.edu.icm.ceon.scala_commons.strings
 import scala.collection.mutable
 
 /**

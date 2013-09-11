@@ -19,7 +19,7 @@
 package pl.edu.icm.coansys.citations.data.feature_calculators
 
 import pl.edu.icm.coansys.citations.data.MatchableEntity
-import pl.edu.icm.coansys.commons.scala.strings
+import pl.edu.icm.ceon.scala_commons.strings
 import pl.edu.icm.coansys.citations.util.misc._
 import pl.edu.icm.coansys.citations.util.classification.features.FeatureCalculator
 

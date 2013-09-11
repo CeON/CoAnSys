@@ -18,11 +18,11 @@
 
 package pl.edu.icm.coansys.citations.tools.hadoop
 
+import resource._
 import java.io.File
 import org.slf4j.LoggerFactory
 import io.Source
-import pl.edu.icm.coansys.commons.scala.files
-import pl.edu.icm.coansys.commons.scala.automatic_resource_management.using
+import pl.edu.icm.ceon.scala_commons.files
 import pl.edu.icm.coansys.citations.util.sequencefile.ConvertingSequenceFileWriter
 
 /**
@@ -41,8 +41,7 @@ object PubMedToSeqFile {
     val prefixLength = new File(workDir).getAbsolutePath.length + 1
     nlms.par.foreach {
       nlm => try {
-        using(Source.fromFile(nlm)) {
-          source =>
+        for(source <- managed(Source.fromFile(nlm))) {
             val key = nlm.getAbsolutePath.substring(prefixLength)
             val value = source.mkString
             writeToSeqFile.synchronized {

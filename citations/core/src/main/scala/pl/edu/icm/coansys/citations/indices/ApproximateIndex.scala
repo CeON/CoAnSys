@@ -18,7 +18,7 @@
 
 package pl.edu.icm.coansys.citations.indices
 
-import pl.edu.icm.coansys.commons.scala.strings.rotations
+import pl.edu.icm.ceon.scala_commons.strings.rotations
 import org.apache.hadoop.io.{Writable, Text}
 import collection.mutable.ListBuffer
 import com.nicta.scoobi.core.DList

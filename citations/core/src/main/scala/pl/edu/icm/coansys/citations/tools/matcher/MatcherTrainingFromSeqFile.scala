@@ -18,11 +18,11 @@
 
 package pl.edu.icm.coansys.citations.tools.matcher
 
+import resource._
 import pl.edu.icm.coansys.citations.data.{MatchableEntity, SimilarityMeasurer}
 import pl.edu.icm.coansys.citations.util.{XPathEvaluator, nlm}
 import org.apache.commons.io.IOUtils
 import org.apache.hadoop.conf.Configuration
-import pl.edu.icm.coansys.commons.scala.automatic_resource_management.using
 import collection.immutable.Queue
 import java.io.{File, FileWriter}
 import pl.edu.icm.coansys.citations.util.sequencefile.ConvertingSequenceFileIterator
@@ -45,32 +45,30 @@ object MatcherTrainingFromSeqFile {
     val n = 40
     val inUri = args(0)
     val outPath = args(1)
-    using(ConvertingSequenceFileIterator.fromUri[String, MatchableEntity](new Configuration(), inUri)) {
-      records =>
-        val begining = records.take(n).toList
-        val measurer = new SimilarityMeasurer
-        val featureVectors = statefulMap(records ++ begining.iterator, Queue.empty.enqueue(begining.unzip._2)) {
-          case ((xmlString, entity), state: Queue[MatchableEntity]) =>
-            val eval = XPathEvaluator.fromInputStream(IOUtils.toInputStream(xmlString))
-            val refMeta = nlm.referenceMetadataBuilderFromNode(eval.asNode("/ref")).build()
-            val cit = MatchableEntity.fromReferenceMetadata(refMeta)
-            val featureVectors = (entity :: state.toList).map {
-              ent =>
-                val features = measurer.featureVectorBuilder.calculateFeatureVectorValues((ent, cit))
-                (entity == ent, features)
-            }
-            val (_, newState) = state.enqueue(entity).dequeue
-            (featureVectors, newState)
-        }.flatten
-        val lines = featureVectors.map {
-          case (equal, fv) =>
-            val label = if (equal) 1 else 0
-            featureVectorValuesToLibSvmLine(fv, label)
-        }
-        using(new FileWriter(new File(outPath))) {
-          writer =>
-            lines.foreach(x => writer.write(x + "\n"))
-        }
+    for(records <- managed(ConvertingSequenceFileIterator.fromUri[String, MatchableEntity](new Configuration(), inUri))) {
+      val begining = records.take(n).toList
+      val measurer = new SimilarityMeasurer
+      val featureVectors = statefulMap(records ++ begining.iterator, Queue.empty.enqueue(begining.unzip._2)) {
+        case ((xmlString, entity), state: Queue[MatchableEntity]) =>
+          val eval = XPathEvaluator.fromInputStream(IOUtils.toInputStream(xmlString))
+          val refMeta = nlm.referenceMetadataBuilderFromNode(eval.asNode("/ref")).build()
+          val cit = MatchableEntity.fromReferenceMetadata(refMeta)
+          val featureVectors = (entity :: state.toList).map {
+            ent =>
+              val features = measurer.featureVectorBuilder.calculateFeatureVectorValues((ent, cit))
+              (entity == ent, features)
+          }
+          val (_, newState) = state.enqueue(entity).dequeue
+          (featureVectors, newState)
+      }.flatten
+      val lines = featureVectors.map {
+        case (equal, fv) =>
+          val label = if (equal) 1 else 0
+          featureVectorValuesToLibSvmLine(fv, label)
+      }
+      for (writer <- managed(new FileWriter(new File(outPath)))) {
+          lines.foreach(x => writer.write(x + "\n"))
+      }
     }
   }
 }

@@ -26,7 +26,7 @@ import pl.edu.icm.coansys.citations.data.MatchableEntity
 import pl.edu.icm.cermine.bibref.parsing.tools.CitationUtils
 import pl.edu.icm.coansys.citations.util.AugmentedDList.augmentDList
 import pl.edu.icm.cermine.bibref.CRFBibReferenceParser
-import pl.edu.icm.coansys.commons.scala.strings
+import pl.edu.icm.ceon.scala_commons.strings
 import pl.edu.icm.coansys.commons.java.DiacriticsRemover
 
 /**

@@ -18,10 +18,10 @@
 
 package pl.edu.icm.coansys.citations.util.sequencefile
 
+import resource._
 import org.testng.annotations.Test
 import org.testng.Assert._
 import java.io.File
-import pl.edu.icm.coansys.commons.scala.automatic_resource_management.using
 import com.nicta.scoobi.io.sequence.SeqSchema.StringSchema
 import org.apache.commons.io.FileUtils
 
@@ -36,15 +36,11 @@ class readWriteTest {
     var tmpFile: File = null
     try {
       tmpFile = File.createTempFile("readWriteTest", ".sq")
-      using(ConvertingSequenceFileWriter.fromLocal[String, String](tmpFile.toURI.toString)) {
-        write =>
+      for (write <- managed(ConvertingSequenceFileWriter.fromLocal[String, String](tmpFile.toURI.toString))) {
           content.foreach(write)
       }
       val result =
-        using(ConvertingSequenceFileIterator.fromLocal[String, String](tmpFile.toURI.toString)) {
-          iterator =>
-            iterator.toList
-        }
+        managed(ConvertingSequenceFileIterator.fromLocal[String, String](tmpFile.toURI.toString)).acquireAndGet(_.toList)
       assertEquals(result, content)
     }
     finally {

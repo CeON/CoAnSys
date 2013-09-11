@@ -18,9 +18,9 @@
 
 package pl.edu.icm.coansys.citations.tools.sequencefile
 
+import resource._
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.io.{SequenceFile, Writable}
-import pl.edu.icm.coansys.commons.scala.automatic_resource_management._
 import org.apache.hadoop.fs.Path
 import pl.edu.icm.coansys.citations.util.sequencefile.SequenceFileIterator
 
@@ -34,17 +34,16 @@ object util {
                         transformation: Iterator[(Writable, Writable)] => Iterator[(Writable, Writable)]): Int = {
     var written = 0
 
-    using(new SequenceFile.Reader(conf, SequenceFile.Reader.file(new Path(inUri)))) {
-      reader =>
-        using(SequenceFile.createWriter(conf, SequenceFile.Writer.file(new Path(outUri)),
-          SequenceFile.Writer.keyClass(reader.getKeyClass), SequenceFile.Writer.valueClass(reader.getValueClass))) {
-          writer =>
-            transformation(new SequenceFileIterator(reader)).foreach {
-              case (key, value) =>
-                writer.append(key, value)
-                written = written + 1
-            }
-        }
+    for {
+      reader <- managed(new SequenceFile.Reader(conf, SequenceFile.Reader.file(new Path(inUri))))
+      writer <- managed(SequenceFile.createWriter(conf, SequenceFile.Writer.file(new Path(outUri)),
+        SequenceFile.Writer.keyClass(reader.getKeyClass), SequenceFile.Writer.valueClass(reader.getValueClass)))
+    } {
+      transformation(new SequenceFileIterator(reader)).foreach {
+        case (key, value) =>
+          writer.append(key, value)
+          written = written + 1
+      }
     }
 
     written

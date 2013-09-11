@@ -1,10 +1,10 @@
 package pl.edu.icm.coansys.citations.tools.pic
 
+import resource._
 import pl.edu.icm.coansys.citations.util.{misc, BytesConverter}
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper
 import pl.edu.icm.coansys.citations.util.sequencefile.ConvertingSequenceFileIterator
 import pl.edu.icm.coansys.citations.data.MatchableEntity
-import pl.edu.icm.coansys.commons.scala.automatic_resource_management._
 import scala.io.Source
 import java.io.File
 import pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue
@@ -14,7 +14,7 @@ import pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue
  */
 object TempCommons {
 
-  def readPicGroundTruth(file: File) = using(Source.fromFile(file)) {
+  def readPicGroundTruth(file: File) = managed(Source.fromFile(file)).acquireAndGet {
       source =>
         source.getLines().toList.map(_.split(','))
           .map(x => ("cit_" + x(0) + "_" + (x(1).toInt), if (x.length == 3) x(2) else ""))

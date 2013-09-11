@@ -2,12 +2,11 @@ package pl.edu.icm.coansys.citations.tools.pic
 
 import pl.edu.icm.coansys.citations.util.misc._
 import scala.Some
-import pl.edu.icm.coansys.commons.scala.strings
+import pl.edu.icm.ceon.scala_commons.strings
 import pl.edu.icm.coansys.commons.java.DiacriticsRemover
 import scala.util.{Success, Try}
 import pl.edu.icm.coansys.citations.util.sequencefile.ConvertingSequenceFileWriter
 import pl.edu.icm.coansys.citations.data.MatchableEntity
-import pl.edu.icm.coansys.commons.scala.automatic_resource_management.using
 import java.io.File
 
 /**

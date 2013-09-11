@@ -1,12 +1,12 @@
 package pl.edu.icm.coansys.citations.tools.pic
 
+import resource._
 import java.io.{FileWriter, BufferedWriter, File}
 import pl.edu.icm.cermine.bibref.CRFBibReferenceParser
 import pl.edu.icm.coansys.citations.util.dataset_readers
 import scala.io.{Codec, Source}
 import pl.edu.icm.coansys.citations.data.{SimilarityMeasurer, MatchableEntity}
-import pl.edu.icm.coansys.commons.scala.xml
-import pl.edu.icm.coansys.commons.scala.automatic_resource_management._
+import pl.edu.icm.ceon.scala_commons.xml
 import pl.edu.icm.coansys.citations.util.classification.svm.SvmClassifier
 
 /**
@@ -41,15 +41,14 @@ object TrainingSetGenerator {
       .filter{case (x,y) => x.toInt < y.toInt}
 
     val entitiesIndex = entities.map(ent => (ent.id, ent)).toMap
-    using(new BufferedWriter(new FileWriter(outFile))) {
-      writer =>
-        pairs.map { case (x, y) =>
-          val e1 = entitiesIndex(x)
-          val e2 = entitiesIndex(y)
-          val fv = SimilarityMeasurer.advancedFvBuilder.calculateFeatureVectorValues((e1, e2))
-          val line = SvmClassifier.featureVectorValuesToLibSvmLine(fv, if (matchArray(x.toInt)(y.toInt)) 1 else 0)
-          writer.write(line + "\n")
-        }
+    for (writer <- managed(new BufferedWriter(new FileWriter(outFile)))) {
+      pairs.map { case (x, y) =>
+        val e1 = entitiesIndex(x)
+        val e2 = entitiesIndex(y)
+        val fv = SimilarityMeasurer.advancedFvBuilder.calculateFeatureVectorValues((e1, e2))
+        val line = SvmClassifier.featureVectorValuesToLibSvmLine(fv, if (matchArray(x.toInt)(y.toInt)) 1 else 0)
+        writer.write(line + "\n")
+      }
     }
   }
 }

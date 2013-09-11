@@ -18,12 +18,12 @@
 
 package pl.edu.icm.coansys.citations.tools.cermine
 
+import resource._
 import collection.JavaConversions._
 import java.io.{FileWriter, FileInputStream, InputStream, File}
 import org.jdom.{Document, Element}
 import org.jdom.input.SAXBuilder
 import org.jdom.filter.Filter
-import pl.edu.icm.coansys.commons.scala.automatic_resource_management._
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -51,8 +51,7 @@ object util {
       """.stripMargin
     val xmlFooter = """</citations>"""
 
-    using(new FileWriter(outFile)) {
-      writer =>
+    for(writer <- managed(new FileWriter(outFile))) {
         writer.write(xmlHeader + "\n")
         citations.foreach(x => writer.write(x + "\n"))
         writer.write(xmlFooter + "\n")

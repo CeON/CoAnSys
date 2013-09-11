@@ -23,7 +23,7 @@ import org.apache.hadoop.io.BytesWritable
 import pl.edu.icm.coansys.citations.util.misc
 import pl.edu.icm.coansys.citations.util.nlm.pubmedNlmToProtoBuf
 import org.slf4j.LoggerFactory
-import pl.edu.icm.coansys.commons.scala.files
+import pl.edu.icm.ceon.scala_commons.files
 import scala.Array
 import com.nicta.scoobi.io.sequence.SeqSchema
 import pl.edu.icm.coansys.citations.util.sequencefile.ConvertingSequenceFileWriter

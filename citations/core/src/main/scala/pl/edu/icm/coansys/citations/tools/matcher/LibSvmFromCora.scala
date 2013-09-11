@@ -1,9 +1,9 @@
 package pl.edu.icm.coansys.citations.tools.matcher
 
+import resource._
 import java.io.{BufferedWriter, FileWriter, File}
 import scala.io.{Codec, Source}
-import pl.edu.icm.coansys.commons.scala.automatic_resource_management.using
-import pl.edu.icm.coansys.commons.scala.xml
+import pl.edu.icm.ceon.scala_commons.xml
 import pl.edu.icm.coansys.citations.data.{SimilarityMeasurer, MatchableEntity}
 import pl.edu.icm.cermine.bibref.CRFBibReferenceParser
 import pl.edu.icm.coansys.citations.util.classification.svm.SvmClassifier
@@ -26,16 +26,15 @@ object LibSvmFromCora {
       MatchableEntity.fromUnparsedReference(
         bibReferenceParser, id, xml.removeTags(text, " ").split(raw"\s+").mkString(" "))}
 
-    using(new BufferedWriter(new FileWriter(outFile))) {
-      writer =>
-        for {
-          e1 <- entities
-          e2 <- entities
-        }  {
-          val fv = SimilarityMeasurer.advancedFvBuilder.calculateFeatureVectorValues((e1, e2))
-          val line = SvmClassifier.featureVectorValuesToLibSvmLine(fv, if (e1.id == e2.id) 1 else 0)
-          writer.write(line + "\n")
-        }
+    for (writer <- managed(new BufferedWriter(new FileWriter(outFile)))) {
+      for {
+        e1 <- entities
+        e2 <- entities
+      }  {
+        val fv = SimilarityMeasurer.advancedFvBuilder.calculateFeatureVectorValues((e1, e2))
+        val line = SvmClassifier.featureVectorValuesToLibSvmLine(fv, if (e1.id == e2.id) 1 else 0)
+        writer.write(line + "\n")
+      }
     }
 
 
