@@ -83,14 +83,13 @@ public class FeaturesCheck extends AND<Boolean> {
 		
 		allContribCounter++;
 		
-		double partial = 0, simil = threshold;
+		double simil = threshold;
 		for ( int d = 0; d < features.length; d++ ) {
 			// Taking features from each keys (name of extractor = feature name)
 			// In contribsT.get(i) there is map we need.
 			// From this map (collection of i'th contributor's features)
 			// we take Bag with value of given feature.
 			// Here we have sure that following Object = DateBag.
-
 
 			Object o = featuresMap.get(featureInfos[d].getFeatureExtractorName());
 
@@ -99,11 +98,8 @@ public class FeaturesCheck extends AND<Boolean> {
 				continue;
 			}
 
-			partial = features[d].calculateAffinity( o, o );
-			partial = partial * featureInfos[d].getWeight();
-
-			simil += partial;
-
+			simil += calculateAffinity( o, o, d);
+			
 			//contributor is similar to himself so maybe comparable to other contributors
 			if ( simil >= 0 ) {
 				return true;

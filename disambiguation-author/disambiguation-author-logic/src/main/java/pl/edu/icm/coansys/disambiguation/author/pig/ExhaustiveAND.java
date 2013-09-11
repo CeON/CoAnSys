@@ -178,7 +178,6 @@ public class ExhaustiveAND extends AND<DataBag> {
 		}catch(Exception e){
 			// Throwing an exception would cause the task to fail.
 			logger.error("Caught exception processing input row:\n" + StackTraceExtractor.getStackTrace(e));
-			System.out.println("DUUUPAAAAAAAAAAAA " + StackTraceExtractor.getStackTrace(e) );
 			return null;
 		}
 	}
@@ -193,43 +192,13 @@ public class ExhaustiveAND extends AND<DataBag> {
 	}
 	
 	private void calculateAffinity( List< Map<String,Object> > contribsT ){
-		
-		Map<String,Object>mA,mB;
-		
 		// N^2 / 2 * features number - already calculated sim values
 		for ( int i = 1; i < contribsT.size(); i++ ) {
 			for ( int j = 0; j < i; j++ ) {
-
 				//if sim value is already calculated, we do not need to calculate one more time
 				if( sim[i][j] != NOT_CALCULATED ) continue;
-				sim[i][j] = threshold;
-
-				for ( int d = 0; d < features.length; d++ ){
-					//Taking features from each keys (name of extractor = feature name)
-					//In contribsT.get(i) there is map we need.
-					//From this map (collection of i'th contributor's features)
-					//we take Bag with value of given feature.
-					//Here we have sure that following Object = DateBag.
-					mA = contribsT.get(i);
-					mB = contribsT.get(j);
-					
-					//probably map is empty for some contrib
-					if ( mA == null || mB == null ){
-						continue;
-					}
-				
-					Object oA = mA.get( featureInfos[d].getFeatureExtractorName() );
-					Object oB = mB.get( featureInfos[d].getFeatureExtractorName() );
-					
-					if ( oA == null || oB == null ){
-						continue;
-					}
-					
-					double partial = features[d].calculateAffinity( oA, oB );
-					partial = partial * featureInfos[d].getWeight();
-					
-					sim[i][j] += partial;
-				}
+				//sim[i][j] = threshold;
+				sim[i][j] = calculateContribsAffinityForAllFeatures( contribsT, i, j, false );
 			}
 		}
 	}
