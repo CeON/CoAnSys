@@ -18,18 +18,17 @@
 
 package pl.edu.icm.coansys.citations.indices
 
-import org.apache.hadoop.conf.Configuration
-import org.apache.hadoop.io.{WritableComparable, Writable, MapFile}
-import org.apache.hadoop.fs.Path
+import com.nicta.scoobi.Scoobi._
 import com.nicta.scoobi.core.DList
+import java.io.IOException
+import org.apache.commons.io.FileUtils
+import org.apache.hadoop.conf.Configuration
+import org.apache.hadoop.fs.Path
+import org.apache.hadoop.io.{WritableComparable, Writable, MapFile}
+import org.slf4j.LoggerFactory
 import pl.edu.icm.coansys.citations.data.MatchableEntity
 import pl.edu.icm.coansys.citations.util.hdfs
-import com.nicta.scoobi.Scoobi._
 import scala.Some
-import org.apache.commons.io.FileUtils
-import java.io.IOException
-import org.slf4j.LoggerFactory
-import pl.edu.icm.coansys.citations.tools.hadoop.PubMedToSeqFile
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -59,7 +58,7 @@ class SimpleIndex[K <: WritableComparable[_] : Manifest, V <: Writable : Manifes
 
 
   def get(key: K): Option[V] = {
-    val value = manifest[V].erasure.newInstance().asInstanceOf[V]
+    val value = manifest[V].runtimeClass.newInstance().asInstanceOf[V]
     val v = reader.get(key, value)
     if (v != null)
       Some(v.asInstanceOf[V])
