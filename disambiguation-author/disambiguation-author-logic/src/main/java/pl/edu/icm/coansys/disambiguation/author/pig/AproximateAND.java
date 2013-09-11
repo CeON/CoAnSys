@@ -22,11 +22,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.pig.EvalFunc;
 import org.apache.pig.data.DataBag;
 import org.apache.pig.data.DefaultDataBag;
 import org.apache.pig.data.DefaultTuple;
@@ -35,24 +33,17 @@ import org.apache.pig.data.TupleFactory;
 import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
-import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.DisambiguatorFactory;
-import pl.edu.icm.coansys.disambiguation.author.pig.extractor.DisambiguationExtractorFactory;
-import pl.edu.icm.coansys.disambiguation.features.Disambiguator;
-import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
 import pl.edu.icm.coansys.disambiguation.author.benchmark.TimerSyso;
 
-public class AproximateAND extends EvalFunc<DataBag> {
+public class AproximateAND extends AND<DataBag> {
 
-	private float threshold;
-	private PigDisambiguator[] features;
-	private FeatureInfo[] featureInfos;
 	private float sim[][];
 	private Tuple datain[];
 	private int N;
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(AproximateAND.class);
+
     private boolean rememberSim = true;
-    private boolean useIdsForExtractors = false;
-    private DisambiguationExtractorFactory extrFactory = new DisambiguationExtractorFactory();
+    
     //benchmark staff
     private boolean isStatistics = false;
     private TimerSyso timer = new TimerSyso();
@@ -61,62 +52,17 @@ public class AproximateAND extends EvalFunc<DataBag> {
     private int finalClusterNumber = 0;
     private List<Integer>clustersSizes;
     
+    
 	public AproximateAND( String threshold, String featureDescription, String rememberSim, String useIdsForExtractors, String printStatistics ) throws Exception{
-		this.threshold = Float.parseFloat(threshold);
+		super( logger, threshold, featureDescription, useIdsForExtractors );
 		this.rememberSim = Boolean.parseBoolean( rememberSim );
-		this.useIdsForExtractors = Boolean.parseBoolean( useIdsForExtractors );
-		this.isStatistics = Boolean.parseBoolean( printStatistics );
-		
-		List<FeatureInfo> FIwithEmpties 
-			= FeatureInfo.parseFeatureInfoString(featureDescription);
-		List<FeatureInfo> FIFinall = new LinkedList<FeatureInfo>();
-		List<PigDisambiguator> FeaturesFinall = new LinkedList<PigDisambiguator>();
-		
-        DisambiguatorFactory ff = new DisambiguatorFactory();
-        Disambiguator d;
-        
-        //separate features which are fully described and able to use
-        for ( FeatureInfo fi : FIwithEmpties ) {
-            if ( fi.getDisambiguatorName().equals("") ) {
-                //creating default disambugiator
-            	d = new Disambiguator();
-            	logger.info("Empty disambiguator name. Creating default disambiguator for this feature.");
-            }
-            if ( fi.getFeatureExtractorName().equals("") ) {
-            	logger.error("Empty extractor name in feature info. Leaving this feature.");
-            	throw new Exception("Empty extractor name.");
-            	//continue;
-            }
-            d = ff.create( fi );
-            if ( d == null ) {
-            	//creating default disambugiator
-            	//d = new Disambiguator();
-            	logger.error("Cannot create disambugiator from given feature info.");
-            	throw new Exception("Cannot create disambugiator from given feature info.");
-            }
-			//wrong max value (would cause dividing by zero)
-			if ( fi.getMaxValue() == 0 ){
-				logger.warn( "Incorrect max value for feature: " + fi.getFeatureExtractorName() + ". Max value cannot equal 0." );
-				throw new Exception("Incorrect max value for feature: " + fi.getFeatureExtractorName() + ". Max value cannot equal 0.");
-			}
-            
-			if ( this.useIdsForExtractors ) {
-				fi.setFeatureExtractorName( 
-						extrFactory.toExId( fi.getFeatureExtractorName() ) );
-			}
-			
-            FIFinall.add( fi );
-            FeaturesFinall.add( new PigDisambiguator( d ) );
-        }
-        
-		this.featureInfos = FIFinall.toArray( new FeatureInfo[ FIFinall.size() ] );
-        this.features = 
-        		FeaturesFinall.toArray( new PigDisambiguator[ FIFinall.size() ] );
-        
+
+		this.isStatistics = Boolean.parseBoolean( printStatistics );		
         if ( this.isStatistics ) {
         	timer.addMonit( "#NOTSTAT#", "alg", "is sim", "id", "N", "cl no",
         			"sim cntr", "big clst", "time", "list of clusters' sizes" );
         }
+
 	}
 	
 	/**
@@ -125,7 +71,7 @@ public class AproximateAND extends EvalFunc<DataBag> {
 	 * @see org.apache.pig.EvalFunc#exec(org.apache.pig.data.Tuple)
 	 */
 	@SuppressWarnings("unchecked")
-	@Override
+	//@Override
 	public DataBag exec( Tuple input ) /*throws IOException*/ {
 
 		if ( input == null || input.size() == 0 ) return null;
