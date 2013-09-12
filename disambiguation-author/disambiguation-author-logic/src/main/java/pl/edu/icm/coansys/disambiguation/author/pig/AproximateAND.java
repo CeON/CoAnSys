@@ -154,7 +154,7 @@ public class AproximateAND extends AND<DataBag> {
 	        //this action will    A D D    S O M E    I N F O R M A T I O N    T O    T I M E R    M O N I T
 			if ( isStatistics ) {				
 				Collections.sort( clustersSizes, Collections.reverseOrder() );
-				int biggestCluster = clustersSizes.get( clustersSizes.size()-1 );
+				int biggestCluster = clustersSizes.isEmpty() ? 1 : clustersSizes.get(0);
 
 				//stopping timer for current play (not thread)
 				/* STATISTICS DESCRIPTION:
@@ -289,7 +289,9 @@ public class AproximateAND extends AND<DataBag> {
 			//benchmark
 			if (clusterSize[i] > 0 && isStatistics ) {
 				finalClusterNumber++;
-				clustersSizes.add( clusterSize[i] );
+				if(clusterSize[i] > 1) {
+					clustersSizes.add( clusterSize[i] );
+				}
 			}
 
 		}

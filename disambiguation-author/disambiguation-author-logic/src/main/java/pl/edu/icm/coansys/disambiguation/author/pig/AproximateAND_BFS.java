@@ -143,8 +143,7 @@ public class AproximateAND_BFS extends AND<DataBag> {
 			// this action will add some informations to timer monit
 			if (isStatistics) {
 				Collections.sort(clustersSizes, Collections.reverseOrder());
-				int biggestCluster = clustersSizes
-						.get(clustersSizes.size() - 1);
+				int biggestCluster = clustersSizes.isEmpty() ? 1 : clustersSizes.get(0);
 
 				// stopping timer for current play (not thread)
 				/*

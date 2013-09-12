@@ -61,7 +61,7 @@ public class disambiguationTests {
 				"dc_m_hdfs_outputContribs=null",
 				"dc_m_str_feature_info=" + "'TitleDisambiguator#EX_TITLE#1#1,KeywordDisambiguator#EX_KEYWORDS#1#1'",
 				"threshold='-1.0'",
-				"statistics=false"
+				"statistics=true"
 			};
 
    		PST.run( "aproximateAND_BFS", "aproximate_AND_BFS_test.pig", "B", "E", params );
