@@ -18,18 +18,18 @@
 
 package pl.edu.icm.coansys.citations.util
 
+import resource._
 import org.jdom.Element
-import pl.edu.icm.coansys.commons.scala.xml._
+import pl.edu.icm.ceon.scala_commons.xml._
 import pl.edu.icm.cermine.bibref.model.BibEntry
 import io.Source
 import collection.mutable.ListBuffer
 import org.jdom.output.XMLOutputter
 import java.io.{FileWriter, BufferedWriter, FilenameFilter, File}
-import pl.edu.icm.coansys.commons.scala.automatic_resource_management._
-import pl.edu.icm.coansys.commons.scala.xml.StartTag
+import pl.edu.icm.ceon.scala_commons.xml.StartTag
 import scala.Some
-import pl.edu.icm.coansys.commons.scala.xml.EndTag
-import pl.edu.icm.coansys.commons.scala.xml.Text
+import pl.edu.icm.ceon.scala_commons.xml.EndTag
+import pl.edu.icm.ceon.scala_commons.xml.Text
 import scala.collection.JavaConversions._
 import pl.edu.icm.cermine.bibref.transformers.BibEntryToNLMElementConverter
 
@@ -201,8 +201,7 @@ object dataset_readers {
         findAndCollapseStringName(elem)
         elem
       }))
-    using(new BufferedWriter(new FileWriter(output))) {
-      writer =>
+    for(writer <- managed(new BufferedWriter(new FileWriter(output)))) {
         mixedCitations foreach (l => writer.write(l + "\n"))
     }
   }

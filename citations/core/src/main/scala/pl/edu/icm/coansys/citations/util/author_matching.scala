@@ -19,8 +19,9 @@
 package pl.edu.icm.coansys.citations.util
 
 import org.apache.commons.lang.StringUtils
-import pl.edu.icm.coansys.commons.scala.collections
+import pl.edu.icm.ceon.scala_commons.collections
 import annotation.tailrec
+import pl.edu.icm.ceon.scala_commons.math.SigmoidFunction
 
 /**
  * An object supplying a fancy author matching method, v. arXiv:1303.6906 [cs.IR].

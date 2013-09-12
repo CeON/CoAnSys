@@ -36,9 +36,9 @@
             <version>0.7.1-cdh4</version>
         </dependency>
         <dependency>
-            <groupId>pl.edu.icm.coansys</groupId>
-            <artifactId>commons-scala</artifactId>
-            <version>${project.version}</version>
+            <groupId>pl.edu.icm.ceon</groupId>
+            <artifactId>ceon-scala-commons</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>pl.edu.icm.coansys</groupId>
