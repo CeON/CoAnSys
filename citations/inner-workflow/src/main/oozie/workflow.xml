@@ -150,31 +150,13 @@
             <arg>${cit_workDir}/key_index</arg>
         </java>
 
-        <ok to="generate-author-index"/>
-        <error to="fail"/>
-    </action>
-    <action name="generate-author-index">
-        <java>
-            <job-tracker>${jobTracker}</job-tracker>
-            <name-node>${nameNode}</name-node>
-            <main-class>pl.edu.icm.coansys.citations.jobs.IndexBuilder</main-class>
-            <java-opts>${cit_genAuthorIdxJavaOpts}</java-opts>
-            <arg>-fs</arg>
-            <arg>${nameNode}</arg>
-            <arg>-jt</arg>
-            <arg>${jobTracker}</arg>
-            <arg>-author</arg>
-            <arg>${cit_workDir}/destination_entities</arg>
-            <arg>${cit_workDir}/author_index</arg>
-        </java>
-
         <ok to="heuristic-type"/>
         <error to="fail"/>
     </action>
 
     <decision name="heuristic-type">
         <switch>
-            <case to="add-heuristic">${cit_heuristic eq "Old"}</case>
+            <case to="generate-author-index">${cit_heuristic eq "Old"}</case>
             <case to="add-new-heuristic">${cit_heuristic eq "New"}</case>
             <default to="fail"/>
         </switch>
@@ -195,6 +177,25 @@
         </java>
 
         <ok to="assess"/>
+        <error to="fail"/>
+    </action>
+
+    <action name="generate-author-index">
+        <java>
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <main-class>pl.edu.icm.coansys.citations.jobs.IndexBuilder</main-class>
+            <java-opts>${cit_genAuthorIdxJavaOpts}</java-opts>
+            <arg>-fs</arg>
+            <arg>${nameNode}</arg>
+            <arg>-jt</arg>
+            <arg>${jobTracker}</arg>
+            <arg>-author</arg>
+            <arg>${cit_workDir}/destination_entities</arg>
+            <arg>${cit_workDir}/author_index</arg>
+        </java>
+
+        <ok to="add-heuristic"/>
         <error to="fail"/>
     </action>
 

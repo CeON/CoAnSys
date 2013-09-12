@@ -19,8 +19,8 @@
 package pl.edu.icm.coansys.citations.data
 
 import feature_calculators._
-import pl.edu.icm.coansys.citations.util.classification.features.FeatureVectorBuilder
-import pl.edu.icm.coansys.citations.util.classification.svm.SvmClassifier
+import pl.edu.icm.ceon.scala_commons.classification.features.FeatureVectorBuilder
+import pl.edu.icm.ceon.scala_commons.classification.svm.SvmClassifier
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
