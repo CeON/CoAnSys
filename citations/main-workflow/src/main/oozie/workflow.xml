@@ -38,6 +38,10 @@
             <name>inputSeqFile</name>
         </property>
         <property>
+            <name>inputCitationsSeqFile</name>
+            <value>${inputSeqFile}</value>
+        </property>
+        <property>
             <name>outputSeqFile</name>
         </property>
         <property>
@@ -64,7 +68,7 @@
             <main-class>pl.edu.icm.coansys.citations.jobs.ReferenceExtractor</main-class>
             <arg>-fs</arg><arg>${nameNode}</arg>
             <arg>-jt</arg><arg>${jobTracker}</arg>
-            <arg>${inputSeqFile}</arg>
+            <arg>${inputCitationsSeqFile}</arg>
             <arg>${workingDir}/source_entities</arg>
         </java>
         <ok to="document_extractor"/>
