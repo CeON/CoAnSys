@@ -27,7 +27,7 @@ import pl.edu.icm.coansys.citations.util.{MyScoobiApp, misc, BytesConverter}
 import pl.edu.icm.coansys.citations.data._
 import feature_calculators._
 import scala.Some
-import pl.edu.icm.coansys.citations.util.classification.features.FeatureVectorBuilder
+import pl.edu.icm.ceon.scala_commons.classification.features.FeatureVectorBuilder
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)

@@ -26,7 +26,8 @@ import com.nicta.scoobi.io.sequence.SeqSchema
 import com.nicta.scoobi.io.sequence.SequenceOutput.toSequenceFile
 import com.nicta.scoobi.Scoobi._
 import pl.edu.icm.coansys.citations.data.MatchableEntity
-import pl.edu.icm.coansys.citations.util.{hdfs, BytesIterable, misc}
+import pl.edu.icm.coansys.citations.util.{BytesIterable, misc}
+import pl.edu.icm.ceon.scala_commons.hadoop.sequencefile
 
 /**
  * A class helping in approximate index saved in MapFile usage.
@@ -46,7 +47,7 @@ class ApproximateIndex[V <: Writable : Manifest](override val indexFileUri: Stri
       val keyStr = key.toString
       if (isMatching(query, keyStr)) {
         buffer.append(value)
-        manifest[V].erasure.newInstance().asInstanceOf[V]
+        manifest[V].runtimeClass.newInstance().asInstanceOf[V]
       }
       else {
         value
@@ -56,7 +57,7 @@ class ApproximateIndex[V <: Writable : Manifest](override val indexFileUri: Stri
     val rots = rotations(query + ApproximateIndex.endOfWordMarker)
     val buffer = new ListBuffer[V]
     val k: Text = new Text()
-    var v: V = manifest[V].erasure.newInstance().asInstanceOf[V]
+    var v: V = manifest[V].runtimeClass.newInstance().asInstanceOf[V]
     val tmpkey: Text = new Text()
 
     rots foreach {
@@ -122,7 +123,7 @@ object ApproximateIndex {
       val mf = manifest[BytesIterable]
     }
     persist(toSequenceFile(indexEntries(documents), indexFile))
-    hdfs.mergeSeqs(indexFile)(conf)
-    hdfs.convertSeqToMap(indexFile)(conf)
+    sequencefile.merge(indexFile)(conf)
+    sequencefile.convertToMapFile(indexFile)(conf)
   }
 }

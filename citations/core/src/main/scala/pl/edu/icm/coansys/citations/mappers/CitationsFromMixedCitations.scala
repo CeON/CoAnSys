@@ -20,8 +20,9 @@ package pl.edu.icm.coansys.citations.mappers
 
 import org.apache.hadoop.io.{Text, BytesWritable, Writable}
 import org.apache.hadoop.mapreduce.Mapper
-import pl.edu.icm.coansys.citations.util.{nlm, XPathEvaluator}
 import org.apache.commons.io.IOUtils
+import pl.edu.icm.ceon.scala_commons.xml.XPathEvaluator
+import pl.edu.icm.ceon.scala_commons.nlm
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
