@@ -21,7 +21,7 @@ package pl.edu.icm.coansys.citations.data.feature_calculators
 import java.util.Locale
 import pl.edu.icm.coansys.citations.data.MatchableEntity
 import pl.edu.icm.coansys.citations.util.ngrams._
-import pl.edu.icm.coansys.citations.util.classification.features.FeatureCalculator
+import pl.edu.icm.ceon.scala_commons.classification.features.FeatureCalculator
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
