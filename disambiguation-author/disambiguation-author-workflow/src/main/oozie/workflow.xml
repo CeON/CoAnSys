@@ -1,25 +1,18 @@
-<workflow-app name='dc-classification' xmlns="uri:oozie:workflow:0.2">
+<workflow-app name='${subproject}' xmlns="uri:oozie:workflow:0.2">
 <!--
  (C) 2010-2012 ICM UW. All rights reserved.
 -->
-    <start to='classify'/>
-    <action name='classify'>
+    <start to='split'/>
+
+    <action name='split'>
         <pig>
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
-            <prepare>
-                <delete path="${dc_classification_OutputDir}"/>
-            </prepare>
+            <!--<prepare>
+                <delete path="${dc_m_hdfs_outputContribs}"/>
+            </prepare>-->
             <configuration>
-                <property>
-                    <name>mapred.job.queue.name</name>
-                    <value>${queueName}</value>
-                </property> 
-                <property>
-                    <name>hbase.zookeeper.quorum</name>
-                    <value>${hbaseZookeeperQuorum}</value>
-                </property>
-		<!-- This is required for new api usage -->
+                <!-- This is required for new api usage -->
                 <property>
                     <name>mapred.mapper.new-api</name>
                     <value>true</value>
@@ -28,26 +21,213 @@
                     <name>mapred.reducer.new-api</name>
                     <value>true</value>
                 </property>
-                <!-- HBase Configuration -->
+
+                <!-- General job parameters -->
                 <property>
-                    <name>hbase.mapreduce.inputtable</name>
-                    <value>${dc_classification_InputHBase}</value>
+                    <name>mapred.job.queue.name</name>
+                    <value>${queueName}</value>
+                </property>
+                <property>
+                    <name>hbase.zookeeper.quorum</name>
+                    <value>${hbaseZookeeperQuorum}</value>
                 </property>
             </configuration>
-            <script>${pigScriptsDir}/2_MODEL_USE_classify.pig</script>
-            <param>DEF_SRC=${dc_classification_InputHBase}</param>
-            <param>inMo=${dc_modelcreation_ModelDir}</param>
-            <param>DEF_DST=${dc_classification_OutputDir}</param>
-            <param>DEF_LIM=1</param>
-            <param>featurevector=${dc_classification_fv}</param>
-            <param>simmeth=${dc_classification_sim}</param>
-            <param>neigh=${dc_classification_neigh}</param>
-	    <param>commonJarsPath=${commonJarsPath}</param>
-            <file>${pigScriptsDir}/AUXIL_docsim.macros.def.pig#AUXIL_docsim.macros.def.pig</file>
-            <file>${pigScriptsDir}/AUXIL_macros.def.pig#AUXIL_macros.def.pig</file>
-            <file>${pigScriptsDir}/SIM_${dc_classification_sim}.pig#SIM_${dc_classification_sim}.pig</file>
-            <file>${pigScriptsDir}/FV_${dc_classification_fv}.pig#FV_${dc_classification_fv}.pig</file>
-        </pig>       
+            <script>${pigScriptsDir}/spliter.pig</script>
+            <param>commonJarsPath=${commonJarsPath}</param>
+            <param>dc_m_double_sample=${dc_m_double_sample}</param>
+            <param>dc_m_hdfs_inputDocsData=${dc_m_hdfs_inputDocsData}</param>
+            <param>dc_m_hdfs_outputContribs=${dc_tmp_path}</param>
+            <param>lang=${lang}</param>
+            <param>dc_m_str_feature_info=${dc_m_str_feature_info}</param>
+        </pig>
+        <ok to='forking'/>
+        <error to='kill'/>
+    </action>
+
+    <fork name="forking">
+        <path start="disambiguation-1"/>
+        <path start="disambiguation-100"/>
+        <path start="disambiguation-1000"/>
+        <path start="disambiguation-DX"/>
+    </fork>
+
+    <action name='disambiguation-1'>
+        <pig>
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <!--<prepare>
+                <delete path="${dc_m_hdfs_outputContribs}"/>
+            </prepare>-->
+            <configuration>
+                <!-- This is required for new api usage -->
+                <property>
+                    <name>mapred.mapper.new-api</name>
+                    <value>true</value>
+                </property>
+                <property>
+                    <name>mapred.reducer.new-api</name>
+                    <value>true</value>
+                </property>
+
+                <!-- General job parameters -->
+                <property>
+                    <name>mapred.job.queue.name</name>
+                    <value>${queueName}</value>
+                </property>
+                <property>
+                    <name>hbase.zookeeper.quorum</name>
+                    <value>${hbaseZookeeperQuorum}</value>
+                </property>
+            </configuration>
+            <script>${pigScriptsDir}/disambiguation1.pig</script>
+            <param>commonJarsPath=${commonJarsPath}</param>
+            <param>dc_m_double_sample=1.0</param>
+            <param>dc_m_hdfs_inputDocsData=${dc_tmp_path}/D1</param>
+            <param>dc_m_hdfs_outputContribs=${dc_m_hdfs_outputContribs}/part1</param>
+            <param>statistics=${statistics}</param>
+            <param>dc_m_str_feature_info=${dc_m_str_feature_info}</param>
+        </pig>
+        <ok to='joining'/>
+        <error to='kill'/>
+    </action>
+
+    <action name='disambiguation-100'>
+        <pig>
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <!--<prepare>
+                <delete path="${dc_m_hdfs_outputContribs}"/>
+            </prepare>-->
+            <configuration>
+                <!-- This is required for new api usage -->
+                <property>
+                    <name>mapred.mapper.new-api</name>
+                    <value>true</value>
+                </property>
+                <property>
+                    <name>mapred.reducer.new-api</name>
+                    <value>true</value>
+                </property>
+
+                <!-- General job parameters -->
+                <property>
+                    <name>mapred.job.queue.name</name>
+                    <value>${queueName}</value>
+                </property>
+                <property>
+                    <name>hbase.zookeeper.quorum</name>
+                    <value>${hbaseZookeeperQuorum}</value>
+                </property>
+            </configuration>
+            <script>${pigScriptsDir}/disambiguation100.pig</script>
+            <param>commonJarsPath=${commonJarsPath}</param>
+            <param>dc_m_double_sample=1.0</param>
+            <param>dc_m_hdfs_inputDocsData=${dc_tmp_path}/D100</param>
+            <param>dc_m_hdfs_outputContribs=${dc_m_hdfs_outputContribs}/part2</param>
+            <param>threshold=${threshold}</param>
+            <param>statistics=${statistics}</param>
+            <param>dc_m_str_feature_info=${dc_m_str_feature_info}</param>
+        </pig>
+        <ok to='joining'/>
+        <error to='kill'/>
+    </action>
+
+    <action name='disambiguation-1000'>
+        <pig>
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <!--<prepare>
+                <delete path="${dc_m_hdfs_outputContribs}"/>
+            </prepare>-->
+            <configuration>
+                <!-- This is required for new api usage -->
+                <property>
+                    <name>mapred.mapper.new-api</name>
+                    <value>true</value>
+                </property>
+                <property>
+                    <name>mapred.reducer.new-api</name>
+                    <value>true</value>
+                </property>
+
+                <!-- General job parameters -->
+                <property>
+                    <name>mapred.job.queue.name</name>
+                    <value>${queueName}</value>
+                </property>
+                <property>
+                    <name>hbase.zookeeper.quorum</name>
+                    <value>${hbaseZookeeperQuorum}</value>
+                </property>
+            </configuration>
+            <script>${pigScriptsDir}/disambiguation1000.pig</script>
+            <param>commonJarsPath=${commonJarsPath}</param>
+            <param>dc_m_double_sample=1.0</param>
+            <param>dc_m_hdfs_inputDocsData=${dc_tmp_path}/D1000</param>
+            <param>dc_m_hdfs_outputContribs=${dc_m_hdfs_outputContribs}/part3</param>
+            <param>threshold=${threshold}</param>
+            <param>mapredChildJavaOpts=${mapredChildJavaOpts_D1000}</param>
+            <param>aproximate_remember_sim=${aproximate_remember_sim_D1000}</param>
+            <param>statistics=${statistics}</param>
+            <param>dc_m_str_feature_info=${dc_m_str_feature_info}</param>
+        </pig>
+        <ok to='joining'/>
+        <error to='kill'/>
+    </action>
+
+    <!-- so far has used the same script as disambiguation-1000 -->
+    <action name='disambiguation-DX'>
+        <pig>
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <!--<prepare>
+                <delete path="${dc_m_hdfs_outputContribs}"/>
+            </prepare>-->
+            <configuration>
+                <!-- This is required for new api usage -->
+                <property>
+                    <name>mapred.mapper.new-api</name>
+                    <value>true</value>
+                </property>
+                <property>
+                    <name>mapred.reducer.new-api</name>
+                    <value>true</value>
+                </property>
+
+                <!-- General job parameters -->
+                <property>
+                    <name>mapred.job.queue.name</name>
+                    <value>${queueName}</value>
+                </property>
+                <property>
+                    <name>hbase.zookeeper.quorum</name>
+                    <value>${hbaseZookeeperQuorum}</value>
+                </property>
+            </configuration>
+            <script>${pigScriptsDir}/disambiguation1000.pig</script>
+            <param>commonJarsPath=${commonJarsPath}</param>
+            <param>dc_m_double_sample=1.0</param>
+            <param>dc_m_hdfs_inputDocsData=${dc_tmp_path}/DX</param>
+            <param>dc_m_hdfs_outputContribs=${dc_m_hdfs_outputContribs}/part4</param>
+            <param>threshold=${threshold}</param>
+            <param>mapredChildJavaOpts=${mapredChildJavaOpts_DX}</param>
+            <param>aproximate_remember_sim=${aproximate_remember_sim_DX}</param>
+            <param>statistics=${statistics}</param>
+            <param>dc_m_str_feature_info=${dc_m_str_feature_info}</param>
+        </pig>
+        <ok to='joining'/>
+        <error to='kill'/>
+    </action>
+
+    <join name="joining" to="end"/>
+
+    <action name='send-email'>
+        <email xmlns="uri:oozie:email-action:0.1">
+            <to>mwos@icm.edu.pl</to>
+            <cc>mwos@icm.edu.pl</cc>
+            <subject>Email notifications for ${wf:id()}</subject>
+            <body>The wf ${wf:id()} successfully completed.</body>
+        </email>
         <ok to='end'/>
         <error to='kill'/>
     </action>
@@ -55,5 +235,6 @@
     <kill name='kill'>
         <message>Workflow failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
     </kill>
+
     <end name='end'/>
 </workflow-app>

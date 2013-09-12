@@ -82,6 +82,21 @@ D1000 = LOAD '$dc_m_hdfs_inputDocsData' as (sname:int, datagroup:{(cId:chararray
 -- -----------------------------------------------------
 -- D1000A: {datagroup: NULL,simTriples: NULL}
 D1000A = foreach D1000 generate flatten( aproximateAND( datagroup ) ) as (datagroup, simTriples);
+
+/*
+split D1000A into
+	D1000B1 if COUNT(datagroup) == 1,
+	D1000B if ( COUNT(datagroup) > 1 and COUNT(datagroup) <= 999999 ),
+	D1000BTOOBIG if COUNT(datagroup) > 999999;
+
+STORE D1000TOOBIG into '';
+
+F = foreach D1000B1 generate flatten( datagroup );-- as (cId:chararray, sname:int, metadata:map);
+-- E1: {cId: chararray,uuid: chararray}
+SINGLE = foreach F generate cId as cId, FLATTEN(GenUUID(TOBAG(cId))) as uuid;
+store SINGLE ...;
+*/
+
 -- D1000B: {uuid: chararray,cIds: chararray}
 D1000B = foreach D1000A generate flatten( exhaustiveAND( datagroup, simTriples ) ) as (uuid:chararray, cIds:chararray);
 -- E1000: {cId: chararray,uuid: chararray}

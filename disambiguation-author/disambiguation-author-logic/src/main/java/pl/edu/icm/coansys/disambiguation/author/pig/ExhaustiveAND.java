@@ -39,7 +39,7 @@ import pl.edu.icm.coansys.disambiguation.idgenerators.UuIdGenerator;
 
 public class ExhaustiveAND extends AND<DataBag> {
 
-    private static final float NOT_CALCULATED = Float.NEGATIVE_INFINITY;
+    private final float NOT_CALCULATED = Float.NEGATIVE_INFINITY;
     private float sim[][];
     private int N;
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ExhaustiveAND.class);
@@ -104,39 +104,41 @@ public class ExhaustiveAND extends AND<DataBag> {
 			clearSimInit();
 			
 			//if we got sim values to init
-			if ( input.size() == 2 ) {
-				//benchamrk
+			if (input.size() == 2) {
+				// benchamrk
 				gotSim = true;
-				//taking bag with calculated similarities
-				DataBag similarities = (DataBag) input.get(1);  
-				it = similarities.iterator();	
-				//iterating through bag, dropping bag to Tuple array
-				while ( it.hasNext() ) { 
-					Tuple t = it.next();
-					calculatedSimCounter++;
-					
-					int idX = (Integer) t.get(0);
-					int idY = (Integer) t.get(1);
-					float simValue = (Float) t.get(2);
+				// taking bag with calculated similarities
+				DataBag similarities = (DataBag) input.get(1);
 
-					try {
-						sim[ idX ][ idY ] = simValue;
+				if (similarities != null) {
+					it = similarities.iterator();
+					// iterating through bag, dropping bag to Tuple array
+					while (it.hasNext()) {
+						Tuple t = it.next();
+						calculatedSimCounter++;
 
-					} catch ( java.lang.ArrayIndexOutOfBoundsException e ) {
+						int idX = (Integer) t.get(0);
+						int idY = (Integer) t.get(1);
+						float simValue = (Float) t.get(2);
 
-						String m = "Out of bounds during sim init by values from input: " 
-								+ "idX: " + idX + ", idY: " + idY + ", sim.length: " 
-								+ sim.length + ", contrib number: " + contribsT.size();
+						try {
+							sim[idX][idY] = simValue;
 
-						if ( sim.length > idX )
-							m += ", sim[idX].length: " + sim[idX].length;
+						} catch (java.lang.ArrayIndexOutOfBoundsException e) {
+							String m = "Out of bounds during sim init by values from input: " 
+									+ "idX: " + idX + ", idY: " + idY + ", sim.length: " 
+									+ sim.length + ", contrib number: " + contribsT.size();
 
-						m += "\n" + "During processing tuple: " + t.toString();
-						
-						logger.error(m, e);
-						logger.info("Leaving all sim values for record");
-						
-						clearSimInit();
+							if ( sim.length > idX )
+								m += ", sim[idX].length: " + sim[idX].length;
+
+							m += "\n" + "During processing tuple: " + t.toString();
+							
+							logger.error(m, e);
+							logger.info("Leaving all sim values for record");
+							
+							clearSimInit();
+						}
 					}
 				}
 			}
@@ -178,7 +180,6 @@ public class ExhaustiveAND extends AND<DataBag> {
 		}catch(Exception e){
 			// Throwing an exception would cause the task to fail.
 			logger.error("Caught exception processing input row:\n" + StackTraceExtractor.getStackTrace(e));
-			System.out.println("DUUUPAAAAAAAAAAAA " + StackTraceExtractor.getStackTrace(e) );
 			return null;
 		}
 	}
@@ -193,43 +194,13 @@ public class ExhaustiveAND extends AND<DataBag> {
 	}
 	
 	private void calculateAffinity( List< Map<String,Object> > contribsT ){
-		
-		Map<String,Object>mA,mB;
-		
 		// N^2 / 2 * features number - already calculated sim values
 		for ( int i = 1; i < contribsT.size(); i++ ) {
 			for ( int j = 0; j < i; j++ ) {
-
 				//if sim value is already calculated, we do not need to calculate one more time
 				if( sim[i][j] != NOT_CALCULATED ) continue;
-				sim[i][j] = threshold;
-
-				for ( int d = 0; d < features.length; d++ ){
-					//Taking features from each keys (name of extractor = feature name)
-					//In contribsT.get(i) there is map we need.
-					//From this map (collection of i'th contributor's features)
-					//we take Bag with value of given feature.
-					//Here we have sure that following Object = DateBag.
-					mA = contribsT.get(i);
-					mB = contribsT.get(j);
-					
-					//probably map is empty for some contrib
-					if ( mA == null || mB == null ){
-						continue;
-					}
-				
-					Object oA = mA.get( featureInfos[d].getFeatureExtractorName() );
-					Object oB = mB.get( featureInfos[d].getFeatureExtractorName() );
-					
-					if ( oA == null || oB == null ){
-						continue;
-					}
-					
-					double partial = features[d].calculateAffinity( oA, oB );
-					partial = partial * featureInfos[d].getWeight();
-					
-					sim[i][j] += partial;
-				}
+				//sim[i][j] = threshold;
+				sim[i][j] = calculateContribsAffinityForAllFeatures( contribsT, i, j, false );
 			}
 		}
 	}

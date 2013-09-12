@@ -5,11 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.pig.EvalFunc;
-import org.apache.pig.data.DataBag;
-import org.apache.pig.data.Tuple;
-import org.slf4j.LoggerFactory;
 
-import pl.edu.icm.coansys.disambiguation.author.benchmark.TimerSyso;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.DisambiguatorFactory;
 import pl.edu.icm.coansys.disambiguation.author.pig.extractor.DisambiguationExtractorFactory;
 import pl.edu.icm.coansys.disambiguation.features.Disambiguator;
@@ -22,7 +18,7 @@ public abstract class AND<T> extends EvalFunc<T> {
 	protected PigDisambiguator[] features;
 	protected FeatureInfo[] featureInfos;
 	
-    private org.slf4j.Logger logger = null;
+    protected org.slf4j.Logger logger = null;
     private DisambiguationExtractorFactory extrFactory = new DisambiguationExtractorFactory();
     private boolean useIdsForExtractors = false;
 
@@ -91,31 +87,53 @@ public abstract class AND<T> extends EvalFunc<T> {
         this.features = 
         		FeaturesFinall.toArray( new PigDisambiguator[ FIFinall.size() ] );
 	}
- 
 	
-	protected Object getFeatureFromContribFeatureList( List< Map<String,Object> > contribsT, 
-			int contribIndex, int featureIndex ) {
-		Map<String,Object> featuresMap;
-		featuresMap = contribsT.get( contribIndex );
+	protected float calculateContribsAffinityForAllFeatures( List< Map<String,Object> > contribsT, int indexA, int indexB, boolean breakWhenPositive ) {
+		Map<String,Object>mA,mB;
+		double affinity = threshold;
 		
-		//probably map is empty for some contrib
-		if ( featuresMap == null ){
-			return null;
+		for ( int d = 0; d < features.length; d++ ){
+			//Taking features from each keys (name of extractor = feature name)
+			//In contribsT.get(i) there is map we need.
+			//From this map (collection of i'th contributor's features)
+			//we take Bag with value of given feature.
+			//Here we have sure that following Object = DateBag.
+			mA = contribsT.get( indexA );
+			mB = contribsT.get( indexB );
+			
+			//probably map is empty for some contrib
+			if ( mA == null || mB == null ){
+				continue;
+			}
+		
+			Object oA = mA.get( featureInfos[d].getFeatureExtractorName() );
+			Object oB = mB.get( featureInfos[d].getFeatureExtractorName() );
+			
+			if ( oA == null || oB == null ){
+				continue;
+			}
+						
+			affinity += calculateAffinity( oA, oB, d );
+			
+			if ( affinity >= 0 && breakWhenPositive ) {
+				//because we do not remember sim values this time
+				//we can break calculations
+				break;
+			}
 		}
 		
-		String featureName = featureInfos[ featureIndex ].getFeatureExtractorName();
-		Object o = featuresMap.get( featureName );
-		
-		//converting extractor name to opposite type
-		//if ( o == null ) {
-		//	o = featuresMap.get( exFactory.convertExtractorName( featureName ) );
-		//}
-		
-		//if still - probably feature does not exist for this contrib
-		if ( o == null ){
-			return null;
-		}
-		return o;
+		return (float)affinity;
 	}
 	
+	
+	protected double calculateAffinity( Object featureDescriptionA, 
+			Object featureDescriptionB, int featureIndex ) {
+		double partial = features[ featureIndex ].calculateAffinity
+				( featureDescriptionA, featureDescriptionB );
+		
+		partial = partial * featureInfos[ featureIndex ].getWeight();
+
+		return partial;
+	}
+		
 }
