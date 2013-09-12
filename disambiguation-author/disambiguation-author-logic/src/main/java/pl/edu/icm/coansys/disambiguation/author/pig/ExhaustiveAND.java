@@ -39,7 +39,7 @@ import pl.edu.icm.coansys.disambiguation.idgenerators.UuIdGenerator;
 
 public class ExhaustiveAND extends AND<DataBag> {
 
-    private static final float NOT_CALCULATED = Float.NEGATIVE_INFINITY;
+    private final float NOT_CALCULATED = Float.NEGATIVE_INFINITY;
     private float sim[][];
     private int N;
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ExhaustiveAND.class);
@@ -104,39 +104,41 @@ public class ExhaustiveAND extends AND<DataBag> {
 			clearSimInit();
 			
 			//if we got sim values to init
-			if ( input.size() == 2 ) {
-				//benchamrk
+			if (input.size() == 2) {
+				// benchamrk
 				gotSim = true;
-				//taking bag with calculated similarities
-				DataBag similarities = (DataBag) input.get(1);  
-				it = similarities.iterator();	
-				//iterating through bag, dropping bag to Tuple array
-				while ( it.hasNext() ) { 
-					Tuple t = it.next();
-					calculatedSimCounter++;
-					
-					int idX = (Integer) t.get(0);
-					int idY = (Integer) t.get(1);
-					float simValue = (Float) t.get(2);
+				// taking bag with calculated similarities
+				DataBag similarities = (DataBag) input.get(1);
 
-					try {
-						sim[ idX ][ idY ] = simValue;
+				if (similarities != null) {
+					it = similarities.iterator();
+					// iterating through bag, dropping bag to Tuple array
+					while (it.hasNext()) {
+						Tuple t = it.next();
+						calculatedSimCounter++;
 
-					} catch ( java.lang.ArrayIndexOutOfBoundsException e ) {
+						int idX = (Integer) t.get(0);
+						int idY = (Integer) t.get(1);
+						float simValue = (Float) t.get(2);
 
-						String m = "Out of bounds during sim init by values from input: " 
-								+ "idX: " + idX + ", idY: " + idY + ", sim.length: " 
-								+ sim.length + ", contrib number: " + contribsT.size();
+						try {
+							sim[idX][idY] = simValue;
 
-						if ( sim.length > idX )
-							m += ", sim[idX].length: " + sim[idX].length;
+						} catch (java.lang.ArrayIndexOutOfBoundsException e) {
+							String m = "Out of bounds during sim init by values from input: " 
+									+ "idX: " + idX + ", idY: " + idY + ", sim.length: " 
+									+ sim.length + ", contrib number: " + contribsT.size();
 
-						m += "\n" + "During processing tuple: " + t.toString();
-						
-						logger.error(m, e);
-						logger.info("Leaving all sim values for record");
-						
-						clearSimInit();
+							if ( sim.length > idX )
+								m += ", sim[idX].length: " + sim[idX].length;
+
+							m += "\n" + "During processing tuple: " + t.toString();
+							
+							logger.error(m, e);
+							logger.info("Leaving all sim values for record");
+							
+							clearSimInit();
+						}
 					}
 				}
 			}

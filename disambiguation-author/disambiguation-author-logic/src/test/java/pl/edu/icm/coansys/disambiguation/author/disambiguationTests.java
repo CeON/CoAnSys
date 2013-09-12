@@ -46,12 +46,27 @@ public class disambiguationTests {
 				"dc_m_hdfs_inputDocsData=null",
 				"dc_m_hdfs_outputContribs=null",
 				"dc_m_str_feature_info=" + "'TitleDisambiguator#EX_TITLE#1#1,KeywordDisambiguator#EX_KEYWORDS#1#1'",
-				"threshold='-1.0'"
+				"threshold='-1.0'",
+				"statistics=false"
 			};
 
    		PST.run( "aproximateAND", "aproximate_AND_test.pig", "B", "E", params );
    	}
   	
+    @Test(groups = {"fast"})
+	public void aproximateAND_BFS() throws IOException, ParseException {
+		
+		String[] params = {
+				"dc_m_hdfs_inputDocsData=null",
+				"dc_m_hdfs_outputContribs=null",
+				"dc_m_str_feature_info=" + "'TitleDisambiguator#EX_TITLE#1#1,KeywordDisambiguator#EX_KEYWORDS#1#1'",
+				"threshold='-1.0'",
+				"statistics=false"
+			};
+
+   		PST.run( "aproximateAND_BFS", "aproximate_AND_BFS_test.pig", "B", "E", params );
+   	}
+    
    	@Test(groups = {"fast"})
 	public void exhaustiveAND() throws IOException, ParseException {
 		
@@ -59,7 +74,8 @@ public class disambiguationTests {
 				"dc_m_hdfs_inputDocsData=null",
 				"dc_m_hdfs_outputContribs=null",
 				"dc_m_str_feature_info=" + "'TitleDisambiguator#EX_TITLE#1#1,KeywordDisambiguator#EX_KEYWORDS#1#1'",
-				"threshold='-1.0'"
+				"threshold='-1.0'",
+				"statistics=false"
 			};
 
    		PST.run( "exhaustiveAND", "exhaustive_AND_with_sim_test.pig", "A", "B", params );
@@ -73,7 +89,8 @@ public class disambiguationTests {
 				"dc_m_hdfs_outputContribs=null",
 				"dc_m_str_feature_info=" + "'TitleDisambiguator#EX_TITLE#1#1,KeywordDisambiguator#EX_KEYWORDS#1#1'",
 				"use_extractor_id_instead_name='true'",
-				"threshold='-1.0'"
+				"threshold='-1.0'",
+				"statistics=false"
 			};
 
    		PST.run( "aproximateAND_extrNameToId", "aproximate_AND_test.pig", "B", "E", params );
@@ -87,7 +104,8 @@ public class disambiguationTests {
 				"dc_m_hdfs_outputContribs=null",
 				"dc_m_str_feature_info=" + "'TitleDisambiguator#EX_TITLE#1#1,KeywordDisambiguator#EX_KEYWORDS#1#1'",
 				"use_extractor_id_instead_name='true'",
-				"threshold='-1.0'"
+				"threshold='-1.0'",
+				"statistics=false"
 			};
 
    		PST.run( "exhaustiveAND_extrNameToId", "exhaustive_AND_with_sim_test.pig", "A", "B", params );
@@ -165,8 +183,6 @@ public class disambiguationTests {
    			assert( factory.toExId( extractors[i] ).equals( ids[i] ) );
    			assert( factory.toExName( ids[i] ).equals( extractors[i] ) );
    			assert( factory.toExName( extractors[i] ).equals( extractors[i] ) );
-   			
-   			
    		}
    	}
 }
