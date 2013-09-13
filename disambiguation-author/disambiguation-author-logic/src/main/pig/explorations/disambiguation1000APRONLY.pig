@@ -34,7 +34,7 @@
 %DEFAULT statistics 'true'
 
 DEFINE exhaustiveAND pl.edu.icm.coansys.disambiguation.author.pig.ExhaustiveAND('$threshold','$dc_m_str_feature_info','$use_extractor_id_instead_name','$statistics');
-DEFINE aproximateAND pl.edu.icm.coansys.disambiguation.author.pig.AproximateAND('$threshold', '$dc_m_str_feature_info','$aproximate_remember_sim','$use_extractor_id_instead_name','$statistics');
+DEFINE aproximateAND pl.edu.icm.coansys.disambiguation.author.pig.AproximateAND_BFS('$threshold', '$dc_m_str_feature_info','$aproximate_remember_sim','$use_extractor_id_instead_name','$statistics');
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- register section

@@ -209,8 +209,6 @@ public class AproximateAND_BFS extends AND<DataBag> {
 						clusterTriple = new SimTriple(u, v, simil);
 					}
 					
-					System.out.println( "(" + u + "," + v + "," + simil + ")" );
-					
 					// potentially the same contributors
 					if (simil >= 0) {
 						clustered.add(u);
