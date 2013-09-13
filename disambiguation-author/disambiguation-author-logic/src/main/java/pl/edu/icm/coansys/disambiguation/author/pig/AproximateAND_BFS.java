@@ -118,21 +118,6 @@ public class AproximateAND_BFS extends AND<DataBag> {
 				datain[k++] = t;
 				// map with features
 				contribsT.add((Map<String, Object>) t.get(2));
-
-				// TODO: ?change map to list (disambiguators are created one by
-				// one as feature does, so both of them will be iterated in the
-				// same order).
-				// change map to databag in pig script? (memory for keys with
-				// strings of extractors' names would be saved)
-				// Note, that now some disambiguators may be omitted. In that
-				// case we'll need boolean ( which feature is used, which not ).
-				// UP: rather do not do this, because we will lose
-				// universality of data ability (for example, if
-				// EXTRACT_CONTRIB_GIVENDATA
-				// extracts more features than we use in aproximate
-				// OR in some records some features will be omitted (because of
-				// e.g. being empty)
-				// there would be crash)
 			}
 
 			// 1. clustering ( and similarities calculating )
@@ -162,8 +147,6 @@ public class AproximateAND_BFS extends AND<DataBag> {
 						"#time", clustersSizes.toString());
 			}
 
-			// bag: Tuple with (Object with (String (UUID), bag: { Tuple with (
-			// String (contrib ID) ) } ) )
 			return ret;
 
 		} catch (Exception e) {
@@ -173,7 +156,9 @@ public class AproximateAND_BFS extends AND<DataBag> {
 			return null;
 		}
 	}
-
+	
+	
+	
 	// calculating affinity, clustering and creating result bag
 	// N^2 / 2
 	// simIdToClusterId[ contrib input index ]= contrib index in his cluster
@@ -218,12 +203,14 @@ public class AproximateAND_BFS extends AND<DataBag> {
 
 					float simil = calculateContribsAffinityForAllFeatures(
 							contribsT, v, u, !rememberSim);
-
+					
 					// creating similarity triple
 					if (rememberSim) {
 						clusterTriple = new SimTriple(u, v, simil);
 					}
-
+					
+					System.out.println( "(" + u + "," + v + "," + simil + ")" );
+					
 					// potentially the same contributors
 					if (simil >= 0) {
 						clustered.add(u);

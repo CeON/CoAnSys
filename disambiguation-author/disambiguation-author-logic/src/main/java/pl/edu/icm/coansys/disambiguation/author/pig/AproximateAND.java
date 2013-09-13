@@ -121,13 +121,8 @@ public class AproximateAND extends AND<DataBag> {
 				// extracts more features than we use in aproximate
 				// OR in some records some features will be omitted (because of e.g. being empty) 
 				// there would be crash)
+				// UP: or do not remove empty features during EXTRACT_CONTRIB_GIVENDATA
 				
-				// the thing we can do for sure is to speed up extractors name (keys) 
-				// searching in map by: getting hashCodes of extractors names
-				// and do map<Int, Object> OR 
-				// use identifiers for extractors 
-				// (starting in extract_contribdata_givendata), what would be even better
-				// (because one character get 1B, hashCode 4b).
 			}
 
 			//sim[][] init
@@ -176,7 +171,6 @@ public class AproximateAND extends AND<DataBag> {
 		        		calculatedSimCounter, biggestCluster, "#time", clustersSizes.toString() );
 			}
 			
-	        //bag: Tuple with (Object with (String (UUID), bag: { Tuple with ( String (contrib ID) ) } ) )
 	        return ret;
 
 		}catch(Exception e){
