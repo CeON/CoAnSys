@@ -52,6 +52,7 @@ public class AproximateAND extends AND<DataBag> {
     private int timerPlayId = 0;
     private int finalClusterNumber = 0;
     private List<Integer>clustersSizes;
+    private Object sname;
     
     
 	public AproximateAND( String threshold, String featureDescription, String rememberSim, String useIdsForExtractors, String printStatistics ) throws Exception{
@@ -60,7 +61,7 @@ public class AproximateAND extends AND<DataBag> {
 
 		this.isStatistics = Boolean.parseBoolean( printStatistics );		
         if ( this.isStatistics ) {
-        	timer.addMonit( "#NOTSTAT#", "alg", "is sim", "id", "N", "cl no",
+        	timer.addMonit( "#NOTSTAT#", "sname", "alg", "is sim", "id", "N", "cl no",
         			"sim cntr", "big clst", "time", "list of clusters' sizes" );
         }
 
@@ -121,13 +122,10 @@ public class AproximateAND extends AND<DataBag> {
 				// extracts more features than we use in aproximate
 				// OR in some records some features will be omitted (because of e.g. being empty) 
 				// there would be crash)
+				// UP: or do not remove empty features during EXTRACT_CONTRIB_GIVENDATA
 				
-				// the thing we can do for sure is to speed up extractors name (keys) 
-				// searching in map by: getting hashCodes of extractors names
-				// and do map<Int, Object> OR 
-				// use identifiers for extractors 
-				// (starting in extract_contribdata_givendata), what would be even better
-				// (because one character get 1B, hashCode 4b).
+				//benchmark
+				sname = t.get(1);
 			}
 
 			//sim[][] init
@@ -159,6 +157,7 @@ public class AproximateAND extends AND<DataBag> {
 				//stopping timer for current play (not thread)
 				/* STATISTICS DESCRIPTION:
 				 * ## #STAT# tag for parser
+				 * ## sname
 				 * ## this algorithm name, 
 				 * ## is sim matrix created and some sim values stored , 
 				 * ## aproximate execution id,
@@ -172,11 +171,10 @@ public class AproximateAND extends AND<DataBag> {
 				 * ## clusters' sizes list
 				 * ## time [s]
 				 */
-				timer.stop( "#STAT#", "APR", rememberSim, timerPlayId, N, finalClusterNumber,
+				timer.stop( "#STAT#", sname, "APR", rememberSim, timerPlayId, N, finalClusterNumber,
 		        		calculatedSimCounter, biggestCluster, "#time", clustersSizes.toString() );
 			}
 			
-	        //bag: Tuple with (Object with (String (UUID), bag: { Tuple with ( String (contrib ID) ) } ) )
 	        return ret;
 
 		}catch(Exception e){
@@ -261,7 +259,9 @@ public class AproximateAND extends AND<DataBag> {
 				if ( simil >= 0 ) {
 					union( i, j );
 					//benchmark
-					if ( rememberSim ) calculatedSimCounter++;
+					if ( rememberSim ) {
+						calculatedSimCounter++;
+					}
 				}
 				
 				if ( rememberSim ) {

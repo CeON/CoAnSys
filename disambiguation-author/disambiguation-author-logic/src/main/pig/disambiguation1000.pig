@@ -26,15 +26,17 @@
 %DEFAULT dc_m_hdfs_inputDocsData tmp/D1000
 %DEFAULT time 20130709_1009
 %DEFAULT dc_m_hdfs_outputContribs disambiguation/outputContribs$time
--- %DEFAULT dc_m_meth_extraction_inner pl.edu.icm.coansys.commons.pig.udf.RichSequenceFileLoader
 %DEFAULT dc_m_str_feature_info 'TitleDisambiguator#EX_TITLE#1#1,YearDisambiguator#EX_YEAR#1#1'
 %DEFAULT threshold '-1.0'
-%DEFAULT use_extractor_id_instead_name 'true'
 %DEFAULT aproximate_remember_sim 'true'
+%DEFAULT use_extractor_id_instead_name 'true'
 %DEFAULT statistics 'true'
 
+%DEFAULT exhaustive_limit 6627
+
 DEFINE exhaustiveAND pl.edu.icm.coansys.disambiguation.author.pig.ExhaustiveAND('$threshold','$dc_m_str_feature_info','$use_extractor_id_instead_name','$statistics');
-DEFINE aproximateAND pl.edu.icm.coansys.disambiguation.author.pig.AproximateAND('$threshold', '$dc_m_str_feature_info','$aproximate_remember_sim','$use_extractor_id_instead_name','$statistics');
+DEFINE aproximateAND pl.edu.icm.coansys.disambiguation.author.pig.AproximateAND_BFS('$threshold', '$dc_m_str_feature_info','$aproximate_remember_sim','$use_extractor_id_instead_name','$statistics');
+DEFINE GenUUID pl.edu.icm.coansys.disambiguation.author.pig.GenUUID();
 
 -- -----------------------------------------------------
 -- -----------------------------------------------------
@@ -75,31 +77,34 @@ set dfs.client.socket-timeout 60000
 -- code section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
-D1000 = LOAD '$dc_m_hdfs_inputDocsData' as (sname:int, datagroup:{(cId:chararray, sname:int, data:map[{(int)}])}, count:long);
+D = LOAD '$dc_m_hdfs_inputDocsData' as (sname:int, datagroup:{(cId:chararray, sname:int, data:map[{(int)}])}, count:long);
 
 -- -----------------------------------------------------
 -- BIG GRUPS OF CONTRIBUTORS ---------------------------
 -- -----------------------------------------------------
 -- D1000A: {datagroup: NULL,simTriples: NULL}
-D1000A = foreach D1000 generate flatten( aproximateAND( datagroup ) ) as (datagroup, simTriples);
+E1 = foreach D generate flatten( aproximateAND( datagroup ) ) as (datagroup:{ ( cId:chararray, sname:int, data:map[{(int)}] ) }, simTriples:{});
+E2 = foreach E1 generate datagroup, simTriples, COUNT( datagroup ) as count;
 
-/*
-split D1000A into
-	D1000B1 if COUNT(datagroup) == 1,
-	D1000B if ( COUNT(datagroup) > 1 and COUNT(datagroup) <= 999999 ),
-	D1000BTOOBIG if COUNT(datagroup) > 999999;
+split E2 into
+	ESINGLE if count == 1,
+	EEXH if ( count > 1 and count <= $exhaustive_limit ),
+	EBIG if count > $exhaustive_limit;
 
-STORE D1000TOOBIG into '';
 
-F = foreach D1000B1 generate flatten( datagroup );-- as (cId:chararray, sname:int, metadata:map);
--- E1: {cId: chararray,uuid: chararray}
+-- CLUSTERS WITH ONE CONTRIBUTOR
+F = foreach ESINGLE generate flatten( datagroup );-- as (cId:chararray, sname:int, metadata:map);
+-- SINGLE: {cId: chararray,uuid: chararray}
 SINGLE = foreach F generate cId as cId, FLATTEN(GenUUID(TOBAG(cId))) as uuid;
-store SINGLE ...;
-*/
 
--- D1000B: {uuid: chararray,cIds: chararray}
-D1000B = foreach D1000A generate flatten( exhaustiveAND( datagroup, simTriples ) ) as (uuid:chararray, cIds:chararray);
--- E1000: {cId: chararray,uuid: chararray}
-E1000 = foreach D1000B generate flatten( cIds ) as cId, uuid;
+-- CLUSTERS FOR EXHAUSTIVE
+G = foreach EEXH generate flatten( exhaustiveAND( datagroup, simTriples ) ) as (uuid:chararray, cIds:chararray);
+-- H: {cId: chararray,uuid: chararray}
+H = foreach G generate flatten( cIds ) as cId, uuid;
 
-store E1000 into '$dc_m_hdfs_outputContribs';
+-- TOO BIG CLUSTERS FOR EXHAUSTIVE
+store EBIG into '$dc_m_hdfs_outputContribs/FAILED';
+
+-- STORING RESULTS
+R = union SINGLE, H;
+store R into '$dc_m_hdfs_outputContribs';

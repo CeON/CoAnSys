@@ -45,9 +45,6 @@ public class CoAuthorsSnameDisambiguatorFullList extends Disambiguator{
 	
 	@Override
 	public double calculateAffinity( List<Object> f1, List<Object> f2 ) {
-		//(-2) because in both lists there is contributor name for whom we are 
-		//calculating similarity
-		
 		Set<Object> set = new HashSet<Object>( f1 );
 		set.addAll( f2 );
 		double sum = set.size();
@@ -59,16 +56,16 @@ public class CoAuthorsSnameDisambiguatorFullList extends Disambiguator{
 		
 		f1.retainAll( f2 );
 		//because this cotributor is in intersection for sure, but we do not want
-		//to take him as co-author.
+		//to take him as his co-author.
 		double intersection = f1.size() - 1;
 		
-		double resoult = intersection / sum;
+		double result = intersection / sum;
 		
-		if ( resoult < 0 ) {
+		if ( result < 0 ) {
 			logger.warn( "Negative value of intersection. Returning 0." );
 			return 0;
 		}
 		
-		return resoult;
+		return result;
 	}
 }

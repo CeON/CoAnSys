@@ -52,6 +52,7 @@ public class AproximateAND_BFS extends AND<DataBag> {
 	private int calculatedSimCounter;
 	private int timerPlayId = 0;
 	private List<Integer> clustersSizes;
+    private Object sname;
 
 	public AproximateAND_BFS(String threshold, String featureDescription,
 			String rememberSim, String useIdsForExtractors,
@@ -63,8 +64,8 @@ public class AproximateAND_BFS extends AND<DataBag> {
 		if (this.isStatistics) {
 			// alg is sim id N cl no sim cntr big clst time list of clusters'
 			// sizes
-			timer.addMonit("#NOTSTAT#", "alg", "is sim", "id", "N", "cl no",
-					"sim cntr", "big clst", "time", "list of clusters' sizes");
+        	timer.addMonit( "#NOTSTAT#", "sname", "alg", "is sim", "id", "N", "cl no",
+        			"sim cntr", "big clst", "time", "list of clusters' sizes" );
 		}
 
 	}
@@ -119,20 +120,8 @@ public class AproximateAND_BFS extends AND<DataBag> {
 				// map with features
 				contribsT.add((Map<String, Object>) t.get(2));
 
-				// TODO: ?change map to list (disambiguators are created one by
-				// one as feature does, so both of them will be iterated in the
-				// same order).
-				// change map to databag in pig script? (memory for keys with
-				// strings of extractors' names would be saved)
-				// Note, that now some disambiguators may be omitted. In that
-				// case we'll need boolean ( which feature is used, which not ).
-				// UP: rather do not do this, because we will lose
-				// universality of data ability (for example, if
-				// EXTRACT_CONTRIB_GIVENDATA
-				// extracts more features than we use in aproximate
-				// OR in some records some features will be omitted (because of
-				// e.g. being empty)
-				// there would be crash)
+				//benchmark
+				sname = t.get(1);
 			}
 
 			// 1. clustering ( and similarities calculating )
@@ -147,7 +136,7 @@ public class AproximateAND_BFS extends AND<DataBag> {
 
 				// stopping timer for current play (not thread)
 				/*
-				 * STATISTICS DESCRIPTION: ## #STAT# tag for parser ## this
+				 * STATISTICS DESCRIPTION: ## #STAT# ## smame ## tag for parser ## this
 				 * algorithm name, ## is sim matrix created and some sim values
 				 * stored , ## aproximate execution id, ## number of contribs,
 				 * ## clusters number after aproximate, ## calculated sim values
@@ -157,13 +146,11 @@ public class AproximateAND_BFS extends AND<DataBag> {
 				 * biggest cluster after aproximate ## clusters' sizes list ##
 				 * time [s]
 				 */
-				timer.stop("#STAT#", "APR", rememberSim, timerPlayId, N,
+				timer.stop("#STAT#", sname, "APR", rememberSim, timerPlayId, N,
 						ret.size(), calculatedSimCounter, biggestCluster,
 						"#time", clustersSizes.toString());
 			}
 
-			// bag: Tuple with (Object with (String (UUID), bag: { Tuple with (
-			// String (contrib ID) ) } ) )
 			return ret;
 
 		} catch (Exception e) {
@@ -173,7 +160,9 @@ public class AproximateAND_BFS extends AND<DataBag> {
 			return null;
 		}
 	}
-
+	
+	
+	
 	// calculating affinity, clustering and creating result bag
 	// N^2 / 2
 	// simIdToClusterId[ contrib input index ]= contrib index in his cluster
@@ -218,12 +207,12 @@ public class AproximateAND_BFS extends AND<DataBag> {
 
 					float simil = calculateContribsAffinityForAllFeatures(
 							contribsT, v, u, !rememberSim);
-
+					
 					// creating similarity triple
 					if (rememberSim) {
 						clusterTriple = new SimTriple(u, v, simil);
 					}
-
+					
 					// potentially the same contributors
 					if (simil >= 0) {
 						clustered.add(u);

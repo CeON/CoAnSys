@@ -27,21 +27,23 @@
 %DEFAULT time 20130709_1009
 %DEFAULT dc_m_hdfs_outputContribs tmp/
 %DEFAULT dc_m_meth_extraction_inner pl.edu.icm.coansys.commons.pig.udf.RichSequenceFileLoader
-%DEFAULT dc_m_str_feature_info 'TitleDisambiguator#EX_TITLE#1#1,YearDisambiguator#EX_YEAR#1#1'
---%DEFAULT threshold '-1.0'
-%DEFAULT use_extractor_id_instead_name 'true'
-%DEFAULT lang 'pl'
+%DEFAULT dc_m_str_feature_info 'CoAuthorsSnameDisambiguatorFullList#EX_AUTH_SNAMES#-0.0000166#8,ClassifCodeDisambiguator#EX_CLASSIFICATION_CODES#0.99#12,KeyphraseDisambiguator#EX_KEYWORDS_SPLIT#0.99#22,KeywordDisambiguator#EX_KEYWORDS#0.0000369#40'
+%DEFAULT lang 'all'
 $DEFAULT skip_empty_features 'true'
---%DEFAULT aproximate_remember_sim 'true'
---%DEFAULT statistics 'true'
+%DEFAULT use_extractor_id_instead_name 'true'
 
-DEFINE keyTiKwAbsCatExtractor pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_MAP_WHEN_CATEG_LIM('en','removeall');
 DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_CONTRIBDATA_GIVENDATA('$dc_m_str_feature_info','$lang','$skip_empty_features','$use_extractor_id_instead_name');
 
---DEFINE exhaustiveAND pl.edu.icm.coansys.disambiguation.author.pig.ExhaustiveAND('$threshold','$dc_m_str_feature_info','$use_extractor_id_instead_name','$statistics');
---DEFINE aproximateAND pl.edu.icm.coansys.disambiguation.author.pig.AproximateAND('$threshold', '$dc_m_str_feature_info','$aproximate_remember_sim','$use_extractor_id_instead_name','$statistics');
---DEFINE aproximateXxlAND pl.edu.icm.coansys.disambiguation.author.pig.AproximateAND('$threshold','$dc_m_str_feature_info', 'false','$statistics');
---DEFINE GenUUID pl.edu.icm.coansys.disambiguation.author.pig.GenUUID();
+/*
+%DEFAULT threshold '-1.0'
+%DEFAULT statistics 'true'
+DEFINE featuresCheck pl.edu.icm.coansys.disambiguation.author.pig.FeaturesCheck('$threshold','$dc_m_str_feature_info','$use_extractor_id_instead_name','$statistics');
+*/
+
+%DEFAULT dc_m_double_sample 1.0
+%DEFAULT exhaustive_limit 6627
+%DEFAULT aproximate_sim_limit 1000000
+
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- register section
@@ -57,14 +59,14 @@ REGISTER '$commonJarsPath'
 -- set section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
-%DEFAULT dc_m_double_sample 1.0
-%DEFAULT parallel_param 16
+%DEFAULT parallel_param 85
 %DEFAULT pig_tmpfilecompression_param true
 %DEFAULT pig_tmpfilecompression_codec_param gz
 %DEFAULT job_priority normal
 %DEFAULT pig_cachedbag_mem_usage 0.1
 %DEFAULT pig_skewedjoin_reduce_memusage 0.3
 %DEFAULT mapredChildJavaOpts -Xmx8000m
+
 set default_parallel $parallel_param
 set pig.tmpfilecompression $pig_tmpfilecompression_param
 set pig.tmpfilecompression.codec $pig_tmpfilecompression_codec_param
@@ -95,12 +97,12 @@ D = foreach C generate group as sname, B as datagroup, COUNT(B) as count;
 
 split D into
         D1 if count == 1,
-        D100 if (count > 1 and count < 100),
-        D1000 if (count >= 100 and count < 300),
-        DX if count >= 300;
+        D100 if (count > 1 and count <= $exhaustive_limit),
+        D1000 if (count > $exhaustive_limit and count <= $aproximate_sim_limit),
+        DX if count > $aproximate_sim_limit;
 
 -- store here, remember to delete path in workflow after joining / merge
-store D1 into '$dc_m_hdfs_outputContribs/D1';
-store D100 into '$dc_m_hdfs_outputContribs/D100';
-store D1000 into '$dc_m_hdfs_outputContribs/D1000';
-store DX into '$dc_m_hdfs_outputContribs/DX';
+store D1 into '$dc_m_hdfs_outputContribs/single';
+store D100 into '$dc_m_hdfs_outputContribs/exh';
+store D1000 into '$dc_m_hdfs_outputContribs/apr-sim';
+store DX into '$dc_m_hdfs_outputContribs/apr-nosim';

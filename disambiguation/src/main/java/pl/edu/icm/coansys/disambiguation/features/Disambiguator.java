@@ -53,7 +53,7 @@ public class Disambiguator {
 		set.addAll( f2 );
 		double sum = set.size();
 		if ( sum <= 0 ) {
-			logger.warn( "Negative or zero value of lists sum. Returning 0." );
+			//logger.warn( "Negative or zero value of lists sum. Returning 0." );
 			//TODO: ? 0 or 1
 			return 0;
 		}
