@@ -52,6 +52,7 @@ public class AproximateAND_BFS extends AND<DataBag> {
 	private int calculatedSimCounter;
 	private int timerPlayId = 0;
 	private List<Integer> clustersSizes;
+    private Object sname;
 
 	public AproximateAND_BFS(String threshold, String featureDescription,
 			String rememberSim, String useIdsForExtractors,
@@ -63,8 +64,8 @@ public class AproximateAND_BFS extends AND<DataBag> {
 		if (this.isStatistics) {
 			// alg is sim id N cl no sim cntr big clst time list of clusters'
 			// sizes
-			timer.addMonit("#NOTSTAT#", "alg", "is sim", "id", "N", "cl no",
-					"sim cntr", "big clst", "time", "list of clusters' sizes");
+        	timer.addMonit( "#NOTSTAT#", "sname", "alg", "is sim", "id", "N", "cl no",
+        			"sim cntr", "big clst", "time", "list of clusters' sizes" );
 		}
 
 	}
@@ -118,6 +119,9 @@ public class AproximateAND_BFS extends AND<DataBag> {
 				datain[k++] = t;
 				// map with features
 				contribsT.add((Map<String, Object>) t.get(2));
+
+				//benchmark
+				sname = t.get(1);
 			}
 
 			// 1. clustering ( and similarities calculating )
@@ -132,7 +136,7 @@ public class AproximateAND_BFS extends AND<DataBag> {
 
 				// stopping timer for current play (not thread)
 				/*
-				 * STATISTICS DESCRIPTION: ## #STAT# tag for parser ## this
+				 * STATISTICS DESCRIPTION: ## #STAT# ## smame ## tag for parser ## this
 				 * algorithm name, ## is sim matrix created and some sim values
 				 * stored , ## aproximate execution id, ## number of contribs,
 				 * ## clusters number after aproximate, ## calculated sim values
@@ -142,7 +146,7 @@ public class AproximateAND_BFS extends AND<DataBag> {
 				 * biggest cluster after aproximate ## clusters' sizes list ##
 				 * time [s]
 				 */
-				timer.stop("#STAT#", "APR", rememberSim, timerPlayId, N,
+				timer.stop("#STAT#", sname, "APR", rememberSim, timerPlayId, N,
 						ret.size(), calculatedSimCounter, biggestCluster,
 						"#time", clustersSizes.toString());
 			}

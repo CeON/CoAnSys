@@ -53,6 +53,7 @@ public class ExhaustiveAND extends AND<DataBag> {
     private int finalClusterNumber = 0;
     private List<Integer>clustersSizes;
     private boolean gotSim = false;
+    private Object sname;
 
     
     public ExhaustiveAND(String threshold, String featureDescription, String useIdsForExtractors, String printStatistics) throws Exception {
@@ -60,7 +61,7 @@ public class ExhaustiveAND extends AND<DataBag> {
 
 		this.isStatistics = Boolean.parseBoolean( printStatistics );		
         if ( this.isStatistics ) {
-        	timer.addMonit( "#NOTSTAT#", "alg", "is sim", "id", "N", "cl no",
+        	timer.addMonit( "#NOTSTAT#", "sname", "alg", "is sim", "id", "N", "cl no",
         			"sim cntr", "big clst", "time", "list of clusters' sizes" );
         }
     }
@@ -102,6 +103,8 @@ public class ExhaustiveAND extends AND<DataBag> {
 				Tuple t = it.next();
 				contribsId[ k++ ] = (String) t.get(0); //getting contrib id from tuple
 				contribsT.add( (Map<String, Object>) t.get(2) ); //getting map with features
+				//benchmark
+				sname = t.get(1);
 			}
 			
 			clearSimInit();
@@ -167,6 +170,7 @@ public class ExhaustiveAND extends AND<DataBag> {
 
 				//stopping timer for current play (not thread)
 				/* STATISTICS DESCRIPTION:
+				 * ## sname
 				 * ## #STAT# tag for parser
 				 * ## this algorithm name, 
 				 * ## is some sim from aproximate, 
@@ -178,7 +182,7 @@ public class ExhaustiveAND extends AND<DataBag> {
 				 * ## -
 				 * ## time [s]
 				 */
-				timer.stop( "#STAT#", "exh", gotSim, timerPlayId, N, finalClusterNumber, calculatedSimCounter, biggestCluster, "#time", clustersSizes );
+				timer.stop( "#STAT#", sname, "exh", gotSim, timerPlayId, N, finalClusterNumber, calculatedSimCounter, biggestCluster, "#time", clustersSizes );
 			}
 			
 	        return ret;
