@@ -66,7 +66,7 @@ public class RankedUnionFindPathCompressed {
 	}
 	
 	public boolean find(int p, int q){
-		return find(p,q);
+		return getRoot(p)==getRoot(q);
 	}
 
 	public int[] getAssignmentArray() {
