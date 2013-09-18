@@ -77,6 +77,7 @@ set mapred.child.java.opts $mapredChildJavaOpts
 -- ulimit must be more than two times the heap size value !
 -- set mapred.child.ulimit unlimited
 set dfs.client.socket-timeout 60000
+set mapred.fairscheduler.pool bigjobs
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- code section
