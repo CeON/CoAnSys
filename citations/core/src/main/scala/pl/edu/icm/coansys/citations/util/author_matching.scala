@@ -82,12 +82,15 @@ object author_matching {
     if (tokens1 == tokens2) 1.0 else 0.0
 
   def matchFactorOnNonEmpty(tokens1: List[String], tokens2: List[String]) = {
-    val len1 = tokens1.length
-    val len2 = tokens2.length
+    val limit = 500
+    val trimmedTokens1 = tokens1.take(limit)
+    val trimmedTokens2 = tokens2.take(limit)
+    val len1 = trimmedTokens1.length
+    val len2 = trimmedTokens2.length
 
     //Add begin and end tokens (they always match)
     val extendedExactMatchingTokens =
-      exactMatchingTokens(tokens1, tokens2).map {
+      exactMatchingTokens(trimmedTokens1, trimmedTokens2).map {
         case (x, y) => (x + 1, y + 1)
       }.toSet + ((0, 0)) + ((len1 + 1, len2 + 1))
 
@@ -104,21 +107,21 @@ object author_matching {
     val dists = Array.tabulate(len1, len2)(alignment.distance)
 
     val importance1 = Array.tabulate(len1) {
-      i => val v = tokens1(i).length.toDouble / tokens1.mkString("").length; v
+      i => val v = trimmedTokens1(i).length.toDouble / trimmedTokens1.mkString("").length; v
     }
     val importance2 = Array.tabulate(len2) {
-      i => val v = tokens2(i).length.toDouble / tokens2.mkString("").length; v
+      i => val v = trimmedTokens2(i).length.toDouble / trimmedTokens2.mkString("").length; v
     }
 
     val editDists = Array.tabulate(len1, len2) {
       (i, j) =>
-        if (tokens1(i) == tokens2(j))
+        if (trimmedTokens1(i) == trimmedTokens2(j))
           0
-        else if (((tokens1(i) startsWith tokens2(j)) && (tokens2(j).length <= 2)) ||
-          ((tokens2(j) startsWith tokens1(i)) && (tokens1(i).length <= 2)))
+        else if (((trimmedTokens1(i) startsWith trimmedTokens2(j)) && (trimmedTokens2(j).length <= 2)) ||
+          ((trimmedTokens2(j) startsWith trimmedTokens1(i)) && (trimmedTokens1(i).length <= 2)))
           1
         else
-          StringUtils.getLevenshteinDistance(tokens1(i), tokens2(j))
+          StringUtils.getLevenshteinDistance(trimmedTokens1(i), trimmedTokens2(j))
     }
 
     val maxLen = math.max(len1, len2)
