@@ -173,6 +173,7 @@
             <param>statistics=${statistics}</param>
             <param>dc_m_str_feature_info=${dc_m_str_feature_info}</param>
             <param>exhaustive_limit=${exhaustive_limit}</param>
+            <param>failedContribs=${failedContribs}/apr-sim</param>
         </pig>
         <ok to='joining'/>
         <error to='kill'/>
@@ -217,7 +218,8 @@
             <param>aproximate_remember_sim=false</param>
             <param>statistics=${statistics}</param>
             <param>dc_m_str_feature_info=${dc_m_str_feature_info}</param>
-			<param>exhaustive_limit=${exhaustive_limit}</param>
+            <param>exhaustive_limit=${exhaustive_limit}</param>
+            <param>failedContribs=${failedContribs}/apr-sim</param>
         </pig>
         <ok to='joining'/>
         <error to='kill'/>

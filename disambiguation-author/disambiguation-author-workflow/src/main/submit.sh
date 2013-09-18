@@ -1,6 +1,6 @@
 #!/bin/sh
 
-TASK="oozie"
+TASK="disambiguation-author-wf"
 USER=mwos
 OOZIE_SERVER=hadoop-master.vls.icm.edu.pl
 PROPERTIES_FILE=oozie/cluster.properties

@@ -27,6 +27,7 @@
 %DEFAULT dc_m_hdfs_inputDocsData extracted/springer_sample02/part*
 %DEFAULT time 20130709_1009
 %DEFAULT dc_m_hdfs_outputContribs disambiguation/outputContribs$time
+%DEFAULT failedContribs disambiguation/failedContribs$time
 %DEFAULT dc_m_str_feature_info 'CoAuthorsSnameDisambiguatorFullList#EX_AUTH_SNAMES#-0.0000166#8,ClassifCodeDisambiguator#EX_CLASSIFICATION_CODES#0.99#12,KeyphraseDisambiguator#EX_KEYWORDS_SPLIT#0.99#22,KeywordDisambiguator#EX_KEYWORDS#0.0000369#40'
 %DEFAULT threshold '-1.0'
 %DEFAULT aproximate_remember_sim 'true'
@@ -73,6 +74,7 @@ set mapred.child.java.opts $mapredChildJavaOpts
 -- ulimit must be more than two times the heap size value !
 -- set mapred.child.ulimit unlimited
 set dfs.client.socket-timeout 60000
+set mapred.fairscheduler.pool bigjobs
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- code section
@@ -104,7 +106,7 @@ G = foreach EEXH generate flatten( exhaustiveAND( datagroup, simTriples ) ) as (
 H = foreach G generate flatten( cIds ) as cId, uuid;
 
 -- TOO BIG CLUSTERS FOR EXHAUSTIVE
-store EBIG into '$dc_m_hdfs_outputContribs/FAILED';
+store EBIG into '$failedContribs';
 
 -- STORING RESULTS
 R = union SINGLE, H;
