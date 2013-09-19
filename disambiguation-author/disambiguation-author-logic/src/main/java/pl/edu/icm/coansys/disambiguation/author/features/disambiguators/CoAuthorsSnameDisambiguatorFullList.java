@@ -18,54 +18,51 @@
 
 package pl.edu.icm.coansys.disambiguation.author.features.disambiguators;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.AbstractMap.SimpleEntry;
 
 import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.disambiguation.features.Disambiguator;
 
 /**
- * Disambiguator for contributors with the same sname. It requires placing their 
+ * Disambiguator for contributors with the same sname. It requires placing their
  * own sname on the list of authors.
+ * 
  * @author mwos
  * @version 1.0
  * @since 2012-08-07
  */
-public class CoAuthorsSnameDisambiguatorFullList extends Disambiguator{
+public class CoAuthorsSnameDisambiguatorFullList extends Disambiguator {
 
-    private static final org.slf4j.Logger logger 
-    	= LoggerFactory.getLogger( CoAuthorsSnameDisambiguatorFullList.class );
-    
+	private static final org.slf4j.Logger logger = LoggerFactory
+			.getLogger(CoAuthorsSnameDisambiguatorFullList.class);
+
 	@Override
 	public String getName() {
 		return CoAuthorsSnameDisambiguatorFullList.class.getSimpleName();
 	}
-	
+
 	@Override
-	public double calculateAffinity( List<Object> f1, List<Object> f2 ) {
-		Set<Object> set = new HashSet<Object>( f1 );
-		set.addAll( f2 );
-		double sum = set.size();
-		if ( sum <= 0 ) {
-			logger.warn( "Negative or zero value of lists sum. Returning 0." );
-			//TODO: ? 0 or 1
+	public double calculateAffinity(List<Object> f1, List<Object> f2) {
+
+		SimpleEntry<Integer, Integer> p = intersectionAndSum(f1, f2);
+
+		// because this cotributor is in sum and intersection for sure, but we
+		// do not want to take him as his co-author.
+		int intersection = p.getKey() - 1;
+		int sum = p.getValue() - 1;
+
+		if (sum <= 0) {
+			logger.warn("Negative or zero value of lists sum. Returning 0.");
+			// TODO: ? 0 or 1
 			return 0;
 		}
-		
-		f1.retainAll( f2 );
-		//because this cotributor is in intersection for sure, but we do not want
-		//to take him as his co-author.
-		double intersection = f1.size() - 1;
-		
-		double result = intersection / sum;
-		
-		if ( result < 0 ) {
-			logger.warn( "Negative value of intersection. Returning 0." );
+		if (intersection < 0) {
+			logger.warn("Negative value of intersection. Returning 0.");
 			return 0;
 		}
-		
-		return result;
+
+		return (double) intersection / sum;
 	}
 }
