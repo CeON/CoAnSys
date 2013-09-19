@@ -19,17 +19,14 @@
 package pl.edu.icm.coansys.disambiguation.author.pig.extractor;
 
 import org.apache.pig.data.DataBag;
-import org.apache.pig.data.DefaultDataBag;
-import org.apache.pig.data.TupleFactory;
-
-import pl.edu.icm.coansys.models.DocumentProtos.ClassifCode;
-import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 
 public class EX_EMAIL_PREFIX extends DisambiguationExtractorAuthor{
 	
 	@Override
 	public DataBag extract( Object o, int fakeindex, String lang ){
 		throw new UnsupportedOperationException();
+
+		//TODO
 //		
 //		DocumentMetadata dm = (DocumentMetadata) o;
 //		DataBag db = new DefaultDataBag();

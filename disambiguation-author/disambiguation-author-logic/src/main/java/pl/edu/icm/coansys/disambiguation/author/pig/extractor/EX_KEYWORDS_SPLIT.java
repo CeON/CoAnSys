@@ -83,7 +83,6 @@ public class EX_KEYWORDS_SPLIT extends DisambiguationExtractorDocument  {
 		if ( db.size() == 0) {
 			logger.info("No keywords IN GIVEN LANG (" + lang + ") out of " 
 					+ dm.getKeywordsCount() + " keywords!");
-			//return null;
 		}
 		return db;
 	}

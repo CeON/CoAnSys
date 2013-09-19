@@ -33,18 +33,6 @@ public class EX_TITLE extends DisambiguationExtractorDocument {
 	
     private static final Logger logger = LoggerFactory.getLogger( EX_TITLE.class );
 
-	/*@Override
-	public DataBag extract( Object o ) {
-		DocumentMetadata dm = (DocumentMetadata) o;
-		
-		DataBag db = new DefaultDataBag();
-		Tuple t = TupleFactory.getInstance().newTuple( normalizeExtracted( 
-				dm.getBasicMetadata().getTitleList().get(0).getText() ) );
-		db.add( t );
-		
-		return db;
-	} */   
-    
 	@Override
 	public DataBag extract( Object o, String lang ) {
 		
@@ -56,14 +44,12 @@ public class EX_TITLE extends DisambiguationExtractorDocument {
             	Tuple t = TupleFactory.getInstance().newTuple( 
         				normalizeExtracted( title.getText() ) );
         		db.add( t );
-        		//return db;
             }
         }
         
  		if ( db.size() == 0) {   
 			logger.info("No title IN GIVEN LANG (" + lang + ") out of " 
         		+ dm.getBasicMetadata().getTitleCount() + " titles!");
-			//return null;
 		}
  		
  		return db;

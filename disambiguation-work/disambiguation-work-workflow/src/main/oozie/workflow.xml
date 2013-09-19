@@ -16,11 +16,11 @@
 				</property>
 				<property>
 					<name>mapred.input.dir</name>
-					<value>${workingDir}/hbase-sf-out/</value>
+					<value>${inputSeqFile}</value>
 				</property>
 				<property>
 					<name>mapred.output.dir</name>
-					<value>${workingDir}/dis-work-out/</value>
+					<value>${outputSeqFile}</value>
 				</property>
 				<property>
 					<name>mapreduce.map.class</name>
@@ -53,12 +53,20 @@
 					</value>
 				</property>
 				<property>
+					<name>mapred.mapoutput.key.class</name>
+					<value>org.apache.hadoop.io.Text</value>
+				</property>
+				<property>
+					<name>mapred.mapoutput.value.class</name>
+					<value>org.apache.hadoop.io.BytesWritable</value>
+				</property>
+				<property>
 					<name>mapred.output.key.class</name>
 					<value>org.apache.hadoop.io.Text</value>
 				</property>
 				<property>
 					<name>mapred.output.value.class</name>
-					<value>org.apache.hadoop.io.BytesWritable</value>
+					<value>org.apache.hadoop.io.Text</value>
 				</property>
 				<property>
 					<name>diMapApplicationContextPath</name>

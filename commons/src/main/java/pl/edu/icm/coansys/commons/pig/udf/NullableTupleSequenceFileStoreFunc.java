@@ -43,8 +43,7 @@ public class NullableTupleSequenceFileStoreFunc extends StoreFunc {
     
 	@Override
 	public OutputFormat<NullableTuple, NullableTuple> getOutputFormat() throws IOException {
-		SequenceFileOutputFormat<NullableTuple,NullableTuple> out = new SequenceFileOutputFormat<NullableTuple,NullableTuple>();
-		return out;
+		return new SequenceFileOutputFormat<NullableTuple,NullableTuple>();
 	}
 
 	@Override

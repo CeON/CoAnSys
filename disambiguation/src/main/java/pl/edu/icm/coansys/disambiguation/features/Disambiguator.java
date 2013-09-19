@@ -18,52 +18,79 @@
 
 package pl.edu.icm.coansys.disambiguation.features;
 
-import java.util.HashSet;
+import java.util.AbstractMap.SimpleEntry;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
-
-import org.slf4j.LoggerFactory;
 
 /**
- * A heuristic for assessing whether two objects, described by two lists of feature values,
- * are similar or not.    
+ * A heuristic for assessing whether two objects, described by two lists of
+ * feature values, are similar or not.
  * 
  * @author pdendek
- * @version 1.0
+ * @author mwos
+ * @version 1.1
  * @since 2012-08-07
  */
 public class Disambiguator {
-	
-    private static final org.slf4j.Logger logger 
-		= LoggerFactory.getLogger( Disambiguator.class );
-	
-	/**
-	 * 
-	 * @param f1 list of feature values associated with the first owner
-	 * @param f2 list of feature values associated with the second owner
-	 * @return value reflecting affinity between owners. 
-	 * In the basic implementation this value is a size of an intersection between feature values' lists 
-	 */
-	public double calculateAffinity( List<Object> f1, List<Object> f2 ) {
-		
-		//TODO: set, retain, add to: sorting list of int (hashes), iterating 
-		//through them and counting both of sum and intersection value.
-		
-		Set<Object> set = new HashSet<Object>( f1 );
-		set.addAll( f2 );
-		double sum = set.size();
-		if ( sum <= 0 ) {
-			//logger.warn( "Negative or zero value of lists sum. Returning 0." );
-			//TODO: ? 0 or 1
-			return 0;
-		}
-		
-		f1.retainAll( f2 );
-		double intersection = f1.size();
 
-		return intersection / sum;
+	/**
+	 * O( n log n ) where n = max f1.size f2.size
+	 * 
+	 * @param f1
+	 *            list of feature values associated with the first owner
+	 * @param f2
+	 *            list of feature values associated with the second owner
+	 * @return value reflecting affinity between owners. In the basic
+	 *         implementation this value is a size of an intersection between
+	 *         feature values' lists.
+	 */
+	public double calculateAffinity(List<Object> f1, List<Object> f2) {
+		SimpleEntry<Integer, Integer> p = intersectionAndSum(f1, f2);
+		return (double) p.getKey() / p.getValue();
 	}
-	
+
+	// O(n log n), n = max f1.size f2.size
+	public SimpleEntry<Integer, Integer> intersectionAndSum(
+			List<Object> f1, List<Object> f2) {
+		
+		//O(n log n)
+		List<Integer> a = toSortedHashArrayList(f1);
+		List<Integer> b = toSortedHashArrayList(f2);
+		int sum = 0, intersection = 0;
+		int ia = 0, ib = 0;
+		
+		//O( min f1.size f2.size )
+		while (ia < a.size() && ib < b.size()) {
+			if (a.get(ia).equals(b.get(ib))) {
+				intersection++;
+				ia++;
+				ib++;
+			} else if (a.get(ia) < b.get(ib)) {
+				ia++;
+			} else {
+				ib++;
+			}
+			sum++;
+		}
+
+		sum += (a.size() - ia) + (b.size() - ib);
+
+		return new SimpleEntry<Integer, Integer>(intersection, sum);
+	}
+
+	// O( n log n )
+	public List<Integer> toSortedHashArrayList(List<Object> l) {
+		List<Integer> res = new ArrayList<Integer>();
+		Iterator<Object> it = l.iterator();
+		while (it.hasNext()) {
+			res.add(it.next().hashCode());
+		}
+		Collections.sort(res);
+		return res;
+	}
+
 	/**
 	 * 
 	 * @return {@link Disambiguator} id.

@@ -43,214 +43,217 @@ import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
 
 /**
- *
+ * 
  * @author pdendek
  * @author mwos
  */
 public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 
-    private static final Logger logger = LoggerFactory.getLogger(EXTRACT_CONTRIBDATA_GIVENDATA.class);
-    private List< DisambiguationExtractorDocument > des4Doc = new ArrayList< DisambiguationExtractorDocument>();
-    private List< DisambiguationExtractorAuthor > des4Author = new ArrayList< DisambiguationExtractorAuthor>();
-    private List< String > 	des4DocNameOrId = new ArrayList< String >(),
-    						des4AuthorNameOrId = new ArrayList< String >();
-    private String language = null;
-    private boolean skipEmptyFeatures = false;
-    private boolean useIdsForExtractors = false;
-    private DisambiguationExtractorFactory extrFactory = new DisambiguationExtractorFactory();
+	private static final Logger logger = LoggerFactory
+			.getLogger(EXTRACT_CONTRIBDATA_GIVENDATA.class);
+	private List<DisambiguationExtractorDocument> des4Doc = new ArrayList<DisambiguationExtractorDocument>();
+	private List<DisambiguationExtractorAuthor> des4Author = new ArrayList<DisambiguationExtractorAuthor>();
+	private List<String> des4DocNameOrId = new ArrayList<String>(),
+			des4AuthorNameOrId = new ArrayList<String>();
+	private String language = null;
+	private boolean skipEmptyFeatures = false;
+	private boolean useIdsForExtractors = false;
+	private DisambiguationExtractorFactory extrFactory = new DisambiguationExtractorFactory();
 
-    @Override
-    public Schema outputSchema(Schema p_input) {
-        try {
-            return Schema.generateNestedSchema(DataType.BAG);
-        } catch (FrontendException e) {
-            logger.error("Error in creating output schema:", e);
-            throw new IllegalStateException(e);
-        }
-    }
+	@Override
+	public Schema outputSchema(Schema p_input) {
+		try {
+			return Schema.generateNestedSchema(DataType.BAG);
+		} catch (FrontendException e) {
+			logger.error("Error in creating output schema:", e);
+			throw new IllegalStateException(e);
+		}
+	}
 
-    private void setDisambiguationExtractor( String featureinfo ) throws
-    	Exception {
+	private void setDisambiguationExtractor(String featureinfo)
+			throws Exception {
 
-    	List<FeatureInfo> features = FeatureInfo.parseFeatureInfoString( featureinfo );
+		List<FeatureInfo> features = FeatureInfo
+				.parseFeatureInfoString(featureinfo);
 
-        String ExtractorDocClassName = new DisambiguationExtractorDocument().getClass().getSimpleName();
-        String ExtractorAuthorClassName = new DisambiguationExtractorAuthor().getClass().getSimpleName();
-        DisambiguationExtractor extractor;
-        String currentClassNameOrId;
-        
-        for ( int i = 0; i < features.size(); i++ ){
-        	
-        	extractor = extrFactory.create( features.get(i) );
-        	String currentSuperClassName = extractor.getClass().getSuperclass().getSimpleName();
-        	if ( useIdsForExtractors ) {
-        		currentClassNameOrId = extrFactory.toExId( 
-        				extractor.getClass().getSimpleName() );
-        	} else {
-        		currentClassNameOrId = extractor.getClass().getSimpleName();
-        	}
-        	
-            try {
-	            if ( currentSuperClassName.equals( ExtractorDocClassName ) ) {
-	            	des4Doc.add( (DisambiguationExtractorDocument) extractor );
-	            	des4DocNameOrId.add( currentClassNameOrId );
-	            } else if ( currentSuperClassName.equals( ExtractorAuthorClassName ) ) {
-	            	des4Author.add( (DisambiguationExtractorAuthor) extractor );
-	            	des4AuthorNameOrId.add( currentClassNameOrId );
-	            } else {
-	            	String m = "Cannot create extractor: "
-	            			+ extractor.getClass().getSimpleName() + ". Its superclass: "
-	            			+ currentSuperClassName + " does not match to any superclass.";
-	            	throw new Exception( m );
-	            }
-            } catch( Exception e ) {
-            	logger.error( StackTraceExtractor.getStackTrace(e) );
-            	throw e;
-            }
-        }
-    }
+		String ExtractorDocClassName = new DisambiguationExtractorDocument()
+				.getClass().getSimpleName();
+		String ExtractorAuthorClassName = new DisambiguationExtractorAuthor()
+				.getClass().getSimpleName();
+		DisambiguationExtractor extractor;
+		String currentClassNameOrId;
 
-    public EXTRACT_CONTRIBDATA_GIVENDATA( String featureinfo ) throws
-    		Exception {
-    	setDisambiguationExtractor( featureinfo );
-    }
+		for (int i = 0; i < features.size(); i++) {
 
-    public EXTRACT_CONTRIBDATA_GIVENDATA( String featureinfo, String lang ) throws
-    		Exception {
-    	this.language = lang;
-    	setDisambiguationExtractor( featureinfo );
-    }
+			extractor = extrFactory.create(features.get(i));
+			String currentSuperClassName = extractor.getClass().getSuperclass()
+					.getSimpleName();
+			if (useIdsForExtractors) {
+				currentClassNameOrId = extrFactory.toExId(extractor.getClass()
+						.getSimpleName());
+			} else {
+				currentClassNameOrId = extractor.getClass().getSimpleName();
+			}
 
-    public EXTRACT_CONTRIBDATA_GIVENDATA( String featureinfo, String lang, String skipEmptyFeatures ) throws
-    		Exception {
-    	this.language = lang;
-    	this.skipEmptyFeatures = Boolean.parseBoolean( skipEmptyFeatures );
-    	setDisambiguationExtractor( featureinfo );
-    }
+			try {
+				if (currentSuperClassName.equals(ExtractorDocClassName)) {
+					des4Doc.add((DisambiguationExtractorDocument) extractor);
+					des4DocNameOrId.add(currentClassNameOrId);
+				} else if (currentSuperClassName
+						.equals(ExtractorAuthorClassName)) {
+					des4Author.add((DisambiguationExtractorAuthor) extractor);
+					des4AuthorNameOrId.add(currentClassNameOrId);
+				} else {
+					String m = "Cannot create extractor: "
+							+ extractor.getClass().getSimpleName()
+							+ ". Its superclass: " + currentSuperClassName
+							+ " does not match to any superclass.";
+					throw new Exception(m);
+				}
+			} catch (Exception e) {
+				logger.error(StackTraceExtractor.getStackTrace(e));
+				throw e;
+			}
+		}
+	}
 
-    public EXTRACT_CONTRIBDATA_GIVENDATA( String featureinfo, String lang, String skipEmptyFeatures, String useIdsForExtractors ) throws
-	Exception {
-    	this.language = lang;
-    	this.skipEmptyFeatures = Boolean.parseBoolean( skipEmptyFeatures );
-    	this.useIdsForExtractors = Boolean.parseBoolean( useIdsForExtractors );
-    	setDisambiguationExtractor( featureinfo );
-    }
+	public EXTRACT_CONTRIBDATA_GIVENDATA(String featureinfo) throws Exception {
+		setDisambiguationExtractor(featureinfo);
+	}
 
-    
-    
-    private boolean checkLanguage() {
-        return (language != null
-                && !language.equalsIgnoreCase("all")
-                && !language.equalsIgnoreCase("null")
-                && !language.equals(""));
-    }
+	public EXTRACT_CONTRIBDATA_GIVENDATA(String featureinfo, String lang)
+			throws Exception {
+		this.language = lang;
+		setDisambiguationExtractor(featureinfo);
+	}
 
-    @Override
-    public DataBag exec(Tuple input) throws IOException {
+	public EXTRACT_CONTRIBDATA_GIVENDATA(String featureinfo, String lang,
+			String skipEmptyFeatures) throws Exception {
+		this.language = lang;
+		this.skipEmptyFeatures = Boolean.parseBoolean(skipEmptyFeatures);
+		setDisambiguationExtractor(featureinfo);
+	}
 
-        if (input == null || input.size() == 0) {
-            return null;
-        }
+	public EXTRACT_CONTRIBDATA_GIVENDATA(String featureinfo, String lang,
+			String skipEmptyFeatures, String useIdsForExtractors)
+			throws Exception {
+		this.language = lang;
+		this.skipEmptyFeatures = Boolean.parseBoolean(skipEmptyFeatures);
+		this.useIdsForExtractors = Boolean.parseBoolean(useIdsForExtractors);
+		setDisambiguationExtractor(featureinfo);
+	}
 
-        try {
-            DataByteArray dba = (DataByteArray) input.get(0);
+	private boolean checkLanguage() {
+		return (language != null && !language.equalsIgnoreCase("all")
+				&& !language.equalsIgnoreCase("null") && !language.equals(""));
+	}
 
-            DocumentWrapper dw = DocumentWrapper.parseFrom(dba.get());
-            dba = null;
+	@Override
+	public DataBag exec(Tuple input) throws IOException {
 
-            //metadata
-            DocumentMetadata dm = dw.getDocumentMetadata();
-            dw = null;
+		if (input == null || input.size() == 0) {
+			return null;
+		}
 
-            //result bag with tuples, which des4Doccribes each contributor
-            DataBag ret = new DefaultDataBag();
+		try {
+			DataByteArray dba = (DataByteArray) input.get(0);
 
-            //author list
-            List<Author> authors =
-                    dm.getBasicMetadata().getAuthorList();
+			DocumentWrapper dw = DocumentWrapper.parseFrom(dba.get());
+			dba = null;
 
-            //in arrays we are storing DataBags from extractors
-            DataBag[] extractedDocObj = new DataBag[des4Doc.size()];
-            DataBag[] extractedAuthorObj;
-            Map<String, DataBag> map = new HashMap<String, DataBag>();
-            Map<String, DataBag> finalMap;
+			// metadata
+			DocumentMetadata dm = dw.getDocumentMetadata();
+			dw = null;
 
+			// result bag with tuples, which des4Doccribes each contributor
+			DataBag ret = new DefaultDataBag();
 
-            if (checkLanguage()) {
-                for (int i = 0; i < des4Doc.size(); i++) {
-                    extractedDocObj[i] = des4Doc.get(i).extract(dm, language);
-                }
-            } else {
-                for (int i = 0; i < des4Doc.size(); i++) {
-                    extractedDocObj[i] = des4Doc.get(i).extract(dm);
-                }
-            }
+			// author list
+			List<Author> authors = dm.getBasicMetadata().getAuthorList();
 
-            //adding to map extractor name and features' data
-            for (int i = 0; i < des4Doc.size(); i++) {
-                if ( extractedDocObj[i] == null ) {
-                    continue;
-                }
-                if ( extractedDocObj[i].size() == 0 && skipEmptyFeatures ) {
-                    continue;
-                }
-                
-                map.put( des4DocNameOrId.get(i), extractedDocObj[i]);
-            }
-            extractedDocObj = null;
+			// in arrays we are storing DataBags from extractors
+			DataBag[] extractedDocObj = new DataBag[des4Doc.size()];
+			DataBag[] extractedAuthorObj;
+			Map<String, DataBag> map = new HashMap<String, DataBag>();
+			Map<String, DataBag> finalMap;
 
+			if (checkLanguage()) {
+				for (int i = 0; i < des4Doc.size(); i++) {
+					extractedDocObj[i] = des4Doc.get(i).extract(dm, language);
+				}
+			} else {
+				for (int i = 0; i < des4Doc.size(); i++) {
+					extractedDocObj[i] = des4Doc.get(i).extract(dm);
+				}
+			}
 
-            //bag making tuples (one tuple for one contributor from document)
-            //with replicated metadata for
-            for (int i = 0; i < authors.size(); i++) {
-                String sname = authors.get(i).getSurname();
+			// adding to map extractor name and features' data
+			for (int i = 0; i < des4Doc.size(); i++) {
+				if (extractedDocObj[i] == null) {
+					continue;
+				}
+				if (extractedDocObj[i].size() == 0 && skipEmptyFeatures) {
+					continue;
+				}
 
-                //here we have sure that Object = Integer
-                Object normalizedSname =
-                        DisambiguationExtractor.normalizeExtracted(sname);
-                String cId = authors.get(i).getKey();
+				map.put(des4DocNameOrId.get(i), extractedDocObj[i]);
+			}
+			extractedDocObj = null;
 
-                finalMap = new HashMap<String, DataBag>(map);
+			// bag making tuples (one tuple for one contributor from document)
+			// with replicated metadata for
+			for (int i = 0; i < authors.size(); i++) {
+				String sname = authors.get(i).getSurname();
 
-                //put author metadata into finalMap
-                extractedAuthorObj = new DataBag[des4Author.size()];
-                if (checkLanguage()) {
-                    for (int j = 0; j < des4Author.size(); j++) {
-                        extractedAuthorObj[j] = des4Author.get(j).extract(dm, i, language);
-                    }
-                } else {
-                    for (int j = 0; j < des4Author.size(); j++) {
-                        extractedAuthorObj[j] = des4Author.get(j).extract(dm, i);
-                    }
-                }
+				// here we have sure that Object = Integer
+				Object normalizedSname = DisambiguationExtractor
+						.normalizeExtracted(sname);
+				String cId = authors.get(i).getKey();
 
-                //adding to map extractor name and features' data
-                for (int j = 0; j < des4Author.size(); j++) {
-                    if (extractedAuthorObj[j] == null) {
-                        continue;
-                    }
-                    if ( extractedAuthorObj[i].size() == 0 && skipEmptyFeatures ) {
-                        continue;
-                    }
-                    
-                    finalMap.put(des4AuthorNameOrId.get(j), extractedAuthorObj[j]);
-                }
-                extractedAuthorObj = null;
+				finalMap = new HashMap<String, DataBag>(map);
 
+				// put author metadata into finalMap
+				extractedAuthorObj = new DataBag[des4Author.size()];
+				if (checkLanguage()) {
+					for (int j = 0; j < des4Author.size(); j++) {
+						extractedAuthorObj[j] = des4Author.get(j).extract(dm,
+								i, language);
+					}
+				} else {
+					for (int j = 0; j < des4Author.size(); j++) {
+						extractedAuthorObj[j] = des4Author.get(j)
+								.extract(dm, i);
+					}
+				}
 
-                Object[] to = new Object[]{cId, normalizedSname, finalMap};
-                Tuple t = TupleFactory.getInstance().newTuple(Arrays.asList(to));
-                ret.add(t);
-            }
-            map = null;
-            dm = null;
+				// adding to map extractor name and features' data
+				for (int j = 0; j < des4Author.size(); j++) {
+					if (extractedAuthorObj[j] == null) {
+						continue;
+					}
+					if (extractedAuthorObj[i].size() == 0 && skipEmptyFeatures) {
+						continue;
+					}
 
-            return ret;
+					finalMap.put(des4AuthorNameOrId.get(j),
+							extractedAuthorObj[j]);
+				}
+				extractedAuthorObj = null;
 
-        } catch (Exception e) {
-            logger.error("Error in processing input row:", e);
-            throw new IOException("Caught exception processing input row:\n"
-                    + StackTraceExtractor.getStackTrace(e));
-        }
-    }
+				Object[] to = new Object[] { cId, normalizedSname, finalMap };
+				Tuple t = TupleFactory.getInstance()
+						.newTuple(Arrays.asList(to));
+				ret.add(t);
+			}
+			map = null;
+			dm = null;
+
+			return ret;
+
+		} catch (Exception e) {
+			logger.error("Error in processing input row:", e);
+			throw new IOException("Caught exception processing input row:\n"
+					+ StackTraceExtractor.getStackTrace(e));
+		}
+	}
 }

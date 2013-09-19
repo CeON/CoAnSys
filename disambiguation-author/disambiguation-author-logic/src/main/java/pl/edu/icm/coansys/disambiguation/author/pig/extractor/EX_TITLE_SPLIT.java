@@ -33,24 +33,6 @@ public class EX_TITLE_SPLIT extends DisambiguationExtractorDocument {
 	
     private static final Logger logger = LoggerFactory.getLogger( EX_TITLE_SPLIT.class );
 
-	/*@Override
-	public DataBag extract( Object o ) {
-		DocumentMetadata dm = (DocumentMetadata) o;
-		
-		DataBag db = new DefaultDataBag();
-		
-		String[] normals = 
-				dm.getBasicMetadata().getTitleList().get(0).getText().split("[\\W]+");
-		
-		for(String s : normals) {
-			Tuple t = TupleFactory.getInstance().newTuple( 
-					normalizeExtracted( s ) );
-			db.add( t );
-		}
-		
-		return db;
-	} */   
-    
 	@Override
 	public DataBag extract( Object o, String lang ) {
 		
@@ -68,7 +50,6 @@ public class EX_TITLE_SPLIT extends DisambiguationExtractorDocument {
             				normalizeExtracted( s ) );
             		db.add( t );
             	}
-        		//return db;
             }
         }
         

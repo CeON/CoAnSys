@@ -35,6 +35,6 @@ public interface ClusteringStrategy extends Cloneable{
 	 * Two objects sharing the same cluster number may be considered as the same one.  
 	 * @throws Exception 
 	 */
-    int[] clusterize(float[][] similarities) throws Exception;
+    int[] clusterize(float[][] similarities);
     
 }
