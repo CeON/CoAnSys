@@ -52,7 +52,7 @@ public class AproximateAND_BFS extends AND<DataBag> {
 	private int calculatedSimCounter;
 	private int timerPlayId = 0;
 	private List<Integer> clustersSizes;
-    private Object sname;
+	private Object sname;
 
 	public AproximateAND_BFS(String threshold, String featureDescription,
 			String rememberSim, String useIdsForExtractors,
@@ -64,8 +64,9 @@ public class AproximateAND_BFS extends AND<DataBag> {
 		if (this.isStatistics) {
 			// alg is sim id N cl no sim cntr big clst time list of clusters'
 			// sizes
-        	timer.addMonit( "#NOTSTAT#", "sname", "alg", "is sim", "id", "N", "cl no",
-        			"sim cntr", "big clst", "time", "list of clusters' sizes" );
+			timer.addMonit("#NOTSTAT#", "sname", "alg", "is sim", "id", "N",
+					"cl no", "sim cntr", "big clst", "time",
+					"list of clusters' sizes");
 		}
 
 	}
@@ -120,7 +121,7 @@ public class AproximateAND_BFS extends AND<DataBag> {
 				// map with features
 				contribsT.add((Map<String, Object>) t.get(2));
 
-				//benchmark
+				// benchmark
 				sname = t.get(1);
 			}
 
@@ -132,19 +133,20 @@ public class AproximateAND_BFS extends AND<DataBag> {
 			// this action will add some informations to timer monit
 			if (isStatistics) {
 				Collections.sort(clustersSizes, Collections.reverseOrder());
-				int biggestCluster = clustersSizes.isEmpty() ? 1 : clustersSizes.get(0);
+				int biggestCluster = clustersSizes.isEmpty() ? 1
+						: clustersSizes.get(0);
 
 				// stopping timer for current play (not thread)
 				/*
-				 * STATISTICS DESCRIPTION: ## #STAT# ## smame ## tag for parser ## this
-				 * algorithm name, ## is sim matrix created and some sim values
-				 * stored , ## aproximate execution id, ## number of contribs,
-				 * ## clusters number after aproximate, ## calculated sim values
-				 * which are stored (note that it doesn't count all calculated -
-				 * only stored, e.g. if 2 contributors are not in the same
-				 * cluster, their sim value would not be stored.) ## size of
-				 * biggest cluster after aproximate ## clusters' sizes list ##
-				 * time [s]
+				 * STATISTICS DESCRIPTION: ## #STAT# ## smame ## tag for parser
+				 * ## this algorithm name, ## is sim matrix created and some sim
+				 * values stored , ## aproximate execution id, ## number of
+				 * contribs, ## clusters number after aproximate, ## calculated
+				 * sim values which are stored (note that it doesn't count all
+				 * calculated - only stored, e.g. if 2 contributors are not in
+				 * the same cluster, their sim value would not be stored.) ##
+				 * size of biggest cluster after aproximate ## clusters' sizes
+				 * list ## time [s]
 				 */
 				timer.stop("#STAT#", sname, "APR", rememberSim, timerPlayId, N,
 						ret.size(), calculatedSimCounter, biggestCluster,
@@ -160,9 +162,7 @@ public class AproximateAND_BFS extends AND<DataBag> {
 			return null;
 		}
 	}
-	
-	
-	
+
 	// calculating affinity, clustering and creating result bag
 	// N^2 / 2
 	// simIdToClusterId[ contrib input index ]= contrib index in his cluster
@@ -207,12 +207,12 @@ public class AproximateAND_BFS extends AND<DataBag> {
 
 					float simil = calculateContribsAffinityForAllFeatures(
 							contribsT, v, u, !rememberSim);
-					
+
 					// creating similarity triple
 					if (rememberSim) {
 						clusterTriple = new SimTriple(u, v, simil);
 					}
-					
+
 					// potentially the same contributors
 					if (simil >= 0) {
 						clustered.add(u);

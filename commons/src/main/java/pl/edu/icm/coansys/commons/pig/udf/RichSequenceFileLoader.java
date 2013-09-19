@@ -21,6 +21,7 @@ package pl.edu.icm.coansys.commons.pig.udf;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -74,7 +75,7 @@ import org.apache.pig.impl.util.UDFContext;
 public class RichSequenceFileLoader extends FileInputLoadFunc implements StoreFuncInterface {
 
 	private static final Log LOG = LogFactory.getLog(RichSequenceFileLoader.class);
-	private ArrayList<Object> mProtoTuple = new ArrayList<Object>(2); 
+	private List<Object> mProtoTuple = new ArrayList<Object>(2); 
 	private Configuration config = new Configuration();
 	private TupleFactory mTupleFactory = TupleFactory.getInstance();
 	private byte keyType = DataType.UNKNOWN;
@@ -203,6 +204,8 @@ public class RichSequenceFileLoader extends FileInputLoadFunc implements StoreFu
 			break;
 		case DataType.BYTE:
 			((ByteWritable) writable).set(((Byte) dataValue).byteValue());
+			break;
+                default:
 			break;
 		}
 	}

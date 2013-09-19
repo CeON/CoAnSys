@@ -38,9 +38,9 @@ public class ExtractorFactory {
 	
     private static final String THIS_PACKAGE = new ExtractorFactory().getClass().getPackage().getName();
     
-	public Extractor create(FeatureInfo fi){
+	public Extractor<?> create(FeatureInfo fi){
 		try {
-            return (Extractor) ReflectionUtil.forName(THIS_PACKAGE + "." + fi.getFeatureExtractorName()).newInstance();
+            return (Extractor<?>) ReflectionUtil.forName(THIS_PACKAGE + "." + fi.getFeatureExtractorName()).newInstance();
         } catch (Exception ex) {
             Logger.getLogger(ExtractorFactory.class.getName()).log(Level.SEVERE, null, ex);
         }

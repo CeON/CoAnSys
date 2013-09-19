@@ -182,7 +182,7 @@ public class ProtoBytearrayToTuple extends EvalFunc<Tuple> {
             }
             return schema;
 
-        } catch (Exception ex) {
+        } catch (FrontendException ex) {
             return null;
         }
     }
