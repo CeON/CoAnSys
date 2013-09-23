@@ -23,7 +23,7 @@
 %DEFAULT JARS '*.jar'
 %DEFAULT commonJarsPath 'lib/$JARS'
 
-%DEFAULT dc_m_hdfs_inputDocsData /srv/bwndata/seqfile/bazekon-20130314.sf
+%DEFAULT dc_m_hdfs_inputDocsData extracted/springer_oldaffinity_08threshold_Nmax6627_2
 %DEFAULT time 2
 %DEFAULT dc_m_hdfs_output svmInput/outputTime$time
 %DEFAULT dc_m_meth_extraction_inner pl.edu.icm.coansys.commons.pig.udf.RichSequenceFileLoader
@@ -33,7 +33,7 @@
 
 -- DEFINE keyTiKwAbsCatExtractor pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_MAP_WHEN_CATEG_LIM('en','removeall');
 DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_CONTRIBDATA_GIVENDATA('$dc_m_str_feature_info','$lang');
-DEFINE pairsCreation pl.edu.icm.coansys.disambiguation.author.pig.SvmPairsCreation('$dc_m_str_feature_info');
+DEFINE pairsCreation pl.edu.icm.coansys.disambiguation.author.pig.SvmPairsCreator('$dc_m_str_feature_info');
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- register section
@@ -72,11 +72,17 @@ set dfs.client.socket-timeout 60000
 -- code section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
+A1 = LOAD '$dc_m_hdfs_inputDocsData' USING $dc_m_meth_extraction_inner('org.apache.hadoop.io.BytesWritable', 'org.apache.hadoop.io.BytesWritable') as (key:chararray, value:bytearray);
+--A2 = limit A1 1;
+--A2 = sample A1 $dc_m_double_sample;
+A3 = foreach A2 generate flatten(snameDocumentMetaExtractor($1)) as (cId:chararray, sname:int, metadata:map[{(int)}]);
+A4 = FILTER A3 BY cId is not null;
+A = group A4 by sname;
+B = foreach A generate *;
+C = join A by sname, B by sname;
+D = foreach C generate flatten($1),flatten($2);
+--DX = filter D by $1<$4;
+store D into '$dc_m_hdfs_output$twocontribs';
+E = foreach D generate  pairsCreation(*);
 %DEFAULT unnormalizedValPairs 'unnormalizedValPairs'
--- omitting tedious recalculations
-E1 = load '$dc_m_hdfs_output$unnormalizedValPairs';
-F1 = group E1 all;
-G1 = foreach F1 generate MAX(E1.$0),MAX(E1.$1),MAX(E1.$2),MAX(E1.$3),
-							MAX(E1.$4),MAX(E1.$5),MAX(E1.$6),MAX(E1.$7),(int)1;
-%DEFAULT maxVals 'maxVals'
-store E into '$dc_m_hdfs_output$maxVals';
+store E into '$dc_m_hdfs_output$unnormalizedValPairs';

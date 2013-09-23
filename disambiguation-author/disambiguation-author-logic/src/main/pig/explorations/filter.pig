@@ -23,8 +23,8 @@
 %DEFAULT JARS '*.jar'
 %DEFAULT commonJarsPath '../lib/$JARS'
 
-%DEFAULT dc_m_hdfs_inputDocsData extracted/springeroldaffinity_08threshold_0
-%DEFAULT time 0
+%DEFAULT dc_m_hdfs_inputDocsData extracted/springeroldaffinity_08threshold_2
+%DEFAULT time 2
 %DEFAULT dc_m_hdfs_outputContribs extracted/springer_oldaffinity_08threshold_Nmax6627_$time
 %DEFAULT dc_m_meth_extraction_inner pl.edu.icm.coansys.commons.pig.udf.RichSequenceFileLoader
 %DEFAULT dc_m_str_feature_info 'CoAuthorsSnameDisambiguatorFullList#EX_AUTH_SNAMES#-0.0000166#8,ClassifCodeDisambiguator#EX_CLASSIFICATION_CODES#0.99#12,KeyphraseDisambiguator#EX_KEYWORDS_SPLIT#0.99#22,KeywordDisambiguator#EX_KEYWORDS#0.0000369#40'
