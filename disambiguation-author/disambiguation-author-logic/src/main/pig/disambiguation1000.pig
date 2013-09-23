@@ -90,15 +90,21 @@ E1 = foreach D generate flatten( aproximateAND( datagroup ) ) as (datagroup:{ ( 
 E2 = foreach E1 generate datagroup, simTriples, COUNT( datagroup ) as count;
 
 split E2 into
-	ESINGLE if count == 1,
+	ESINGLE if count <= 2,
 	EEXH if ( count > 1 and count <= $exhaustive_limit ),
 	EBIG if count > $exhaustive_limit;
 
 
 -- CLUSTERS WITH ONE CONTRIBUTOR
+/*
 F = foreach ESINGLE generate flatten( datagroup );-- as (cId:chararray, sname:int, metadata:map);
 -- SINGLE: {cId: chararray,uuid: chararray}
 SINGLE = foreach F generate cId as cId, FLATTEN(GenUUID(TOBAG(cId))) as uuid;
+*/
+
+F = foreach ESINGLE generate datagroup.cId as cIds, GenUUID( datagroup.cId ) as uuid;
+SINGLE = foreach F generate flatten( cIds ) as cId, uuid as uuid;
+
 
 -- CLUSTERS FOR EXHAUSTIVE
 G = foreach EEXH generate flatten( exhaustiveAND( datagroup, simTriples ) ) as (uuid:chararray, cIds:chararray);

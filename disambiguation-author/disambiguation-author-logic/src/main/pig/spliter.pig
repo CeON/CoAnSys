@@ -34,11 +34,10 @@
 
 DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_CONTRIBDATA_GIVENDATA('$dc_m_str_feature_info','$lang','$skip_empty_features','$use_extractor_id_instead_name');
 
-/*
 %DEFAULT threshold '-0.8'
 %DEFAULT statistics 'true'
 DEFINE featuresCheck pl.edu.icm.coansys.disambiguation.author.pig.FeaturesCheck('$threshold','$dc_m_str_feature_info','$use_extractor_id_instead_name','$statistics');
-*/
+
 
 %DEFAULT dc_m_double_sample 1.0
 %DEFAULT exhaustive_limit 6627
@@ -90,17 +89,28 @@ A2 = sample A1 $dc_m_double_sample;
 
 B1 = foreach A2 generate flatten(snameDocumentMetaExtractor($1)) as (cId:chararray, sname:int, metadata:map[{(int)}]);
 
-B = FILTER B1 BY cId is not null;
+B = FILTER B1 BY (cId is not null) AND featuresCheck(cId, sname, metadata);
+--B = FILTER B1 BY cId is not null;
 
 C = group B by sname;
 -- D: {sname: chararray, datagroup: {(cId: chararray,cPos: int,sname: chararray,data: map[{(val_0: chararray)}])}, count: long}
 D = foreach C generate group as sname, B as datagroup, COUNT(B) as count;
 
+/*
+-- in future: apr+exh+sim
 split D into
         D1 if count == 1,
         D100 if (count > 1 and count <= $exhaustive_limit),
         D1000 if (count > $exhaustive_limit and count <= $aproximate_sim_limit),
         DX if count > $aproximate_sim_limit;
+*/
+
+-- for some time we do not want to remember sim values
+split D into
+        D1 if count == 1,
+        D100 if (count > 1 and count <= $exhaustive_limit),
+        DX if (count > $exhaustive_limit and count <= $aproximate_sim_limit),
+        D1000 if count > $aproximate_sim_limit;
 
 -- store here, remember to delete path in workflow after joining / merge
 store D1 into '$dc_m_hdfs_outputContribs/single';
