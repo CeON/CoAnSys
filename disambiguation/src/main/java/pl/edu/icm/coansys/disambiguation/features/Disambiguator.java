@@ -48,7 +48,22 @@ public class Disambiguator {
 	 */
 	public double calculateAffinity(List<Object> f1, List<Object> f2) {
 		SimpleEntry<Integer, Integer> p = intersectionAndSum(f1, f2);
-		return (double) p.getKey() / p.getValue();
+		int intersection = p.getKey();
+		int sum = p.getValue();
+		
+		if (sum <= 0) {
+			//logger.warn("Negative or zero value of lists sum. Returning 0.");
+			// TODO: ? 0 or 1
+			return 0;
+		}
+		if (intersection < 0) {
+			//should not get in here, because sum >= intersection
+			//logger.warn("Negative value of intersection. Returning 0.");
+			return 0;
+		}
+		
+		//return (double) intersection / sum;
+		return (double) intersection;
 	}
 
 	// O(n log n), n = max f1.size f2.size

@@ -125,7 +125,7 @@ public class disambiguationTests {
 
    		PST.run( "exhaustiveAND_extrNameToId", "exhaustive_AND_with_sim_test.pig", "A", "B", params );
    	}
-    
+    */
    	@Test(groups = {"fast"})
    	public void normalizers() {
 		String text = "é{(Zaaaażółć 'gęślą', \"jaź(ń)\"}]# æ 1234567890 !@#$%^&*() _+=?/>.<,-";
@@ -221,7 +221,7 @@ public class disambiguationTests {
   		res = 4.0 / 14.0;
   		assert( COAUTH.calculateAffinity(a, b) == res );
    	}
-   	*/
+   	
     
    	private Tuple contribCreator(Object id, Object sname, Map<String,DataBag>features){
    		Tuple res = new DefaultTuple();
