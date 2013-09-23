@@ -21,14 +21,23 @@ package pl.edu.icm.coansys.disambiguation.author;
 import org.testng.annotations.Test;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.pig.data.DataBag;
+import org.apache.pig.data.DefaultDataBag;
+import org.apache.pig.data.DefaultTuple;
+import org.apache.pig.data.Tuple;
+import org.apache.pig.data.TupleFactory;
 import org.apache.pig.tools.parameters.ParseException;
 
 import pl.edu.icm.coansys.commons.java.DiacriticsRemover;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.ClassifCodeDisambiguator;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.CoAuthorsSnameDisambiguatorFullList;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.KeyphraseDisambiguator;
+import pl.edu.icm.coansys.disambiguation.author.pig.AND;
+import pl.edu.icm.coansys.disambiguation.author.pig.AproximateAND_BFS;
 import pl.edu.icm.coansys.disambiguation.author.pig.extractor.DisambiguationExtractorDocument;
 import pl.edu.icm.coansys.disambiguation.author.pig.extractor.DisambiguationExtractorFactory;
 import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.ToEnglishLowerCase;
@@ -44,7 +53,7 @@ public class disambiguationTests {
     //while input contrariwise
 
     private PigScriptTester PST = new PigScriptTester( PIG_SCRIPT_DIR, TEST_DIR );
-
+/*
     @Test(groups = {"fast"})
 	public void aproximateAND() throws IOException, ParseException {
 		
@@ -211,9 +220,85 @@ public class disambiguationTests {
   		
   		res = 4.0 / 14.0;
   		assert( COAUTH.calculateAffinity(a, b) == res );
-  	  	
+   	}
+   	*/
+    
+   	private Tuple contribCreator(Object id, Object sname, Map<String,DataBag>features){
+   		Tuple res = new DefaultTuple();
+   		res.append(id);
+   		res.append(sname);
+   		res.append(features);
+   		return res;
+   	}
+   	
+   	private DataBag createFeatureDescriptionBag( Object... descriptions ) {
+   		DataBag descriptionBag = new DefaultDataBag();
+		TupleFactory tf = TupleFactory.getInstance();
+		
+   		for ( Object d : descriptions ) {
+   			Tuple t = tf.newTuple();
+   			t.append(d);
+   			descriptionBag.add(t);
+   		}
+ 
+   		return descriptionBag;
+   	}
+   	
+   	private DataBag tupleArrayToDataBag( Tuple[] array ) {
+   		DataBag res = new DefaultDataBag();
+   		for ( Tuple c : array ) {
+   			res.add(c);
+   		}
+   		return res;
+   	}
+   	   	
+   	private void addFeatureToMap( Map<String,DataBag>map, String featureName, Object... descriptions) {
+   		map.put( featureName, createFeatureDescriptionBag(descriptions) );
    	}
    	
    	
+   	
+   	@Test(groups = {"fast"})
+   	public void AproximateAND_nopig() throws Exception {
+  		
+   		AND<DataBag> aproximate = new AproximateAND_BFS(
+   				"-1.0", 
+   				"CoAuthorsSnameDisambiguatorFullList#EX_AUTH_SNAMES#-0.0000166#8,ClassifCodeDisambiguator#EX_CLASSIFICATION_CODES#0.99#12,KeyphraseDisambiguator#EX_KEYWORDS_SPLIT#0.99#22,KeywordDisambiguator#EX_KEYWORDS#0.0000369#40",
+   				"true",
+   				"true",
+   				"true");
+   		
+   		DisambiguationExtractorFactory factory = new DisambiguationExtractorFactory();
+  		String COAUTH = factory.convertExNameToId("EX_AUTH_SNAMES");
+  		String CC = factory.convertExNameToId("EX_CLASSIFICATION_CODES");
+  		String KP = factory.convertExNameToId("EX_KEYWORDS_SPLIT");
+  		String KW = factory.convertExNameToId("EX_KEYWORDS");
+  		
+   		Tuple[] contribs = new Tuple[2];
+   		
+   		//dc_m_str_feature_info 'CoAuthorsSnameDisambiguatorFullList#EX_AUTH_SNAMES#-0.0000166#8,ClassifCodeDisambiguator#EX_CLASSIFICATION_CODES#0.99#12,KeyphraseDisambiguator#EX_KEYWORDS_SPLIT#0.99#22,KeywordDisambiguator#EX_KEYWORDS#0.0000369#40'
+
+   		// contrib#1
+   		Map<String,DataBag>map0 = new HashMap<String,DataBag>();
+   		addFeatureToMap(map0, COAUTH, 1, 2, 3);
+   		addFeatureToMap(map0, CC, 1, 2, 3); //classif codes
+   		addFeatureToMap(map0, KP, 1, 2, 3); //key phrase
+   		addFeatureToMap(map0, KW, 1, 2, 3); //key words
+   		contribs[0] = contribCreator(0, 0, map0);
+   		
+   		Map<String,DataBag>map1 = new HashMap<String,DataBag>();
+   		addFeatureToMap(map1, COAUTH, 1, 2, 3);
+   		addFeatureToMap(map1, CC, 1, 2, 3); //classif codes
+   		addFeatureToMap(map1, KP, 1, 2, 3); //key phrase
+   		addFeatureToMap(map1, KW, 1, 2, 3); //key words
+   		contribs[1] = contribCreator(1, 1, map1);
+   		
+   		Tuple input = new DefaultTuple();
+   		DataBag contribsBag = tupleArrayToDataBag(contribs);
+		input.append( contribsBag );
+   	
+		System.out.println(input);
+   		//aproximate.exec(input);
+   	}
 }
 

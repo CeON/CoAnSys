@@ -35,7 +35,7 @@
 DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_CONTRIBDATA_GIVENDATA('$dc_m_str_feature_info','$lang','$skip_empty_features','$use_extractor_id_instead_name');
 
 /*
-%DEFAULT threshold '-1.0'
+%DEFAULT threshold '-0.8'
 %DEFAULT statistics 'true'
 DEFINE featuresCheck pl.edu.icm.coansys.disambiguation.author.pig.FeaturesCheck('$threshold','$dc_m_str_feature_info','$use_extractor_id_instead_name','$statistics');
 */
