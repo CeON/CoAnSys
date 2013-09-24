@@ -127,6 +127,7 @@
             <param>dc_m_hdfs_inputDocsData=${dc_tmp_path}/exh</param>
             <param>dc_m_hdfs_outputContribs=${dc_m_hdfs_outputContribs}/part2</param>
             <param>threshold=${threshold}</param>
+            <param>mapredChildJavaOpts=${mapredChildJavaOpts_exh_sim}</param>
             <param>statistics=${statistics}</param>
             <param>dc_m_str_feature_info=${dc_m_str_feature_info}</param>
         </pig>

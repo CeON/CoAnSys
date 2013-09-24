@@ -29,7 +29,7 @@
 %DEFAULT dc_m_hdfs_outputContribs disambiguation/outputContribs$time
 %DEFAULT failedContribs disambiguation/failedContribs$time
 %DEFAULT dc_m_str_feature_info 'CoAuthorsSnameDisambiguatorFullList#EX_AUTH_SNAMES#-0.0000166#8,ClassifCodeDisambiguator#EX_CLASSIFICATION_CODES#0.99#12,KeyphraseDisambiguator#EX_KEYWORDS_SPLIT#0.99#22,KeywordDisambiguator#EX_KEYWORDS#0.0000369#40'
-%DEFAULT threshold '-1.0'
+%DEFAULT threshold '-0.8'
 %DEFAULT aproximate_remember_sim 'true'
 %DEFAULT use_extractor_id_instead_name 'true'
 %DEFAULT statistics 'true'
@@ -90,15 +90,21 @@ E1 = foreach D generate flatten( aproximateAND( datagroup ) ) as (datagroup:{ ( 
 E2 = foreach E1 generate datagroup, simTriples, COUNT( datagroup ) as count;
 
 split E2 into
-	ESINGLE if count == 1,
+	ESINGLE if count <= 2,
 	EEXH if ( count > 1 and count <= $exhaustive_limit ),
 	EBIG if count > $exhaustive_limit;
 
 
 -- CLUSTERS WITH ONE CONTRIBUTOR
+/*
 F = foreach ESINGLE generate flatten( datagroup );-- as (cId:chararray, sname:int, metadata:map);
 -- SINGLE: {cId: chararray,uuid: chararray}
 SINGLE = foreach F generate cId as cId, FLATTEN(GenUUID(TOBAG(cId))) as uuid;
+*/
+
+F = foreach ESINGLE generate datagroup.cId as cIds, GenUUID( datagroup.cId ) as uuid;
+SINGLE = foreach F generate flatten( cIds ) as cId, uuid as uuid;
+
 
 -- CLUSTERS FOR EXHAUSTIVE
 G = foreach EEXH generate flatten( exhaustiveAND( datagroup, simTriples ) ) as (uuid:chararray, cIds:chararray);
