@@ -21,8 +21,10 @@ package pl.edu.icm.coansys.disambiguation.features;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 /**
  * A heuristic for assessing whether two objects, described by two lists of
@@ -36,7 +38,7 @@ import java.util.List;
 public class Disambiguator {
 
 	/**
-	 * O( n log n ) where n = max f1.size f2.size
+	 * O( f1.size + f2.size )
 	 * 
 	 * @param f1
 	 *            list of feature values associated with the first owner
@@ -66,44 +68,23 @@ public class Disambiguator {
 		return (double) intersection;
 	}
 
-	// O(n log n), n = max f1.size f2.size
+	// O( f1.size() + f2.size() )
 	public SimpleEntry<Integer, Integer> intersectionAndSum(
 			List<Object> f1, List<Object> f2) {
 		
-		//O(n log n)
-		List<Integer> a = toSortedHashArrayList(f1);
-		List<Integer> b = toSortedHashArrayList(f2);
-		int sum = 0, intersection = 0;
-		int ia = 0, ib = 0;
+		Set <Object> all = new HashSet<Object>( f1.size() + f2.size() );
 		
-		//O( min f1.size f2.size )
-		while (ia < a.size() && ib < b.size()) {
-			if (a.get(ia).equals(b.get(ib))) {
-				intersection++;
-				ia++;
-				ib++;
-			} else if (a.get(ia) < b.get(ib)) {
-				ia++;
+		all.addAll( f1 );
+		int sum = f1.size(), intersection = 0;
+		
+		for ( Object o : f2 ) {
+			if ( all.add( o ) ) {
+				sum++;
 			} else {
-				ib++;
+				intersection++;
 			}
-			sum++;
 		}
-
-		sum += (a.size() - ia) + (b.size() - ib);
-
 		return new SimpleEntry<Integer, Integer>(intersection, sum);
-	}
-
-	// O( n log n )
-	public List<Integer> toSortedHashArrayList(List<Object> l) {
-		List<Integer> res = new ArrayList<Integer>();
-		Iterator<Object> it = l.iterator();
-		while (it.hasNext()) {
-			res.add(it.next().hashCode());
-		}
-		Collections.sort(res);
-		return res;
 	}
 
 	/**
