@@ -136,7 +136,9 @@ public abstract class AND<T> extends EvalFunc<T> {
 		double partial = features[featureIndex].calculateAffinity(
 				featureDescriptionA, featureDescriptionB);
 
-		partial = partial * featureInfos[featureIndex].getWeight();
+		partial = partial
+				/ featureInfos[featureIndex].getMaxValue()
+				* featureInfos[featureIndex].getWeight();
 
 		return partial;
 	}
