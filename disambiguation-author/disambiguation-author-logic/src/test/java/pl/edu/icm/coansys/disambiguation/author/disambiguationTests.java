@@ -213,7 +213,7 @@ public class disambiguationTests {
    		Object btab[] = {-2,-1,"one", "two", 5, 9.0, "eleven", 12, 13.0};		
    		List<Object> a = Arrays.asList(atab);
    		List<Object> b = Arrays.asList(btab);
-  		//double res = 5.0 / 15.0;
+  		////double res = 5.0 / 15.0;
    		double res = 5.0;
    		
   		assert( new Disambiguator().calculateAffinity(a, b) == res );
