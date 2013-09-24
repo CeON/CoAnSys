@@ -14,7 +14,7 @@
     <name>Author Disambiguation Tool</name>
 
     <modules>
-        <module>author-disambiguation-workflow</module>
-        <module>author-disambiguation-logic</module>
+        <module>disambiguation-author-workflow</module>
+        <module>disambiguation-author-logic</module>
     </modules>    
 </project>
