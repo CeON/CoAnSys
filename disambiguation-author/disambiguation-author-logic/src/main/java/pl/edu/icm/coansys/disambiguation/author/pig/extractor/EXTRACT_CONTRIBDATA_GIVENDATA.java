@@ -20,6 +20,7 @@ package pl.edu.icm.coansys.disambiguation.author.pig.extractor;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +38,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
+import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.AuthorToInitials;
+import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.PigNormalizer;
 import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
 import pl.edu.icm.coansys.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
@@ -167,10 +170,54 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 
 			// result bag with tuples, which des4Doccribes each contributor
 			DataBag ret = new DefaultDataBag();
-
-			// author list
-			List<Author> authors = dm.getBasicMetadata().getAuthorList();
-
+			
+			// TODO: Checking for author clones should be in importers
+			// START IMPORTER PART
+			// getting full author list (probably with duplicates)
+			List<Author> dplAuthors = dm.getBasicMetadata().getAuthorList();
+			
+			Map <String, Author> filteredAuthors = 
+					new HashMap <String, Author> ( dplAuthors.size() );
+			
+			// removing clones or duplicates (cid - initials hash)
+			PigNormalizer toInitials = new AuthorToInitials();
+			for ( Author a : dplAuthors ) {
+				Author b = filteredAuthors.put( a.getKey(), a );
+				if ( b != null ) {
+					//cId is inside map already. Checking whether cId is cloned or
+					//duplicated for different data or incorrectly attributed for different authors
+					String aInit = (String) toInitials.normalize( a );
+					String bInit = (String) toInitials.normalize( b );
+					Object aNorm = DisambiguationExtractor.normalizeExtracted( aInit );
+					Object bNorm = DisambiguationExtractor.normalizeExtracted( bInit );
+					
+					if ( a.equals( b ) ) {
+						// all authors data are equal
+						// AUTHOR B (AS CLONE A) SCHOULD BE REMOVED FROM DOCUMENT'S AUTHOR LIST IN IMPORTERS
+						logger.info( "Author metadata clones with key: " + a.getKey() + 
+								" in document with key: " + dm.getKey() );
+					} else if ( aNorm.equals( bNorm ) ) {
+						logger.info( "Duplicated author key: " 
+								+ a.getKey() +  " for different metadata (except initials)" +
+								" in document with key: " + dm.getKey() );
+					} else {
+						logger.error( "Duplicated aurhor key: " 
+								+ a.getKey() + " for different authors: " + aInit 
+								+ ", " + bInit + 
+								" in document with key: " + dm.getKey() );
+					}
+				}
+			}
+			Collection<Author> authors = filteredAuthors.values();
+			//END IMPORTER PART
+			
+			// TODO: builder for document metadata,
+			// replace old author list (with duplicates) with new (filtered)
+			// we want replace it, because in the other way EX_AUTH_SNAMES will
+			// give us feature description with duplicates OR we would need to
+			// write there the same filter as above.
+			// Or include author clones checking in IMPORTERS.
+			
 			// in arrays we are storing DataBags from extractors
 			DataBag[] extractedDocObj = new DataBag[des4Doc.size()];
 			DataBag[] extractedAuthorObj;
@@ -202,13 +249,15 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 
 			// bag making tuples (one tuple for one contributor from document)
 			// with replicated metadata for
-			for (int i = 0; i < authors.size(); i++) {
-				String sname = authors.get(i).getSurname();
 
+			int i = -1;
+			for ( Author a : authors )
+			{
+				i++;
 				// here we have sure that Object = Integer
-				Object normalizedSname = DisambiguationExtractor
-						.normalizeExtracted(sname);
-				String cId = authors.get(i).getKey();
+				Object normalizedSname = EX_AUTH_INITIALS
+						.normalizeExtracted( a );
+				String cId = a.getKey();
 
 				finalMap = new HashMap<String, DataBag>(map);
 
