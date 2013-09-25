@@ -27,3 +27,5 @@ _SUCCESS
 
 #secret test data
 *_secret.*
+maven-eclipse.xml
+.externalToolBuilders
