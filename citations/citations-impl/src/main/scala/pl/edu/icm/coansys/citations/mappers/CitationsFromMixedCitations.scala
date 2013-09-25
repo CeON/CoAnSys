@@ -34,7 +34,7 @@ class CitationsFromMixedCitations extends Mapper[Text, Writable, BytesWritable, 
 
   override def map(key: Text, value: Writable, context: Context) {
     val eval = XPathEvaluator.fromInputStream(IOUtils.toInputStream(key.toString))
-    val refBuilder = nlm.referenceMetadataBuilderFromNode(eval.asNode("/ref"))
+    val refBuilder = nlm.nlmToDocumentProto.referenceMetadataBuilderFromNode(eval.asNode("/ref"))
     refBuilder.setSourceDocKey(eval( """/ref//pub-id[@pub-id-type='pmid']"""))
     val ref = refBuilder.build()
     val bytes = ref.toByteArray
