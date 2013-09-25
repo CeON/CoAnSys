@@ -1,7 +1,7 @@
 --
 -- This file is part of CoAnSys project.
 -- Copyright (c) 2012-2013 ICM-UW
--- 
+--
 -- CoAnSys is free software: you can redistribute it and/or modify
 -- it under the terms of the GNU Affero General Public License as published by
 -- the Free Software Foundation, either version 3 of the License, or
@@ -11,7 +11,7 @@
 -- but WITHOUT ANY WARRANTY; without even the implied warranty of
 -- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 -- GNU Affero General Public License for more details.
--- 
+--
 -- You should have received a copy of the GNU Affero General Public License
 -- along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
 --
@@ -28,7 +28,7 @@
 %DEFAULT dc_m_hdfs_output svmInput/outputTime$time
 %DEFAULT dc_m_meth_extraction_inner pl.edu.icm.coansys.commons.pig.udf.RichSequenceFileLoader
 --%DEFAULT dc_m_str_feature_info 'ClassificationCodeDisambiguator#EX_CLASSIFICATION_CODES#1#1,EmailDisambiguator#EX_EMAIL#1#1,EmailPrefixDisambiguator#EX_EAMIL_PREFIX#1#1,TitleSplitDisambiguator#EX_TITLE_SPLIT#1#1,KeyWordsDisambiguator#EX_KEYWORDS#1#1,KeyPhrasesDisambiguator#EX_KEYPHRASES#1#1,YearDisambiguator#EX_YEAR#1#1,CoAuthorsSnameDisambiguator#EX_COAUTH_SNAME#1#1,#EX_PERSON_ID#1#1'
-%DEFAULT dc_m_str_feature_info 'CoAuthorsSnameDisambiguatorFullList#EX_AUTH_SNAMES#-0.0000166#8,ClassifCodeDisambiguator#EX_CLASSIFICATION_CODES#0.99#12,KeyphraseDisambiguator#EX_KEYWORDS_SPLIT#0.99#22,KeywordDisambiguator#EX_KEYWORDS#0.0000369#40'
+%DEFAULT dc_m_str_feature_info 'CoAuthorsSnameDisambiguatorFullList#EX_AUTH_INITIALS#-0.0000166#8,ClassifCodeDisambiguator#EX_CLASSIFICATION_CODES#0.99#12,KeyphraseDisambiguator#EX_KEYWORDS_SPLIT#0.99#22,KeywordDisambiguator#EX_KEYWORDS#0.0000369#40'
 %DEFAULT threshold '-0.8'
 %DEFAULT lang 'all'
 
@@ -65,7 +65,7 @@ set job.priority $job_priority
 set pig.cachedbag.memusage $pig_cachedbag_mem_usage
 set pig.skewedjoin.reduce.memusage $pig_skewedjoin_reduce_memusage
 set mapred.child.java.opts $mapredChildJavaOpts
--- ulimit must be more than two times the heap size value ! 
+-- ulimit must be more than two times the heap size value !
 -- set mapred.child.ulimit unlimited
 set dfs.client.socket-timeout 60000
 -- -----------------------------------------------------

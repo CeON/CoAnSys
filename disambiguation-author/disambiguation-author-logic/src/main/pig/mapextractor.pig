@@ -30,8 +30,8 @@
 %DEFAULT time 0
 %DEFAULT dc_m_hdfs_outputContribs extracted/test$time
 %DEFAULT dc_m_meth_extraction_inner pl.edu.icm.coansys.commons.pig.udf.RichSequenceFileLoader
--- %DEFAULT dc_m_str_feature_info 'TitleDisambiguator#EX_TITLE#1#1,CoAuthorsSnameDisambiguatorFullList#EX_AUTH_SNAMES#-0.0000166#8,ClassifCodeDisambiguator#EX_CLASSIFICATION_CODES#0.99#12,KeywordDisambiguator#EX_KEYWORDS#0.0000369#40'
-%DEFAULT dc_m_str_feature_info 'ClassifCodeDisambiguator#EX_CLASSIFICATION_CODES#1#1,KeyphraseDisambiguator#EX_KEYWORDS_SPLIT#1#1,KeywordDisambiguator#EX_KEYWORDS#1#1,TitleSplitDisambiguator#EX_TITLE_SPLIT#1#1,YearDisambiguator#EX_YEAR#1#1,TitleDisambiguator#EX_TITLE#1#1,CoAuthorsSnameDisambiguatorFullList#EX_AUTH_SNAMES#1#1,ForenamesInitsDisambiguator#EX_FORENAMES_INITS#1#1,PersonIdDisambiguator#EX_PERSON_ID#1#1,EmailDisambiguator#EX_EMAIL#1#1'
+-- %DEFAULT dc_m_str_feature_info 'TitleDisambiguator#EX_TITLE#1#1,CoAuthorsSnameDisambiguatorFullList#EX_AUTH_INITIALS#-0.0000166#8,ClassifCodeDisambiguator#EX_CLASSIFICATION_CODES#0.99#12,KeywordDisambiguator#EX_KEYWORDS#0.0000369#40'
+%DEFAULT dc_m_str_feature_info 'ClassifCodeDisambiguator#EX_CLASSIFICATION_CODES#1#1,KeyphraseDisambiguator#EX_KEYWORDS_SPLIT#1#1,KeywordDisambiguator#EX_KEYWORDS#1#1,TitleSplitDisambiguator#EX_TITLE_SPLIT#1#1,YearDisambiguator#EX_YEAR#1#1,TitleDisambiguator#EX_TITLE#1#1,CoAuthorsSnameDisambiguatorFullList#EX_AUTH_INITIALS#1#1,ForenamesInitsDisambiguator#EX_FORENAMES_INITS#1#1,PersonIdDisambiguator#EX_PERSON_ID#1#1,EmailDisambiguator#EX_EMAIL#1#1'
 
 %DEFAULT lang 'all'
 --%DEFAULT statistics 'true'
@@ -88,14 +88,14 @@ B1 = foreach A2 generate flatten(snameDocumentMetaExtractor($1)) as metadata:map
 -- store B1 into '$dc_m_hdfs_outputContribs/B1';
 
 
-B = foreach B1 generate metadata#'EX_CLASSIFICATION_CODES', metadata#'EX_KEYWORDS_SPLIT', metadata#'EX_KEYWORDS', metadata#'EX_TITLE_SPLIT', metadata#'EX_YEAR', metadata#'EX_TITLE', metadata#'EX_AUTH_SNAMES', metadata#'EX_FORENAMES_INITS', metadata#'EX_PERSON_ID', metadata#'EX_EMAIL';
+B = foreach B1 generate metadata#'EX_CLASSIFICATION_CODES', metadata#'EX_KEYWORDS_SPLIT', metadata#'EX_KEYWORDS', metadata#'EX_TITLE_SPLIT', metadata#'EX_YEAR', metadata#'EX_TITLE', metadata#'EX_AUTH_INITIALS', metadata#'EX_FORENAMES_INITS', metadata#'EX_PERSON_ID', metadata#'EX_EMAIL';
 DESCRIBE B;
 
 
 C = group B all;
 DESCRIBE C;
 
--- #EX_CLASSIFICATION_CODES,#EX_KEYWORDS_SPLIT,#EX_KEYWORDS,#EX_TITLE_SPLIT,#EX_YEAR,#EX_TITLE,#EX_AUTH_SNAMES,#EX_FORENAMES_INITS,#EX_PERSON_ID,#EX_EMAIL,records COUNT
+-- #EX_CLASSIFICATION_CODES,#EX_KEYWORDS_SPLIT,#EX_KEYWORDS,#EX_TITLE_SPLIT,#EX_YEAR,#EX_TITLE,#EX_AUTH_INITIALS,#EX_FORENAMES_INITS,#EX_PERSON_ID,#EX_EMAIL,records COUNT
 
 D = foreach C generate SUM(B.$0) as CC, SUM(B.$1) as KWS, SUM(B.$2), SUM(B.$3), SUM(B.$4), SUM(B.$5), SUM(B.$6), SUM(B.$7), SUM(B.$8), SUM(B.$9), COUNT(B);
 DESCRIBE D;
