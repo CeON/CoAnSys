@@ -15,7 +15,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package pl.edu.icm.coansys.disambiguation.work;
 
 import pl.edu.icm.coansys.commons.java.DocumentWrapperUtils;
@@ -34,7 +33,7 @@ import pl.edu.icm.coansys.models.DocumentProtos;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
 
 /**
- * 
+ *
  * @author Łukasz Dumiszewski
  *
  */
@@ -43,25 +42,19 @@ public class DuplicateWorkDetectMapService implements DiMapService<Writable, Byt
 
     @SuppressWarnings("unused")
     private static Logger log = LoggerFactory.getLogger(DuplicateWorkDetectMapService.class);
-    
-    
+
     @Override
     public void map(Writable key, BytesWritable value, Mapper<Writable, BytesWritable, Text, BytesWritable>.Context context)
             throws IOException, InterruptedException {
-        
-        DocumentWrapper docWrapper = DocumentProtos.DocumentWrapper.parseFrom(value.copyBytes());
-        
-        String docKey = WorkKeyGenerator.generateKey(docWrapper, 0);
-        
-        DocumentWrapper thinDocWrapper = DocumentWrapperUtils.cloneDocumentMetadata(docWrapper);
-        
-        context.write(new Text(docKey), new BytesWritable(thinDocWrapper.toByteArray()));
-        
-        
-    }
 
-    
+        DocumentWrapper docWrapper = DocumentProtos.DocumentWrapper.parseFrom(value.copyBytes());
+
+        String docKey = WorkKeyGenerator.generateKey(docWrapper, 0);
+
+        if (!docKey.isEmpty()) {
+            DocumentWrapper thinDocWrapper = DocumentWrapperUtils.cloneDocumentMetadata(docWrapper);
+            context.write(new Text(docKey), new BytesWritable(thinDocWrapper.toByteArray()));
+        }
+    }
     //******************** PRIVATE ********************
-    
-    
 }
