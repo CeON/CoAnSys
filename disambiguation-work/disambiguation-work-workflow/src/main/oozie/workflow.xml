@@ -8,6 +8,10 @@
             <name>MAPRED_TASK_TIMEOUT</name>
             <value>3600000</value>
         </property>
+        <property>
+            <name>POOL_NAME</name>
+            <value>default</value>
+        </property>
     </parameters>
     <start to="disambiguation-work" />
     <action name="disambiguation-work">
@@ -105,6 +109,10 @@
 				<property>
 					<name>mapred.child.java.opts</name>
 					<value>-Xmx4096m</value>
+				</property>
+				<property>
+					<name>mapred.fairscheduler.pool</name>
+					<value>${POOL_NAME}</value>
 				</property>
 			</configuration>
 		</map-reduce>
