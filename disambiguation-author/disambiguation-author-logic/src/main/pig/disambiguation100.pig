@@ -27,7 +27,7 @@
 %DEFAULT dc_m_hdfs_inputDocsData extracted/springer_sample02/part*
 %DEFAULT time 20130709_1009
 %DEFAULT dc_m_hdfs_outputContribs disambiguation/outputContribs$time
-%DEFAULT dc_m_str_feature_info 'CoAuthorsSnameDisambiguatorFullList#EX_AUTH_SNAMES#-0.0000166#8,ClassifCodeDisambiguator#EX_CLASSIFICATION_CODES#0.99#12,KeyphraseDisambiguator#EX_KEYWORDS_SPLIT#0.99#22,KeywordDisambiguator#EX_KEYWORDS#0.0000369#40'
+%DEFAULT dc_m_str_feature_info 'CoAuthorsSnameDisambiguatorFullList#EX_AUTH_INITIALS#-0.0000166#8,ClassifCodeDisambiguator#EX_CLASSIFICATION_CODES#0.99#12,KeyphraseDisambiguator#EX_KEYWORDS_SPLIT#0.99#22,KeywordDisambiguator#EX_KEYWORDS#0.0000369#40'
 %DEFAULT threshold '-0.8'
 %DEFAULT use_extractor_id_instead_name 'true'
 %DEFAULT statistics 'true'

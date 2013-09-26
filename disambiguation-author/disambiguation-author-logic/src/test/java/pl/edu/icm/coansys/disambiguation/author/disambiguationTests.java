@@ -44,6 +44,8 @@ import pl.edu.icm.coansys.disambiguation.author.pig.extractor.DisambiguationExtr
 import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.ToEnglishLowerCase;
 import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.ToHashCode;
 import pl.edu.icm.coansys.disambiguation.features.Disambiguator;
+import pl.edu.icm.coansys.models.DocumentProtos.Author;
+import pl.edu.icm.coansys.models.DocumentProtos.Author.Builder;
 
 public class disambiguationTests {
 	
@@ -154,6 +156,8 @@ public class disambiguationTests {
 		// testing normalize tool, which is using after data extraction
 		a = DisambiguationExtractorDocument.normalizeExtracted( text );
 		assert( a.equals( DisExtrExpected ) );
+		
+		//TODO Author initials normalizer test case
    	}
    	
    	@Test(groups = {"fast"})
@@ -173,7 +177,8 @@ public class disambiguationTests {
    			   	"EX_COAUTH_SNAME",
    			   	"EX_CLASSIFICATION_CODES",
    			   	"EX_FORENAMES_INITS",
-   			   	"EX_EMAIL_PREFIX" 
+   			   	"EX_EMAIL_PREFIX" ,
+   			   	"EX_AUTH_INITIALS"
    		};
    		String[] ids = {
    				"0",
@@ -187,7 +192,8 @@ public class disambiguationTests {
    				"2",
    				"1",
    				"5",
-   				"3"
+   				"3",
+   				"C"
    		};
    		
    		assert ( ids.length == extractors.length );

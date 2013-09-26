@@ -15,41 +15,46 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
+
 package pl.edu.icm.coansys.disambiguation.author.pig.extractor;
 
+import org.apache.pig.data.DataBag;
+import org.apache.pig.data.DefaultDataBag;
+import org.apache.pig.data.Tuple;
+import org.apache.pig.data.TupleFactory;
+
+import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.AuthorToInitials;
 import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.PigNormalizer;
 import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.ToEnglishLowerCase;
 import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.ToHashCode;
+import pl.edu.icm.coansys.models.DocumentProtos.Author;
+import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 
-public class DisambiguationExtractor {
-
+public class EX_AUTH_INITIALS extends DisambiguationExtractorDocument {
+	
 	static public PigNormalizer normalizers[] = {
+		new AuthorToInitials(),
 		new ToEnglishLowerCase(), 
 		new ToHashCode()
 	};
-
-	static public Object normalizeExtracted( Object extracted ) {
-		Object tmp = extracted;
-		for ( PigNormalizer pn: normalizers ) {
-			tmp = pn.normalize( tmp );
-		}
-		return tmp;
-	}
 	
-	static public boolean isClassifCode(String str) {
-		if (isMSc(str)) {
-			return true;
-		} else {
-			return false;
+	@Override
+	public DataBag extract( Object o, String lang ){
+		TupleFactory tf = TupleFactory.getInstance();
+		DocumentMetadata dm = (DocumentMetadata) o;
+		DataBag db = new DefaultDataBag();
+		
+		for ( Author a : dm.getBasicMetadata().getAuthorList() ){
+			Tuple t = tf.newTuple();
+			t.append( normalizeExtracted( a ) );
+			db.add(t);
 		}
+		
+		return db;
 	}
 
-	static public boolean isMSc(String str) {
-		return str.toUpperCase().matches("[0-9][0-9][A-Z][0-9][0-9]");
-	}
-	
-	//to re-implement in each extractor
+	@Override
 	public String getId() {
-		return null;
+		return "C";
 	}
 }
