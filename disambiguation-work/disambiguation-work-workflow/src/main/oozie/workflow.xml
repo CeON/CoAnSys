@@ -1,5 +1,5 @@
 <workflow-app xmlns="uri:oozie:workflow:0.4" name="disambiguation-work-wf">
-    <properties>
+    <parameters>
         <property>
             <name>DFS_SOCKET_CLIENT_TIMEOUT</name>
             <value>120000</value>
@@ -8,7 +8,7 @@
             <name>MAPRED_TASK_TIMEOUT</name>
             <value>3600000</value>
         </property>
-    <properties>
+    </parameters>
     <start to="disambiguation-work" />
     <action name="disambiguation-work">
 		<map-reduce>
