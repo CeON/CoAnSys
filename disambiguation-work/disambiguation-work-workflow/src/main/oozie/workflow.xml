@@ -1,6 +1,16 @@
-<workflow-app xmlns="uri:oozie:workflow:0.1" name="disambiguation-work-wf">
+<workflow-app xmlns="uri:oozie:workflow:0.4" name="disambiguation-work-wf">
+    <properties>
+        <property>
+            <name>DFS_SOCKET_CLIENT_TIMEOUT</name>
+            <value>120000</value>
+        </property>
+        <property>
+            <name>MAPRED_TASK_TIMEOUT</name>
+            <value>3600000</value>
+        </property>
+    <properties>
     <start to="disambiguation-work" />
-<action name="disambiguation-work">
+    <action name="disambiguation-work">
 		<map-reduce>
 			<job-tracker>${jobTracker}</job-tracker>
 			<name-node>${nameNode}</name-node>
@@ -86,11 +96,11 @@
 				</property>
 				<property>
 					<name>dfs.client.socket-timeout</name>
-					<value>120000</value>
+					<value>${DFS_SOCKET_CLIENT_TIMEOUT}</value>
 				</property>
 				<property>
 					<name>mapred.task.timeout</name>
-					<value>1200000</value>
+					<value>${MAPRED_TASK_TIMEOUT}</value>
 				</property>
 				<property>
 					<name>mapred.child.java.opts</name>
