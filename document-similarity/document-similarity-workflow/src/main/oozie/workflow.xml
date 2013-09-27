@@ -1,4 +1,4 @@
-<workflow-app name='document-similarity' xmlns="uri:oozie:workflow:0.2">
+<workflow-app name='${project}/${subproject}' xmlns="uri:oozie:workflow:0.2">
     <start to='tfidf'/>
     <action name='tfidf'>
         <pig>
@@ -13,7 +13,7 @@
                     <value>${queueName}</value>
                 </property> 
             </configuration>
-            <script>${pigScriptsDir}/document-similarity-tiny.pig</script>
+            <script>document-similarity-tiny.pig</script>
             <param>inputPath=${ds_bwndataMetadataInputPath}</param>
             <param>outputPath=${ds_similarityOutputPath}</param>
             <param>commonJarsPath=${commonJarsPath}</param>
@@ -21,13 +21,33 @@
             <param>tmpCompressionCodec=${ds_tmpCompressionCodec}</param>
             <param>sample=${ds_sample}</param>
             <param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>            
-            <file>${pigScriptsDir}/macros.pig#macros.pig</file> 
         </pig>       
         <ok to='end'/>
         <error to='kill'/>
     </action>
-    <kill name='kill'>
+
+    <action name='end'>
+        <email xmlns="uri:oozie:email-action:0.1">
+            <to>pdendek@icm.edu.pl</to>
+            <subject>SUCCEEDED!: ${wf:id()}</subject>
+            <body></body>
+        </email>
+        <ok to='end2'/>
+        <error to='kill'/>
+    </action>
+
+    <action name='kill'>
+        <email xmlns="uri:oozie:email-action:0.1">
+            <to>pdendek@icm.edu.pl</to>
+            <subject>FAILED!: ${wf:id()}</subject>
+            <body></body>
+        </email>
+        <ok to='kill2'/>
+        <error to='kill2'/>>
+    </action>
+
+    <kill name='kill2'>
         <message>Workflow failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
     </kill>
-    <end name='end'/>
+    <end name='end2'/>
 </workflow-app>
