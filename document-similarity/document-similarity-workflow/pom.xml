@@ -8,7 +8,7 @@
     </parent>
     
     <artifactId>document-similarity-workflow</artifactId>
-    <packaging>jar</packaging>
+    <packaging>oozie</packaging>
     <name>Document Similarity Tool: Workflow</name>
     <url>http://maven.apache.org</url>
 
@@ -33,7 +33,7 @@
         <dependency>
             <groupId>pl.edu.icm.coansys</groupId>
             <artifactId>document-similarity-logic</artifactId>
-            <version>1.4-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 </project>
