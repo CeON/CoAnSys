@@ -31,6 +31,7 @@ import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
 
 import com.google.common.collect.Lists;
 import com.google.protobuf.InvalidProtocolBufferException;
+import pl.edu.icm.coansys.models.DocumentProtos.BasicMetadata;
 
 /** 
  * Contains various utility methods related to the {@link DocumentWrapper} class
@@ -53,7 +54,12 @@ public abstract class DocumentWrapperUtils {
      * 
      * */
     public static String getMainTitle(DocumentWrapper documentWrapper) {
-        return documentWrapper.getDocumentMetadata().getBasicMetadata().getTitle(0).getText();
+        BasicMetadata basicMetadata = documentWrapper.getDocumentMetadata().getBasicMetadata();
+        if (basicMetadata.getTitleCount() > 0) {
+            return basicMetadata.getTitle(0).getText();
+        } else {
+            return "";
+        }
     }
     
     
@@ -116,5 +122,5 @@ public abstract class DocumentWrapperUtils {
         return DocumentWrapper.newBuilder().setDocumentMetadata(docWrapper.getDocumentMetadata()).setRowId(docWrapper.getRowId()).build();
     }
 
-    
-}
+
+        }
