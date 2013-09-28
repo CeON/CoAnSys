@@ -1,4 +1,4 @@
-<workflow-app name='${project}/${subproject}' xmlns="uri:oozie:workflow:0.2">
+<workflow-app name='${project}*${subproject}' xmlns="uri:oozie:workflow:0.4">
     <start to='tfidf'/>
     <action name='tfidf'>
         <pig>
@@ -25,29 +25,29 @@
         <ok to='end'/>
         <error to='kill'/>
     </action>
-
-    <action name='end'>
-        <email xmlns="uri:oozie:email-action:0.1">
+<!--
+    <action name='end-mail'>
+        <email xmlns="uri:oozie:workflow:0.2">
             <to>pdendek@icm.edu.pl</to>
             <subject>SUCCEEDED!: ${wf:id()}</subject>
-            <body></body>
+            <body>succ</body>
         </email>
-        <ok to='end2'/>
+        <ok to='end'/>
         <error to='kill'/>
     </action>
 
-    <action name='kill'>
-        <email xmlns="uri:oozie:email-action:0.1">
+    <action name='kill-mail'>
+        <email xmlns="uri:oozie:workflow:0.2">
             <to>pdendek@icm.edu.pl</to>
             <subject>FAILED!: ${wf:id()}</subject>
-            <body></body>
+            <body>fail</body>
         </email>
-        <ok to='kill2'/>
-        <error to='kill2'/>>
+        <ok to='kill'/>
+        <error to='kill'/>>
     </action>
-
-    <kill name='kill2'>
+-->
+    <kill name='kill'>
         <message>Workflow failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
     </kill>
-    <end name='end2'/>
+    <end name='end'/>
 </workflow-app>
