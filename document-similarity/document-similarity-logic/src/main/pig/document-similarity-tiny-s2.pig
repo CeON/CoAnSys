@@ -70,7 +70,7 @@ IMPORT 'macros.pig';
 /*** (b) store results (c) close current tasks *************************************/
 tfidf_all_topn_projected = LOAD '$outputPath$TFIDF_TOPN_ALL_TEMP' 
 	AS (docId: chararray, term: chararray, tfidf: double);
-tfidf_all_topn_sorted = order tfidf_all_topn_projected by docId desc;
+tfidf_all_topn_sorted = order tfidf_all_topn_projected by term asc;
 %default one '1'
 %default two '2'
 STORE tfidf_all_topn_sorted  INTO '$outputPath$TFIDF_TOPN_ALL_SUBDIR$one';
