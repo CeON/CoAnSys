@@ -1,13 +1,7 @@
 #!/bin/bash
 
 START_POS=`pwd`
-cd ../../../ 
-mvn clean install -DjobPackage -DskipTests
-
-#cd target/oozie-wf/lib
-#cp /usr/lib/hbase/lib/zookeeper.jar .
-#cp /usr/lib/hbase/hbase-*-cdh4.*-security.jar .
-#cp /usr/lib/hbase/lib/guava-11.0.2.jar .
+./install.sh
 
 USER=$1
 if [ "$USER" == "" ] ; then 
@@ -15,8 +9,10 @@ if [ "$USER" == "" ] ; then
  echo "setting USER to default value (pdendek)"
 fi
 
+<<OUT_OUT
 cd $START_POS 
 echo $START_POS
+OUT_OUT
 
 ./copy-to-oozie.sh ${USER}
 

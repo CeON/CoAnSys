@@ -23,9 +23,7 @@ DEFINE load_from_hdfs(inputPath, sampling) RETURNS C {
 	A = LOAD '$inputPath' USING pl.edu.icm.coansys.commons.pig.udf.RichSequenceFileLoader('org.apache.hadoop.io.Text', 
 		 'org.apache.hadoop.io.BytesWritable') as (key:chararray, value:bytearray);	
 	B = SAMPLE A $sampling;	
-	$C = FOREACH B GENERATE key , 
-		FLATTEN(pl.edu.icm.coansys.similarity.pig.udf.DocumentProtobufToTupleMap(mproto)) 
-			AS document;
+	$C = FOREACH B GENERATE $0, FLATTEN(pl.edu.icm.coansys.similarity.pig.udf.DocumentProtobufToTupleMap($1)); 
 };
 -------------------------------------------------------
 -- clean and drop nulls

@@ -37,7 +37,7 @@
 
 %default inputPath 'full/hbase-dump/mproto-m*'
 %default outputPath 'document-similarity-output'
-$default jars '*.jar'
+%default jars '*.jar'
 %default commonJarsPath '../oozie/similarity/workflow/lib/$jars'
 
 REGISTER '$commonJarsPath'
@@ -58,7 +58,8 @@ IMPORT 'macros.pig';
 -- business code section
 -------------------------------------------------------
 doc = load_from_hdfs('$inputPath', $sample);
-doc_raw = foreach doc generate $1, document.title as title, document.abstract as abstract;
+doc = foreach doc generate $0 as docId, $1 as documents;
+doc_raw = foreach doc generate $0, document.title as title, document.abstract as abstract;
 -- speparated line as FLATTEN w a hidden CROSS
 doc_keyword_raw = foreach doc generate $1 AS docId, FLATTEN(document.keywords) AS keywords;
 /*DESCRIBE doc_keyword_raw;*/
