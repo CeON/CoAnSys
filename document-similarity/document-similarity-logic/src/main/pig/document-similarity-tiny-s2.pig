@@ -21,6 +21,7 @@
 %default DOC_TERM_TITLE '/term/title'
 %default TFIDF_NON_WEIGHTED_SUBDIR '/tfidf/nonweighted'
 %default TFIDF_TOPN_WEIGHTED_SUBDIR '/tfidf/weighted-topn'
+%default TFIDF_TOPN_ALL_TEMP '/tfidf/all-topn-tmp'
 %default TFIDF_TOPN_ALL_SUBDIR '/tfidf/all-topn'
 %default TFIDF_TF_ALL_SUBDIR '/tfidf/tf-all-topn'
 %default SIMILARITY_ALL_DOCS_SUBDIR '/similarity/alldocs'
@@ -36,7 +37,7 @@
 %default mapredChildJavaOpts -Xmx8000m
 
 %default inputPath '/srv/polindex/seqfile/polindex-yadda-20130729-text.sf'
-%default time '2013-09-28--10-37'
+%default time ''
 %default outputPath 'document-similarity-output/$time/'
 %default jars '*.jar'
 %default commonJarsPath '../../../../document-similarity-workflow/target/oozie-wf/lib/$jars'
@@ -58,10 +59,22 @@ IMPORT 'macros.pig';
 -------------------------------------------------------
 -- business code section
 -------------------------------------------------------
-/*** (d) load sorted results (e) duplicate it *************************************/
+/********************* BEG:MERGE-SORT ZONE *****************************************/
+/********* follwing advices from http://tinyurl.com/mqn638w `exec;` ****************/
+/********* command has been used to guarantee corect merge-join execution **********/
+/*** (a) load, order and assign to tfidf_all_topn_projected ************************/
+/*** (b) store results (c) close current tasks *************************************/
+tfidf_all_topn_projected = LOAD '$outputPath$TFIDF_TOPN_ALL_TEMP';
+tfidf_all_topn_sorted = order tfidf_all_topn_projected by docId asc;
+%default one '1'
+%default two '2'
+STORE tfidf_all_topn_sorted  INTO '$outputPath$TFIDF_TOPN_ALL_SUBDIR$one';
+STORE tfidf_all_topn_sorted  INTO '$outputPath$TFIDF_TOPN_ALL_SUBDIR$two';
+exec;
+/*** (d) load sorted data and duplicate *******************************************/
 /*** (f) perform doc-sim calculation [MERGE-SORT] (g) close current tasks *********/
-tfidf_all_topn_sorted_orig = LOAD '$outputPath$TFIDF_TOPN_ALL_SUBDIR' AS (docId: chararray, term: chararray, tfidf: double);
-tfidf_all_topn_sorted_dupl = LOAD '$outputPath$TFIDF_TOPN_ALL_SUBDIR' AS (docId: chararray, term: chararray, tfidf: double);
+tfidf_all_topn_sorted_orig = LOAD '$outputPath$TFIDF_TOPN_ALL_SUBDIR$one' AS (docId: chararray, term: chararray, tfidf: double);
+tfidf_all_topn_sorted_dupl = LOAD '$outputPath$TFIDF_TOPN_ALL_SUBDIR$two' AS (docId: chararray, term: chararray, tfidf: double);
 -- calculate and store document similarity for all documents
 document_similarity = calculate_pairwise_similarity(tfidf_all_topn_sorted_orig,
 		tfidf_all_topn_sorted_dupl, docId, term, tfidf, '::',$parallel);
