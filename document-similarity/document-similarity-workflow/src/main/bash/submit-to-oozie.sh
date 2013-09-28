@@ -1,6 +1,10 @@
 #!/bin/bash
 
 USER=$1
+if [ "$USER" == "" ] ; then
+ USER=pdendek
+ echo "setting USER to default value (pdendek)"
+fi
 
 ./copy-to-oozie.sh ${USER}
 
