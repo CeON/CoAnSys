@@ -35,6 +35,7 @@ import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
 
+import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
 import pl.edu.icm.coansys.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
@@ -84,7 +85,8 @@ public class DocumentProtobufToTupleMap extends EvalFunc<Tuple> {
             return new Schema(new Schema.FieldSchema(getSchemaName(this.getClass().getName().toLowerCase(), input),
                     tupleSchema, DataType.TUPLE));
         } catch (Exception e) {
-            return null;
+            System.out.println(StackTraceExtractor.getStackTrace(e));
+            throw new RuntimeException(e);
         }
     }
 
