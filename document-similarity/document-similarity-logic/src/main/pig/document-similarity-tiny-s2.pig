@@ -56,16 +56,21 @@ SET pig.tmpfilecompression.codec $tmpCompressionCodec
 
 IMPORT 'macros.pig';
 
+/********************* BEG:MERGE-SORT ZONE *****************************************/
+/********* Follwing advices from http://tinyurl.com/mqn638w ************************/
+/****`exec;` command has been used to guarantee corect merge-join execution ********/
+/*** Other good pieces of advice may be found at ***********************************/
+/*** http://pig.apache.org/docs/r0.11.0/perf.html#merge-joins **********************/
+/***********************************************************************************/
+
 -------------------------------------------------------
 -- business code section
 -------------------------------------------------------
-/********************* BEG:MERGE-SORT ZONE *****************************************/
-/********* follwing advices from http://tinyurl.com/mqn638w `exec;` ****************/
-/********* command has been used to guarantee corect merge-join execution **********/
 /*** (a) load, order and assign to tfidf_all_topn_projected ************************/
 /*** (b) store results (c) close current tasks *************************************/
-tfidf_all_topn_projected = LOAD '$outputPath$TFIDF_TOPN_ALL_TEMP';
-tfidf_all_topn_sorted = order tfidf_all_topn_projected by docId asc;
+tfidf_all_topn_projected = LOAD '$outputPath$TFIDF_TOPN_ALL_TEMP' 
+	AS (docId: chararray, term: chararray, tfidf: double);
+tfidf_all_topn_sorted = order tfidf_all_topn_projected by docId desc;
 %default one '1'
 %default two '2'
 STORE tfidf_all_topn_sorted  INTO '$outputPath$TFIDF_TOPN_ALL_SUBDIR$one';
@@ -73,10 +78,14 @@ STORE tfidf_all_topn_sorted  INTO '$outputPath$TFIDF_TOPN_ALL_SUBDIR$two';
 exec;
 /*** (d) load sorted data and duplicate *******************************************/
 /*** (f) perform doc-sim calculation [MERGE-SORT] (g) close current tasks *********/
-tfidf_all_topn_sorted_orig = LOAD '$outputPath$TFIDF_TOPN_ALL_SUBDIR$one' AS (docId: chararray, term: chararray, tfidf: double);
-tfidf_all_topn_sorted_dupl = LOAD '$outputPath$TFIDF_TOPN_ALL_SUBDIR$two' AS (docId: chararray, term: chararray, tfidf: double);
+tfidf_all_topn_sorted_orig = LOAD '$outputPath$TFIDF_TOPN_ALL_SUBDIR$one' 
+	AS (docId: chararray, term: chararray, tfidf: double);
+tfidf_all_topn_sorted_dupl = LOAD '$outputPath$TFIDF_TOPN_ALL_SUBDIR$two' 
+	AS (docId: chararray, term: chararray, tfidf: double);
 -- calculate and store document similarity for all documents
 document_similarity = calculate_pairwise_similarity(tfidf_all_topn_sorted_orig,
 		tfidf_all_topn_sorted_dupl, docId, term, tfidf, '::',$parallel);
 STORE document_similarity INTO '$outputPath$SIMILARITY_ALL_DOCS_SUBDIR';
+
 /********************* END:MERGE-SORT ZONE *****************************************/
+
