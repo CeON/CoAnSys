@@ -1,16 +1,18 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-   
-    <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>pl.edu.icm.coansys</groupId>
-        <artifactId>document-similarity</artifactId>
-        <version>1.4-SNAPSHOT</version>
-    </parent>
-    
-    <artifactId>document-similarity-logic</artifactId>
-    <packaging>jar</packaging>
-    <name>Document Similarity Tool: Logic</name>
-    <url>http://maven.apache.org</url>
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>pl.edu.icm.coansys</groupId>
+		<artifactId>document-similarity</artifactId>
+		<version>1.4-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>document-similarity-logic</artifactId>
+	<packaging>jar</packaging>
+	<name>Document Similarity Tool: Logic</name>
+	<url>http://maven.apache.org</url>
 
 	<build>
 		<resources>
@@ -22,7 +24,7 @@
 				</includes>
 				<excludes>
 					<exclude>**/macros.pig</exclude>
-				</excludes>				
+				</excludes>
 				<targetPath>${project.build.directory}/classes/pig-main</targetPath>
 			</resource>
 			<resource>
@@ -36,16 +38,16 @@
 		</resources>
 	</build>
 
-    <dependencies>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>commons</artifactId>
-            <version>${project.version}</version>
-        </dependency>
- 		<dependency>
-            <groupId>org.antlr</groupId>
-            <artifactId>antlr-runtime</artifactId>
-            <version>3.2</version>
-        </dependency>
-    </dependencies>
+	<dependencies>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>commons</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.antlr</groupId>
+			<artifactId>antlr-runtime</artifactId>
+			<version>3.2</version>
+		</dependency>
+	</dependencies>
 </project>
