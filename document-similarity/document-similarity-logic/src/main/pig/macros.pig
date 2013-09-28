@@ -170,11 +170,7 @@ DEFINE calculate_pairwise_similarity(in_relation, in_relation2, doc_field, term_
         	KeywordSimilarity(term, docId1, tfidf1, docId2, tfidf2) AS similarity;
 
 	docs_terms_group = GROUP term_doc_similarity BY (docId1, docId2);
-	docs_terms_similarity = FOREACH docs_terms_group GENERATE FLATTEN(group) AS (docId1, docId2),
-        	DocsCombinedSimilarity(term_doc_similarity.docId1, term_doc_similarity.docId2, term_doc_similarity.similarity) AS similarity;
-
-	docs_similarity = FOREACH docs_terms_similarity GENERATE docId1, docId2, similarity;
-	docs_similarity2 = FOREACH docs_similarity GENERATE docId2 AS docId1, docId1 AS docId2, similarity;
-	docs_similarity_union = UNION docs_similarity, docs_similarity2;
-	$out_relation = FOREACH docs_similarity_union GENERATE *;
+	$out_relation = FOREACH docs_terms_group GENERATE FLATTEN(group) AS (docId1, docId2),
+	DocsCombinedSimilarity(term_doc_similarity.docId1, term_doc_similarity.docId2, term_doc_similarity.similarity) AS similarity;
 };
+

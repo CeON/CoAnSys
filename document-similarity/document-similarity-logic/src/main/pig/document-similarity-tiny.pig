@@ -58,8 +58,15 @@ IMPORT 'macros.pig';
 -------------------------------------------------------
 -- business code section
 -------------------------------------------------------
-doc = load_from_hdfs('$inputPath', $sample);
-doc = foreach doc generate $0 as docId, $1 as document;
+doc = LOAD '$inputPath' USING pl.edu.icm.coansys.commons.pig.udf.
+	RichSequenceFileLoader('org.apache.hadoop.io.Text','org.apache.hadoop.io.BytesWritable') 
+	as (key:chararray, value:bytearray);
+--B = SAMPLE A $sampling;
+B = limit A 100;
+C = FOREACH B GENERATE $0 as docId, pl.edu.icm.coansys.similarity.pig.udf.DocumentProtobufToTupleMap($1) as document ;
+--doc = load_from_hdfs('$inputPath', $sample);
+--doc = foreach doc generate $0 as docId, $1 as document;
+
 doc_raw = foreach doc generate docId, document.title as title, document.abstract as abstract;
 -- speparated line as FLATTEN w a hidden CROSS
 doc_keyword_raw = foreach doc generate docId, FLATTEN(document.keywords) AS keywords;
@@ -80,18 +87,29 @@ tfidf_all = calculate_tfidf(doc_all, docId, term, $tfidfMinValue);
 -- store tfidf values into separate direcotires
 STORE tfidf_all INTO '$outputPath$TFIDF_NON_WEIGHTED_SUBDIR';
 
+exec;
 -- calculate and store topn terms per document in all results
 tfidf_all_topn = get_topn_per_group(tfidf_all, docId, tfidf, 'desc', $tfidfTopnTermPerDocument);
 tfidf_all_topn_projected = FOREACH tfidf_all_topn GENERATE top::docId AS docId, top::term AS term, top::tfidf AS tfidf;
-STORE tfidf_all_topn_projected INTO '$outputPath$TFIDF_TOPN_ALL_SUBDIR';
+tfidf_all_topn_sorted = order tfidf_all_topn_projected by docId asc;
+STORE tfidf_all_topn_sorted  INTO '$outputPath$TFIDF_TOPN_ALL_SUBDIR';
+exec;
 
-tfidf_all_topn_projected_loaded = LOAD '$outputPath$TFIDF_TOPN_ALL_SUBDIR' AS (docId: chararray, term: chararray, tfidf: double);
-duplicate = foreach tfidf_all_topn_projected_loaded generate *;
+tfidf_all_topn_sorted_orig = LOAD '$outputPath$TFIDF_TOPN_ALL_SUBDIR' AS (docId: chararray, term: chararray, tfidf: double);
+tfidf_all_topn_sorted_dupl = LOAD '$outputPath$TFIDF_TOPN_ALL_SUBDIR' AS (docId: chararray, term: chararray, tfidf: double);
 -- calculate and store document similarity for all documents
-document_similarity = calculate_pairwise_similarity(tfidf_all_topn_projected_loaded,duplicate , docId, term, tfidf, '::',$parallel);
+document_similarity = calculate_pairwise_similarity(tfidf_all_topn_sorted_orig,
+		tfidf_all_topn_sorted_dupl, docId, term, tfidf, '::',$parallel);
 STORE document_similarity INTO '$outputPath$SIMILARITY_ALL_DOCS_SUBDIR';
 
+exec;
+mix_l = LOAD '$outputPath$SIMILARITY_ALL_DOCS_SUBDIR' as (chararray,chararray,double);
+mix_r = foreach mix_l generate $1,$0,$2;
+mix_f = union mix_l,mix_r;
+mix_f = foreach mix_f generate $0 as (docIdA:chararray), $1 as (docIdB:chararray),$2 as (similarity:double);
+
 -- calculate and store topn similar documents for each document
-document_similarity_topn = get_topn_per_group(document_similarity, docId1, similarity, 'desc', $similarityTopnDocumentPerDocument);
+document_similarity_topn = get_topn_per_group(mix_f, docIdA, similarityX, 'desc', $similarityTopnDocumentPerDocument);
 STORE document_similarity_topn INTO '$outputPath$SIMILARITY_TOPN_DOCS_SUBDIR';
+/**/
 
