@@ -1,0 +1,53 @@
+<workflow-app name='${project}*${subproject}' xmlns="uri:oozie:workflow:0.4">
+    <start to='tfidf'/>
+    <action name='tfidf'>
+        <pig>
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <prepare>
+                <delete path="${ds_similarityOutputPath}"/>
+            </prepare>
+            <configuration>
+                <property>
+                    <name>mapred.job.queue.name</name>
+                    <value>${queueName}</value>
+                </property> 
+            </configuration>
+            <script>document-similarity-tiny.pig</script>
+            <param>inputPath=${ds_bwndataMetadataInputPath}</param>
+            <param>outputPath=${ds_similarityOutputPath}</param>
+            <param>commonJarsPath=${commonJarsPath}</param>
+            <param>parallel=${ds_parallel}</param>
+            <param>tmpCompressionCodec=${ds_tmpCompressionCodec}</param>
+            <param>sample=${ds_sample}</param>
+            <param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>            
+        </pig>       
+        <ok to='end'/>
+        <error to='kill'/>
+    </action>
+<!--
+    <action name='end-mail'>
+        <email xmlns="uri:oozie:workflow:0.2">
+            <to>pdendek@icm.edu.pl</to>
+            <subject>SUCCEEDED!: ${wf:id()}</subject>
+            <body>succ</body>
+        </email>
+        <ok to='end'/>
+        <error to='kill'/>
+    </action>
+
+    <action name='kill-mail'>
+        <email xmlns="uri:oozie:workflow:0.2">
+            <to>pdendek@icm.edu.pl</to>
+            <subject>FAILED!: ${wf:id()}</subject>
+            <body>fail</body>
+        </email>
+        <ok to='kill'/>
+        <error to='kill'/>>
+    </action>
+-->
+    <kill name='kill'>
+        <message>Workflow failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+    </kill>
+    <end name='end'/>
+</workflow-app>
