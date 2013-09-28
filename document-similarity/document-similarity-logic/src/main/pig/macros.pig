@@ -19,55 +19,14 @@
 -------------------------------------------------------
 -- load BWMeta documents form sequence files stored in hdfs
 -------------------------------------------------------
-DEFINE load_bwndata_hdfs(inputPath, sampling) RETURNS doc {
-	raw_bytes = LOAD '$inputPath' USING pl.edu.icm.coansys.commons.pig.udf.RichSequenceFileLoader();	
-	raw_bytes_sample = SAMPLE raw_bytes $sampling;
-	raw_doc = FOREACH raw_bytes_sample GENERATE 
-			pl.edu.icm.coansys.commons.pig.udf.BytesToCharArray($0) AS rowkey, 
-			FLATTEN(pl.edu.icm.coansys.commons.pig.udf.DocumentProtoPartsTupler($1)) AS (docId, mproto, cproto);
-	
-	$doc = FOREACH raw_doc GENERATE rowkey, pl.edu.icm.coansys.commons.pig.udf.DocumentProtobufBytesToTuple(mproto, cproto) AS document;
+DEFINE load_from_hdfs(inputPath, sampling) RETURNS C {
+	A = LOAD '$inputPath' USING pl.edu.icm.coansys.commons.pig.udf.RichSequenceFileLoader('org.apache.hadoop.io.Text', 
+		 'org.apache.hadoop.io.BytesWritable') as (key:chararray, value:bytearray);	
+	B = SAMPLE A $sampling;	
+	$C = FOREACH B GENERATE key , 
+		FLATTEN(pl.edu.icm.coansys.similarity.pig.udf.DocumentProtobufToTupleMap(mproto)) 
+			AS document;
 };
-
--------------------------------------------------------
--- load BWMeta metadata form sequence files stored in hdfs
--------------------------------------------------------
-DEFINE load_bwndata_metadata_hdfs(inputPath, sampling) RETURNS meta {
-	raw_bytes = LOAD '$inputPath' USING pl.edu.icm.coansys.commons.pig.udf.RichSequenceFileLoader();
-	raw_bytes_sample = SAMPLE raw_bytes $sampling;
-	raw_meta = FOREACH raw_bytes_sample GENERATE 
-			pl.edu.icm.coansys.commons.pig.udf.BytesToCharArray($0) AS rowkey,
-			pl.edu.icm.coansys.commons.pig.udf.BytesToDataByteArray($1) AS mproto;
-
-	$meta = FOREACH raw_meta
-		GENERATE rowkey, pl.edu.icm.coansys.commons.pig.udf.DocumentProtobufBytesToTuple(mproto) AS document;
-};
-
--------------------------------------------------------
--- load BWMeta documents form HBase tabls that contains
--------------------------------------------------------
-DEFINE load_bwndata(tableName) RETURNS doc {
-	raw_doc = LOAD 'hbase://$tableName' 
-		USING org.apache.pig.backend.hadoop.hbase.HBaseStorage('m:mproto, c:cproto', '-loadKey true -caching 50 -limit 100')
-		AS (rowkey: chararray, mproto: bytearray, cproto: bytearray);
-	
-	$doc = FOREACH raw_doc 
-                GENERATE rowkey, pl.edu.icm.coansys.commons.pig.udf.DocumentProtobufBytesToTuple(mproto, cproto) AS document;
-};
-
--------------------------------------------------------
--- load BWMeta documents form HBase tabls that contains
--------------------------------------------------------
-DEFINE load_bwndata_metadata(tableName) RETURNS doc {
-	raw_doc = LOAD 'hbase://$tableName' 
-		USING org.apache.pig.backend.hadoop.hbase.HBaseStorage('m:mproto', '-loadKey true -caching 1000')
-		AS (rowkey: chararray, mproto: bytearray);
-	
-	$doc = FOREACH raw_doc 
-                GENERATE rowkey, pl.edu.icm.coansys.commons.pig.udf.DocumentProtobufBytesToTuple(mproto) AS document;
-};
-
-
 -------------------------------------------------------
 -- clean and drop nulls
 -------------------------------------------------------
