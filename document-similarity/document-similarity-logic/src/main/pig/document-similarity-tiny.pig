@@ -89,8 +89,9 @@ tfidf_all_topn_projected = FOREACH tfidf_all_topn GENERATE top::docId AS docId, 
 STORE tfidf_all_topn_projected INTO '$outputPath$TFIDF_TOPN_ALL_SUBDIR';
 
 tfidf_all_topn_projected_loaded = LOAD '$outputPath$TFIDF_TOPN_ALL_SUBDIR' AS (docId: chararray, term: chararray, tfidf: double);
+duplicate = foreach tfidf_all_topn_projected_loaded generate *;
 -- calculate and store document similarity for all documents
-document_similarity = calculate_pairwise_similarity(tfidf_all_topn_projected_loaded, docId, term, tfidf, '::');
+document_similarity = calculate_pairwise_similarity(tfidf_all_topn_projected_loaded,duplicate, docId, term, tfidf, '::',$parallel);
 DESCRIBE document_similarity;
 STORE document_similarity INTO '$outputPath$SIMILARITY_ALL_DOCS_SUBDIR';
 
