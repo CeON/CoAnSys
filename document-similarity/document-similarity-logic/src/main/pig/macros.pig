@@ -23,7 +23,7 @@ DEFINE load_from_hdfs(inputPath, sampling) RETURNS C {
 	A = LOAD '$inputPath' USING pl.edu.icm.coansys.commons.pig.udf.RichSequenceFileLoader('org.apache.hadoop.io.Text', 
 		 'org.apache.hadoop.io.BytesWritable') as (key:chararray, value:bytearray);	
 	B = SAMPLE A $sampling;	
-	$C = FOREACH B GENERATE $0, FLATTEN(pl.edu.icm.coansys.similarity.pig.udf.DocumentProtobufToTupleMap($1)); 
+	$C = FOREACH B GENERATE $0 as docId, pl.edu.icm.coansys.similarity.pig.udf.DocumentProtobufToTupleMap($1) as document ;
 };
 -------------------------------------------------------
 -- clean and drop nulls
@@ -148,7 +148,7 @@ DEFINE get_topn_per_group(in_relation, group_field, order_field, order_direction
 	$out_relation = FOREACH grouped {
            sorted = ORDER $in_relation BY $order_field $order_direction;
            top = LIMIT sorted $topn;
-           GENERATE flatten(top);
+           GENERATE flatten(top);-- as (docId1:chararray,docId2:chararray,similarity:double);
 	};
 };
 

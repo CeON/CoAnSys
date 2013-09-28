@@ -30,15 +30,16 @@
 %default similarityTopnDocumentPerDocument 20
 %default tfidfMinValue 0.4
 
-%default sample 0.5
+%default sample 0.1
 %default parallel 10
 %default tmpCompressionCodec gz
 %default mapredChildJavaOpts -Xmx8000m
 
-%default inputPath 'full/hbase-dump/mproto-m*'
-%default outputPath 'document-similarity-output'
+%default inputPath '/srv/polindex/seqfile/polindex-yadda-20130729-text.sf'
+%default time '2013-09-28--10-37'
+%default outputPath 'document-similarity-output/$time/'
 %default jars '*.jar'
-%default commonJarsPath '../oozie/similarity/workflow/lib/$jars'
+%default commonJarsPath '../../../../document-similarity-workflow/target/oozie-wf/lib/$jars'
 
 REGISTER '$commonJarsPath'
 
@@ -58,11 +59,10 @@ IMPORT 'macros.pig';
 -- business code section
 -------------------------------------------------------
 doc = load_from_hdfs('$inputPath', $sample);
-doc = foreach doc generate $0 as docId, $1 as documents;
-doc_raw = foreach doc generate $0, document.title as title, document.abstract as abstract;
+doc = foreach doc generate $0 as docId, $1 as document;
+doc_raw = foreach doc generate docId, document.title as title, document.abstract as abstract;
 -- speparated line as FLATTEN w a hidden CROSS
-doc_keyword_raw = foreach doc generate $1 AS docId, FLATTEN(document.keywords) AS keywords;
-/*DESCRIBE doc_keyword_raw;*/
+doc_keyword_raw = foreach doc generate docId, FLATTEN(document.keywords) AS keywords;
 -- stem, clean, filter out
 doc_keyword_all = stem_words(doc_keyword_raw, docId, keywords);
 doc_title_all = stem_words(doc_raw, docId, title);
@@ -74,13 +74,10 @@ doc_all = UNION doc_keyword_all, doc_title_all, doc_abstract_all;
 -- store document and terms
 --STORE doc_title_all INTO '$outputPath$DOC_TERM_TITLE';
 --STORE doc_keyword_all INTO '$outputPath$DOC_TERM_KEYWORDS';
-DESCRIBE doc_all;
 STORE doc_all INTO '$outputPath$DOC_TERM_ALL';
-
 -- calculate tf-idf for each group of terms
 tfidf_all = calculate_tfidf(doc_all, docId, term, $tfidfMinValue);
 -- store tfidf values into separate direcotires
-DESCRIBE tfidf_all;
 STORE tfidf_all INTO '$outputPath$TFIDF_NON_WEIGHTED_SUBDIR';
 
 -- calculate and store topn terms per document in all results
@@ -91,10 +88,10 @@ STORE tfidf_all_topn_projected INTO '$outputPath$TFIDF_TOPN_ALL_SUBDIR';
 tfidf_all_topn_projected_loaded = LOAD '$outputPath$TFIDF_TOPN_ALL_SUBDIR' AS (docId: chararray, term: chararray, tfidf: double);
 duplicate = foreach tfidf_all_topn_projected_loaded generate *;
 -- calculate and store document similarity for all documents
-document_similarity = calculate_pairwise_similarity(tfidf_all_topn_projected_loaded,duplicate, docId, term, tfidf, '::',$parallel);
-DESCRIBE document_similarity;
+document_similarity = calculate_pairwise_similarity(tfidf_all_topn_projected_loaded,duplicate , docId, term, tfidf, '::',$parallel);
 STORE document_similarity INTO '$outputPath$SIMILARITY_ALL_DOCS_SUBDIR';
 
 -- calculate and store topn similar documents for each document
 document_similarity_topn = get_topn_per_group(document_similarity, docId1, similarity, 'desc', $similarityTopnDocumentPerDocument);
 STORE document_similarity_topn INTO '$outputPath$SIMILARITY_TOPN_DOCS_SUBDIR';
+
