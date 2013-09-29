@@ -20,7 +20,8 @@
 -- default section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
-%DEFAULT commonJarsPath 'lib/*.jar'
+$DEFAULT jars '*.jar'
+%DEFAULT commonJarsPath 'lib/$jars'
 
 %DEFAULT dc_m_hdfs_neighs /tmp/docNeigh
 %DEFAULT dc_m_hdfs_docClassifMapping /tmp/dataForDocClassif
@@ -60,6 +61,8 @@ IMPORT 'FV_$dc_m_pigScript_featureVector.pig';
 %DEFAULT job_priority normal
 %DEFAULT pig_cachedbag_mem_usage 0.1
 %DEFAULT pig_skewedjoin_reduce_memusage 0.3
+%DEFAULT dc_m_mapredChildJavaOpts -Xmx2000m
+set mapred.child.java.opts $dc_m_mapredChildJavaOpts
 set default_parallel $parallel_param
 set pig.tmpfilecompression $pig_tmpfilecompression_param
 set pig.tmpfilecompression.codec $pig_tmpfilecompression_codec_param
