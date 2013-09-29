@@ -1,16 +1,15 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <!-- (C) 2010-2012 ICM UW. All rights reserved. -->        
-    <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
-		<groupId>pl.edu.icm.coansys</groupId>
         <artifactId>document-classification</artifactId>
+		<groupId>pl.edu.icm.coansys</groupId>
         <version>1.4-SNAPSHOT</version>
     </parent>
     
-    <artifactId>dc-classification-workflow</artifactId>
+    <modelVersion>4.0.0</modelVersion>
+    
+    <artifactId>document-classification-model-building-workflow</artifactId>
     <packaging>oozie</packaging>
-    <name>Document Classification Tool: Classification Workflow</name>
-    <url>http://maven.apache.org</url>
+    <name>Document Classification Tool: Model Building Workflow</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -32,7 +31,7 @@
     <dependencies>
         <dependency>
             <groupId>pl.edu.icm.coansys</groupId>
-            <artifactId>dc-logic</artifactId>
+            <artifactId>document-classification-logic</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

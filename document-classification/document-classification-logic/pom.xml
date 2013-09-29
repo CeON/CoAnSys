@@ -7,7 +7,7 @@
         <version>1.4-SNAPSHOT</version>
     </parent>
     
-    <artifactId>dc-logic</artifactId>
+    <artifactId>document-classification-logic</artifactId>
     <packaging>jar</packaging>
     <name>Document Classification Tool: Logic</name>
     <url>http://maven.apache.org</url>
