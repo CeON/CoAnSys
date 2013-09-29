@@ -36,8 +36,8 @@ DEFINE documentMetaExtractor pl.edu.icm.coansys.classification.documents.pig.ext
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 REGISTER /usr/lib/hbase/lib/zookeeper.jar
-REGISTER /usr/lib/hbase/hbase-0.94.6-cdh4.3.0-security.jar 
-REGISTER /usr/lib/hbase/lib/guava-11.0.2.jar
+REGISTER /usr/lib/hbase/hbase-*-cdh*-security.jar 
+REGISTER /usr/lib/hbase/lib/guava-*.jar
 
 REGISTER '$commonJarsPath'
 -- -----------------------------------------------------
