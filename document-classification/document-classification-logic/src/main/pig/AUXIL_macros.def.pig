@@ -27,7 +27,7 @@ DEFINE getProtosFromHbase(tableName,auxil) RETURNS idProtoTab {
 };
 
 DEFINE getBWBWFromHDFS(localization,method) RETURNS val {
-	$val = LOAD '$localization' USING $method('org.apache.hadoop.io.BytesWritable', 'org.apache.hadoop.io.BytesWritable') as (key:chararray, value:bytearray);
+	$val = LOAD '$localization' USING $method('org.apache.hadoop.io.Text', 'org.apache.hadoop.io.BytesWritable') as (key:chararray, value:bytearray);
 };
 
 DEFINE getLocal(localization,auxil) RETURNS docsimOutput {
