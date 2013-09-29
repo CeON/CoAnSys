@@ -36,6 +36,7 @@ import org.slf4j.LoggerFactory;
 import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
 import pl.edu.icm.coansys.models.DocumentProtos.ClassifCode;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
+import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
 
 /**
  *
@@ -66,7 +67,7 @@ public class EXTRACT_KEY_CATEG extends EvalFunc<Tuple> {
 
             DataByteArray dba = (DataByteArray) obj;
 
-            DocumentMetadata dm = DocumentMetadata.parseFrom(dba.get());
+            DocumentMetadata dm = DocumentWrapper.parseFrom(dba.get()).getDocumentMetadata();
 
             String key = dm.getKey();
             DataBag db = new DefaultDataBag();
