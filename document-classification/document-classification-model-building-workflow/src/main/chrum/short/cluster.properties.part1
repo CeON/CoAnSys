@@ -40,7 +40,7 @@ dc_m_hdfs_modelEvaluation=${results}/modelEval
 @dc_m_int_folds@ 5
 dc_m_parallel=40
 dc_fold_parallel=8
-dc_m_sample=1.0
+dc_m_double_sample=0.2
 dc_m_mapredChildJavaOpts=-Xmx4000m
 
 dc_m_pigScript_featureVector=tfidf
