@@ -19,7 +19,7 @@
 <!-- ========================== OOZIE-GENERAL ======================== -->
 <!-- ================================================================= -->
 # BEG:REPLACE @OOZIE-START@
-<workflow-app name='dc-train-model' xmlns="uri:oozie:workflow:0.2">
+<workflow-app name='${project}*${subproject}' xmlns="uri:oozie:workflow:0.2">
 	<start to='docs2neigh_01'/>
 # END:REPLACE
 
@@ -89,10 +89,6 @@ dc_fold_parallel=${dc_fold_parallel}
 				<property>
 					<name>mapred.job.queue.name</name>
 					<value>${queueName}</value>
-				</property>
-				<property>
-					<name>hbase.zookeeper.quorum</name>
-					<value>${hbaseZookeeperQuorum}</value>
 				</property>
 				<!-- This is required for new api usage -->
 				<property>
