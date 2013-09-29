@@ -44,6 +44,7 @@ import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
 import pl.edu.icm.coansys.commons.java.Pair;
 import pl.edu.icm.coansys.models.DocumentProtos.ClassifCode;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
+import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
 import pl.edu.icm.coansys.models.DocumentProtos.KeywordsList;
 import pl.edu.icm.coansys.models.DocumentProtos.TextWithLanguage;
 
@@ -108,7 +109,7 @@ public class EXTRACT_MAP_WHEN_CATEG_LIM extends EvalFunc<Map> {
         try {
             DataByteArray protoMetadata = (DataByteArray) input.get(0);
             int lim = (Integer) input.get(1);
-            DocumentMetadata metadata = DocumentMetadata.parseFrom(protoMetadata.get());
+            DocumentMetadata metadata = DocumentWrapper.parseFrom(protoMetadata.get()).getDocumentMetadata();
 
             if (language != null) {
                 return generateConcreteLanguageMap(metadata, lim);
@@ -146,8 +147,8 @@ public class EXTRACT_MAP_WHEN_CATEG_LIM extends EvalFunc<Map> {
 
         if (kwCc.getY().size() > lim) {
             Map<String, Object> map = new HashMap<String, Object>();
-            map.put("key", dm.getKey());
-            map.put("title", docTitle);
+            map.put("key", dm.getKey().trim());
+            map.put("title", docTitle.trim());
             map.put("keywords", kwCc.getX());
             map.put("abstract", docAbstract);
             map.put("categories", kwCc.getY());
@@ -157,18 +158,22 @@ public class EXTRACT_MAP_WHEN_CATEG_LIM extends EvalFunc<Map> {
     }
 
     private String removeAllNonAlphaNumeric(String str) {
-        return str.replaceAll("[^a-zA-Z0-9_\\- ]", "");
+    	String result = str.replaceAll("[^a-zA-Z0-9_\\- ]", ""); 
+    	result = result.trim();
+        return result;
     }
 
     private String removeAllKeyPunctations(String str) {
         String result = str.replaceAll(",", "");
         result = result.replaceAll("#", "");
+        result = result.trim();
         return result;
     }
 
     private String translateNonAlphaNumeric(String str) {
         String result = str.replaceAll(",", " COMMA ");
         result = result.replaceAll("#", " HASH ");
+        result = result.trim();
         return result;
     }
 
@@ -179,6 +184,12 @@ public class EXTRACT_MAP_WHEN_CATEG_LIM extends EvalFunc<Map> {
         for (KeywordsList kwl : dm.getKeywordsList()) {
             if (language.equalsIgnoreCase(kwl.getLanguage())) {
                 for (String str : kwl.getKeywordsList()) {
+                	
+                    if (isClassifCode(str)) {
+                    	ctgs.add(str);
+                        continue;
+                    }
+                    
                     if (action == Action.TRANSLATE) {
                         str = translateNonAlphaNumeric(str);
                     } else if (action == Action.REMOVE_KEYCHARACTERS) {
@@ -186,12 +197,8 @@ public class EXTRACT_MAP_WHEN_CATEG_LIM extends EvalFunc<Map> {
                     } else {
                         str = removeAllNonAlphaNumeric(str);
                     }
-
-                    if (!isClassifCode(str)) {
-                        kws.add(str);
-                    } else {
-                        ctgs.add(str);
-                    }
+                    
+                    kws.add(str);
                 }
             }
         }
