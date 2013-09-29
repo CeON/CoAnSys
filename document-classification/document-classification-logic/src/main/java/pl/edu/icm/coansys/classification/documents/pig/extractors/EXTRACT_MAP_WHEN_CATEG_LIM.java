@@ -109,7 +109,7 @@ public class EXTRACT_MAP_WHEN_CATEG_LIM extends EvalFunc<Map> {
         try {
             DataByteArray protoMetadata = (DataByteArray) input.get(0);
             int lim = (Integer) input.get(1);
-            DocumentMetadata metadata = DocumentWrapper.parseFrom(protoMetadata.get()).getDocumentMetadata();
+            DocumentMetadata metadata = DocumentMetadata.parseFrom(protoMetadata.get());
 
             if (language != null) {
                 return generateConcreteLanguageMap(metadata, lim);
