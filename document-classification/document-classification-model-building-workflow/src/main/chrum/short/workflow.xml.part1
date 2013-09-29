@@ -148,6 +148,7 @@ RETURNS:
 -->
 			<script>1_MODEL_CREATE_03_split.pig</script>
 			
+			<param>dc_m_speculative=${dc_m_speculative}</param>
 			<param>dc_m_hdfs_src=@src@</param>
 			<param>dc_m_int_concreteInvestigatedFold=@fold@</param>
 			<param>parallel_param=${dc_fold_parallel}</param>
@@ -163,6 +164,7 @@ RETURNS:
 -->
 			<script>1_MODEL_CREATE_04_enrich.pig</script>
 
+			<param>dc_m_speculative=${dc_m_speculative}</param>
 			<param>dc_m_hdfs_neighs=${dc_m_hdfs_neighs}_@lev@_@fold@</param>
 			<param>dc_m_hdfs_docClassifMapping=${dc_m_hdfs_docClassifMapping}_@lev@_@fold@</param>
 			<param>dc_m_hdfs_dataEnriched=${dc_m_hdfs_dataEnriched}_@lev@_@fold@</param>
@@ -180,6 +182,7 @@ RETURNS:
 -->
 			<script>1_MODEL_CREATE_05_build_model.pig</script>
 
+			<param>dc_m_speculative=${dc_m_speculative}</param>
 			<param>dc_m_hdfs_neighs=${dc_m_hdfs_neighs}_Tr_@fold@</param>
 			<param>dc_m_hdfs_docClassifMapping=${dc_m_hdfs_docClassifMapping}_Tr_@fold@</param>
 			<param>dc_m_hdfs_dataEnriched=${dc_m_hdfs_dataEnriched}_Tr_@fold@</param>
@@ -195,7 +198,8 @@ RETURNS:
 @fold@ seq(0,${dc_m_int_folds},1)
 -->
 			<script>1_MODEL_CREATE_06_test_model.pig</script>
-			
+
+			<param>dc_m_speculative=${dc_m_speculative}</param>			
 			<param>dc_m_hdfs_neighs=${dc_m_hdfs_neighs}_Te_@fold@</param>
 			<param>dc_m_hdfs_docClassifMapping=${dc_m_hdfs_docClassifMapping}_Te_@fold@</param>
 			<param>dc_m_hdfs_dataEnriched=${dc_m_hdfs_dataEnriched}_Te_@fold@</param>

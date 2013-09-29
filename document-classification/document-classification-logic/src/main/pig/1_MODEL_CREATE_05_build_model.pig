@@ -64,7 +64,9 @@ set pig.tmpfilecompression.codec $pig_tmpfilecompression_codec_param
 set job.priority $job_priority
 set pig.cachedbag.memusage $pig_cachedbag_mem_usage
 set pig.skewedjoin.reduce.memusage $pig_skewedjoin_reduce_memusage
-set mapred.map.tasks.speculative.execution false
+%DEFAULT dc_m_speculative true
+set mapred.map.tasks.speculative.execution $dc_m_speculative
+set mapred.reduce.tasks.speculative.execution $dc_m_speculative
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- code section
