@@ -93,7 +93,7 @@ DEFINE howmanyrecords(tab) returns ret{
 -- set section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
-%DEFAULT dc_m_double_sample 0.001
+%DEFAULT dc_m_double_sample 0.01
 %DEFAULT parallel_param 16
 %DEFAULT pig_tmpfilecompression_param true
 %DEFAULT pig_tmpfilecompression_codec_param gz

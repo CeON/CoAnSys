@@ -26,13 +26,14 @@ dc_c_fv=${dc_c_fv}
 dc_c_sim=${dc_c_sim}
 dc_c_neigh=${dc_c_neigh}
 dc_c_double_sample=${dc_c_double_sample}
+dc_m_mapredChildJavaOpts=${dc_m_mapredChildJavaOpts}
 dc_c_OutputDir=${dc_c_OutputDir}
 dc_c_tmp=${dc_c_tmp}
 # END:REPLACE
 
 
 
-<workflow-app name='dc-classification' xmlns="uri:oozie:workflow:0.2">
+<workflow-app name='${project}*${subproject}' xmlns="uri:oozie:workflow:0.2">
 	<start to='start-mail'/>
 
     <action name='start-mail'>
@@ -58,8 +59,9 @@ The wf ${wf:id()} started.
                     <value>${queueName}</value>
                 </property> 
             </configuration>
-            <script>${pigScriptsDir}/2_MODEL_USE_classify.pig</script>
-			<param>parallel_param=190</param>
+            <script>2_MODEL_USE_classify.pig</script>
+            <param>dc_m_mapredChildJavaOpts=${dc_m_mapredChildJavaOpts}</param>
+			<param>parallel_param=${dc_m_parallel}</param>
 			<param>dc_c_in_ModelDir=${dc_c_in_ModelDir}</param>
 			<param>dc_c_in_inputDocsData=${dc_c_in_inputDocsData}</param>
 			<param>dc_c_fv=${dc_c_fv}</param>
@@ -69,10 +71,6 @@ The wf ${wf:id()} started.
 			<param>dc_c_double_sample=${dc_c_double_sample}</param>
 			<param>dc_c_OutputDir=${dc_c_OutputDir}</param>
 			<param>commonJarsPath=${commonJarsPath}</param>
-            <file>${pigScriptsDir}/AUXIL_docsim.macros.def.pig#AUXIL_docsim.macros.def.pig</file>
-            <file>${pigScriptsDir}/AUXIL_macros.def.pig#AUXIL_macros.def.pig</file>
-            <file>${pigScriptsDir}/SIM_${dc_c_sim}.pig#SIM_${dc_c_sim}.pig</file>
-            <file>${pigScriptsDir}/FV_${dc_c_fv}.pig#FV_${dc_c_fv}.pig</file>
         </pig>       
         <ok to='end'/>
         <error to='kill'/>
