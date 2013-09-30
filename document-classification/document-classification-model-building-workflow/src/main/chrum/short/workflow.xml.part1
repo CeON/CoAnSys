@@ -31,7 +31,7 @@
             <body>
 The wf ${wf:id()} successfully completed.
 
-oozie.wf.application.path=${dc_exec_path}
+oozie.wf.application.path=${oozie.wf.application.path}
 results=${results}
 
 dc_m_in_inputDocsData=${dc_m_in_inputDocsData}
@@ -47,6 +47,7 @@ dc_m_pigScript_modelBuilderClass=${dc_m_pigScript_modelBuilderClass}
 dc_m_pigScript_modelUse=${dc_m_pigScript_modelUse}
 dc_m_parallel=${dc_m_parallel}
 dc_fold_parallel=${dc_fold_parallel}
+dc_scheduler=${dc_scheduler}
 			</body>
         </email>
         <ok to="end2"/>
@@ -71,7 +72,7 @@ dc_fold_parallel=${dc_fold_parallel}
 # END:REPLACE
 
 # BEG:REPLACE @LEV@
-@lev@ Te Tr
+@lev@ TE TR
 # END:REPLACE
 
 # BEG:REPLACE @SRC@
@@ -140,8 +141,8 @@ dc_fold_parallel=${dc_fold_parallel}
 @src@ ${dc_m_hdfs_neighs}
 @fold@ seq(0,${dc_m_int_folds},1)
 RETURNS: 
-@src@_Te_@fold@
-@src@_Tr_@fold@
+@src@TE@fold@
+@src@TR@fold@
 -->
 			<script>1_MODEL_CREATE_03_split_NS.pig</script>
 			
@@ -156,11 +157,11 @@ RETURNS:
 <!-- ================================================================= -->
 # BEG:REPLACE @WF-3B@
 <!--
-@src@ ${dc_m_hdfs_docClassifMapping}
+@src@ ${dc_m_hdfs_neighs}
 @fold@ seq(0,${dc_m_int_folds},1)
 RETURNS: 
-@src@_Te_@fold@
-@src@_Tr_@fold@
+@src@TE@fold@
+@src@TR@fold@
 -->
 			<script>1_MODEL_CREATE_03_split_CA.pig</script>
 			
@@ -176,14 +177,14 @@ RETURNS:
 # BEG:REPLACE @WF-4@
 <!--
 @fold@ seq(0,${dc_m_int_folds},1)
-@lev@ Te Tr
+@lev@ TE TR
 -->
 			<script>1_MODEL_CREATE_04_enrich.pig</script>
 
 			<param>dc_m_speculative=${dc_m_speculative}</param>
-			<param>dc_m_hdfs_neighs=${dc_m_hdfs_neighs}_@lev@_@fold@</param>
-			<param>dc_m_hdfs_docClassifMapping=${dc_m_hdfs_docClassifMapping}_@lev@_@fold@</param>
-			<param>dc_m_hdfs_dataEnriched=${dc_m_hdfs_dataEnriched}_@lev@_@fold@</param>
+			<param>dc_m_hdfs_neighs=${dc_m_hdfs_neighs}@lev@@fold@</param>
+			<param>dc_m_hdfs_docClassifMapping=${dc_m_hdfs_docClassifMapping}@lev@@fold@</param>
+			<param>dc_m_hdfs_dataEnriched=${dc_m_hdfs_dataEnriched}@lev@@fold@</param>
 			<param>dc_m_pigScript_featureVector=${dc_m_pigScript_featureVector}</param>
 			<param>dc_m_pigScript_similarityMetric=${dc_m_pigScript_similarityMetric}</param>
 			<param>parallel_param=${dc_fold_parallel}</param>
@@ -199,10 +200,10 @@ RETURNS:
 			<script>1_MODEL_CREATE_05_build_model.pig</script>
 
 			<param>dc_m_speculative=${dc_m_speculative}</param>
-			<param>dc_m_hdfs_neighs=${dc_m_hdfs_neighs}_Tr_@fold@</param>
-			<param>dc_m_hdfs_docClassifMapping=${dc_m_hdfs_docClassifMapping}_Tr_@fold@</param>
-			<param>dc_m_hdfs_dataEnriched=${dc_m_hdfs_dataEnriched}_Tr_@fold@</param>
-			<param>dc_m_hdfs_model=${dc_m_hdfs_model}_@fold@</param>
+			<param>dc_m_hdfs_neighs=${dc_m_hdfs_neighs}TR@fold@</param>
+			<param>dc_m_hdfs_docClassifMapping=${dc_m_hdfs_docClassifMapping}TR@fold@</param>
+			<param>dc_m_hdfs_dataEnriched=${dc_m_hdfs_dataEnriched}TR@fold@</param>
+			<param>dc_m_hdfs_model=${dc_m_hdfs_model}@fold@</param>
 			<param>parallel_param=${dc_fold_parallel}</param>
 			@AUXIL@
 # END:REPLACE
@@ -216,11 +217,11 @@ RETURNS:
 			<script>1_MODEL_CREATE_06_test_model.pig</script>
 
 			<param>dc_m_speculative=${dc_m_speculative}</param>			
-			<param>dc_m_hdfs_neighs=${dc_m_hdfs_neighs}_Te_@fold@</param>
-			<param>dc_m_hdfs_docClassifMapping=${dc_m_hdfs_docClassifMapping}_Te_@fold@</param>
-			<param>dc_m_hdfs_dataEnriched=${dc_m_hdfs_dataEnriched}_Te_@fold@</param>
-			<param>dc_m_hdfs_model=${dc_m_hdfs_model}_@fold@</param>
-			<param>dc_m_hdfs_modelEvaluation=${dc_m_hdfs_modelEvaluation}_@fold@</param>
+			<param>dc_m_hdfs_neighs=${dc_m_hdfs_neighs}TE@fold@</param>
+			<param>dc_m_hdfs_docClassifMapping=${dc_m_hdfs_docClassifMapping}TE@fold@</param>
+			<param>dc_m_hdfs_dataEnriched=${dc_m_hdfs_dataEnriched}TE@fold@</param>
+			<param>dc_m_hdfs_model=${dc_m_hdfs_model}@fold@</param>
+			<param>dc_m_hdfs_modelEvaluation=${dc_m_hdfs_modelEvaluation}@fold@</param>
 			<param>dc_m_pigScript_modelUse=${dc_m_pigScript_modelUse}</param>
 			<param>parallel_param=${dc_fold_parallel}</param>
 			<param>parallel_param=${dc_fold_parallel}</param>
