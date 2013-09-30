@@ -111,18 +111,17 @@
 		<error to="kill"/>
 	</action>
 	<fork name="split_03">
-		<path start="split_03_forked_node_0"/>
-		<path start="split_03_forked_node_1"/>
-		<path start="split_03_forked_node_2"/>
-		<path start="split_03_forked_node_3"/>
-		<path start="split_03_forked_node_4"/>
-		<path start="split_03_forked_node_5"/>
-		<path start="split_03_forked_node_6"/>
-		<path start="split_03_forked_node_7"/>
-		<path start="split_03_forked_node_8"/>
-		<path start="split_03_forked_node_9"/>
+		<path start="split_03A"/>
+		<path start="split_03B"/>
 	</fork>
-	<action name="split_03_forked_node_0">
+	<fork name="split_03A">
+		<path start="split_03A_forked_node_0"/>
+		<path start="split_03A_forked_node_1"/>
+		<path start="split_03A_forked_node_2"/>
+		<path start="split_03A_forked_node_3"/>
+		<path start="split_03A_forked_node_4"/>
+	</fork>
+	<action name="split_03A_forked_node_0">
 		<pig>
 			<job-tracker>
 				${jobTracker}
@@ -157,8 +156,11 @@
 				</property>
 			</configuration>
 			<script>
-				1_MODEL_CREATE_03_split.pig
+				1_MODEL_CREATE_03_split_NS.pig
 			</script>
+			<param>
+				dc_m_speculative=${dc_m_speculative}
+			</param>
 			<param>
 				dc_m_hdfs_src=${dc_m_hdfs_neighs}
 			</param>
@@ -172,10 +174,10 @@
 				commonJarsPath=${commonJarsPath}
 			</param>
 		</pig>
-		<ok to="split_03_join"/>
+		<ok to="split_03A_join"/>
 		<error to="kill"/>
 	</action>
-	<action name="split_03_forked_node_1">
+	<action name="split_03A_forked_node_1">
 		<pig>
 			<job-tracker>
 				${jobTracker}
@@ -210,8 +212,243 @@
 				</property>
 			</configuration>
 			<script>
-				1_MODEL_CREATE_03_split.pig
+				1_MODEL_CREATE_03_split_NS.pig
 			</script>
+			<param>
+				dc_m_speculative=${dc_m_speculative}
+			</param>
+			<param>
+				dc_m_hdfs_src=${dc_m_hdfs_neighs}
+			</param>
+			<param>
+				dc_m_int_concreteInvestigatedFold=1
+			</param>
+			<param>
+				parallel_param=${dc_fold_parallel}
+			</param>
+			<param>
+				commonJarsPath=${commonJarsPath}
+			</param>
+		</pig>
+		<ok to="split_03A_join"/>
+		<error to="kill"/>
+	</action>
+	<action name="split_03A_forked_node_2">
+		<pig>
+			<job-tracker>
+				${jobTracker}
+			</job-tracker>
+			<name-node>
+				${nameNode}
+			</name-node>
+			<configuration>
+				<property>
+					<name>
+						mapred.job.queue.name
+					</name>
+					<value>
+						${queueName}
+					</value>
+				</property>
+				<property>
+					<name>
+						mapred.mapper.new-api
+					</name>
+					<value>
+						true
+					</value>
+				</property>
+				<property>
+					<name>
+						mapred.reducer.new-api
+					</name>
+					<value>
+						true
+					</value>
+				</property>
+			</configuration>
+			<script>
+				1_MODEL_CREATE_03_split_NS.pig
+			</script>
+			<param>
+				dc_m_speculative=${dc_m_speculative}
+			</param>
+			<param>
+				dc_m_hdfs_src=${dc_m_hdfs_neighs}
+			</param>
+			<param>
+				dc_m_int_concreteInvestigatedFold=2
+			</param>
+			<param>
+				parallel_param=${dc_fold_parallel}
+			</param>
+			<param>
+				commonJarsPath=${commonJarsPath}
+			</param>
+		</pig>
+		<ok to="split_03A_join"/>
+		<error to="kill"/>
+	</action>
+	<action name="split_03A_forked_node_3">
+		<pig>
+			<job-tracker>
+				${jobTracker}
+			</job-tracker>
+			<name-node>
+				${nameNode}
+			</name-node>
+			<configuration>
+				<property>
+					<name>
+						mapred.job.queue.name
+					</name>
+					<value>
+						${queueName}
+					</value>
+				</property>
+				<property>
+					<name>
+						mapred.mapper.new-api
+					</name>
+					<value>
+						true
+					</value>
+				</property>
+				<property>
+					<name>
+						mapred.reducer.new-api
+					</name>
+					<value>
+						true
+					</value>
+				</property>
+			</configuration>
+			<script>
+				1_MODEL_CREATE_03_split_NS.pig
+			</script>
+			<param>
+				dc_m_speculative=${dc_m_speculative}
+			</param>
+			<param>
+				dc_m_hdfs_src=${dc_m_hdfs_neighs}
+			</param>
+			<param>
+				dc_m_int_concreteInvestigatedFold=3
+			</param>
+			<param>
+				parallel_param=${dc_fold_parallel}
+			</param>
+			<param>
+				commonJarsPath=${commonJarsPath}
+			</param>
+		</pig>
+		<ok to="split_03A_join"/>
+		<error to="kill"/>
+	</action>
+	<action name="split_03A_forked_node_4">
+		<pig>
+			<job-tracker>
+				${jobTracker}
+			</job-tracker>
+			<name-node>
+				${nameNode}
+			</name-node>
+			<configuration>
+				<property>
+					<name>
+						mapred.job.queue.name
+					</name>
+					<value>
+						${queueName}
+					</value>
+				</property>
+				<property>
+					<name>
+						mapred.mapper.new-api
+					</name>
+					<value>
+						true
+					</value>
+				</property>
+				<property>
+					<name>
+						mapred.reducer.new-api
+					</name>
+					<value>
+						true
+					</value>
+				</property>
+			</configuration>
+			<script>
+				1_MODEL_CREATE_03_split_NS.pig
+			</script>
+			<param>
+				dc_m_speculative=${dc_m_speculative}
+			</param>
+			<param>
+				dc_m_hdfs_src=${dc_m_hdfs_neighs}
+			</param>
+			<param>
+				dc_m_int_concreteInvestigatedFold=4
+			</param>
+			<param>
+				parallel_param=${dc_fold_parallel}
+			</param>
+			<param>
+				commonJarsPath=${commonJarsPath}
+			</param>
+		</pig>
+		<ok to="split_03A_join"/>
+		<error to="kill"/>
+	</action>
+	<join name="split_03A_join" to="merge_03"/>
+	<fork name="split_03B">
+		<path start="split_03B_forked_node_0"/>
+		<path start="split_03B_forked_node_1"/>
+		<path start="split_03B_forked_node_2"/>
+		<path start="split_03B_forked_node_3"/>
+		<path start="split_03B_forked_node_4"/>
+	</fork>
+	<action name="split_03B_forked_node_0">
+		<pig>
+			<job-tracker>
+				${jobTracker}
+			</job-tracker>
+			<name-node>
+				${nameNode}
+			</name-node>
+			<configuration>
+				<property>
+					<name>
+						mapred.job.queue.name
+					</name>
+					<value>
+						${queueName}
+					</value>
+				</property>
+				<property>
+					<name>
+						mapred.mapper.new-api
+					</name>
+					<value>
+						true
+					</value>
+				</property>
+				<property>
+					<name>
+						mapred.reducer.new-api
+					</name>
+					<value>
+						true
+					</value>
+				</property>
+			</configuration>
+			<script>
+				1_MODEL_CREATE_03_split_CA.pig
+			</script>
+			<param>
+				dc_m_speculative=${dc_m_speculative}
+			</param>
 			<param>
 				dc_m_hdfs_src=${dc_m_hdfs_docClassifMapping}
 			</param>
@@ -225,10 +462,10 @@
 				commonJarsPath=${commonJarsPath}
 			</param>
 		</pig>
-		<ok to="split_03_join"/>
+		<ok to="split_03B_join"/>
 		<error to="kill"/>
 	</action>
-	<action name="split_03_forked_node_2">
+	<action name="split_03B_forked_node_1">
 		<pig>
 			<job-tracker>
 				${jobTracker}
@@ -263,61 +500,11 @@
 				</property>
 			</configuration>
 			<script>
-				1_MODEL_CREATE_03_split.pig
+				1_MODEL_CREATE_03_split_CA.pig
 			</script>
 			<param>
-				dc_m_hdfs_src=${dc_m_hdfs_neighs}
+				dc_m_speculative=${dc_m_speculative}
 			</param>
-			<param>
-				dc_m_int_concreteInvestigatedFold=1
-			</param>
-			<param>
-				parallel_param=${dc_fold_parallel}
-			</param>
-			<param>
-				commonJarsPath=${commonJarsPath}
-			</param>
-		</pig>
-		<ok to="split_03_join"/>
-		<error to="kill"/>
-	</action>
-	<action name="split_03_forked_node_3">
-		<pig>
-			<job-tracker>
-				${jobTracker}
-			</job-tracker>
-			<name-node>
-				${nameNode}
-			</name-node>
-			<configuration>
-				<property>
-					<name>
-						mapred.job.queue.name
-					</name>
-					<value>
-						${queueName}
-					</value>
-				</property>
-				<property>
-					<name>
-						mapred.mapper.new-api
-					</name>
-					<value>
-						true
-					</value>
-				</property>
-				<property>
-					<name>
-						mapred.reducer.new-api
-					</name>
-					<value>
-						true
-					</value>
-				</property>
-			</configuration>
-			<script>
-				1_MODEL_CREATE_03_split.pig
-			</script>
 			<param>
 				dc_m_hdfs_src=${dc_m_hdfs_docClassifMapping}
 			</param>
@@ -331,10 +518,10 @@
 				commonJarsPath=${commonJarsPath}
 			</param>
 		</pig>
-		<ok to="split_03_join"/>
+		<ok to="split_03B_join"/>
 		<error to="kill"/>
 	</action>
-	<action name="split_03_forked_node_4">
+	<action name="split_03B_forked_node_2">
 		<pig>
 			<job-tracker>
 				${jobTracker}
@@ -369,61 +556,11 @@
 				</property>
 			</configuration>
 			<script>
-				1_MODEL_CREATE_03_split.pig
+				1_MODEL_CREATE_03_split_CA.pig
 			</script>
 			<param>
-				dc_m_hdfs_src=${dc_m_hdfs_neighs}
+				dc_m_speculative=${dc_m_speculative}
 			</param>
-			<param>
-				dc_m_int_concreteInvestigatedFold=2
-			</param>
-			<param>
-				parallel_param=${dc_fold_parallel}
-			</param>
-			<param>
-				commonJarsPath=${commonJarsPath}
-			</param>
-		</pig>
-		<ok to="split_03_join"/>
-		<error to="kill"/>
-	</action>
-	<action name="split_03_forked_node_5">
-		<pig>
-			<job-tracker>
-				${jobTracker}
-			</job-tracker>
-			<name-node>
-				${nameNode}
-			</name-node>
-			<configuration>
-				<property>
-					<name>
-						mapred.job.queue.name
-					</name>
-					<value>
-						${queueName}
-					</value>
-				</property>
-				<property>
-					<name>
-						mapred.mapper.new-api
-					</name>
-					<value>
-						true
-					</value>
-				</property>
-				<property>
-					<name>
-						mapred.reducer.new-api
-					</name>
-					<value>
-						true
-					</value>
-				</property>
-			</configuration>
-			<script>
-				1_MODEL_CREATE_03_split.pig
-			</script>
 			<param>
 				dc_m_hdfs_src=${dc_m_hdfs_docClassifMapping}
 			</param>
@@ -437,10 +574,10 @@
 				commonJarsPath=${commonJarsPath}
 			</param>
 		</pig>
-		<ok to="split_03_join"/>
+		<ok to="split_03B_join"/>
 		<error to="kill"/>
 	</action>
-	<action name="split_03_forked_node_6">
+	<action name="split_03B_forked_node_3">
 		<pig>
 			<job-tracker>
 				${jobTracker}
@@ -475,61 +612,11 @@
 				</property>
 			</configuration>
 			<script>
-				1_MODEL_CREATE_03_split.pig
+				1_MODEL_CREATE_03_split_CA.pig
 			</script>
 			<param>
-				dc_m_hdfs_src=${dc_m_hdfs_neighs}
+				dc_m_speculative=${dc_m_speculative}
 			</param>
-			<param>
-				dc_m_int_concreteInvestigatedFold=3
-			</param>
-			<param>
-				parallel_param=${dc_fold_parallel}
-			</param>
-			<param>
-				commonJarsPath=${commonJarsPath}
-			</param>
-		</pig>
-		<ok to="split_03_join"/>
-		<error to="kill"/>
-	</action>
-	<action name="split_03_forked_node_7">
-		<pig>
-			<job-tracker>
-				${jobTracker}
-			</job-tracker>
-			<name-node>
-				${nameNode}
-			</name-node>
-			<configuration>
-				<property>
-					<name>
-						mapred.job.queue.name
-					</name>
-					<value>
-						${queueName}
-					</value>
-				</property>
-				<property>
-					<name>
-						mapred.mapper.new-api
-					</name>
-					<value>
-						true
-					</value>
-				</property>
-				<property>
-					<name>
-						mapred.reducer.new-api
-					</name>
-					<value>
-						true
-					</value>
-				</property>
-			</configuration>
-			<script>
-				1_MODEL_CREATE_03_split.pig
-			</script>
 			<param>
 				dc_m_hdfs_src=${dc_m_hdfs_docClassifMapping}
 			</param>
@@ -543,10 +630,10 @@
 				commonJarsPath=${commonJarsPath}
 			</param>
 		</pig>
-		<ok to="split_03_join"/>
+		<ok to="split_03B_join"/>
 		<error to="kill"/>
 	</action>
-	<action name="split_03_forked_node_8">
+	<action name="split_03B_forked_node_4">
 		<pig>
 			<job-tracker>
 				${jobTracker}
@@ -581,61 +668,11 @@
 				</property>
 			</configuration>
 			<script>
-				1_MODEL_CREATE_03_split.pig
+				1_MODEL_CREATE_03_split_CA.pig
 			</script>
 			<param>
-				dc_m_hdfs_src=${dc_m_hdfs_neighs}
+				dc_m_speculative=${dc_m_speculative}
 			</param>
-			<param>
-				dc_m_int_concreteInvestigatedFold=4
-			</param>
-			<param>
-				parallel_param=${dc_fold_parallel}
-			</param>
-			<param>
-				commonJarsPath=${commonJarsPath}
-			</param>
-		</pig>
-		<ok to="split_03_join"/>
-		<error to="kill"/>
-	</action>
-	<action name="split_03_forked_node_9">
-		<pig>
-			<job-tracker>
-				${jobTracker}
-			</job-tracker>
-			<name-node>
-				${nameNode}
-			</name-node>
-			<configuration>
-				<property>
-					<name>
-						mapred.job.queue.name
-					</name>
-					<value>
-						${queueName}
-					</value>
-				</property>
-				<property>
-					<name>
-						mapred.mapper.new-api
-					</name>
-					<value>
-						true
-					</value>
-				</property>
-				<property>
-					<name>
-						mapred.reducer.new-api
-					</name>
-					<value>
-						true
-					</value>
-				</property>
-			</configuration>
-			<script>
-				1_MODEL_CREATE_03_split.pig
-			</script>
 			<param>
 				dc_m_hdfs_src=${dc_m_hdfs_docClassifMapping}
 			</param>
@@ -649,10 +686,11 @@
 				commonJarsPath=${commonJarsPath}
 			</param>
 		</pig>
-		<ok to="split_03_join"/>
+		<ok to="split_03B_join"/>
 		<error to="kill"/>
 	</action>
-	<join name="split_03_join" to="enrich_04"/>
+	<join name="split_03B_join" to="merge_03"/>
+	<join name="merge_03" to="enrich_04"/>
 	<fork name="enrich_04">
 		<path start="enrich_04_forked_node_0"/>
 		<path start="enrich_04_forked_node_1"/>
@@ -702,6 +740,9 @@
 			<script>
 				1_MODEL_CREATE_04_enrich.pig
 			</script>
+			<param>
+				dc_m_speculative=${dc_m_speculative}
+			</param>
 			<param>
 				dc_m_hdfs_neighs=${dc_m_hdfs_neighs}_Te_0
 			</param>
@@ -765,6 +806,9 @@
 				1_MODEL_CREATE_04_enrich.pig
 			</script>
 			<param>
+				dc_m_speculative=${dc_m_speculative}
+			</param>
+			<param>
 				dc_m_hdfs_neighs=${dc_m_hdfs_neighs}_Tr_0
 			</param>
 			<param>
@@ -826,6 +870,9 @@
 			<script>
 				1_MODEL_CREATE_04_enrich.pig
 			</script>
+			<param>
+				dc_m_speculative=${dc_m_speculative}
+			</param>
 			<param>
 				dc_m_hdfs_neighs=${dc_m_hdfs_neighs}_Te_1
 			</param>
@@ -889,6 +936,9 @@
 				1_MODEL_CREATE_04_enrich.pig
 			</script>
 			<param>
+				dc_m_speculative=${dc_m_speculative}
+			</param>
+			<param>
 				dc_m_hdfs_neighs=${dc_m_hdfs_neighs}_Tr_1
 			</param>
 			<param>
@@ -950,6 +1000,9 @@
 			<script>
 				1_MODEL_CREATE_04_enrich.pig
 			</script>
+			<param>
+				dc_m_speculative=${dc_m_speculative}
+			</param>
 			<param>
 				dc_m_hdfs_neighs=${dc_m_hdfs_neighs}_Te_2
 			</param>
@@ -1013,6 +1066,9 @@
 				1_MODEL_CREATE_04_enrich.pig
 			</script>
 			<param>
+				dc_m_speculative=${dc_m_speculative}
+			</param>
+			<param>
 				dc_m_hdfs_neighs=${dc_m_hdfs_neighs}_Tr_2
 			</param>
 			<param>
@@ -1074,6 +1130,9 @@
 			<script>
 				1_MODEL_CREATE_04_enrich.pig
 			</script>
+			<param>
+				dc_m_speculative=${dc_m_speculative}
+			</param>
 			<param>
 				dc_m_hdfs_neighs=${dc_m_hdfs_neighs}_Te_3
 			</param>
@@ -1137,6 +1196,9 @@
 				1_MODEL_CREATE_04_enrich.pig
 			</script>
 			<param>
+				dc_m_speculative=${dc_m_speculative}
+			</param>
+			<param>
 				dc_m_hdfs_neighs=${dc_m_hdfs_neighs}_Tr_3
 			</param>
 			<param>
@@ -1199,6 +1261,9 @@
 				1_MODEL_CREATE_04_enrich.pig
 			</script>
 			<param>
+				dc_m_speculative=${dc_m_speculative}
+			</param>
+			<param>
 				dc_m_hdfs_neighs=${dc_m_hdfs_neighs}_Te_4
 			</param>
 			<param>
@@ -1260,6 +1325,9 @@
 			<script>
 				1_MODEL_CREATE_04_enrich.pig
 			</script>
+			<param>
+				dc_m_speculative=${dc_m_speculative}
+			</param>
 			<param>
 				dc_m_hdfs_neighs=${dc_m_hdfs_neighs}_Tr_4
 			</param>
@@ -1331,6 +1399,9 @@
 				1_MODEL_CREATE_05_build_model.pig
 			</script>
 			<param>
+				dc_m_speculative=${dc_m_speculative}
+			</param>
+			<param>
 				dc_m_hdfs_neighs=${dc_m_hdfs_neighs}_Tr_0
 			</param>
 			<param>
@@ -1389,6 +1460,9 @@
 			<script>
 				1_MODEL_CREATE_05_build_model.pig
 			</script>
+			<param>
+				dc_m_speculative=${dc_m_speculative}
+			</param>
 			<param>
 				dc_m_hdfs_neighs=${dc_m_hdfs_neighs}_Tr_1
 			</param>
@@ -1449,6 +1523,9 @@
 				1_MODEL_CREATE_05_build_model.pig
 			</script>
 			<param>
+				dc_m_speculative=${dc_m_speculative}
+			</param>
+			<param>
 				dc_m_hdfs_neighs=${dc_m_hdfs_neighs}_Tr_2
 			</param>
 			<param>
@@ -1508,6 +1585,9 @@
 				1_MODEL_CREATE_05_build_model.pig
 			</script>
 			<param>
+				dc_m_speculative=${dc_m_speculative}
+			</param>
+			<param>
 				dc_m_hdfs_neighs=${dc_m_hdfs_neighs}_Tr_3
 			</param>
 			<param>
@@ -1566,6 +1646,9 @@
 			<script>
 				1_MODEL_CREATE_05_build_model.pig
 			</script>
+			<param>
+				dc_m_speculative=${dc_m_speculative}
+			</param>
 			<param>
 				dc_m_hdfs_neighs=${dc_m_hdfs_neighs}_Tr_4
 			</param>
@@ -1634,6 +1717,9 @@
 				1_MODEL_CREATE_06_test_model.pig
 			</script>
 			<param>
+				dc_m_speculative=${dc_m_speculative}
+			</param>
+			<param>
 				dc_m_hdfs_neighs=${dc_m_hdfs_neighs}_Te_0
 			</param>
 			<param>
@@ -1698,6 +1784,9 @@
 			<script>
 				1_MODEL_CREATE_06_test_model.pig
 			</script>
+			<param>
+				dc_m_speculative=${dc_m_speculative}
+			</param>
 			<param>
 				dc_m_hdfs_neighs=${dc_m_hdfs_neighs}_Te_1
 			</param>
@@ -1764,6 +1853,9 @@
 				1_MODEL_CREATE_06_test_model.pig
 			</script>
 			<param>
+				dc_m_speculative=${dc_m_speculative}
+			</param>
+			<param>
 				dc_m_hdfs_neighs=${dc_m_hdfs_neighs}_Te_2
 			</param>
 			<param>
@@ -1829,6 +1921,9 @@
 				1_MODEL_CREATE_06_test_model.pig
 			</script>
 			<param>
+				dc_m_speculative=${dc_m_speculative}
+			</param>
+			<param>
 				dc_m_hdfs_neighs=${dc_m_hdfs_neighs}_Te_3
 			</param>
 			<param>
@@ -1893,6 +1988,9 @@
 			<script>
 				1_MODEL_CREATE_06_test_model.pig
 			</script>
+			<param>
+				dc_m_speculative=${dc_m_speculative}
+			</param>
 			<param>
 				dc_m_hdfs_neighs=${dc_m_hdfs_neighs}_Te_4
 			</param>
