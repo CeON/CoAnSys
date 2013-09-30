@@ -12,6 +12,18 @@
             <name>POOL_NAME</name>
             <value>default</value>
         </property>
+        <property>
+            <name>INITIAL_MAX_DOCS_SET_SIZE</name>
+            <value>1000</value>
+        </property>
+        <property>
+            <name>MAX_DOCS_SET_SIZE_INC</name>
+            <value>200</value>
+        </property>
+        <property>
+            <name>MAX_SPLIT_LEVEL</name>
+            <value>10</value>
+        </property>
     </parameters>
     <start to="disambiguation-work" />
     <action name="disambiguation-work">
