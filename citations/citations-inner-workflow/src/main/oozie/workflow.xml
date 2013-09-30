@@ -33,6 +33,10 @@
             <value>default</value>
         </property>
         <property>
+            <name>poolName</name>
+            <value>default</value>
+        </property>
+        <property>
             <name>cit_inputSrcSeqFile</name>
             <description>
                 source file containing citations to be matched in (CitId as Text, $cit_inputSrcFormat) format
@@ -88,8 +92,15 @@
         <java>
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
+            <configuration>
+                <property>
+                    <name>mapred.fairscheduler.pool</name>
+                    <value>${poolName}</value>
+                </property>
+            </configuration>
             <main-class>pl.edu.icm.coansys.citations.jobs.ReferencesToEntitiesConverter</main-class>
             <arg>-Dmapred.max.split.size=500000</arg>
+            <arg>-Dmapred.fairscheduler.pool=${poolName}</arg>
             <arg>-fs</arg>
             <arg>${nameNode}</arg>
             <arg>-jt</arg>
@@ -106,7 +117,14 @@
         <java>
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
+            <configuration>
+                <property>
+                    <name>mapred.fairscheduler.pool</name>
+                    <value>${poolName}</value>
+                </property>
+            </configuration>
             <main-class>pl.edu.icm.coansys.citations.jobs.BasicMetadataToEntitiesConverter</main-class>
+            <arg>-Dmapred.fairscheduler.pool=${poolName}</arg>
             <arg>-fs</arg>
             <arg>${nameNode}</arg>
             <arg>-jt</arg>
@@ -123,7 +141,14 @@
         <java>
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
+            <configuration>
+                <property>
+                    <name>mapred.fairscheduler.pool</name>
+                    <value>${poolName}</value>
+                </property>
+            </configuration>
             <main-class>pl.edu.icm.coansys.citations.jobs.BasicMetadataToEntitiesConverter</main-class>
+            <arg>-Dmapred.fairscheduler.pool=${poolName}</arg>
             <arg>-fs</arg>
             <arg>${nameNode}</arg>
             <arg>-jt</arg>
@@ -140,7 +165,14 @@
         <java>
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
+            <configuration>
+                <property>
+                    <name>mapred.fairscheduler.pool</name>
+                    <value>${poolName}</value>
+                </property>
+            </configuration>
             <main-class>pl.edu.icm.coansys.citations.jobs.IndexBuilder</main-class>
+            <arg>-Dmapred.fairscheduler.pool=${poolName}</arg>
             <arg>-fs</arg>
             <arg>${nameNode}</arg>
             <arg>-jt</arg>
@@ -166,7 +198,14 @@
         <java>
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
+            <configuration>
+                <property>
+                    <name>mapred.fairscheduler.pool</name>
+                    <value>${poolName}</value>
+                </property>
+            </configuration>
             <main-class>pl.edu.icm.coansys.citations.jobs.NewHeuristicAdder</main-class>
+            <arg>-Dmapred.fairscheduler.pool=${poolName}</arg>
             <arg>-fs</arg>
             <arg>${nameNode}</arg>
             <arg>-jt</arg>
@@ -184,8 +223,15 @@
         <java>
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
+            <configuration>
+                <property>
+                    <name>mapred.fairscheduler.pool</name>
+                    <value>${poolName}</value>
+                </property>
+            </configuration>
             <main-class>pl.edu.icm.coansys.citations.jobs.IndexBuilder</main-class>
             <java-opts>${cit_genAuthorIdxJavaOpts}</java-opts>
+            <arg>-Dmapred.fairscheduler.pool=${poolName}</arg>
             <arg>-fs</arg>
             <arg>${nameNode}</arg>
             <arg>-jt</arg>
@@ -219,6 +265,10 @@
                 <property>
                     <name>mapred.job.queue.name</name>
                     <value>${queueName}</value>
+                </property>
+                <property>
+                    <name>mapred.fairscheduler.pool</name>
+                    <value>${poolName}</value>
                 </property>
                 <!-- MapReduce Mapper/Reducer parameters -->
                 <property>
@@ -297,6 +347,10 @@
                     <name>mapred.job.queue.name</name>
                     <value>${queueName}</value>
                 </property>
+                <property>
+                    <name>mapred.fairscheduler.pool</name>
+                    <value>${poolName}</value>
+                </property>
                 <!-- MapReduce Mapper/Reducer parameters -->
                 <property>
                     <name>mapreduce.map.class</name>
@@ -337,21 +391,15 @@
                 </property>
                 <property>
                     <name>mapred.max.split.size</name>
-                    <value>5000000</value>
+                    <value>50000000</value>
                 </property>
                 <property>
                     <name>index.key</name>
                     <value>key_index</value>
                 </property>
-                <property>
-                    <name>index.author</name>
-                    <value>author_index</value>
-                </property>
             </configuration>
             <file>${cit_workDir}/key_index/data#key-data</file>
             <file>${cit_workDir}/key_index/index#key-index</file>
-            <file>${cit_workDir}/author_index/data#author-data</file>
-            <file>${cit_workDir}/author_index/index#author-index</file>
         </map-reduce>
         <ok to="end"/>
         <error to="fail"/>
