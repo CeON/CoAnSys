@@ -76,12 +76,14 @@ set mapred.reduce.tasks.speculative.execution $dc_m_speculative
 -- code section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
-
-
-D = LOAD '$dc_m_hdfs_src' as (chararray,{(chararray)},int);
-split D into
-	Te if $2 == $dc_m_int_concreteInvestigatedFold,
-	Tr if $2 != $dc_m_int_concreteInvestigatedFold;
+D = LOAD '$dc_m_hdfs_src' as (key:chararray,data,part:int);
+/*
+split A into
+        Te if part == 1,
+        Tr if part != 1;
+*/
+Te = filter D by part == $dc_m_int_concreteInvestigatedFold;
+Tr = filter D by part != $dc_m_int_concreteInvestigatedFold;
 
 sh echo "===========$dc_m_hdfs_src$TR$dc_m_int_concreteInvestigatedFold================="
 sh echo "===========$dc_m_hdfs_src$TE$dc_m_int_concreteInvestigatedFold============="
