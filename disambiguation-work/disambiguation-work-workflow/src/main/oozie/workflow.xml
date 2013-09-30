@@ -126,6 +126,18 @@
 					<name>mapred.fairscheduler.pool</name>
 					<value>${POOL_NAME}</value>
 				</property>
+				<property>
+					<name>INITIAL_MAX_DOCS_SET_SIZE</name>
+					<value>${INITIAL_MAX_DOCS_SET_SIZE}</value>
+				</property>
+				<property>
+					<name>MAX_DOCS_SET_SIZE_INC</name>
+					<value>${MAX_DOCS_SET_SIZE_INC}</value>
+				</property>
+				<property>
+					<name>MAX_SPLIT_LEVEL</name>
+					<value>${MAX_SPLIT_LEVEL}</value>
+				</property>
 			</configuration>
 		</map-reduce>
 		<ok to="finalize" />
