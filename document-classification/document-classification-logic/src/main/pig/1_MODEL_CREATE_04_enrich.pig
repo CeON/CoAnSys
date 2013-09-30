@@ -20,7 +20,7 @@
 -- default section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
-$DEFAULT jars '*.jar'
+%DEFAULT jars '*.jar'
 %DEFAULT commonJarsPath 'lib/$jars'
 
 %DEFAULT dc_m_hdfs_neighs /tmp/docNeigh
