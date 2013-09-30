@@ -2130,7 +2130,7 @@
 		<ok to="testModel_06_join"/>
 		<error to="kill"/>
 	</action>
-	<join name="testModel_06_join" to="end"/>
+	<join name="testModel_06_join" to="end2"/>
 	<action name="end">
 		<email xmlns="uri:oozie:email-action:0.1">
 			<to>
@@ -2141,7 +2141,7 @@
 			</subject>
 			<body>
 The wf ${wf:id()} successfully completed.
-oozie.wf.application.path=${dc_exec_path}
+oozie.wf.application.path=${oozie.wf.application.path}
 results=${results}
 dc_m_in_inputDocsData=${dc_m_in_inputDocsData}
 dc_m_hdfs_neighs=${dc_m_hdfs_neighs}
@@ -2156,6 +2156,7 @@ dc_m_pigScript_modelBuilderClass=${dc_m_pigScript_modelBuilderClass}
 dc_m_pigScript_modelUse=${dc_m_pigScript_modelUse}
 dc_m_parallel=${dc_m_parallel}
 dc_fold_parallel=${dc_fold_parallel}
+dc_scheduler=${dc_scheduler}
 			</body>
 		</email>
 		<ok to="end2"/>

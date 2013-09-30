@@ -33,7 +33,6 @@ The wf ${wf:id()} successfully completed.
 
 oozie.wf.application.path=${oozie.wf.application.path}
 results=${results}
-
 dc_m_in_inputDocsData=${dc_m_in_inputDocsData}
 dc_m_hdfs_neighs=${dc_m_hdfs_neighs}
 dc_m_hdfs_docClassifMapping=${dc_m_hdfs_docClassifMapping}
@@ -292,7 +291,7 @@ RETURNS:
 
 # END:FORK_MERGE
 
-# BEG:FORK_MERGE name=testModel_06 node_after_join=end error=kill
+# BEG:FORK_MERGE name=testModel_06 node_after_join=end2 error=kill
 @FOLDS@
 		@PIG_START@
 			@CONFIG@
