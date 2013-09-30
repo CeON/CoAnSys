@@ -118,7 +118,7 @@ set mapred.reduce.tasks.speculative.execution $dc_m_speculative
 -- -----------------------------------------------------
 
 A = load '$dc_m_hdfs_neighs' as (key:chararray, data:map[], part:int); --key,map,part
-A0 = foreach A generate key, (bag{tuple(chararray)})data#'categories' as categs, part;
+A0 = foreach A generate key, data#'categories' as categs:{(categ:chararray)}, part;
 --dump A0;
 --C = foreach A generate key, pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_BAG_FROM_MAP(data,'categories') as categs, part; --key,categs,part
 /*A1 selection is needed only when reading data filed (map) is faulty*/

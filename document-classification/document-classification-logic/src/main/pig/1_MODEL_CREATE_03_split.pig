@@ -78,7 +78,7 @@ set mapred.reduce.tasks.speculative.execution $dc_m_speculative
 -- -----------------------------------------------------
 
 
-D = LOAD '$dc_m_hdfs_src';
+D = LOAD '$dc_m_hdfs_src' as (chararray,{(chararray)},int);
 split D into
 	Te if $2 == $dc_m_int_concreteInvestigatedFold,
 	Tr if $2 != $dc_m_int_concreteInvestigatedFold;

@@ -79,6 +79,6 @@ set mapred.reduce.tasks.speculative.execution $dc_m_speculative
 X20 = $dc_m_meth_extraction('$dc_m_in_inputDocsData','$dc_m_meth_extraction_inner'); 
 X200 = sample X20 $dc_m_double_sample;
 X21 = foreach X200 generate $0, flatten(documentMetaExtractor($1));
-X3 = foreach X21 generate $0 as key,keyTiKwAbsCatExtractor($1,1) as data, (int)(RANDOM()*$dc_m_int_folds) as part;
+X3 = foreach X21 generate (chararray)$0 as key,(map[])keyTiKwAbsCatExtractor($1,1) as data, (int)(RANDOM()*$dc_m_int_folds) as part;
 X4 = filter X3 by $1 is not null;
 STORE X4 into '$dc_m_hdfs_neighs'; --key,map,part
