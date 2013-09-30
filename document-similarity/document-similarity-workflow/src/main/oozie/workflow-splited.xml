@@ -20,7 +20,8 @@
             <param>parallel=${ds_parallel}</param>
             <param>tmpCompressionCodec=${ds_tmpCompressionCodec}</param>
             <param>sample=${ds_sample}</param>
-            <param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>            
+            <param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>
+            <param>ds_scheduler=${ds_scheduler}</param>
         </pig>       
         <ok to='pairwise-sim'/>
         <error to='kill'/>
@@ -42,7 +43,8 @@
             <param>parallel=${ds_parallel}</param>
             <param>tmpCompressionCodec=${ds_tmpCompressionCodec}</param>
             <param>sample=${ds_sample}</param>
-            <param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>            
+            <param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>
+            <param>ds_scheduler=${ds_scheduler}</param> 
         </pig>       
         <ok to='calculate_final_results'/>
         <error to='kill'/>
@@ -65,7 +67,8 @@
             <param>parallel=${ds_parallel}</param>
             <param>tmpCompressionCodec=${ds_tmpCompressionCodec}</param>
             <param>sample=${ds_sample}</param>
-            <param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>            
+            <param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>
+            <param>ds_scheduler=${ds_scheduler}</param> 
         </pig>       
         <ok to='end'/>
         <error to='kill'/>

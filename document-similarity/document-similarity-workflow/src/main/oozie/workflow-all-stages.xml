@@ -19,8 +19,9 @@
             <param>commonJarsPath=${commonJarsPath}</param>
             <param>parallel=${ds_parallel}</param>
             <param>tmpCompressionCodec=${ds_tmpCompressionCodec}</param>
+            <param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>
             <param>sample=${ds_sample}</param>
-            <param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>            
+            <param>ds_scheduler=${ds_scheduler}</param> 
         </pig>       
         <ok to='end'/>
         <error to='kill'/>

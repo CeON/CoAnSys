@@ -52,6 +52,8 @@ SET default_parallel $parallel
 SET mapred.child.java.opts $mapredChildJavaOpts
 SET pig.tmpfilecompression true
 SET pig.tmpfilecompression.codec $tmpCompressionCodec
+%DEFAULT ds_scheduler default
+SET mapred.fairscheduler.pool $ds_scheduler
 
 IMPORT 'macros.pig';
 

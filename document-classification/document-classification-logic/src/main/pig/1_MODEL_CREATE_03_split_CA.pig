@@ -53,7 +53,6 @@ IMPORT 'AUXIL_macros.def.pig';
 -- set section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
-/*
 %DEFAULT dc_m_double_sample 0.001
 %DEFAULT parallel_param 16
 %DEFAULT pig_tmpfilecompression_param true
@@ -72,8 +71,8 @@ set pig.skewedjoin.reduce.memusage $pig_skewedjoin_reduce_memusage
 %DEFAULT dc_m_speculative true
 set mapred.map.tasks.speculative.execution $dc_m_speculative
 set mapred.reduce.tasks.speculative.execution $dc_m_speculative
-*/
---set mapreduce.tasktracker.reserved.physicalmemory.mb 2048
+%DEFAULT dc_scheduler default
+SET mapred.fairscheduler.pool $dc_scheduler
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- code section

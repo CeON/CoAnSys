@@ -71,6 +71,8 @@ set pig.skewedjoin.reduce.memusage $pig_skewedjoin_reduce_memusage
 %DEFAULT dc_m_speculative true
 set mapred.map.tasks.speculative.execution $dc_m_speculative
 set mapred.reduce.tasks.speculative.execution $dc_m_speculative
+%DEFAULT dc_scheduler default
+SET mapred.fairscheduler.pool $dc_scheduler
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- code section

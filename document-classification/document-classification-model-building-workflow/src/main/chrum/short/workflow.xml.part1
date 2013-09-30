@@ -106,6 +106,7 @@ dc_fold_parallel=${dc_fold_parallel}
 <!-- ================================================================= -->
 # BEG:REPLACE @AUXIL@
 			<param>commonJarsPath=${commonJarsPath}</param>
+			<param>dc_scheduler=${dc_scheduler}</param>
 # END:REPLACE
 <!-- ================================================================= -->
 <!-- ============================= WF-1 ============================== -->
@@ -222,6 +223,8 @@ RETURNS:
 			<param>dc_m_hdfs_modelEvaluation=${dc_m_hdfs_modelEvaluation}_@fold@</param>
 			<param>dc_m_pigScript_modelUse=${dc_m_pigScript_modelUse}</param>
 			<param>parallel_param=${dc_fold_parallel}</param>
+			<param>parallel_param=${dc_fold_parallel}</param>
+
 			@AUXIL@
 # END:REPLACE
 <!-- ================================================================= -->
