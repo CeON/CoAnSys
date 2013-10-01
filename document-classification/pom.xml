@@ -14,17 +14,8 @@
     <name>Document Classification Tool</name>
 
     <modules>
-        <module>dc-logic</module>
-        <module>dc-model-building-workflow</module>
-        <module>dc-classification-workflow</module>
+        <module>document-classification-logic</module>
+        <module>document-classification-model-building-workflow</module>
+        <module>document-classification-labeling-workflow</module>
     </modules>
-
-    <dependencies>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>commons</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-    </dependencies>
-
 </project>

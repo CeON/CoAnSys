@@ -1,0 +1,109 @@
+<!--
+  This file is part of CoAnSys project.
+  Copyright (c) 2012-2013 ICM-UW
+  
+  CoAnSys is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Affero General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  CoAnSys is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU Affero General Public License for more details.
+  
+  You should have received a copy of the GNU Affero General Public License
+  along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
+-->
+
+# BEG:REPLACE @MAIL-DEF@
+wf.id=${wf:id()}
+oozie.wf.application.path=${dc_exec_path}
+results=${results}
+dc_c_in_inputDocsData=${dc_c_in_inputDocsData}
+dc_c_in_ModelDir=${dc_c_in_ModelDir}
+dc_c_fv=${dc_c_fv}
+dc_c_sim=${dc_c_sim}
+dc_c_neigh=${dc_c_neigh}
+dc_c_double_sample=${dc_c_double_sample}
+dc_m_mapredChildJavaOpts=${dc_m_mapredChildJavaOpts}
+dc_c_OutputDir=${dc_c_OutputDir}
+dc_c_tmp=${dc_c_tmp}
+# END:REPLACE
+
+
+
+<workflow-app name='${project}*${subproject}' xmlns="uri:oozie:workflow:0.2">
+	<start to='start-mail'/>
+
+    <action name='start-mail'>
+        <email xmlns="uri:oozie:email-action:0.1">
+            <to>piotr.dendek@gmail.com</to>
+            <subject>OOZIE started! for ${wf:id()} STARTED execution at ${timestamp()}</subject>
+            <body>
+The wf ${wf:id()} started.
+@MAIL-DEF@
+			</body>
+        </email>
+        <ok to="classify"/>
+        <error to="kill"/>
+    </action>
+
+    <action name='classify'>
+        <pig>
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <configuration>
+                <property>
+                    <name>mapred.job.queue.name</name>
+                    <value>${queueName}</value>
+                </property> 
+            </configuration>
+            <script>2_MODEL_USE_classify.pig</script>
+            <param>dc_m_mapredChildJavaOpts=${dc_m_mapredChildJavaOpts}</param>
+			<param>parallel_param=${dc_m_parallel}</param>
+			<param>dc_c_in_ModelDir=${dc_c_in_ModelDir}</param>
+			<param>dc_c_in_inputDocsData=${dc_c_in_inputDocsData}</param>
+			<param>dc_c_fv=${dc_c_fv}</param>
+			<param>dc_c_sim=${dc_c_sim}</param>
+			<param>dc_c_tmp=${dc_c_tmp}</param>
+			<param>dc_c_neigh=${dc_c_neigh}</param>
+			<param>dc_c_double_sample=${dc_c_double_sample}</param>
+			<param>dc_c_OutputDir=${dc_c_OutputDir}</param>
+			<param>commonJarsPath=${commonJarsPath}</param>
+        </pig>       
+        <ok to='end'/>
+        <error to='kill'/>
+    </action>
+
+    <action name="end">
+        <email xmlns="uri:oozie:email-action:0.1">
+            <to>piotr.dendek@gmail.com</to>
+            <subject>OOZIE completed! for ${wf:id()} SUCC-FINISHED execution at ${timestamp()}</subject>
+            <body>
+The wf ${wf:id()} successfully completed.
+@MAIL-DEF@
+			</body>
+        </email>
+        <ok to="end2"/>
+        <error to="kill"/>
+    </action>
+
+    <action name="kill">
+        <email xmlns="uri:oozie:email-action:0.1">
+            <to>piotr.dendek@gmail.com</to>
+            <subject>OOZIE completed! for ${wf:id()} FAILED execution at ${timestamp()}</subject>
+            <body>
+The wf ${wf:id()} failed: error message[${wf:errorMessage(wf:lastErrorNode())}]
+@MAIL-DEF@
+			</body>
+        </email>
+        <ok to="kill2"/>
+        <error to="kill2"/>
+    </action>
+
+    <kill name='kill2'>
+        <message>Workflow failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+    </kill>
+    <end name='end2'/>
+</workflow-app>

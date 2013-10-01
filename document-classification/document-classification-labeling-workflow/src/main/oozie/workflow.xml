@@ -1,0 +1,58 @@
+<workflow-app name='dc-classification' xmlns="uri:oozie:workflow:0.2">
+<!--
+ (C) 2010-2012 ICM UW. All rights reserved.
+-->
+    <start to='classify'/>
+    <action name='classify'>
+        <pig>
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <prepare>
+                <delete path="${dc_classification_OutputDir}"/>
+            </prepare>
+            <configuration>
+                <property>
+                    <name>mapred.job.queue.name</name>
+                    <value>${queueName}</value>
+                </property> 
+                <property>
+                    <name>hbase.zookeeper.quorum</name>
+                    <value>${hbaseZookeeperQuorum}</value>
+                </property>
+		<!-- This is required for new api usage -->
+                <property>
+                    <name>mapred.mapper.new-api</name>
+                    <value>true</value>
+                </property>
+                <property>
+                    <name>mapred.reducer.new-api</name>
+                    <value>true</value>
+                </property>
+                <!-- HBase Configuration -->
+                <property>
+                    <name>hbase.mapreduce.inputtable</name>
+                    <value>${dc_classification_InputHBase}</value>
+                </property>
+            </configuration>
+            <script>2_MODEL_USE_classify.pig</script>
+            <param>dc_m_mapredChildJavaOpts=${dc_m_mapredChildJavaOpts}</param>
+			<param>parallel_param=${dc_m_parallel}</param>
+			<param>dc_c_in_ModelDir=${dc_c_in_ModelDir}</param>
+			<param>dc_c_in_inputDocsData=${dc_c_in_inputDocsData}</param>
+			<param>dc_c_fv=${dc_c_fv}</param>
+			<param>dc_c_sim=${dc_c_sim}</param>
+			<param>dc_c_tmp=${dc_c_tmp}</param>
+			<param>dc_c_neigh=${dc_c_neigh}</param>
+			<param>dc_c_double_sample=${dc_c_double_sample}</param>
+			<param>dc_c_OutputDir=${dc_c_OutputDir}</param>
+			<param>commonJarsPath=${commonJarsPath}</param>
+        </pig>       
+        <ok to='end'/>
+        <error to='kill'/>
+    </action>
+
+    <kill name='kill'>
+        <message>Workflow failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+    </kill>
+    <end name='end'/>
+</workflow-app>
