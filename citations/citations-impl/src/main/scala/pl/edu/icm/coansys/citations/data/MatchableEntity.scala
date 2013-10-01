@@ -48,7 +48,8 @@ class MatchableEntity(val data: MatchableEntityData) {
   def normalisedAuthorTokens: Iterable[String] =
     misc.lettersNormaliseTokenise(author).distinct
 
-  def toReferenceString: String = List(author, title, source, pages, year).mkString("; ")
+  def toReferenceString: String =
+    rawText.getOrElse(List(author, title, source, pages, year).mkString("; "))
 
   def toDebugString: String =
     "id: " + id + "\n" +
