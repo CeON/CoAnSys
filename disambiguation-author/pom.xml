@@ -1,51 +1,18 @@
-
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
-    <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>pl.edu.icm.coansys</groupId>
         <artifactId>coansys</artifactId>
+        <groupId>pl.edu.icm.coansys</groupId>
         <version>1.4-SNAPSHOT</version>
     </parent>
+    <modelVersion>4.0.0</modelVersion>
     
-    <artifactId>disambiguation-author</artifactId>
-    <packaging>jar</packaging>
-    <name>Author Disambiguation Tool</name>
-    <url>http://maven.apache.org</url>
-
-	<build>
-		<resources>
-			<resource>
-				<directory>src/main/pig</directory>
-				<filtering>false</filtering>
-				<includes>
-					<include>**/*.pig</include>
-				</includes>
-				<targetPath>${project.build.directory}/classes/pig</targetPath>
-			</resource>
-		</resources>
-	</build>
-
-    <dependencies>
-        <dependency>
-            <groupId>pl.edu.icm.coansys</groupId>
-            <version>1.4-SNAPSHOT</version>
-            <artifactId>models</artifactId>
-        </dependency>          
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>commons</artifactId>
-            <version>${project.version}</version>
-        </dependency>        
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>disambiguation</artifactId>
-            <version>${project.version}</version>
-        </dependency>
- 		<dependency>
-            <groupId>org.antlr</groupId>
-            <artifactId>antlr-runtime</artifactId>
-            <version>3.2</version>
-        </dependency>
-    </dependencies>        
+	<artifactId>disambiguation-author</artifactId>
+	<name>Author Disambiguation Tool</name>
+    <description>The tool for Author Name Disambiguation (AND)</description>
+	<packaging>pom</packaging>
+    <modules>
+        <module>disambiguation-author-workflow</module>
+        <module>disambiguation-author-logic</module>
+    </modules>    
 </project>
