@@ -32,6 +32,10 @@
             <value>default</value>
         </property>
         <property>
+            <name>poolName</name>
+            <value>default</value>
+        </property>
+        <property>
             <name>workingDir</name>
         </property>
         <property>
@@ -61,7 +65,14 @@
         <java>
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
+            <configuration>
+                <property>
+                    <name>mapred.fairscheduler.pool</name>
+                    <value>${poolName}</value>
+                </property>
+            </configuration>
             <main-class>pl.edu.icm.coansys.citations.jobs.ReferenceExtractor</main-class>
+            <arg>-Dmapred.fairscheduler.pool=${poolName}</arg>
             <arg>-fs</arg><arg>${nameNode}</arg>
             <arg>-jt</arg><arg>${jobTracker}</arg>
             <arg>${inputSeqFile}</arg>
@@ -75,7 +86,14 @@
         <java>
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
+            <configuration>
+                <property>
+                    <name>mapred.fairscheduler.pool</name>
+                    <value>${poolName}</value>
+                </property>
+            </configuration>
             <main-class>pl.edu.icm.coansys.citations.jobs.DocumentExtractor</main-class>
+            <arg>-Dmapred.fairscheduler.pool=${poolName}</arg>
             <arg>-fs</arg><arg>${nameNode}</arg>
             <arg>-jt</arg><arg>${jobTracker}</arg>
             <arg>${inputSeqFile}</arg>
@@ -87,7 +105,7 @@
 
     <action name="inner">
         <sub-workflow>
-            <app-path>${wf:appPath()}/pl.edu.icm.coansys.citations-inner-workflow</app-path>
+            <app-path>${wf:appPath()}/pl.edu.icm.coansys-citations-inner-workflow</app-path>
             <configuration>
                 <property>
                     <name>cit_workDir</name>
@@ -104,6 +122,10 @@
                 <property>
                     <name>queueName</name>
                     <value>${queueName}</value>
+                </property>
+                <property>
+                    <name>poolName</name>
+                    <value>${poolName}</value>
                 </property>
                 <property>
                     <name>cit_inputSrcSeqFile</name>
@@ -135,7 +157,14 @@
         <java>
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
+            <configuration>
+                <property>
+                    <name>mapred.fairscheduler.pool</name>
+                    <value>${poolName}</value>
+                </property>
+            </configuration>
             <main-class>pl.edu.icm.coansys.citations.jobs.OutputToPICProtosConverter</main-class>
+            <arg>-Dmapred.fairscheduler.pool=${poolName}</arg>
             <arg>-fs</arg><arg>${nameNode}</arg>
             <arg>-jt</arg><arg>${jobTracker}</arg>
             <arg>${workingDir}/matching</arg>

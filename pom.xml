@@ -363,8 +363,8 @@
 
     <repositories>
         <repository>
-            <id>yadda</id>
-            <name>YADDA project repository</name>
+            <id>ceon</id>
+            <name>CeON project repository</name>
             <url>http://maven.icm.edu.pl/artifactory/repo</url>
         </repository>
 <!--        <repository>
@@ -385,8 +385,8 @@
     </repositories>
     <pluginRepositories>
         <pluginRepository>
-            <id>yadda</id>
-            <name>YADDA project repository</name>
+            <id>ceon</id>
+            <name>CeON project repository</name>
             <url>http://maven.icm.edu.pl/artifactory/repo</url>
         </pluginRepository>
     </pluginRepositories>
