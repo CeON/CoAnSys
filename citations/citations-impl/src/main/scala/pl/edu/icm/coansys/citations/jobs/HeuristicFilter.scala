@@ -23,6 +23,7 @@ import pl.edu.icm.coansys.citations.util.MyScoobiApp
 import pl.edu.icm.coansys.citations.data.MatchableEntity
 import pl.edu.icm.coansys.citations.util.misc._
 import java.util.Locale
+import scala.annotation.tailrec
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -30,6 +31,22 @@ import java.util.Locale
 object HeuristicFilter extends MyScoobiApp {
   def niceTokens(s: String) =
     tokensFromCermine(s.toLowerCase(Locale.ENGLISH)).filter(x => x.length > 2 || x.exists(_.isDigit)).take(50).toSet
+
+  def merge(xs: List[(Double, String)], ys: List[(Double, String)], limit: Int): List[(Double, String)] = {
+    import scala.util.control.TailCalls._
+    def helper: (List[(Double, String)], List[(Double, String)], Int, List[(Double, String)]) => TailRec[List[(Double, String)]] = {
+      case (_, _, 0, acc) => done(acc)
+      case (Nil, Nil, _, acc) => done(acc)
+      case (Nil, ys, limit, acc) => done(ys.take(limit).reverse ::: acc)
+      case (xs, Nil, limit, acc) => done(xs.take(limit).reverse ::: acc)
+      case (((sx, idx)::tx), ((sy, idy)::ty), limit, acc) =>
+        if (sx > sy)
+          tailcall(helper(tx, (sy, idy)::ty, limit - 1, (sx, idx)::acc))
+        else
+          tailcall(helper((sx, idx)::tx, ty, limit - 1, (sy, idy)::acc))
+    }
+    helper(xs, ys, limit, Nil).result.reverse
+  }
 
   def run() {
     val targetEntitiesUri = args(0)
@@ -45,11 +62,10 @@ object HeuristicFilter extends MyScoobiApp {
     }.map { case (src, dst) =>
       val srcTokens = niceTokens(src.toReferenceString)
       val dstTokens = niceTokens(dst.toReferenceString)
-      (src, (2.0 * (srcTokens & dstTokens).size / (srcTokens | dstTokens).size, dst.id))
-    }.groupByKey[MatchableEntity, (Double, String)].mapFlatten { case (src, iter) =>
-      for ((score, id) <- nGreatest(iter, 100))
-        yield (src, id)
-    }
+      (src, List((2.0 * (srcTokens & dstTokens).size / (srcTokens | dstTokens).size, dst.id)))
+    }.groupByKey[MatchableEntity, List[(Double, String)]]
+     .combine(Reduction[List[(Double, String)]]((xs, ys) => merge(xs, ys, 100)))
+     .mapFlatten{case (src,list) => Stream.continually(src) zip list.unzip._2}
 
     persist(filtered.toSequenceFile[MatchableEntity, String](outUri, overwrite = true))
   }
