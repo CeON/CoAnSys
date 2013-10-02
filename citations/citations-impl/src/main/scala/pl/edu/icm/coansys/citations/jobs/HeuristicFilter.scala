@@ -56,14 +56,22 @@ object HeuristicFilter extends MyScoobiApp {
     val heurs = fromSequenceFile[MatchableEntity, String](heursUri)
     val entities = fromSequenceFile[String, MatchableEntity](targetEntitiesUri)
 
-    val filtered = heurs.map(_.swap).joinLeft(entities).mapFlatten{
+    val preassessed = heurs.map(_.swap).joinLeft(entities).mapFlatten{
       case (_, (src, Some(dst))) => Some(src, dst)
       case _ => None
     }.map { case (src, dst) =>
       val srcTokens = niceTokens(src.toReferenceString)
       val dstTokens = niceTokens(dst.toReferenceString)
-      (src, List((2.0 * (srcTokens & dstTokens).size / (srcTokens | dstTokens).size, dst.id)))
-    }.groupByKey[MatchableEntity, List[(Double, String)]]
+      (src, 2.0 * (srcTokens & dstTokens).size / (srcTokens.size + dstTokens.size) + ':' + dst.id)
+    }
+    persist(preassessed.toSequenceFile[MatchableEntity, String](outUri + "_preassessed", overwrite = true))
+
+    val filtered =
+    fromSequenceFile[MatchableEntity, String](outUri + "_preassessed").map{case (src, value) =>
+      val Array(scoreStr, dst) = value.split(':')
+      (src, List((scoreStr.toDouble, dst)))
+    }
+     .groupByKey[MatchableEntity, List[(Double, String)]]
      .combine(Reduction[List[(Double, String)]]((xs, ys) => merge(xs, ys, 100)))
      .mapFlatten{case (src,list) => Stream.continually(src) zip list.unzip._2}
 
