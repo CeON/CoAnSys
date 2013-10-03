@@ -32,7 +32,7 @@
             <value>default</value>
         </property>
         <property>
-            <name>poolName</name>
+            <name>pool</name>
             <value>default</value>
         </property>
         <property>
@@ -67,12 +67,12 @@
             <name-node>${nameNode}</name-node>
             <configuration>
                 <property>
-                    <name>mapred.fairscheduler.pool</name>
-                    <value>${poolName}</value>
+                    <name>oozie.launcher.mapred.fairscheduler.pool</name>
+                    <value>${pool}</value>
                 </property>
             </configuration>
             <main-class>pl.edu.icm.coansys.citations.jobs.ReferenceExtractor</main-class>
-            <arg>-Dmapred.fairscheduler.pool=${poolName}</arg>
+            <arg>-Dmapred.fairscheduler.pool=${pool}</arg>
             <arg>-fs</arg><arg>${nameNode}</arg>
             <arg>-jt</arg><arg>${jobTracker}</arg>
             <arg>${inputSeqFile}</arg>
@@ -88,12 +88,12 @@
             <name-node>${nameNode}</name-node>
             <configuration>
                 <property>
-                    <name>mapred.fairscheduler.pool</name>
-                    <value>${poolName}</value>
+                    <name>oozie.launcher.mapred.fairscheduler.pool</name>
+                    <value>${pool}</value>
                 </property>
             </configuration>
             <main-class>pl.edu.icm.coansys.citations.jobs.DocumentExtractor</main-class>
-            <arg>-Dmapred.fairscheduler.pool=${poolName}</arg>
+            <arg>-Dmapred.fairscheduler.pool=${pool}</arg>
             <arg>-fs</arg><arg>${nameNode}</arg>
             <arg>-jt</arg><arg>${jobTracker}</arg>
             <arg>${inputSeqFile}</arg>
@@ -124,8 +124,8 @@
                     <value>${queueName}</value>
                 </property>
                 <property>
-                    <name>poolName</name>
-                    <value>${poolName}</value>
+                    <name>pool</name>
+                    <value>${pool}</value>
                 </property>
                 <property>
                     <name>cit_inputSrcSeqFile</name>
@@ -159,12 +159,12 @@
             <name-node>${nameNode}</name-node>
             <configuration>
                 <property>
-                    <name>mapred.fairscheduler.pool</name>
-                    <value>${poolName}</value>
+                    <name>oozie.launcher.mapred.fairscheduler.pool</name>
+                    <value>${pool}</value>
                 </property>
             </configuration>
             <main-class>pl.edu.icm.coansys.citations.jobs.OutputToPICProtosConverter</main-class>
-            <arg>-Dmapred.fairscheduler.pool=${poolName}</arg>
+            <arg>-Dmapred.fairscheduler.pool=${pool}</arg>
             <arg>-fs</arg><arg>${nameNode}</arg>
             <arg>-jt</arg><arg>${jobTracker}</arg>
             <arg>${workingDir}/matching</arg>

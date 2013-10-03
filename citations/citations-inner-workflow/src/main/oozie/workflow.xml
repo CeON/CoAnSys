@@ -33,7 +33,7 @@
             <value>default</value>
         </property>
         <property>
-            <name>poolName</name>
+            <name>pool</name>
             <value>default</value>
         </property>
         <property>
@@ -94,13 +94,13 @@
             <name-node>${nameNode}</name-node>
             <configuration>
                 <property>
-                    <name>mapred.fairscheduler.pool</name>
-                    <value>${poolName}</value>
+                    <name>oozie.launcher.mapred.fairscheduler.pool</name>
+                    <value>${pool}</value>
                 </property>
             </configuration>
             <main-class>pl.edu.icm.coansys.citations.jobs.ReferencesToEntitiesConverter</main-class>
             <arg>-Dmapred.max.split.size=500000</arg>
-            <arg>-Dmapred.fairscheduler.pool=${poolName}</arg>
+            <arg>-Dmapred.fairscheduler.pool=${pool}</arg>
             <arg>-fs</arg>
             <arg>${nameNode}</arg>
             <arg>-jt</arg>
@@ -119,12 +119,12 @@
             <name-node>${nameNode}</name-node>
             <configuration>
                 <property>
-                    <name>mapred.fairscheduler.pool</name>
-                    <value>${poolName}</value>
+                    <name>oozie.launcher.mapred.fairscheduler.pool</name>
+                    <value>${pool}</value>
                 </property>
             </configuration>
             <main-class>pl.edu.icm.coansys.citations.jobs.BasicMetadataToEntitiesConverter</main-class>
-            <arg>-Dmapred.fairscheduler.pool=${poolName}</arg>
+            <arg>-Dmapred.fairscheduler.pool=${pool}</arg>
             <arg>-fs</arg>
             <arg>${nameNode}</arg>
             <arg>-jt</arg>
@@ -143,12 +143,12 @@
             <name-node>${nameNode}</name-node>
             <configuration>
                 <property>
-                    <name>mapred.fairscheduler.pool</name>
-                    <value>${poolName}</value>
+                    <name>oozie.launcher.mapred.fairscheduler.pool</name>
+                    <value>${pool}</value>
                 </property>
             </configuration>
             <main-class>pl.edu.icm.coansys.citations.jobs.BasicMetadataToEntitiesConverter</main-class>
-            <arg>-Dmapred.fairscheduler.pool=${poolName}</arg>
+            <arg>-Dmapred.fairscheduler.pool=${pool}</arg>
             <arg>-fs</arg>
             <arg>${nameNode}</arg>
             <arg>-jt</arg>
@@ -167,12 +167,12 @@
             <name-node>${nameNode}</name-node>
             <configuration>
                 <property>
-                    <name>mapred.fairscheduler.pool</name>
-                    <value>${poolName}</value>
+                    <name>oozie.launcher.mapred.fairscheduler.pool</name>
+                    <value>${pool}</value>
                 </property>
             </configuration>
             <main-class>pl.edu.icm.coansys.citations.jobs.IndexBuilder</main-class>
-            <arg>-Dmapred.fairscheduler.pool=${poolName}</arg>
+            <arg>-Dmapred.fairscheduler.pool=${pool}</arg>
             <arg>-fs</arg>
             <arg>${nameNode}</arg>
             <arg>-jt</arg>
@@ -200,12 +200,12 @@
             <name-node>${nameNode}</name-node>
             <configuration>
                 <property>
-                    <name>mapred.fairscheduler.pool</name>
-                    <value>${poolName}</value>
+                    <name>oozie.launcher.mapred.fairscheduler.pool</name>
+                    <value>${pool}</value>
                 </property>
             </configuration>
             <main-class>pl.edu.icm.coansys.citations.jobs.NewHeuristicAdder</main-class>
-            <arg>-Dmapred.fairscheduler.pool=${poolName}</arg>
+            <arg>-Dmapred.fairscheduler.pool=${pool}</arg>
             <arg>-fs</arg>
             <arg>${nameNode}</arg>
             <arg>-jt</arg>
@@ -225,13 +225,13 @@
             <name-node>${nameNode}</name-node>
             <configuration>
                 <property>
-                    <name>mapred.fairscheduler.pool</name>
-                    <value>${poolName}</value>
+                    <name>oozie.launcher.mapred.fairscheduler.pool</name>
+                    <value>${pool}</value>
                 </property>
             </configuration>
             <main-class>pl.edu.icm.coansys.citations.jobs.IndexBuilder</main-class>
             <java-opts>${cit_genAuthorIdxJavaOpts}</java-opts>
-            <arg>-Dmapred.fairscheduler.pool=${poolName}</arg>
+            <arg>-Dmapred.fairscheduler.pool=${pool}</arg>
             <arg>-fs</arg>
             <arg>${nameNode}</arg>
             <arg>-jt</arg>
@@ -267,8 +267,12 @@
                     <value>${queueName}</value>
                 </property>
                 <property>
+                    <name>oozie.launcher.mapred.fairscheduler.pool</name>
+                    <value>${pool}</value>
+                </property>
+                <property>
                     <name>mapred.fairscheduler.pool</name>
-                    <value>${poolName}</value>
+                    <value>${pool}</value>
                 </property>
                 <!-- MapReduce Mapper/Reducer parameters -->
                 <property>
@@ -348,8 +352,12 @@
                     <value>${queueName}</value>
                 </property>
                 <property>
+                    <name>oozie.launcher.mapred.fairscheduler.pool</name>
+                    <value>${pool}</value>
+                </property>
+                <property>
                     <name>mapred.fairscheduler.pool</name>
-                    <value>${poolName}</value>
+                    <value>${pool}</value>
                 </property>
                 <!-- MapReduce Mapper/Reducer parameters -->
                 <property>
