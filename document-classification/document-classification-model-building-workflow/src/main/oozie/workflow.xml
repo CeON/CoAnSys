@@ -12,6 +12,14 @@
 			<configuration>
 				<property>
 					<name>
+						oozie.launcher.mapred.fairscheduler.pool
+					</name>
+					<value>
+						${pool}
+					</value>
+				</property>
+				<property>
+					<name>
 						mapred.job.queue.name
 					</name>
 					<value>
@@ -69,6 +77,14 @@
 				${nameNode}
 			</name-node>
 			<configuration>
+				<property>
+					<name>
+						oozie.launcher.mapred.fairscheduler.pool
+					</name>
+					<value>
+						${pool}
+					</value>
+				</property>
 				<property>
 					<name>
 						mapred.job.queue.name
@@ -138,6 +154,14 @@
 			<configuration>
 				<property>
 					<name>
+						oozie.launcher.mapred.fairscheduler.pool
+					</name>
+					<value>
+						${pool}
+					</value>
+				</property>
+				<property>
+					<name>
 						mapred.job.queue.name
 					</name>
 					<value>
@@ -195,6 +219,14 @@
 				${nameNode}
 			</name-node>
 			<configuration>
+				<property>
+					<name>
+						oozie.launcher.mapred.fairscheduler.pool
+					</name>
+					<value>
+						${pool}
+					</value>
+				</property>
 				<property>
 					<name>
 						mapred.job.queue.name
@@ -256,6 +288,14 @@
 			<configuration>
 				<property>
 					<name>
+						oozie.launcher.mapred.fairscheduler.pool
+					</name>
+					<value>
+						${pool}
+					</value>
+				</property>
+				<property>
+					<name>
 						mapred.job.queue.name
 					</name>
 					<value>
@@ -315,6 +355,14 @@
 			<configuration>
 				<property>
 					<name>
+						oozie.launcher.mapred.fairscheduler.pool
+					</name>
+					<value>
+						${pool}
+					</value>
+				</property>
+				<property>
+					<name>
 						mapred.job.queue.name
 					</name>
 					<value>
@@ -372,6 +420,14 @@
 				${nameNode}
 			</name-node>
 			<configuration>
+				<property>
+					<name>
+						oozie.launcher.mapred.fairscheduler.pool
+					</name>
+					<value>
+						${pool}
+					</value>
+				</property>
 				<property>
 					<name>
 						mapred.job.queue.name
@@ -441,6 +497,14 @@
 			<configuration>
 				<property>
 					<name>
+						oozie.launcher.mapred.fairscheduler.pool
+					</name>
+					<value>
+						${pool}
+					</value>
+				</property>
+				<property>
+					<name>
 						mapred.job.queue.name
 					</name>
 					<value>
@@ -498,6 +562,14 @@
 				${nameNode}
 			</name-node>
 			<configuration>
+				<property>
+					<name>
+						oozie.launcher.mapred.fairscheduler.pool
+					</name>
+					<value>
+						${pool}
+					</value>
+				</property>
 				<property>
 					<name>
 						mapred.job.queue.name
@@ -559,6 +631,14 @@
 			<configuration>
 				<property>
 					<name>
+						oozie.launcher.mapred.fairscheduler.pool
+					</name>
+					<value>
+						${pool}
+					</value>
+				</property>
+				<property>
+					<name>
 						mapred.job.queue.name
 					</name>
 					<value>
@@ -618,6 +698,14 @@
 			<configuration>
 				<property>
 					<name>
+						oozie.launcher.mapred.fairscheduler.pool
+					</name>
+					<value>
+						${pool}
+					</value>
+				</property>
+				<property>
+					<name>
 						mapred.job.queue.name
 					</name>
 					<value>
@@ -675,6 +763,14 @@
 				${nameNode}
 			</name-node>
 			<configuration>
+				<property>
+					<name>
+						oozie.launcher.mapred.fairscheduler.pool
+					</name>
+					<value>
+						${pool}
+					</value>
+				</property>
 				<property>
 					<name>
 						mapred.job.queue.name
@@ -750,6 +846,14 @@
 			<configuration>
 				<property>
 					<name>
+						oozie.launcher.mapred.fairscheduler.pool
+					</name>
+					<value>
+						${pool}
+					</value>
+				</property>
+				<property>
+					<name>
 						mapred.job.queue.name
 					</name>
 					<value>
@@ -816,6 +920,14 @@
 				${nameNode}
 			</name-node>
 			<configuration>
+				<property>
+					<name>
+						oozie.launcher.mapred.fairscheduler.pool
+					</name>
+					<value>
+						${pool}
+					</value>
+				</property>
 				<property>
 					<name>
 						mapred.job.queue.name
@@ -886,6 +998,14 @@
 			<configuration>
 				<property>
 					<name>
+						oozie.launcher.mapred.fairscheduler.pool
+					</name>
+					<value>
+						${pool}
+					</value>
+				</property>
+				<property>
+					<name>
 						mapred.job.queue.name
 					</name>
 					<value>
@@ -952,6 +1072,14 @@
 				${nameNode}
 			</name-node>
 			<configuration>
+				<property>
+					<name>
+						oozie.launcher.mapred.fairscheduler.pool
+					</name>
+					<value>
+						${pool}
+					</value>
+				</property>
 				<property>
 					<name>
 						mapred.job.queue.name
@@ -1022,6 +1150,14 @@
 			<configuration>
 				<property>
 					<name>
+						oozie.launcher.mapred.fairscheduler.pool
+					</name>
+					<value>
+						${pool}
+					</value>
+				</property>
+				<property>
+					<name>
 						mapred.job.queue.name
 					</name>
 					<value>
@@ -1088,6 +1224,14 @@
 				${nameNode}
 			</name-node>
 			<configuration>
+				<property>
+					<name>
+						oozie.launcher.mapred.fairscheduler.pool
+					</name>
+					<value>
+						${pool}
+					</value>
+				</property>
 				<property>
 					<name>
 						mapred.job.queue.name
@@ -1158,6 +1302,14 @@
 			<configuration>
 				<property>
 					<name>
+						oozie.launcher.mapred.fairscheduler.pool
+					</name>
+					<value>
+						${pool}
+					</value>
+				</property>
+				<property>
+					<name>
 						mapred.job.queue.name
 					</name>
 					<value>
@@ -1224,6 +1376,14 @@
 				${nameNode}
 			</name-node>
 			<configuration>
+				<property>
+					<name>
+						oozie.launcher.mapred.fairscheduler.pool
+					</name>
+					<value>
+						${pool}
+					</value>
+				</property>
 				<property>
 					<name>
 						mapred.job.queue.name
@@ -1294,6 +1454,14 @@
 			<configuration>
 				<property>
 					<name>
+						oozie.launcher.mapred.fairscheduler.pool
+					</name>
+					<value>
+						${pool}
+					</value>
+				</property>
+				<property>
+					<name>
 						mapred.job.queue.name
 					</name>
 					<value>
@@ -1360,6 +1528,14 @@
 				${nameNode}
 			</name-node>
 			<configuration>
+				<property>
+					<name>
+						oozie.launcher.mapred.fairscheduler.pool
+					</name>
+					<value>
+						${pool}
+					</value>
+				</property>
 				<property>
 					<name>
 						mapred.job.queue.name
@@ -1438,6 +1614,14 @@
 			<configuration>
 				<property>
 					<name>
+						oozie.launcher.mapred.fairscheduler.pool
+					</name>
+					<value>
+						${pool}
+					</value>
+				</property>
+				<property>
+					<name>
 						mapred.job.queue.name
 					</name>
 					<value>
@@ -1501,6 +1685,14 @@
 				${nameNode}
 			</name-node>
 			<configuration>
+				<property>
+					<name>
+						oozie.launcher.mapred.fairscheduler.pool
+					</name>
+					<value>
+						${pool}
+					</value>
+				</property>
 				<property>
 					<name>
 						mapred.job.queue.name
@@ -1568,6 +1760,14 @@
 			<configuration>
 				<property>
 					<name>
+						oozie.launcher.mapred.fairscheduler.pool
+					</name>
+					<value>
+						${pool}
+					</value>
+				</property>
+				<property>
+					<name>
 						mapred.job.queue.name
 					</name>
 					<value>
@@ -1633,6 +1833,14 @@
 			<configuration>
 				<property>
 					<name>
+						oozie.launcher.mapred.fairscheduler.pool
+					</name>
+					<value>
+						${pool}
+					</value>
+				</property>
+				<property>
+					<name>
 						mapred.job.queue.name
 					</name>
 					<value>
@@ -1696,6 +1904,14 @@
 				${nameNode}
 			</name-node>
 			<configuration>
+				<property>
+					<name>
+						oozie.launcher.mapred.fairscheduler.pool
+					</name>
+					<value>
+						${pool}
+					</value>
+				</property>
 				<property>
 					<name>
 						mapred.job.queue.name
@@ -1769,6 +1985,14 @@
 				${nameNode}
 			</name-node>
 			<configuration>
+				<property>
+					<name>
+						oozie.launcher.mapred.fairscheduler.pool
+					</name>
+					<value>
+						${pool}
+					</value>
+				</property>
 				<property>
 					<name>
 						mapred.job.queue.name
@@ -1845,6 +2069,14 @@
 			<configuration>
 				<property>
 					<name>
+						oozie.launcher.mapred.fairscheduler.pool
+					</name>
+					<value>
+						${pool}
+					</value>
+				</property>
+				<property>
+					<name>
 						mapred.job.queue.name
 					</name>
 					<value>
@@ -1917,6 +2149,14 @@
 				${nameNode}
 			</name-node>
 			<configuration>
+				<property>
+					<name>
+						oozie.launcher.mapred.fairscheduler.pool
+					</name>
+					<value>
+						${pool}
+					</value>
+				</property>
 				<property>
 					<name>
 						mapred.job.queue.name
@@ -1993,6 +2233,14 @@
 			<configuration>
 				<property>
 					<name>
+						oozie.launcher.mapred.fairscheduler.pool
+					</name>
+					<value>
+						${pool}
+					</value>
+				</property>
+				<property>
+					<name>
 						mapred.job.queue.name
 					</name>
 					<value>
@@ -2065,6 +2313,14 @@
 				${nameNode}
 			</name-node>
 			<configuration>
+				<property>
+					<name>
+						oozie.launcher.mapred.fairscheduler.pool
+					</name>
+					<value>
+						${pool}
+					</value>
+				</property>
 				<property>
 					<name>
 						mapred.job.queue.name
