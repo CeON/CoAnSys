@@ -38,6 +38,8 @@ import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import org.apache.hadoop.conf.Configuration;
+import org.springframework.beans.factory.annotation.Value;
 
 
 /**
@@ -56,18 +58,25 @@ public class DuplicateWorkDetectReduceService implements DiReduceService<Text, B
     @Autowired
     private DuplicateWorkService duplicateWorkService;
         
-    
+    private int initialMaxDocsSetSize;
+    private int maxDocsSetSizeInc;
+    private int maxSplitLevel;
     
     //******************** DiReduceService Implementation ********************
     
     @Override
     public void reduce(Text key, Iterable<BytesWritable> values, Reducer<Text, BytesWritable, Text, Text>.Context context) throws IOException, InterruptedException {
-        
+
         List<DocumentWrapper> documents = DocumentWrapperUtils.extractDocumentWrappers(key, values);
         
         long startTime = new Date().getTime();
+
+        Configuration conf = context.getConfiguration();
+        initialMaxDocsSetSize = conf.getInt("INITIAL_MAX_DOCS_SET_SIZE", initialMaxDocsSetSize);
+        maxDocsSetSizeInc = conf.getInt("MAX_DOCS_SET_SIZE_INC", maxDocsSetSizeInc);
+        maxSplitLevel = conf.getInt("MAX_SPLIT_LEVEL", maxSplitLevel);
         
-        process(key, context, documents, 0, 1000);
+        process(key, context, documents, 0, initialMaxDocsSetSize);
         
         log.info("time [msec]: " + (new Date().getTime()-startTime));
         
@@ -103,12 +112,12 @@ public class DuplicateWorkDetectReduceService implements DiReduceService<Text, B
             
             for (Map.Entry<Text, List<DocumentWrapper>> docs : documentPacks.entrySet()) {
                 if (docs.getValue().size()==documents.size()) { // docs were not splitted, the generated key is the same for all the titles, may happen if the documents have the same short title, e.g. news in brief
-                   maxNumOfDocs+=maxNumOfDocs; 
+                   maxNumOfDocs+=maxDocsSetSizeInc;
                 }
                 process(docs.getKey(), context, docs.getValue(), lev, maxNumOfDocs);
             }
             
-            
+
         } else {
             Map<Integer, Set<DocumentWrapper>> duplicateWorksMap = duplicateWorkService.findDuplicates(documents);
             saveDuplicatesToContext(duplicateWorksMap, key, context);
@@ -141,6 +150,18 @@ public class DuplicateWorkDetectReduceService implements DiReduceService<Text, B
             }
             list.add(doc);
         }
+
+        if (level > maxSplitLevel && splitDocuments.size() == 1) {
+            //split into 2 parts
+            Text firstKey = splitDocuments.keySet().iterator().next();
+            Text secondKey = new Text(firstKey.toString() + "-B");
+            List<DocumentWrapper> fullList = splitDocuments.get(firstKey);
+            int items = fullList.size();
+            List<DocumentWrapper> firstHalf = fullList.subList(0, items/2);
+            List<DocumentWrapper> secondHalf = fullList.subList(items/2, items);
+            splitDocuments.put(firstKey, firstHalf);
+            splitDocuments.put(secondKey, secondHalf);
+        }
         
         return splitDocuments;
     }
@@ -157,5 +178,20 @@ public class DuplicateWorkDetectReduceService implements DiReduceService<Text, B
             }
         }
         
+    }
+
+    @Value("1000")
+    public void setBeginPackSize(int beginPackSize) {
+        this.initialMaxDocsSetSize = beginPackSize;
+    }
+
+    @Value("200")
+    public void setPackSizeInc(int packSizeInc) {
+        this.maxDocsSetSizeInc = packSizeInc;
+    }
+
+    @Value("10")
+    public void setMaxSplitLevels(int maxSplitLevels) {
+        this.maxSplitLevel = maxSplitLevels;
     }
 }

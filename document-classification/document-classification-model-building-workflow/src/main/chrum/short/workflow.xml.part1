@@ -1,0 +1,305 @@
+<!--
+  This file is part of CoAnSys project.
+  Copyright (c) 2012-2013 ICM-UW
+  
+  CoAnSys is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Affero General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  CoAnSys is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU Affero General Public License for more details.
+  
+  You should have received a copy of the GNU Affero General Public License
+  along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
+-->
+<!-- ================================================================= -->
+<!-- ========================== OOZIE-GENERAL ======================== -->
+<!-- ================================================================= -->
+# BEG:REPLACE @OOZIE-START@
+<workflow-app name='${project}*${subproject}' xmlns="uri:oozie:workflow:0.2">
+	<start to='docs2neigh_01'/>
+# END:REPLACE
+
+# BEG:REPLACE @OOZIE-END@
+    <action name="end">
+        <email xmlns="uri:oozie:email-action:0.1">
+            <to>piotr.dendek@gmail.com</to>
+            <subject>OOZIE completed! for ${wf:id()}</subject>
+            <body>
+The wf ${wf:id()} successfully completed.
+
+oozie.wf.application.path=${oozie.wf.application.path}
+results=${results}
+dc_m_in_inputDocsData=${dc_m_in_inputDocsData}
+dc_m_hdfs_neighs=${dc_m_hdfs_neighs}
+dc_m_hdfs_docClassifMapping=${dc_m_hdfs_docClassifMapping}
+dc_m_hdfs_model=${dc_m_hdfs_model}
+dc_m_hdfs_dataEnriched=${dc_m_hdfs_dataEnriched}
+dc_m_hdfs_modelEvaluation=${dc_m_hdfs_modelEvaluation}
+dc_m_int_folds=${dc_m_int_folds}
+dc_m_pigScript_featureVector=${dc_m_pigScript_featureVector}
+dc_m_pigScript_similarityMetric=${dc_m_pigScript_similarityMetric}
+dc_m_pigScript_modelBuilderClass=${dc_m_pigScript_modelBuilderClass}
+dc_m_pigScript_modelUse=${dc_m_pigScript_modelUse}
+dc_m_parallel=${dc_m_parallel}
+dc_fold_parallel=${dc_fold_parallel}
+dc_scheduler=${dc_scheduler}
+			</body>
+        </email>
+        <ok to="end2"/>
+        <error to="kill"/>
+    </action>
+
+	<kill name="kill">
+		<message>Workflow failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+	</kill>
+	<end name="end2"/>
+</workflow-app>
+# END:REPLACE
+
+# BEG:REPLACE @PIG_START@
+		<pig>
+			<job-tracker>${jobTracker}</job-tracker>
+			<name-node>${nameNode}</name-node>
+# END:REPLACE
+
+# BEG:REPLACE @PIG_END@
+		</pig>
+# END:REPLACE
+
+# BEG:REPLACE @LEV@
+@lev@ TE TR
+# END:REPLACE
+
+# BEG:REPLACE @SRC@
+@src@ ${dc_m_hdfs_neighs} ${dc_m_hdfs_docClassifMapping}
+# END:REPLACE
+
+# BEG:REPLACE @FOLDS@
+@fold@ seq(0,${dc_m_int_folds},1)
+# END:REPLACE
+<!-- ================================================================= -->
+<!-- ============================= CONFIG ============================ -->
+<!-- ================================================================= -->
+# BEG:REPLACE @CONFIG@
+			<configuration>
+				<property>
+					<name>mapred.job.queue.name</name>
+					<value>${queueName}</value>
+				</property>
+				<!-- This is required for new api usage -->
+				<property>
+					<name>mapred.mapper.new-api</name>
+					<value>true</value>
+				</property>
+				<property>
+					<name>mapred.reducer.new-api</name>
+					<value>true</value>
+				</property>
+			</configuration>
+# END:REPLACE
+<!-- ================================================================= -->
+<!-- ============================= AUXIL ============================= -->
+<!-- ================================================================= -->
+# BEG:REPLACE @AUXIL@
+			<param>commonJarsPath=${commonJarsPath}</param>
+			<param>dc_scheduler=${dc_scheduler}</param>
+# END:REPLACE
+<!-- ================================================================= -->
+<!-- ============================= WF-1 ============================== -->
+<!-- ================================================================= -->
+# BEG:REPLACE @WF-1@
+
+			<script>1_MODEL_CREATE_01_docs2neig.pig</script>
+			
+			<param>dc_m_in_inputDocsData=${dc_m_in_inputDocsData}</param>
+			<param>dc_m_hdfs_neighs=${dc_m_hdfs_neighs}</param>
+			<param>dc_m_double_sample=${dc_m_double_sample}</param>
+			<param>parallel_param=${dc_m_parallel}</param>
+			@AUXIL@
+# END:REPLACE
+<!-- ================================================================= -->
+<!-- ============================= WF-2 ============================== -->
+<!-- ================================================================= -->
+# BEG:REPLACE @WF-2@
+			<script>1_MODEL_CREATE_02_assignAndCreateDocClassif.pig</script>
+			
+			<param>dc_m_hdfs_neighs=${dc_m_hdfs_neighs}</param>
+			<param>dc_m_hdfs_docClassifMapping=${dc_m_hdfs_docClassifMapping}</param>
+			<param>parallel_param=${dc_m_parallel}</param>
+			@AUXIL@
+# END:REPLACE
+<!-- ================================================================= -->
+<!-- ============================= WF-3A : NS ======================== -->
+<!-- ================================================================= -->
+# BEG:REPLACE @WF-3A@
+<!--
+@src@ ${dc_m_hdfs_neighs}
+@fold@ seq(0,${dc_m_int_folds},1)
+RETURNS: 
+@src@TE@fold@
+@src@TR@fold@
+-->
+			<script>1_MODEL_CREATE_03_split_NS.pig</script>
+			
+			<param>dc_m_speculative=${dc_m_speculative}</param>
+			<param>dc_m_hdfs_src=@src@</param>
+			<param>dc_m_int_concreteInvestigatedFold=@fold@</param>
+			<param>parallel_param=${dc_fold_parallel}</param>
+			@AUXIL@
+# END:REPLACE
+<!-- ================================================================= -->
+<!-- ============================= WF-3B : CA ======================== -->
+<!-- ================================================================= -->
+# BEG:REPLACE @WF-3B@
+<!--
+@src@ ${dc_m_hdfs_neighs}
+@fold@ seq(0,${dc_m_int_folds},1)
+RETURNS: 
+@src@TE@fold@
+@src@TR@fold@
+-->
+			<script>1_MODEL_CREATE_03_split_CA.pig</script>
+			
+			<param>dc_m_speculative=${dc_m_speculative}</param>
+			<param>dc_m_hdfs_src=@src@</param>
+			<param>dc_m_int_concreteInvestigatedFold=@fold@</param>
+			<param>parallel_param=${dc_fold_parallel}</param>
+			@AUXIL@
+# END:REPLACE
+<!-- ================================================================= -->
+<!-- ============================= WF-4 ============================== -->
+<!-- ================================================================= -->
+# BEG:REPLACE @WF-4@
+<!--
+@fold@ seq(0,${dc_m_int_folds},1)
+@lev@ TE TR
+-->
+			<script>1_MODEL_CREATE_04_enrich.pig</script>
+
+			<param>dc_m_speculative=${dc_m_speculative}</param>
+			<param>dc_m_hdfs_neighs=${dc_m_hdfs_neighs}@lev@@fold@</param>
+			<param>dc_m_hdfs_docClassifMapping=${dc_m_hdfs_docClassifMapping}@lev@@fold@</param>
+			<param>dc_m_hdfs_dataEnriched=${dc_m_hdfs_dataEnriched}@lev@@fold@</param>
+			<param>dc_m_pigScript_featureVector=${dc_m_pigScript_featureVector}</param>
+			<param>dc_m_pigScript_similarityMetric=${dc_m_pigScript_similarityMetric}</param>
+			<param>parallel_param=${dc_fold_parallel}</param>
+			@AUXIL@
+# END:REPLACE
+<!-- ================================================================= -->
+<!-- ============================= WF-5 ============================== -->
+<!-- ================================================================= -->
+# BEG:REPLACE @WF-5@
+<!--
+@fold@ seq(0,${dc_m_int_folds},1)
+-->
+			<script>1_MODEL_CREATE_05_build_model.pig</script>
+
+			<param>dc_m_speculative=${dc_m_speculative}</param>
+			<param>dc_m_hdfs_neighs=${dc_m_hdfs_neighs}TR@fold@</param>
+			<param>dc_m_hdfs_docClassifMapping=${dc_m_hdfs_docClassifMapping}TR@fold@</param>
+			<param>dc_m_hdfs_dataEnriched=${dc_m_hdfs_dataEnriched}TR@fold@</param>
+			<param>dc_m_hdfs_model=${dc_m_hdfs_model}@fold@</param>
+			<param>parallel_param=${dc_fold_parallel}</param>
+			@AUXIL@
+# END:REPLACE
+<!-- ================================================================= -->
+<!-- ============================= WF-6 ============================== -->
+<!-- ================================================================= -->
+# BEG:REPLACE @WF-6@
+<!--
+@fold@ seq(0,${dc_m_int_folds},1)
+-->
+			<script>1_MODEL_CREATE_06_test_model.pig</script>
+
+			<param>dc_m_speculative=${dc_m_speculative}</param>			
+			<param>dc_m_hdfs_neighs=${dc_m_hdfs_neighs}TE@fold@</param>
+			<param>dc_m_hdfs_docClassifMapping=${dc_m_hdfs_docClassifMapping}TE@fold@</param>
+			<param>dc_m_hdfs_dataEnriched=${dc_m_hdfs_dataEnriched}TE@fold@</param>
+			<param>dc_m_hdfs_model=${dc_m_hdfs_model}@fold@</param>
+			<param>dc_m_hdfs_modelEvaluation=${dc_m_hdfs_modelEvaluation}@fold@</param>
+			<param>dc_m_pigScript_modelUse=${dc_m_pigScript_modelUse}</param>
+			<param>parallel_param=${dc_fold_parallel}</param>
+			<param>parallel_param=${dc_fold_parallel}</param>
+
+			@AUXIL@
+# END:REPLACE
+<!-- ================================================================= -->
+<!-- ========================== NORMAL CODE SINCE HERE =============== -->
+<!-- ================================================================= -->
+@OOZIE-START@
+<!-- 
+ -->
+# BEG:ACTION name=docs2neigh_01 ok=assignAndCreateDocClassif_02 error=kill
+		@PIG_START@
+			@CONFIG@
+			@WF-1@
+		@PIG_END@
+# END:ACTION
+
+# BEG:ACTION name=assignAndCreateDocClassif_02 ok=split_03 error=kill
+		@PIG_START@
+			@CONFIG@
+			@WF-2@
+		@PIG_END@
+# END:ACTION
+
+	<fork name="split_03">
+        <path start="split_03A" />
+        <path start="split_03B" />
+    </fork>
+
+# BEG:FORK_MERGE name=split_03A node_after_join=merge_03 error=kill
+@src@ ${dc_m_hdfs_neighs}
+@FOLDS@
+		@PIG_START@
+			@CONFIG@
+			@WF-3A@
+		@PIG_END@
+# END:FORK_MERGE
+
+# BEG:FORK_MERGE name=split_03B node_after_join=merge_03 error=kill
+@src@ ${dc_m_hdfs_docClassifMapping}
+@FOLDS@
+		@PIG_START@
+			@CONFIG@
+			@WF-3B@
+		@PIG_END@
+# END:FORK_MERGE
+
+	<join name="merge_03" to="enrich_04" />
+
+# BEG:FORK_MERGE name=enrich_04 node_after_join=buildModel_05 error=kill
+@FOLDS@
+@LEV@
+		@PIG_START@
+			@CONFIG@
+			@WF-4@
+		@PIG_END@
+
+# END:FORK_MERGE
+
+# BEG:FORK_MERGE name=buildModel_05 node_after_join=testModel_06 error=kill
+@FOLDS@
+		@PIG_START@
+			@CONFIG@
+			@WF-5@
+		@PIG_END@
+
+# END:FORK_MERGE
+
+# BEG:FORK_MERGE name=testModel_06 node_after_join=end2 error=kill
+@FOLDS@
+		@PIG_START@
+			@CONFIG@
+			@WF-6@
+		@PIG_END@
+
+# END:FORK_MERGE
+<!-- 
+-->
+@OOZIE-END@
+
