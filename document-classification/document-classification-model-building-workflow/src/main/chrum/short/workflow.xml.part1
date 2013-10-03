@@ -87,6 +87,10 @@ dc_scheduler=${dc_scheduler}
 # BEG:REPLACE @CONFIG@
 			<configuration>
 				<property>
+					<name>oozie.launcher.mapred.fairscheduler.pool</name>
+					<value>${pool}</value>
+				</property>
+				<property>
 					<name>mapred.job.queue.name</name>
 					<value>${queueName}</value>
 				</property>
