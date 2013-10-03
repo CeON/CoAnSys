@@ -60,6 +60,13 @@ class MatchableEntity(val data: MatchableEntityData) {
       "pages: " + pages + "\n" +
       "year: " + year + "\n" +
       "raw text: " + rawText + "\n"
+
+  override def hashCode = id.hashCode
+
+  override def equals(other: Any) : Boolean = other match {
+    case that: MatchableEntity => that.id == this.id
+    case _ => false
+  }
 }
 
 object MatchableEntity {
