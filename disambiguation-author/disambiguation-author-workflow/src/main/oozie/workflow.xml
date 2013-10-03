@@ -1,247 +1,632 @@
-<workflow-app name='${subproject}' xmlns="uri:oozie:workflow:0.2">
-<!--
- (C) 2010-2012 ICM UW. All rights reserved.
--->
-    <start to='split'/>
-
-    <action name='split'>
-        <pig>
-            <job-tracker>${jobTracker}</job-tracker>
-            <name-node>${nameNode}</name-node>
-            <!--<prepare>
-                <delete path="${dc_m_hdfs_outputContribs}"/>
-            </prepare>-->
-            <configuration>
-                <!-- This is required for new api usage -->
-                <property>
-                    <name>mapred.mapper.new-api</name>
-                    <value>true</value>
-                </property>
-                <property>
-                    <name>mapred.reducer.new-api</name>
-                    <value>true</value>
-                </property>
-
-                <!-- General job parameters -->
-                <property>
-                    <name>mapred.job.queue.name</name>
-                    <value>${queueName}</value>
-                </property>
-                <property>
-                    <name>hbase.zookeeper.quorum</name>
-                    <value>${hbaseZookeeperQuorum}</value>
-                </property>
-            </configuration>
-            <script>${pigScriptsDir}/spliter.pig</script>
-            <param>commonJarsPath=${commonJarsPath}</param>
-            <param>dc_m_double_sample=${dc_m_double_sample}</param>
-            <param>dc_m_hdfs_inputDocsData=${dc_m_hdfs_inputDocsData}</param>
-            <param>dc_m_hdfs_outputContribs=${dc_tmp_path}</param>
-            <param>lang=${lang}</param>
-            <param>dc_m_str_feature_info=${dc_m_str_feature_info}</param>
-            <param>exhaustive_limit=${exhaustive_limit}</param>
-            <param>aproximate_sim_limit=${aproximate_sim_limit}</param>                        
-        </pig>
-        <ok to='forking'/>
-        <error to='kill'/>
-    </action>
-
-    <fork name="forking">
-        <path start="disambiguation-single"/>
-        <path start="disambiguation-exh"/>
-        <path start="disambiguation-apr-sim"/>
-        <path start="disambiguation-apr-nosim"/>
-    </fork>
-
-    <action name='disambiguation-single'>
-        <pig>
-            <job-tracker>${jobTracker}</job-tracker>
-            <name-node>${nameNode}</name-node>
-            <!--<prepare>
-                <delete path="${dc_m_hdfs_outputContribs}"/>
-            </prepare>-->
-            <configuration>
-                <!-- This is required for new api usage -->
-                <property>
-                    <name>mapred.mapper.new-api</name>
-                    <value>true</value>
-                </property>
-                <property>
-                    <name>mapred.reducer.new-api</name>
-                    <value>true</value>
-                </property>
-
-                <!-- General job parameters -->
-                <property>
-                    <name>mapred.job.queue.name</name>
-                    <value>${queueName}</value>
-                </property>
-                <property>
-                    <name>hbase.zookeeper.quorum</name>
-                    <value>${hbaseZookeeperQuorum}</value>
-                </property>
-            </configuration>
-            <script>${pigScriptsDir}/disambiguation1.pig</script>
-            <param>commonJarsPath=${commonJarsPath}</param>
-            <param>dc_m_double_sample=1.0</param>
-            <param>dc_m_hdfs_inputDocsData=${dc_tmp_path}/single</param>
-            <param>dc_m_hdfs_outputContribs=${dc_m_hdfs_outputContribs}/part1</param>
-            <param>statistics=${statistics}</param>
-            <param>dc_m_str_feature_info=${dc_m_str_feature_info}</param>
-        </pig>
-        <ok to='joining'/>
-        <error to='kill'/>
-    </action>
-
-    <action name='disambiguation-exh'>
-        <pig>
-            <job-tracker>${jobTracker}</job-tracker>
-            <name-node>${nameNode}</name-node>
-            <!--<prepare>
-                <delete path="${dc_m_hdfs_outputContribs}"/>
-            </prepare>-->
-            <configuration>
-                <!-- This is required for new api usage -->
-                <property>
-                    <name>mapred.mapper.new-api</name>
-                    <value>true</value>
-                </property>
-                <property>
-                    <name>mapred.reducer.new-api</name>
-                    <value>true</value>
-                </property>
-
-                <!-- General job parameters -->
-                <property>
-                    <name>mapred.job.queue.name</name>
-                    <value>${queueName}</value>
-                </property>
-                <property>
-                    <name>hbase.zookeeper.quorum</name>
-                    <value>${hbaseZookeeperQuorum}</value>
-                </property>
-            </configuration>
-            <script>${pigScriptsDir}/disambiguation100.pig</script>
-            <param>commonJarsPath=${commonJarsPath}</param>
-            <param>dc_m_double_sample=1.0</param>
-            <param>dc_m_hdfs_inputDocsData=${dc_tmp_path}/exh</param>
-            <param>dc_m_hdfs_outputContribs=${dc_m_hdfs_outputContribs}/part2</param>
-            <param>threshold=${threshold}</param>
-            <param>mapredChildJavaOpts=${mapredChildJavaOpts_exh_sim}</param>
-            <param>statistics=${statistics}</param>
-            <param>dc_m_str_feature_info=${dc_m_str_feature_info}</param>
-        </pig>
-        <ok to='joining'/>
-        <error to='kill'/>
-    </action>
-
-    <action name='disambiguation-apr-sim'>
-        <pig>
-            <job-tracker>${jobTracker}</job-tracker>
-            <name-node>${nameNode}</name-node>
-            <!--<prepare>
-                <delete path="${dc_m_hdfs_outputContribs}"/>
-            </prepare>-->
-            <configuration>
-                <!-- This is required for new api usage -->
-                <property>
-                    <name>mapred.mapper.new-api</name>
-                    <value>true</value>
-                </property>
-                <property>
-                    <name>mapred.reducer.new-api</name>
-                    <value>true</value>
-                </property>
-
-                <!-- General job parameters -->
-                <property>
-                    <name>mapred.job.queue.name</name>
-                    <value>${queueName}</value>
-                </property>
-                <property>
-                    <name>hbase.zookeeper.quorum</name>
-                    <value>${hbaseZookeeperQuorum}</value>
-                </property>
-            </configuration>
-            <script>${pigScriptsDir}/disambiguation1000.pig</script>
-            <param>commonJarsPath=${commonJarsPath}</param>
-            <param>dc_m_double_sample=1.0</param>
-            <param>dc_m_hdfs_inputDocsData=${dc_tmp_path}/apr-sim</param>
-            <param>dc_m_hdfs_outputContribs=${dc_m_hdfs_outputContribs}/part3</param>
-            <param>threshold=${threshold}</param>
-            <param>mapredChildJavaOpts=${mapredChildJavaOpts_apr_sim}</param>
-            <param>aproximate_remember_sim=true</param>
-            <param>statistics=${statistics}</param>
-            <param>dc_m_str_feature_info=${dc_m_str_feature_info}</param>
-            <param>exhaustive_limit=${exhaustive_limit}</param>
-            <param>failedContribs=${failedContribs}/apr-sim</param>
-        </pig>
-        <ok to='joining'/>
-        <error to='kill'/>
-    </action>
-
-    <!-- so far has used the same script as disambiguation-1000 -->
-    <action name='disambiguation-apr-nosim'>
-        <pig>
-            <job-tracker>${jobTracker}</job-tracker>
-            <name-node>${nameNode}</name-node>
-            <!--<prepare>
-                <delete path="${dc_m_hdfs_outputContribs}"/>
-            </prepare>-->
-            <configuration>
-                <!-- This is required for new api usage -->
-                <property>
-                    <name>mapred.mapper.new-api</name>
-                    <value>true</value>
-                </property>
-                <property>
-                    <name>mapred.reducer.new-api</name>
-                    <value>true</value>
-                </property>
-
-                <!-- General job parameters -->
-                <property>
-                    <name>mapred.job.queue.name</name>
-                    <value>${queueName}</value>
-                </property>
-                <property>
-                    <name>hbase.zookeeper.quorum</name>
-                    <value>${hbaseZookeeperQuorum}</value>
-                </property>
-            </configuration>
-            <script>${pigScriptsDir}/disambiguation1000.pig</script>
-            <param>commonJarsPath=${commonJarsPath}</param>
-            <param>dc_m_double_sample=1.0</param>
-            <param>dc_m_hdfs_inputDocsData=${dc_tmp_path}/apr-nosim</param>
-            <param>dc_m_hdfs_outputContribs=${dc_m_hdfs_outputContribs}/part4</param>
-            <param>threshold=${threshold}</param>
-            <param>mapredChildJavaOpts=${mapredChildJavaOpts_apr_nosim}</param>
-            <param>aproximate_remember_sim=false</param>
-            <param>statistics=${statistics}</param>
-            <param>dc_m_str_feature_info=${dc_m_str_feature_info}</param>
-            <param>exhaustive_limit=${exhaustive_limit}</param>
-            <param>failedContribs=${failedContribs}/apr-sim</param>
-        </pig>
-        <ok to='joining'/>
-        <error to='kill'/>
-    </action>
-
-    <join name="joining" to="end"/>
-
-    <action name='send-email'>
-        <email xmlns="uri:oozie:email-action:0.1">
-            <to>mwos@icm.edu.pl</to>
-            <cc>mwos@icm.edu.pl</cc>
-            <subject>Email notifications for ${wf:id()}</subject>
-            <body>The wf ${wf:id()} successfully completed.</body>
-        </email>
-        <ok to='end'/>
-        <error to='kill'/>
-    </action>
-
-    <kill name='kill'>
-        <message>Workflow failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
-    </kill>
-
-    <end name='end'/>
+<?xml version="1.0" ?>
+<workflow-app name="${project}*${subproject}" xmlns="uri:oozie:workflow:0.2">
+	<start to="split"/>
+	<action name="split">
+		<pig>
+			<job-tracker>
+				${jobTracker}
+			</job-tracker>
+			<name-node>
+				${nameNode}
+			</name-node>
+			<configuration>
+				<property>
+					<name>
+						oozie.launcher.mapred.fairscheduler.pool
+					</name>
+					<value>
+						${pool}
+					</value>
+				</property>
+				<property>
+					<name>
+						mapred.mapper.new-api
+					</name>
+					<value>
+						true
+					</value>
+				</property>
+				<property>
+					<name>
+						mapred.reducer.new-api
+					</name>
+					<value>
+						true
+					</value>
+				</property>
+				<property>
+					<name>
+						mapred.job.queue.name
+					</name>
+					<value>
+						${queueName}
+					</value>
+				</property>
+				<property>
+					<name>
+						hbase.zookeeper.quorum
+					</name>
+					<value>
+						${hbaseZookeeperQuorum}
+					</value>
+				</property>
+			</configuration>
+			<script>
+				splitter.pig
+			</script>
+			<param>
+				and_sample=${and_sample}
+			</param>
+			<param>
+				and_inputDocsData=${and_inputDocsData}
+			</param>
+			<param>
+				commonJarsPath=${commonJarsPath}
+			</param>
+			<param>
+				semi=tmp
+			</param>
+			<param>
+				final=identities
+			</param>
+			<param>
+				one=one
+			</param>
+			<param>
+				exh=exh
+			</param>
+			<param>
+				appSim=app_sim
+			</param>
+			<param>
+				appNoSim=app_no_sim
+			</param>
+			<param>
+				sep=/
+			</param>
+			<param>
+				and_aproximate_sim_limit=${and_aproximate_sim_limit}
+			</param>
+			<param>
+				and_exhaustive_limit=${and_exhaustive_limit}
+			</param>
+			<param>
+				and_failedContribs=${and_failedContribs}
+			</param>
+			<param>
+				and_feature_info=${and_feature_info}
+			</param>
+			<param>
+				and_lang=${and_lang}
+			</param>
+			<param>
+				and_outputContribs=${and_outputContribs}
+			</param>
+			<param>
+				and_scheduler=${and_scheduler}
+			</param>
+			<param>
+				and_splitter_output=${and_splitted_output}
+			</param>
+			<param>
+				and_statistics=${and_statistics}
+			</param>
+			<param>
+				and_threshold=${and_threshold}
+			</param>
+		</pig>
+		<ok to="do_and"/>
+		<error to="kill"/>
+	</action>
+	<fork name="do_and">
+		<path start="do_and_forked_node_0"/>
+		<path start="do_and_forked_node_1"/>
+		<path start="do_and_forked_node_2"/>
+		<path start="do_and_forked_node_3"/>
+	</fork>
+	<action name="do_and_forked_node_0">
+		<pig>
+			<job-tracker>
+				${jobTracker}
+			</job-tracker>
+			<name-node>
+				${nameNode}
+			</name-node>
+			<configuration>
+				<property>
+					<name>
+						oozie.launcher.mapred.fairscheduler.pool
+					</name>
+					<value>
+						${pool}
+					</value>
+				</property>
+				<property>
+					<name>
+						mapred.mapper.new-api
+					</name>
+					<value>
+						true
+					</value>
+				</property>
+				<property>
+					<name>
+						mapred.reducer.new-api
+					</name>
+					<value>
+						true
+					</value>
+				</property>
+				<property>
+					<name>
+						mapred.job.queue.name
+					</name>
+					<value>
+						${queueName}
+					</value>
+				</property>
+				<property>
+					<name>
+						hbase.zookeeper.quorum
+					</name>
+					<value>
+						${hbaseZookeeperQuorum}
+					</value>
+				</property>
+			</configuration>
+			<script>
+				disambiguation_one.pig
+			</script>
+			<param>
+				and_sample=1.0
+			</param>
+			<param>
+				and_inputDocsData=${and_splitted_output}/one
+			</param>
+			<param>
+				mapredChildJavaOpts=${mapredChildJavaOpts_one}
+			</param>
+			<param>
+				commonJarsPath=${commonJarsPath}
+			</param>
+			<param>
+				semi=tmp
+			</param>
+			<param>
+				final=identities
+			</param>
+			<param>
+				one=one
+			</param>
+			<param>
+				exh=exh
+			</param>
+			<param>
+				appSim=app_sim
+			</param>
+			<param>
+				appNoSim=app_no_sim
+			</param>
+			<param>
+				sep=/
+			</param>
+			<param>
+				and_aproximate_sim_limit=${and_aproximate_sim_limit}
+			</param>
+			<param>
+				and_exhaustive_limit=${and_exhaustive_limit}
+			</param>
+			<param>
+				and_failedContribs=${and_failedContribs}
+			</param>
+			<param>
+				and_feature_info=${and_feature_info}
+			</param>
+			<param>
+				and_lang=${and_lang}
+			</param>
+			<param>
+				and_outputContribs=${and_outputContribs}
+			</param>
+			<param>
+				and_scheduler=${and_scheduler}
+			</param>
+			<param>
+				and_splitter_output=${and_splitted_output}
+			</param>
+			<param>
+				and_statistics=${and_statistics}
+			</param>
+			<param>
+				and_threshold=${and_threshold}
+			</param>
+		</pig>
+		<ok to="do_and_join"/>
+		<error to="kill"/>
+	</action>
+	<action name="do_and_forked_node_1">
+		<pig>
+			<job-tracker>
+				${jobTracker}
+			</job-tracker>
+			<name-node>
+				${nameNode}
+			</name-node>
+			<configuration>
+				<property>
+					<name>
+						oozie.launcher.mapred.fairscheduler.pool
+					</name>
+					<value>
+						${pool}
+					</value>
+				</property>
+				<property>
+					<name>
+						mapred.mapper.new-api
+					</name>
+					<value>
+						true
+					</value>
+				</property>
+				<property>
+					<name>
+						mapred.reducer.new-api
+					</name>
+					<value>
+						true
+					</value>
+				</property>
+				<property>
+					<name>
+						mapred.job.queue.name
+					</name>
+					<value>
+						${queueName}
+					</value>
+				</property>
+				<property>
+					<name>
+						hbase.zookeeper.quorum
+					</name>
+					<value>
+						${hbaseZookeeperQuorum}
+					</value>
+				</property>
+			</configuration>
+			<script>
+				disambiguation_exh.pig
+			</script>
+			<param>
+				and_sample=1.0
+			</param>
+			<param>
+				and_inputDocsData=${and_splitted_output}/exh
+			</param>
+			<param>
+				mapredChildJavaOpts=${mapredChildJavaOpts_exh}
+			</param>
+			<param>
+				commonJarsPath=${commonJarsPath}
+			</param>
+			<param>
+				semi=tmp
+			</param>
+			<param>
+				final=identities
+			</param>
+			<param>
+				one=one
+			</param>
+			<param>
+				exh=exh
+			</param>
+			<param>
+				appSim=app_sim
+			</param>
+			<param>
+				appNoSim=app_no_sim
+			</param>
+			<param>
+				sep=/
+			</param>
+			<param>
+				and_aproximate_sim_limit=${and_aproximate_sim_limit}
+			</param>
+			<param>
+				and_exhaustive_limit=${and_exhaustive_limit}
+			</param>
+			<param>
+				and_failedContribs=${and_failedContribs}
+			</param>
+			<param>
+				and_feature_info=${and_feature_info}
+			</param>
+			<param>
+				and_lang=${and_lang}
+			</param>
+			<param>
+				and_outputContribs=${and_outputContribs}
+			</param>
+			<param>
+				and_scheduler=${and_scheduler}
+			</param>
+			<param>
+				and_splitter_output=${and_splitted_output}
+			</param>
+			<param>
+				and_statistics=${and_statistics}
+			</param>
+			<param>
+				and_threshold=${and_threshold}
+			</param>
+		</pig>
+		<ok to="do_and_join"/>
+		<error to="kill"/>
+	</action>
+	<action name="do_and_forked_node_2">
+		<pig>
+			<job-tracker>
+				${jobTracker}
+			</job-tracker>
+			<name-node>
+				${nameNode}
+			</name-node>
+			<configuration>
+				<property>
+					<name>
+						oozie.launcher.mapred.fairscheduler.pool
+					</name>
+					<value>
+						${pool}
+					</value>
+				</property>
+				<property>
+					<name>
+						mapred.mapper.new-api
+					</name>
+					<value>
+						true
+					</value>
+				</property>
+				<property>
+					<name>
+						mapred.reducer.new-api
+					</name>
+					<value>
+						true
+					</value>
+				</property>
+				<property>
+					<name>
+						mapred.job.queue.name
+					</name>
+					<value>
+						${queueName}
+					</value>
+				</property>
+				<property>
+					<name>
+						hbase.zookeeper.quorum
+					</name>
+					<value>
+						${hbaseZookeeperQuorum}
+					</value>
+				</property>
+			</configuration>
+			<script>
+				disambiguation_app-sim.pig
+			</script>
+			<param>
+				and_sample=1.0
+			</param>
+			<param>
+				and_inputDocsData=${and_splitted_output}/app-sim
+			</param>
+			<param>
+				mapredChildJavaOpts=${mapredChildJavaOpts_app-sim}
+			</param>
+			<param>
+				commonJarsPath=${commonJarsPath}
+			</param>
+			<param>
+				semi=tmp
+			</param>
+			<param>
+				final=identities
+			</param>
+			<param>
+				one=one
+			</param>
+			<param>
+				exh=exh
+			</param>
+			<param>
+				appSim=app_sim
+			</param>
+			<param>
+				appNoSim=app_no_sim
+			</param>
+			<param>
+				sep=/
+			</param>
+			<param>
+				and_aproximate_sim_limit=${and_aproximate_sim_limit}
+			</param>
+			<param>
+				and_exhaustive_limit=${and_exhaustive_limit}
+			</param>
+			<param>
+				and_failedContribs=${and_failedContribs}
+			</param>
+			<param>
+				and_feature_info=${and_feature_info}
+			</param>
+			<param>
+				and_lang=${and_lang}
+			</param>
+			<param>
+				and_outputContribs=${and_outputContribs}
+			</param>
+			<param>
+				and_scheduler=${and_scheduler}
+			</param>
+			<param>
+				and_splitter_output=${and_splitted_output}
+			</param>
+			<param>
+				and_statistics=${and_statistics}
+			</param>
+			<param>
+				and_threshold=${and_threshold}
+			</param>
+		</pig>
+		<ok to="do_and_join"/>
+		<error to="kill"/>
+	</action>
+	<action name="do_and_forked_node_3">
+		<pig>
+			<job-tracker>
+				${jobTracker}
+			</job-tracker>
+			<name-node>
+				${nameNode}
+			</name-node>
+			<configuration>
+				<property>
+					<name>
+						oozie.launcher.mapred.fairscheduler.pool
+					</name>
+					<value>
+						${pool}
+					</value>
+				</property>
+				<property>
+					<name>
+						mapred.mapper.new-api
+					</name>
+					<value>
+						true
+					</value>
+				</property>
+				<property>
+					<name>
+						mapred.reducer.new-api
+					</name>
+					<value>
+						true
+					</value>
+				</property>
+				<property>
+					<name>
+						mapred.job.queue.name
+					</name>
+					<value>
+						${queueName}
+					</value>
+				</property>
+				<property>
+					<name>
+						hbase.zookeeper.quorum
+					</name>
+					<value>
+						${hbaseZookeeperQuorum}
+					</value>
+				</property>
+			</configuration>
+			<script>
+				disambiguation_app-no-sim.pig
+			</script>
+			<param>
+				and_sample=1.0
+			</param>
+			<param>
+				and_inputDocsData=${and_splitted_output}/app-no-sim
+			</param>
+			<param>
+				mapredChildJavaOpts=${mapredChildJavaOpts_app-no-sim}
+			</param>
+			<param>
+				commonJarsPath=${commonJarsPath}
+			</param>
+			<param>
+				semi=tmp
+			</param>
+			<param>
+				final=identities
+			</param>
+			<param>
+				one=one
+			</param>
+			<param>
+				exh=exh
+			</param>
+			<param>
+				appSim=app_sim
+			</param>
+			<param>
+				appNoSim=app_no_sim
+			</param>
+			<param>
+				sep=/
+			</param>
+			<param>
+				and_aproximate_sim_limit=${and_aproximate_sim_limit}
+			</param>
+			<param>
+				and_exhaustive_limit=${and_exhaustive_limit}
+			</param>
+			<param>
+				and_failedContribs=${and_failedContribs}
+			</param>
+			<param>
+				and_feature_info=${and_feature_info}
+			</param>
+			<param>
+				and_lang=${and_lang}
+			</param>
+			<param>
+				and_outputContribs=${and_outputContribs}
+			</param>
+			<param>
+				and_scheduler=${and_scheduler}
+			</param>
+			<param>
+				and_splitter_output=${and_splitted_output}
+			</param>
+			<param>
+				and_statistics=${and_statistics}
+			</param>
+			<param>
+				and_threshold=${and_threshold}
+			</param>
+		</pig>
+		<ok to="do_and_join"/>
+		<error to="kill"/>
+	</action>
+	<join name="do_and_join" to="end"/>
+	<action name="send-email">
+		<email xmlns="uri:oozie:email-action:0.1">
+			<to>
+				mwos@icm.edu.pl
+			</to>
+			<cc>
+				mwos@icm.edu.pl
+			</cc>
+			<subject>
+				Email notifications for ${wf:id()}
+			</subject>
+			<body>
+				The wf ${wf:id()} successfully completed.
+			</body>
+		</email>
+		<ok to="end"/>
+		<error to="kill"/>
+	</action>
+	<kill name="kill">
+		<message>
+			Workflow failed, error message[${wf:errorMessage(wf:lastErrorNode())}]
+		</message>
+	</kill>
+	<end name="end"/>
 </workflow-app>
