@@ -64,12 +64,6 @@
 				commonJarsPath=${commonJarsPath}
 			</param>
 			<param>
-				semi=tmp
-			</param>
-			<param>
-				final=identities
-			</param>
-			<param>
 				one=one
 			</param>
 			<param>
@@ -80,9 +74,6 @@
 			</param>
 			<param>
 				appNoSim=app_no_sim
-			</param>
-			<param>
-				sep=/
 			</param>
 			<param>
 				and_aproximate_sim_limit=${and_aproximate_sim_limit}
@@ -184,16 +175,10 @@
 				and_inputDocsData=${and_splitted_output}/one
 			</param>
 			<param>
-				mapredChildJavaOpts=${mapredChildJavaOpts_one}
+				mapredChildJavaOpts=${and_mapredChildJavaOpts_one}
 			</param>
 			<param>
 				commonJarsPath=${commonJarsPath}
-			</param>
-			<param>
-				semi=tmp
-			</param>
-			<param>
-				final=identities
 			</param>
 			<param>
 				one=one
@@ -206,9 +191,6 @@
 			</param>
 			<param>
 				appNoSim=app_no_sim
-			</param>
-			<param>
-				sep=/
 			</param>
 			<param>
 				and_aproximate_sim_limit=${and_aproximate_sim_limit}
@@ -304,16 +286,10 @@
 				and_inputDocsData=${and_splitted_output}/exh
 			</param>
 			<param>
-				mapredChildJavaOpts=${mapredChildJavaOpts_exh}
+				mapredChildJavaOpts=${and_mapredChildJavaOpts_exh}
 			</param>
 			<param>
 				commonJarsPath=${commonJarsPath}
-			</param>
-			<param>
-				semi=tmp
-			</param>
-			<param>
-				final=identities
 			</param>
 			<param>
 				one=one
@@ -326,9 +302,6 @@
 			</param>
 			<param>
 				appNoSim=app_no_sim
-			</param>
-			<param>
-				sep=/
 			</param>
 			<param>
 				and_aproximate_sim_limit=${and_aproximate_sim_limit}
@@ -415,25 +388,19 @@
 				</property>
 			</configuration>
 			<script>
-				disambiguation_app-sim.pig
+				disambiguation_app_sim.pig
 			</script>
 			<param>
 				and_sample=1.0
 			</param>
 			<param>
-				and_inputDocsData=${and_splitted_output}/app-sim
+				and_inputDocsData=${and_splitted_output}/app_sim
 			</param>
 			<param>
-				mapredChildJavaOpts=${mapredChildJavaOpts_app-sim}
+				mapredChildJavaOpts=${and_mapredChildJavaOpts_app_sim}
 			</param>
 			<param>
 				commonJarsPath=${commonJarsPath}
-			</param>
-			<param>
-				semi=tmp
-			</param>
-			<param>
-				final=identities
 			</param>
 			<param>
 				one=one
@@ -446,9 +413,6 @@
 			</param>
 			<param>
 				appNoSim=app_no_sim
-			</param>
-			<param>
-				sep=/
 			</param>
 			<param>
 				and_aproximate_sim_limit=${and_aproximate_sim_limit}
@@ -535,25 +499,19 @@
 				</property>
 			</configuration>
 			<script>
-				disambiguation_app-no-sim.pig
+				disambiguation_app_no_sim.pig
 			</script>
 			<param>
 				and_sample=1.0
 			</param>
 			<param>
-				and_inputDocsData=${and_splitted_output}/app-no-sim
+				and_inputDocsData=${and_splitted_output}/app_no_sim
 			</param>
 			<param>
-				mapredChildJavaOpts=${mapredChildJavaOpts_app-no-sim}
+				mapredChildJavaOpts=${and_mapredChildJavaOpts_app_no_sim}
 			</param>
 			<param>
 				commonJarsPath=${commonJarsPath}
-			</param>
-			<param>
-				semi=tmp
-			</param>
-			<param>
-				final=identities
 			</param>
 			<param>
 				one=one
@@ -566,9 +524,6 @@
 			</param>
 			<param>
 				appNoSim=app_no_sim
-			</param>
-			<param>
-				sep=/
 			</param>
 			<param>
 				and_aproximate_sim_limit=${and_aproximate_sim_limit}

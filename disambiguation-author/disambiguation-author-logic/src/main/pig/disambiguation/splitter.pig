@@ -69,7 +69,7 @@ set pig.tmpfilecompression.codec $pig_tmpfilecompression_codec_param
 set job.priority $job_priority
 set pig.cachedbag.memusage $pig_cachedbag_mem_usage
 set pig.skewedjoin.reduce.memusage $pig_skewedjoin_reduce_memusage
-set mapred.child.java.opts $and_mapredChildJavaOpts
+set mapred.child.java.opts $mapredChildJavaOpts
 -- ulimit must be more than two times the heap size value !
 -- set mapred.child.ulimit unlimited
 set dfs.client.socket-timeout 60000

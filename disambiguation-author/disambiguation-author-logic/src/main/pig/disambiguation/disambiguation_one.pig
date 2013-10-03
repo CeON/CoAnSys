@@ -55,6 +55,8 @@ REGISTER '$commonJarsPath'
 %DEFAULT job_priority normal
 %DEFAULT pig_cachedbag_mem_usage 0.1
 %DEFAULT pig_skewedjoin_reduce_memusage 0.3
+%DEFAULT mapredChildJavaOpts -Xmx8000m
+set mapred.child.java.opts $mapredChildJavaOpts
 set default_parallel $and_parallel_param
 set pig.tmpfilecompression $pig_tmpfilecompression_param
 set pig.tmpfilecompression.codec $pig_tmpfilecompression_codec_param
