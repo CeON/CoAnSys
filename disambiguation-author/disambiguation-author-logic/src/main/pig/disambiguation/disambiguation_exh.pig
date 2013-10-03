@@ -23,16 +23,16 @@
 %DEFAULT JARS '*.jar'
 %DEFAULT commonJarsPath 'lib/$JARS'
 
---%DEFAULT dc_m_hdfs_inputDocsData tmp/exh
-%DEFAULT dc_m_hdfs_inputDocsData extracted/springer_sample02/part*
-%DEFAULT time 20130709_1009
-%DEFAULT dc_m_hdfs_outputContribs disambiguation/outputContribs$time
-%DEFAULT dc_m_str_feature_info 'CoAuthorsSnameDisambiguatorFullList#EX_AUTH_INITIALS#-0.0000166#8,ClassifCodeDisambiguator#EX_CLASSIFICATION_CODES#0.99#12,KeyphraseDisambiguator#EX_KEYWORDS_SPLIT#0.99#22,KeywordDisambiguator#EX_KEYWORDS#0.0000369#40'
-%DEFAULT threshold '-0.8'
-%DEFAULT use_extractor_id_instead_name 'true'
-%DEFAULT statistics 'true'
+--%DEFAULT and_inputDocsData tmp/exh
+%DEFAULT and_inputDocsData extracted/springer_sample02/part*
+%DEFAULT and_time 20130709_1009
+%DEFAULT and_outputContribs disambiguation/outputContribs$and_time
+%DEFAULT and_feature_info 'CoAuthorsSnameDisambiguatorFullList#EX_AUTH_INITIALS#-0.0000166#8,ClassifCodeDisambiguator#EX_CLASSIFICATION_CODES#0.99#12,KeyphraseDisambiguator#EX_KEYWORDS_SPLIT#0.99#22,KeywordDisambiguator#EX_KEYWORDS#0.0000369#40'
+%DEFAULT and_threshold '-0.8'
+%DEFAULT and_use_extractor_id_instead_name 'true'
+%DEFAULT and_statistics 'true'
 
-DEFINE exhaustiveAND pl.edu.icm.coansys.disambiguation.author.pig.ExhaustiveAND('$threshold','$dc_m_str_feature_info','$use_extractor_id_instead_name','$statistics');
+DEFINE exhaustiveAND pl.edu.icm.coansys.disambiguation.author.pig.ExhaustiveAND('$and_threshold','$and_feature_info','$and_use_extractor_id_instead_name','$and_statistics');
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- register section
@@ -48,27 +48,28 @@ REGISTER '$commonJarsPath'
 -- set section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
-%DEFAULT dc_m_double_sample 1.0
-%DEFAULT parallel_param 16
+%DEFAULT and_sample 1.0
+%DEFAULT and_parallel_param 16
 %DEFAULT pig_tmpfilecompression_param true
 %DEFAULT pig_tmpfilecompression_codec_param gz
 %DEFAULT job_priority normal
 %DEFAULT pig_cachedbag_mem_usage 0.1
 %DEFAULT pig_skewedjoin_reduce_memusage 0.3
-set default_parallel $parallel_param
+set default_parallel $and_parallel_param
 set pig.tmpfilecompression $pig_tmpfilecompression_param
 set pig.tmpfilecompression.codec $pig_tmpfilecompression_codec_param
 set job.priority $job_priority
 set pig.cachedbag.memusage $pig_cachedbag_mem_usage
 set pig.skewedjoin.reduce.memusage $pig_skewedjoin_reduce_memusage
 set dfs.client.socket-timeout 60000
-set mapred.fairscheduler.pool bigjobs
+%DEFAULT and_scheduler benchmark80
+SET mapred.fairscheduler.pool $and_scheduler
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- code section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
-D100 = LOAD '$dc_m_hdfs_inputDocsData' as (sname:int, datagroup:{(cId:chararray, sname:int, data:map[{(int)}])}, count:long);
+D100 = LOAD '$and_inputDocsData' as (sname:int, datagroup:{(cId:chararray, sname:int, data:map[{(int)}])}, count:long);
 
 -- -----------------------------------------------------
 -- SMALL GRUPS OF CONTRIBUTORS -------------------------
@@ -76,5 +77,11 @@ D100 = LOAD '$dc_m_hdfs_inputDocsData' as (sname:int, datagroup:{(cId:chararray,
 D100A = foreach D100 generate flatten( exhaustiveAND( datagroup ) ) as (uuid:chararray, cIds:chararray);
 E100 = foreach D100A generate flatten( cIds ) as cId, uuid;
 
-store E100 into '$dc_m_hdfs_outputContribs';
+%DEFAULT one 'one'
+%DEFAULT exh 'exh'
+%DEFAULT appSim 'app-sim'
+%DEFAULT appNoSim 'app-no-sim'
+%DEFAULT sep '/'
+
+store E100 into '$and_outputContribs$sep$exh';
 

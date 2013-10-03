@@ -23,9 +23,14 @@
 %DEFAULT JARS '*.jar'
 %DEFAULT commonJarsPath 'lib/$JARS'
 
-%DEFAULT dc_m_hdfs_inputDocsData tmp/D1
-%DEFAULT time 20130709_1009
-%DEFAULT dc_m_hdfs_outputContribs disambiguation/outputContribs$time
+%DEFAULT and_splitter_output 'splitted'
+%DEFAULT one 'one'
+%DEFAULT exh 'exh'
+%DEFAULT appSim 'app-sim'
+%DEFAULT appNoSim 'app-no-sim'
+%DEFAULT sep '/'
+
+%DEFAULT and_outputContribs disambiguation/outputContribs$and_time
 
 DEFINE GenUUID pl.edu.icm.coansys.disambiguation.author.pig.GenUUID();
 -- -----------------------------------------------------
@@ -35,7 +40,7 @@ DEFINE GenUUID pl.edu.icm.coansys.disambiguation.author.pig.GenUUID();
 -- -----------------------------------------------------
 REGISTER /usr/lib/hbase/lib/zookeeper.jar
 REGISTER /usr/lib/hbase/hbase-*-cdh4.*-security.jar
-REGISTER /usr/lib/hbase/lib/guava-11.0.2.jar
+REGISTER /usr/lib/hbase/lib/guava-*.jar
 
 REGISTER '$commonJarsPath'
 -- -----------------------------------------------------
@@ -43,28 +48,29 @@ REGISTER '$commonJarsPath'
 -- set section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
-%DEFAULT dc_m_double_sample 1.0
-%DEFAULT parallel_param 16
+%DEFAULT and_sample 1.0
+%DEFAULT and_parallel_param 16
 %DEFAULT pig_tmpfilecompression_param true
 %DEFAULT pig_tmpfilecompression_codec_param gz
 %DEFAULT job_priority normal
 %DEFAULT pig_cachedbag_mem_usage 0.1
 %DEFAULT pig_skewedjoin_reduce_memusage 0.3
-set default_parallel $parallel_param
+set default_parallel $and_parallel_param
 set pig.tmpfilecompression $pig_tmpfilecompression_param
 set pig.tmpfilecompression.codec $pig_tmpfilecompression_codec_param
 set job.priority $job_priority
 set pig.cachedbag.memusage $pig_cachedbag_mem_usage
 set pig.skewedjoin.reduce.memusage $pig_skewedjoin_reduce_memusage
 set dfs.client.socket-timeout 60000
-set mapred.fairscheduler.pool bigjobs
+%DEFAULT and_scheduler benchmark80
+SET mapred.fairscheduler.pool $and_scheduler
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- code section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 
-D1 = LOAD '$dc_m_hdfs_inputDocsData' as (sname: int, datagroup: {(cId: chararray,sname: int,data: map[{(int)}])}, count: long);
+D1 = LOAD '$and_inputDocsData' as (sname: int, datagroup: {(cId: chararray,sname: int,data: map[{(int)}])}, count: long);
 
 -- -----------------------------------------------------
 -- SINGLE CONTRIBUTORS ---------------------------------
@@ -73,4 +79,13 @@ D1A = foreach D1 generate flatten( datagroup );-- as (cId:chararray, sname:int, 
 -- E1: {cId: chararray,uuid: chararray}
 E1 = foreach D1A generate cId as cId, FLATTEN(GenUUID(TOBAG(cId))) as uuid;
 
-store E1 into '$dc_m_hdfs_outputContribs';
+%DEFAULT semi 'tmp'
+%DEFAULT final 'identities'
+%DEFAULT and_splitter_output 'splitted'
+%DEFAULT one 'one'
+%DEFAULT exh 'exh'
+%DEFAULT appSim 'app-sim'
+%DEFAULT appNoSim 'app-no-sim'
+%DEFAULT sep '/'
+
+store E1 into '$and_outputContribs$sep$one';
