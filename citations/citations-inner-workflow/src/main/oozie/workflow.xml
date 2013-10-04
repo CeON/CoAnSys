@@ -331,7 +331,7 @@
     </action>
 
     <action name="assess">
-        <map-reduce>
+        <java>
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
             <prepare>
@@ -339,76 +339,22 @@
             </prepare>
             <configuration>
                 <property>
-                    <name>mapred.mapper.new-api</name>
-                    <value>true</value>
-                </property>
-                <property>
-                    <name>mapred.reducer.new-api</name>
-                    <value>true</value>
-                </property>
-                <!-- General job parameters -->
-                <property>
-                    <name>mapred.job.queue.name</name>
-                    <value>${queueName}</value>
-                </property>
-                <property>
                     <name>oozie.launcher.mapred.fairscheduler.pool</name>
                     <value>${pool}</value>
                 </property>
-                <property>
-                    <name>mapred.fairscheduler.pool</name>
-                    <value>${pool}</value>
-                </property>
-                <!-- MapReduce Mapper/Reducer parameters -->
-                <property>
-                    <name>mapreduce.map.class</name>
-                    <value>pl.edu.icm.coansys.citations.mappers.ExactAssesor</value>
-                </property>
-                <property>
-                    <name>mapreduce.reduce.class</name>
-                    <value>pl.edu.icm.coansys.citations.reducers.BestSelector</value>
-                </property>
-                <property>
-                    <name>mapreduce.combine.class</name>
-                    <value>pl.edu.icm.coansys.citations.reducers.BestSelector</value>
-                </property>
-                <!-- MapReduce input/output parameters -->
-                <property>
-                    <name>mapred.input.dir</name>
-                    <value>${cit_workDir}/source_entities_heur</value>
-                </property>
-                <property>
-                    <name>mapred.output.dir</name>
-                    <value>${cit_outputSeqFile}</value>
-                </property>
-                <property>
-                    <name>mapreduce.inputformat.class</name>
-                    <value>org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat</value>
-                </property>
-                <property>
-                    <name>mapreduce.outputformat.class</name>
-                    <value>org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat</value>
-                </property>
-                <property>
-                    <name>mapred.output.key.class</name>
-                    <value>org.apache.hadoop.io.Text</value>
-                </property>
-                <property>
-                    <name>mapred.output.value.class</name>
-                    <value>org.apache.hadoop.io.Text</value>
-                </property>
-                <property>
-                    <name>mapred.max.split.size</name>
-                    <value>50000000</value>
-                </property>
-                <property>
-                    <name>index.key</name>
-                    <value>key_index</value>
-                </property>
             </configuration>
-            <file>${cit_workDir}/key_index/data#key-data</file>
-            <file>${cit_workDir}/key_index/index#key-index</file>
-        </map-reduce>
+            <main-class>pl.edu.icm.coansys.citations.jobs.FilteringAssessor</main-class>
+            <java-opts>${cit_genAuthorIdxJavaOpts}</java-opts>
+            <arg>-Dmapred.fairscheduler.pool=${pool}</arg>
+            <arg>-Dmapred.max.split.size=50000000</arg>
+            <arg>-fs</arg>
+            <arg>${nameNode}</arg>
+            <arg>-jt</arg>
+            <arg>${jobTracker}</arg>
+            <arg>${cit_workDir}/destination_entities</arg>
+            <arg>${cit_workDir}/source_entities_heur</arg>
+            <arg>${cit_outputSeqFile}</arg>
+        </java>
         <ok to="end"/>
         <error to="fail"/>
     </action>
