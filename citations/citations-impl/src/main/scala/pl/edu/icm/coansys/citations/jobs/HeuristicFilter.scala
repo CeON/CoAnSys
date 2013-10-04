@@ -56,20 +56,13 @@ object HeuristicFilter extends MyScoobiApp {
     val heurs = fromSequenceFile[MatchableEntity, String](heursUri)
     val entities = fromSequenceFile[String, MatchableEntity](targetEntitiesUri)
 
-    val preassessed = heurs.map(_.swap).joinLeft(entities).mapFlatten{
+    val filtered = heurs.map(_.swap).joinLeft(entities).mapFlatten{
       case (_, (src, Some(dst))) => Some(src, dst)
       case _ => None
     }.map { case (src, dst) =>
       val srcTokens = niceTokens(src.toReferenceString)
       val dstTokens = niceTokens(dst.toReferenceString)
-      (src, List((2.0 * (srcTokens & dstTokens).size / (srcTokens.size + dstTokens.size)).toString, ":", dst.id).mkString)
-    }
-    persist(preassessed.toSequenceFile[MatchableEntity, String](outUri + "_preassessed", overwrite = true))
-
-    val filtered =
-    fromSequenceFile[MatchableEntity, String](outUri + "_preassessed").map{case (src, value) =>
-      val Array(scoreStr, dst) = value.split(":", 2)
-      (src, List((scoreStr.toDouble, dst)))
+      (src, List((2.0 * (srcTokens & dstTokens).size / (srcTokens.size + dstTokens.size), dst.id)))
     }
      .groupByKey[MatchableEntity, List[(Double, String)]]
      .combine(Reduction[List[(Double, String)]]((xs, ys) => merge(xs, ys, 100)))
