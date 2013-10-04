@@ -18,7 +18,7 @@
 
 package pl.edu.icm.coansys.citations.jobs
 
-import pl.edu.icm.coansys.citations.util.MyScoobiApp
+import pl.edu.icm.coansys.citations.util.{NoOpClose, MyScoobiApp}
 import pl.edu.icm.coansys.citations.util.misc._
 import java.util.Locale
 import com.nicta.scoobi.Scoobi._
@@ -69,7 +69,7 @@ object FilteringAssessor extends MyScoobiApp {
       .combine(Reduction[List[(Double, MatchableEntity)]]((xs, ys) => merge(xs, ys, 100)))
       .mapFlatten{case (src,list) => Stream.continually(src) zip list.unzip._2}
 
-    val results = filtered.flatMapWithResource(new SimilarityMeasurer) {case (measurer, (src, dst)) =>
+    val results = filtered.flatMapWithResource(new SimilarityMeasurer with NoOpClose) {case (measurer, (src, dst)) =>
       val minimalSimilarity = 0.5
       val similarity = measurer.similarity(src, dst)
       if (similarity > minimalSimilarity)
