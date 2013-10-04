@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<oozie-maven-plugin> 
+	<main-project-pig>
+		<scripts>
+			<root>pig-main/</root>
+			<preserve>false</preserve>
+			<target>/</target>		
+			<includes>
+				<include>.*\.pig</include>
+			</includes>
+		</scripts>
+		<macros>
+			<root>pig-macros/</root>
+			<preserve>false</preserve>
+			<target>lib/</target>
+			<includes>
+				<include>.*\.pig</include>
+			</includes>
+		</macros>
+	</main-project-pig>
+	<deps-project-pig>
+		<all-scripts>
+			<root>pig/</root>
+			<preserve>true</preserve>
+			<target>lib/pig/</target>		
+			<includes>
+				<include>.*\.pig</include>
+			</includes>
+		</all-scripts>
+	</deps-project-pig>	
+</oozie-maven-plugin>

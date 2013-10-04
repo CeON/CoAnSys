@@ -1,0 +1,53 @@
+#
+# This file is part of CoAnSys project.
+# Copyright (c) 2012-2013 ICM-UW
+# 
+# CoAnSys is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# CoAnSys is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU Affero General Public License for more details.
+# 
+# You should have received a copy of the GNU Affero General Public License
+# along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
+#
+
+masterNode=hadoop-master.vls.icm.edu.pl
+nameNode=hdfs://${masterNode}:8020
+jobTracker=${masterNode}:8021
+queueName=default
+project=coansys
+subproject=document-classification-model-creation
+
+oozie.wf.application.path=${HDFS_EXEC_PATH}
+workflowPath=${oozie.wf.application.path}
+
+commonJarsPath=/usr/lib/hbase/lib/zookeeper.jar
+
+dc_m_in_inputDocsData=${nameNode}/srv/bwndata/seqfile/springer-metadata/springer-20120419-springer0*.sq
+#dc_m_in_inputDocsData=/srv/polindex/seqfile/polindex-yadda-20130729-text.sf
+dc_m_results=${workflowPath}/results/
+ds_scheduler=default
+
+dc_m_hdfs_neighs=${results}/neighs
+dc_m_hdfs_docClassifMapping=${results}/doc_classif_mapping
+dc_m_hdfs_model=${results}/model
+dc_m_hdfs_dataEnriched=${results}/dataEnrich
+dc_m_hdfs_modelEvaluation=${results}/modelEval
+
+@dc_m_int_folds@ 5
+dc_m_parallel=40
+dc_fold_parallel=8
+dc_m_double_sample=0.2
+dc_m_mapredChildJavaOpts=-Xmx4000m
+dc_m_speculative=true
+dc_scheduler=default
+
+dc_m_pigScript_featureVector=tfidf
+dc_m_pigScript_similarityMetric=cosine
+dc_m_pigScript_modelBuilderClass=mlknnThresBuild
+dc_m_pigScript_modelUse=mlknnThresClassify

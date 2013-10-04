@@ -25,4 +25,8 @@ public class RelaxedPair{
 		this.a = a;
 		this.b = b;
 	}
+	
+	public String toString(){
+		return "<"+a+","+b+">";
+	}
 }
