@@ -85,8 +85,8 @@ public class FLAT_POS_NEG extends EvalFunc<DataBag> {
         }
         try {
             String keyA = (String) input.get(0);
-            DataBag categsA = (DataBag) input.get(2);
-            DataBag categsB = (DataBag) input.get(3);
+            DataBag categsA = (DataBag) input.get(1);
+            DataBag categsB = (DataBag) input.get(2);
 
             if (keyA == null || categsA == null || categsB == null) {
             	StringBuffer sb = new StringBuffer();
