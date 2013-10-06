@@ -116,4 +116,4 @@ store EBIG into '$and_failedContribs$sep$appNoSim';
 
 -- STORING RESULTS
 R = union SINGLE, H;
-store R into '$and_outputContribs$sepSappNoSim';
+store R into '$and_outputContribs$sep$appNoSim';

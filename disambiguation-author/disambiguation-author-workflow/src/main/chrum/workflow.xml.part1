@@ -88,14 +88,13 @@
 # BEG:REPLACE @AUXIL@
 
 			<param>commonJarsPath=${commonJarsPath}</param>
-
-			<param>semi=tmp</param>
-			<param>final=identities</param>
+		<!--	<param>semi=tmp</param>			-->
+		<!--	<param>final=identities</param>		-->
 			<param>one=one</param>
 			<param>exh=exh</param>
 			<param>appSim=app_sim</param>
 			<param>appNoSim=app_no_sim</param>
-			<param>sep=/</param>
+		<!--	<param>sep=/</param>			-->
 
             <param>and_aproximate_sim_limit=${and_aproximate_sim_limit}</param>
             <param>and_exhaustive_limit=${and_exhaustive_limit}</param>
@@ -128,7 +127,7 @@
             <script>disambiguation_@script@.pig</script>
             <param>and_sample=1.0</param>
             <param>and_inputDocsData=${and_splitted_output}/@script@</param>
-			<param>mapredChildJavaOpts=${mapredChildJavaOpts_@script@}</param>
+	<param>mapredChildJavaOpts=${and_mapredChildJavaOpts_@script@}</param>
 <!--        <param>and_outputData=${and_outputContribs}/{one,enh,app_sim,app_no_sim}</param>  -->
 <!--        <param>and_outputData=${and_failedContribs}/{one,enh,app_sim,app_no_sim}</param>  -->
 			@AUXIL@
@@ -144,7 +143,7 @@
 # END:ACTION
 
 # BEG:FORK_MERGE name=do_and node_after_join=end error=kill
-@script@ one exh app-sim app-no-sim
+@script@ one exh app_sim app_no_sim
 		@PIG_START@
 			@WF-2@
 		@PIG_END@
