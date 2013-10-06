@@ -79,6 +79,7 @@ public class FLAT_POS_NEG extends EvalFunc<DataBag> {
         	sb.append("\tinput==null ? "+input==null);
         	sb.append("\tinput.size()==0 ? "+(input.size()==0));
         	sb.append("\nreturning NULL value");
+        	System.out.println(sb.toString());
         	logger.error(sb.toString());
             return null;
         }
@@ -94,6 +95,7 @@ public class FLAT_POS_NEG extends EvalFunc<DataBag> {
             	sb.append("categsA="+categsA+"\t");
             	sb.append("categsB="+categsB+"\t");
             	sb.append("\nreturning NULL value");
+            	System.out.println(sb.toString());
             	logger.error(sb.toString());
                 return null;
             }
@@ -134,6 +136,7 @@ public class FLAT_POS_NEG extends EvalFunc<DataBag> {
             
             return ret;
         } catch (Exception e) {
+        	System.out.println(e);
             logger.error("Error in processing input row:", e);
             throw new IOException("Caught exception processing input row:\t"
                     + StackTraceExtractor.getStackTrace(e).replace("\n", "\t"));
