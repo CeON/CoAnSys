@@ -18,7 +18,8 @@
 
 package pl.edu.icm.coansys.citations.indices
 
-import pl.edu.icm.coansys.citations.util.{misc, BytesIterable}
+import pl.edu.icm.coansys.citations.util.misc
+import pl.edu.icm.ceon.scala_commons.hadoop.writables.BytesIterable
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
