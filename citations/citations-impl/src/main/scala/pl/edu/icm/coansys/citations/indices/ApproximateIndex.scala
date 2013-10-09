@@ -124,7 +124,7 @@ object ApproximateIndex {
       val mf = manifest[BytesIterable]
     }
     persist(toSequenceFile(indexEntries(documents), indexFile))
-    sequencefile.mergeWithScoobi(indexFile)(conf)
+    sequencefile.mergeWithScoobi[String, BytesIterable](indexFile)
     sequencefile.convertToMapFile(indexFile)(conf)
   }
 }
