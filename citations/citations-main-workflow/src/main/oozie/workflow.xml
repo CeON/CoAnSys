@@ -52,6 +52,10 @@
             <name>heuristic</name>
             <value>Old</value>
         </property>
+        <property>
+            <name>lowLevelApi</name>
+            <value>true</value>
+        </property>
     </parameters>
 
     <start to="prelude"/>
@@ -142,6 +146,10 @@
                 <property>
                     <name>cit_heuristic</name>
                     <value>${heuristic}</value>
+                </property>
+                <property>
+                    <name>lowLevelApi</name>
+                    <value>${lowLevelApi}</value>
                 </property>
                 <property>
                     <name>cit_inputDestSeqFile</name>
