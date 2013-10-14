@@ -39,21 +39,14 @@ public class LCSSimilarity extends SimilarityCalculator {
     private int lcs(String s1, String s2) {
         int m = s1.length();
         int n = s2.length();
-        int[][] lcs = new int[m][n];
-        
-        for (int i = 0; i < m; i++) {
-            lcs[i][0] = 0;
-        }
-        for (int i = 0; i < n; i++) {
-            lcs[0][i] = 0;
-        }
+        int[][] lcs = new int[m+1][n+1];
         
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
                 if (s1.charAt(i) == s2.charAt(j)) {
-                    lcs[i][j] = lcs[i- 1][j - 1] + 1;
+                    lcs[i+1][j+1] = lcs[i][j] + 1;
                 } else {
-                    lcs[i][j] = Math.max(lcs[i][j - 1], lcs[i - 1][j]);
+                    lcs[i+1][j+1] = Math.max(lcs[i+1][j], lcs[i][j+1]);
                 }
             }
         }
