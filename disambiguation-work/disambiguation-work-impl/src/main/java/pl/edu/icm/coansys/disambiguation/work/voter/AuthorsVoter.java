@@ -101,7 +101,7 @@ public class AuthorsVoter extends AbstractSimilarityVoter {
                     positionsCorrect = false;
                 } else {
                     int authorPosition = author.getPositionNumber() - 1;
-                    if (authorPosition >= resultByPositionNb.length || resultByPositionNb[authorPosition] != null) {
+                    if (authorPosition < 0 || authorPosition >= resultByPositionNb.length || resultByPositionNb[authorPosition] != null) {
                         positionsCorrect = false;
                     } else {
                         resultByPositionNb[authorPosition] = surname;
