@@ -1,8 +1,10 @@
 <workflow-app xmlns="uri:oozie:workflow:0.4" name="keywords-extraction-wf">
-    <property>
-        <name>POOL_NAME</name>
-        <value>default</value>
-    </property>
+   <parameters>
+        <property>
+            <name>POOL_NAME</name>
+            <value>default</value>
+        </property>
+    </parameters>
 
     <start to="keyword-extraction" />
     <action name="keyword-extraction">
