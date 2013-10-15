@@ -26,8 +26,9 @@ import com.nicta.scoobi.io.sequence.SeqSchema
 import com.nicta.scoobi.io.sequence.SequenceOutput.toSequenceFile
 import com.nicta.scoobi.Scoobi._
 import pl.edu.icm.coansys.citations.data.MatchableEntity
-import pl.edu.icm.coansys.citations.util.{BytesIterable, misc}
+import pl.edu.icm.coansys.citations.util.misc
 import pl.edu.icm.ceon.scala_commons.hadoop.sequencefile
+import pl.edu.icm.ceon.scala_commons.hadoop.writables.BytesIterable
 
 /**
  * A class helping in approximate index saved in MapFile usage.
@@ -123,7 +124,7 @@ object ApproximateIndex {
       val mf = manifest[BytesIterable]
     }
     persist(toSequenceFile(indexEntries(documents), indexFile))
-    sequencefile.merge(indexFile)(conf)
+    sequencefile.mergeWithScoobi[String, BytesIterable](indexFile)
     sequencefile.convertToMapFile(indexFile)(conf)
   }
 }

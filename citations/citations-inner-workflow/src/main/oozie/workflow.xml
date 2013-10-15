@@ -33,6 +33,10 @@
             <value>default</value>
         </property>
         <property>
+            <name>pool</name>
+            <value>default</value>
+        </property>
+        <property>
             <name>cit_inputSrcSeqFile</name>
             <description>
                 source file containing citations to be matched in (CitId as Text, $cit_inputSrcFormat) format
@@ -52,6 +56,10 @@
         <property>
             <name>cit_heuristic</name>
             <value>Old</value>
+        </property>
+        <property>
+            <name>lowLevelApi</name>
+            <value>true</value>
         </property>
         <property>
             <name>cit_inputDestSeqFile</name>
@@ -88,8 +96,15 @@
         <java>
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
+            <configuration>
+                <property>
+                    <name>oozie.launcher.mapred.fairscheduler.pool</name>
+                    <value>${pool}</value>
+                </property>
+            </configuration>
             <main-class>pl.edu.icm.coansys.citations.jobs.ReferencesToEntitiesConverter</main-class>
             <arg>-Dmapred.max.split.size=500000</arg>
+            <arg>-Dmapred.fairscheduler.pool=${pool}</arg>
             <arg>-fs</arg>
             <arg>${nameNode}</arg>
             <arg>-jt</arg>
@@ -106,7 +121,14 @@
         <java>
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
+            <configuration>
+                <property>
+                    <name>oozie.launcher.mapred.fairscheduler.pool</name>
+                    <value>${pool}</value>
+                </property>
+            </configuration>
             <main-class>pl.edu.icm.coansys.citations.jobs.BasicMetadataToEntitiesConverter</main-class>
+            <arg>-Dmapred.fairscheduler.pool=${pool}</arg>
             <arg>-fs</arg>
             <arg>${nameNode}</arg>
             <arg>-jt</arg>
@@ -123,7 +145,14 @@
         <java>
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
+            <configuration>
+                <property>
+                    <name>oozie.launcher.mapred.fairscheduler.pool</name>
+                    <value>${pool}</value>
+                </property>
+            </configuration>
             <main-class>pl.edu.icm.coansys.citations.jobs.BasicMetadataToEntitiesConverter</main-class>
+            <arg>-Dmapred.fairscheduler.pool=${pool}</arg>
             <arg>-fs</arg>
             <arg>${nameNode}</arg>
             <arg>-jt</arg>
@@ -140,7 +169,14 @@
         <java>
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
+            <configuration>
+                <property>
+                    <name>oozie.launcher.mapred.fairscheduler.pool</name>
+                    <value>${pool}</value>
+                </property>
+            </configuration>
             <main-class>pl.edu.icm.coansys.citations.jobs.IndexBuilder</main-class>
+            <arg>-Dmapred.fairscheduler.pool=${pool}</arg>
             <arg>-fs</arg>
             <arg>${nameNode}</arg>
             <arg>-jt</arg>
@@ -166,7 +202,14 @@
         <java>
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
+            <configuration>
+                <property>
+                    <name>oozie.launcher.mapred.fairscheduler.pool</name>
+                    <value>${pool}</value>
+                </property>
+            </configuration>
             <main-class>pl.edu.icm.coansys.citations.jobs.NewHeuristicAdder</main-class>
+            <arg>-Dmapred.fairscheduler.pool=${pool}</arg>
             <arg>-fs</arg>
             <arg>${nameNode}</arg>
             <arg>-jt</arg>
@@ -176,7 +219,7 @@
             <arg>${cit_workDir}/source_entities_heur</arg>
         </java>
 
-        <ok to="assess"/>
+        <ok to="api-level"/>
         <error to="fail"/>
     </action>
 
@@ -184,8 +227,15 @@
         <java>
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
+            <configuration>
+                <property>
+                    <name>oozie.launcher.mapred.fairscheduler.pool</name>
+                    <value>${pool}</value>
+                </property>
+            </configuration>
             <main-class>pl.edu.icm.coansys.citations.jobs.IndexBuilder</main-class>
             <java-opts>${cit_genAuthorIdxJavaOpts}</java-opts>
+            <arg>-Dmapred.fairscheduler.pool=${pool}</arg>
             <arg>-fs</arg>
             <arg>${nameNode}</arg>
             <arg>-jt</arg>
@@ -219,6 +269,14 @@
                 <property>
                     <name>mapred.job.queue.name</name>
                     <value>${queueName}</value>
+                </property>
+                <property>
+                    <name>oozie.launcher.mapred.fairscheduler.pool</name>
+                    <value>${pool}</value>
+                </property>
+                <property>
+                    <name>mapred.fairscheduler.pool</name>
+                    <value>${pool}</value>
                 </property>
                 <!-- MapReduce Mapper/Reducer parameters -->
                 <property>
@@ -272,6 +330,37 @@
             <file>${cit_workDir}/author_index/data#author-data</file>
             <file>${cit_workDir}/author_index/index#author-index</file>
         </map-reduce>
+        <ok to="api-level"/>
+        <error to="fail"/>
+    </action>
+    <decision name="api-level">
+        <switch>
+            <case to="filter">${lowLevelApi eq "true"}</case>
+            <default to="filterAssess"/>
+        </switch>
+    </decision>
+
+    <action name="filter">
+        <java>
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <configuration>
+                <property>
+                    <name>oozie.launcher.mapred.fairscheduler.pool</name>
+                    <value>${pool}</value>
+                </property>
+            </configuration>
+            <main-class>pl.edu.icm.coansys.citations.jobs.HeuristicFilter</main-class>
+            <arg>-Dmapred.fairscheduler.pool=${pool}</arg>
+            <arg>-fs</arg>
+            <arg>${nameNode}</arg>
+            <arg>-jt</arg>
+            <arg>${jobTracker}</arg>
+            <arg>${cit_workDir}/destination_entities</arg>
+            <arg>${cit_workDir}/source_entities_heur</arg>
+            <arg>${cit_workDir}/source_entities_heur_filtered</arg>
+        </java>
+
         <ok to="assess"/>
         <error to="fail"/>
     </action>
@@ -297,6 +386,14 @@
                     <name>mapred.job.queue.name</name>
                     <value>${queueName}</value>
                 </property>
+                <property>
+                    <name>oozie.launcher.mapred.fairscheduler.pool</name>
+                    <value>${pool}</value>
+                </property>
+                <property>
+                    <name>mapred.fairscheduler.pool</name>
+                    <value>${pool}</value>
+                </property>
                 <!-- MapReduce Mapper/Reducer parameters -->
                 <property>
                     <name>mapreduce.map.class</name>
@@ -313,7 +410,7 @@
                 <!-- MapReduce input/output parameters -->
                 <property>
                     <name>mapred.input.dir</name>
-                    <value>${cit_workDir}/source_entities_heur</value>
+                    <value>${cit_workDir}/source_entities_heur_filtered</value>
                 </property>
                 <property>
                     <name>mapred.output.dir</name>
@@ -337,25 +434,49 @@
                 </property>
                 <property>
                     <name>mapred.max.split.size</name>
-                    <value>5000000</value>
+                    <value>50000000</value>
                 </property>
                 <property>
                     <name>index.key</name>
                     <value>key_index</value>
                 </property>
-                <property>
-                    <name>index.author</name>
-                    <value>author_index</value>
-                </property>
             </configuration>
             <file>${cit_workDir}/key_index/data#key-data</file>
             <file>${cit_workDir}/key_index/index#key-index</file>
-            <file>${cit_workDir}/author_index/data#author-data</file>
-            <file>${cit_workDir}/author_index/index#author-index</file>
         </map-reduce>
         <ok to="end"/>
         <error to="fail"/>
     </action>
+
+    <action name="filterAssess">
+      <java>
+        <job-tracker>${jobTracker}</job-tracker>
+        <name-node>${nameNode}</name-node>
+        <prepare>
+          <delete path="${cit_outputSeqFile}"/>
+        </prepare>
+        <configuration>
+          <property>
+            <name>oozie.launcher.mapred.fairscheduler.pool</name>
+            <value>${pool}</value>
+          </property>
+        </configuration>
+        <main-class>pl.edu.icm.coansys.citations.jobs.FilteringAssessor</main-class>
+        <java-opts>${cit_genAuthorIdxJavaOpts}</java-opts>
+        <arg>-Dmapred.fairscheduler.pool=${pool}</arg>
+        <arg>-Dmapred.max.split.size=50000000</arg>
+        <arg>-fs</arg>
+        <arg>${nameNode}</arg>
+        <arg>-jt</arg>
+        <arg>${jobTracker}</arg>
+        <arg>${cit_workDir}/destination_entities</arg>
+        <arg>${cit_workDir}/source_entities_heur</arg>
+        <arg>${cit_outputSeqFile}</arg>
+      </java>
+      <ok to="end"/>
+      <error to="fail"/>
+    </action>
+
 
     <kill name="fail">
         <message>Workflow failed</message>

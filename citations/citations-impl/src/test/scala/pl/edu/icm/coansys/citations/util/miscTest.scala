@@ -21,6 +21,7 @@ package pl.edu.icm.coansys.citations.util
 import org.testng.Assert._
 import org.testng.annotations.Test
 import misc._
+import scala.util.Random
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -67,7 +68,9 @@ class miscTest {
   }
 
   @Test(groups = Array("fast"))
-  def normalizedAuthorTokensFromAuthorListTest() {
-
+  def nGreatestTest() {
+    assertEquals(nGreatest(1 to 200, 100).toSet, (101 to 200).toSet)
+    assertEquals(nGreatest(Random.shuffle((1 to 200).toList), 100).toSet, (101 to 200).toSet)
+    assertEquals(nGreatest(1 to 10, 100).toSet, (1 to 10).toSet)
   }
 }
