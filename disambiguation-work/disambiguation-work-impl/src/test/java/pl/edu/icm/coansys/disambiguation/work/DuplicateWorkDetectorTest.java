@@ -30,6 +30,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.util.ToolRunner;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +38,7 @@ import org.slf4j.LoggerFactory;
 import pl.edu.icm.coansys.commons.hadoop.SequenceFileUtils;
 import pl.edu.icm.coansys.disambiguation.work.tool.DuplicateGenerator;
 
-
+@Ignore
 public class DuplicateWorkDetectorTest {
     
     private static Logger log = LoggerFactory.getLogger(DuplicateWorkDetectorTest.class);

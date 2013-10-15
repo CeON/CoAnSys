@@ -265,6 +265,20 @@ public final class StringTools {
         }
         return true;
     }
+    
+    /**
+     * Counts digits to all chars in string ratio
+     */
+    public static int digitsPercentage(String s) {
+        int allChars = s.length();
+        int digits = 0;
+        for (int i = 0; i < s.length(); i++) {
+            if (Character.isDigit(s.charAt(i))) {
+                digits++;
+            }
+        }
+        return digits * 100 / allChars;
+    }
 
     //******************** PRIVATE ********************
     private static int processDecimal(int decimal, int lastNumber, int lastDecimal) {
