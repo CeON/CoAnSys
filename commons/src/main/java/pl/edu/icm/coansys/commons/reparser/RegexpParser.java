@@ -59,7 +59,6 @@ public class RegexpParser {
         iter = (Iterator<String>) cfg.getKeys(NODE);
         while (iter.hasNext()) {
             String nodeId = iter.next();
-            System.out.println("nodeId: " + nodeId);
             nodeId = nodeId.replaceFirst("^" + NODE + "\\.", "").replaceFirst("\\..*$", "");
             if (!nodes.containsKey(nodeId)) {
                 nodes.put(nodeId, new NodeCategory());
@@ -92,7 +91,6 @@ public class RegexpParser {
                 List<String> templates = (List<String>) cfg.getList(NODE + "." + id + "." + TEMPLATE + "." + type);
 
                 for (String template : templates) {
-                    System.out.println("template: " + template);
                     Template t = new Template();
                     t.setType(type);
 
