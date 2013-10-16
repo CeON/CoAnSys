@@ -63,15 +63,15 @@ public class AuthorsVoter extends AbstractSimilarityVoter {
         if (probability > 1.0f) {
             probability = 1.0f;
         }
-        if (probability < 0.0f) {
-            probability = 0.0f;
+        if (probability <= 0.0f) {
+            return new Vote(Vote.VoteStatus.NOT_EQUALS);
         }
         
         return new Vote(Vote.VoteStatus.PROBABILITY, probability);
     }
 
     
-    private Pair<String[], Boolean> extractSurnames(DocumentProtos.DocumentWrapper doc) {
+    private static Pair<String[], Boolean> extractSurnames(DocumentProtos.DocumentWrapper doc) {
         RegexpParser authorParser = new RegexpParser("authorParser.properties", "author");
         List<DocumentProtos.Author> authorList = doc.getDocumentMetadata().getBasicMetadata().getAuthorList();
         String[] resultByPositionNb = new String[authorList.size()];
@@ -114,7 +114,7 @@ public class AuthorsVoter extends AbstractSimilarityVoter {
         return new Pair<String[], Boolean>(positionsCorrect ? resultByPositionNb : resultByOrder, positionsCorrect);
     }
     
-    private SimilarityCalculator getSimilarityCalculator() {
+    private static SimilarityCalculator getSimilarityCalculator() {
         return new JaroWinklerSimilarity();
     }
     
@@ -125,7 +125,7 @@ public class AuthorsVoter extends AbstractSimilarityVoter {
      * @param doc2authors
      * @return 
      */
-    private float allAuthorsMatching(String[] doc1authors, String[] doc2authors) {
+    private static float allAuthorsMatching(String[] doc1authors, String[] doc2authors) {
         int intersectionSize = 0;
         
         SimilarityCalculator similarity = getSimilarityCalculator();

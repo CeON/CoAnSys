@@ -17,33 +17,45 @@
  */
 package pl.edu.icm.coansys.disambiguation.work.voter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.edu.icm.coansys.models.DocumentProtos;
 
 /**
  *
  * @author Artur Czeczko <a.czeczko@icm.edu.pl>
  */
-public class DoiVoter extends AbstractSimilarityVoter {
+public class IssueVoter extends AbstractSimilarityVoter {
+    
+    private static Logger log = LoggerFactory.getLogger(IssueVoter.class);
 
     @Override
     public Vote vote(DocumentProtos.DocumentWrapper doc1, DocumentProtos.DocumentWrapper doc2) {
-        String doi1 = extractDOI(doc1);
-        String doi2 = extractDOI(doc2);
-        if (doi1 == null || doi2 == null) {
+        Integer issue1 = extractIssue(doc1);
+        Integer issue2 = extractIssue(doc2);
+
+        if (issue1 == null || issue2 == null) {
             return new Vote(Vote.VoteStatus.ABSTAIN);
-        } else if (doi1.equals(doi2)) {
-            return new Vote(Vote.VoteStatus.EQUALS);
+        } else if (issue1.equals(issue2)) {
+            return new Vote(Vote.VoteStatus.PROBABILITY, 1.0f);
         } else {
             return new Vote(Vote.VoteStatus.NOT_EQUALS);
         }
     }
-    
-    private static String extractDOI(DocumentProtos.DocumentWrapper doc) {
+
+    private static Integer extractIssue(DocumentProtos.DocumentWrapper doc) {
         DocumentProtos.BasicMetadata basicMetadata = doc.getDocumentMetadata().getBasicMetadata();
-        if (!basicMetadata.hasDoi()) {
-            return null;
+        if (basicMetadata.hasIssue()) {
+            String issueStr = basicMetadata.getIssue();
+            try {
+                Integer issue = Integer.parseInt(issueStr);
+                return issue;
+            } catch (NumberFormatException ex) {
+                log.warn("Cannot parse issue: " + issueStr, ex);
+                return null;
+            }
         } else {
-            return basicMetadata.getDoi();
+            return null;
         }
     }
 }
