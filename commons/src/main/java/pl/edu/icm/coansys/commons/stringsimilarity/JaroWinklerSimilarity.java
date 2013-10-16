@@ -34,14 +34,12 @@ public class JaroWinklerSimilarity extends SimilarityCalculator {
         s2 = s2.toLowerCase();
         float dist = score(s1, s2);
         dist = dist + commonPrefix(s1, s2, maxPrefLength) * weight * (1.0f - dist);
-        System.out.println("dist: " + dist);
         if (dist < 0) {
             dist = 0;
         }
         if (dist > 1.0f) {
             dist = 1.0f;
         }
-        System.out.println("dist2: " + dist);
         return dist;
     }
 
@@ -75,7 +73,6 @@ public class JaroWinklerSimilarity extends SimilarityCalculator {
                 }
             }
         }
-        System.out.println("commonChars: " + common);
         return common.toString();
     }
 
@@ -86,7 +83,6 @@ public class JaroWinklerSimilarity extends SimilarityCalculator {
                 transpositions++;
             }
         }
-        System.out.println("transpositions: " + transpositions / 2);
         return transpositions / 2;
     }
 
@@ -97,7 +93,6 @@ public class JaroWinklerSimilarity extends SimilarityCalculator {
                 return i;
             }
         }
-        System.out.println("commonPrefix: " + n);
         return n;
     }
 }
