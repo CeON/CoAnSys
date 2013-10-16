@@ -19,7 +19,6 @@ package pl.edu.icm.coansys.commons.reparser;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 /**
  * @author Lukasz Bolikowski (bolo@icm.edu.pl)
@@ -86,9 +85,7 @@ public class NodeCategory {
 
         Node first = null;
         Node prev = null;
-        System.out.println("pre-for (NodeCategory)i, text: " + text);
         for (Template t : getTemplates()) {
-            System.out.println("for (NodeCategory), template: " + t);
             Node n = t.match(tokens);
             if (n == null) {
                 continue;
