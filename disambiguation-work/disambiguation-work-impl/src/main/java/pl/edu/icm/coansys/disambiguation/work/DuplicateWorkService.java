@@ -45,7 +45,7 @@ public class DuplicateWorkService {
     
     
     @Autowired
-    private DuplicateWorkVoter duplicateWorkVoter;
+    private DuplicateWorkComparator duplicateWorkComparator;
      
     
     
@@ -79,7 +79,7 @@ public class DuplicateWorkService {
                 if (document.getRowId().equals(other.getRowId())) {
                     documentsCopy.remove(other);
                 } else {
-                    if (duplicateWorkVoter.isDuplicate(document, other)) {
+                    if (duplicateWorkComparator.isDuplicate(document, other)) {
                         addSameWorks(sameWorksMap, i, document, other);
                         documentsCopy.remove(other);
                     }

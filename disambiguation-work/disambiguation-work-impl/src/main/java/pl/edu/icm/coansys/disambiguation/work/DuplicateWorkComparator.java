@@ -28,7 +28,7 @@ import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
  * @author Artur Czeczko
  *
  */
-public class DuplicateWorkVoter {
+public class DuplicateWorkComparator {
 
     private List<SimilarityVoter> similarityVoters;
 
@@ -39,7 +39,7 @@ public class DuplicateWorkVoter {
 
         double weightsSum = 0.0;
         double probabilitiesSum = 0.0;
-
+        
         if (similarityVoters != null) {
             for (SimilarityVoter voter : similarityVoters) {
                 Vote vote = voter.vote(doc1, doc2);
