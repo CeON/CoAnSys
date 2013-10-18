@@ -66,7 +66,7 @@ public class DuplicateWorkVoterTest {
         
         Assert.assertTrue(duplicateWorkComparator.isDuplicate(doc1, doc2));
         
-        verify(simVoter, times(1)).vote(any(DocumentWrapper.class), any(DocumentWrapper.class));
+        verify(workTitleVoter, times(1)).vote(any(DocumentWrapper.class), any(DocumentWrapper.class));
         /*
         verify(workTitleComparator, times(1))
                 .sameTitles(any(DocumentWrapper.class), any(DocumentWrapper.class));
