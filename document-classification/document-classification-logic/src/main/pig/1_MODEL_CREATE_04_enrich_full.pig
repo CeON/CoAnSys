@@ -20,11 +20,16 @@
 -- default section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
-%DEFAULT commonJarsPath 'lib/*.jar'
+%DEFAULT jars '*.jar'
+%DEFAULT commonJarsPath 'lib/$jars'
 
+%DEFAULT dc_m_hdfs_neighs /tmp/docNeigh
+%DEFAULT dc_m_hdfs_docClassifMapping /tmp/dataForDocClassif
 %DEFAULT dc_m_hdfs_dataEnriched /tmp/dataEnriched
-%DEFAULT dc_m_int_numOfNeighbours 5
-%DEFAULT dc_m_hdfs_model /tmp/dataModel
+%DEFAULT dc_m_int_numOfNeighbours 4
+
+%DEFAULT dc_m_pigScript_featureVector tfidf
+%DEFAULT dc_m_pigScript_similarityMetric cosine
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- register section
@@ -37,9 +42,19 @@ REGISTER /usr/lib/hbase/lib/guava-11.0.2.jar
 REGISTER '$commonJarsPath'
 -- -----------------------------------------------------
 -- -----------------------------------------------------
+-- import section
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+IMPORT 'AUXIL_docsim.macros.def.pig';
+IMPORT 'AUXIL_macros.def.pig';
+IMPORT 'SIM_$dc_m_pigScript_similarityMetric.pig';
+IMPORT 'FV_$dc_m_pigScript_featureVector.pig';
+-- -----------------------------------------------------
+-- -----------------------------------------------------
 -- set section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
+%DEFAULT dc_m_double_sample 0.001
 %DEFAULT parallel_param 16
 %DEFAULT pig_tmpfilecompression_param true
 %DEFAULT pig_tmpfilecompression_codec_param gz
@@ -59,31 +74,47 @@ set mapred.map.tasks.speculative.execution $dc_m_speculative
 set mapred.reduce.tasks.speculative.execution $dc_m_speculative
 %DEFAULT dc_scheduler default
 SET mapred.fairscheduler.pool $dc_scheduler
-
-DEFINE posNeg pl.edu.icm.coansys.classification.documents.pig.proceeders.FLAT_POS_NEG();
-DEFINE tres pl.edu.icm.coansys.classification.documents.pig.proceeders.THRES_FOR_CATEG();
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- code section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
-A = LOAD '$dc_m_hdfs_dataEnriched'  as (keyA:chararray,keyB:chararray,sim:double,categsA:bag{(categA:chararray)},categsB:bag{(categB:chararray)});--keyA,keyB,sim,{categA},{categB}
-Ax = distinct A;
-B1 = foreach Ax generate flatten(posNeg(keyA,categsA,categsB)) as (keyA, categQ, pos, neg);
-B2 = group B1 by (keyA,categQ);
-B3 = foreach B2 generate group.keyA as keyA, group.categQ as categQ, SUM(B1.pos) as pos, SUM(B1.neg) as neg;
-split B3 into
-        	B3pos if pos>0,
-	        B3neg if neg>0;
-B4pos = group B3pos by (categQ,pos);
-pos = foreach B4pos generate group.categQ as categQ, group.pos as neigh, COUNT(B3pos) as docsocc;
-posX = group pos by categQ;
 
-B4neg = group B3neg by (categQ,neg);
-neg = foreach B4neg generate group.categQ as categQ, group.neg as neigh, COUNT(B3neg) as docsocc;
-negX = group neg by categQ;
+/* load <key,categs{(categ)}> */
+X1 = LOAD '$dc_m_hdfs_docClassifMapping' as (key:chararray,categs:bag{(categ:chararray)}); --key,{categ}
+X2 = foreach X1 generate key;
+X3 = group X2 all;
+X4 = foreach X3 generate X2, 1 as crosspoint;
 
-C = join posX by group full outer,negX by group;
-D = foreach C generate FLATTEN(tres(*,'$dc_m_int_numOfNeighbours')) as (categ:chararray, thres:int, f1:double);
-E = filter D by $0 is not null;
-store E into '$dc_m_hdfs_model';
+D1 = LOAD '$dc_m_hdfs_neighs' as (key:chararray,data:map[],part:int);
+/******** use this part to unsure that dc_m_hdfs_neighs contains categories
+D2 = foreach D1 generate *, 1 as crosspoint;
+D3 = join D2 by crosspoint, X4 by crosspoint using 'replicated'; --key,map,part,crosspoint,{keys},crosspoint
+D4 = foreach D3 generate key,data,flatten(X2) as allowed;
+D5 = filter D4 by key==allowed;
+D6 = foreach D5 generate key, data;
+********/
+/******** or ignore it when no doubt ********/
+D6 = foreach D1 generate key,data;
+E = $dc_m_pigScript_featureVector(D6);
+F = group E by key;
+G = foreach F generate *;
+CroZ = filter(cross F, G) by F::group < G::group;
+G00 = $dc_m_pigScript_similarityMetric(CroZ); --keyA,keyB,sim
+G01 = foreach G00 generate $1, $0,$2; --keyB,keyA,sim
+G = union G00,G01;
+G1 = group G by keyA;
+G2 = foreach G1{
+	n = order G by sim desc;
+	m = limit n $dc_m_int_numOfNeighbours;
+	generate m;
+}
+G3 = foreach G2 generate flatten($0);
+H = LOAD '$dc_m_hdfs_docClassifMapping' as (key:chararray,categs:bag{(categ:chararray)}); --key,{categ}
+I = join G3 by keyA, H by key;
+J = join I by keyB, H by key; --keyA,keyB,sim,key,{categ},key,{categ}
+
+K = foreach J generate $0 as keyA, $1 as keyB, $2 as sim, $4 as categsA, $6 as categsB; --keyA,keyB,sim,{categ},{categ}
+
+store K into '$dc_m_hdfs_dataEnriched'; --keyA,keyB,sim,{categA},{categB}
+

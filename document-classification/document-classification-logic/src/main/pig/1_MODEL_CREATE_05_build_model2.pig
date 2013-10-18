@@ -24,7 +24,9 @@
 
 %DEFAULT dc_m_hdfs_dataEnriched /tmp/dataEnriched
 %DEFAULT dc_m_int_numOfNeighbours 5
+%DEFAULT dc_m_pigScript_modelBuilderClass mlknnThresBuild
 %DEFAULT dc_m_hdfs_model /tmp/dataModel
+%DEFAULT PIG_ENDING .pig
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- register section
@@ -37,9 +39,17 @@ REGISTER /usr/lib/hbase/lib/guava-11.0.2.jar
 REGISTER '$commonJarsPath'
 -- -----------------------------------------------------
 -- -----------------------------------------------------
+-- import section
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+IMPORT 'MODEL_BLD_CLASS_$dc_m_pigScript_modelBuilderClass$PIG_ENDING';
+IMPORT 'AUXIL_macros.def.pig';
+-- -----------------------------------------------------
+-- -----------------------------------------------------
 -- set section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
+%DEFAULT dc_m_double_sample 0.001
 %DEFAULT parallel_param 16
 %DEFAULT pig_tmpfilecompression_param true
 %DEFAULT pig_tmpfilecompression_codec_param gz
@@ -60,30 +70,39 @@ set mapred.reduce.tasks.speculative.execution $dc_m_speculative
 %DEFAULT dc_scheduler default
 SET mapred.fairscheduler.pool $dc_scheduler
 
-DEFINE posNeg pl.edu.icm.coansys.classification.documents.pig.proceeders.FLAT_POS_NEG();
-DEFINE tres pl.edu.icm.coansys.classification.documents.pig.proceeders.THRES_FOR_CATEG();
+%DEFAULT suffix 'bla2'
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- code section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
-A = LOAD '$dc_m_hdfs_dataEnriched'  as (keyA:chararray,keyB:chararray,sim:double,categsA:bag{(categA:chararray)},categsB:bag{(categB:chararray)});--keyA,keyB,sim,{categA},{categB}
-Ax = distinct A;
-B1 = foreach Ax generate flatten(posNeg(keyA,categsA,categsB)) as (keyA, categQ, pos, neg);
-B2 = group B1 by (keyA,categQ);
-B3 = foreach B2 generate group.keyA as keyA, group.categQ as categQ, SUM(B1.pos) as pos, SUM(B1.neg) as neg;
-split B3 into
-        	B3pos if pos>0,
-	        B3neg if neg>0;
-B4pos = group B3pos by (categQ,pos);
-pos = foreach B4pos generate group.categQ as categQ, group.pos as neigh, COUNT(B3pos) as docsocc;
-posX = group pos by categQ;
+posXl = load '20131006_pos$suffix' as (group:chararray,{(categQ:chararray,neigh:int,docsocc:int)});
+negXl = load '20131006_neg$suffix' as (group:chararray,{(categQ:chararray,neigh:int,docsocc:int)});
+	negXs = order negXl by group asc;
+	posXs = order posXl by group asc;
 
-B4neg = group B3neg by (categQ,neg);
-neg = foreach B4neg generate group.categQ as categQ, group.neg as neigh, COUNT(B3neg) as docsocc;
-negX = group neg by categQ;
+	Z = join posXl by group full outer,negXl by group;-- using 'merge'; -- (group::posX::categ),pos::{(categ,count,docscount)}, (group::negX::categ),neg::{(categ,count,docscount)}?
 
-C = join posX by group full outer,negX by group;
-D = foreach C generate FLATTEN(tres(*,'$dc_m_int_numOfNeighbours')) as (categ:chararray, thres:int, f1:double);
-E = filter D by $0 is not null;
-store E into '$dc_m_hdfs_model';
+store Z into '20131006_pos_neg$suffix';
+Z = load '20131006_pos_neg$suffix';
+dump Z;
+/**********************
+**********************/
+
+
+
+
+
+
+/*
+B = $dc_m_pigScript_modelBuilderClass(A,$dc_m_int_numOfNeighbours);
+
+store B into 'posNeg';
+dump B;
+*/
+/*
+retX = foreach allX6 generate FLATTEN(pl.edu.icm.coansys.classification.documents.pig.proceeders.THRES_FOR_CATEG(*,'$DEF_NEIGH'))
+                as (categ:chararray, thres:int, f1:double);
+$ret = filter retX by $0 is not null;
+store B into '$dc_m_hdfs_model';
+*/

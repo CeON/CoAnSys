@@ -18,7 +18,7 @@
 
 DEFINE mlknnThresBuild(part,DEF_NEIGH) RETURNS ret{
 	B1 = foreach $part generate flatten(pl.edu.icm.coansys.classification.
-                documents.pig.proceeders.POS_NEG(keyA,keyB,categsA,categsB,categQ)) as (keyA, categQ, pos, neg);
+                documents.pig.proceeders.POS_NEG(keyA,keyB,categsA,categsB)) as (keyA, categQ, pos, neg);
 	B2 = group B1 by (keyA,categQ);
 	B3 = foreach B2 generate group.keyA as keyA, group.categQ as categQ, SUM(B1.pos) as pos, SUM(B1.neg) as neg;
 
@@ -28,17 +28,22 @@ DEFINE mlknnThresBuild(part,DEF_NEIGH) RETURNS ret{
 	B4pos = group B3pos by (categQ,pos);
 	pos = foreach B4pos generate group.categQ as categQ, group.pos as neigh, COUNT(B3pos) as docsocc;
 	posX = group pos by categQ;
-
+	posXs = order posX by categQ asc;
+	
 	B4neg = group B3neg by (categQ,neg);
 	neg = foreach B4neg generate group.categQ as categQ, group.neg as neigh, COUNT(B3neg) as docsocc;
 	negX = group neg by categQ;
+	negXs = order negX by categQ asc;
 
-	allX6 = join posX by $0 /*full outer*/,negX by $0; -- (group::posX::categ),pos::{(categ,count,docscount)}, (group::negX::categ),neg::{(categ,count,docscount)}?
+	$ret = join posX by categQ full outer,negX by categQ using 'merge'; -- (group::posX::categ),pos::{(categ,count,docscount)}, (group::negX::categ),neg::{(categ,count,docscount)}?
+/*
+	allX6 = join posX by categQ full outer,negX by categQ using "merge"; -- (group::posX::categ),pos::{(categ,count,docscount)}, (group::negX::categ),neg::{(categ,count,docscount)}?
 
 	retX = foreach allX6 generate FLATTEN(pl.edu.icm.coansys.classification.
                 documents.pig.proceeders.THRES_FOR_CATEG(*,'$DEF_NEIGH'))
                 as (categ:chararray, thres:int, f1:double);
 	$ret = filter retX by $0 is not null;
+*/
 };
 /*
 DEFINE mlknnThresBuild(part,DEF_NEIGH) RETURNS ret{
