@@ -46,6 +46,8 @@
                 </bean>
                 <bean id="workAuthorsVoter" class="pl.edu.icm.coansys.disambiguation.work.voter.AuthorsVoter">
                     <property name="weight" value="0.7"/>
+                    <property name="disapproveLevel" value="0.4"/>
+                    <property name="approveLevel" value="0.1"/>
                 </bean>
             </list>
         </property>

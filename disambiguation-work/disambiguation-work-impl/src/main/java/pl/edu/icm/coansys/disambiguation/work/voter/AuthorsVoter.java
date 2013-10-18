@@ -18,10 +18,14 @@
 package pl.edu.icm.coansys.disambiguation.work.voter;
 
 import java.util.List;
+import org.jruby.RubyArray$i$1$0$append;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.edu.icm.coansys.commons.java.Pair;
 import pl.edu.icm.coansys.commons.java.StringTools;
 import pl.edu.icm.coansys.commons.reparser.Node;
 import pl.edu.icm.coansys.commons.reparser.RegexpParser;
+import pl.edu.icm.coansys.commons.stringsimilarity.EditDistanceSimilarity;
 import pl.edu.icm.coansys.commons.stringsimilarity.JaroWinklerSimilarity;
 import pl.edu.icm.coansys.commons.stringsimilarity.SimilarityCalculator;
 import pl.edu.icm.coansys.models.DocumentProtos;
@@ -31,7 +35,12 @@ import pl.edu.icm.coansys.models.DocumentProtos;
  * @author Artur Czeczko <a.czeczko@icm.edu.pl>
  */
 public class AuthorsVoter extends AbstractSimilarityVoter {
-
+    
+    private static Logger logger = LoggerFactory.getLogger(AuthorsVoter.class);
+    
+    private float disapproveLevel;
+    private float approveLevel;
+    
     @Override
     public Vote vote(DocumentProtos.DocumentWrapper doc1, DocumentProtos.DocumentWrapper doc2) {
 
@@ -46,11 +55,16 @@ public class AuthorsVoter extends AbstractSimilarityVoter {
         float allAuthorsMatchFactor = 0.75f;
         
         if (doc1surnames.getY() && doc2surnames.getY()) {
+            logger.info("Authors' order available in both documents");
             String doc1firstAuthor = doc1surnames.getX()[0];
             String doc2firstAuthor = doc2surnames.getX()[0];
             
+            logger.info("doc1 first author: " + doc1firstAuthor);
+            logger.info("doc2 first author: " + doc2firstAuthor);
+            
             SimilarityCalculator similarity = getSimilarityCalculator();
             if (similarity.calculateSimilarity(doc1firstAuthor, doc2firstAuthor) > 0.5f) {
+                logger.info("First author matches");
                 firstAuthorComponent = 0.667f;
                 allAuthorsMatchFactor = 0.33f;
             } else {
@@ -114,8 +128,8 @@ public class AuthorsVoter extends AbstractSimilarityVoter {
         return new Pair<String[], Boolean>(positionsCorrect ? resultByPositionNb : resultByOrder, positionsCorrect);
     }
     
-    private static SimilarityCalculator getSimilarityCalculator() {
-        return new JaroWinklerSimilarity();
+    private SimilarityCalculator getSimilarityCalculator() {
+        return new EditDistanceSimilarity(approveLevel, disapproveLevel);
     }
     
     /**
@@ -125,7 +139,7 @@ public class AuthorsVoter extends AbstractSimilarityVoter {
      * @param doc2authors
      * @return 
      */
-    private static float allAuthorsMatching(String[] doc1authors, String[] doc2authors) {
+    private float allAuthorsMatching(String[] doc1authors, String[] doc2authors) {
         int intersectionSize = 0;
         
         SimilarityCalculator similarity = getSimilarityCalculator();
@@ -138,7 +152,17 @@ public class AuthorsVoter extends AbstractSimilarityVoter {
                 }
             }
         }
-        
-        return 2.0f * intersectionSize / (doc1authors.length + doc2authors.length);
+        float result = 2.0f * intersectionSize / (doc1authors.length + doc2authors.length);
+        logger.info("authors' intersection size: " + intersectionSize);
+        logger.info("allAuthorsMatching result: " + result);
+        return result;
+    }
+
+    public void setDisapproveLevel(float disapproveLevel) {
+        this.disapproveLevel = disapproveLevel;
+    }
+
+    public void setApproveLevel(float approveLevel) {
+        this.approveLevel = approveLevel;
     }
 }

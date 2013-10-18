@@ -35,8 +35,8 @@ public class WorkTitleVoter extends AbstractSimilarityVoter {
     
     Logger log = LoggerFactory.getLogger(WorkTitleVoter.class);
     
-    private float disapproveLevel = 10f;
-    private float approveLevel = 19f;
+    private float disapproveLevel;
+    private float approveLevel;
     private int digitsPercentageTreshold;
 
     @Override
