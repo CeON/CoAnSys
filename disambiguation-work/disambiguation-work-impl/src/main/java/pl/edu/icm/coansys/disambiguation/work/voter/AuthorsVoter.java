@@ -18,7 +18,6 @@
 package pl.edu.icm.coansys.disambiguation.work.voter;
 
 import java.util.List;
-import org.jruby.RubyArray$i$1$0$append;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.edu.icm.coansys.commons.java.Pair;
@@ -26,7 +25,6 @@ import pl.edu.icm.coansys.commons.java.StringTools;
 import pl.edu.icm.coansys.commons.reparser.Node;
 import pl.edu.icm.coansys.commons.reparser.RegexpParser;
 import pl.edu.icm.coansys.commons.stringsimilarity.EditDistanceSimilarity;
-import pl.edu.icm.coansys.commons.stringsimilarity.JaroWinklerSimilarity;
 import pl.edu.icm.coansys.commons.stringsimilarity.SimilarityCalculator;
 import pl.edu.icm.coansys.models.DocumentProtos;
 
