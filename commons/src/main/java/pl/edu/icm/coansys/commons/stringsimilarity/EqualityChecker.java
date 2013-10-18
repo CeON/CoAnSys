@@ -1,7 +1,7 @@
 /*
  * This file is part of CoAnSys project.
  * Copyright (c) 2012-2013 ICM-UW
- * 
+ *
  * CoAnSys is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -11,28 +11,33 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Affero General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.edu.icm.coansys.citations.indices
-
-import pl.edu.icm.coansys.citations.util.misc
-import pl.edu.icm.ceon.scala_commons.hadoop.writables.BytesIterable
+package pl.edu.icm.coansys.commons.stringsimilarity;
 
 /**
- * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
+ *
+ * @author acz
  */
-class AuthorIndex(val indexFileUri: String, val useDistributedCache: Boolean = true) {
-  private val index = new ApproximateIndex[BytesIterable](indexFileUri, useDistributedCache)
+public class EqualityChecker extends SimilarityCalculator {
 
-  def getDocumentsByAuthor(author: String): Iterable[String] = {
-    index.getApproximate(author).flatMap(_.iterable map misc.uuidDecode).toSet
-  }
-
-  def close() {
-    index.close()
-  }
+    /**
+     * Checks if both strings are equals
+     *
+     * @param s1
+     * @param s2
+     * @return
+     */
+    @Override
+    protected float doCalculate(String s1, String s2) {
+        if (s1.equals(s2)) {
+            return 1.0f;
+        } else {
+            return 0.0f;
+        }
+    }
 
 }

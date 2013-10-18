@@ -32,10 +32,18 @@
             <value>default</value>
         </property>
         <property>
+            <name>pool</name>
+            <value>default</value>
+        </property>
+        <property>
             <name>workingDir</name>
         </property>
         <property>
             <name>inputSeqFile</name>
+        </property>
+        <property>
+            <name>inputCitationsSeqFile</name>
+            <value>${inputSeqFile}</value>
         </property>
         <property>
             <name>outputSeqFile</name>
@@ -43,6 +51,10 @@
         <property>
             <name>heuristic</name>
             <value>Old</value>
+        </property>
+        <property>
+            <name>lowLevelApi</name>
+            <value>true</value>
         </property>
     </parameters>
 
@@ -61,10 +73,17 @@
         <java>
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
+            <configuration>
+                <property>
+                    <name>oozie.launcher.mapred.fairscheduler.pool</name>
+                    <value>${pool}</value>
+                </property>
+            </configuration>
             <main-class>pl.edu.icm.coansys.citations.jobs.ReferenceExtractor</main-class>
+            <arg>-Dmapred.fairscheduler.pool=${pool}</arg>
             <arg>-fs</arg><arg>${nameNode}</arg>
             <arg>-jt</arg><arg>${jobTracker}</arg>
-            <arg>${inputSeqFile}</arg>
+            <arg>${inputCitationsSeqFile}</arg>
             <arg>${workingDir}/source_entities</arg>
         </java>
         <ok to="document_extractor"/>
@@ -75,7 +94,14 @@
         <java>
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
+            <configuration>
+                <property>
+                    <name>oozie.launcher.mapred.fairscheduler.pool</name>
+                    <value>${pool}</value>
+                </property>
+            </configuration>
             <main-class>pl.edu.icm.coansys.citations.jobs.DocumentExtractor</main-class>
+            <arg>-Dmapred.fairscheduler.pool=${pool}</arg>
             <arg>-fs</arg><arg>${nameNode}</arg>
             <arg>-jt</arg><arg>${jobTracker}</arg>
             <arg>${inputSeqFile}</arg>
@@ -87,7 +113,7 @@
 
     <action name="inner">
         <sub-workflow>
-            <app-path>${wf:appPath()}/pl.edu.icm.coansys.citations-inner-workflow</app-path>
+            <app-path>${wf:appPath()}/pl.edu.icm.coansys-citations-inner-workflow</app-path>
             <configuration>
                 <property>
                     <name>cit_workDir</name>
@@ -106,6 +132,10 @@
                     <value>${queueName}</value>
                 </property>
                 <property>
+                    <name>pool</name>
+                    <value>${pool}</value>
+                </property>
+                <property>
                     <name>cit_inputSrcSeqFile</name>
                     <value>${workingDir}/source_entities</value>
                 </property>
@@ -116,6 +146,10 @@
                 <property>
                     <name>cit_heuristic</name>
                     <value>${heuristic}</value>
+                </property>
+                <property>
+                    <name>lowLevelApi</name>
+                    <value>${lowLevelApi}</value>
                 </property>
                 <property>
                     <name>cit_inputDestSeqFile</name>
@@ -135,7 +169,14 @@
         <java>
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
+            <configuration>
+                <property>
+                    <name>oozie.launcher.mapred.fairscheduler.pool</name>
+                    <value>${pool}</value>
+                </property>
+            </configuration>
             <main-class>pl.edu.icm.coansys.citations.jobs.OutputToPICProtosConverter</main-class>
+            <arg>-Dmapred.fairscheduler.pool=${pool}</arg>
             <arg>-fs</arg><arg>${nameNode}</arg>
             <arg>-jt</arg><arg>${jobTracker}</arg>
             <arg>${workingDir}/matching</arg>

@@ -28,6 +28,7 @@ import pl.edu.icm.coansys.citations.util.AugmentedDList.augmentDList
 import pl.edu.icm.cermine.bibref.CRFBibReferenceParser
 import pl.edu.icm.ceon.scala_commons.strings
 import pl.edu.icm.coansys.commons.java.DiacriticsRemover
+import scala.collection.mutable
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -113,6 +114,17 @@ object misc {
 
   def tokensFromCermine(s: String): List[String] =
     CitationUtils.stringToCitation(s).getTokens.map(_.getText).toList
+
+  def nGreatest[A : Ordering](elems: TraversableOnce[A], n: Int): Seq[A] = {
+    var q = mutable.SortedSet()
+    for (elem <- elems) {
+      q.add(elem)
+      if (q.size > n)
+        q.remove(q.min)
+    }
+
+    q.toSeq
+  }
 
   val stopWords =
     """

@@ -15,24 +15,18 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
+package pl.edu.icm.coansys.disambiguation.work.voter;
 
-package pl.edu.icm.coansys.citations.indices
-
-import pl.edu.icm.coansys.citations.util.misc
-import pl.edu.icm.ceon.scala_commons.hadoop.writables.BytesIterable
+import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
 
 /**
- * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
+ *
+ * @author Łukasz Dumiszewski
+ * @author Artur Czeczko
  */
-class AuthorIndex(val indexFileUri: String, val useDistributedCache: Boolean = true) {
-  private val index = new ApproximateIndex[BytesIterable](indexFileUri, useDistributedCache)
+public interface SimilarityVoter {
 
-  def getDocumentsByAuthor(author: String): Iterable[String] = {
-    index.getApproximate(author).flatMap(_.iterable map misc.uuidDecode).toSet
-  }
+    public Vote vote(DocumentWrapper doc1, DocumentWrapper doc2);
 
-  def close() {
-    index.close()
-  }
-
+    public float getWeight();
 }

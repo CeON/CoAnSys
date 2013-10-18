@@ -16,23 +16,26 @@
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.edu.icm.coansys.citations.indices
-
-import pl.edu.icm.coansys.citations.util.misc
-import pl.edu.icm.ceon.scala_commons.hadoop.writables.BytesIterable
+package pl.edu.icm.coansys.disambiguation.work.voter;
 
 /**
- * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
+ *
+ * @author Łukasz Dumiszewski
+ * @author Artur Czeczko
  */
-class AuthorIndex(val indexFileUri: String, val useDistributedCache: Boolean = true) {
-  private val index = new ApproximateIndex[BytesIterable](indexFileUri, useDistributedCache)
+public abstract class AbstractSimilarityVoter implements SimilarityVoter {
+    
+    private float weight = 1.0f;
 
-  def getDocumentsByAuthor(author: String): Iterable[String] = {
-    index.getApproximate(author).flatMap(_.iterable map misc.uuidDecode).toSet
-  }
+    @Override
+    public float getWeight() {
+        return weight;
+    }
 
-  def close() {
-    index.close()
-  }
-
+    public void setWeight(float weight) {
+        if (weight <= 0.0) {
+            throw new IllegalArgumentException("weight must be a positive number");
+        }
+        this.weight = weight;
+    }
 }

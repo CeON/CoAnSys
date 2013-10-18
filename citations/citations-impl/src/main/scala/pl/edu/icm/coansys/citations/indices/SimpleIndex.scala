@@ -24,7 +24,7 @@ import java.io.IOException
 import org.apache.commons.io.FileUtils
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.Path
-import org.apache.hadoop.io.{WritableComparable, Writable, MapFile}
+import org.apache.hadoop.io.{BytesWritable, WritableComparable, Writable, MapFile}
 import org.slf4j.LoggerFactory
 import pl.edu.icm.coansys.citations.data.MatchableEntity
 import scala.Some
@@ -75,7 +75,7 @@ class SimpleIndex[K <: WritableComparable[_] : Manifest, V <: Writable : Manifes
 object SimpleIndex {
   def buildKeyIndex(documents: DList[MatchableEntity], indexFile: String)(implicit conf: ScoobiConfiguration) {
     persist(toSequenceFile(documents.map(doc => (doc.id, doc)), indexFile))
-    sequencefile.merge(indexFile)(conf)
+    sequencefile.mergeWithScoobi[String, BytesWritable](indexFile)
     sequencefile.convertToMapFile(indexFile)(conf)
   }
 }
