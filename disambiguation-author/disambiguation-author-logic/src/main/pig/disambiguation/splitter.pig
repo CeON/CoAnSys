@@ -84,13 +84,14 @@ set mapred.fairscheduler.pool $and_scheduler
 A1 = LOAD '$and_inputDocsData' USING pl.edu.icm.coansys.commons.pig.udf.RichSequenceFileLoader('org.apache.hadoop.io.Text', 'org.apache.hadoop.io.BytesWritable') as (key:chararray, value:bytearray);
 A2 = sample A1 $and_sample;
 
-B1 = foreach A2 generate flatten(snameDocumentMetaExtractor($1)) as (cId:chararray, sname:int, metadata:map[{(int)}]);
+B1 = foreach A2 generate flatten(snameDocumentMetaExtractor($1)) as (dockey:chararray, cId:chararray, sname:int, metadata:map[{(int)}]);
 
-B = FILTER B1 BY (cId is not null) AND featuresCheck(cId, sname, metadata);
+B = FILTER B1 BY (dockey is not null) AND featuresCheck(cId, sname, metadata);
 
 C = group B by sname;
 -- D: {sname: chararray, datagroup: {(cId: chararray,cPos: int,sname: chararray,data: map[{(val_0: chararray)}])}, count: long}
-D = foreach C generate group as sname, B as datagroup, COUNT(B) as count;
+-- TODO: remove sname from datagroup. Then in UDFs as well..
+D = foreach C generate group as sname, ( B.cId, B.sname, B.metadata ) as datagroup, COUNT(B) as count;
 
 split D into
         D1 if count == 1,
@@ -106,8 +107,15 @@ split D into
 %DEFAULT appSim 'app-sim'
 %DEFAULT appNoSim 'app-no-sim'
 %DEFAULT sep '/'
+%DEFAULT cid_dockey 'cid_dockey'
 
 store D1 into '$and_splitter_output$sep$one';
 store D100 into '$and_splitter_output$sep$exh';
 store D1000 into '$and_splitter_output$sep$appSim';
 store DX into '$and_splitter_output$sep$appNoSim';
+
+Q = foreach B generate cId, dockey;
+store Q into '$and_splitter_output$sep$cid_dockey';
+-- TODO: wygenerowac tabele (dockey, cId) i zapisac
+
+
