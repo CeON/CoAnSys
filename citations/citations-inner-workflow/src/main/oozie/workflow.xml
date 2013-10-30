@@ -105,6 +105,7 @@
             <main-class>pl.edu.icm.coansys.citations.jobs.ReferencesToEntitiesConverter</main-class>
             <arg>-Dmapred.max.split.size=500000</arg>
             <arg>-Dmapred.fairscheduler.pool=${pool}</arg>
+            <arg>-Dscoobi.libjarsdir=${cit_workDir}/libjars</arg> 
             <arg>-fs</arg>
             <arg>${nameNode}</arg>
             <arg>-jt</arg>
@@ -130,6 +131,7 @@
             </configuration>
             <main-class>pl.edu.icm.coansys.citations.jobs.BasicMetadataToEntitiesConverter</main-class>
             <arg>-Dmapred.fairscheduler.pool=${pool}</arg>
+            <arg>-Dscoobi.libjarsdir=${cit_workDir}/libjars</arg> 
             <arg>-fs</arg>
             <arg>${nameNode}</arg>
             <arg>-jt</arg>
@@ -155,6 +157,7 @@
             </configuration>
             <main-class>pl.edu.icm.coansys.citations.jobs.BasicMetadataToEntitiesConverter</main-class>
             <arg>-Dmapred.fairscheduler.pool=${pool}</arg>
+            <arg>-Dscoobi.libjarsdir=${cit_workDir}/libjars</arg> 
             <arg>-fs</arg>
             <arg>${nameNode}</arg>
             <arg>-jt</arg>
@@ -180,6 +183,7 @@
             </configuration>
             <main-class>pl.edu.icm.coansys.citations.jobs.IndexBuilder</main-class>
             <arg>-Dmapred.fairscheduler.pool=${pool}</arg>
+            <arg>-Dscoobi.libjarsdir=${cit_workDir}/libjars</arg> 
             <arg>-fs</arg>
             <arg>${nameNode}</arg>
             <arg>-jt</arg>
@@ -214,6 +218,7 @@
             </configuration>
             <main-class>pl.edu.icm.coansys.citations.jobs.NewHeuristicAdder</main-class>
             <arg>-Dmapred.fairscheduler.pool=${pool}</arg>
+            <arg>-Dscoobi.libjarsdir=${cit_workDir}/libjars</arg> 
             <arg>-fs</arg>
             <arg>${nameNode}</arg>
             <arg>-jt</arg>
@@ -241,6 +246,7 @@
             <main-class>pl.edu.icm.coansys.citations.jobs.IndexBuilder</main-class>
             <java-opts>${cit_genAuthorIdxJavaOpts}</java-opts>
             <arg>-Dmapred.fairscheduler.pool=${pool}</arg>
+            <arg>-Dscoobi.libjarsdir=${cit_workDir}/libjars</arg> 
             <arg>-fs</arg>
             <arg>${nameNode}</arg>
             <arg>-jt</arg>
@@ -358,6 +364,7 @@
             </configuration>
             <main-class>pl.edu.icm.coansys.citations.jobs.HeuristicFilter</main-class>
             <arg>-Dmapred.fairscheduler.pool=${pool}</arg>
+            <arg>-Dscoobi.libjarsdir=${cit_workDir}/libjars</arg> 
             <arg>-fs</arg>
             <arg>${nameNode}</arg>
             <arg>-jt</arg>
