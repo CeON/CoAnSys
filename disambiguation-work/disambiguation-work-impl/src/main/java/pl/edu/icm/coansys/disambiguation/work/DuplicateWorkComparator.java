@@ -18,6 +18,8 @@
 package pl.edu.icm.coansys.disambiguation.work;
 
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.edu.icm.coansys.disambiguation.work.voter.SimilarityVoter;
 import pl.edu.icm.coansys.disambiguation.work.voter.Vote;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
@@ -28,8 +30,9 @@ import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
  * @author Artur Czeczko
  *
  */
-public class DuplicateWorkVoter {
+public class DuplicateWorkComparator {
 
+    private static Logger logger = LoggerFactory.getLogger(DuplicateWorkComparator.class);
     private List<SimilarityVoter> similarityVoters;
 
     /**
@@ -40,24 +43,35 @@ public class DuplicateWorkVoter {
         double weightsSum = 0.0;
         double probabilitiesSum = 0.0;
 
+        String ids = doc1.getRowId() + ", " + doc2.getRowId();
+        StringBuilder logBuilder = new StringBuilder();
+
         if (similarityVoters != null) {
             for (SimilarityVoter voter : similarityVoters) {
                 Vote vote = voter.vote(doc1, doc2);
 
                 switch (vote.getStatus()) {
                     case EQUALS:
+                        logger.info("Documents " + ids + " considered as duplicates because of result EQUALS of voter "
+                                + voter.getClass().getName());
                         return true;
                     case NOT_EQUALS:
                         return false;
                     case ABSTAIN:
                         continue;
                     case PROBABILITY:
+                        logBuilder.append(" -- voter ").append(voter.getClass().getName())
+                                .append(" returned probability ").append(vote.getProbability())
+                                .append(", weight ").append(voter.getWeight()).append('\n');
                         weightsSum += voter.getWeight();
                         probabilitiesSum += vote.getProbability() * voter.getWeight();
                 }
             }
         }
 
+        logger.info(ids + " considered as duplicates because:\n" + logBuilder.toString());
+        logger.info("doc1:\n" + doc1.getDocumentMetadata());
+        logger.info("doc2:\n" + doc2.getDocumentMetadata());
         return (weightsSum > 0) && (probabilitiesSum / weightsSum > 0.5);
     }
 
