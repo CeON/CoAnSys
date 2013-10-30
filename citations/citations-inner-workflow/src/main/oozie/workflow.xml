@@ -111,6 +111,7 @@
             <arg>${jobTracker}</arg>
             <arg>${cit_inputSrcSeqFile}</arg>
             <arg>${cit_workDir}/source_entities</arg>
+            <arg>--</arg><arg>scoobi</arg><arg>cluster</arg>
         </java>
 
         <ok to="convert-destination-entities"/>
@@ -135,6 +136,7 @@
             <arg>${jobTracker}</arg>
             <arg>${cit_inputSrcSeqFile}</arg>
             <arg>${cit_workDir}/source_entities</arg>
+            <arg>--</arg><arg>scoobi</arg><arg>cluster</arg>
         </java>
 
         <ok to="convert-destination-entities"/>
@@ -159,6 +161,7 @@
             <arg>${jobTracker}</arg>
             <arg>${cit_inputDestSeqFile}</arg>
             <arg>${cit_workDir}/destination_entities</arg>
+            <arg>--</arg><arg>scoobi</arg><arg>cluster</arg>
         </java>
 
         <ok to="generate-key-index"/>
@@ -184,6 +187,7 @@
             <arg>-key</arg>
             <arg>${cit_workDir}/destination_entities</arg>
             <arg>${cit_workDir}/key_index</arg>
+            <arg>--</arg><arg>scoobi</arg><arg>cluster</arg>
         </java>
 
         <ok to="heuristic-type"/>
@@ -217,6 +221,7 @@
             <arg>${cit_workDir}/source_entities</arg>
             <arg>${cit_workDir}/destination_entities</arg>
             <arg>${cit_workDir}/source_entities_heur</arg>
+            <arg>--</arg><arg>scoobi</arg><arg>cluster</arg>
         </java>
 
         <ok to="api-level"/>
@@ -243,6 +248,7 @@
             <arg>-author</arg>
             <arg>${cit_workDir}/destination_entities</arg>
             <arg>${cit_workDir}/author_index</arg>
+            <arg>--</arg><arg>scoobi</arg><arg>cluster</arg>
         </java>
 
         <ok to="add-heuristic"/>
@@ -359,6 +365,7 @@
             <arg>${cit_workDir}/destination_entities</arg>
             <arg>${cit_workDir}/source_entities_heur</arg>
             <arg>${cit_workDir}/source_entities_heur_filtered</arg>
+            <arg>--</arg><arg>scoobi</arg><arg>cluster</arg>
         </java>
 
         <ok to="assess"/>
@@ -472,6 +479,7 @@
         <arg>${cit_workDir}/destination_entities</arg>
         <arg>${cit_workDir}/source_entities_heur</arg>
         <arg>${cit_outputSeqFile}</arg>
+        <arg>--</arg><arg>scoobi</arg><arg>cluster</arg>
       </java>
       <ok to="end"/>
       <error to="fail"/>

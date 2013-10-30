@@ -85,6 +85,7 @@
             <arg>-jt</arg><arg>${jobTracker}</arg>
             <arg>${inputCitationsSeqFile}</arg>
             <arg>${workingDir}/source_entities</arg>
+            <arg>--</arg><arg>scoobi</arg><arg>cluster</arg>
         </java>
         <ok to="document_extractor"/>
         <error to="fail"/>
@@ -106,6 +107,7 @@
             <arg>-jt</arg><arg>${jobTracker}</arg>
             <arg>${inputSeqFile}</arg>
             <arg>${workingDir}/destination_entities</arg>
+            <arg>--</arg><arg>scoobi</arg><arg>cluster</arg>
         </java>
         <ok to="inner"/>
         <error to="fail"/>
@@ -181,6 +183,7 @@
             <arg>-jt</arg><arg>${jobTracker}</arg>
             <arg>${workingDir}/matching</arg>
             <arg>${outputSeqFile}</arg>
+            <arg>--</arg><arg>scoobi</arg><arg>cluster</arg>
         </java>
         <ok to="end"/>
         <error to="fail"/>
