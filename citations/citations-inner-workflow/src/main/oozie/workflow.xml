@@ -105,12 +105,14 @@
             <main-class>pl.edu.icm.coansys.citations.jobs.ReferencesToEntitiesConverter</main-class>
             <arg>-Dmapred.max.split.size=500000</arg>
             <arg>-Dmapred.fairscheduler.pool=${pool}</arg>
+            <arg>-Dscoobi.libjarsdir=${cit_workDir}/libjars</arg> 
             <arg>-fs</arg>
             <arg>${nameNode}</arg>
             <arg>-jt</arg>
             <arg>${jobTracker}</arg>
             <arg>${cit_inputSrcSeqFile}</arg>
             <arg>${cit_workDir}/source_entities</arg>
+            <arg>--</arg><arg>scoobi</arg><arg>cluster</arg>
         </java>
 
         <ok to="convert-destination-entities"/>
@@ -129,12 +131,14 @@
             </configuration>
             <main-class>pl.edu.icm.coansys.citations.jobs.BasicMetadataToEntitiesConverter</main-class>
             <arg>-Dmapred.fairscheduler.pool=${pool}</arg>
+            <arg>-Dscoobi.libjarsdir=${cit_workDir}/libjars</arg> 
             <arg>-fs</arg>
             <arg>${nameNode}</arg>
             <arg>-jt</arg>
             <arg>${jobTracker}</arg>
             <arg>${cit_inputSrcSeqFile}</arg>
             <arg>${cit_workDir}/source_entities</arg>
+            <arg>--</arg><arg>scoobi</arg><arg>cluster</arg>
         </java>
 
         <ok to="convert-destination-entities"/>
@@ -153,12 +157,14 @@
             </configuration>
             <main-class>pl.edu.icm.coansys.citations.jobs.BasicMetadataToEntitiesConverter</main-class>
             <arg>-Dmapred.fairscheduler.pool=${pool}</arg>
+            <arg>-Dscoobi.libjarsdir=${cit_workDir}/libjars</arg> 
             <arg>-fs</arg>
             <arg>${nameNode}</arg>
             <arg>-jt</arg>
             <arg>${jobTracker}</arg>
             <arg>${cit_inputDestSeqFile}</arg>
             <arg>${cit_workDir}/destination_entities</arg>
+            <arg>--</arg><arg>scoobi</arg><arg>cluster</arg>
         </java>
 
         <ok to="generate-key-index"/>
@@ -177,6 +183,7 @@
             </configuration>
             <main-class>pl.edu.icm.coansys.citations.jobs.IndexBuilder</main-class>
             <arg>-Dmapred.fairscheduler.pool=${pool}</arg>
+            <arg>-Dscoobi.libjarsdir=${cit_workDir}/libjars</arg> 
             <arg>-fs</arg>
             <arg>${nameNode}</arg>
             <arg>-jt</arg>
@@ -184,6 +191,7 @@
             <arg>-key</arg>
             <arg>${cit_workDir}/destination_entities</arg>
             <arg>${cit_workDir}/key_index</arg>
+            <arg>--</arg><arg>scoobi</arg><arg>cluster</arg>
         </java>
 
         <ok to="heuristic-type"/>
@@ -210,6 +218,7 @@
             </configuration>
             <main-class>pl.edu.icm.coansys.citations.jobs.NewHeuristicAdder</main-class>
             <arg>-Dmapred.fairscheduler.pool=${pool}</arg>
+            <arg>-Dscoobi.libjarsdir=${cit_workDir}/libjars</arg> 
             <arg>-fs</arg>
             <arg>${nameNode}</arg>
             <arg>-jt</arg>
@@ -217,6 +226,7 @@
             <arg>${cit_workDir}/source_entities</arg>
             <arg>${cit_workDir}/destination_entities</arg>
             <arg>${cit_workDir}/source_entities_heur</arg>
+            <arg>--</arg><arg>scoobi</arg><arg>cluster</arg>
         </java>
 
         <ok to="api-level"/>
@@ -236,6 +246,7 @@
             <main-class>pl.edu.icm.coansys.citations.jobs.IndexBuilder</main-class>
             <java-opts>${cit_genAuthorIdxJavaOpts}</java-opts>
             <arg>-Dmapred.fairscheduler.pool=${pool}</arg>
+            <arg>-Dscoobi.libjarsdir=${cit_workDir}/libjars</arg> 
             <arg>-fs</arg>
             <arg>${nameNode}</arg>
             <arg>-jt</arg>
@@ -243,6 +254,7 @@
             <arg>-author</arg>
             <arg>${cit_workDir}/destination_entities</arg>
             <arg>${cit_workDir}/author_index</arg>
+            <arg>--</arg><arg>scoobi</arg><arg>cluster</arg>
         </java>
 
         <ok to="add-heuristic"/>
@@ -352,6 +364,7 @@
             </configuration>
             <main-class>pl.edu.icm.coansys.citations.jobs.HeuristicFilter</main-class>
             <arg>-Dmapred.fairscheduler.pool=${pool}</arg>
+            <arg>-Dscoobi.libjarsdir=${cit_workDir}/libjars</arg> 
             <arg>-fs</arg>
             <arg>${nameNode}</arg>
             <arg>-jt</arg>
@@ -359,6 +372,7 @@
             <arg>${cit_workDir}/destination_entities</arg>
             <arg>${cit_workDir}/source_entities_heur</arg>
             <arg>${cit_workDir}/source_entities_heur_filtered</arg>
+            <arg>--</arg><arg>scoobi</arg><arg>cluster</arg>
         </java>
 
         <ok to="assess"/>
@@ -472,6 +486,7 @@
         <arg>${cit_workDir}/destination_entities</arg>
         <arg>${cit_workDir}/source_entities_heur</arg>
         <arg>${cit_outputSeqFile}</arg>
+        <arg>--</arg><arg>scoobi</arg><arg>cluster</arg>
       </java>
       <ok to="end"/>
       <error to="fail"/>
