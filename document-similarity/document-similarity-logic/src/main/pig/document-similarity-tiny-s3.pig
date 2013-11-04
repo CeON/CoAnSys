@@ -54,7 +54,7 @@ SET pig.tmpfilecompression true
 SET pig.tmpfilecompression.codec $tmpCompressionCodec
 %DEFAULT ds_scheduler default
 SET mapred.fairscheduler.pool $ds_scheduler
-
+--SET pig.noSplitCombination true;
 IMPORT 'macros.pig';
 
 -------------------------------------------------------

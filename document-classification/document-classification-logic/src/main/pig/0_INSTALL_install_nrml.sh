@@ -4,8 +4,7 @@
 # (C) 2010-2012 ICM UW. All rights reserved.
 #
 
-eval "cd ../../..";
-eval "mvn install";
-eval "mkdir src/main/pig/lib";
-eval "cp target/document-classification-1.2-SNAPSHOT.jar src/main/pig/lib";
-eval "cd src/main/pig";
+cd ../../..
+mvn clean install 
+mkdir src/main/pig/lib
+cp target/document-classification-*-SNAPSHOT*.jar src/main/pig/lib
