@@ -81,10 +81,12 @@
             </configuration>
             <main-class>pl.edu.icm.coansys.citations.jobs.ReferenceExtractor</main-class>
             <arg>-Dmapred.fairscheduler.pool=${pool}</arg>
+            <arg>-Dscoobi.libjarsdir=${workingDir}/libjars</arg> 
             <arg>-fs</arg><arg>${nameNode}</arg>
             <arg>-jt</arg><arg>${jobTracker}</arg>
             <arg>${inputCitationsSeqFile}</arg>
             <arg>${workingDir}/source_entities</arg>
+            <arg>--</arg><arg>scoobi</arg><arg>cluster</arg>
         </java>
         <ok to="document_extractor"/>
         <error to="fail"/>
@@ -102,10 +104,12 @@
             </configuration>
             <main-class>pl.edu.icm.coansys.citations.jobs.DocumentExtractor</main-class>
             <arg>-Dmapred.fairscheduler.pool=${pool}</arg>
+            <arg>-Dscoobi.libjarsdir=${workingDir}/libjars</arg> 
             <arg>-fs</arg><arg>${nameNode}</arg>
             <arg>-jt</arg><arg>${jobTracker}</arg>
             <arg>${inputSeqFile}</arg>
             <arg>${workingDir}/destination_entities</arg>
+            <arg>--</arg><arg>scoobi</arg><arg>cluster</arg>
         </java>
         <ok to="inner"/>
         <error to="fail"/>
@@ -177,10 +181,12 @@
             </configuration>
             <main-class>pl.edu.icm.coansys.citations.jobs.OutputToPICProtosConverter</main-class>
             <arg>-Dmapred.fairscheduler.pool=${pool}</arg>
+            <arg>-Dscoobi.libjarsdir=${workingDir}/libjars</arg> 
             <arg>-fs</arg><arg>${nameNode}</arg>
             <arg>-jt</arg><arg>${jobTracker}</arg>
             <arg>${workingDir}/matching</arg>
             <arg>${outputSeqFile}</arg>
+            <arg>--</arg><arg>scoobi</arg><arg>cluster</arg>
         </java>
         <ok to="end"/>
         <error to="fail"/>
