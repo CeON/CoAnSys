@@ -11,9 +11,9 @@ public final class DocumentClassificationProtos {
   public interface DocumentClassificationOutOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
     
-    // required string docIdA = 1;
-    boolean hasDocIdA();
-    String getDocIdA();
+    // required string docId = 1;
+    boolean hasDocId();
+    String getDocId();
     
     // repeated string classificationCodes = 2;
     java.util.List<String> getClassificationCodesList();
@@ -59,14 +59,14 @@ public final class DocumentClassificationProtos {
     }
     
     private int bitField0_;
-    // required string docIdA = 1;
-    public static final int DOCIDA_FIELD_NUMBER = 1;
-    private java.lang.Object docIdA_;
-    public boolean hasDocIdA() {
+    // required string docId = 1;
+    public static final int DOCID_FIELD_NUMBER = 1;
+    private java.lang.Object docId_;
+    public boolean hasDocId() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
-    public String getDocIdA() {
-      java.lang.Object ref = docIdA_;
+    public String getDocId() {
+      java.lang.Object ref = docId_;
       if (ref instanceof String) {
         return (String) ref;
       } else {
@@ -74,17 +74,17 @@ public final class DocumentClassificationProtos {
             (com.google.protobuf.ByteString) ref;
         String s = bs.toStringUtf8();
         if (com.google.protobuf.Internal.isValidUtf8(bs)) {
-          docIdA_ = s;
+          docId_ = s;
         }
         return s;
       }
     }
-    private com.google.protobuf.ByteString getDocIdABytes() {
-      java.lang.Object ref = docIdA_;
+    private com.google.protobuf.ByteString getDocIdBytes() {
+      java.lang.Object ref = docId_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8((String) ref);
-        docIdA_ = b;
+        docId_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
@@ -127,7 +127,7 @@ public final class DocumentClassificationProtos {
     }
     
     private void initFields() {
-      docIdA_ = "";
+      docId_ = "";
       classificationCodes_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       auxs_ = java.util.Collections.emptyList();
     }
@@ -136,7 +136,7 @@ public final class DocumentClassificationProtos {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
       
-      if (!hasDocIdA()) {
+      if (!hasDocId()) {
         memoizedIsInitialized = 0;
         return false;
       }
@@ -148,7 +148,7 @@ public final class DocumentClassificationProtos {
                         throws java.io.IOException {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeBytes(1, getDocIdABytes());
+        output.writeBytes(1, getDocIdBytes());
       }
       for (int i = 0; i < classificationCodes_.size(); i++) {
         output.writeBytes(2, classificationCodes_.getByteString(i));
@@ -167,7 +167,7 @@ public final class DocumentClassificationProtos {
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(1, getDocIdABytes());
+          .computeBytesSize(1, getDocIdBytes());
       }
       {
         int dataSize = 0;
@@ -307,7 +307,7 @@ public final class DocumentClassificationProtos {
       
       public Builder clear() {
         super.clear();
-        docIdA_ = "";
+        docId_ = "";
         bitField0_ = (bitField0_ & ~0x00000001);
         classificationCodes_ = com.google.protobuf.LazyStringArrayList.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000002);
@@ -358,7 +358,7 @@ public final class DocumentClassificationProtos {
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
           to_bitField0_ |= 0x00000001;
         }
-        result.docIdA_ = docIdA_;
+        result.docId_ = docId_;
         if (((bitField0_ & 0x00000002) == 0x00000002)) {
           classificationCodes_ = new com.google.protobuf.UnmodifiableLazyStringList(
               classificationCodes_);
@@ -390,8 +390,8 @@ public final class DocumentClassificationProtos {
       
       public Builder mergeFrom(pl.edu.icm.coansys.models.DocumentClassificationProtos.DocumentClassificationOut other) {
         if (other == pl.edu.icm.coansys.models.DocumentClassificationProtos.DocumentClassificationOut.getDefaultInstance()) return this;
-        if (other.hasDocIdA()) {
-          setDocIdA(other.getDocIdA());
+        if (other.hasDocId()) {
+          setDocId(other.getDocId());
         }
         if (!other.classificationCodes_.isEmpty()) {
           if (classificationCodes_.isEmpty()) {
@@ -434,7 +434,7 @@ public final class DocumentClassificationProtos {
       }
       
       public final boolean isInitialized() {
-        if (!hasDocIdA()) {
+        if (!hasDocId()) {
           
           return false;
         }
@@ -466,7 +466,7 @@ public final class DocumentClassificationProtos {
             }
             case 10: {
               bitField0_ |= 0x00000001;
-              docIdA_ = input.readBytes();
+              docId_ = input.readBytes();
               break;
             }
             case 18: {
@@ -486,39 +486,39 @@ public final class DocumentClassificationProtos {
       
       private int bitField0_;
       
-      // required string docIdA = 1;
-      private java.lang.Object docIdA_ = "";
-      public boolean hasDocIdA() {
+      // required string docId = 1;
+      private java.lang.Object docId_ = "";
+      public boolean hasDocId() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
-      public String getDocIdA() {
-        java.lang.Object ref = docIdA_;
+      public String getDocId() {
+        java.lang.Object ref = docId_;
         if (!(ref instanceof String)) {
           String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
-          docIdA_ = s;
+          docId_ = s;
           return s;
         } else {
           return (String) ref;
         }
       }
-      public Builder setDocIdA(String value) {
+      public Builder setDocId(String value) {
         if (value == null) {
     throw new NullPointerException();
   }
   bitField0_ |= 0x00000001;
-        docIdA_ = value;
+        docId_ = value;
         onChanged();
         return this;
       }
-      public Builder clearDocIdA() {
+      public Builder clearDocId() {
         bitField0_ = (bitField0_ & ~0x00000001);
-        docIdA_ = getDefaultInstance().getDocIdA();
+        docId_ = getDefaultInstance().getDocId();
         onChanged();
         return this;
       }
-      void setDocIdA(com.google.protobuf.ByteString value) {
+      void setDocId(com.google.protobuf.ByteString value) {
         bitField0_ |= 0x00000001;
-        docIdA_ = value;
+        docId_ = value;
         onChanged();
       }
       
@@ -1264,13 +1264,13 @@ public final class DocumentClassificationProtos {
   static {
     java.lang.String[] descriptorData = {
       "\n!document_classification_out.proto\022\031pl." +
-      "edu.icm.coansys.models\"{\n\031DocumentClassi" +
-      "ficationOut\022\016\n\006docIdA\030\001 \002(\t\022\033\n\023classific" +
-      "ationCodes\030\002 \003(\t\0221\n\004auxs\030\004 \003(\0132#.pl.edu." +
-      "icm.coansys.models.Auxiliar\"\'\n\010Auxiliar\022" +
-      "\014\n\004type\030\001 \001(\t\022\r\n\005value\030\002 \001(\tB9\n\031pl.edu.i" +
-      "cm.coansys.modelsB\034DocumentClassificatio" +
-      "nProtos"
+      "edu.icm.coansys.models\"z\n\031DocumentClassi" +
+      "ficationOut\022\r\n\005docId\030\001 \002(\t\022\033\n\023classifica" +
+      "tionCodes\030\002 \003(\t\0221\n\004auxs\030\004 \003(\0132#.pl.edu.i" +
+      "cm.coansys.models.Auxiliar\"\'\n\010Auxiliar\022\014" +
+      "\n\004type\030\001 \001(\t\022\r\n\005value\030\002 \001(\tB9\n\031pl.edu.ic" +
+      "m.coansys.modelsB\034DocumentClassification" +
+      "Protos"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -1282,7 +1282,7 @@ public final class DocumentClassificationProtos {
           internal_static_pl_edu_icm_coansys_models_DocumentClassificationOut_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_pl_edu_icm_coansys_models_DocumentClassificationOut_descriptor,
-              new java.lang.String[] { "DocIdA", "ClassificationCodes", "Auxs", },
+              new java.lang.String[] { "DocId", "ClassificationCodes", "Auxs", },
               pl.edu.icm.coansys.models.DocumentClassificationProtos.DocumentClassificationOut.class,
               pl.edu.icm.coansys.models.DocumentClassificationProtos.DocumentClassificationOut.Builder.class);
           internal_static_pl_edu_icm_coansys_models_Auxiliar_descriptor =
