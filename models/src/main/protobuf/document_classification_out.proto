@@ -7,7 +7,7 @@ option java_package = "pl.edu.icm.coansys.models";
 option java_outer_classname = "DocumentClassificationProtos";
 
 message DocumentClassificationOut {
-  required string docIdA = 1;
+  required string docId = 1;
   repeated string classificationCodes = 2;
   repeated Auxiliar auxs = 4;
 }
