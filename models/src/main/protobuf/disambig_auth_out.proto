@@ -1,0 +1,24 @@
+//
+// (C) 2010-2012 ICM UW. All rights reserved.
+//
+package pl.edu.icm.coansys.models;
+
+option java_package = "pl.edu.icm.coansys.models";
+option java_outer_classname = "DisambiguationAuthorProtos";
+
+message DisambiguationAuthorOut {
+  required string docId = 1;
+  repeated ContributorDescription contributorDescription = 2;
+  repeated Auxiliar auxs = 3;
+}
+  
+message ContributorDescription{
+	required string contribId = 1;
+	required string clusterId = 2;
+	repeated Auxiliar auxs = 3;
+}  
+
+message Auxiliar{
+	optional string type = 1;
+	optional string value = 2;
+}
