@@ -50,7 +50,7 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>disambiguation-author</artifactId>
+            <artifactId>disambiguation-author-logic</artifactId>
             <version>${project.version}</version>
         </dependency>             
     </dependencies>
