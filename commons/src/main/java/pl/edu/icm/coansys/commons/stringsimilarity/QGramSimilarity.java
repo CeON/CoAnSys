@@ -20,6 +20,7 @@ package pl.edu.icm.coansys.commons.stringsimilarity;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * This code is derived from Fine-Grained Record Integration and Linkage Tool
@@ -114,9 +115,9 @@ public class QGramSimilarity extends SimilarityCalculator {
 
     private int measureDistance(Map gramsS1, Map gramsS2) {
         int diff = 0;
-        for (Iterator iterator = gramsS1.keySet().iterator(); iterator.hasNext();) {
-            String gramS1 = (String) iterator.next();
-            Counter counterS1 = (Counter) gramsS1.get(gramS1);
+        for (Map.Entry entry : (Set<Map.Entry>) gramsS1.entrySet()) {
+            String gramS1 = (String) entry.getKey();
+            Counter counterS1 = (Counter) entry.getValue();
             Counter counterS2 = (Counter) gramsS2.get(gramS1);
             if (counterS2 == null) {
                 diff += counterS1.count;
@@ -125,10 +126,10 @@ public class QGramSimilarity extends SimilarityCalculator {
             }
         }
 
-        for (Iterator iterator = gramsS2.keySet().iterator(); iterator.hasNext();) {
-            String gramS2 = (String) iterator.next();
+        for (Map.Entry entry : (Set<Map.Entry>) gramsS2.entrySet()) {
+            String gramS2 = (String) entry.getKey();
             if (!gramsS1.containsKey(gramS2)) {
-                Counter counterS2 = (Counter) gramsS2.get(gramS2);
+                Counter counterS2 = (Counter) entry.getValue();
                 diff += counterS2.count;
             }
         }
