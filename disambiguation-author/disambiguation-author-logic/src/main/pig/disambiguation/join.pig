@@ -29,7 +29,7 @@
 %DEFAULT and_outputPB 'finall_out'
 
 %DEFAULT and_sample 1.0
-DEFINE serialize pl.edu.icm.coansys.disambiguation.author.pig.serialization.SERIALIZE_RESULTS()
+DEFINE serialize pl.edu.icm.coansys.disambiguation.author.pig.serialization.SERIALIZE_RESULTS();
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- register section
@@ -81,12 +81,12 @@ set mapred.fairscheduler.pool $and_scheduler
 %DEFAULT sep '/'
 %DEFAULT cid_dockey 'cid_dockey'
 
-CidDkey = LOAD '$and_cid_dockey' as (cId:chararray, dockey:chararray);
+CidDkey = LOAD '$and_cid_dockey' as (cId:chararray, docKey:chararray);
 CidAuuid = LOAD '$and_outputContribs$sep*' as (cId:chararray, uuid:chararray);
 -- TODO: is that load correct with '*' ?
 
 A = JOIN CidDkey BY cId, CidAuuid BY cId;
-B = FOREACH A generate cId, uuid, docKey;
+B = FOREACH A generate CidDkey::cId as cId, uuid as uuid, docKey as docKey;
 C = group B by docKey;
 --TODO wyrzucic doc key z data bag'a
 D = FOREACH C generate group as docKey, B as trio;
