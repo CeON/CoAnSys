@@ -20,6 +20,7 @@ package pl.edu.icm.coansys.disambiguation.work;
 
 import pl.edu.icm.coansys.commons.java.DocumentWrapperUtils;
 import pl.edu.icm.coansys.commons.java.StringTools;
+import pl.edu.icm.coansys.models.DocumentProtos;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
 
 
@@ -42,11 +43,17 @@ abstract class WorkKeyGenerator {
      * Generates key for the given {@link DocumentWrapper}
      * @param level influences the keyLength, the keyLength is a multiplication of the level and {@link #KEY_PART_LENGTH} 
      */
-    public static String generateKey(DocumentWrapper doc, int level) {
+    public static String generateKey(DocumentProtos.DocumentMetadata doc, int level) {
         String docKey = DocumentWrapperUtils.getMainTitle(doc);
         docKey = StringTools.normalize(docKey);
         docKey = StringTools.removeStopWords(docKey);
         docKey = docKey.replaceAll("\\s", "");
+        
+        StringBuilder oddCharsSB = new StringBuilder();
+        for (int i=0; i < docKey.length(); i += 2) {
+            oddCharsSB.append(docKey.charAt(i));
+        }
+        docKey = oddCharsSB.toString();
         
         int keyLength = level*KEY_PART_LENGTH+KEY_PART_LENGTH;
         if (docKey.length() > keyLength) {

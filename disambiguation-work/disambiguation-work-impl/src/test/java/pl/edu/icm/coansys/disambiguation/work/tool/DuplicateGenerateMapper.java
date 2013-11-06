@@ -37,7 +37,7 @@ public class DuplicateGenerateMapper extends Mapper<Writable, BytesWritable, Tex
     
     private static Logger log = LoggerFactory.getLogger(PartExtractingMapper.class);
     
-    static private Map<String, String> oldNewTitles = Maps.newHashMap();
+    static final private Map<String, String> oldNewTitles = Maps.newHashMap();
     
     static {
         oldNewTitles.put("Trwały rozwój regionu transgranicznego Górnego Śląska i Północnych Moraw", "Trwały rozwj regionu transgranicznego Górnego Śląska i Półnoznych Moraw"); // 2 letter gap
@@ -51,17 +51,17 @@ public class DuplicateGenerateMapper extends Mapper<Writable, BytesWritable, Tex
     @Override
     protected void map(Writable key, BytesWritable value, Context context) throws IOException, InterruptedException {
 
-        DocumentWrapper docWrapper = DocumentProtos.DocumentWrapper.parseFrom(value.copyBytes());
+        DocumentProtos.DocumentMetadata docMetadata = DocumentProtos.DocumentWrapper.parseFrom(value.copyBytes()).getDocumentMetadata();
         
-        context.write(new Text(docWrapper.getRowId()), new BytesWritable(value.copyBytes()));
+        context.write(new Text(docMetadata.getKey()), new BytesWritable(value.copyBytes()));
         
-        String title0 = docWrapper.getDocumentMetadata().getBasicMetadata().getTitle(0).getText();
+        String title0 = docMetadata.getBasicMetadata().getTitle(0).getText();
         log.debug("title = " + title0);
         if (oldNewTitles.containsKey(title0)) {
-            DocumentWrapper newDocWrapper = MockDocumentWrapperFactory.changeTitle(docWrapper, 0, oldNewTitles.get(title0));
+            DocumentProtos.DocumentMetadata newDocMetadata = MockDocumentMetadataFactory.changeTitle(docMetadata, 0, oldNewTitles.get(title0));
             
-            log.debug("changed title = " + newDocWrapper.getDocumentMetadata().getBasicMetadata().getTitle(0).getText());
-            context.write(new Text(docWrapper.getRowId()), new BytesWritable(newDocWrapper.toByteArray()));
+            log.debug("changed title = " + newDocMetadata.getBasicMetadata().getTitle(0).getText());
+            context.write(new Text(docMetadata.getKey()), new BytesWritable(newDocMetadata.toByteArray()));
         }
         
     }

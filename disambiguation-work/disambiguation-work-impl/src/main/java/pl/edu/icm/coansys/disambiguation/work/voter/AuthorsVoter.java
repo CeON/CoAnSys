@@ -40,7 +40,7 @@ public class AuthorsVoter extends AbstractSimilarityVoter {
     private float approveLevel;
     
     @Override
-    public Vote vote(DocumentProtos.DocumentWrapper doc1, DocumentProtos.DocumentWrapper doc2) {
+    public Vote vote(DocumentProtos.DocumentMetadata doc1, DocumentProtos.DocumentMetadata doc2) {
 
         Pair<String[], Boolean> doc1surnames = extractSurnames(doc1);
         Pair<String[], Boolean> doc2surnames = extractSurnames(doc2);
@@ -53,18 +53,13 @@ public class AuthorsVoter extends AbstractSimilarityVoter {
         float allAuthorsMatchFactor = 0.75f;
         
         if (doc1surnames.getY() && doc2surnames.getY()) {
-            logger.info("Authors' order available in both documents");
             String doc1firstAuthor = doc1surnames.getX()[0];
             String doc2firstAuthor = doc2surnames.getX()[0];
             
-            logger.info("doc1 first author: " + doc1firstAuthor);
-            logger.info("doc2 first author: " + doc2firstAuthor);
-            
             SimilarityCalculator similarity = getSimilarityCalculator();
             if (similarity.calculateSimilarity(doc1firstAuthor, doc2firstAuthor) > 0.5f) {
-                logger.info("First author matches");
                 firstAuthorComponent = 0.667f;
-                allAuthorsMatchFactor = 0.33f;
+                allAuthorsMatchFactor = 0.333f;
             } else {
                 allAuthorsMatchFactor = 0.667f;
             }
@@ -83,15 +78,15 @@ public class AuthorsVoter extends AbstractSimilarityVoter {
     }
 
     
-    private static Pair<String[], Boolean> extractSurnames(DocumentProtos.DocumentWrapper doc) {
+    private static Pair<String[], Boolean> extractSurnames(DocumentProtos.DocumentMetadata doc) {
         RegexpParser authorParser = new RegexpParser("authorParser.properties", "author");
-        List<DocumentProtos.Author> authorList = doc.getDocumentMetadata().getBasicMetadata().getAuthorList();
+        List<DocumentProtos.Author> authorList = doc.getBasicMetadata().getAuthorList();
         String[] resultByPositionNb = new String[authorList.size()];
         String[] resultByOrder = new String[authorList.size()];
         boolean positionsCorrect = true;
 
         int orderNb = 0;
-        for (DocumentProtos.Author author : doc.getDocumentMetadata().getBasicMetadata().getAuthorList()) {
+        for (DocumentProtos.Author author : doc.getBasicMetadata().getAuthorList()) {
             String surname;
             if (author.hasSurname()) {
                 surname = author.getSurname();
@@ -151,8 +146,6 @@ public class AuthorsVoter extends AbstractSimilarityVoter {
             }
         }
         float result = 2.0f * intersectionSize / (doc1authors.length + doc2authors.length);
-        logger.info("authors' intersection size: " + intersectionSize);
-        logger.info("allAuthorsMatching result: " + result);
         return result;
     }
 

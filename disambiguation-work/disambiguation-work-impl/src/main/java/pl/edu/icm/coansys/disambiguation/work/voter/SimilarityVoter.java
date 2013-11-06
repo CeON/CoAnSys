@@ -17,7 +17,7 @@
  */
 package pl.edu.icm.coansys.disambiguation.work.voter;
 
-import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
+import pl.edu.icm.coansys.models.DocumentProtos;
 
 /**
  *
@@ -26,7 +26,7 @@ import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
  */
 public interface SimilarityVoter {
 
-    public Vote vote(DocumentWrapper doc1, DocumentWrapper doc2);
+    public Vote vote(DocumentProtos.DocumentMetadata doc1, DocumentProtos.DocumentMetadata doc2);
 
     public float getWeight();
 }

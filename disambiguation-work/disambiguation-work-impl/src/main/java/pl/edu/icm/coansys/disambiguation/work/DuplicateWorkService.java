@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.mortbay.log.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +31,7 @@ import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import pl.edu.icm.coansys.models.DocumentProtos;
 
 /**
  * 
@@ -67,16 +67,16 @@ public class DuplicateWorkService {
      * 
      * 
      */
-    public Map<Integer, Set<DocumentWrapper>> findDuplicates(List<DocumentWrapper> documents) {
-        Map<Integer, Set<DocumentWrapper>> sameWorksMap = Maps.newHashMap();
+    public Map<Integer, Set<DocumentProtos.DocumentMetadata>> findDuplicates(List<DocumentProtos.DocumentMetadata> documents) {
+        Map<Integer, Set<DocumentProtos.DocumentMetadata>> sameWorksMap = Maps.newHashMap();
         
-        List<DocumentWrapper> documentsCopy = Lists.newArrayList(documents);
+        List<DocumentProtos.DocumentMetadata> documentsCopy = Lists.newArrayList(documents);
         
         int i=0;
-        for (DocumentWrapper document : documents) {
+        for (DocumentProtos.DocumentMetadata document : documents) {
            
-           for (DocumentWrapper other : new ArrayList<DocumentWrapper>(documentsCopy)) {
-                if (document.getRowId().equals(other.getRowId())) {
+           for (DocumentProtos.DocumentMetadata other : new ArrayList<DocumentProtos.DocumentMetadata>(documentsCopy)) {
+                if (document.getKey().equals(other.getKey())) {
                     documentsCopy.remove(other);
                 } else {
                     if (duplicateWorkComparator.isDuplicate(document, other)) {
@@ -96,8 +96,9 @@ public class DuplicateWorkService {
 
     //******************** PRIVATE ********************
     
-    private void addSameWorks(Map<Integer, Set<DocumentWrapper>> sameWorksMap, int i, DocumentWrapper document, DocumentWrapper other) {
-        Set<DocumentWrapper> sameWorks = sameWorksMap.get(i);
+    private void addSameWorks(Map<Integer, Set<DocumentProtos.DocumentMetadata>> sameWorksMap, int i,
+            DocumentProtos.DocumentMetadata document, DocumentProtos.DocumentMetadata other) {
+        Set<DocumentProtos.DocumentMetadata> sameWorks = sameWorksMap.get(i);
         if (sameWorks==null) {
             sameWorks = Sets.newHashSet();
             sameWorksMap.put(i, sameWorks);

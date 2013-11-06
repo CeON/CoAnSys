@@ -24,56 +24,52 @@ import java.util.UUID;
 import pl.edu.icm.coansys.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.models.DocumentProtos.BasicMetadata;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
-import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
 import pl.edu.icm.coansys.models.DocumentProtos.TextWithLanguage;
 
 import com.beust.jcommander.internal.Lists;
 
-public abstract class MockDocumentWrapperFactory {
+public abstract class MockDocumentMetadataFactory {
 
-    private MockDocumentWrapperFactory() {}
+    private MockDocumentMetadataFactory() {}
     
-    public static DocumentWrapper changeTitle(DocumentWrapper docWrapper, int titleIndex, String newTitle) {
-        BasicMetadata basicMetadata = docWrapper.getDocumentMetadata().getBasicMetadata();
+    public static DocumentMetadata changeTitle(DocumentMetadata docMetadata, int titleIndex, String newTitle) {
+        BasicMetadata basicMetadata = docMetadata.getBasicMetadata();
         TextWithLanguage newTitle0 = TextWithLanguage.newBuilder(basicMetadata.getTitle(titleIndex)).setText(newTitle).build();
         BasicMetadata newBasicMetadata = BasicMetadata.newBuilder(basicMetadata).setTitle(titleIndex, newTitle0).build();
-        DocumentMetadata newDocumentMetadata = DocumentMetadata.newBuilder(docWrapper.getDocumentMetadata()).setBasicMetadata(newBasicMetadata).build();
-        DocumentWrapper newDocWrapper = DocumentWrapper.newBuilder(docWrapper).setDocumentMetadata(newDocumentMetadata).setRowId(docWrapper.getRowId()+UUID.randomUUID()).build();
-        return newDocWrapper;
+        DocumentMetadata newDocumentMetadata = DocumentMetadata.newBuilder(docMetadata).setBasicMetadata(newBasicMetadata).build();
+        return newDocumentMetadata;
     }
 
     
-    public static DocumentWrapper createDocumentWrapper(String title0) {
+    public static DocumentMetadata createDocumentMetadata(String title0) {
         TextWithLanguage textTitle0 = TextWithLanguage.newBuilder().setText(title0).build();
         BasicMetadata basicMetadata = BasicMetadata.newBuilder().addTitle(textTitle0).build();
-        return createDocumentWrapper(basicMetadata);
+        return createDocumentMetadata(basicMetadata);
     }
     
-    public static DocumentWrapper createDocumentWrapper(String title0, String issn, String journalTitle) {
+    public static DocumentMetadata createDocumentMetadata(String title0, String issn, String journalTitle) {
         TextWithLanguage textTitle0 = TextWithLanguage.newBuilder().setText(title0).build();
         BasicMetadata basicMetadata = BasicMetadata.newBuilder().addTitle(textTitle0).setIssn(issn).setJournal(journalTitle).build();
-        return createDocumentWrapper(basicMetadata);
+        return createDocumentMetadata(basicMetadata);
     }
     
-    public static DocumentWrapper createDocumentWrapper(String title0, int publicationYear, List<Author> authors) {
+    public static DocumentMetadata createDocumentMetadata(String title0, int publicationYear, List<Author> authors) {
         TextWithLanguage textTitle0 = TextWithLanguage.newBuilder().setText(title0).build();
         BasicMetadata basicMetadata = BasicMetadata.newBuilder().addTitle(textTitle0).addAllAuthor(authors).setYear(""+publicationYear).build();
-        return createDocumentWrapper(basicMetadata);
+        return createDocumentMetadata(basicMetadata);
     }
     
-    public static DocumentWrapper createDocumentWrapper(String title0, int publicationYear, Author... authors) {
+    public static DocumentMetadata createDocumentMetadata(String title0, int publicationYear, Author... authors) {
         List<Author> authorList = Lists.newArrayList();
         for (Author author : authors) {
             authorList.add(author);
         }
-        return createDocumentWrapper(title0, publicationYear, authorList);
+        return createDocumentMetadata(title0, publicationYear, authorList);
     }
     
-    public static DocumentWrapper createDocumentWrapper(BasicMetadata basicMetadata) {
+    public static DocumentMetadata createDocumentMetadata(BasicMetadata basicMetadata) {
         DocumentMetadata documentMetadata = DocumentMetadata.newBuilder().setKey(""+UUID.randomUUID()).setBasicMetadata(basicMetadata).build();
-        DocumentWrapper docWrapper = DocumentWrapper.newBuilder().setDocumentMetadata(documentMetadata).setRowId(""+UUID.randomUUID()).build();
-        return docWrapper;
-        
+        return documentMetadata;        
     }
     
     public static Author createAuthor(String firstName, String lastName, int authorPosition) {

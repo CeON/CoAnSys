@@ -125,7 +125,7 @@ public final class SequenceFileUtils {
         sb.append("-------------------------------------------\n");
         sb.append("key    : ").append(key).append("\n");
         sb.append("rowid  : ").append(documentWrapper.getRowId()).append("\n");
-        sb.append("title0 : ").append(DocumentWrapperUtils.getMainTitle(documentWrapper)).append("\n");
+        sb.append("title0 : ").append(DocumentWrapperUtils.getMainTitle(documentWrapper.getDocumentMetadata())).append("\n");
         sb.append("year   : ").append(DocumentWrapperUtils.getPublicationYear(documentWrapper)).append("\n");
         for (Author author : documentWrapper.getDocumentMetadata().getBasicMetadata().getAuthorList()) {
             sb.append(author.getPositionNumber()).append(". ").append(author.getName()).append(" ").append(author.getSurname()).append("\n");

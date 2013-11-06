@@ -53,8 +53,8 @@ public abstract class DocumentWrapperUtils {
      * documentWrapper.getDocumentMetadata().getBasicMetadata().getTitle(0).getText() 
      * 
      * */
-    public static String getMainTitle(DocumentWrapper documentWrapper) {
-        BasicMetadata basicMetadata = documentWrapper.getDocumentMetadata().getBasicMetadata();
+    public static String getMainTitle(DocumentProtos.DocumentMetadata documentMetadata) {
+        BasicMetadata basicMetadata = documentMetadata.getBasicMetadata();
         if (basicMetadata.getTitleCount() > 0) {
             return basicMetadata.getTitle(0).getText();
         } else {
@@ -114,6 +114,19 @@ public abstract class DocumentWrapperUtils {
         return documents;
     }
     
+    /**
+     * 
+     */
+    public static List<DocumentProtos.DocumentMetadata> extractDocumentMetadata(Text key, Iterable<BytesWritable> values) throws InvalidProtocolBufferException {
+        List<DocumentProtos.DocumentMetadata> documents = Lists.newArrayList();
+        
+        for (BytesWritable value : values) {
+            DocumentWrapper docWrapper = DocumentProtos.DocumentWrapper.parseFrom(value.copyBytes());
+            documents.add(docWrapper.getDocumentMetadata());
+        }
+        
+        return documents;
+    }
 
     /**
      * Returns the clone of the passed DocumentWrapper with filled {@link DocumentWrapper#getDocumentMetadata()} and {@link DocumentWrapper#getRowId()} only 
