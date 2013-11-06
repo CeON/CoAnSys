@@ -166,6 +166,7 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 
 			// metadata
 			DocumentMetadata dm = dw.getDocumentMetadata();
+			String docKey = dm.getKey();
 			dw = null;
 
 			// result bag with tuples, which des4Doccribes each contributor
@@ -195,16 +196,16 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 						// all authors data are equal
 						// AUTHOR B (AS CLONE A) SCHOULD BE REMOVED FROM DOCUMENT'S AUTHOR LIST IN IMPORTERS
 						logger.info( "Author metadata clones with key: " + a.getKey() + 
-								" in document with key: " + dm.getKey() );
+								" in document with key: " + docKey );
 					} else if ( aNorm.equals( bNorm ) ) {
 						logger.info( "Duplicated author key: " 
 								+ a.getKey() +  " for different metadata (except initials)" +
-								" in document with key: " + dm.getKey() );
+								" in document with key: " + docKey );
 					} else {
 						logger.error( "Duplicated aurhor key: " 
 								+ a.getKey() + " for different authors: " + aInit 
 								+ ", " + bInit + 
-								" in document with key: " + dm.getKey() );
+								" in document with key: " + docKey );
 					}
 				}
 			}
@@ -249,7 +250,6 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 
 			// bag making tuples (one tuple for one contributor from document)
 			// with replicated metadata for
-
 			int i = -1;
 			for ( Author a : authors )
 			{
@@ -289,7 +289,7 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 				}
 				extractedAuthorObj = null;
 
-				Object[] to = new Object[] { cId, normalizedSname, finalMap };
+				Object[] to = new Object[] { docKey, cId, normalizedSname, finalMap };
 				Tuple t = TupleFactory.getInstance()
 						.newTuple(Arrays.asList(to));
 				ret.add(t);

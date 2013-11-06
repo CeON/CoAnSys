@@ -47,7 +47,8 @@ public class DisambiguationExtractorFactory {
 			eid = e.getId();
 
 			if (eid == null) {
-				String m = "Creating extractor: " + name  + " with no id value given.";
+				String m = "Creating extractor: " + name
+						+ " with no id value given (null).";
 				logger.error(m);
 				throw new Exception(m);
 			}

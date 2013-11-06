@@ -140,6 +140,7 @@ public class AproximateAND extends AND<DataBag> {
 				// EXTRACT_CONTRIB_GIVENDATA
 
 				// benchmark
+				// TODO: snamy są wyrzucone
 				sname = t.get(1);
 			}
 

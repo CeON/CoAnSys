@@ -50,20 +50,18 @@ public abstract class AND<T> extends EvalFunc<T> {
 
 		// separate features which are fully described and able to use
 		for (FeatureInfo fi : FIwithEmpties) {
-			if (fi.getDisambiguatorName().equals("")) {
-				// creating default disambugiator
-				d = new Disambiguator();
-				logger.info("Empty disambiguator name. Creating default disambiguator for this feature.");
-			}
 			if (fi.getFeatureExtractorName().equals("")) {
 				logger.error("Empty extractor name in feature info. Leaving this feature.");
 				throw new Exception("Empty extractor name.");
 				// continue;
 			}
-			d = ff.create(fi);
-			if (d == null) {
-				// creating default disambugiator
-				// d = new Disambiguator();
+			if (fi.getDisambiguatorName().equals("")) {
+				// creating default disambiguator
+				d = new Disambiguator();
+				logger.info("Empty disambiguator name. Creating default disambiguator for this feature.");
+			} else if ((d = ff.create(fi)) == null) {
+				// creating default disambiguator
+				d = new Disambiguator();
 				logger.error("Cannot create disambugiator from given feature info.");
 				throw new Exception(
 						"Cannot create disambugiator from given feature info.");

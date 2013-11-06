@@ -101,8 +101,8 @@ SINGLE = foreach F generate flatten( cIds ) as cId, uuid as uuid;
 
 
 -- CLUSTERS FOR EXHAUSTIVE
-G = foreach EEXH generate flatten( exhaustiveAND( datagroup, simTriples ) ) as (uuid:chararray, cIds:chararray);
--- H: {cId: chararray,uuid: chararray}
+G = foreach EEXH generate flatten( exhaustiveAND( datagroup, simTriples ) ) as (uuid:chararray, cIds:{(chararray)});
+-- H: {cId: chararray,uuid: chararray} 
 H = foreach G generate flatten( cIds ) as cId, uuid;
 
 %DEFAULT one 'one'
