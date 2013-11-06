@@ -37,10 +37,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import pl.edu.icm.coansys.disambiguation.work.tool.MockDocumentWrapperFactory;
+import pl.edu.icm.coansys.disambiguation.work.tool.MockDocumentMetadataFactory;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
 
 import com.google.common.collect.Lists;
+import pl.edu.icm.coansys.models.DocumentProtos;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -52,7 +53,7 @@ public class DuplicateWorkDetectReduceServiceTest {
     @Autowired
     private DuplicateWorkDetectReduceService duplicateWorkDetectReduceService;
     
-    private List<DocumentWrapper> documents = Lists.newArrayList();
+    private List<DocumentProtos.DocumentMetadata> documents = Lists.newArrayList();
     @SuppressWarnings("unchecked")
     private Reducer<Text, BytesWritable, Text, Text>.Context context = Mockito.mock(Context.class);
     
@@ -60,11 +61,11 @@ public class DuplicateWorkDetectReduceServiceTest {
     public void setUp() throws Exception {
         
         for (int i = 0; i < 2000; i++) {
-            documents.add(MockDocumentWrapperFactory.createDocumentWrapper("A brief story of time " + i));
+            documents.add(MockDocumentMetadataFactory.createDocumentMetadata("A brief story of time. From the Big Bang to Black Holes " + i));
         }
         
         for (int i = 0; i <= 300; i++) {
-            documents.add(MockDocumentWrapperFactory.createDocumentWrapper("The news in brief"));
+            documents.add(MockDocumentMetadataFactory.createDocumentMetadata("The news in brief"));
         }
         
         
@@ -81,14 +82,18 @@ public class DuplicateWorkDetectReduceServiceTest {
     
     @Test
     public void testSplitDocuments() {
-        Map<Text, List<DocumentWrapper>> splitDocuments = duplicateWorkDetectReduceService.splitDocuments(new Text(""), documents, 0);
+        Map<Text, List<DocumentProtos.DocumentMetadata>> splitDocuments = duplicateWorkDetectReduceService.splitDocuments(new Text(""), documents, 0);
         Assert.assertEquals(2, splitDocuments.size());
         
         splitDocuments = duplicateWorkDetectReduceService.splitDocuments(new Text(""), documents, 1);
         Assert.assertEquals(2, splitDocuments.size());
         
         splitDocuments = duplicateWorkDetectReduceService.splitDocuments(new Text(""), documents, 2);
-        Assert.assertEquals(11, splitDocuments.size());
+        Assert.assertEquals(2, splitDocuments.size());
+        
+        splitDocuments = duplicateWorkDetectReduceService.splitDocuments(new Text(""), documents, 3);
+        Assert.assertEquals(12, splitDocuments.size());
+
     }
     
     

@@ -73,12 +73,14 @@ public class FLAT_POS_NEG extends EvalFunc<DataBag> {
     @Override
     public DataBag exec(Tuple input) throws IOException {
         if (input == null || input.size() == 0) {
-        	StringBuffer sb = new StringBuffer();
-        	sb.append(FLAT_POS_NEG.class.getSimpleName()+":\t");
+        	StringBuilder sb = new StringBuilder();
+        	sb.append(FLAT_POS_NEG.class.getSimpleName()).append(":\t");
         	sb.append("Problematic input tuple detected");
-        	sb.append("\tinput==null ? "+input==null);
-        	sb.append("\tinput.size()==0 ? "+(input.size()==0));
-        	sb.append("\nreturning NULL value");
+        	sb.append("\tinput==null ? ").append(input==null);
+                if(input != null) {
+                    sb.append("\tinput.size()==0 ? ").append(input.size()==0);
+                }
+                sb.append("\nreturning NULL value");
         	System.out.println(sb.toString());
         	logger.error(sb.toString());
             return null;

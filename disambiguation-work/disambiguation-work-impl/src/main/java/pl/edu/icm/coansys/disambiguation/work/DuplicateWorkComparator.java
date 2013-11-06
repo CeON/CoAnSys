@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.edu.icm.coansys.disambiguation.work.voter.SimilarityVoter;
 import pl.edu.icm.coansys.disambiguation.work.voter.Vote;
+import pl.edu.icm.coansys.models.DocumentProtos;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
 
 /**
@@ -38,12 +39,12 @@ public class DuplicateWorkComparator {
     /**
      * Tells whether the given documents are duplicates.
      */
-    public boolean isDuplicate(DocumentWrapper doc1, DocumentWrapper doc2) {
+    public boolean isDuplicate(DocumentProtos.DocumentMetadata doc1, DocumentProtos.DocumentMetadata doc2) {
 
         double weightsSum = 0.0;
         double probabilitiesSum = 0.0;
 
-        String ids = doc1.getRowId() + ", " + doc2.getRowId();
+        String ids = doc1.getKey() + ", " + doc2.getKey();
         StringBuilder logBuilder = new StringBuilder();
 
         if (similarityVoters != null) {
@@ -70,8 +71,8 @@ public class DuplicateWorkComparator {
         }
 
         logger.info(ids + " considered as duplicates because:\n" + logBuilder.toString());
-        logger.info("doc1:\n" + doc1.getDocumentMetadata());
-        logger.info("doc2:\n" + doc2.getDocumentMetadata());
+        //logger.info("doc1:\n" + doc1.getDocumentMetadata());
+        //logger.info("doc2:\n" + doc2.getDocumentMetadata());
         return (weightsSum > 0) && (probabilitiesSum / weightsSum > 0.5);
     }
 

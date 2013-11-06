@@ -24,6 +24,7 @@ import pl.edu.icm.coansys.commons.java.DocumentWrapperUtils;
 import pl.edu.icm.coansys.commons.java.StringTools;
 import pl.edu.icm.coansys.commons.stringsimilarity.EditDistanceSimilarity;
 import pl.edu.icm.coansys.commons.stringsimilarity.TrailingNumbersSimilarity;
+import pl.edu.icm.coansys.models.DocumentProtos;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
 
 /**
@@ -40,7 +41,7 @@ public class WorkTitleVoter extends AbstractSimilarityVoter {
     private int digitsPercentageTreshold;
 
     @Override
-    public Vote vote(DocumentWrapper doc1, DocumentWrapper doc2) {
+    public Vote vote(DocumentProtos.DocumentMetadata doc1, DocumentProtos.DocumentMetadata doc2) {
         String title1 = getNormalizedTitle(doc1);
         String title2 = getNormalizedTitle(doc2);
         
@@ -70,7 +71,7 @@ public class WorkTitleVoter extends AbstractSimilarityVoter {
         return new Vote(Vote.VoteStatus.PROBABILITY, editDistance);
     }
     
-    private String getNormalizedTitle(DocumentWrapper doc) {
+    private String getNormalizedTitle(DocumentProtos.DocumentMetadata doc) {
         String title = DocumentWrapperUtils.getMainTitle(doc);
         title = StringTools.normalize(title);
         title = StringTools.replaceLastRomanNumberToDecimal(title);

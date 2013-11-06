@@ -33,11 +33,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import pl.edu.icm.coansys.disambiguation.work.tool.MockDocumentWrapperFactory;
+import pl.edu.icm.coansys.disambiguation.work.tool.MockDocumentMetadataFactory;
 import pl.edu.icm.coansys.models.DocumentProtos.Author;
-import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
 
 import com.google.common.collect.Lists;
+import pl.edu.icm.coansys.models.DocumentProtos;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations="classpath:spring/applicationContext.xml")
@@ -49,22 +49,22 @@ public class DuplicateWorkServiceTest {
     private DuplicateWorkService duplicateWorkService;
     
     
-    private List<DocumentWrapper> documentWrappers = Lists.newArrayList();
+    private List<DocumentProtos.DocumentMetadata> documentWrappers = Lists.newArrayList();
     
-    private DocumentWrapper documentWrapper1;
-    private DocumentWrapper documentWrapper5;
+    private DocumentProtos.DocumentMetadata documentWrapper1;
+    private DocumentProtos.DocumentMetadata documentWrapper5;
     
     @Before
     public void setUp() throws Exception {
-        Author janKowalski = MockDocumentWrapperFactory.createAuthor("Jan", "Kowalski", 1);
-        Author adamNowak = MockDocumentWrapperFactory.createAuthor("Adam", "Nowak", 2);
+        Author janKowalski = MockDocumentMetadataFactory.createAuthor("Jan", "Kowalski", 1);
+        Author adamNowak = MockDocumentMetadataFactory.createAuthor("Adam", "Nowak", 2);
         
-        documentWrapper1 = MockDocumentWrapperFactory.createDocumentWrapper("Ala ma kota a", 2012, janKowalski, adamNowak);
-        DocumentWrapper documentWrapper2 = MockDocumentWrapperFactory.createDocumentWrapper("Ala ma kota b", 2012, janKowalski, adamNowak);
-        DocumentWrapper documentWrapper3 = MockDocumentWrapperFactory.createDocumentWrapper("Ala ma kota g", 2012, janKowalski, adamNowak);
-        DocumentWrapper documentWrapper4 = MockDocumentWrapperFactory.createDocumentWrapper("Ala mna kota f", 2012, janKowalski, adamNowak);
-        documentWrapper5 = MockDocumentWrapperFactory.createDocumentWrapper("Ola ma fajnego psiaka 300", 2012, janKowalski, adamNowak);
-        DocumentWrapper documentWrapper6 = MockDocumentWrapperFactory.createDocumentWrapper("Ola mma fajnego pisaka 300", 2012, janKowalski, adamNowak);
+        documentWrapper1 = MockDocumentMetadataFactory.createDocumentMetadata("Ala ma kota a", 2012, janKowalski, adamNowak);
+        DocumentProtos.DocumentMetadata documentWrapper2 = MockDocumentMetadataFactory.createDocumentMetadata("Ala ma kota b", 2012, janKowalski, adamNowak);
+        DocumentProtos.DocumentMetadata documentWrapper3 = MockDocumentMetadataFactory.createDocumentMetadata("Ala ma kota g", 2012, janKowalski, adamNowak);
+        DocumentProtos.DocumentMetadata documentWrapper4 = MockDocumentMetadataFactory.createDocumentMetadata("Ala mna kota f", 2012, janKowalski, adamNowak);
+        documentWrapper5 = MockDocumentMetadataFactory.createDocumentMetadata("Ola ma fajnego psiaka 300", 2012, janKowalski, adamNowak);
+        DocumentProtos.DocumentMetadata documentWrapper6 = MockDocumentMetadataFactory.createDocumentMetadata("Ola mma fajnego pisaka 300", 2012, janKowalski, adamNowak);
         
         documentWrappers.add(documentWrapper1);
         documentWrappers.add(documentWrapper2);
@@ -76,15 +76,15 @@ public class DuplicateWorkServiceTest {
 
     @Test
     public void testFindDuplicates() {
-        Map<Integer, Set<DocumentWrapper>> duplicates = duplicateWorkService.findDuplicates(documentWrappers);
-        for (Map.Entry<Integer, Set<DocumentWrapper>> entry : duplicates.entrySet()) {
+        Map<Integer, Set<DocumentProtos.DocumentMetadata>> duplicates = duplicateWorkService.findDuplicates(documentWrappers);
+        for (Map.Entry<Integer, Set<DocumentProtos.DocumentMetadata>> entry : duplicates.entrySet()) {
             log.info("key   : {}", ""+entry.getKey());
-            for (DocumentWrapper documentWrapper: entry.getValue()) {
-                log.info("------ title0: {}", DocumentWrapperUtils.getMainTitle(documentWrapper));
+            for (DocumentProtos.DocumentMetadata documentMetadata: entry.getValue()) {
+                log.info("------ title0: {}", DocumentWrapperUtils.getMainTitle(documentMetadata));
             }
         }
         Assert.assertEquals(2, duplicates.size());
-        for (Map.Entry<Integer, Set<DocumentWrapper>> entry : duplicates.entrySet()) {
+        for (Map.Entry<Integer, Set<DocumentProtos.DocumentMetadata>> entry : duplicates.entrySet()) {
             if (entry.getValue().contains(documentWrapper1)) {
                 Assert.assertEquals(4, entry.getValue().size());
             }

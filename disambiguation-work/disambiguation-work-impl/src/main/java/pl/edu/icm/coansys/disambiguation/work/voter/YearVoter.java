@@ -31,7 +31,7 @@ public class YearVoter extends AbstractSimilarityVoter {
     private int yearMaxDistance = 0;
 
     @Override
-    public Vote vote(DocumentProtos.DocumentWrapper doc1, DocumentProtos.DocumentWrapper doc2) {
+    public Vote vote(DocumentProtos.DocumentMetadata doc1, DocumentProtos.DocumentMetadata doc2) {
 
         Integer doc1year = extractYear(doc1);
         Integer doc2year = extractYear(doc2);
@@ -48,8 +48,8 @@ public class YearVoter extends AbstractSimilarityVoter {
         }
     }
 
-    private static Integer extractYear(DocumentProtos.DocumentWrapper doc) {
-        DocumentProtos.BasicMetadata basicMetadata = doc.getDocumentMetadata().getBasicMetadata();
+    private static Integer extractYear(DocumentProtos.DocumentMetadata doc) {
+        DocumentProtos.BasicMetadata basicMetadata = doc.getBasicMetadata();
         if (basicMetadata.hasYear()) {
             String yearStr = basicMetadata.getYear();
             try {
