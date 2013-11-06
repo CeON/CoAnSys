@@ -86,10 +86,10 @@ CidAuuid = LOAD '$and_outputContribs$sep*' as (cId:chararray, uuid:chararray);
 -- TODO: is that load correct with '*' ?
 
 A = JOIN CidDkey BY cId, CidAuuid BY cId;
-B = FOREACH A generate docKey, cId, uuid;
+B = FOREACH A generate cId, uuid, docKey;
 C = group B by docKey;
 --TODO wyrzucic doc key z data bag'a
-D = FOREACH C generate group as docKey, B as pair;
+D = FOREACH C generate group as docKey, B as trio;
 DUMP D;
 DESCRIBE D;
 -- E = FOREACH C generate serialize(*);

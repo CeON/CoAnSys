@@ -53,7 +53,7 @@ public class SERIALIZE_RESULTS extends EvalFunc<Tuple> {
 	}
 
 	/*
-	 * an input should follow schema (docId:chararray,{(contribId,clusterId)}) 
+	 * an input should follow schema (docId:chararray,{(contribId,clusterId [,...] )}) 
 	 */
 	@Override
 	public Tuple exec(Tuple input) throws IOException {
