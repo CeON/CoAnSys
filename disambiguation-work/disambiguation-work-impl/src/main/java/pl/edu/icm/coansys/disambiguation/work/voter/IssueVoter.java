@@ -30,7 +30,7 @@ public class IssueVoter extends AbstractSimilarityVoter {
     private static Logger log = LoggerFactory.getLogger(IssueVoter.class);
 
     @Override
-    public Vote vote(DocumentProtos.DocumentWrapper doc1, DocumentProtos.DocumentWrapper doc2) {
+    public Vote vote(DocumentProtos.DocumentMetadata doc1, DocumentProtos.DocumentMetadata doc2) {
         Integer issue1 = extractIssue(doc1);
         Integer issue2 = extractIssue(doc2);
 
@@ -43,15 +43,15 @@ public class IssueVoter extends AbstractSimilarityVoter {
         }
     }
 
-    private static Integer extractIssue(DocumentProtos.DocumentWrapper doc) {
-        DocumentProtos.BasicMetadata basicMetadata = doc.getDocumentMetadata().getBasicMetadata();
+    private static Integer extractIssue(DocumentProtos.DocumentMetadata doc) {
+        DocumentProtos.BasicMetadata basicMetadata = doc.getBasicMetadata();
         if (basicMetadata.hasIssue()) {
             String issueStr = basicMetadata.getIssue();
             try {
                 Integer issue = Integer.parseInt(issueStr);
                 return issue;
             } catch (NumberFormatException ex) {
-                log.warn("Cannot parse issue: " + issueStr, ex);
+                log.warn("Cannot parse issue: " + issueStr);
                 return null;
             }
         } else {

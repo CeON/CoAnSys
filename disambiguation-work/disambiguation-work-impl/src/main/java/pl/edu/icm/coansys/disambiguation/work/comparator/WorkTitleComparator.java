@@ -73,7 +73,7 @@ public class WorkTitleComparator {
     //******************** PRIVATE ********************
     
     private String normalizeTitle(DocumentWrapper doc1) {
-        String title = normalize(DocumentWrapperUtils.getMainTitle(doc1));
+        String title = normalize(DocumentWrapperUtils.getMainTitle(doc1.getDocumentMetadata()));
         title = replaceLastRomanNumberToDecimal(title);
         title = replaceLastWordNumberToDecimal(title);
         return title;

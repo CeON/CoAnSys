@@ -26,7 +26,7 @@ import pl.edu.icm.coansys.models.DocumentProtos;
 public class DoiVoter extends AbstractSimilarityVoter {
 
     @Override
-    public Vote vote(DocumentProtos.DocumentWrapper doc1, DocumentProtos.DocumentWrapper doc2) {
+    public Vote vote(DocumentProtos.DocumentMetadata doc1, DocumentProtos.DocumentMetadata doc2) {
         String doi1 = extractDOI(doc1);
         String doi2 = extractDOI(doc2);
         if (doi1 == null || doi2 == null) {
@@ -38,8 +38,8 @@ public class DoiVoter extends AbstractSimilarityVoter {
         }
     }
     
-    private static String extractDOI(DocumentProtos.DocumentWrapper doc) {
-        DocumentProtos.BasicMetadata basicMetadata = doc.getDocumentMetadata().getBasicMetadata();
+    private static String extractDOI(DocumentProtos.DocumentMetadata doc) {
+        DocumentProtos.BasicMetadata basicMetadata = doc.getBasicMetadata();
         if (!basicMetadata.hasDoi()) {
             return null;
         } else {

@@ -29,7 +29,7 @@ import pl.edu.icm.coansys.models.DocumentProtos;
 public class JournalSimilarityVoter extends AbstractSimilarityVoter {
 
     @Override
-    public Vote vote(DocumentProtos.DocumentWrapper doc1, DocumentProtos.DocumentWrapper doc2) {
+    public Vote vote(DocumentProtos.DocumentMetadata doc1, DocumentProtos.DocumentMetadata doc2) {
         String journal1 = extractJournal(doc1);
         String journal2 = extractJournal(doc2);
         if (journal1 == null || journal2 == null) {
@@ -44,8 +44,8 @@ public class JournalSimilarityVoter extends AbstractSimilarityVoter {
         return new Vote(Vote.VoteStatus.PROBABILITY, similarity);
     }
 
-    private static String extractJournal(DocumentProtos.DocumentWrapper doc) {
-        DocumentProtos.BasicMetadata basicMetadata = doc.getDocumentMetadata().getBasicMetadata();
+    private static String extractJournal(DocumentProtos.DocumentMetadata doc) {
+        DocumentProtos.BasicMetadata basicMetadata = doc.getBasicMetadata();
         return basicMetadata.hasJournal() ? basicMetadata.getJournal() : null;
     }
 }

@@ -24,11 +24,12 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import static org.mockito.Mockito.*;
-import pl.edu.icm.coansys.disambiguation.work.tool.MockDocumentWrapperFactory;
+import pl.edu.icm.coansys.disambiguation.work.tool.MockDocumentMetadataFactory;
 import pl.edu.icm.coansys.disambiguation.work.voter.AuthorsVoter;
 import pl.edu.icm.coansys.disambiguation.work.voter.SimilarityVoter;
 import pl.edu.icm.coansys.disambiguation.work.voter.Vote;
 import pl.edu.icm.coansys.disambiguation.work.voter.WorkTitleVoter;
+import pl.edu.icm.coansys.models.DocumentProtos;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
 
 public class DuplicateWorkVoterTest {
@@ -39,8 +40,8 @@ public class DuplicateWorkVoterTest {
     private AuthorsVoter workAuthorVoter = mock(AuthorsVoter.class);
     private SimilarityVoter simVoter = mock(SimilarityVoter.class);
     
-    private DocumentWrapper doc1 = MockDocumentWrapperFactory.createDocumentWrapper("a");
-    private DocumentWrapper doc2 = MockDocumentWrapperFactory.createDocumentWrapper("b");
+    private DocumentProtos.DocumentMetadata doc1 = MockDocumentMetadataFactory.createDocumentMetadata("a");
+    private DocumentProtos.DocumentMetadata doc2 = MockDocumentMetadataFactory.createDocumentMetadata("b");
     
     
     @Before
@@ -56,17 +57,17 @@ public class DuplicateWorkVoterTest {
     
     @Test
     public void testSameTitleSameAuthorsSameYear() {
-        when(workTitleVoter.vote(any(DocumentWrapper.class), any(DocumentWrapper.class)))
+        when(workTitleVoter.vote(any(DocumentProtos.DocumentMetadata.class), any(DocumentProtos.DocumentMetadata.class)))
                 .thenReturn(new Vote(Vote.VoteStatus.PROBABILITY, 1.0f));
         when(workTitleVoter.getWeight()).thenReturn(1.0f);
 
-        when(workAuthorVoter.vote(any(DocumentWrapper.class), any(DocumentWrapper.class)))
+        when(workAuthorVoter.vote(any(DocumentProtos.DocumentMetadata.class), any(DocumentProtos.DocumentMetadata.class)))
                 .thenReturn(new Vote(Vote.VoteStatus.PROBABILITY, 0.8f));
         when(workAuthorVoter.getWeight()).thenReturn(1.0f);
         
         Assert.assertTrue(duplicateWorkComparator.isDuplicate(doc1, doc2));
         
-        verify(workTitleVoter, times(1)).vote(any(DocumentWrapper.class), any(DocumentWrapper.class));
+        verify(workTitleVoter, times(1)).vote(any(DocumentProtos.DocumentMetadata.class), any(DocumentProtos.DocumentMetadata.class));
         /*
         verify(workTitleComparator, times(1))
                 .sameTitles(any(DocumentWrapper.class), any(DocumentWrapper.class));
