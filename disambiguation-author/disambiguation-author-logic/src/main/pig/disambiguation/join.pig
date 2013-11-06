@@ -24,7 +24,7 @@
 %DEFAULT commonJarsPath 'lib/$JARS'
 
 -- outputContribs as input for this script
-%DEFAULT and_outputContribs 'workflows/pl.edu.icm.coansys-disambiguation-author-workflow/results/splitted'
+%DEFAULT and_outputContribs 'workflows/pl.edu.icm.coansys-disambiguation-author-workflow/results/outputContribs'
 %DEFAULT and_cid_dockey 'workflows/pl.edu.icm.coansys-disambiguation-author-workflow/results/cid_dockey'
 %DEFAULT and_outputPB 'finall_out'
 
@@ -90,7 +90,6 @@ B = FOREACH A generate CidDkey::cId as cId, uuid as uuid, docKey as docKey;
 C = group B by docKey;
 --TODO wyrzucic doc key z data bag'a
 D = FOREACH C generate group as docKey, B as trio;
-DUMP D;
-DESCRIBE D;
--- E = FOREACH C generate serialize(*);
--- store E into '$and_outputPB';
+
+E = FOREACH C generate serialize(*);
+store E into '$and_outputPB';
