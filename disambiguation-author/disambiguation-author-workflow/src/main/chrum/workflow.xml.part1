@@ -106,6 +106,8 @@
             <param>and_splitter_output=${and_splitted_output}</param>
             <param>and_statistics=${and_statistics}</param>
             <param>and_threshold=${and_threshold}</param>
+            <param>and_cid_dockey=${and_cid_dockey}</param>
+            <param>and_outputPB=${and_outputPB}</param>
 # END:REPLACE
 <!-- ================================================================= -->
 <!-- ============================= WF-1 ============================== -->
