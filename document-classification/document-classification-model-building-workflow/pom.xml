@@ -34,5 +34,12 @@
             <artifactId>document-classification-logic</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>pl.edu.icm.coansys</groupId>
+            <artifactId>document-similarity-workflow</artifactId>
+            <version>${project.version}</version>
+            <classifier>oozie-wf</classifier>
+            <type>tar.gz</type>
+        </dependency>
     </dependencies>
 </project>

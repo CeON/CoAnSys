@@ -16,13 +16,13 @@
         <property name="titleLengthExactComparison" value="7"/>
 
     </bean>
-	
+        
     <bean id="workYearComparatorConfiguration" class="pl.edu.icm.coansys.disambiguation.work.comparator.WorkYearComparatorConfiguration">
         <property name="publicationYearMaxDistance" value="0"/>
 
     </bean>
-        
-    <bean id="duplicateWorkVoter" class="pl.edu.icm.coansys.disambiguation.work.DuplicateWorkVoter">
+    
+    <bean id="duplicateWorkComparator" class="pl.edu.icm.coansys.disambiguation.work.DuplicateWorkComparator">
         <property name="similarityVoters">
             <list>
                 <bean id="workDoiVoter" class="pl.edu.icm.coansys.disambiguation.work.voter.DoiVoter">
@@ -46,6 +46,8 @@
                 </bean>
                 <bean id="workAuthorsVoter" class="pl.edu.icm.coansys.disambiguation.work.voter.AuthorsVoter">
                     <property name="weight" value="0.7"/>
+                    <property name="disapproveLevel" value="0.4"/>
+                    <property name="approveLevel" value="0.1"/>
                 </bean>
             </list>
         </property>

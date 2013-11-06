@@ -1,0 +1,18 @@
+//
+// (C) 2010-2012 ICM UW. All rights reserved.
+//
+package pl.edu.icm.coansys.models;
+
+option java_package = "pl.edu.icm.coansys.models";
+option java_outer_classname = "DocumentClassificationProtos";
+
+message DocumentClassificationOut {
+  required string docId = 1;
+  repeated string classificationCodes = 2;
+  repeated Auxiliar auxs = 4;
+}
+
+message Auxiliar{
+	optional string type = 1;
+	optional string value = 2;
+}

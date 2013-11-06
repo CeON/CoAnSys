@@ -12,6 +12,10 @@
 					<name>mapred.job.queue.name</name>
 					<value>${queueName}</value>
 				</property>
+                                <property>
+                                        <name>oozie.launcher.mapred.fairscheduler.pool</name>
+                                        <value>${pool}</value>
+                                </property>
 			</configuration>
 			<script>document-similarity-tiny-s1.pig</script>
 			<param>inputPath=${ds_bwndataMetadataInputPath}</param>
@@ -36,6 +40,10 @@
 					<name>mapred.job.queue.name</name>
 					<value>${queueName}</value>
 				</property>
+                                <property>
+                                        <name>oozie.launcher.mapred.fairscheduler.pool</name>
+                                        <value>${pool}</value>
+                                </property>
 			</configuration>
 			<script>document-similarity-tiny-s2.pig</script>
 			<param>inputPath=${ds_bwndataMetadataInputPath}</param>
@@ -60,6 +68,10 @@
 					<name>mapred.job.queue.name</name>
 					<value>${queueName}</value>
 				</property>
+                                <property>
+                                        <name>oozie.launcher.mapred.fairscheduler.pool</name>
+                                        <value>${pool}</value>
+                                </property>
 			</configuration>
 			<script>document-similarity-tiny-s3.pig</script>
 			<param>inputPath=${ds_bwndataMetadataInputPath}</param>

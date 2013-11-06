@@ -1,0 +1,15 @@
+(<action name=")
+(enrich_04_forked_node_)
+([0-9])
+([\w\W\t\n.]*?)
+(1_MODEL_CREATE_04_enrich)
+(.pig)
+([\w\W\t\n.]*?)
+(<ok to=")
+([^"]*)
+([\w\W\t\n.]*?)
+(</action>)
+
+
+(<action name=")(enrich_04_forked_node_)([0-9])([\w\W\t\n.]*?)(1_MODEL_CREATE_04_enrich)(.pig)([\w\W\t\n.]*?)(<ok to=")([^"]*)([\w\W\t\n.]*?)(</action>)
+\1\2\3\4\5_01\6\7\8\2\3B\10\11\1\2\3B\4\5_02\6\7\8\2\3C\10\11\1\2\3C\4\5_03\6\7\8\9\10\11
