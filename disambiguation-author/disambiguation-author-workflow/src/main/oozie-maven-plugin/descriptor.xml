@@ -6,28 +6,24 @@
 			<preserve>false</preserve>
 			<target>/</target>		
 			<includes>
-				<include>2_.*\.pig</include>
+				<include>.*disambiguation.*\.pig</include>
+				<include>.*splitter.*\.pig</include>
 			</includes>
 		</scripts>
 		<macros>
 			<root>pig-macros/</root>
 			<preserve>false</preserve>
-			<target>lib/pig/</target>
+			<target>lib/</target>
 			<includes>
-				<include>.*\.pig</include>
+				<include>nothing</include>
 			</includes>
-			<excludes>
-				<exclude>1_.*\.pig</exclude>
-				<exclude>2_.*\.pig</exclude>
-				<exclude>GARB_.*\.pig</exclude>
-			</excludes>
 		</macros>
 	</main-project-pig>
 	<deps-project-pig>
 		<all-scripts>
 			<root>pig/</root>
 			<preserve>true</preserve>
-			<target>lib/pig/</target>		
+			<target>lib/</target>		
 			<includes>
 				<include>.*\.pig</include>
 			</includes>

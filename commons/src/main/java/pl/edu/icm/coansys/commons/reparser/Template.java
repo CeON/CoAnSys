@@ -58,21 +58,21 @@ public class Template {
 
 	@Override
 	public String toString() {
-		String ret = "";
+		StringBuilder ret = new StringBuilder();
 		boolean first = true;
 		for (NodeCategory nc : fields) {
-			ret += (first ? "" : " ") + nc.toString();
+			ret.append((first ? "" : " ")).append(nc.toString());
 			first = false;
 		}
-		return "{" + ret + "}";
+		return "{" + ret.toString() + "}";
 	}
 
 	public String getRegexp() {
-		String regexp = "";
+		StringBuilder regexp = new StringBuilder();
 		for (NodeCategory nc : fields) {
-			regexp += nc.getRegexp();
+			regexp.append(nc.getRegexp());
 		}
-		return "^" + regexp + "$";
+		return "^" + regexp.toString() + "$";
 	}
 
 	private Pattern getPattern() {
@@ -82,41 +82,41 @@ public class Template {
 	}
 	
 	private String spaces(int count) {
-		String ret = "";
+		StringBuilder ret = new StringBuilder();
 		for (int i = 0; i < count; i++)
-			ret += " ";
-		return ret;
+			ret.append(" ");
+		return ret.toString();
 	}
 	
 	private String findMatchedText(List<Token> tokens, int start, int end) {
-		String res = "";
+		StringBuilder res = new StringBuilder();
 		int curStart = 0;
 		for (Token t : tokens) {
 			final int curLen = t.getContent().length();
 			final int curEnd = curStart + curLen;
 			if (start < curEnd && end > curStart) {
 				//TODO: concatenate only the relevant (matched) part of the token
-				res += t.getContent();
+				res.append(t.getContent());
 				//TODO: implement without using getNext()/getPrevious()
 				if (t.getNext() != null)
-					res += spaces(t.getNext().getStart() - t.getEnd() - 1);
+					res.append(spaces(t.getNext().getStart() - t.getEnd() - 1));
 			}
 			curStart += curLen + 1;
 		}
-		return res;
+		return res.toString();
 	}
 
 	public Node match(List<Token> tokens) {
-		String text = "";
+		StringBuilder text = new StringBuilder();
 		for (Token t : tokens) {
-			text += t.getContent() + " ";
+			text.append(t.getContent()).append(" ");
 		}
 
 		Node n = new Node();
 		n.setType(getType());
 		
 		Pattern p = getPattern();
-		Matcher m = p.matcher(text);
+		Matcher m = p.matcher(text.toString());
 		if (!m.matches())
 			return null;
 		

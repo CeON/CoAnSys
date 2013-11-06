@@ -16,12 +16,13 @@
 	<build>
 		<resources>
 			<resource>
-				<directory>src/main/pig</directory>
-				<filtering>false</filtering>
+				<directory>src/main/pig/disambiguation</directory>
+				<filtering>true</filtering>
 				<includes>
-					<include>**/*.pig</include>
+					<include>**/disambiguation*.pig</include>
+					<include>**/splitter*.pig</include>
 				</includes>
-				<targetPath>${project.build.directory}/classes/pig</targetPath>
+				<targetPath>${project.build.directory}/classes/pig-main</targetPath>
 			</resource>
 		</resources>
 	</build>

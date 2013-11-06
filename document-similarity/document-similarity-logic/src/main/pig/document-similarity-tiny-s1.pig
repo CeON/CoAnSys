@@ -36,7 +36,7 @@
 %default tmpCompressionCodec gz
 %default mapredChildJavaOpts -Xmx8000m
 
-%default inputPath '/srv/polindex/seqfile/polindex-yadda-20130729-text.sf'
+%default inputPath 'hdfs://hadoop-master.vls.icm.edu.pl:8020/srv/bwndata/seqfile/springer-metadata/springer-20120419-springer0*.sq'
 %default time '2013-09-28--10-37'
 %default outputPath 'document-similarity-output/$time/'
 %default jars '*.jar'
@@ -55,12 +55,13 @@ SET pig.tmpfilecompression true
 SET pig.tmpfilecompression.codec $tmpCompressionCodec
 %DEFAULT ds_scheduler default
 SET mapred.fairscheduler.pool $ds_scheduler
-
+--SET pig.noSplitCombination true;
 IMPORT 'macros.pig';
 
 -------------------------------------------------------
 -- business code section
 -------------------------------------------------------
+
 docIn = LOAD '$inputPath' USING pl.edu.icm.coansys.commons.pig.udf.
 	RichSequenceFileLoader('org.apache.hadoop.io.Text','org.apache.hadoop.io.BytesWritable') 
 	as (key:chararray, value:bytearray);
@@ -80,7 +81,6 @@ doc_abstract_all = stem_words(doc_raw, docId, abstract);
 
 -- get all words (with duplicates for tfidf)
 doc_all = UNION doc_keyword_all, doc_title_all, doc_abstract_all;
-
 -- store document and terms
 --STORE doc_title_all INTO '$outputPath$DOC_TERM_TITLE';
 --STORE doc_keyword_all INTO '$outputPath$DOC_TERM_KEYWORDS';
@@ -93,4 +93,3 @@ STORE tfidf_all INTO '$outputPath$TFIDF_NON_WEIGHTED_SUBDIR';
 tfidf_all_topn = get_topn_per_group(tfidf_all, docId, tfidf, 'desc', $tfidfTopnTermPerDocument);
 tfidf_all_topn_projected = FOREACH tfidf_all_topn GENERATE top::docId AS docId, top::term AS term, top::tfidf AS tfidf;
 STORE tfidf_all_topn_projected  INTO '$outputPath$TFIDF_TOPN_ALL_TEMP';
-

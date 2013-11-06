@@ -20,7 +20,7 @@
 <!-- ================================================================= -->
 # BEG:REPLACE @OOZIE-START@
 <workflow-app name='${project}*${subproject}' xmlns="uri:oozie:workflow:0.2">
-	<start to='buildModel_05'/>
+	<start to='docs2neigh_01'/>
 # END:REPLACE
 
 # BEG:REPLACE @OOZIE-END@
@@ -243,6 +243,7 @@ RETURNS:
 <!-- ================================================================= -->
 @OOZIE-START@
 <!-- 
+ -->
 # BEG:ACTION name=docs2neigh_01 ok=assignAndCreateDocClassif_02 error=kill
 		@PIG_START@
 			@CONFIG@
@@ -257,7 +258,6 @@ RETURNS:
 		@PIG_END@
 # END:ACTION
 
--->
 <!--
 	<fork name="split_03">
         <path start="split_03A" />
@@ -284,7 +284,7 @@ RETURNS:
 
 	<join name="merge_03" to="enrich_04" />
 -->
-<!--
+
 # BEG:FORK_MERGE name=split_03 node_after_join=enrich_04 error=kill
 @src@ ${dc_m_hdfs_neighs} ${dc_m_hdfs_docClassifMapping}
 @FOLDS@
@@ -304,7 +304,6 @@ RETURNS:
 		@PIG_END@
 
 # END:FORK_MERGE
--->
 
 # BEG:FORK_MERGE name=buildModel_05 node_after_join=testModel_06 error=kill
 @FOLDS@
