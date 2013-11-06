@@ -26,6 +26,7 @@
 %DEFAULT and_outputContribs disambiguation/outputContribs$and_time
 
 %DEFAULT and_sample 1.0
+DEFINE serialize pl.edu.icm.coansys.disambiguation.author.pig.serialization.SERIALIZE_RESULTS()
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- register section
@@ -85,6 +86,6 @@ A = JOIN CidDkey BY cId, CidAuuid BY cId;
 B = FOREACH A generate docKey, cId, uuid;
 C = group B by docKey;
 D = FOREACH C generate group as docKey, (B.cId, B.uuid) as pair;
-
--- TODO D to protocol buffers ...
-
+DUMP D;
+DESCRIBE D;
+-- E = FOREACH C generate serialize(*)

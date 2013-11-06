@@ -20,9 +20,11 @@ commonJarsPath=/usr/lib/hbase/lib/zookeeper.jar
 
 and_inputDocsData=/srv/bwndata/seqfile/springer-metadata/springer-20120419-springer0*.sq
 and_splitted_output=${results}/splitted
+and_cid_dockey_output=${results}/cid_dockey
 and_outputContribs=${results}/outputContribs
 and_failedContribs=${results}/failedContribs
-and_tmp_path=${results}/tmp
+and_outputPB=${results}/outputPB
+and_tmp_path=${results}/tmp1
 
 and_sample=0.05
 and_exhaustive_limit=6627
