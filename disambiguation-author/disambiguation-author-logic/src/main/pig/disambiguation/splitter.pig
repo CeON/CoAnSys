@@ -94,7 +94,7 @@ C1 = foreach B generate cId as cId, sname as sname, metadata as metadata;
 C = group C1 by sname;
 -- D: {sname: chararray, datagroup: {(cId: chararray,cPos: int,sname: chararray,data: map[{(val_0: chararray)}])}, count: long}
 -- TODO: remove sname from datagroup. Then in UDFs as well..
-D = foreach C generate group as sname, C1 as datagroup, COUNT(B) as count;
+D = foreach C generate group as sname, C1 as datagroup, COUNT(C1) as count;
 
 split D into
         D1 if count == 1,
