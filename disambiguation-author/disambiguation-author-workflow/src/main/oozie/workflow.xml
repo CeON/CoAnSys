@@ -83,7 +83,7 @@
 			</configuration>
 			<script>disambiguation_one.pig</script>
 			<param>and_sample=1.0</param>
-			<param>and_inputDocsData=${and_splitted_output}/one</param>
+			<param>and_inputDocsData=${and_splitted_output}/one/*</param>
 			<param>mapredChildJavaOpts=${and_mapredChildJavaOpts_one}</param>
 			<param>commonJarsPath=${commonJarsPath}</param>
 			<param>one=one</param>
@@ -132,7 +132,7 @@
 			</configuration>
 			<script>disambiguation_exh.pig</script>
 			<param>and_sample=1.0</param>
-			<param>and_inputDocsData=${and_splitted_output}/exh</param>
+			<param>and_inputDocsData=${and_splitted_output}/exh/*</param>
 			<param>mapredChildJavaOpts=${and_mapredChildJavaOpts_exh}</param>
 			<param>commonJarsPath=${commonJarsPath}</param>
 			<param>one=one</param>
@@ -181,7 +181,7 @@
 			</configuration>
 			<script>disambiguation_app_sim.pig</script>
 			<param>and_sample=1.0</param>
-			<param>and_inputDocsData=${and_splitted_output}/app_sim</param>
+			<param>and_inputDocsData=${and_splitted_output}/app_sim/*</param>
 			<param>mapredChildJavaOpts=${and_mapredChildJavaOpts_app_sim}</param>
 			<param>commonJarsPath=${commonJarsPath}</param>
 			<param>one=one</param>
@@ -230,7 +230,7 @@
 			</configuration>
 			<script>disambiguation_app_no_sim.pig</script>
 			<param>and_sample=1.0</param>
-			<param>and_inputDocsData=${and_splitted_output}/app_no_sim</param>
+			<param>and_inputDocsData=${and_splitted_output}/app_no_sim/*</param>
 			<param>mapredChildJavaOpts=${and_mapredChildJavaOpts_app_no_sim}</param>
 			<param>commonJarsPath=${commonJarsPath}</param>
 			<param>one=one</param>

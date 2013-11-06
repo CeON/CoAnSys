@@ -1,4 +1,4 @@
-if [ $CHRUM = "" ]
+if [ "${CHRUM}" = "" ]
 then
 	echo "ERROE: No path to chrum location in environment specifed. Set environment variable CHRUM and run again."
 	exit 1
