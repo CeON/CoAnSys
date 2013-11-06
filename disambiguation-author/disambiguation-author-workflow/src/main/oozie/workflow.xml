@@ -45,6 +45,8 @@
 			<param>and_splitter_output=${and_splitted_output}</param>
 			<param>and_statistics=${and_statistics}</param>
 			<param>and_threshold=${and_threshold}</param>
+			<param>and_cid_dockey=${and_cid_dockey}</param>
+			<param>and_outputPB=${and_outputPB}</param>
 		</pig>
 		<ok to="do_and"/>
 		<error to="kill"/>
@@ -100,6 +102,8 @@
 			<param>and_splitter_output=${and_splitted_output}</param>
 			<param>and_statistics=${and_statistics}</param>
 			<param>and_threshold=${and_threshold}</param>
+			<param>and_cid_dockey=${and_cid_dockey}</param>
+			<param>and_outputPB=${and_outputPB}</param>
 		</pig>
 		<ok to="do_and_join"/>
 		<error to="kill"/>
@@ -149,6 +153,8 @@
 			<param>and_splitter_output=${and_splitted_output}</param>
 			<param>and_statistics=${and_statistics}</param>
 			<param>and_threshold=${and_threshold}</param>
+			<param>and_cid_dockey=${and_cid_dockey}</param>
+			<param>and_outputPB=${and_outputPB}</param>
 		</pig>
 		<ok to="do_and_join"/>
 		<error to="kill"/>
@@ -198,6 +204,8 @@
 			<param>and_splitter_output=${and_splitted_output}</param>
 			<param>and_statistics=${and_statistics}</param>
 			<param>and_threshold=${and_threshold}</param>
+			<param>and_cid_dockey=${and_cid_dockey}</param>
+			<param>and_outputPB=${and_outputPB}</param>
 		</pig>
 		<ok to="do_and_join"/>
 		<error to="kill"/>
@@ -247,11 +255,63 @@
 			<param>and_splitter_output=${and_splitted_output}</param>
 			<param>and_statistics=${and_statistics}</param>
 			<param>and_threshold=${and_threshold}</param>
+			<param>and_cid_dockey=${and_cid_dockey}</param>
+			<param>and_outputPB=${and_outputPB}</param>
 		</pig>
 		<ok to="do_and_join"/>
 		<error to="kill"/>
 	</action>
-	<join name="do_and_join" to="end"/>
+	<join name="do_and_join" to="serialize"/>
+	<action name="serialize">
+		<pig>
+			<job-tracker>${jobTracker}</job-tracker>
+			<name-node>${nameNode}</name-node>
+			<configuration>
+				<property>
+					<name>oozie.launcher.mapred.fairscheduler.pool</name>
+					<value>${pool}</value>
+				</property>
+				<property>
+					<name>mapred.mapper.new-api</name>
+					<value>true</value>
+				</property>
+				<property>
+					<name>mapred.reducer.new-api</name>
+					<value>true</value>
+				</property>
+				<property>
+					<name>mapred.job.queue.name</name>
+					<value>${queueName}</value>
+				</property>
+				<property>
+					<name>hbase.zookeeper.quorum</name>
+					<value>${hbaseZookeeperQuorum}</value>
+				</property>
+			</configuration>
+			<script>join.pig</script>
+			<param>and_sample=1.0</param>
+			<param>and_outputContribs=${and_outputContribs}</param>
+			<param>commonJarsPath=${commonJarsPath}</param>
+			<param>one=one</param>
+			<param>exh=exh</param>
+			<param>appSim=app_sim</param>
+			<param>appNoSim=app_no_sim</param>
+			<param>and_aproximate_sim_limit=${and_aproximate_sim_limit}</param>
+			<param>and_exhaustive_limit=${and_exhaustive_limit}</param>
+			<param>and_failedContribs=${and_failedContribs}</param>
+			<param>and_feature_info=${and_feature_info}</param>
+			<param>and_lang=${and_lang}</param>
+			<param>and_outputContribs=${and_outputContribs}</param>
+			<param>and_scheduler=${and_scheduler}</param>
+			<param>and_splitter_output=${and_splitted_output}</param>
+			<param>and_statistics=${and_statistics}</param>
+			<param>and_threshold=${and_threshold}</param>
+			<param>and_cid_dockey=${and_cid_dockey}</param>
+			<param>and_outputPB=${and_outputPB}</param>
+		</pig>
+		<ok to="end"/>
+		<error to="kill"/>
+	</action>
 	<action name="send-email">
 		<email xmlns="uri:oozie:email-action:0.1">
 			<to>mwos@icm.edu.pl</to>

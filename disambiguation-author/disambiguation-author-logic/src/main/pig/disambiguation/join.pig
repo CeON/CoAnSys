@@ -23,7 +23,10 @@
 %DEFAULT JARS '*.jar'
 %DEFAULT commonJarsPath 'lib/$JARS'
 
-%DEFAULT and_outputContribs disambiguation/outputContribs$and_time
+-- outputContribs as input for this script
+%DEFAULT and_outputContribs 'workflows/pl.edu.icm.coansys-disambiguation-author-workflow/results/splitted'
+%DEFAULT and_cid_dockey 'workflows/pl.edu.icm.coansys-disambiguation-author-workflow/results/cid_dockey'
+%DEFAULT and_outputPB 'finall_out'
 
 %DEFAULT and_sample 1.0
 DEFINE serialize pl.edu.icm.coansys.disambiguation.author.pig.serialization.SERIALIZE_RESULTS()
@@ -78,14 +81,16 @@ set mapred.fairscheduler.pool $and_scheduler
 %DEFAULT sep '/'
 %DEFAULT cid_dockey 'cid_dockey'
 
-CidDkey = LOAD '$and_splitter_output$sep$cid_dockey' as (cId:chararray, dockey:chararray);
+CidDkey = LOAD '$and_cid_dockey' as (cId:chararray, dockey:chararray);
 CidAuuid = LOAD '$and_outputContribs$sep*' as (cId:chararray, uuid:chararray);
 -- TODO: is that load correct with '*' ?
 
 A = JOIN CidDkey BY cId, CidAuuid BY cId;
 B = FOREACH A generate docKey, cId, uuid;
 C = group B by docKey;
-D = FOREACH C generate group as docKey, (B.cId, B.uuid) as pair;
+--TODO wyrzucic doc key z data bag'a
+D = FOREACH C generate group as docKey, B as pair;
 DUMP D;
 DESCRIBE D;
--- E = FOREACH C generate serialize(*)
+-- E = FOREACH C generate serialize(*);
+-- store E into '$and_outputPB';

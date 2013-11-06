@@ -24,6 +24,7 @@
 %DEFAULT commonJarsPath 'lib/$JARS'
 
 %DEFAULT and_inputDocsData /srv/bwndata/seqfile/bazekon-20130314.sf
+%DEFAULT and_cid_dockey 'cid_dockey'
 %DEFAULT and_time 20130709_1009
 %DEFAULT and_feature_info 'CoAuthorsSnameDisambiguatorFullList#EX_AUTH_INITIALS#-0.0000166#8,ClassifCodeDisambiguator#EX_CLASSIFICATION_CODES#0.99#12,KeyphraseDisambiguator#EX_KEYWORDS_SPLIT#0.99#22,KeywordDisambiguator#EX_KEYWORDS#0.0000369#40'
 %DEFAULT and_lang 'all'
@@ -118,7 +119,7 @@ store D1000 into '$and_splitter_output$sep$appSim';
 store DX into '$and_splitter_output$sep$appNoSim';
 
 Q = foreach B generate cId, dockey;
-store Q into '$and_splitter_output$sep$cid_dockey';
+store Q into '$and_cid_dockey';
 -- TODO: wygenerowac tabele (dockey, cId) i zapisac
 
 

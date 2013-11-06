@@ -135,6 +135,15 @@
 			@AUXIL@
 # END:REPLACE
 <!-- ================================================================= -->
+<!-- ============================= WF-3 ============================== -->
+<!-- ================================================================= -->
+# BEG:REPLACE @WF-3@
+            <script>join.pig</script>
+            <param>and_sample=1.0</param>
+            <param>and_outputContribs=${and_outputContribs}</param>
+			@AUXIL@
+# END:REPLACE
+<!-- ================================================================= -->
 <!-- ================================================================= -->
 <!-- ================================================================= -->
 @OOZIE-START@
@@ -144,11 +153,17 @@
 		@PIG_END@
 # END:ACTION
 
-# BEG:FORK_MERGE name=do_and node_after_join=end error=kill
+# BEG:FORK_MERGE name=do_and node_after_join=serialize error=kill
 @script@ one exh app_sim app_no_sim
 		@PIG_START@
 			@WF-2@
 		@PIG_END@
 # END:FORK_MERGE
+
+# BEG:ACTION name=serialize ok=end error=kill
+		@PIG_START@
+			@WF-3@
+		@PIG_END@
+# END:ACTION
 
 @OOZIE-END@
