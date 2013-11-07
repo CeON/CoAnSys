@@ -94,8 +94,9 @@ message DocumentMetadata{
 	repeated KeyValue auxiliarInfo = 6;
 	repeated Affiliation affiliations = 12;
 	repeated ReferenceMetadata reference = 7;
-	optional string collection = 8;
+	repeated string collection = 8;
 	optional string sourcePath = 9;
+	repeated string origKey = 11;
 }
 
 // position -- citation's position in reference list, starting by 1
