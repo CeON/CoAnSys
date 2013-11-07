@@ -21,8 +21,6 @@ package pl.edu.icm.coansys.disambiguation.author.features.disambiguators;
 import java.util.List;
 import java.util.AbstractMap.SimpleEntry;
 
-import org.slf4j.LoggerFactory;
-
 import pl.edu.icm.coansys.disambiguation.features.Disambiguator;
 
 /**
@@ -35,8 +33,8 @@ import pl.edu.icm.coansys.disambiguation.features.Disambiguator;
  */
 public class CoAuthorsSnameDisambiguatorFullList extends Disambiguator {
 
-	private static final org.slf4j.Logger logger = LoggerFactory
-			.getLogger(CoAuthorsSnameDisambiguatorFullList.class);
+	//private static final org.slf4j.Logger logger = LoggerFactory
+	//		.getLogger(CoAuthorsSnameDisambiguatorFullList.class);
 
 	@Override
 	public String getName() {
@@ -65,6 +63,6 @@ public class CoAuthorsSnameDisambiguatorFullList extends Disambiguator {
 		}
 
 		//return (double) intersection / sum;
-		return (double) intersection;
+		return intersection;
 	}
 }

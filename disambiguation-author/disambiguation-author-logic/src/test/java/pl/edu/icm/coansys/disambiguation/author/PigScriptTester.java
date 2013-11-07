@@ -23,7 +23,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.pig.pigunit.PigTest;
-import org.apache.pig.tools.parameters.ParseException;
 
 import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
 
@@ -58,7 +57,7 @@ public class PigScriptTester {
     
     private PigTest pigtest;
     public void run( String testsFolderName, String scriptName, 
-    		String inputAlias, String outputAlias, String[] pigParams ) throws IOException, ParseException {
+    		String inputAlias, String outputAlias, String[] pigParams ) throws IOException {
 
     	final String scriptPath = PIG_SCRIPT_DIR + scriptName;
 		Auxil.fileExist( scriptPath );

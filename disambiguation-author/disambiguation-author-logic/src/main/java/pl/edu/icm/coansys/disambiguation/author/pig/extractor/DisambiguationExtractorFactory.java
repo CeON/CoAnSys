@@ -31,6 +31,7 @@ public class DisambiguationExtractorFactory {
 		Set<Class<? extends DisambiguationExtractor>> classes = reflections
 				.getSubTypesOf(DisambiguationExtractor.class);
 
+		@SuppressWarnings("unchecked")
 		Class<? extends DisambiguationExtractor>[] ar = 
 				classes.toArray(new Class[classes.size()]);
 

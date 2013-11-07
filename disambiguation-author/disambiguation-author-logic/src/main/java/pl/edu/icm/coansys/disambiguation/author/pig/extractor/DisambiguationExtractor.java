@@ -23,10 +23,18 @@ import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.ToHashCode;
 
 public class DisambiguationExtractor {
 
-	static public PigNormalizer normalizers[] = {
+	static private PigNormalizer normalizers[] = {
 		new ToEnglishLowerCase(), 
 		new ToHashCode()
 	};
+
+	public static PigNormalizer[] getNormalizers() {
+		return normalizers;
+	}
+
+	public static void setNormalizers(PigNormalizer[] normalizers) {
+		DisambiguationExtractor.normalizers = normalizers;
+	}
 
 	static public Object normalizeExtracted( Object extracted ) {
 		Object tmp = extracted;

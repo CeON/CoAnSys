@@ -83,7 +83,7 @@ public class FeaturesCheck extends AND<Boolean> {
 		
 		allContribCounter++;
 		
-		double simil = threshold;
+		double simil = getThreshold();
 		for ( int d = 0; d < features.length; d++ ) {
 			// Taking features from each keys (name of extractor = feature name)
 			// In contribsT.get(i) there is map we need.
@@ -107,7 +107,6 @@ public class FeaturesCheck extends AND<Boolean> {
 		}
 		
 		if ( isStatistics ) {
-			//System.out.println( "FCH\t" +  cid + "\t" + sname + "\t" );
 			logger.info("Skipping " + (++skipedContribCounter) + " / " 
 					+ allContribCounter + " contrib: cid = " 
 					+ cid + ", sname = " + sname + ". Not enough features." );
