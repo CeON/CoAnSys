@@ -77,7 +77,7 @@ public class AproximateAND extends AND<DataBag> {
 	 * @see org.apache.pig.EvalFunc#exec(org.apache.pig.data.Tuple)
 	 */
 	@SuppressWarnings("unchecked")
-	// @Override
+	@Override
 	public DataBag exec(Tuple input) /* throws IOException */{
 
 		if (input == null || input.size() == 0)
@@ -140,7 +140,6 @@ public class AproximateAND extends AND<DataBag> {
 				// EXTRACT_CONTRIB_GIVENDATA
 
 				// benchmark
-				// TODO: snamy są wyrzucone
 				sname = t.get(1);
 			}
 
@@ -151,7 +150,7 @@ public class AproximateAND extends AND<DataBag> {
 					sim[i] = new float[i];
 
 					for (int j = 0; j < i; j++) {
-						sim[i][j] = threshold;
+						sim[i][j] = getThreshold();
 					}
 				}
 			}

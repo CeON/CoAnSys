@@ -40,7 +40,7 @@ public class DocumentProto2KeyWordExtractor implements Extractor<DocumentMetadat
 
     @Override
     public List<String> extract(DocumentMetadata input, String... auxil) {
-        DocumentMetadata dm = (DocumentMetadata) input;
+        DocumentMetadata dm = input;
         List<String> ret = new ArrayList<String>();
         for (DocumentProtos.KeywordsList keywordsList : dm.getKeywordsList()) {
             for (String kw : keywordsList.getKeywordsList()) {

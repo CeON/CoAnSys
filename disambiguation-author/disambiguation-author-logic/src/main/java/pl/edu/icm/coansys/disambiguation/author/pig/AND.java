@@ -13,7 +13,8 @@ import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
 
 public abstract class AND<T> extends EvalFunc<T> {
 
-	protected float threshold;
+	private float threshold;
+
 	protected PigDisambiguator[] features;
 	protected FeatureInfo[] featureInfos;
 
@@ -25,6 +26,10 @@ public abstract class AND<T> extends EvalFunc<T> {
 	// private Tuple datain[];
 	// private int N;
 
+	protected float getThreshold() {
+		return threshold;
+	}
+	
 	// benchmark staff
 	/*
 	 * protected boolean isStatistics = false; private TimerSyso timer = new
@@ -32,7 +37,6 @@ public abstract class AND<T> extends EvalFunc<T> {
 	 * 0; private int finalClusterNumber = 0; private
 	 * List<Integer>clustersSizes;
 	 */
-
 	public AND(org.slf4j.Logger logger, String threshold,
 			String featureDescription, String useIdsForExtractors)
 			throws Exception {

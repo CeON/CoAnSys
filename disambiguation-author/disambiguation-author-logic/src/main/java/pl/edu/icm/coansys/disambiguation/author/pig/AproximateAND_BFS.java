@@ -78,7 +78,7 @@ public class AproximateAND_BFS extends AND<DataBag> {
 	 * @see org.apache.pig.EvalFunc#exec(org.apache.pig.data.Tuple)
 	 */
 	@SuppressWarnings("unchecked")
-	// @Override
+	@Override
 	public DataBag exec(Tuple input) /* throws IOException */{
 
 		if (input == null || input.size() == 0)
