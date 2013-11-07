@@ -60,11 +60,12 @@ public abstract class AND<T> extends EvalFunc<T> {
 				d = new Disambiguator();
 				logger.info("Empty disambiguator name. Creating default disambiguator for this feature.");
 			} else if ((d = ff.create(fi)) == null) {
-				// creating default disambiguator
-				d = new Disambiguator();
 				logger.error("Cannot create disambugiator from given feature info.");
 				throw new Exception(
 						"Cannot create disambugiator from given feature info.");
+				// if you do not want to throw an exception, uncomment the
+				// following creating default disambiguator
+				// d = new Disambiguator();
 			}
 			// wrong max value (would cause dividing by zero)
 			if (fi.getMaxValue() == 0) {
@@ -134,8 +135,7 @@ public abstract class AND<T> extends EvalFunc<T> {
 		double partial = features[featureIndex].calculateAffinity(
 				featureDescriptionA, featureDescriptionB);
 
-		partial = partial
-				/ featureInfos[featureIndex].getMaxValue()
+		partial = partial / featureInfos[featureIndex].getMaxValue()
 				* featureInfos[featureIndex].getWeight();
 
 		return partial;
