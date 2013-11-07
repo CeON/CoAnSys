@@ -8446,13 +8446,19 @@ public final class DocumentProtos {
     pl.edu.icm.coansys.models.DocumentProtos.ReferenceMetadataOrBuilder getReferenceOrBuilder(
         int index);
     
-    // optional string collection = 8;
-    boolean hasCollection();
-    String getCollection();
+    // repeated string collection = 8;
+    java.util.List<String> getCollectionList();
+    int getCollectionCount();
+    String getCollection(int index);
     
     // optional string sourcePath = 9;
     boolean hasSourcePath();
     String getSourcePath();
+    
+    // repeated string origKey = 11;
+    java.util.List<String> getOrigKeyList();
+    int getOrigKeyCount();
+    String getOrigKey(int index);
   }
   public static final class DocumentMetadata extends
       com.google.protobuf.GeneratedMessage
@@ -8654,43 +8660,25 @@ public final class DocumentProtos {
       return reference_.get(index);
     }
     
-    // optional string collection = 8;
+    // repeated string collection = 8;
     public static final int COLLECTION_FIELD_NUMBER = 8;
-    private java.lang.Object collection_;
-    public boolean hasCollection() {
-      return ((bitField0_ & 0x00000004) == 0x00000004);
+    private com.google.protobuf.LazyStringList collection_;
+    public java.util.List<String>
+        getCollectionList() {
+      return collection_;
     }
-    public String getCollection() {
-      java.lang.Object ref = collection_;
-      if (ref instanceof String) {
-        return (String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
-          collection_ = s;
-        }
-        return s;
-      }
+    public int getCollectionCount() {
+      return collection_.size();
     }
-    private com.google.protobuf.ByteString getCollectionBytes() {
-      java.lang.Object ref = collection_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
-        collection_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
+    public String getCollection(int index) {
+      return collection_.get(index);
     }
     
     // optional string sourcePath = 9;
     public static final int SOURCEPATH_FIELD_NUMBER = 9;
     private java.lang.Object sourcePath_;
     public boolean hasSourcePath() {
-      return ((bitField0_ & 0x00000008) == 0x00000008);
+      return ((bitField0_ & 0x00000004) == 0x00000004);
     }
     public String getSourcePath() {
       java.lang.Object ref = sourcePath_;
@@ -8718,6 +8706,20 @@ public final class DocumentProtos {
       }
     }
     
+    // repeated string origKey = 11;
+    public static final int ORIGKEY_FIELD_NUMBER = 11;
+    private com.google.protobuf.LazyStringList origKey_;
+    public java.util.List<String>
+        getOrigKeyList() {
+      return origKey_;
+    }
+    public int getOrigKeyCount() {
+      return origKey_.size();
+    }
+    public String getOrigKey(int index) {
+      return origKey_.get(index);
+    }
+    
     private void initFields() {
       key_ = "";
       basicMetadata_ = pl.edu.icm.coansys.models.DocumentProtos.BasicMetadata.getDefaultInstance();
@@ -8727,8 +8729,9 @@ public final class DocumentProtos {
       auxiliarInfo_ = java.util.Collections.emptyList();
       affiliations_ = java.util.Collections.emptyList();
       reference_ = java.util.Collections.emptyList();
-      collection_ = "";
+      collection_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       sourcePath_ = "";
+      origKey_ = com.google.protobuf.LazyStringArrayList.EMPTY;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -8808,14 +8811,17 @@ public final class DocumentProtos {
       for (int i = 0; i < reference_.size(); i++) {
         output.writeMessage(7, reference_.get(i));
       }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        output.writeBytes(8, getCollectionBytes());
+      for (int i = 0; i < collection_.size(); i++) {
+        output.writeBytes(8, collection_.getByteString(i));
       }
-      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
         output.writeBytes(9, getSourcePathBytes());
       }
       for (int i = 0; i < keywords_.size(); i++) {
         output.writeMessage(10, keywords_.get(i));
+      }
+      for (int i = 0; i < origKey_.size(); i++) {
+        output.writeBytes(11, origKey_.getByteString(i));
       }
       for (int i = 0; i < affiliations_.size(); i++) {
         output.writeMessage(12, affiliations_.get(i));
@@ -8853,17 +8859,31 @@ public final class DocumentProtos {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(7, reference_.get(i));
       }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(8, getCollectionBytes());
+      {
+        int dataSize = 0;
+        for (int i = 0; i < collection_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeBytesSizeNoTag(collection_.getByteString(i));
+        }
+        size += dataSize;
+        size += 1 * getCollectionList().size();
       }
-      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(9, getSourcePathBytes());
       }
       for (int i = 0; i < keywords_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(10, keywords_.get(i));
+      }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < origKey_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeBytesSizeNoTag(origKey_.getByteString(i));
+        }
+        size += dataSize;
+        size += 1 * getOrigKeyList().size();
       }
       for (int i = 0; i < affiliations_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
@@ -9044,10 +9064,12 @@ public final class DocumentProtos {
         } else {
           referenceBuilder_.clear();
         }
-        collection_ = "";
+        collection_ = com.google.protobuf.LazyStringArrayList.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000100);
         sourcePath_ = "";
         bitField0_ = (bitField0_ & ~0x00000200);
+        origKey_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000400);
         return this;
       }
       
@@ -9152,14 +9174,22 @@ public final class DocumentProtos {
         } else {
           result.reference_ = referenceBuilder_.build();
         }
-        if (((from_bitField0_ & 0x00000100) == 0x00000100)) {
-          to_bitField0_ |= 0x00000004;
+        if (((bitField0_ & 0x00000100) == 0x00000100)) {
+          collection_ = new com.google.protobuf.UnmodifiableLazyStringList(
+              collection_);
+          bitField0_ = (bitField0_ & ~0x00000100);
         }
         result.collection_ = collection_;
         if (((from_bitField0_ & 0x00000200) == 0x00000200)) {
-          to_bitField0_ |= 0x00000008;
+          to_bitField0_ |= 0x00000004;
         }
         result.sourcePath_ = sourcePath_;
+        if (((bitField0_ & 0x00000400) == 0x00000400)) {
+          origKey_ = new com.google.protobuf.UnmodifiableLazyStringList(
+              origKey_);
+          bitField0_ = (bitField0_ & ~0x00000400);
+        }
+        result.origKey_ = origKey_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -9338,11 +9368,28 @@ public final class DocumentProtos {
             }
           }
         }
-        if (other.hasCollection()) {
-          setCollection(other.getCollection());
+        if (!other.collection_.isEmpty()) {
+          if (collection_.isEmpty()) {
+            collection_ = other.collection_;
+            bitField0_ = (bitField0_ & ~0x00000100);
+          } else {
+            ensureCollectionIsMutable();
+            collection_.addAll(other.collection_);
+          }
+          onChanged();
         }
         if (other.hasSourcePath()) {
           setSourcePath(other.getSourcePath());
+        }
+        if (!other.origKey_.isEmpty()) {
+          if (origKey_.isEmpty()) {
+            origKey_ = other.origKey_;
+            bitField0_ = (bitField0_ & ~0x00000400);
+          } else {
+            ensureOrigKeyIsMutable();
+            origKey_.addAll(other.origKey_);
+          }
+          onChanged();
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -9462,8 +9509,8 @@ public final class DocumentProtos {
               break;
             }
             case 66: {
-              bitField0_ |= 0x00000100;
-              collection_ = input.readBytes();
+              ensureCollectionIsMutable();
+              collection_.add(input.readBytes());
               break;
             }
             case 74: {
@@ -9475,6 +9522,11 @@ public final class DocumentProtos {
               pl.edu.icm.coansys.models.DocumentProtos.KeywordsList.Builder subBuilder = pl.edu.icm.coansys.models.DocumentProtos.KeywordsList.newBuilder();
               input.readMessage(subBuilder, extensionRegistry);
               addKeywords(subBuilder.buildPartial());
+              break;
+            }
+            case 90: {
+              ensureOrigKeyIsMutable();
+              origKey_.add(input.readBytes());
               break;
             }
             case 98: {
@@ -10731,39 +10783,59 @@ public final class DocumentProtos {
         return referenceBuilder_;
       }
       
-      // optional string collection = 8;
-      private java.lang.Object collection_ = "";
-      public boolean hasCollection() {
-        return ((bitField0_ & 0x00000100) == 0x00000100);
+      // repeated string collection = 8;
+      private com.google.protobuf.LazyStringList collection_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private void ensureCollectionIsMutable() {
+        if (!((bitField0_ & 0x00000100) == 0x00000100)) {
+          collection_ = new com.google.protobuf.LazyStringArrayList(collection_);
+          bitField0_ |= 0x00000100;
+         }
       }
-      public String getCollection() {
-        java.lang.Object ref = collection_;
-        if (!(ref instanceof String)) {
-          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
-          collection_ = s;
-          return s;
-        } else {
-          return (String) ref;
-        }
+      public java.util.List<String>
+          getCollectionList() {
+        return java.util.Collections.unmodifiableList(collection_);
       }
-      public Builder setCollection(String value) {
+      public int getCollectionCount() {
+        return collection_.size();
+      }
+      public String getCollection(int index) {
+        return collection_.get(index);
+      }
+      public Builder setCollection(
+          int index, String value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000100;
-        collection_ = value;
+  ensureCollectionIsMutable();
+        collection_.set(index, value);
+        onChanged();
+        return this;
+      }
+      public Builder addCollection(String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureCollectionIsMutable();
+        collection_.add(value);
+        onChanged();
+        return this;
+      }
+      public Builder addAllCollection(
+          java.lang.Iterable<String> values) {
+        ensureCollectionIsMutable();
+        super.addAll(values, collection_);
         onChanged();
         return this;
       }
       public Builder clearCollection() {
+        collection_ = com.google.protobuf.LazyStringArrayList.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000100);
-        collection_ = getDefaultInstance().getCollection();
         onChanged();
         return this;
       }
-      void setCollection(com.google.protobuf.ByteString value) {
-        bitField0_ |= 0x00000100;
-        collection_ = value;
+      void addCollection(com.google.protobuf.ByteString value) {
+        ensureCollectionIsMutable();
+        collection_.add(value);
         onChanged();
       }
       
@@ -10800,6 +10872,62 @@ public final class DocumentProtos {
       void setSourcePath(com.google.protobuf.ByteString value) {
         bitField0_ |= 0x00000200;
         sourcePath_ = value;
+        onChanged();
+      }
+      
+      // repeated string origKey = 11;
+      private com.google.protobuf.LazyStringList origKey_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private void ensureOrigKeyIsMutable() {
+        if (!((bitField0_ & 0x00000400) == 0x00000400)) {
+          origKey_ = new com.google.protobuf.LazyStringArrayList(origKey_);
+          bitField0_ |= 0x00000400;
+         }
+      }
+      public java.util.List<String>
+          getOrigKeyList() {
+        return java.util.Collections.unmodifiableList(origKey_);
+      }
+      public int getOrigKeyCount() {
+        return origKey_.size();
+      }
+      public String getOrigKey(int index) {
+        return origKey_.get(index);
+      }
+      public Builder setOrigKey(
+          int index, String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureOrigKeyIsMutable();
+        origKey_.set(index, value);
+        onChanged();
+        return this;
+      }
+      public Builder addOrigKey(String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureOrigKeyIsMutable();
+        origKey_.add(value);
+        onChanged();
+        return this;
+      }
+      public Builder addAllOrigKey(
+          java.lang.Iterable<String> values) {
+        ensureOrigKeyIsMutable();
+        super.addAll(values, origKey_);
+        onChanged();
+        return this;
+      }
+      public Builder clearOrigKey() {
+        origKey_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000400);
+        onChanged();
+        return this;
+      }
+      void addOrigKey(com.google.protobuf.ByteString value) {
+        ensureOrigKeyIsMutable();
+        origKey_.add(value);
         onChanged();
       }
       
@@ -14195,28 +14323,29 @@ public final class DocumentProtos {
       "lassifCode\"v\n\014KeywordsList\022\014\n\004type\030\001 \001(\t" +
       "\022\020\n\010language\030\002 \001(\t\022\020\n\010keywords\030\003 \003(\t\022\017\n\007" +
       "comment\030\004 \001(\t\022#\n\nprovenance\030\005 \001(\0132\017.Prov" +
-      "enanceInfo\"\302\002\n\020DocumentMetadata\022\013\n\003key\030\001",
+      "enanceInfo\"\323\002\n\020DocumentMetadata\022\013\n\003key\030\001",
       " \002(\t\022%\n\rbasicMetadata\030\002 \002(\0132\016.BasicMetad" +
       "ata\022+\n\020documentAbstract\030\003 \003(\0132\021.TextWith" +
       "Language\022\037\n\010keywords\030\n \003(\0132\r.KeywordsLis" +
       "t\022\030\n\005extId\030\005 \003(\0132\t.KeyValue\022\037\n\014auxiliarI" +
       "nfo\030\006 \003(\0132\t.KeyValue\022\"\n\014affiliations\030\014 \003" +
       "(\0132\014.Affiliation\022%\n\treference\030\007 \003(\0132\022.Re" +
-      "ferenceMetadata\022\022\n\ncollection\030\010 \001(\t\022\022\n\ns" +
-      "ourcePath\030\t \001(\t\"\225\001\n\021ReferenceMetadata\022%\n" +
-      "\rbasicMetadata\030\001 \002(\0132\016.BasicMetadata\022\024\n\014" +
-      "sourceDocKey\030\002 \001(\t\022\020\n\010position\030\003 \001(\005\022\027\n\017",
-      "rawCitationText\030\004 \001(\t\022\030\n\005extId\030\005 \003(\0132\t.K" +
-      "eyValue\"\266\001\n\005Media\022\013\n\003key\030\001 \002(\t\022\021\n\tmediaT" +
-      "ype\030\002 \002(\t\022\017\n\007content\030\003 \002(\014\022\022\n\ncollection" +
-      "\030\004 \001(\t\022\022\n\nsourcePath\030\005 \001(\t\022\026\n\016sourceFile" +
-      "size\030\006 \001(\003\022\027\n\017destinationPath\030\007 \001(\t\022#\n\np" +
-      "rovenance\030\010 \001(\0132\017.ProvenanceInfo\"\'\n\016Medi" +
-      "aContainer\022\025\n\005media\030\001 \003(\0132\006.Media\"v\n\017Doc" +
-      "umentWrapper\022\r\n\005rowId\030\001 \002(\t\022+\n\020documentM" +
-      "etadata\030\002 \001(\0132\021.DocumentMetadata\022\'\n\016medi" +
-      "aContainer\030\003 \001(\0132\017.MediaContainerB+\n\031pl.",
-      "edu.icm.coansys.modelsB\016DocumentProtos"
+      "ferenceMetadata\022\022\n\ncollection\030\010 \003(\t\022\022\n\ns" +
+      "ourcePath\030\t \001(\t\022\017\n\007origKey\030\013 \003(\t\"\225\001\n\021Ref" +
+      "erenceMetadata\022%\n\rbasicMetadata\030\001 \002(\0132\016." +
+      "BasicMetadata\022\024\n\014sourceDocKey\030\002 \001(\t\022\020\n\010p",
+      "osition\030\003 \001(\005\022\027\n\017rawCitationText\030\004 \001(\t\022\030" +
+      "\n\005extId\030\005 \003(\0132\t.KeyValue\"\266\001\n\005Media\022\013\n\003ke" +
+      "y\030\001 \002(\t\022\021\n\tmediaType\030\002 \002(\t\022\017\n\007content\030\003 " +
+      "\002(\014\022\022\n\ncollection\030\004 \001(\t\022\022\n\nsourcePath\030\005 " +
+      "\001(\t\022\026\n\016sourceFilesize\030\006 \001(\003\022\027\n\017destinati" +
+      "onPath\030\007 \001(\t\022#\n\nprovenance\030\010 \001(\0132\017.Prove" +
+      "nanceInfo\"\'\n\016MediaContainer\022\025\n\005media\030\001 \003" +
+      "(\0132\006.Media\"v\n\017DocumentWrapper\022\r\n\005rowId\030\001" +
+      " \002(\t\022+\n\020documentMetadata\030\002 \001(\0132\021.Documen" +
+      "tMetadata\022\'\n\016mediaContainer\030\003 \001(\0132\017.Medi",
+      "aContainerB+\n\031pl.edu.icm.coansys.modelsB" +
+      "\016DocumentProtos"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -14300,7 +14429,7 @@ public final class DocumentProtos {
           internal_static_DocumentMetadata_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_DocumentMetadata_descriptor,
-              new java.lang.String[] { "Key", "BasicMetadata", "DocumentAbstract", "Keywords", "ExtId", "AuxiliarInfo", "Affiliations", "Reference", "Collection", "SourcePath", },
+              new java.lang.String[] { "Key", "BasicMetadata", "DocumentAbstract", "Keywords", "ExtId", "AuxiliarInfo", "Affiliations", "Reference", "Collection", "SourcePath", "OrigKey", },
               pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata.class,
               pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata.Builder.class);
           internal_static_ReferenceMetadata_descriptor =
