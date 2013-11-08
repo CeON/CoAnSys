@@ -1,6 +1,13 @@
-<workflow-app xmlns="uri:oozie:workflow:0.1" name="keywords-extraction-wf">
-    <start to="keyword-extraction" />
-    <action name="keyword-extraction">
+<workflow-app xmlns="uri:oozie:workflow:0.4" name="keywords-extraction-wf">
+	<parameters>
+		<property>
+			<name>POOL_NAME</name>
+			<value>default</value>
+		</property>
+	</parameters>
+
+	<start to="keyword-extraction" />
+	<action name="keyword-extraction">
 		<map-reduce>
 			<job-tracker>${jobTracker}</job-tracker>
 			<name-node>${nameNode}</name-node>
@@ -8,6 +15,10 @@
 				<delete path="${hdfsWorkingDirURI}/intermediate-data" />
 			</prepare>
 			<configuration>
+				<property>
+					<name>oozie.launcher.mapred.fairscheduler.pool</name>
+					<value>${POOL_NAME}</value>
+				</property>
 				<!-- This is required for new api usage -->
 				<property>
 					<name>mapred.mapper.new-api</name>
