@@ -9,23 +9,13 @@
 				<include>.*\.pig</include>
 			</includes>
 		</scripts>
-		<macros>
+		<scripts>
 			<root>pig-macros/</root>
 			<preserve>false</preserve>
 			<target>lib/</target>
 			<includes>
 				<include>.*\.pig</include>
 			</includes>
-		</macros>
-	</main-project-pig>
-	<deps-project-pig>
-		<all-scripts>
-			<root>pig/</root>
-			<preserve>true</preserve>
-			<target>lib/pig/</target>		
-			<includes>
-				<include>.*\.pig</include>
-			</includes>
-		</all-scripts>
-	</deps-project-pig>	
+		</scripts>
+	</main-project-pig>	
 </oozie-maven-plugin>
