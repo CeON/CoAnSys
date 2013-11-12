@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<oozie-maven-plugin> 
+<oozie-maven-plugin>
 	<main-project-pig>
 		<scripts>
-			<root>pig-main/</root>
+			<root>pig-main</root>
 			<preserve>false</preserve>
-			<target>/</target>		
+			<target />
 			<includes>
 				<include>1_.*\.pig</include>
 			</includes>
 		</scripts>
 		<macros>
-			<root>pig-macros/</root>
+			<root>pig-macros</root>
 			<preserve>false</preserve>
 			<target>lib/</target>
 			<includes>
@@ -25,12 +25,23 @@
 	</main-project-pig>
 	<deps-project-pig>
 		<all-scripts>
-			<root>pig/</root>
-			<preserve>true</preserve>
-			<target>lib/</target>		
+			<srcProject>.*document-similarity.*</srcProject>
+			<root>pig-main</root>
+			<preserve>false</preserve>
+			<target>/</target>
 			<includes>
 				<include>.*\.pig</include>
 			</includes>
 		</all-scripts>
-	</deps-project-pig>	
+		<all-scripts>
+			<srcProject>.*document-similarity.*</srcProject>
+			<root>pig-macros</root>
+			<preserve>false</preserve>
+			<target>lib/</target>
+			<mainDirAsDst>true</mainDirAsDst>
+			<includes>
+				<include>.*\.pig</include>
+			</includes>
+		</all-scripts>
+	</deps-project-pig>
 </oozie-maven-plugin>
