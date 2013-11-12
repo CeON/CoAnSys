@@ -3,31 +3,11 @@
 	<main-project-pig>
 		<scripts>
 			<root>pig-main/</root>
-			<preserve>false</preserve>
-			<target>/</target>		
 			<includes>
 				<include>.*disambiguation.*\.pig</include>
 				<include>.*splitter.*\.pig</include>
 				<include>.*join.*\.pig</include>
 			</includes>
 		</scripts>
-		<macros>
-			<root>pig-macros/</root>
-			<preserve>false</preserve>
-			<target>lib/</target>
-			<includes>
-				<include>nothing</include>
-			</includes>
-		</macros>
-	</main-project-pig>
-	<deps-project-pig>
-		<all-scripts>
-			<root>pig/</root>
-			<preserve>true</preserve>
-			<target>lib/</target>		
-			<includes>
-				<include>.*\.pig</include>
-			</includes>
-		</all-scripts>
-	</deps-project-pig>	
+	</main-project-pig>	
 </oozie-maven-plugin>

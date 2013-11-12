@@ -3,15 +3,12 @@
 	<main-project-pig>
 		<scripts>
 			<root>pig-main</root>
-			<preserve>false</preserve>
-			<target />
 			<includes>
 				<include>1_.*\.pig</include>
 			</includes>
 		</scripts>
-		<macros>
+		<scripts>
 			<root>pig-macros</root>
-			<preserve>false</preserve>
 			<target>lib/</target>
 			<includes>
 				<include>.*\.pig</include>
@@ -21,27 +18,24 @@
 				<exclude>2_.*\.pig</exclude>
 				<exclude>GARB_.*\.pig</exclude>
 			</excludes>
-		</macros>
+		</scripts>
 	</main-project-pig>
 	<deps-project-pig>
-		<all-scripts>
+		<scripts>
 			<srcProject>.*document-similarity.*</srcProject>
 			<root>pig-main</root>
-			<preserve>false</preserve>
-			<target>/</target>
 			<includes>
 				<include>.*\.pig</include>
 			</includes>
-		</all-scripts>
-		<all-scripts>
+		</scripts>
+		<scripts>
 			<srcProject>.*document-similarity.*</srcProject>
 			<root>pig-macros</root>
-			<preserve>false</preserve>
 			<target>lib/</target>
 			<mainDirAsDst>true</mainDirAsDst>
 			<includes>
 				<include>.*\.pig</include>
 			</includes>
-		</all-scripts>
+		</scripts>
 	</deps-project-pig>
 </oozie-maven-plugin>
