@@ -8,9 +8,14 @@ option java_outer_classname = "DocumentSimilarityProtos";
 
 message DocumentSimilarityOut {
   required string docIdA = 1;
-  required string docIdB = 2;
-  required double similarity = 3;
-  repeated Auxiliar auxs = 4;
+  repeated SecondDocInfo secondDocInfo = 2;
+  repeated Auxiliar auxs = 3;
+}
+
+message SecondDocInfo {
+	required string docIdB = 1;
+	required string similarity = 2;
+	repeated Auxiliar auxs = 3;
 }
 
 message Auxiliar{
