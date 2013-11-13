@@ -14,7 +14,7 @@ message DocumentSimilarityOut {
 
 message SecondDocInfo {
 	required string docIdB = 1;
-	required string similarity = 2;
+	required double similarity = 2;
 	repeated Auxiliar auxs = 3;
 }
 
