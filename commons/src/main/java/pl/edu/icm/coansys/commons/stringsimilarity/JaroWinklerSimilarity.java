@@ -30,10 +30,10 @@ public class JaroWinklerSimilarity extends SimilarityCalculator {
 
     @Override
     protected float doCalculate(String s1, String s2) {
-        s1 = s1.toLowerCase();
-        s2 = s2.toLowerCase();
-        float dist = score(s1, s2);
-        dist = dist + commonPrefix(s1, s2, maxPrefLength) * weight * (1.0f - dist);
+        String _s1 = s1.toLowerCase();
+        String _s2 = s2.toLowerCase();
+        float dist = score(_s1, _s2);
+        dist = dist + commonPrefix(_s1, _s2, maxPrefLength) * weight * (1.0f - dist);
         if (dist < 0) {
             dist = 0;
         }

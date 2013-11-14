@@ -53,8 +53,7 @@ public class YearVoter extends AbstractSimilarityVoter {
         if (basicMetadata.hasYear()) {
             String yearStr = basicMetadata.getYear();
             try {
-                Integer year = Integer.parseInt(yearStr);
-                return year;
+                return Integer.parseInt(yearStr);
             } catch (NumberFormatException ex) {
                 log.warn("Cannot parse year: " + yearStr, ex);
                 return null;

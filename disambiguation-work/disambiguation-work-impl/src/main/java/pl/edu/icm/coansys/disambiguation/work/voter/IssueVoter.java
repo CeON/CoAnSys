@@ -48,8 +48,7 @@ public class IssueVoter extends AbstractSimilarityVoter {
         if (basicMetadata.hasIssue()) {
             String issueStr = basicMetadata.getIssue();
             try {
-                Integer issue = Integer.parseInt(issueStr);
-                return issue;
+                return Integer.parseInt(issueStr);
             } catch (NumberFormatException ex) {
                 log.warn("Cannot parse issue: " + issueStr);
                 return null;
