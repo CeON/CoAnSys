@@ -6,7 +6,7 @@
  * it under the terms of the GNU Affero General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
-
+ * 
  * CoAnSys is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
@@ -44,7 +44,7 @@ public class SERIALIZE_RESULTS extends EvalFunc<Tuple> {
 	private static final Logger logger = LoggerFactory.getLogger(SERIALIZE_RESULTS.class);
 	
 	@Override
-	public Schema outputSchema(Schema p_input) {
+	public Schema outputSchema(@SuppressWarnings("unused") Schema input) {
 		try {
 			return Schema.generateNestedSchema(DataType.TUPLE, DataType.CHARARRAY,  DataType.BAG);
 		} catch (FrontendException e) {
@@ -58,7 +58,7 @@ public class SERIALIZE_RESULTS extends EvalFunc<Tuple> {
 	 */
 	@Override
 	public Tuple exec(Tuple input) throws IOException {
-
+		
 		if (input == null || input.size() == 0) {
 			return null;
 		}

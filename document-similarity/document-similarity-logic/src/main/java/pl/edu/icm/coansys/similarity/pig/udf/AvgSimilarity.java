@@ -34,6 +34,7 @@ import org.apache.pig.data.DataType;
 import org.apache.pig.data.Tuple;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
 
+import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
 import pl.edu.icm.coansys.similarity.documents.function.AvgSimilarityFunction;
 import pl.edu.icm.coansys.similarity.documents.function.SimilarityFunction;
 
@@ -104,7 +105,9 @@ public class AvgSimilarity extends EvalFunc<Double> {
             Schema doubleSchema = new Schema();
             return new Schema(new Schema.FieldSchema(getSchemaName(this.getClass().getName().toLowerCase(), input),doubleSchema, DataType.DOUBLE));
         }catch (Exception e){
-                return null;
+        	log.error("Error in the output Schema creation",e);
+        	log.error(StackTraceExtractor.getStackTrace(e));
+            return null;
         }
     }
 }

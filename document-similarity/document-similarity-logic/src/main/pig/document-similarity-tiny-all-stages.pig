@@ -35,11 +35,12 @@
 %default tmpCompressionCodec gz
 %default mapredChildJavaOpts -Xmx8000m
 
-%default inputPath '/srv/polindex/seqfile/polindex-yadda-20130729-text.sf'
-%default time '2013-09-28--10-37'
-%default outputPath 'document-similarity-output/$time/'
+%default inputPath 'working_dir/in/document/'
+%default time '1'
+%default outputPath 'doc-sim/output/$time/'
 %default jars '*.jar'
-%default commonJarsPath '../../../../document-similarity-workflow/target/oozie-wf/lib/$jars'
+%default commonJarsPath 'lib/$jars'
+--%default commonJarsPath '../../../../document-similarity-workflow/target/oozie-wf/lib/$jars'
 
 REGISTER '$commonJarsPath'
 
@@ -52,7 +53,7 @@ SET default_parallel $parallel
 SET mapred.child.java.opts $mapredChildJavaOpts
 SET pig.tmpfilecompression true
 SET pig.tmpfilecompression.codec $tmpCompressionCodec
-DEFAULT ds_scheduler default
+%DEFAULT ds_scheduler default
 SET mapred.fairscheduler.pool $ds_scheduler
 
 IMPORT 'macros.pig';
