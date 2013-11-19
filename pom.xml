@@ -167,7 +167,7 @@
     </profiles>
 
     <modules>
-        <!--<module>citations</module>-->
+        <module>citations</module>
         <module>commons</module>
         <module>models</module>
         <module>disambiguation</module>
