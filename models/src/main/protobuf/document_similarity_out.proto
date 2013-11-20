@@ -6,11 +6,18 @@ package pl.edu.icm.coansys.models;
 option java_package = "pl.edu.icm.coansys.models";
 option java_outer_classname = "DocumentSimilarityProtos";
 
-message DocumentSimilarityOut {
+message DocumentSimilarityInfo {
   required string docIdA = 1;
-  required string docIdB = 2;
-  required double similarity = 3;
+  repeated SecondDocInfo secondDocInfo = 2;
+  required string type = 3;
   repeated Auxiliar auxs = 4;
+  optional ProvenanceInfo provenanceInfo = 5;
+}
+
+message SecondDocInfo {
+	required string docIdB = 1;
+	required double similarity = 2;
+	repeated Auxiliar auxs = 3;
 }
 
 message Auxiliar{

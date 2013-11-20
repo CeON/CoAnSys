@@ -67,6 +67,6 @@ public class TFIDF extends EvalFunc<Double> {
     }
     
     private double getZeroIfNull(Double d) {
-        return (d == null ? 0d : d);
+        return d == null ? 0d : d;
     }
 }

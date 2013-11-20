@@ -145,8 +145,7 @@ public class AuthorsVoter extends AbstractSimilarityVoter {
                 }
             }
         }
-        float result = 2.0f * intersectionSize / (doc1authors.length + doc2authors.length);
-        return result;
+        return 2.0f * intersectionSize / (doc1authors.length + doc2authors.length);
     }
 
     public void setDisapproveLevel(float disapproveLevel) {

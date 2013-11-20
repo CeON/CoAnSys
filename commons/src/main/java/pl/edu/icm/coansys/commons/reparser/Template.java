@@ -83,8 +83,9 @@ public class Template {
 	
 	private String spaces(int count) {
 		StringBuilder ret = new StringBuilder();
-		for (int i = 0; i < count; i++)
+		for (int i = 0; i < count; i++) {
 			ret.append(" ");
+                }
 		return ret.toString();
 	}
 	

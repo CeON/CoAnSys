@@ -6,7 +6,7 @@
  * it under the terms of the GNU Affero General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
-
+ * 
  * CoAnSys is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
@@ -18,8 +18,10 @@
 package pl.edu.icm.coansys.similarity.pig.serializers;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import org.apache.pig.EvalFunc;
+import org.apache.pig.data.DataBag;
 import org.apache.pig.data.DataByteArray;
 import org.apache.pig.data.DataType;
 import org.apache.pig.data.Tuple;
@@ -31,6 +33,7 @@ import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
 import pl.edu.icm.coansys.models.DocumentSimilarityProtos.DocumentSimilarityOut;
+import pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo;
 
 /**
  * 
@@ -41,7 +44,7 @@ public class SERIALIZE_RESULTS extends EvalFunc<Tuple> {
 	private static final Logger logger = LoggerFactory.getLogger(SERIALIZE_RESULTS.class);
 	
 	@Override
-	public Schema outputSchema(Schema p_input) {
+	public Schema outputSchema(@SuppressWarnings("unused") Schema input) {
 		try {
 			return Schema.generateNestedSchema(DataType.TUPLE, DataType.CHARARRAY,  DataType.BAG);
 		} catch (FrontendException e) {
@@ -51,11 +54,11 @@ public class SERIALIZE_RESULTS extends EvalFunc<Tuple> {
 	}
 
 	/*
-	 * an input should follow schema (docId:chararray,{(categString)}) 
+	 * an input should follow schema (docId:chararray,{(docIdB,sim)}) 
 	 */
 	@Override
 	public Tuple exec(Tuple input) throws IOException {
-
+		
 		if (input == null || input.size() == 0) {
 			return null;
 		}
@@ -64,8 +67,16 @@ public class SERIALIZE_RESULTS extends EvalFunc<Tuple> {
 			DocumentSimilarityOut.Builder outb = DocumentSimilarityOut.newBuilder();
 			String docIdA = (String) input.get(0);
 			outb.setDocIdA(docIdA);
-			outb.setDocIdB((String) input.get(1));
-			outb.setSimilarity((Double) input.get(2));
+			
+			DataBag bd = (DataBag)input.get(1);
+			ArrayList<SecondDocInfo> sdil = new ArrayList<SecondDocInfo>(); 
+			for(Tuple in : bd){
+				SecondDocInfo.Builder sdib = SecondDocInfo.newBuilder();
+				sdib.setDocIdB((String) in.get(0));
+				sdib.setSimilarity((Double) in.get(1));
+				sdil.add(sdib.build());
+			}
+			outb.addAllSecondDocInfo(sdil);
 			
 			Tuple result = TupleFactory.getInstance().newTuple();
             result.append(docIdA);
