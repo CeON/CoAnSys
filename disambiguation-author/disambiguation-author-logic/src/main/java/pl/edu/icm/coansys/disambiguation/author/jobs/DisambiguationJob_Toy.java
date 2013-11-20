@@ -237,11 +237,18 @@ public class DisambiguationJob_Toy implements Tool {
      * The Main method
      *
      */
-    public static void main(String args[]) throws Exception {
+    public static void main(String args[]) {
         Configuration conf = HBaseConfiguration.create();
         DisambiguationJob_Toy job = new DisambiguationJob_Toy();
-        int result = ToolRunner.run(conf, job, args);
-        logger.debug("=== Job End ===");
-        System.exit(result);
+        int result;
+		try {
+			result = ToolRunner.run(conf, job, args);
+	        logger.debug("=== Job End ===");
+	        System.exit(result);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			logger.error("Exception ");
+			e.printStackTrace();
+		}
     }
 }

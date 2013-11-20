@@ -21,7 +21,7 @@ public class DisambiguationExtractorFactory {
 	private final String THIS_PACKAGE = new DisambiguationExtractor()
 			.getClass().getPackage().getName();
 
-	public DisambiguationExtractorFactory() throws Exception {
+	public DisambiguationExtractorFactory() throws InstantiationException, IllegalAccessException {
 
 		nameToId = new HashMap<String, String>();
 		idToName = new IdentityHashMap<String, String>();
@@ -51,7 +51,7 @@ public class DisambiguationExtractorFactory {
 				String m = "Creating extractor: " + name
 						+ " with no id value given (null).";
 				logger.error(m);
-				throw new Exception(m);
+				throw new IllegalStateException(m);
 			}
 
 			nameToId.put(name, eid);
@@ -61,7 +61,7 @@ public class DisambiguationExtractorFactory {
 				String m = "Some extractors have the same id: " + eid + ": "
 						+ name + ", " + idToName.get(eid) + ".";
 				logger.error(m);
-				throw new Exception(m);
+				throw new IllegalStateException(m);
 			}
 			idToName.put(eid, name);
 		}

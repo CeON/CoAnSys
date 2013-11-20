@@ -57,7 +57,7 @@ public class AproximateAND extends AND<DataBag> {
 
 	public AproximateAND(String threshold, String featureDescription,
 			String rememberSim, String useIdsForExtractors,
-			String printStatistics) throws Exception {
+			String printStatistics) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
 		super(logger, threshold, featureDescription, useIdsForExtractors);
 		this.rememberSim = Boolean.parseBoolean(rememberSim);
 
@@ -80,8 +80,9 @@ public class AproximateAND extends AND<DataBag> {
 	@Override
 	public DataBag exec(Tuple input) /* throws IOException */{
 
-		if (input == null || input.size() == 0)
+		if (input == null || input.size() == 0) {
 			return null;
+		}
 		try {
 			// TODO optional:
 			// it would be enough to take as argument only map bag with
@@ -93,9 +94,9 @@ public class AproximateAND extends AND<DataBag> {
 			DataBag contribs = (DataBag) input.get(0); // taking bag with
 														// contribs
 
-			if (contribs == null || contribs.size() == 0)
+			if (contribs == null || contribs.size() == 0) {
 				return null;
-
+			}
 			// start benchmark
 			if (isStatistics) {
 				timer.play();
@@ -212,8 +213,9 @@ public class AproximateAND extends AND<DataBag> {
 	// finding cluster associations
 	// o( log*( n ) ) ~ o( 1 )
 	private int find(int a) {
-		if (clusterAssociations[a] == a)
+		if (clusterAssociations[a] == a) {
 			return a;
+		}
 		int fa = find(clusterAssociations[a]);
 		// Correcting cluster associations to the top one during traversing
 		// along the path.
@@ -341,9 +343,9 @@ public class AproximateAND extends AND<DataBag> {
 		// iterating through clusters
 		for (int[] cluster : clusters) {
 			// skipping empty clusters
-			if (cluster == null || cluster.length == 0)
+			if (cluster == null || cluster.length == 0) {
 				continue;
-
+			}
 			contribDatas = new DefaultDataBag();
 			similarities = new DefaultDataBag();
 

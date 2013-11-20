@@ -19,7 +19,7 @@ public abstract class AND<T> extends EvalFunc<T> {
 	protected FeatureInfo[] featureInfos;
 
 	protected org.slf4j.Logger logger = null;
-	private DisambiguationExtractorFactory extrFactory = new DisambiguationExtractorFactory();
+	private DisambiguationExtractorFactory extrFactory;
 	private boolean useIdsForExtractors = false;
 
 	// private float sim[][];
@@ -29,7 +29,7 @@ public abstract class AND<T> extends EvalFunc<T> {
 	protected float getThreshold() {
 		return threshold;
 	}
-	
+
 	// benchmark staff
 	/*
 	 * protected boolean isStatistics = false; private TimerSyso timer = new
@@ -39,7 +39,8 @@ public abstract class AND<T> extends EvalFunc<T> {
 	 */
 	public AND(org.slf4j.Logger logger, String threshold,
 			String featureDescription, String useIdsForExtractors)
-			throws Exception {
+			throws ClassNotFoundException, InstantiationException,
+			IllegalAccessException {
 		this.logger = logger;
 		this.threshold = Float.parseFloat(threshold);
 		this.useIdsForExtractors = Boolean.parseBoolean(useIdsForExtractors);
@@ -49,6 +50,7 @@ public abstract class AND<T> extends EvalFunc<T> {
 		List<FeatureInfo> FIFinall = new LinkedList<FeatureInfo>();
 		List<PigDisambiguator> FeaturesFinall = new LinkedList<PigDisambiguator>();
 
+		extrFactory = new DisambiguationExtractorFactory();
 		DisambiguatorFactory ff = new DisambiguatorFactory();
 		Disambiguator d;
 
@@ -56,7 +58,7 @@ public abstract class AND<T> extends EvalFunc<T> {
 		for (FeatureInfo fi : FIwithEmpties) {
 			if (fi.getFeatureExtractorName().equals("")) {
 				logger.error("Empty extractor name in feature info. Leaving this feature.");
-				throw new Exception("Empty extractor name.");
+				throw new IllegalArgumentException("Empty extractor name.");
 				// continue;
 			}
 			if (fi.getDisambiguatorName().equals("")) {
@@ -64,21 +66,21 @@ public abstract class AND<T> extends EvalFunc<T> {
 				d = new Disambiguator();
 				logger.info("Empty disambiguator name. Creating default disambiguator for this feature.");
 			} else if ((d = ff.create(fi)) == null) {
-				logger.error("Cannot create disambugiator from given feature info.");
-				throw new Exception(
-						"Cannot create disambugiator from given feature info.");
+				String errMsg = "Cannot create disambugiator from given feature info (disambiguator name: "
+						+ fi.getDisambiguatorName() + ")";
+				logger.error(errMsg);
+				throw new ClassNotFoundException(errMsg);
 				// if you do not want to throw an exception, uncomment the
 				// following creating default disambiguator
 				// d = new Disambiguator();
 			}
 			// wrong max value (would cause dividing by zero)
 			if (fi.getMaxValue() == 0) {
-				logger.warn("Incorrect max value for feature: "
+				String errMsg = "Incorrect max value for feature: "
 						+ fi.getFeatureExtractorName()
-						+ ". Max value cannot equal 0.");
-				throw new Exception("Incorrect max value for feature: "
-						+ fi.getFeatureExtractorName()
-						+ ". Max value cannot equal 0.");
+						+ ". Max value cannot equal 0.";
+				logger.warn(errMsg);
+				throw new IllegalArgumentException(errMsg);
 			}
 
 			if (this.useIdsForExtractors) {
