@@ -41,6 +41,7 @@ import pl.edu.icm.coansys.disambiguation.author.pig.AproximateAND_BFS;
 import pl.edu.icm.coansys.disambiguation.author.pig.extractor.DisambiguationExtractor;
 import pl.edu.icm.coansys.disambiguation.author.pig.extractor.DisambiguationExtractorDocument;
 import pl.edu.icm.coansys.disambiguation.author.pig.extractor.DisambiguationExtractorFactory;
+import pl.edu.icm.coansys.disambiguation.author.pig.extractor.EX_AUTH_INITIALS;
 import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.AuthorToInitials;
 import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.ToEnglishLowerCase;
 import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.ToHashCode;
@@ -59,7 +60,7 @@ public class DisambiguationTests {
 		String toELCExpected = "e zaaaazolc gesla jaz n ae 1234567890 _ -";
 		Integer toHashExpected = -1486600746;
 		Integer DisExtrExpected = -1399651159;
-		Object a, b, c;
+		Object a, b, c, d;
 		String tmp;
 		
 		// testing critical changes in DiacriticsRemover
@@ -76,10 +77,6 @@ public class DisambiguationTests {
 		a = (new ToHashCode()).normalize( (Object) text );
 		assert( a.equals( toHashExpected ) );
 		
-		// testing normalize tool, which is using after data extraction
-		a = DisambiguationExtractorDocument.normalizeExtracted( text );
-		assert( a.equals( DisExtrExpected ) );
-		
 		// testing Author initials normalizer
 		Author.Builder ab =  Author.newBuilder();
 		ab.setName("Piotr");
@@ -89,7 +86,25 @@ public class DisambiguationTests {
 		String toInitExpected = "P. Dendek";
 		c = (new AuthorToInitials()).normalize( (Object) author );
 		assert( c.equals( toInitExpected ) );
+   	
+		
+		// DisambiguationExtractor - normalizeExtracted tests:
+		
+		// testing normalize tool, which is using after data extraction
+		DisambiguationExtractorDocument DED = 
+				new DisambiguationExtractorDocument();
+		a = DED.normalizeExtracted( text );
+		assert( a.equals( DisExtrExpected ) );
+		
+		// simulation of normalizeExtracted function from EX_AUTH_INITIALS
+		d = (new AuthorToInitials()).normalize( author );
+   		d = (new ToEnglishLowerCase()).normalize( d );
+		d = (new ToHashCode()).normalize( d );
+   		
+		DisambiguationExtractor DE = new EX_AUTH_INITIALS();
+		assert( d.equals( DE.normalizeExtracted(author) ) );
    	}
+   	
    	
    	@Test(groups = {"fast"})
    	public void pig_extractor_DisambiguationExtractorFactory_ALL() 
@@ -150,6 +165,7 @@ public class DisambiguationTests {
    		}
    	}
    	
+   	
    	@Test(groups = {"fast"})
    	public void features_disambiguator_SOME_calculateAffinity() {
    		//'CoAuthorsSnameDisambiguatorFullList#EX_AUTH_SNAMES#-0.0000166#8,ClassifCodeDisambiguator#EX_CLASSIFICATION_CODES#0.99#12,KeyphraseDisambiguator#EX_KEYWORDS_SPLIT#0.99#22,KeywordDisambiguator#EX_KEYWORDS#0.0000369#40'
@@ -172,6 +188,7 @@ public class DisambiguationTests {
   		res = 4.0;
   		assert( COAUTH.calculateAffinity(a, b) == res );
    	}
+   	
    	
     // Tools:
    	private Tuple contribCreator(Object id, Object sname, 

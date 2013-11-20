@@ -32,11 +32,15 @@ import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 
 public class EX_AUTH_INITIALS extends DisambiguationExtractorDocument {
 	
-	private static PigNormalizer normalizers[] = {
+	private final static PigNormalizer new_normalizers[] = {
 		new AuthorToInitials(),
 		new ToEnglishLowerCase(), 
 		new ToHashCode()
 	};
+	
+	public EX_AUTH_INITIALS(){
+		super( new_normalizers );
+	}
 	
 	@Override
 	public DataBag extract( Object o, String lang ){
@@ -56,13 +60,5 @@ public class EX_AUTH_INITIALS extends DisambiguationExtractorDocument {
 	@Override
 	public String getId() {
 		return "C";
-	}
-
-	public static PigNormalizer[] getNormalizers() {
-		return normalizers;
-	}
-
-	public static void setNormalizers(PigNormalizer normalizers[]) {
-		EX_AUTH_INITIALS.normalizers = normalizers;
 	}
 }

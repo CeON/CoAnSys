@@ -182,6 +182,10 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 			
 			// removing clones or duplicates (cid - initials hash)
 			PigNormalizer toInitials = new AuthorToInitials();
+			// creating disambiguation extractor only for normalizer
+			DisambiguationExtractor disam_extractor = 
+					new DisambiguationExtractor();
+			
 			for ( Author a : dplAuthors ) {
 				Author b = filteredAuthors.put( a.getKey(), a );
 				if ( b != null ) {
@@ -189,8 +193,8 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 					//duplicated for different data or incorrectly attributed for different authors
 					String aInit = (String) toInitials.normalize( a );
 					String bInit = (String) toInitials.normalize( b );
-					Object aNorm = DisambiguationExtractor.normalizeExtracted( aInit );
-					Object bNorm = DisambiguationExtractor.normalizeExtracted( bInit );
+					Object aNorm = disam_extractor.normalizeExtracted( aInit );
+					Object bNorm = disam_extractor.normalizeExtracted( bInit );
 					
 					if ( a.equals( b ) ) {
 						// all authors data are equal
@@ -247,7 +251,10 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 				map.put(des4DocNameOrId.get(i), extractedDocObj[i]);
 			}
 			extractedDocObj = null;
-
+			
+			// creating disambiguation extractor only for normalizer
+			EX_AUTH_INITIALS auth_initials_ex = new EX_AUTH_INITIALS ();
+			
 			// bag making tuples (one tuple for one contributor from document)
 			// with replicated metadata for
 			int i = -1;
@@ -255,7 +262,7 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 			{
 				i++;
 				// here we have sure that Object = Integer
-				Object normalizedSname = EX_AUTH_INITIALS
+				Object normalizedSname = auth_initials_ex
 						.normalizeExtracted( a );
 				String cId = a.getKey();
 

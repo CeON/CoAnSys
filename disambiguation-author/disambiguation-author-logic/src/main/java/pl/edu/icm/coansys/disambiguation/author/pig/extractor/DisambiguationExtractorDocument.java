@@ -20,8 +20,16 @@ package pl.edu.icm.coansys.disambiguation.author.pig.extractor;
 
 import org.apache.pig.data.DataBag;
 
+import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.PigNormalizer;
+
 public class DisambiguationExtractorDocument extends DisambiguationExtractor {
 
+	public DisambiguationExtractorDocument() {}
+	
+	public DisambiguationExtractorDocument( PigNormalizer[] new_normalizers ) {
+		super( new_normalizers );
+	}
+	
 	public DataBag extract( Object o, String lang ) {
 		return null;
 	}
