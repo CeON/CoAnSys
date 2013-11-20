@@ -25,10 +25,6 @@ public class DisambiguationExtractor {
 
 	private final PigNormalizer normalizers[];
 
-	public PigNormalizer[] getNormalizers() {
-		return normalizers;
-	}
-
 	public DisambiguationExtractor(){
 		normalizers = new PigNormalizer[] {
 				new ToEnglishLowerCase(), 
@@ -37,7 +33,7 @@ public class DisambiguationExtractor {
 	}
 	
 	public DisambiguationExtractor( PigNormalizer[] new_normalizers ) {
-		normalizers = new_normalizers;
+		normalizers = new_normalizers.clone();
 	}
 
 	public Object normalizeExtracted( Object extracted ) {

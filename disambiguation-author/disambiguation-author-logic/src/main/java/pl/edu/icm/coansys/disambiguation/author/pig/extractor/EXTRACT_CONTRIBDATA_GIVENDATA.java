@@ -73,8 +73,8 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 		}
 	}
 
-	private void setDisambiguationExtractor(String featureinfo)
-			throws Exception {
+	private void setDisambiguationExtractor(String featureinfo) throws InstantiationException, IllegalAccessException, ClassNotFoundException
+			{
 
 		List<FeatureInfo> features = FeatureInfo
 				.parseFeatureInfoString(featureinfo);
@@ -98,24 +98,20 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 				currentClassNameOrId = extractor.getClass().getSimpleName();
 			}
 
-			try {
-				if (currentSuperClassName.equals(ExtractorDocClassName)) {
-					des4Doc.add((DisambiguationExtractorDocument) extractor);
-					des4DocNameOrId.add(currentClassNameOrId);
-				} else if (currentSuperClassName
-						.equals(ExtractorAuthorClassName)) {
-					des4Author.add((DisambiguationExtractorAuthor) extractor);
-					des4AuthorNameOrId.add(currentClassNameOrId);
-				} else {
-					String m = "Cannot create extractor: "
-							+ extractor.getClass().getSimpleName()
-							+ ". Its superclass: " + currentSuperClassName
-							+ " does not match to any superclass.";
-					throw new Exception(m);
-				}
-			} catch (Exception e) {
-				logger.error(StackTraceExtractor.getStackTrace(e));
-				throw e;
+
+			if (currentSuperClassName.equals(ExtractorDocClassName)) {
+				des4Doc.add((DisambiguationExtractorDocument) extractor);
+				des4DocNameOrId.add(currentClassNameOrId);
+			} else if (currentSuperClassName.equals(ExtractorAuthorClassName)) {
+				des4Author.add((DisambiguationExtractorAuthor) extractor);
+				des4AuthorNameOrId.add(currentClassNameOrId);
+			} else {
+				String m = "Cannot create extractor: "
+						+ extractor.getClass().getSimpleName()
+						+ ". Its superclass: " + currentSuperClassName
+						+ " does not match to any superclass.";
+				logger.error(m);
+				throw new ClassNotFoundException(m);
 			}
 		}
 	}
@@ -124,22 +120,22 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 		setDisambiguationExtractor(featureinfo);
 	}
 
-	public EXTRACT_CONTRIBDATA_GIVENDATA(String featureinfo, String lang)
-			throws Exception {
+	public EXTRACT_CONTRIBDATA_GIVENDATA(String featureinfo, String lang) throws InstantiationException, IllegalAccessException, ClassNotFoundException
+		{
 		this.language = lang;
 		setDisambiguationExtractor(featureinfo);
 	}
 
 	public EXTRACT_CONTRIBDATA_GIVENDATA(String featureinfo, String lang,
-			String skipEmptyFeatures) throws Exception {
+			String skipEmptyFeatures) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 		this.language = lang;
 		this.skipEmptyFeatures = Boolean.parseBoolean(skipEmptyFeatures);
 		setDisambiguationExtractor(featureinfo);
 	}
 
 	public EXTRACT_CONTRIBDATA_GIVENDATA(String featureinfo, String lang,
-			String skipEmptyFeatures, String useIdsForExtractors)
-			throws Exception {
+			String skipEmptyFeatures, String useIdsForExtractors) throws InstantiationException, IllegalAccessException, ClassNotFoundException
+			 {
 		this.language = lang;
 		this.skipEmptyFeatures = Boolean.parseBoolean(skipEmptyFeatures);
 		this.useIdsForExtractors = Boolean.parseBoolean(useIdsForExtractors);
