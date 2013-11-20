@@ -65,8 +65,7 @@ public class EXTRACT_DOCUMENTDATA_GIVENDATA extends
 		}
 	}
 
-	private void setDisambiguationExtractor(String featureinfo)
-			throws Exception {
+	private void setDisambiguationExtractor(String featureinfo) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
 
 		List<FeatureInfo> features = FeatureInfo
 				.parseFeatureInfoString(featureinfo);
@@ -93,23 +92,16 @@ public class EXTRACT_DOCUMENTDATA_GIVENDATA extends
 			// recognition of extractor type
 			String currentSuperClassName = c.getSuperclass().getSimpleName();
 
-			try {
-				if (currentSuperClassName.equals(ExtractorDocClassName)) {
-					des4Doc.add((DisambiguationExtractorDocument) c
-							.newInstance());
-				} else if (currentSuperClassName
-						.equals(ExtractorAuthorClassName)) {
-					des4Author.add((DisambiguationExtractorAuthor) c
-							.newInstance());
-				} else {
-					String m = "Cannot create extractor: " + c.getSimpleName()
-							+ ". Its superclass: " + currentSuperClassName
-							+ " does not match to any superclass.";
-					throw new Exception(m);
-				}
-			} catch (Exception e) {
-				logger.error(StackTraceExtractor.getStackTrace(e));
-				throw e;
+			if (currentSuperClassName.equals(ExtractorDocClassName)) {
+				des4Doc.add((DisambiguationExtractorDocument) c.newInstance());
+			} else if (currentSuperClassName.equals(ExtractorAuthorClassName)) {
+				des4Author.add((DisambiguationExtractorAuthor) c.newInstance());
+			} else {
+				String m = "Cannot create extractor: " + c.getSimpleName()
+						+ ". Its superclass: " + currentSuperClassName
+						+ " does not match to any superclass.";
+				logger.error(m);
+				throw new ClassNotFoundException(m);
 			}
 		}
 	}
@@ -118,14 +110,13 @@ public class EXTRACT_DOCUMENTDATA_GIVENDATA extends
 		setDisambiguationExtractor(featureinfo);
 	}
 
-	public EXTRACT_DOCUMENTDATA_GIVENDATA(String featureinfo, String lang)
-			throws Exception {
+	public EXTRACT_DOCUMENTDATA_GIVENDATA(String featureinfo, String lang) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
 		setDisambiguationExtractor(featureinfo);
 		language = lang;
 	}
 
 	public EXTRACT_DOCUMENTDATA_GIVENDATA(String featureinfo, String lang,
-			String skipEmptyFeatures) throws Exception {
+			String skipEmptyFeatures) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
 		setDisambiguationExtractor(featureinfo);
 		language = lang;
 		this.skipEmptyFeatures = Boolean.parseBoolean(skipEmptyFeatures);
