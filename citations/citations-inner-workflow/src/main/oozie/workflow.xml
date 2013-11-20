@@ -48,6 +48,11 @@
             <description>either BasicMetadata or Raw</description>
         </property>
         <property>
+            <name>scoobi_nolibjars</name>
+            <value>false</value>
+            <description>turns scoobi dependency uploading off</description>
+        </property>
+        <property>
             <name>cit_genAuthorIdxJavaOpts</name>
             <!-- we need to put something other than an empty string here to get a proper default value -->
             <value>-showversion</value>
@@ -112,7 +117,7 @@
             <arg>${jobTracker}</arg>
             <arg>${cit_inputSrcSeqFile}</arg>
             <arg>${cit_workDir}/source_entities</arg>
-            <arg>--</arg><arg>scoobi</arg><arg>cluster</arg>
+            <arg>--</arg><arg>scoobi</arg><arg>cluster${scoobi_nolibjars ? ".nolibjars":""}</arg>
         </java>
 
         <ok to="convert-destination-entities"/>
@@ -138,7 +143,7 @@
             <arg>${jobTracker}</arg>
             <arg>${cit_inputSrcSeqFile}</arg>
             <arg>${cit_workDir}/source_entities</arg>
-            <arg>--</arg><arg>scoobi</arg><arg>cluster</arg>
+            <arg>--</arg><arg>scoobi</arg><arg>cluster${scoobi_nolibjars ? ".nolibjars":""}</arg>
         </java>
 
         <ok to="convert-destination-entities"/>
