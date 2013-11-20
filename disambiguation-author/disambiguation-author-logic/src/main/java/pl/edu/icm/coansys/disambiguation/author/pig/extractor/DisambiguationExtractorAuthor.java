@@ -20,7 +20,14 @@ package pl.edu.icm.coansys.disambiguation.author.pig.extractor;
 
 import org.apache.pig.data.DataBag;
 
+import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.PigNormalizer;
+
 public class DisambiguationExtractorAuthor extends DisambiguationExtractor {
+	
+	public DisambiguationExtractorAuthor() {}
+	public DisambiguationExtractorAuthor( PigNormalizer[] new_normalizers ) {
+		super( new_normalizers );
+	}
 	
 	public DataBag extract( Object o, int authorIndex, String lang ) {
 		return null;
