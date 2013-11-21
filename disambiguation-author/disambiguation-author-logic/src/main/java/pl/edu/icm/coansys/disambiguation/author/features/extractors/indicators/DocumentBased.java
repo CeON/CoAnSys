@@ -18,7 +18,6 @@
 
 package pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators;
 
-import pl.edu.icm.coansys.disambiguation.features.Extractor;
 
 /**
  * The interface for indicating that an {@link Extractor} results are not author specific and may be calculated once per document 

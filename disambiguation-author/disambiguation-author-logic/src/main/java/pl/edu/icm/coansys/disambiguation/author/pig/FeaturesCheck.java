@@ -18,112 +18,109 @@
 
 package pl.edu.icm.coansys.disambiguation.author.pig;
 
-
 import org.apache.pig.backend.executionengine.ExecException;
 import org.apache.pig.data.Tuple;
 import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
+
 import java.util.Map;
 
 /**
- * Verify that the author may be similar (comparable) to someone 
- * by checking whether there is a minimum number of features.
+ * Verify that the author may be similar (comparable) to someone by checking
+ * whether there is a minimum number of features.
  * 
  * @author mwos
  */
 public class FeaturesCheck extends AND<Boolean> {
 
-	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(FeaturesCheck.class);
-    //benchmark
+	private static final org.slf4j.Logger logger = LoggerFactory
+			.getLogger(FeaturesCheck.class);
+	// benchmark
 	private boolean isStatistics = false;
-    private static int skipedContribCounter = 0, allContribCounter = 0;
-    
-	
+	private static int skipedContribCounter = 0, allContribCounter = 0;
+
 	/**
-     * @param Tuple input with cid, sname, map with features
-	 * @throws Exception 
-     * @throws ExecException 
-     * @returns String UUID
-     */
-	
-	public FeaturesCheck( String threshold, String featureDescription, String useIdsForExtractors, String printStatistics ) throws Exception {
-		super( logger, threshold, featureDescription, useIdsForExtractors );
-		this.isStatistics = Boolean.parseBoolean( printStatistics );
+	 * @param Tuple
+	 *            input with cid, sname, map with features
+	 * @throws IllegalAccessException
+	 * @throws InstantiationException
+	 * @throws ClassNotFoundException
+	 * @throws Exception
+	 * @throws ExecException
+	 * @returns String UUID
+	 */
+
+	public FeaturesCheck(String threshold, String featureDescription,
+			String useIdsForExtractors, String printStatistics)
+			throws ClassNotFoundException, InstantiationException,
+			IllegalAccessException {
+		super(logger, threshold, featureDescription, useIdsForExtractors);
+		this.isStatistics = Boolean.parseBoolean(printStatistics);
 	}
-	
+
 	@Override
-	public Boolean exec( Tuple input ) {
-		
-		if ( input == null || input.size() == 0 ) {
+	public Boolean exec(Tuple input) {
+
+		if (input == null || input.size() == 0) {
 			return false;
 		}
-		
+
 		String cid = null, sname = null;
-		Map<String,Object> featuresMap = null;
-		
+		Map<String, Object> featuresMap = null;
+
 		try {
 			cid = input.get(0).toString();
 			sname = input.get(1).toString();
 			featuresMap = (Map<String, Object>) input.get(2);
-		} catch ( ExecException e ) {
+		} catch (ExecException e) {
 			// Throwing an exception would cause the task to fail.
-			logger.error("Caught exception processing input row:\n" 
-						+ StackTraceExtractor.getStackTrace(e));
+			logger.error("Caught exception processing input row:\n"
+					+ StackTraceExtractor.getStackTrace(e));
 			return false;
 		}
 
-		
-		if ( cid == null || sname == null || featuresMap == null ) {
-			logger.info("Skipping " + (++skipedContribCounter) + " / " 
-					+ allContribCounter + " contrib: cid = " 
-					+ cid + ", sname = " + sname + ". Cid or sname or feature map with null value." );
+		if (cid == null || sname == null || featuresMap == null) {
+			logger.info("Skipping " + (++skipedContribCounter) + " / "
+					+ allContribCounter + " contrib: cid = " + cid
+					+ ", sname = " + sname
+					+ ". Cid or sname or feature map with null value.");
 			return false;
 		}
-		
+
 		allContribCounter++;
-		
+
 		double simil = getThreshold();
-		for ( int d = 0; d < features.length; d++ ) {
+		for (int d = 0; d < features.length; d++) {
 			// Taking features from each keys (name of extractor = feature name)
 			// In contribsT.get(i) there is map we need.
 			// From this map (collection of i'th contributor's features)
 			// we take Bag with value of given feature.
 			// Here we have sure that following Object = DateBag.
 
-			Object o = featuresMap.get(featureInfos[d].getFeatureExtractorName());
+			Object o = featuresMap.get(featureInfos[d]
+					.getFeatureExtractorName());
 
-			// probably feature does not exist 
-			if ( o == null ) {
+			// probably feature does not exist
+			if (o == null) {
 				continue;
 			}
 
-			simil += calculateAffinity( o, o, d);
-			
-			//contributor is similar to himself so maybe comparable to other contributors
-			if ( simil >= 0 ) {
+			simil += calculateAffinity(o, o, d);
+
+			// contributor is similar to himself so maybe comparable to other
+			// contributors
+			if (simil >= 0) {
 				return true;
 			}
 		}
-		
-		if ( isStatistics ) {
-			logger.info("Skipping " + (++skipedContribCounter) + " / " 
-					+ allContribCounter + " contrib: cid = " 
-					+ cid + ", sname = " + sname + ". Not enough features." );
+
+		if (isStatistics) {
+			logger.info("Skipping " + (++skipedContribCounter) + " / "
+					+ allContribCounter + " contrib: cid = " + cid
+					+ ", sname = " + sname + ". Not enough features.");
 		}
-		
+
 		return false;
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-

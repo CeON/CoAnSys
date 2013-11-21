@@ -73,8 +73,8 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 		}
 	}
 
-	private void setDisambiguationExtractor(String featureinfo)
-			throws Exception {
+	private void setDisambiguationExtractor(String featureinfo) throws InstantiationException, IllegalAccessException, ClassNotFoundException
+			{
 
 		List<FeatureInfo> features = FeatureInfo
 				.parseFeatureInfoString(featureinfo);
@@ -98,24 +98,20 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 				currentClassNameOrId = extractor.getClass().getSimpleName();
 			}
 
-			try {
-				if (currentSuperClassName.equals(ExtractorDocClassName)) {
-					des4Doc.add((DisambiguationExtractorDocument) extractor);
-					des4DocNameOrId.add(currentClassNameOrId);
-				} else if (currentSuperClassName
-						.equals(ExtractorAuthorClassName)) {
-					des4Author.add((DisambiguationExtractorAuthor) extractor);
-					des4AuthorNameOrId.add(currentClassNameOrId);
-				} else {
-					String m = "Cannot create extractor: "
-							+ extractor.getClass().getSimpleName()
-							+ ". Its superclass: " + currentSuperClassName
-							+ " does not match to any superclass.";
-					throw new Exception(m);
-				}
-			} catch (Exception e) {
-				logger.error(StackTraceExtractor.getStackTrace(e));
-				throw e;
+
+			if (currentSuperClassName.equals(ExtractorDocClassName)) {
+				des4Doc.add((DisambiguationExtractorDocument) extractor);
+				des4DocNameOrId.add(currentClassNameOrId);
+			} else if (currentSuperClassName.equals(ExtractorAuthorClassName)) {
+				des4Author.add((DisambiguationExtractorAuthor) extractor);
+				des4AuthorNameOrId.add(currentClassNameOrId);
+			} else {
+				String m = "Cannot create extractor: "
+						+ extractor.getClass().getSimpleName()
+						+ ". Its superclass: " + currentSuperClassName
+						+ " does not match to any superclass.";
+				logger.error(m);
+				throw new ClassNotFoundException(m);
 			}
 		}
 	}
@@ -124,22 +120,22 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 		setDisambiguationExtractor(featureinfo);
 	}
 
-	public EXTRACT_CONTRIBDATA_GIVENDATA(String featureinfo, String lang)
-			throws Exception {
+	public EXTRACT_CONTRIBDATA_GIVENDATA(String featureinfo, String lang) throws InstantiationException, IllegalAccessException, ClassNotFoundException
+		{
 		this.language = lang;
 		setDisambiguationExtractor(featureinfo);
 	}
 
 	public EXTRACT_CONTRIBDATA_GIVENDATA(String featureinfo, String lang,
-			String skipEmptyFeatures) throws Exception {
+			String skipEmptyFeatures) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 		this.language = lang;
 		this.skipEmptyFeatures = Boolean.parseBoolean(skipEmptyFeatures);
 		setDisambiguationExtractor(featureinfo);
 	}
 
 	public EXTRACT_CONTRIBDATA_GIVENDATA(String featureinfo, String lang,
-			String skipEmptyFeatures, String useIdsForExtractors)
-			throws Exception {
+			String skipEmptyFeatures, String useIdsForExtractors) throws InstantiationException, IllegalAccessException, ClassNotFoundException
+			 {
 		this.language = lang;
 		this.skipEmptyFeatures = Boolean.parseBoolean(skipEmptyFeatures);
 		this.useIdsForExtractors = Boolean.parseBoolean(useIdsForExtractors);
@@ -182,6 +178,10 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 			
 			// removing clones or duplicates (cid - initials hash)
 			PigNormalizer toInitials = new AuthorToInitials();
+			// creating disambiguation extractor only for normalizer
+			DisambiguationExtractor disam_extractor = 
+					new DisambiguationExtractor();
+			
 			for ( Author a : dplAuthors ) {
 				Author b = filteredAuthors.put( a.getKey(), a );
 				if ( b != null ) {
@@ -189,8 +189,8 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 					//duplicated for different data or incorrectly attributed for different authors
 					String aInit = (String) toInitials.normalize( a );
 					String bInit = (String) toInitials.normalize( b );
-					Object aNorm = DisambiguationExtractor.normalizeExtracted( aInit );
-					Object bNorm = DisambiguationExtractor.normalizeExtracted( bInit );
+					Object aNorm = disam_extractor.normalizeExtracted( aInit );
+					Object bNorm = disam_extractor.normalizeExtracted( bInit );
 					
 					if ( a.equals( b ) ) {
 						// all authors data are equal
@@ -247,7 +247,10 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 				map.put(des4DocNameOrId.get(i), extractedDocObj[i]);
 			}
 			extractedDocObj = null;
-
+			
+			// creating disambiguation extractor only for normalizer
+			EX_AUTH_INITIALS auth_initials_ex = new EX_AUTH_INITIALS ();
+			
 			// bag making tuples (one tuple for one contributor from document)
 			// with replicated metadata for
 			int i = -1;
@@ -255,7 +258,7 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 			{
 				i++;
 				// here we have sure that Object = Integer
-				Object normalizedSname = EX_AUTH_INITIALS
+				Object normalizedSname = auth_initials_ex
 						.normalizeExtracted( a );
 				String cId = a.getKey();
 

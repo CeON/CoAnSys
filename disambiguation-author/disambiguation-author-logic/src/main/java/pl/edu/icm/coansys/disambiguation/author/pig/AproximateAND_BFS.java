@@ -56,7 +56,7 @@ public class AproximateAND_BFS extends AND<DataBag> {
 
 	public AproximateAND_BFS(String threshold, String featureDescription,
 			String rememberSim, String useIdsForExtractors,
-			String printStatistics) throws Exception {
+			String printStatistics) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
 		super(logger, threshold, featureDescription, useIdsForExtractors);
 		this.rememberSim = Boolean.parseBoolean(rememberSim);
 
@@ -171,7 +171,7 @@ public class AproximateAND_BFS extends AND<DataBag> {
 	private DataBag MBFS(List<Map<String, Object>> contribsT) {
 
 		simIdToClusterId = new int[N];
-		final int GUARD = Integer.MIN_VALUE;
+		final int guard = Integer.MIN_VALUE;
 		Deque<Integer> toCluster = new ArrayDeque<Integer>(N + 1);
 		List<Integer> clustered = new ArrayList<Integer>(N);
 		int idToCluster[] = new int[N];
@@ -189,7 +189,7 @@ public class AproximateAND_BFS extends AND<DataBag> {
 		for (int i = 0; i < N; i++) {
 			toCluster.add(i);
 		}
-		toCluster.add(GUARD);
+		toCluster.add(guard);
 
 		// iterating through all nodes (contributors) to cluster; (>1) because
 		// of GUARD
@@ -201,7 +201,7 @@ public class AproximateAND_BFS extends AND<DataBag> {
 			if (p < clustered.size()) {
 				int v = clustered.get(p++);
 				// while exist some unvisited adjacent node
-				while (toCluster.getFirst() != GUARD) {
+				while (toCluster.getFirst() != guard) {
 					// removing node from not clustered nodes queue
 					int u = toCluster.pollFirst();
 
@@ -308,8 +308,8 @@ public class AproximateAND_BFS extends AND<DataBag> {
 	}
 
 	class SimTriple {
-		int v, u;
-		float sim;
+		private int v, u;
+		private float sim;
 
 		SimTriple(int v, int u, float sim) {
 			this.v = v;

@@ -4,7 +4,7 @@
     <parent>
         <groupId>pl.edu.icm.coansys</groupId>
         <artifactId>nlm-extraction</artifactId>
-        <version>1.4-SNAPSHOT</version>
+        <version>1.5-SNAPSHOT</version>
     </parent>
     
     <artifactId>nlm-extraction-impl</artifactId>
@@ -14,7 +14,7 @@
     <dependencies>
         <dependency>
 	    	<groupId>pl.edu.icm.coansys</groupId>
-	    	<version>1.4-SNAPSHOT</version>
+	    	<version>1.5-SNAPSHOT</version>
 	    	<artifactId>models</artifactId>
 		</dependency>
         <dependency>

@@ -32,7 +32,6 @@ import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
 import pl.edu.icm.coansys.disambiguation.author.benchmark.TimerSyso;
-
 import pl.edu.icm.coansys.disambiguation.clustering.strategies.ClusteringStrategy;
 import pl.edu.icm.coansys.disambiguation.clustering.strategies.CompleteLinkageHACStrategy_StateOfTheArt;
 import pl.edu.icm.coansys.disambiguation.idgenerators.IdGenerator;
@@ -57,8 +56,9 @@ public class ExhaustiveAND extends AND<DataBag> {
 	private Object sname;
 
 	public ExhaustiveAND(String threshold, String featureDescription,
-			String useIdsForExtractors, String printStatistics)
-			throws Exception {
+			String useIdsForExtractors, String printStatistics) 
+			throws ClassNotFoundException, InstantiationException, 
+			IllegalAccessException {
 		super(logger, threshold, featureDescription, useIdsForExtractors);
 
 		this.isStatistics = Boolean.parseBoolean(printStatistics);
@@ -81,15 +81,16 @@ public class ExhaustiveAND extends AND<DataBag> {
 	@Override
 	public DataBag exec(Tuple input) {
 
-		if (input == null || input.size() == 0)
+		if (input == null || input.size() == 0) {
 			return null;
+		}
 		try {
 
 			DataBag contribs = (DataBag) input.get(0);
 
-			if (contribs == null || contribs.size() == 0)
+			if (contribs == null || contribs.size() == 0) {
 				return null;
-
+			}
 			// start benchmark
 			if (isStatistics) {
 				timer.play();
@@ -149,9 +150,9 @@ public class ExhaustiveAND extends AND<DataBag> {
 									+ sim.length
 									+ ", contrib number: " + contribsT.size();
 
-							if (sim.length > idX)
+							if (sim.length > idX) {
 								m += ", sim[idX].length: " + sim[idX].length;
-
+							}
 							m += "\n" + "During processing tuple: "
 									+ t.toString();
 
@@ -212,8 +213,9 @@ public class ExhaustiveAND extends AND<DataBag> {
 		sim = new float[N][];
 		for (int i = 1; i < N; i++) {
 			sim[i] = new float[i];
-			for (int j = 0; j < i; j++)
+			for (int j = 0; j < i; j++) {
 				sim[i][j] = NOT_CALCULATED;
+			}
 		}
 	}
 
@@ -223,8 +225,9 @@ public class ExhaustiveAND extends AND<DataBag> {
 			for (int j = 0; j < i; j++) {
 				// if sim value is already calculated, we do not need to
 				// calculate one more time
-				if (sim[i][j] != NOT_CALCULATED)
+				if (sim[i][j] != NOT_CALCULATED) {
 					continue;
+				}
 				// sim[i][j] = threshold;
 				sim[i][j] = calculateContribsAffinityForAllFeatures(contribsT,
 						i, j, false);

@@ -9,7 +9,7 @@
     <groupId>pl.edu.icm.coansys</groupId>
     <artifactId>coansys</artifactId>
     <name>Content Analysis Systems</name>
-    <version>1.4-SNAPSHOT</version>
+    <version>1.5-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <properties>
@@ -23,7 +23,7 @@
         <testng.version>6.5.2</testng.version>
         <maven.surefire.plugin.version>2.12.3</maven.surefire.plugin.version>
         <spring.version>3.2.0.RELEASE</spring.version>
-        <oozie-maven-plugin.version>1.2-SNAPSHOT</oozie-maven-plugin.version>
+        <oozie-maven-plugin.version>1.2</oozie-maven-plugin.version>
         <oozie-runner.version>1.1</oozie-runner.version>
         <jackson-mapper-asl.version>1.9.12</jackson-mapper-asl.version>
         <scala.version>2.10.2</scala.version>

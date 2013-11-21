@@ -23,20 +23,20 @@ import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.ToHashCode;
 
 public class DisambiguationExtractor {
 
-	static private PigNormalizer normalizers[] = {
-		new ToEnglishLowerCase(), 
-		new ToHashCode()
-	};
+	private final PigNormalizer normalizers[];
 
-	public static PigNormalizer[] getNormalizers() {
-		return normalizers;
+	public DisambiguationExtractor(){
+		normalizers = new PigNormalizer[] {
+				new ToEnglishLowerCase(), 
+				new ToHashCode()
+			};
+	}
+	
+	public DisambiguationExtractor( PigNormalizer[] new_normalizers ) {
+		normalizers = new_normalizers.clone();
 	}
 
-	public static void setNormalizers(PigNormalizer[] normalizers) {
-		DisambiguationExtractor.normalizers = normalizers;
-	}
-
-	static public Object normalizeExtracted( Object extracted ) {
+	public Object normalizeExtracted( Object extracted ) {
 		Object tmp = extracted;
 		for ( PigNormalizer pn: normalizers ) {
 			tmp = pn.normalize( tmp );
@@ -44,15 +44,11 @@ public class DisambiguationExtractor {
 		return tmp;
 	}
 	
-	static public boolean isClassifCode(String str) {
-		if (isMSc(str)) {
-			return true;
-		} else {
-			return false;
-		}
+	public static boolean isClassifCode(String str) {
+		return isMSc(str); 
 	}
 
-	static public boolean isMSc(String str) {
+	public static boolean isMSc(String str) {
 		return str.toUpperCase().matches("[0-9][0-9][A-Z][0-9][0-9]");
 	}
 	
