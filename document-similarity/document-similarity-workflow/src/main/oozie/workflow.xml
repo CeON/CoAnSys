@@ -26,8 +26,6 @@
 			<param>sample=${ds_sample}</param>
 			<param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>
 			<param>ds_scheduler=${ds_scheduler}</param>
-			<param>tfidfTopnTermPerDocument=${ds_tfidfTopnTermPerDocument}</param>
-			<param>similarityTopnDocumentPerDocument=${ds_similarityTopnDocumentPerDocument}</param>
 			<param>tfidfMinValue=${ds_tfidfMinValue}</param>
 		</pig>
 		<ok to='pairwise-sim' />
@@ -57,8 +55,6 @@
 			<param>sample=${ds_sample}</param>
 			<param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>
 			<param>ds_scheduler=${ds_scheduler}</param>
-			<param>tfidfTopnTermPerDocument=${ds_tfidfTopnTermPerDocument}</param>
-			<param>similarityTopnDocumentPerDocument=${ds_similarityTopnDocumentPerDocument}</param>
 			<param>tfidfMinValue=${ds_tfidfMinValue}</param>
 		</pig>
 		<ok to='calculate_final_results' />
@@ -88,8 +84,6 @@
 			<param>sample=${ds_sample}</param>
 			<param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>
 			<param>ds_scheduler=${ds_scheduler}</param>
-			<param>tfidfTopnTermPerDocument=${ds_tfidfTopnTermPerDocument}</param>
-			<param>similarityTopnDocumentPerDocument=${ds_similarityTopnDocumentPerDocument}</param>
 			<param>tfidfMinValue=${ds_tfidfMinValue}</param>
 		</pig>
 		<ok to='end' />
