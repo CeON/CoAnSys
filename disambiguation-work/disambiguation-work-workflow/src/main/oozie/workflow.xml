@@ -24,6 +24,10 @@
             <name>MAX_SPLIT_LEVEL</name>
             <value>10</value>
         </property>
+        <property>
+            <name>MAPRED_REDUCE_TASKS</name>
+            <value>16</value>
+        </property>
     </parameters>
     <start to="disambiguation-work" />
     <action name="disambiguation-work">
@@ -62,7 +66,7 @@
 				</property>
 				<property>
 					<name>mapred.reduce.tasks</name>
-					<value>8</value>
+					<value>${MAPRED_REDUCE_TASKS}</value>
 				</property>
 				<property>
 					<name>mapred.job.queue.name</name>
