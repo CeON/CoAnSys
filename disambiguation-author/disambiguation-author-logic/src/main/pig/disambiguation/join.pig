@@ -92,4 +92,4 @@ C = group B by docKey;
 D = FOREACH C generate group as docKey, B as trio;
 
 E = FOREACH C generate serialize(*);
-store E into '$and_outputPB';
+STORE '$$and_outputPB' USING pl.edu.icm.coansys.commons.pig.udf.RichSequenceFileLoader('org.apache.hadoop.io.Text', 'org.apache.hadoop.io.BytesWritable');
