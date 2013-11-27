@@ -3,8 +3,9 @@
 START_POS=`pwd`
 ./install.sh
 
-USER=$1
-if [ "$USER" == "" ] ; then 
+if [ "$1" != "" ] ; then
+ USER=$1
+elif [ "$USER" == "" ] ; then 
  USER=pdendek
  echo "setting USER to default value (pdendek)"
 fi
