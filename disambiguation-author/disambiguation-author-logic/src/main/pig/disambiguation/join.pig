@@ -89,7 +89,7 @@ A = JOIN CidDkey BY cId, CidAuuid BY cId;
 B = FOREACH A generate CidDkey::cId as cId, uuid as uuid, docKey as docKey;
 C = group B by docKey;
 --TODO wyrzucic doc key z data bag'a
-D = FOREACH C generate group as docKey, B as trio;
+-- D = FOREACH C generate group as docKey, B as trio;
 
-E = FOREACH C generate serialize(*);
+E = FOREACH C generate FLATTEN(serialize(*));
 STORE E into '$and_outputPB' USING pl.edu.icm.coansys.commons.pig.udf.RichSequenceFileLoader('org.apache.hadoop.io.Text', 'org.apache.hadoop.io.BytesWritable');
