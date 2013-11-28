@@ -1,32 +1,39 @@
 <?xml version="1.0" ?>
-<workflow-app name="${project}*${subproject}" xmlns="uri:oozie:workflow:0.2">
+<workflow-app name="${project}*${subproject}" xmlns="uri:oozie:workflow:0.4">
+
+	<global>
+		<job-tracker>${jobTracker}</job-tracker>
+		<name-node>${nameNode}</name-node>
+		<configuration>
+			<property>
+				<name>mapred.fairscheduler.pool</name>
+				<value>${pool}</value>
+			</property>
+			<property>
+				<name>oozie.launcher.mapred.fairscheduler.pool</name>
+				<value>${pool}</value>
+			</property>
+			<property>
+				<name>mapred.job.queue.name</name>
+				<value>${queueName}</value>
+			</property>
+			<property>
+				<name>mapred.mapper.new-api</name>
+				<value>true</value>
+			</property>
+			<property>
+				<name>mapred.reducer.new-api</name>
+				<value>true</value>
+			</property>
+			<property>
+				<name>oozie.use.system.libpath</name>
+				<value>true</value>
+			</property>
+		</configuration>
+	</global>
 	<start to="split"/>
 	<action name="split">
 		<pig>
-			<job-tracker>${jobTracker}</job-tracker>
-			<name-node>${nameNode}</name-node>
-			<configuration>
-				<property>
-					<name>oozie.launcher.mapred.fairscheduler.pool</name>
-					<value>${pool}</value>
-				</property>
-				<property>
-					<name>mapred.mapper.new-api</name>
-					<value>true</value>
-				</property>
-				<property>
-					<name>mapred.reducer.new-api</name>
-					<value>true</value>
-				</property>
-				<property>
-					<name>mapred.job.queue.name</name>
-					<value>${queueName}</value>
-				</property>
-				<property>
-					<name>hbase.zookeeper.quorum</name>
-					<value>${hbaseZookeeperQuorum}</value>
-				</property>
-			</configuration>
 			<script>splitter.pig</script>
 			<param>and_sample=${and_sample}</param>
 			<param>and_inputDocsData=${and_inputDocsData}</param>
@@ -59,30 +66,6 @@
 	</fork>
 	<action name="do_and_forked_node_0">
 		<pig>
-			<job-tracker>${jobTracker}</job-tracker>
-			<name-node>${nameNode}</name-node>
-			<configuration>
-				<property>
-					<name>oozie.launcher.mapred.fairscheduler.pool</name>
-					<value>${pool}</value>
-				</property>
-				<property>
-					<name>mapred.mapper.new-api</name>
-					<value>true</value>
-				</property>
-				<property>
-					<name>mapred.reducer.new-api</name>
-					<value>true</value>
-				</property>
-				<property>
-					<name>mapred.job.queue.name</name>
-					<value>${queueName}</value>
-				</property>
-				<property>
-					<name>hbase.zookeeper.quorum</name>
-					<value>${hbaseZookeeperQuorum}</value>
-				</property>
-			</configuration>
 			<script>disambiguation_one.pig</script>
 			<param>and_sample=1.0</param>
 			<param>and_inputDocsData=${and_splitted_output}/one/*</param>
@@ -110,30 +93,6 @@
 	</action>
 	<action name="do_and_forked_node_1">
 		<pig>
-			<job-tracker>${jobTracker}</job-tracker>
-			<name-node>${nameNode}</name-node>
-			<configuration>
-				<property>
-					<name>oozie.launcher.mapred.fairscheduler.pool</name>
-					<value>${pool}</value>
-				</property>
-				<property>
-					<name>mapred.mapper.new-api</name>
-					<value>true</value>
-				</property>
-				<property>
-					<name>mapred.reducer.new-api</name>
-					<value>true</value>
-				</property>
-				<property>
-					<name>mapred.job.queue.name</name>
-					<value>${queueName}</value>
-				</property>
-				<property>
-					<name>hbase.zookeeper.quorum</name>
-					<value>${hbaseZookeeperQuorum}</value>
-				</property>
-			</configuration>
 			<script>disambiguation_exh.pig</script>
 			<param>and_sample=1.0</param>
 			<param>and_inputDocsData=${and_splitted_output}/exh/*</param>
@@ -161,30 +120,6 @@
 	</action>
 	<action name="do_and_forked_node_2">
 		<pig>
-			<job-tracker>${jobTracker}</job-tracker>
-			<name-node>${nameNode}</name-node>
-			<configuration>
-				<property>
-					<name>oozie.launcher.mapred.fairscheduler.pool</name>
-					<value>${pool}</value>
-				</property>
-				<property>
-					<name>mapred.mapper.new-api</name>
-					<value>true</value>
-				</property>
-				<property>
-					<name>mapred.reducer.new-api</name>
-					<value>true</value>
-				</property>
-				<property>
-					<name>mapred.job.queue.name</name>
-					<value>${queueName}</value>
-				</property>
-				<property>
-					<name>hbase.zookeeper.quorum</name>
-					<value>${hbaseZookeeperQuorum}</value>
-				</property>
-			</configuration>
 			<script>disambiguation_app_sim.pig</script>
 			<param>and_sample=1.0</param>
 			<param>and_inputDocsData=${and_splitted_output}/app_sim/*</param>
@@ -212,30 +147,6 @@
 	</action>
 	<action name="do_and_forked_node_3">
 		<pig>
-			<job-tracker>${jobTracker}</job-tracker>
-			<name-node>${nameNode}</name-node>
-			<configuration>
-				<property>
-					<name>oozie.launcher.mapred.fairscheduler.pool</name>
-					<value>${pool}</value>
-				</property>
-				<property>
-					<name>mapred.mapper.new-api</name>
-					<value>true</value>
-				</property>
-				<property>
-					<name>mapred.reducer.new-api</name>
-					<value>true</value>
-				</property>
-				<property>
-					<name>mapred.job.queue.name</name>
-					<value>${queueName}</value>
-				</property>
-				<property>
-					<name>hbase.zookeeper.quorum</name>
-					<value>${hbaseZookeeperQuorum}</value>
-				</property>
-			</configuration>
 			<script>disambiguation_app_no_sim.pig</script>
 			<param>and_sample=1.0</param>
 			<param>and_inputDocsData=${and_splitted_output}/app_no_sim/*</param>
@@ -264,31 +175,7 @@
 	<join name="do_and_join" to="serialize"/>
 	<action name="serialize">
 		<pig>
-			<job-tracker>${jobTracker}</job-tracker>
-			<name-node>${nameNode}</name-node>
-			<configuration>
-				<property>
-					<name>oozie.launcher.mapred.fairscheduler.pool</name>
-					<value>${pool}</value>
-				</property>
-				<property>
-					<name>mapred.mapper.new-api</name>
-					<value>true</value>
-				</property>
-				<property>
-					<name>mapred.reducer.new-api</name>
-					<value>true</value>
-				</property>
-				<property>
-					<name>mapred.job.queue.name</name>
-					<value>${queueName}</value>
-				</property>
-				<property>
-					<name>hbase.zookeeper.quorum</name>
-					<value>${hbaseZookeeperQuorum}</value>
-				</property>
-			</configuration>
-			<script>join.pig</script>
+			<script>serialize.pig</script>
 			<param>and_sample=1.0</param>
 			<param>and_outputContribs=${and_outputContribs}</param>
 			<param>commonJarsPath=${commonJarsPath}</param>
@@ -326,4 +213,5 @@
 		<message>Workflow failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
 	</kill>
 	<end name="end"/>
+
 </workflow-app>
