@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:hdp="http://www.springframework.org/schema/hadoop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans	http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+						http://www.springframework.org/schema/hadoop http://www.springframework.org/schema/hadoop/spring-hadoop.xsd
+    					http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+        
+
+    <bean id="workTitleComparatorConfiguration" class="pl.edu.icm.coansys.deduplication.document.comparator.WorkTitleComparatorConfiguration">
+        <property name="titleMaxLevenshteinDistance" value="5"/>
+        <property name="titleMostMeaningfulEndLength" value="8"/>
+        <property name="titleEndMaxLevenshteinDistance" value="2"/>
+        <property name="titleLevenshteinDistancePerPart" value="1"/>
+        <property name="titlePartLength" value="7"/>
+        <property name="titleLengthExactComparison" value="7"/>
+
+    </bean>
+        
+    <bean id="workYearComparatorConfiguration" class="pl.edu.icm.coansys.deduplication.document.comparator.WorkYearComparatorConfiguration">
+        <property name="publicationYearMaxDistance" value="0"/>
+
+    </bean>
+    
+    <bean id="duplicateWorkComparator" class="pl.edu.icm.coansys.deduplication.document.DuplicateWorkComparator">
+        <property name="similarityVoters">
+            <list>
+                <bean id="workDoiVoter" class="pl.edu.icm.coansys.deduplication.document.voter.DoiVoter">
+                    <property name="weight" value="1.0"/>
+                </bean>
+                <bean id="workIssueVoter" class="pl.edu.icm.coansys.deduplication.document.voter.IssueVoter">
+                    <property name="weight" value="0.2"/>
+                </bean>
+                <bean id="workYearVoter" class="pl.edu.icm.coansys.deduplication.document.voter.YearVoter">
+                    <property name="weight" value="0.2"/>
+                    <property name="yearMaxDistance" value="0"/>
+                </bean>
+                <bean id="journalVoter" class="pl.edu.icm.coansys.deduplication.document.voter.JournalSimilarityVoter">
+                    <property name="weight" value="0.3"/>
+                </bean>
+                <bean id="workTitleVoter" class="pl.edu.icm.coansys.deduplication.document.voter.WorkTitleVoter">
+                    <property name="weight" value="0.8"/>
+                    <property name="disapproveLevel" value="0.2"/>
+                    <property name="approveLevel" value="0.03"/>
+                    <property name="digitsPercentageTreshold" value="15"/>
+                </bean>
+                <bean id="workAuthorsVoter" class="pl.edu.icm.coansys.deduplication.document.voter.AuthorsVoter">
+                    <property name="weight" value="0.7"/>
+                    <property name="disapproveLevel" value="0.2"/>
+                    <property name="approveLevel" value="0.03"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
+
+    <context:component-scan resource-pattern="**/*.class" base-package="pl.edu.icm.coansys.deduplication.document"/>
+
+</beans>
