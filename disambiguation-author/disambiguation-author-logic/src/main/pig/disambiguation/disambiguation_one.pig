@@ -27,19 +27,9 @@
 %DEFAULT appSim 'app-sim'
 %DEFAULT appNoSim 'app-no-sim'
 
-
 %DEFAULT and_outputContribs disambiguation/outputContribs$and_time
 
 DEFINE GenUUID pl.edu.icm.coansys.disambiguation.author.pig.GenUUID();
--- -----------------------------------------------------
--- -----------------------------------------------------
--- register section
--- -----------------------------------------------------
--- -----------------------------------------------------
-REGISTER /usr/lib/hbase/lib/zookeeper.jar
-REGISTER /usr/lib/hbase/hbase-*-cdh4.*-security.jar
-REGISTER /usr/lib/hbase/lib/guava-*.jar
-
 
 -- -----------------------------------------------------
 -- -----------------------------------------------------

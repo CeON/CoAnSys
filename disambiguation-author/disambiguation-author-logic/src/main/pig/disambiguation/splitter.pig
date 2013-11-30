@@ -40,15 +40,6 @@ DEFINE featuresCheck pl.edu.icm.coansys.disambiguation.author.pig.FeaturesCheck(
 %DEFAULT and_sample 1.0
 %DEFAULT and_exhaustive_limit 6627
 %DEFAULT and_aproximate_sim_limit 1000000
--- -----------------------------------------------------
--- -----------------------------------------------------
--- register section
--- -----------------------------------------------------
--- -----------------------------------------------------
-REGISTER /usr/lib/hbase/lib/zookeeper.jar
-REGISTER /usr/lib/hbase/hbase-*-cdh4.*-security.jar
-REGISTER /usr/lib/hbase/lib/guava-*.jar
-
 
 -- -----------------------------------------------------
 -- -----------------------------------------------------

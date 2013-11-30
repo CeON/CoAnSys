@@ -28,15 +28,6 @@
 
 %DEFAULT and_sample 1.0
 DEFINE serialize pl.edu.icm.coansys.disambiguation.author.pig.serialization.SERIALIZE_RESULTS();
--- -----------------------------------------------------
--- -----------------------------------------------------
--- register section
--- -----------------------------------------------------
--- -----------------------------------------------------
-REGISTER /usr/lib/hbase/lib/zookeeper.jar
-REGISTER /usr/lib/hbase/hbase-*-cdh4.*-security.jar
-REGISTER /usr/lib/hbase/lib/guava-*.jar
-
 
 -- -----------------------------------------------------
 -- -----------------------------------------------------

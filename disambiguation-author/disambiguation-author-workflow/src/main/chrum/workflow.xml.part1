@@ -180,19 +180,19 @@
 			<param>exh=exh</param>
 			<param>appSim=app_sim</param>
 			<param>appNoSim=app_no_sim</param>
-
-            <param>and_aproximate_sim_limit=${and_aproximate_sim_limit}</param>
-            <param>and_exhaustive_limit=${and_exhaustive_limit}</param>
-            <param>and_failedContribs=${and_failedContribs}</param>
-            <param>and_feature_info=${and_feature_info}</param>
-            <param>and_lang=${and_lang}</param>
-            <param>and_outputContribs=${and_outputContribs}</param>
-			<param>and_scheduler=${and_scheduler}</param>
-            <param>and_splitter_output=${and_splitted_output}</param>
-            <param>and_statistics=${and_statistics}</param>
-            <param>and_threshold=${and_threshold}</param>
-            <param>and_cid_dockey=${and_cid_dockey}</param>
-            <param>and_outputPB=${and_outputPB}</param>
+			
+			<param>and_aproximate_sim_limit=${and_aproximate_sim_limit}</param>
+			<param>and_exhaustive_limit=${and_exhaustive_limit}</param>
+			<param>and_failedContribs=${and_failedContribs}</param>
+			<param>and_feature_info=${and_feature_info}</param>
+			<param>and_lang=${and_lang}</param>
+			<param>and_outputContribs=${and_outputContribs}</param>
+			<param>and_scheduler=${and_pool}</param>
+			<param>and_splitter_output=${and_splitted_output}</param>
+			<param>and_statistics=${and_statistics}</param>
+			<param>and_threshold=${and_threshold}</param>
+			<param>and_cid_dockey=${and_cid_dockey}</param>
+			<param>and_outputPB=${and_outputPB}</param>
 # END:REPLACE
 <!-- ================================================================= -->
 <!-- ============================= WF-1 ============================== -->
