@@ -20,15 +20,13 @@
 -- default section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
-%DEFAULT JARS '*.jar'
-%DEFAULT commonJarsPath 'lib/$JARS'
 
 %DEFAULT and_splitter_output 'splitted'
 %DEFAULT one 'one'
 %DEFAULT exh 'exh'
 %DEFAULT appSim 'app-sim'
 %DEFAULT appNoSim 'app-no-sim'
-%DEFAULT sep '/'
+
 
 %DEFAULT and_outputContribs disambiguation/outputContribs$and_time
 
@@ -42,7 +40,7 @@ REGISTER /usr/lib/hbase/lib/zookeeper.jar
 REGISTER /usr/lib/hbase/hbase-*-cdh4.*-security.jar
 REGISTER /usr/lib/hbase/lib/guava-*.jar
 
-REGISTER '$commonJarsPath'
+
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- set section
@@ -88,6 +86,6 @@ E1 = foreach D1A generate cId as cId, FLATTEN(GenUUID(TOBAG(cId))) as uuid;
 %DEFAULT exh 'exh'
 %DEFAULT appSim 'app-sim'
 %DEFAULT appNoSim 'app-no-sim'
-%DEFAULT sep '/'
 
-store E1 into '$and_outputContribs$sep$one';
+
+store E1 into '$and_outputContribs/$one';

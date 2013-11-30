@@ -20,8 +20,6 @@
 -- default section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
-%DEFAULT JARS '*.jar'
-%DEFAULT commonJarsPath 'lib/$JARS'
 
 -- outputContribs as input for this script
 %DEFAULT and_outputContribs 'workflows/pl.edu.icm.coansys-disambiguation-author-workflow/results/outputContribs'
@@ -39,7 +37,7 @@ REGISTER /usr/lib/hbase/lib/zookeeper.jar
 REGISTER /usr/lib/hbase/hbase-*-cdh4.*-security.jar
 REGISTER /usr/lib/hbase/lib/guava-*.jar
 
-REGISTER '$commonJarsPath'
+
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- set section
@@ -78,11 +76,11 @@ set mapred.fairscheduler.pool $and_scheduler
 %DEFAULT exh 'exh'
 %DEFAULT appSim 'app-sim'
 %DEFAULT appNoSim 'app-no-sim'
-%DEFAULT sep '/'
+
 %DEFAULT cid_dockey 'cid_dockey'
 
 CidDkey = LOAD '$and_cid_dockey' as (cId:chararray, docKey:chararray);
-CidAuuid = LOAD '$and_outputContribs$sep*' as (cId:chararray, uuid:chararray);
+CidAuuid = LOAD '$and_outputContribs/*' as (cId:chararray, uuid:chararray);
 -- TODO: is that load correct with '*' ?
 
 A = JOIN CidDkey BY cId, CidAuuid BY cId;

@@ -20,8 +20,7 @@
 -- default section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
-%DEFAULT JARS '*.jar'
-%DEFAULT commonJarsPath 'lib/$JARS'
+
 
 %DEFAULT and_inputDocsData /srv/bwndata/seqfile/bazekon-20130314.sf
 %DEFAULT and_cid_dockey 'cid_dockey'
@@ -50,7 +49,7 @@ REGISTER /usr/lib/hbase/lib/zookeeper.jar
 REGISTER /usr/lib/hbase/hbase-*-cdh4.*-security.jar
 REGISTER /usr/lib/hbase/lib/guava-*.jar
 
-REGISTER '$commonJarsPath'
+
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- set section
@@ -110,13 +109,12 @@ split D into
 %DEFAULT exh 'exh'
 %DEFAULT appSim 'app-sim'
 %DEFAULT appNoSim 'app-no-sim'
-%DEFAULT sep '/'
 %DEFAULT cid_dockey 'cid_dockey'
 
-store D1 into '$and_splitter_output$sep$one';
-store D100 into '$and_splitter_output$sep$exh';
-store D1000 into '$and_splitter_output$sep$appSim';
-store DX into '$and_splitter_output$sep$appNoSim';
+store D1 into '$and_splitter_output/$one';
+store D100 into '$and_splitter_output/$exh';
+store D1000 into '$and_splitter_output/$appSim';
+store DX into '$and_splitter_output/$appNoSim';
 
 Q = foreach B generate cId, dockey;
 store Q into '$and_cid_dockey';

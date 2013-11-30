@@ -20,8 +20,6 @@
 -- default section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
-%DEFAULT jars '*.jar'
-%DEFAULT commonJarsPath 'lib/$jars'
 
 --%DEFAULT and_inputDocsData tmp/D1000
 %DEFAULT and_inputDocsData extracted/springer_sample02/part*
@@ -48,7 +46,7 @@ REGISTER /usr/lib/hbase/lib/zookeeper.jar
 REGISTER /usr/lib/hbase/hbase-*-cdh4.*-security.jar
 REGISTER /usr/lib/hbase/lib/guava-*.jar
 
-REGISTER '$commonJarsPath'
+
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- set section
@@ -109,12 +107,12 @@ H = foreach G generate flatten( cIds ) as cId, uuid;
 %DEFAULT exh 'exh'
 %DEFAULT appSim 'app-sim'
 %DEFAULT appNoSim 'app-no-sim'
-%DEFAULT sep '/'
+
 
 
 -- TOO BIG CLUSTERS FOR EXHAUSTIVE
-store EBIG into '$and_failedContribs$sep$appSim';
+store EBIG into '$and_failedContribs/$appSim';
 
 -- STORING RESULTS
 R = union SINGLE, H;
-store R into '$and_outputContribs$sep$appSim';
+store R into '$and_outputContribs/$appSim';

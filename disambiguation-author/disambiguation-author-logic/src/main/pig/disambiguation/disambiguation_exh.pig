@@ -20,10 +20,7 @@
 -- default section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
-%DEFAULT JARS '*.jar'
-%DEFAULT commonJarsPath 'lib/$JARS'
 
---%DEFAULT and_inputDocsData tmp/exh
 %DEFAULT and_inputDocsData extracted/springer_sample02/part*
 %DEFAULT and_time 20130709_1009
 %DEFAULT and_outputContribs disambiguation/outputContribs$and_time
@@ -42,7 +39,7 @@ REGISTER /usr/lib/hbase/lib/zookeeper.jar
 REGISTER /usr/lib/hbase/hbase-*-cdh4.*-security.jar
 REGISTER /usr/lib/hbase/lib/guava-11.0.2.jar
 
-REGISTER '$commonJarsPath'
+
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- set section
@@ -83,7 +80,7 @@ E100 = foreach D100A generate flatten( cIds ) as cId, uuid;
 %DEFAULT exh 'exh'
 %DEFAULT appSim 'app-sim'
 %DEFAULT appNoSim 'app-no-sim'
-%DEFAULT sep '/'
 
-store E100 into '$and_outputContribs$sep$exh';
+
+store E100 into '$and_outputContribs/$exh';
 
