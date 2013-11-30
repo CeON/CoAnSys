@@ -1,17 +1,104 @@
 <?xml version="1.0" ?>
 <workflow-app name="${project}*${subproject}" xmlns="uri:oozie:workflow:0.4">
 
+	<parameters>
+		<!-- Properties associated with cluster parameters -->
+		<property>
+			<name>and_pool</name>
+			<value>default</value>
+			<description>Fairscheduler pool property.</description>
+		</property>
+		<property>
+			<name>and_mapredChildJavaOpts_one</name>
+			<value>-Xmx1024m</value>
+			<description>Java options for mappers in disambiguation-one Pig scripts.</description>
+		</property>
+		<property>
+			<name>and_mapredChildJavaOpts_exh</name>
+			<!-- minimum RAM: exh_limit^2 / 2 * 64 / 8 / 1024 / 1024 MB * const1 + const2 -->
+			<value>-Xmx1024m</value>
+			<description>Java options for mappers in disambiguation-exhaustive Pig scripts.</description>
+		</property>
+		<property>
+			<name>and_mapredChildJavaOpts_app_sim</name>
+			<value>-Xmx8000m</value>
+			<description>Java options for mappers in disambiguation-aproximate with storing similarities Pig scripts.</description>
+		</property>
+		<property>
+			<name>and_mapredChildJavaOpts_app_no_sim</name>
+			<value>-Xmx8000m</value>
+			<description>Java options for mappers in disambiguation-aproximate without storing similarities Pig scripts.</description>
+		</property>						
+		<!-- Additional out data paths -->
+		<property>
+			<name>and_splitted_output</name>
+			<value>${results}/splitted</value>
+			<description>Path for data with splitted groups of coontributors (splited in terms of the number of contributors in each cluster).</description>
+		</property>
+		<property>
+			<name>and_cid_dockey</name>
+			<value>${results}/cid_dockey</value>
+			<description>Path for additional data - pairs ( document id, contributor id ). Used in 'serialize' action to associate generated ( author uuid, contributor id ) pairs with documents. </description>
+		</property>
+		<property>
+			<name>and_outputContribs</name>
+			<value>${results}/outputContribs</value>
+			<description>Path for analyzed data - pairs ( contributor id, uuid ). </description>
+		</property>
+		<property>
+			<name>and_failedContribs</name>
+			<value>${results}/failedContribs</value>
+			<description>Path for not analyzed data - too big groups of contributors. </description>
+		</property>
+		<!-- Properties for Pig scripts -->
+		<property>
+			<name>and_sample</name>
+			<value>0.01</value>
+			<description>Input Sample Size: [0; 1]. Default 1 (all data).</description>
+		</property>
+		<property>
+			<name>and_threshold</name>
+			<value>-0.8</value>
+			<description>Initial value for calculating affinity between contributors: [-1.0; 0].</description>
+		</property>
+		<property>
+			<name>and_lang</name>
+			<value>all</value>
+			<description>Responsible for the selection of documents with given language. Value format as in document metadata. Default: all. </description>
+		</property>
+		<property>
+			<name>and_exhaustive_limit</name>
+			<value>6627</value>
+			<description>Upper limit on the size of the contributors group for exhaustive disambiguation algorithm.</description>
+		</property>
+		<property>
+			<name>and_aproximate_sim_limit</name>
+			<value>1000000000</value>
+			<description>Upper limit on the size of the contributors group for aproximate disambiguation algorithm with storing calculated similarities.</description>
+		</property>
+		<property>
+			<name>and_feature_info</name>
+			<!--<value>"CoAuthorsSnameDisambiguatorFullList#EX_AUTH_SNAMES#-0.0000166#8,ClassifCodeDisambiguator#EX_CLASSIFICATION_CODES#0.99#12,KeyphraseDisambiguator#EX_KEYWORDS_SPLIT#0.99#22,KeywordDisambiguator#EX_KEYWORDS#0.0000369#40".</value>-->
+			<value>"ForenamesInitsDisambiguator#EX_AUTH_INITIALS#1.0#1"</value>
+			<description>Features description - model for calculating affinity and contributors clustering. Value in format: "Disambiguator_name#Feature_extractor_name#weight#coefficient_of_the_maximum_number_of_occurrences,...". </description>
+		</property>
+		<property>
+			<name>and_statistics</name>
+			<value>false</value>
+			<description>Log ANDs algorithms statistics.</description>
+		</property>
+	</parameters>
 	<global>
 		<job-tracker>${jobTracker}</job-tracker>
 		<name-node>${nameNode}</name-node>
 		<configuration>
 			<property>
 				<name>mapred.fairscheduler.pool</name>
-				<value>${pool}</value>
+				<value>${and_pool}</value>
 			</property>
 			<property>
 				<name>oozie.launcher.mapred.fairscheduler.pool</name>
-				<value>${pool}</value>
+				<value>${and_pool}</value>
 			</property>
 			<property>
 				<name>mapred.job.queue.name</name>
@@ -48,7 +135,7 @@
 			<param>and_feature_info=${and_feature_info}</param>
 			<param>and_lang=${and_lang}</param>
 			<param>and_outputContribs=${and_outputContribs}</param>
-			<param>and_scheduler=${and_scheduler}</param>
+			<param>and_scheduler=${and_pool}</param>
 			<param>and_splitter_output=${and_splitted_output}</param>
 			<param>and_statistics=${and_statistics}</param>
 			<param>and_threshold=${and_threshold}</param>
@@ -81,7 +168,7 @@
 			<param>and_feature_info=${and_feature_info}</param>
 			<param>and_lang=${and_lang}</param>
 			<param>and_outputContribs=${and_outputContribs}</param>
-			<param>and_scheduler=${and_scheduler}</param>
+			<param>and_scheduler=${and_pool}</param>
 			<param>and_splitter_output=${and_splitted_output}</param>
 			<param>and_statistics=${and_statistics}</param>
 			<param>and_threshold=${and_threshold}</param>
@@ -108,7 +195,7 @@
 			<param>and_feature_info=${and_feature_info}</param>
 			<param>and_lang=${and_lang}</param>
 			<param>and_outputContribs=${and_outputContribs}</param>
-			<param>and_scheduler=${and_scheduler}</param>
+			<param>and_scheduler=${and_pool}</param>
 			<param>and_splitter_output=${and_splitted_output}</param>
 			<param>and_statistics=${and_statistics}</param>
 			<param>and_threshold=${and_threshold}</param>
@@ -135,7 +222,7 @@
 			<param>and_feature_info=${and_feature_info}</param>
 			<param>and_lang=${and_lang}</param>
 			<param>and_outputContribs=${and_outputContribs}</param>
-			<param>and_scheduler=${and_scheduler}</param>
+			<param>and_scheduler=${and_pool}</param>
 			<param>and_splitter_output=${and_splitted_output}</param>
 			<param>and_statistics=${and_statistics}</param>
 			<param>and_threshold=${and_threshold}</param>
@@ -162,7 +249,7 @@
 			<param>and_feature_info=${and_feature_info}</param>
 			<param>and_lang=${and_lang}</param>
 			<param>and_outputContribs=${and_outputContribs}</param>
-			<param>and_scheduler=${and_scheduler}</param>
+			<param>and_scheduler=${and_pool}</param>
 			<param>and_splitter_output=${and_splitted_output}</param>
 			<param>and_statistics=${and_statistics}</param>
 			<param>and_threshold=${and_threshold}</param>
@@ -189,7 +276,7 @@
 			<param>and_feature_info=${and_feature_info}</param>
 			<param>and_lang=${and_lang}</param>
 			<param>and_outputContribs=${and_outputContribs}</param>
-			<param>and_scheduler=${and_scheduler}</param>
+			<param>and_scheduler=${and_pool}</param>
 			<param>and_splitter_output=${and_splitted_output}</param>
 			<param>and_statistics=${and_statistics}</param>
 			<param>and_threshold=${and_threshold}</param>
