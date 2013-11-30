@@ -6,7 +6,7 @@
 			<includes>
 				<include>.*disambiguation.*\.pig</include>
 				<include>.*splitter.*\.pig</include>
-				<include>.*join.*\.pig</include>
+				<include>.*serialize.*\.pig</include>
 			</includes>
 		</scripts>
 	</main-project-pig>	
