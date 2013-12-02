@@ -179,6 +179,7 @@
         <module>logs-analysis</module>
         <module>keywords-extraction</module>
         <module>nlm-extraction</module>
+        <module>statistics-generator</module>
     </modules>
 
     <dependencies>
