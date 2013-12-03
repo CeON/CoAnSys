@@ -27,7 +27,7 @@ class MarkedText(val marked: Boolean) extends WritableComparable[MarkedText]  {
   def compareTo(o: MarkedText) = {
     val textCompare = text.compareTo(o.text)
     if (textCompare == 0)
-      isMarked.compareTo(o.isMarked)
+      -isMarked.compareTo(o.isMarked)
     else
       textCompare
   }
