@@ -17,9 +17,9 @@ class EntityAuthorTagger extends Mapper[Writable, BytesWritable, MarkedText, Mar
     val entity = MatchableEntity.fromBytes(value.copyBytes())
     val text = entity.rawText.getOrElse("")
     val keys = for {
-      year <- digitsNormaliseTokenise(text)
+      year <- digitsNormaliseTokenise(text).filter(_.length == 4)
       approxYear <- approximateYear(year)
-      author <- lettersNormaliseTokenise(text)
+      author <- lettersNormaliseTokenise(text).distinct
     } yield author + approxYear
 
     outValue.bytes.set(value)
