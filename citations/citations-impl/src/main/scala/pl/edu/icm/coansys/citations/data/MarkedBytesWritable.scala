@@ -6,7 +6,9 @@ import org.apache.hadoop.io.{BooleanWritable, BytesWritable, Writable}
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
-class MarkedBytesWritable(val marked: Boolean = false) extends Writable {
+class MarkedBytesWritable(val marked: Boolean) extends Writable {
+  def this() = this(false)
+
   val bytes = new BytesWritable()
   val isMarked = new BooleanWritable(marked)
 

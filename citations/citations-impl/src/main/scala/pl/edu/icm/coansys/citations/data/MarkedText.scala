@@ -8,7 +8,9 @@ import org.apache.hadoop.io.LongWritable.Comparator
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
-class MarkedText(val marked: Boolean = false) extends WritableComparable[MarkedText]  {
+class MarkedText(val marked: Boolean) extends WritableComparable[MarkedText]  {
+  def this() = this(false)
+
   val text = new Text
   val isMarked = new BooleanWritable(marked)
 
