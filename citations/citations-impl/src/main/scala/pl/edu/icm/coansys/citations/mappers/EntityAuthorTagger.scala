@@ -22,9 +22,9 @@ class EntityAuthorTagger extends Mapper[Writable, BytesWritable, MarkedText, Mar
       author <- lettersNormaliseTokenise(text)
     } yield author + approxYear
 
+    outValue.bytes.set(value)
     keys.foreach {k =>
       outKey.text.set(k)
-      outValue.bytes.set(value)
       context.write(outKey, outValue)
     }
   }

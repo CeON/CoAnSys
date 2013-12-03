@@ -17,9 +17,9 @@ class AuthorIndexer extends Mapper[Writable, BytesWritable, MarkedText, MarkedBy
   override def map(key: Writable, value: BytesWritable, context: Context) {
     val entity = MatchableEntity.fromBytes(value.copyBytes())
     val authorTokens = misc.lettersNormaliseTokenise(entity.author).filterNot(stopWords).distinct
+    outValue.bytes.set(value)
     authorTokens.foreach{ token =>
       outKey.text.set(token + entity.year)
-      outValue.bytes.set(value)
       context.write(outKey, outValue)
     }
   }
