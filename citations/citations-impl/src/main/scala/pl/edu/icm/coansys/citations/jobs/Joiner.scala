@@ -14,7 +14,7 @@ import pl.edu.icm.coansys.citations.reducers.AuthorJoiner
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
-class Joiner extends Configured with Tool {
+object Joiner extends Configured with Tool {
   def run(args: Array[String]): Int = {
     val srcUri = args(0)
     val destUri = args(1)
@@ -38,7 +38,7 @@ class Joiner extends Configured with Tool {
     job.setOutputFormatClass(classOf[SequenceFileOutputFormat[BytesWritable, BytesWritable]])
 
     MultipleInputs.addInputPath(job, new Path(srcUri), classOf[SequenceFileInputFormat[Writable, BytesWritable]], classOf[EntityAuthorTagger])
-    MultipleInputs.addInputPath(job, new Path(srcUri), classOf[SequenceFileInputFormat[Writable, BytesWritable]], classOf[AuthorIndexer])
+    MultipleInputs.addInputPath(job, new Path(destUri), classOf[SequenceFileInputFormat[Writable, BytesWritable]], classOf[AuthorIndexer])
 
     job.setMapOutputKeyClass(classOf[MarkedText])
     job.setMapOutputValueClass(classOf[MarkedBytesWritable])
@@ -52,7 +52,7 @@ class Joiner extends Configured with Tool {
   }
 
   def main(args: Array[String]) {
-    val exitCode = ToolRunner.run(MatcherLowLevel, args)
+    val exitCode = ToolRunner.run(Joiner, args)
     System.exit(exitCode)
   }
 }
