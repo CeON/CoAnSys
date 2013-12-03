@@ -29,6 +29,7 @@ import pl.edu.icm.cermine.bibref.CRFBibReferenceParser
 import pl.edu.icm.ceon.scala_commons.strings
 import pl.edu.icm.coansys.commons.java.DiacriticsRemover
 import scala.collection.mutable
+import scala.util.Try
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -125,6 +126,11 @@ object misc {
 
     q.toSeq
   }
+
+  def approximateYear(year: String) = for {
+    diff <- -1 to 1
+    year <- Try(year.toInt).toOption
+  } yield (year + diff).toString
 
   val stopWords =
     """
