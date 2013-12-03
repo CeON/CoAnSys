@@ -15,10 +15,11 @@ class AuthorJoiner extends Reducer[MarkedText, MarkedBytesWritable, BytesWritabl
   val left = new BytesWritable()
 
   override def reduce(key: MarkedText, values: java.lang.Iterable[MarkedBytesWritable], context: Context) {
-    for (value <- values) {
-      if (value.isMarked.get()) {
-        left.set(value.bytes)
-      } else {
+    val it = values.iterator()
+    val first = it.next()
+    if (first.isMarked.get()) {
+      left.set(first.bytes)
+      for (value <- it) {
         context.write(left, value.bytes)
       }
     }
