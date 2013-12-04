@@ -18,31 +18,29 @@
 
 package pl.edu.icm.coansys.deduplication.document;
 
-import pl.edu.icm.coansys.deduplication.document.DuplicateWorkService;
 import pl.edu.icm.coansys.commons.java.DocumentWrapperUtils;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.testng.Assert;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import pl.edu.icm.coansys.deduplication.document.tool.MockDocumentMetadataFactory;
 import pl.edu.icm.coansys.models.DocumentProtos.Author;
 
 import com.google.common.collect.Lists;
+import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import pl.edu.icm.coansys.models.DocumentProtos;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@Test
 @ContextConfiguration(locations="classpath:spring/applicationContext.xml")
-public class DuplicateWorkServiceTest {
+public class DuplicateWorkServiceTest extends AbstractTestNGSpringContextTests {
     
     private static Logger log = LoggerFactory.getLogger(DuplicateWorkServiceTest.class);
 
@@ -55,7 +53,7 @@ public class DuplicateWorkServiceTest {
     private DocumentProtos.DocumentMetadata documentWrapper1;
     private DocumentProtos.DocumentMetadata documentWrapper5;
     
-    @Before
+    @BeforeTest
     public void setUp() throws Exception {
         Author janKowalski = MockDocumentMetadataFactory.createAuthor("Jan", "Kowalski", 1);
         Author adamNowak = MockDocumentMetadataFactory.createAuthor("Adam", "Nowak", 2);

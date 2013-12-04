@@ -18,30 +18,27 @@
 
 package pl.edu.icm.coansys.deduplication.document.comparator;
 
-import pl.edu.icm.coansys.deduplication.document.comparator.WorkJournalComparator;
-import pl.edu.icm.coansys.deduplication.document.comparator.WorkAuthorComparator;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mockito;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+import org.testng.Assert;
 
 import pl.edu.icm.coansys.deduplication.document.tool.MockDocumentMetadataFactory;
+import pl.edu.icm.coansys.deduplication.document.voter.AuthorsVoter;
+import pl.edu.icm.coansys.deduplication.document.voter.Vote;
 import pl.edu.icm.coansys.models.DocumentProtos;
 import pl.edu.icm.coansys.models.DocumentProtos.Author;
-import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
 
 public class WorkAuthorComparatorTest {
 
-    private WorkAuthorComparator workAuthorComparator; 
-    private WorkJournalComparator workJournalComparator;
+    private AuthorsVoter workAuthorComparator;
+    private Vote vote;
     
-    @Before
+    @BeforeTest
     public void setUp() throws Exception {
         
-        workAuthorComparator = new WorkAuthorComparator();
-        
-        workJournalComparator = Mockito.mock(WorkJournalComparator.class);
-        workAuthorComparator.setWorkJournalComparator(workJournalComparator);
+        workAuthorComparator = new AuthorsVoter();
+        workAuthorComparator.setDisapproveLevel(0.2f);
+        workAuthorComparator.setApproveLevel(0.03f);
     }
 
     
@@ -52,8 +49,10 @@ public class WorkAuthorComparatorTest {
         Author adamNowak = MockDocumentMetadataFactory.createAuthor("Adam", "Nowak", 2);
         DocumentProtos.DocumentMetadata doc1 = MockDocumentMetadataFactory.createDocumentMetadata("Ala m kota", 2012, janKowalski, adamNowak);
         DocumentProtos.DocumentMetadata doc2 = MockDocumentMetadataFactory.createDocumentMetadata("Ala ma kota", 2012, janKowalski, adamNowak);
+        vote = workAuthorComparator.vote(doc1, doc2);
         
-        //Assert.assertTrue(workAuthorComparator.sameAuthors(doc1, doc2));
+        Assert.assertEquals(vote.getStatus(), Vote.VoteStatus.PROBABILITY);
+        Assert.assertTrue(vote.getProbability() > 0.5);
     }
     
     
@@ -67,7 +66,9 @@ public class WorkAuthorComparatorTest {
         Author johnSmith = MockDocumentMetadataFactory.createAuthor("John", "Smith", 1);
         DocumentProtos.DocumentMetadata doc2 = MockDocumentMetadataFactory.createDocumentMetadata("Ala ma kota", 2012, johnSmith);
         
-        //Assert.assertFalse(workAuthorComparator.sameAuthors(doc1, doc2));
+        vote = workAuthorComparator.vote(doc1, doc2);
+        
+        Assert.assertEquals(vote.getStatus(), Vote.VoteStatus.NOT_EQUALS);
     }
     
     
@@ -84,7 +85,10 @@ public class WorkAuthorComparatorTest {
         
         DocumentProtos.DocumentMetadata doc2 = MockDocumentMetadataFactory.createDocumentMetadata("Ala ma kota", 2012, janKowalski, adamNowak, adamZbik);
         
-        //Assert.assertFalse(workAuthorComparator.sameAuthors(doc1, doc2));
+        vote = workAuthorComparator.vote(doc1, doc2);
+        
+        Assert.assertEquals(vote.getStatus(), Vote.VoteStatus.PROBABILITY);
+        Assert.assertTrue(vote.getProbability() < 0.5f);
     }
     
    
@@ -101,11 +105,11 @@ public class WorkAuthorComparatorTest {
         DocumentProtos.DocumentMetadata doc2 = MockDocumentMetadataFactory.createDocumentMetadata("Ala ma kota", 2012, janKowalski, adamNowak, Онущенко);
         
         // different journals
-        Mockito.when(workJournalComparator.sameJournals(Mockito.any(DocumentWrapper.class), Mockito.any(DocumentWrapper.class))).thenReturn(false);
+        //Mockito.when(workJournalComparator.sameJournals(Mockito.any(DocumentWrapper.class), Mockito.any(DocumentWrapper.class))).thenReturn(false);
         //Assert.assertFalse(workAuthorComparator.sameAuthors(doc1, doc2));
         
         // same journals
-        Mockito.when(workJournalComparator.sameJournals(Mockito.any(DocumentWrapper.class), Mockito.any(DocumentWrapper.class))).thenReturn(true);
+        //Mockito.when(workJournalComparator.sameJournals(Mockito.any(DocumentWrapper.class), Mockito.any(DocumentWrapper.class))).thenReturn(true);
         //Assert.assertTrue(workAuthorComparator.sameAuthors(doc1, doc2));
         
         

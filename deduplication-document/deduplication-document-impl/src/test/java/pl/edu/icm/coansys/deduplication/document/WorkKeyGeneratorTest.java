@@ -18,9 +18,8 @@
 
 package pl.edu.icm.coansys.deduplication.document;
 
-import pl.edu.icm.coansys.deduplication.document.WorkKeyGenerator;
-import org.junit.Assert;
-import org.junit.Test;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 import pl.edu.icm.coansys.deduplication.document.tool.MockDocumentMetadataFactory;
 import pl.edu.icm.coansys.models.DocumentProtos;

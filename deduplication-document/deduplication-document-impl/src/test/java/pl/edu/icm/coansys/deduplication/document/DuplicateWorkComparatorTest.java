@@ -18,38 +18,41 @@
 
 package pl.edu.icm.coansys.deduplication.document;
 
-import pl.edu.icm.coansys.deduplication.document.DuplicateWorkComparator;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.testng.Assert;
+import org.testng.annotations.*;
+import org.testng.annotations.Test;
 import static org.mockito.Mockito.*;
 import pl.edu.icm.coansys.deduplication.document.tool.MockDocumentMetadataFactory;
 import pl.edu.icm.coansys.deduplication.document.voter.AuthorsVoter;
 import pl.edu.icm.coansys.deduplication.document.voter.SimilarityVoter;
 import pl.edu.icm.coansys.deduplication.document.voter.Vote;
 import pl.edu.icm.coansys.deduplication.document.voter.WorkTitleVoter;
+import pl.edu.icm.coansys.deduplication.document.voter.YearVoter;
 import pl.edu.icm.coansys.models.DocumentProtos;
-import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
 
-public class DuplicateWorkVoterTest {
+public class DuplicateWorkComparatorTest {
 
     
     private DuplicateWorkComparator duplicateWorkComparator;
-    private WorkTitleVoter workTitleVoter = mock(WorkTitleVoter.class);
-    private AuthorsVoter workAuthorVoter = mock(AuthorsVoter.class);
-    private SimilarityVoter simVoter = mock(SimilarityVoter.class);
+    private WorkTitleVoter workTitleVoter;
+    private AuthorsVoter workAuthorVoter;
+    private YearVoter workYearVoter;
     
     private DocumentProtos.DocumentMetadata doc1 = MockDocumentMetadataFactory.createDocumentMetadata("a");
     private DocumentProtos.DocumentMetadata doc2 = MockDocumentMetadataFactory.createDocumentMetadata("b");
     
     
-    @Before
+    @BeforeMethod
     public void setUp() throws Exception {
         List<SimilarityVoter> voters = new ArrayList<SimilarityVoter>();
+        workTitleVoter = mock(WorkTitleVoter.class);
+        workAuthorVoter = mock(AuthorsVoter.class);
+        workYearVoter = mock(YearVoter.class);
         voters.add(workTitleVoter);
         voters.add(workAuthorVoter);
+        voters.add(workYearVoter);
         
         duplicateWorkComparator = new DuplicateWorkComparator();
         duplicateWorkComparator.setSimilarityVoters(voters);
@@ -63,70 +66,83 @@ public class DuplicateWorkVoterTest {
         when(workTitleVoter.getWeight()).thenReturn(1.0f);
 
         when(workAuthorVoter.vote(any(DocumentProtos.DocumentMetadata.class), any(DocumentProtos.DocumentMetadata.class)))
-                .thenReturn(new Vote(Vote.VoteStatus.PROBABILITY, 0.8f));
+                .thenReturn(new Vote(Vote.VoteStatus.PROBABILITY, 0.9f));
         when(workAuthorVoter.getWeight()).thenReturn(1.0f);
+        
+        when(workYearVoter.vote(any(DocumentProtos.DocumentMetadata.class), any(DocumentProtos.DocumentMetadata.class)))
+                .thenReturn(new Vote(Vote.VoteStatus.PROBABILITY, 1.0f));
+        when(workYearVoter.getWeight()).thenReturn(0.5f);
         
         Assert.assertTrue(duplicateWorkComparator.isDuplicate(doc1, doc2));
         
         verify(workTitleVoter, times(1)).vote(any(DocumentProtos.DocumentMetadata.class), any(DocumentProtos.DocumentMetadata.class));
-        /*
-        verify(workTitleComparator, times(1))
-                .sameTitles(any(DocumentWrapper.class), any(DocumentWrapper.class));
-        verify(workAuthorComparator, times(1))
-                .sameAuthors(any(DocumentWrapper.class), any(DocumentWrapper.class));
-        verify(workYearComparator, times(1))
-                .sameYears(any(DocumentWrapper.class), any(DocumentWrapper.class));
-                */
+        verify(workAuthorVoter, times(1)).vote(any(DocumentProtos.DocumentMetadata.class), any(DocumentProtos.DocumentMetadata.class));
+        verify(workYearVoter, times(1)).vote(any(DocumentProtos.DocumentMetadata.class), any(DocumentProtos.DocumentMetadata.class));
     }
     
     
     @Test
     public void testSameTitleSameAuthorsDifferentYear() {
-        /*
-        when(workTitleComparator.sameTitles(any(DocumentWrapper.class), any(DocumentWrapper.class))).thenReturn(true);
-        when(workAuthorComparator.sameAuthors(any(DocumentWrapper.class), any(DocumentWrapper.class))).thenReturn(true);
-        when(workYearComparator.sameYears(any(DocumentWrapper.class), any(DocumentWrapper.class))).thenReturn(false);
+        when(workTitleVoter.vote(any(DocumentProtos.DocumentMetadata.class), any(DocumentProtos.DocumentMetadata.class)))
+                .thenReturn(new Vote(Vote.VoteStatus.PROBABILITY, 1.0f));
+        when(workTitleVoter.getWeight()).thenReturn(1.0f);
+
+        when(workAuthorVoter.vote(any(DocumentProtos.DocumentMetadata.class), any(DocumentProtos.DocumentMetadata.class)))
+                .thenReturn(new Vote(Vote.VoteStatus.PROBABILITY, 1.0f));
+        when(workAuthorVoter.getWeight()).thenReturn(1.0f);
+        
+        when(workYearVoter.vote(any(DocumentProtos.DocumentMetadata.class), any(DocumentProtos.DocumentMetadata.class)))
+                .thenReturn(new Vote(Vote.VoteStatus.NOT_EQUALS));
+        when(workYearVoter.getWeight()).thenReturn(0.5f);
         
         Assert.assertFalse(duplicateWorkComparator.isDuplicate(doc1, doc2));
         
-        verify(workTitleComparator, times(1)).sameTitles(any(DocumentWrapper.class), any(DocumentWrapper.class));
-        verify(workAuthorComparator, times(1)).sameAuthors(any(DocumentWrapper.class), any(DocumentWrapper.class));
-        verify(workYearComparator, times(1)).sameYears(any(DocumentWrapper.class), any(DocumentWrapper.class));
-        */
+        verify(workTitleVoter, times(1)).vote(any(DocumentProtos.DocumentMetadata.class), any(DocumentProtos.DocumentMetadata.class));
+        verify(workAuthorVoter, times(1)).vote(any(DocumentProtos.DocumentMetadata.class), any(DocumentProtos.DocumentMetadata.class));
+        verify(workYearVoter, times(1)).vote(any(DocumentProtos.DocumentMetadata.class), any(DocumentProtos.DocumentMetadata.class));
     }
     
     @Test
     public void testSameTitleDifferentAuthorsSameYear() {
-        /*
-        when(workTitleComparator.sameTitles(any(DocumentWrapper.class), any(DocumentWrapper.class))).thenReturn(true);
-        when(workAuthorComparator.sameAuthors(any(DocumentWrapper.class), any(DocumentWrapper.class))).thenReturn(false);
-        when(workYearComparator.sameYears(any(DocumentWrapper.class), any(DocumentWrapper.class))).thenReturn(true);
+        when(workTitleVoter.vote(any(DocumentProtos.DocumentMetadata.class), any(DocumentProtos.DocumentMetadata.class)))
+                .thenReturn(new Vote(Vote.VoteStatus.PROBABILITY, 1.0f));
+        when(workTitleVoter.getWeight()).thenReturn(1.0f);
+
+        when(workAuthorVoter.vote(any(DocumentProtos.DocumentMetadata.class), any(DocumentProtos.DocumentMetadata.class)))
+                .thenReturn(new Vote(Vote.VoteStatus.NOT_EQUALS));
+        when(workAuthorVoter.getWeight()).thenReturn(1.0f);
+        
+        when(workYearVoter.vote(any(DocumentProtos.DocumentMetadata.class), any(DocumentProtos.DocumentMetadata.class)))
+                .thenReturn(new Vote(Vote.VoteStatus.PROBABILITY, 1.0f));
+        when(workYearVoter.getWeight()).thenReturn(0.5f);
         
         Assert.assertFalse(duplicateWorkComparator.isDuplicate(doc1, doc2));
         
-        verify(workTitleComparator, times(1)).sameTitles(any(DocumentWrapper.class), any(DocumentWrapper.class));
-        verify(workAuthorComparator, times(1)).sameAuthors(any(DocumentWrapper.class), any(DocumentWrapper.class));
-        verify(workYearComparator, times(0)).sameYears(any(DocumentWrapper.class), any(DocumentWrapper.class));
-        */
+        verify(workTitleVoter, times(1)).vote(any(DocumentProtos.DocumentMetadata.class), any(DocumentProtos.DocumentMetadata.class));
+        verify(workAuthorVoter, times(1)).vote(any(DocumentProtos.DocumentMetadata.class), any(DocumentProtos.DocumentMetadata.class));
+        verify(workYearVoter, times(0)).vote(any(DocumentProtos.DocumentMetadata.class), any(DocumentProtos.DocumentMetadata.class));
     }
     
     
     @Test
     public void testDifferentTitleSameAuthorsSameYear() {
-        /*
-        when(workTitleComparator.sameTitles(any(DocumentWrapper.class), any(DocumentWrapper.class))).thenReturn(false);
-        when(workAuthorComparator.sameAuthors(any(DocumentWrapper.class), any(DocumentWrapper.class))).thenReturn(true);
-        when(workYearComparator.sameYears(any(DocumentWrapper.class), any(DocumentWrapper.class))).thenReturn(true);
+
+        when(workTitleVoter.vote(any(DocumentProtos.DocumentMetadata.class), any(DocumentProtos.DocumentMetadata.class)))
+                .thenReturn(new Vote(Vote.VoteStatus.NOT_EQUALS));
+        when(workTitleVoter.getWeight()).thenReturn(1.0f);
+
+        when(workAuthorVoter.vote(any(DocumentProtos.DocumentMetadata.class), any(DocumentProtos.DocumentMetadata.class)))
+                .thenReturn(new Vote(Vote.VoteStatus.PROBABILITY, 1.0f));
+        when(workAuthorVoter.getWeight()).thenReturn(1.0f);
+        
+        when(workYearVoter.vote(any(DocumentProtos.DocumentMetadata.class), any(DocumentProtos.DocumentMetadata.class)))
+                .thenReturn(new Vote(Vote.VoteStatus.PROBABILITY, 1.0f));
+        when(workYearVoter.getWeight()).thenReturn(0.5f);
         
         Assert.assertFalse(duplicateWorkComparator.isDuplicate(doc1, doc2));
         
-        verify(workTitleComparator, times(1)).sameTitles(any(DocumentWrapper.class), any(DocumentWrapper.class));
-        verify(workAuthorComparator, times(0)).sameAuthors(any(DocumentWrapper.class), any(DocumentWrapper.class));
-        verify(workYearComparator, times(0)).sameYears(any(DocumentWrapper.class), any(DocumentWrapper.class));
-        */
+        verify(workTitleVoter, times(1)).vote(any(DocumentProtos.DocumentMetadata.class), any(DocumentProtos.DocumentMetadata.class));
+        verify(workAuthorVoter, times(0)).vote(any(DocumentProtos.DocumentMetadata.class), any(DocumentProtos.DocumentMetadata.class));
+        verify(workYearVoter, times(0)).vote(any(DocumentProtos.DocumentMetadata.class), any(DocumentProtos.DocumentMetadata.class));
     }
-    
-     
-
-
 }
