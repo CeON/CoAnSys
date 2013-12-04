@@ -42,7 +42,7 @@ public class ConfigReader {
         String partitionsClassesArgsStr = conf.get(confPrefix + ConfigurationConstants.CLASSES_ARGS);
 
         if (partitionsNamesStr == null) {
-            throw new IllegalArgumentException("configuration error -- " + confPrefix + ConfigurationConstants.NAMES + "must be set");
+            throw new IllegalArgumentException("configuration error -- " + confPrefix + ConfigurationConstants.NAMES + " must be set");
         }
         String[] partitionsNames = partitionsNamesStr.split(ConfigurationConstants.CONF_FIELDS_SEPARATOR);
         String[] partitionsClasses;
@@ -58,7 +58,7 @@ public class ConfigReader {
         } else {
             partitionsClasses = new String[partitionsNb];
             for (int i = 0; i < partitionsClasses.length; i++) {
-                partitionsClasses[i] = ConfigurationConstants.DEFAULT_PARTITION_CLASS;
+                partitionsClasses[i] = ConfigurationConstants.DEFAULT_CLASSES.get(confPrefix);
             }
         }
 

@@ -18,36 +18,29 @@
 
 package pl.edu.icm.coansys.deduplication.document;
 
-import pl.edu.icm.coansys.deduplication.document.DuplicateWorkDetectReduceService;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
 import junit.framework.Assert;
-
 import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.Reducer.Context;
 import org.apache.log4j.Logger;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
 import pl.edu.icm.coansys.deduplication.document.tool.MockDocumentMetadataFactory;
-import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
-
 import com.google.common.collect.Lists;
+import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import pl.edu.icm.coansys.models.DocumentProtos;
 
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@Test
 @ContextConfiguration(locations="classpath:spring/applicationContext.xml")
-public class DuplicateWorkDetectReduceServiceTest {
+public class DuplicateWorkDetectReduceServiceTest extends AbstractTestNGSpringContextTests {
 
     private static Logger log = Logger.getLogger(DuplicateWorkDetectReduceServiceTest.class);
     
@@ -58,7 +51,7 @@ public class DuplicateWorkDetectReduceServiceTest {
     @SuppressWarnings("unchecked")
     private Reducer<Text, BytesWritable, Text, Text>.Context context = Mockito.mock(Context.class);
     
-    @Before
+    @BeforeTest
     public void setUp() throws Exception {
         
         for (int i = 0; i < 2000; i++) {

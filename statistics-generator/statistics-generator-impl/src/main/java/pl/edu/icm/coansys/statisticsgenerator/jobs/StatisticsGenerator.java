@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.SortedMap;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.Writable;
@@ -125,6 +126,8 @@ public class StatisticsGenerator implements Tool {
         job.setJarByClass(StatisticsGenerator.class);
         job.setInputFormatClass(SequenceFileInputFormat.class);
         job.setOutputFormatClass(SequenceFileOutputFormat.class);
+        SequenceFileInputFormat.addInputPath(job, new Path(args[0]));
+        SequenceFileOutputFormat.setOutputPath(job, new Path(args[1]));
         job.setMapperClass(StatisticsMap.class);
         job.setReducerClass(StatisticsReduce.class);
         job.setMapOutputKeyClass(SortedMapWritableComparable.class);
@@ -152,6 +155,9 @@ public class StatisticsGenerator implements Tool {
     }
 
     public static void main(String[] args) throws Exception {
+        if (args.length < 2) {
+            throw new IllegalArgumentException("syntax: StatisticsGenerator <input_path> <output_path>");
+        }
         ToolRunner.run(new StatisticsGenerator(), args);
     }
 }

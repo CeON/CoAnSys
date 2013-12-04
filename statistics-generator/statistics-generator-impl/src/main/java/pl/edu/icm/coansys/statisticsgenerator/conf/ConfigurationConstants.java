@@ -18,6 +18,9 @@
 
 package pl.edu.icm.coansys.statisticsgenerator.conf;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  *
  * @author Artur Czeczko <a.czeczko@icm.edu.pl>
@@ -33,5 +36,9 @@ public class ConfigurationConstants {
     public static final String CONF_FIELDS_SEPARATOR = ";";
     public static final String CONF_PARAMS_SEPARATOR = "#";
     
-    public static final String DEFAULT_PARTITION_CLASS = "EQUALS";
+    public static final Map<String, String> DEFAULT_CLASSES = new HashMap<String, String>();
+    static {
+        DEFAULT_CLASSES.put(PARTITIONS_PREFIX, "EQUALS");
+        DEFAULT_CLASSES.put(STATISTICS_PREFIX, "COUNT");
+    }
 }

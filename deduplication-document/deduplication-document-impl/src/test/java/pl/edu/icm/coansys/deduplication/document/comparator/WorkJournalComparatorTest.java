@@ -18,10 +18,8 @@
 
 package pl.edu.icm.coansys.deduplication.document.comparator;
 
-import pl.edu.icm.coansys.deduplication.document.comparator.WorkJournalComparator;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
 
 import pl.edu.icm.coansys.deduplication.document.tool.MockDocumentMetadataFactory;
 import pl.edu.icm.coansys.models.DocumentProtos;
@@ -30,7 +28,7 @@ public class WorkJournalComparatorTest {
 
     private WorkJournalComparator workJournalComparator = new WorkJournalComparator();
     
-    @Before
+    @BeforeTest
     public void setUp() throws Exception {
         
     }
