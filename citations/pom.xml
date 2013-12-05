@@ -15,6 +15,7 @@
         <module>citations-impl</module>
         <module>citations-main-workflow</module>
         <module>citations-inner-workflow</module>
+        <module>citations-heuristic-workflow</module>
     </modules>
 
 

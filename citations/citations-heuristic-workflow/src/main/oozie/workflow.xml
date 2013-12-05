@@ -1,0 +1,176 @@
+<!--
+  Copyright (c) 2010 Yahoo! Inc. All rights reserved.
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License. See accompanying LICENSE file.
+-->
+<workflow-app xmlns="uri:oozie:workflow:0.4" name="java-main-wf">
+    <parameters>
+        <property>
+            <name>src_entities</name>
+        </property>
+        <property>
+            <name>dst_entities</name>
+        </property>
+        <property>
+            <name>output</name>
+        </property>
+    </parameters>
+    <global>
+        <job-tracker>${jobTracker}</job-tracker>
+        <name-node>${nameNode}</name-node>
+        <configuration>
+            <property>
+                <name>mapred.mapper.new-api</name>
+                <value>true</value>
+            </property>
+            <property>
+                <name>mapred.reducer.new-api</name>
+                <value>true</value>
+            </property>
+            <!-- General job parameters -->
+            <property>
+                <name>mapred.job.queue.name</name>
+                <value>${queueName}</value>
+            </property>
+            <property>
+                <name>oozie.launcher.mapred.fairscheduler.pool</name>
+                <value>${pool}</value>
+            </property>
+            <property>
+                <name>mapred.fairscheduler.pool</name>
+                <value>${pool}</value>
+            </property>
+        </configuration>
+    </global>
+    <start to="first"/>
+    <action name="first">
+        <map-reduce>
+            <prepare>
+                <delete path="${output}_partial"/>
+            </prepare>
+            <configuration>
+                <!-- MapReduce Mapper/Reducer parameters -->
+                <property>
+                    <name>mapred.input.dir.mappers</name>
+                    <value>
+                        ${src_entities};pl.edu.icm.coansys.citations.mappers.EntityAuthorTagger,${dst_entities};pl.edu.icm.coansys.citations.mappers.AuthorIndexer
+                    </value>
+                </property>
+                <property>
+                    <name>mapred.input.dir.formats</name>
+                    <value>
+                        ${src_entities};org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat,${dst_entities};org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat
+                    </value>
+                </property>
+                <property>
+                    <name>mapred.mapoutput.key.class</name>
+                    <value>pl.edu.icm.coansys.citations.data.MarkedText</value>
+                </property>
+                <property>
+                    <name>mapred.mapoutput.value.class</name>
+                    <value>pl.edu.icm.coansys.citations.data.MarkedBytesWritable</value>
+                </property>
+                <property>
+                    <name>mapreduce.partitioner.class</name>
+                    <value>pl.edu.icm.coansys.citations.data.MarkedTextPartitioner</value>
+                </property>
+                <property>
+                    <name>mapred.output.value.groupfn.class</name>
+                    <value>pl.edu.icm.coansys.citations.data.MarkedTextGroupComparator</value>
+                </property>
+                <property>
+                    <name>mapred.output.key.comparator.class</name>
+                    <value>pl.edu.icm.coansys.citations.data.MarkedTextSortComparator</value>
+                </property>
+                <property>
+                    <name>mapreduce.reduce.class</name>
+                    <value>pl.edu.icm.coansys.citations.reducers.AuthorJoinerStepOne</value>
+                </property>
+                <property>
+                    <name>mapred.output.dir</name>
+                    <value>${output}_partial</value>
+                </property>
+                <property>
+                    <name>mapreduce.outputformat.class</name>
+                    <value>org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat</value>
+                </property>
+                <property>
+                    <name>mapred.output.key.class</name>
+                    <value>pl.edu.icm.coansys.citations.data.MarkedText</value>
+                </property>
+                <property>
+                    <name>mapred.output.value.class</name>
+                    <value>pl.edu.icm.coansys.citations.data.MarkedBytesWritable</value>
+                </property>
+                <property>
+                    <name>mapred.max.split.size</name>
+                    <value>50000000</value>
+                </property>
+            </configuration>
+        </map-reduce>
+        <ok to="second"/>
+        <error to="fail"/>
+    </action>
+
+    <action name="second">
+        <map-reduce>
+            <prepare>
+                <delete path="${output}"/>
+            </prepare>
+            <configuration>
+                <property>
+                    <name>mapreduce.map.class</name>
+                    <value>org.apache.hadoop.mapreduce.Mapper</value>
+                </property>
+                <property>
+                    <name>mapreduce.reduce.class</name>
+                    <value>pl.edu.icm.coansys.citations.reducers.AuthorJoinerStepTwo</value>
+                </property>
+                <!-- MapReduce input/output parameters -->
+                <property>
+                    <name>mapred.input.dir</name>
+                    <value>${output}_partial</value>
+                </property>
+                <property>
+                    <name>mapred.output.dir</name>
+                    <value>${output}</value>
+                </property>
+                <property>
+                    <name>mapreduce.inputformat.class</name>
+                    <value>org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat</value>
+                </property>
+                <property>
+                    <name>mapreduce.outputformat.class</name>
+                    <value>org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat</value>
+                </property>
+                <property>
+                    <name>mapred.output.key.class</name>
+                    <value>org.apache.hadoop.io.BytesWritable</value>
+                </property>
+                <property>
+                    <name>mapred.output.value.class</name>
+                    <value>org.apache.hadoop.io.BytesWritable</value>
+                </property>
+                <property>
+                    <name>mapred.max.split.size</name>
+                    <value>50000000</value>
+                </property>
+            </configuration>
+        </map-reduce>
+        <ok to="end"/>
+        <error to="fail"/>
+    </action>
+    <kill name="fail">
+        <message>Java failed, error message [${wf:errorMessage(wf:lastErrorNode())}]</message>
+    </kill>
+    <end name="end"/>
+</workflow-app>
