@@ -117,7 +117,7 @@
                 </property>
                 <property>
                     <name>mapred.output.value.class</name>
-                    <value>pl.edu.icm.coansys.citations.data.MarkedBytesWritable</value>
+                    <value>org.apache.hadoop.io.BytesWritable</value>
                 </property>
                 <property>
                     <name>mapred.max.split.size</name>
