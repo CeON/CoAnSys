@@ -1,18 +1,22 @@
 <!--
-  Copyright (c) 2010 Yahoo! Inc. All rights reserved.
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
+  ~ This file is part of CoAnSys project.
+  ~ Copyright (c) 2012-2013 ICM-UW
+  ~
+  ~ CoAnSys is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ CoAnSys is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
+  -->
 
-    http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License. See accompanying LICENSE file.
--->
-<workflow-app xmlns="uri:oozie:workflow:0.4" name="java-main-wf">
+<workflow-app xmlns="uri:oozie:workflow:0.4" name="heuristic-wf">
     <parameters>
         <property>
             <name>src_entities</name>
@@ -132,7 +136,7 @@
     <action name="second">
         <map-reduce>
             <prepare>
-                <delete path="${output}"/>
+                <delete path="${output}_with_dups"/>
             </prepare>
             <configuration>
                 <property>
@@ -150,7 +154,7 @@
                 </property>
                 <property>
                     <name>mapred.output.dir</name>
-                    <value>${output}</value>
+                    <value>${output}_with_dups</value>
                 </property>
                 <property>
                     <name>mapreduce.inputformat.class</name>
@@ -194,9 +198,67 @@
                 </property>
             </configuration>
         </map-reduce>
+        <ok to="distinctor"/>
+        <error to="fail"/>
+    </action>
+
+    <action name="distinctor">
+        <map-reduce>
+            <prepare>
+                <delete path="${output}"/>
+            </prepare>
+            <configuration>
+                <property>
+                    <name>mapreduce.map.class</name>
+                    <value>pl.edu.icm.coansys.citations.mappers.IdExtractor</value>
+                </property>
+                <property>
+                    <name>mapreduce.reduce.class</name>
+                    <value>pl.edu.icm.coansys.citations.reducers.Distinctor</value>
+                </property>
+                <!-- MapReduce input/output parameters -->
+                <property>
+                    <name>mapred.input.dir</name>
+                    <value>${output}_with_dups</value>
+                </property>
+                <property>
+                    <name>mapred.output.dir</name>
+                    <value>${output}</value>
+                </property>
+                <property>
+                    <name>mapreduce.inputformat.class</name>
+                    <value>org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat</value>
+                </property>
+                <property>
+                    <name>mapreduce.outputformat.class</name>
+                    <value>org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat</value>
+                </property>
+                <property>
+                    <name>mapred.mapoutput.key.class</name>
+                    <value>org.apache.hadoop.io.Text</value>
+                </property>
+                <property>
+                    <name>mapred.mapoutput.value.class</name>
+                    <value>pl.edu.icm.coansys.citations.data.BytesPairWritable</value>
+                </property>
+                <property>
+                    <name>mapred.output.key.class</name>
+                    <value>org.apache.hadoop.io.BytesWritable</value>
+                </property>
+                <property>
+                    <name>mapred.output.value.class</name>
+                    <value>org.apache.hadoop.io.BytesWritable</value>
+                </property>
+                <property>
+                    <name>mapred.max.split.size</name>
+                    <value>50000000</value>
+                </property>
+            </configuration>
+        </map-reduce>
         <ok to="end"/>
         <error to="fail"/>
     </action>
+
     <kill name="fail">
         <message>Java failed, error message [${wf:errorMessage(wf:lastErrorNode())}]</message>
     </kill>
