@@ -60,6 +60,14 @@
             <configuration>
                 <!-- MapReduce Mapper/Reducer parameters -->
                 <property>
+                  <name>mapreduce.inputformat.class</name>
+                  <value>org.apache.hadoop.mapreduce.lib.input.DelegatingInputFormat</value>
+                </property>
+                <property>
+                  <name>mapreduce.map.class</name>
+                  <value>org.apache.hadoop.mapreduce.lib.input.DelegatingMapper</value>
+                </property>
+                <property>
                     <name>mapred.input.dir.mappers</name>
                     <value>
                         ${src_entities};pl.edu.icm.coansys.citations.mappers.EntityAuthorTagger,${dst_entities};pl.edu.icm.coansys.citations.mappers.AuthorIndexer
