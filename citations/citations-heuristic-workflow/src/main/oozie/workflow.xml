@@ -53,6 +53,10 @@
                 <name>mapred.fairscheduler.pool</name>
                 <value>${pool}</value>
             </property>
+            <property>
+                <name>mapred.max.split.size</name>
+                <value>50000000</value>
+            </property>
         </configuration>
     </global>
     <start to="first"/>
@@ -123,10 +127,6 @@
                     <name>mapred.output.value.class</name>
                     <value>org.apache.hadoop.io.BytesWritable</value>
                 </property>
-                <property>
-                    <name>mapred.max.split.size</name>
-                    <value>50000000</value>
-                </property>
             </configuration>
         </map-reduce>
         <ok to="second"/>
@@ -192,10 +192,6 @@
                     <name>mapred.output.value.class</name>
                     <value>org.apache.hadoop.io.BytesWritable</value>
                 </property>
-                <property>
-                    <name>mapred.max.split.size</name>
-                    <value>50000000</value>
-                </property>
             </configuration>
         </map-reduce>
         <ok to="distinctor"/>
@@ -242,6 +238,18 @@
                     <value>pl.edu.icm.coansys.citations.data.BytesPairWritable</value>
                 </property>
                 <property>
+                    <name>mapreduce.partitioner.class</name>
+                    <value>pl.edu.icm.coansys.citations.data.TextNumericWritablePartitioner</value>
+                </property>
+                <property>
+                    <name>mapred.output.value.groupfn.class</name>
+                    <value>pl.edu.icm.coansys.citations.data.TextNumericWritableGroupComparator</value>
+                </property>
+                <property>
+                    <name>mapred.output.key.comparator.class</name>
+                    <value>pl.edu.icm.coansys.citations.data.TextNumericWritableSortComparator</value>
+                </property>
+                <property>
                     <name>mapred.output.key.class</name>
                     <value>org.apache.hadoop.io.BytesWritable</value>
                 </property>
@@ -249,9 +257,58 @@
                     <name>mapred.output.value.class</name>
                     <value>org.apache.hadoop.io.BytesWritable</value>
                 </property>
+            </configuration>
+        </map-reduce>
+        <ok to="end"/>
+        <error to="fail"/>
+    </action>
+
+    <action name="preassesor">
+        <map-reduce>
+            <prepare>
+                <delete path="${output}_pre"/>
+            </prepare>
+            <configuration>
                 <property>
-                    <name>mapred.max.split.size</name>
-                    <value>50000000</value>
+                    <name>mapreduce.map.class</name>
+                    <value>pl.edu.icm.coansys.citations.mappers.PreAssesor</value>
+                </property>
+                <property>
+                    <name>mapreduce.reduce.class</name>
+                    <value>pl.edu.icm.coansys.citations.reducers.TopSelector</value>
+                </property>
+                <!-- MapReduce input/output parameters -->
+                <property>
+                    <name>mapred.input.dir</name>
+                    <value>${output}</value>
+                </property>
+                <property>
+                    <name>mapred.output.dir</name>
+                    <value>${output}_pre</value>
+                </property>
+                <property>
+                    <name>mapreduce.inputformat.class</name>
+                    <value>org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat</value>
+                </property>
+                <property>
+                    <name>mapreduce.outputformat.class</name>
+                    <value>org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat</value>
+                </property>
+                <property>
+                    <name>mapred.mapoutput.key.class</name>
+                    <value>pl.edu.icm.coansys.citations.data.TextNumericWritable</value>
+                </property>
+                <property>
+                    <name>mapred.mapoutput.value.class</name>
+                    <value>pl.edu.icm.coansys.citations.data.BytesPairWritable</value>
+                </property>
+                <property>
+                    <name>mapred.output.key.class</name>
+                    <value>org.apache.hadoop.io.BytesWritable</value>
+                </property>
+                <property>
+                    <name>mapred.output.value.class</name>
+                    <value>org.apache.hadoop.io.BytesWritable</value>
                 </property>
             </configuration>
         </map-reduce>

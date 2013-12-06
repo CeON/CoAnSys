@@ -1,10 +1,8 @@
 package pl.edu.icm.coansys.citations.mappers
 
-import org.apache.hadoop.io.{Text, BytesWritable, Writable}
+import org.apache.hadoop.io.{Text, BytesWritable}
 import org.apache.hadoop.mapreduce.Mapper
-import pl.edu.icm.coansys.citations.data.{BytesPairWritable, MatchableEntity, MarkedBytesWritable, MarkedText}
-import pl.edu.icm.coansys.citations.util.misc
-import pl.edu.icm.coansys.citations.util.misc._
+import pl.edu.icm.coansys.citations.data.{BytesPairWritable, MatchableEntity}
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)

@@ -30,6 +30,7 @@ import pl.edu.icm.ceon.scala_commons.strings
 import pl.edu.icm.coansys.commons.java.DiacriticsRemover
 import scala.collection.mutable
 import scala.util.Try
+import java.util.Locale
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -115,6 +116,9 @@ object misc {
 
   def tokensFromCermine(s: String): List[String] =
     CitationUtils.stringToCitation(s).getTokens.map(_.getText).toList
+
+  def niceTokens(s: String) =
+    tokensFromCermine(s.toLowerCase(Locale.ENGLISH)).filter(x => x.length > 2 || x.exists(_.isDigit)).take(50).toSet
 
   def nGreatest[A : Ordering](elems: TraversableOnce[A], n: Int): Seq[A] = {
     var q = mutable.SortedSet()
