@@ -19,12 +19,12 @@ class AuthorJoinerStepOne extends Reducer[MarkedText, MarkedBytesWritable, Marke
     var leftCount = 0
     for (value <- values) {
       if (value.isMarked.get()) {
-        outMarkedKey.text.set(key.toString + "_" + leftCount)
+        outMarkedKey.text.set(key.text.toString + "_" + leftCount)
         leftCount += 1
         context.write(outMarkedKey, value.bytes)
       } else {
         for (i <- 0 until leftCount) {
-          outUnmarkedKey.text.set(key.toString + "_" + i)
+          outUnmarkedKey.text.set(key.text.toString + "_" + i)
           context.write(outUnmarkedKey, value.bytes)
         }
       }
