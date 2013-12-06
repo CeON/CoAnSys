@@ -19,10 +19,27 @@
 <workflow-app xmlns="uri:oozie:workflow:0.4" name="heuristic-wf">
     <parameters>
         <property>
-            <name>src_entities</name>
+            <name>jobTracker</name>
         </property>
         <property>
-            <name>dst_entities</name>
+            <name>nameNode</name>
+        </property>
+        <property>
+            <name>queueName</name>
+            <value>default</value>
+        </property>
+        <property>
+            <name>pool</name>
+            <value>default</value>
+        </property>
+        <property>
+            <name>workingDirectory</name>
+        </property>
+        <property>
+            <name>sourceEntities</name>
+        </property>
+        <property>
+            <name>destinationEntities</name>
         </property>
         <property>
             <name>output</name>
@@ -54,17 +71,32 @@
                 <value>${pool}</value>
             </property>
             <property>
+                <name>mapreduce.inputformat.class</name>
+                <value>org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat</value>
+            </property>
+            <property>
+                <name>mapreduce.outputformat.class</name>
+                <value>org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat</value>
+            </property>
+            <property>
                 <name>mapred.max.split.size</name>
                 <value>50000000</value>
             </property>
         </configuration>
     </global>
-    <start to="first"/>
+    <start to="prepare"/>
+
+    <action name="prepare">
+        <fs>
+            <delete path="${workingDirectory}"/>
+            <mkdir path="${workingDirectory}"/>
+        </fs>
+        <ok to="first"/>
+        <error to="fail"/>
+    </action>
+
     <action name="first">
         <map-reduce>
-            <prepare>
-                <delete path="${output}_partial"/>
-            </prepare>
             <configuration>
                 <!-- MapReduce Mapper/Reducer parameters -->
                 <property>
@@ -78,13 +110,13 @@
                 <property>
                     <name>mapred.input.dir.mappers</name>
                     <value>
-                        ${src_entities};pl.edu.icm.coansys.citations.mappers.EntityAuthorTagger,${dst_entities};pl.edu.icm.coansys.citations.mappers.AuthorIndexer
+                        ${sourceEntities};pl.edu.icm.coansys.citations.mappers.EntityAuthorTagger,${destinationEntities};pl.edu.icm.coansys.citations.mappers.AuthorIndexer
                     </value>
                 </property>
                 <property>
                     <name>mapred.input.dir.formats</name>
                     <value>
-                        ${src_entities};org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat,${dst_entities};org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat
+                        ${sourceEntities};org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat,${destinationEntities};org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat
                     </value>
                 </property>
                 <property>
@@ -113,11 +145,7 @@
                 </property>
                 <property>
                     <name>mapred.output.dir</name>
-                    <value>${output}_partial</value>
-                </property>
-                <property>
-                    <name>mapreduce.outputformat.class</name>
-                    <value>org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat</value>
+                    <value>${workingDirectory}/heuristic_partial</value>
                 </property>
                 <property>
                     <name>mapred.output.key.class</name>
@@ -135,9 +163,6 @@
 
     <action name="second">
         <map-reduce>
-            <prepare>
-                <delete path="${output}_with_dups"/>
-            </prepare>
             <configuration>
                 <property>
                     <name>mapreduce.map.class</name>
@@ -150,19 +175,11 @@
                 <!-- MapReduce input/output parameters -->
                 <property>
                     <name>mapred.input.dir</name>
-                    <value>${output}_partial</value>
+                    <value>${workingDirectory}/heuristic_partial</value>
                 </property>
                 <property>
                     <name>mapred.output.dir</name>
-                    <value>${output}_with_dups</value>
-                </property>
-                <property>
-                    <name>mapreduce.inputformat.class</name>
-                    <value>org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat</value>
-                </property>
-                <property>
-                    <name>mapreduce.outputformat.class</name>
-                    <value>org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat</value>
+                    <value>${workingDirectory}/heuristic_with_dups</value>
                 </property>
                 <property>
                     <name>mapred.mapoutput.key.class</name>
@@ -215,19 +232,11 @@
                 <!-- MapReduce input/output parameters -->
                 <property>
                     <name>mapred.input.dir</name>
-                    <value>${output}_with_dups</value>
+                    <value>${workingDirectory}/heuristic_with_dups</value>
                 </property>
                 <property>
                     <name>mapred.output.dir</name>
-                    <value>${output}</value>
-                </property>
-                <property>
-                    <name>mapreduce.inputformat.class</name>
-                    <value>org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat</value>
-                </property>
-                <property>
-                    <name>mapreduce.outputformat.class</name>
-                    <value>org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat</value>
+                    <value>${workingDirectory}/heuristic_fat</value>
                 </property>
                 <property>
                     <name>mapred.mapoutput.key.class</name>
@@ -259,15 +268,12 @@
                 </property>
             </configuration>
         </map-reduce>
-        <ok to="end"/>
+        <ok to="preassesor"/>
         <error to="fail"/>
     </action>
 
     <action name="preassesor">
         <map-reduce>
-            <prepare>
-                <delete path="${output}_pre"/>
-            </prepare>
             <configuration>
                 <property>
                     <name>mapreduce.map.class</name>
@@ -280,19 +286,11 @@
                 <!-- MapReduce input/output parameters -->
                 <property>
                     <name>mapred.input.dir</name>
-                    <value>${output}</value>
+                    <value>${workingDirectory}/heuristic_fat</value>
                 </property>
                 <property>
                     <name>mapred.output.dir</name>
-                    <value>${output}_pre</value>
-                </property>
-                <property>
-                    <name>mapreduce.inputformat.class</name>
-                    <value>org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat</value>
-                </property>
-                <property>
-                    <name>mapreduce.outputformat.class</name>
-                    <value>org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat</value>
+                    <value>${workingDirectory}/heuristic_slim</value>
                 </property>
                 <property>
                     <name>mapred.mapoutput.key.class</name>
@@ -309,6 +307,44 @@
                 <property>
                     <name>mapred.output.value.class</name>
                     <value>org.apache.hadoop.io.BytesWritable</value>
+                </property>
+            </configuration>
+        </map-reduce>
+        <ok to="assess"/>
+        <error to="fail"/>
+    </action>
+
+    <action name="assessor">
+        <map-reduce>
+            <configuration>
+                <property>
+                    <name>mapreduce.map.class</name>
+                    <value>pl.edu.icm.coansys.citations.mappers.EntityAssesor</value>
+                </property>
+                <property>
+                    <name>mapreduce.reduce.class</name>
+                    <value>pl.edu.icm.coansys.citations.reducers.BestSelector</value>
+                </property>
+                <property>
+                    <name>mapreduce.combine.class</name>
+                    <value>pl.edu.icm.coansys.citations.reducers.BestSelector</value>
+                </property>
+                <!-- MapReduce input/output parameters -->
+                <property>
+                    <name>mapred.input.dir</name>
+                    <value>${workingDirectory}/heuristic_slim</value>
+                </property>
+                <property>
+                    <name>mapred.output.dir</name>
+                    <value>${output}</value>
+                </property>
+                <property>
+                    <name>mapred.output.key.class</name>
+                    <value>org.apache.hadoop.io.Text</value>
+                </property>
+                <property>
+                    <name>mapred.output.value.class</name>
+                    <value>org.apache.hadoop.io.Text</value>
                 </property>
             </configuration>
         </map-reduce>
