@@ -91,11 +91,11 @@
             <delete path="${workingDirectory}"/>
             <mkdir path="${workingDirectory}"/>
         </fs>
-        <ok to="first"/>
+        <ok to="heuristic-first"/>
         <error to="fail"/>
     </action>
 
-    <action name="first">
+    <action name="heuristic-first">
         <map-reduce>
             <configuration>
                 <!-- MapReduce Mapper/Reducer parameters -->
@@ -157,11 +157,11 @@
                 </property>
             </configuration>
         </map-reduce>
-        <ok to="second"/>
+        <ok to="heuristic-second"/>
         <error to="fail"/>
     </action>
 
-    <action name="second">
+    <action name="heuristic-second">
         <map-reduce>
             <configuration>
                 <property>
