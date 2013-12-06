@@ -66,7 +66,7 @@ object Joiner extends Configured with Tool {
 
     jobTwo.setReducerClass(classOf[AuthorJoinerStepTwo])
 
-    jobTwo.setOutputKeyClass(classOf[MarkedText])
+    jobTwo.setOutputKeyClass(classOf[BytesWritable])
     jobTwo.setOutputValueClass(classOf[BytesWritable])
     jobTwo.setOutputFormatClass(classOf[SequenceFileOutputFormat[BytesWritable, BytesWritable]])
     FileOutputFormat.setOutputPath(jobTwo, new Path(outUri))
