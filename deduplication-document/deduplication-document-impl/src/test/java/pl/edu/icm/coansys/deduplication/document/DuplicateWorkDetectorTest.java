@@ -18,28 +18,24 @@
 
 package pl.edu.icm.coansys.deduplication.document;
 
-import pl.edu.icm.coansys.deduplication.document.DuplicateWorkDetector;
-import pl.edu.icm.coansys.commons.java.DocumentWrapperUtils;
 import java.io.File;
 import java.net.URL;
 import java.util.List;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.util.ToolRunner;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.commons.hadoop.SequenceFileUtils;
 import pl.edu.icm.coansys.deduplication.document.tool.DuplicateGenerator;
 
-@Ignore
 public class DuplicateWorkDetectorTest {
     
     private static Logger log = LoggerFactory.getLogger(DuplicateWorkDetectorTest.class);
@@ -48,7 +44,7 @@ public class DuplicateWorkDetectorTest {
     private String outputDir = baseOutputUrl.getPath() + "/testOut";
     
     
-    @Before
+    @BeforeTest
     public void before() throws Exception{
         URL inputSeqFileUrl = this.getClass().getResource("/publications.seq");
         ToolRunner.run(new Configuration(), new DuplicateGenerator(), new String[]{inputSeqFileUrl.getFile(), this.getClass().getResource("/").getFile()});
@@ -57,12 +53,12 @@ public class DuplicateWorkDetectorTest {
         ToolRunner.run(new Configuration(), new DuplicateWorkDetector(), new String[]{inputFileUrl.getPath(), outputDir});
     }
     
-    @After
+    @AfterTest
     public void after() throws Exception{
         FileUtils.deleteDirectory(new File(outputDir));
     }
     
-    @Test
+    @Test(enabled=false)
     public void test() throws Exception {
         List<String> docIds = SequenceFileUtils.readTexts(outputDir+"/part-r-00000");
         Assert.assertEquals(6, docIds.size());

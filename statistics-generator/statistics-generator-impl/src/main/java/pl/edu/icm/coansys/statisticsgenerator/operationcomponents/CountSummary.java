@@ -16,23 +16,28 @@
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.edu.icm.coansys.deduplication.document;
+package pl.edu.icm.coansys.statisticsgenerator.operationcomponents;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.apache.hadoop.io.BytesWritable;
 
-import pl.edu.icm.coansys.deduplication.document.tool.MockDocumentMetadataFactory;
-import pl.edu.icm.coansys.models.DocumentProtos;
+/**
+ *
+ * @author acz
+ */
+public class CountSummary implements StatisticCalculator {
 
-public class WorkKeyGeneratorTest {
-
-    
-    @Test
-    public void testGenerateKey() {
-        DocumentProtos.DocumentMetadata doc = MockDocumentMetadataFactory.createDocumentMetadata("A comparison of associated dsd sd");
+    @Override
+    public double calculate(Iterable<BytesWritable> messages) {
+        double result = 0.0;
         
-        Assert.assertEquals("cmaio", WorkKeyGenerator.generateKey(doc, 0));
-        Assert.assertEquals("cmaioascae", WorkKeyGenerator.generateKey(doc, 1));
-        Assert.assertEquals("cmaioascaeddd", WorkKeyGenerator.generateKey(doc, 2));
+        for (BytesWritable bw : messages) {
+            result += 1.0;
+        }
+        
+        return result;
     }
+
+    @Override
+    public void setup(String... param) {
+    }    
 }

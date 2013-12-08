@@ -16,23 +16,12 @@
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.edu.icm.coansys.deduplication.document;
+package pl.edu.icm.coansys.statisticsgenerator.operationcomponents;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
-import pl.edu.icm.coansys.deduplication.document.tool.MockDocumentMetadataFactory;
-import pl.edu.icm.coansys.models.DocumentProtos;
-
-public class WorkKeyGeneratorTest {
-
-    
-    @Test
-    public void testGenerateKey() {
-        DocumentProtos.DocumentMetadata doc = MockDocumentMetadataFactory.createDocumentMetadata("A comparison of associated dsd sd");
-        
-        Assert.assertEquals("cmaio", WorkKeyGenerator.generateKey(doc, 0));
-        Assert.assertEquals("cmaioascae", WorkKeyGenerator.generateKey(doc, 1));
-        Assert.assertEquals("cmaioascaeddd", WorkKeyGenerator.generateKey(doc, 2));
-    }
+/**
+ *
+ * @author Artur Czeczko <a.czeczko@icm.edu.pl>
+ */
+public interface Partitioner extends OperationComponent {
+    public String partition(String inputField);
 }

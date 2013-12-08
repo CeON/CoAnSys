@@ -16,23 +16,24 @@
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.edu.icm.coansys.deduplication.document;
+package pl.edu.icm.coansys.statisticsgenerator.conf;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import java.util.HashMap;
+import java.util.Map;
+import pl.edu.icm.coansys.statisticsgenerator.operationcomponents.CountSummary;
+import pl.edu.icm.coansys.statisticsgenerator.operationcomponents.EqualsPartitioner;
+import pl.edu.icm.coansys.statisticsgenerator.operationcomponents.OperationComponent;
 
-import pl.edu.icm.coansys.deduplication.document.tool.MockDocumentMetadataFactory;
-import pl.edu.icm.coansys.models.DocumentProtos;
+/**
+ *
+ * @author Artur Czeczko <a.czeczko@icm.edu.pl>
+ */
+public class ComponentsMapping {
 
-public class WorkKeyGeneratorTest {
+    public static final Map<String, Class<? extends OperationComponent>> mapping = new HashMap<String, Class<? extends OperationComponent>>();
 
-    
-    @Test
-    public void testGenerateKey() {
-        DocumentProtos.DocumentMetadata doc = MockDocumentMetadataFactory.createDocumentMetadata("A comparison of associated dsd sd");
-        
-        Assert.assertEquals("cmaio", WorkKeyGenerator.generateKey(doc, 0));
-        Assert.assertEquals("cmaioascae", WorkKeyGenerator.generateKey(doc, 1));
-        Assert.assertEquals("cmaioascaeddd", WorkKeyGenerator.generateKey(doc, 2));
+    static {
+        mapping.put("EQUALS", EqualsPartitioner.class);
+        mapping.put("COUNT", CountSummary.class);
     }
 }

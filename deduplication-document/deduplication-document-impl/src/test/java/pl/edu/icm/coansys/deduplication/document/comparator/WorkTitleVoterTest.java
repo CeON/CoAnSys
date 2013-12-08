@@ -18,30 +18,27 @@
 
 package pl.edu.icm.coansys.deduplication.document.comparator;
 
-import pl.edu.icm.coansys.deduplication.document.comparator.WorkTitleComparator;
-import pl.edu.icm.coansys.deduplication.document.comparator.WorkTitleComparatorConfiguration;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+import org.testng.Assert;
 
 import pl.edu.icm.coansys.deduplication.document.tool.MockDocumentMetadataFactory;
+import pl.edu.icm.coansys.deduplication.document.voter.Vote;
+import pl.edu.icm.coansys.deduplication.document.voter.WorkTitleVoter;
 import pl.edu.icm.coansys.models.DocumentProtos;
 
-public class WorkTitleComparatorTest {
+public class WorkTitleVoterTest {
 
     
-    private WorkTitleComparator workTitleComparator; 
+    private WorkTitleVoter workTitleVoter;
+    private Vote vote;
     
-    @Before
+    @BeforeTest
     public void setUp() throws Exception {
-        WorkTitleComparatorConfiguration config = new WorkTitleComparatorConfiguration();
-        config.setTitleMaxLevenshteinDistance(5);
-        config.setTitleEndMaxLevenshteinDistance(1);
-        config.setTitleMostMeaningfulEndLength(8);
-        config.setTitlePartLength(7);
-        config.setTitleLevenshteinDistancePerPart(1);
-        config.setTitleLengthExactComparison(7);
-        workTitleComparator = new WorkTitleComparator(config);
+        workTitleVoter = new WorkTitleVoter();
+        workTitleVoter.setApproveLevel(0.03f);
+        workTitleVoter.setDisapproveLevel(0.15f);
+        workTitleVoter.setDigitsPercentageTreshold(15);
     }
     
 
@@ -49,15 +46,16 @@ public class WorkTitleComparatorTest {
     public void testSameTitles_Simple() {
         DocumentProtos.DocumentMetadata doc1 = MockDocumentMetadataFactory.createDocumentMetadata("Ala m kota");
         DocumentProtos.DocumentMetadata doc2 = MockDocumentMetadataFactory.createDocumentMetadata("Ala ma wielkiego tygrysa");
+        vote = workTitleVoter.vote(doc1, doc2);
         
-        //Assert.assertFalse(workTitleComparator.sameTitles(doc1, doc2));
-        
+        Assert.assertEquals(vote.getStatus(), Vote.VoteStatus.NOT_EQUALS);
         
         doc1 = MockDocumentMetadataFactory.createDocumentMetadata("Ala ma wielkkiego tygrysa");
         doc2 = MockDocumentMetadataFactory.createDocumentMetadata("Ala ma wielkiego tygrysa");
+        vote = workTitleVoter.vote(doc1, doc2);
         
-        //Assert.assertTrue(workTitleComparator.sameTitles(doc1, doc2));
-        
+        Assert.assertEquals(vote.getStatus(), Vote.VoteStatus.PROBABILITY);
+        Assert.assertTrue(vote.getProbability() > 0.5f);
     }
     
     
@@ -65,40 +63,45 @@ public class WorkTitleComparatorTest {
     public void testSameTitles_DifferentTitleNumbers() {
         DocumentProtos.DocumentMetadata doc1 = MockDocumentMetadataFactory.createDocumentMetadata("Ala ma kota cz.1");
         DocumentProtos.DocumentMetadata doc2 = MockDocumentMetadataFactory.createDocumentMetadata("Ala ma kota cz.2");
+        vote = workTitleVoter.vote(doc1, doc2);
         
-        //Assert.assertFalse(workTitleComparator.sameTitles(doc1, doc2));
-
+        Assert.assertEquals(vote.getStatus(), Vote.VoteStatus.NOT_EQUALS);
+        
         
         doc1 = MockDocumentMetadataFactory.createDocumentMetadata("Ala ma kota (1)");
         doc2 = MockDocumentMetadataFactory.createDocumentMetadata("Ala ma kota (2)");
+        vote = workTitleVoter.vote(doc1, doc2);
         
-        //Assert.assertFalse(workTitleComparator.sameTitles(doc1, doc2));
+        Assert.assertEquals(vote.getStatus(), Vote.VoteStatus.NOT_EQUALS);
         
         
         doc1 = MockDocumentMetadataFactory.createDocumentMetadata("Ala ma kota (I)");
         doc2 = MockDocumentMetadataFactory.createDocumentMetadata("Ala ma kota (II)");
-
+        vote = workTitleVoter.vote(doc1, doc2);
         
-        //Assert.assertFalse(workTitleComparator.sameTitles(doc1, doc2));
+        Assert.assertEquals(vote.getStatus(), Vote.VoteStatus.NOT_EQUALS);
 
         
         doc1 = MockDocumentMetadataFactory.createDocumentMetadata("Łatwiej i taniej przez granicę (cz.I)");
         doc2 = MockDocumentMetadataFactory.createDocumentMetadata("Łatwiej i taniej przez granicę (cz.II)");
+        vote = workTitleVoter.vote(doc1, doc2);
         
-        //Assert.assertFalse(workTitleComparator.sameTitles(doc1, doc2));
+        Assert.assertEquals(vote.getStatus(), Vote.VoteStatus.NOT_EQUALS);
 
-
+        
         doc1 = MockDocumentMetadataFactory.createDocumentMetadata("Łatwiej i taniej przez granicę (part one)");
         doc2 = MockDocumentMetadataFactory.createDocumentMetadata("Łatwiej i taniej przez granicę (part 1)");
+        vote = workTitleVoter.vote(doc1, doc2);
         
-        //Assert.assertTrue(workTitleComparator.sameTitles(doc1, doc2));
+        Assert.assertEquals(vote.getStatus(), Vote.VoteStatus.PROBABILITY);
+        Assert.assertTrue(vote.getProbability() > 0.5f);
         
         
         doc1 = MockDocumentMetadataFactory.createDocumentMetadata("Łatwiej i taniej przez granicę (part one)");
         doc2 = MockDocumentMetadataFactory.createDocumentMetadata("Łatwiej i taniej przez granicę (part two)");
+        vote = workTitleVoter.vote(doc1, doc2);
         
-        //Assert.assertFalse(workTitleComparator.sameTitles(doc1, doc2));
-        
+        Assert.assertEquals(vote.getStatus(), Vote.VoteStatus.NOT_EQUALS);
     }
     
     @Test
@@ -106,49 +109,56 @@ public class WorkTitleComparatorTest {
         
         DocumentProtos.DocumentMetadata doc1 = MockDocumentMetadataFactory.createDocumentMetadata("Квантовый размерный эффект в трехмерных микрокристаллах полупроводников");
         DocumentProtos.DocumentMetadata doc2 = MockDocumentMetadataFactory.createDocumentMetadata("Квантовый размерный эффект в трехмерных микрокристаллах полупроводников");
+        vote = workTitleVoter.vote(doc1, doc2);
         
-        //Assert.assertTrue(workTitleComparator.sameTitles(doc1, doc2));
+        Assert.assertEquals(vote.getStatus(), Vote.VoteStatus.PROBABILITY);
+        Assert.assertTrue(vote.getProbability() > 0.5f);  
         
         
         doc1 = MockDocumentMetadataFactory.createDocumentMetadata("Квантовый размерный эффект в трехмерных микрокристаллах полупроводников");
         doc2 = MockDocumentMetadataFactory.createDocumentMetadata("Квантовый размерный beledblsdjs полупроводников");
+        vote = workTitleVoter.vote(doc1, doc2);
         
-        //Assert.assertFalse(workTitleComparator.sameTitles(doc1, doc2));
-        
+        Assert.assertEquals(vote.getStatus(), Vote.VoteStatus.NOT_EQUALS);
         
         
         doc1 = MockDocumentMetadataFactory.createDocumentMetadata("Квантовый размерный эффект в трехмерных микрокристаллах полупроводников");
         doc2 = MockDocumentMetadataFactory.createDocumentMetadata("Квантовый трехмерных мерный эффект в микрокристаллах полупроводников");
+        vote = workTitleVoter.vote(doc1, doc2);
         
-        //Assert.assertFalse(workTitleComparator.sameTitles(doc1, doc2));
+        Assert.assertEquals(vote.getStatus(), Vote.VoteStatus.NOT_EQUALS);
         
         
         doc1 = MockDocumentMetadataFactory.createDocumentMetadata("Квантовый размерный эффект в трехмерных микрокристаллах полупроводников 1");
         doc2 = MockDocumentMetadataFactory.createDocumentMetadata("Квантовый размерный эффект в трехмерных микрокристаллах полупроводников 2");
+        vote = workTitleVoter.vote(doc1, doc2);
         
-        //Assert.assertFalse(workTitleComparator.sameTitles(doc1, doc2));
-        
+        Assert.assertEquals(vote.getStatus(), Vote.VoteStatus.NOT_EQUALS);        
     }
     
     @Test
     public void testSameTitles_EndsDifferent() {
         DocumentProtos.DocumentMetadata doc1 = MockDocumentMetadataFactory.createDocumentMetadata("Doświadczenia Unii Europejskiej w zakresie polityki proinnowacyjnej");
         DocumentProtos.DocumentMetadata doc2 = MockDocumentMetadataFactory.createDocumentMetadata(" Doświadczenia Unii Europejskiej w zakresie polityki innowacyjnej");
+        vote = workTitleVoter.vote(doc1, doc2);
         
-        //Assert.assertTrue(workTitleComparator.sameTitles(doc1, doc2));
+        Assert.assertEquals(vote.getStatus(), Vote.VoteStatus.PROBABILITY);
+        Assert.assertTrue(vote.getProbability() > 0.5f); 
 
         
         doc1 = MockDocumentMetadataFactory.createDocumentMetadata("Aspiracje integracyjne państw śródziemnomorskich - Turcja");
         doc2 = MockDocumentMetadataFactory.createDocumentMetadata("Aspiracje integracyjne państw śródziemnomorskich - Malta");
+        vote = workTitleVoter.vote(doc1, doc2);
         
-        //Assert.assertFalse(workTitleComparator.sameTitles(doc1, doc2));
+        //Assert.assertEquals(vote.getStatus(), Vote.VoteStatus.NOT_EQUALS);
+        //Assert.assertEquals(vote.getProbability(), 0.3333f);
         
         
         doc1 = MockDocumentMetadataFactory.createDocumentMetadata("Atak z sieci");
         doc2 = MockDocumentMetadataFactory.createDocumentMetadata("Atak z ulicy");
+        vote = workTitleVoter.vote(doc1, doc2);
         
-        //Assert.assertFalse(workTitleComparator.sameTitles(doc1, doc2));
-        
+        Assert.assertEquals(vote.getStatus(), Vote.VoteStatus.NOT_EQUALS);        
     }
     
     @Test

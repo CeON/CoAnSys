@@ -19,14 +19,14 @@
 package pl.edu.icm.coansys.deduplication.document.tool;
 
 import pl.edu.icm.coansys.commons.java.StringTools;
-import junit.framework.Assert;
+import org.testng.Assert;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
 
 public class StringToolsTest {
 
-    @Before
+    @BeforeTest
     public void setUp() throws Exception {
     }
 
@@ -55,7 +55,7 @@ public class StringToolsTest {
     }
     
     
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expectedExceptions=IllegalArgumentException.class)
     public void testInvalidRomanToDecimal() {
         String romanNumber = "XXAX";
         StringTools.romanToDecimal(romanNumber);
