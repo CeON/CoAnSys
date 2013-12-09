@@ -19,32 +19,35 @@
 package pl.edu.icm.coansys.disambiguation.author.pig.extractor;
 
 import org.apache.pig.data.DataBag;
+import org.apache.pig.data.DefaultDataBag;
+import org.apache.pig.data.Tuple;
+import org.apache.pig.data.TupleFactory;
+
+import pl.edu.icm.coansys.models.DocumentProtos.Author;
+import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 
 public class EX_EMAIL_PREFIX extends DisambiguationExtractorAuthor{
 	
 	@Override
 	public DataBag extract( Object o, int fakeindex, String lang ){
-		throw new UnsupportedOperationException();
-
-		//TODO
-//		
-//		DocumentMetadata dm = (DocumentMetadata) o;
-//		DataBag db = new DefaultDataBag();
-//		
-//		for(ClassifCode cc : dm.getBasicMetadata().getClassifCodeList()){ 
-//			for(String s : cc.getValueList()){
-//				db.add( TupleFactory.getInstance().newTuple( 
-//						normalizeExtracted( s ) ) );
-//			}
-//		}
-//			
-//		if(System.nanoTime() == 0) return db;
-//		else throw new UnsupportedOperationException();
+		DocumentMetadata dm = (DocumentMetadata) o;
+		Author a = dm.getBasicMetadata().getAuthor(fakeindex);
+		String email = a.getEmail();
+		
+		DataBag retBag = new DefaultDataBag();
+		
+		email = email.replaceAll("@.+", "");
+		if(email.length()>0){
+			Tuple t = TupleFactory.getInstance().newTuple();
+			t.append(email);
+			retBag.add(t);
+		}
+		return retBag;
 	}
 	
 
 	@Override
 	public String getId() {
-		return "3";
+		return "777";
 	}
 }
