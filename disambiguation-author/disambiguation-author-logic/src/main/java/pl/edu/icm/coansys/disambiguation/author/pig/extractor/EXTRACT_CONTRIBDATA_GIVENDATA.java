@@ -313,6 +313,7 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 			for(int i=0; i<des4Author.size();i++){
 				logger.error(des4Author.get(i).getClass().getSimpleName());
 			}
+			logger.error("Error in processing input row:", ex);
 			throw ex;
 		} catch (Exception e) {
 			logger.error("Error in processing input row:", e);
