@@ -22,6 +22,7 @@ import org.apache.pig.data.DataBag;
 import org.apache.pig.data.DefaultDataBag;
 import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
+import org.apache.pig.tools.pigstats.PigStatusReporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,23 +36,26 @@ public class EX_EMAIL extends DisambiguationExtractorAuthor {
 	
 	@Override
 	public DataBag extract( Object o, int fakeIndex, String lang ){
-		DocumentMetadata dm = (DocumentMetadata) o;
 		DataBag db = new DefaultDataBag();
-		Tuple t = TupleFactory.getInstance().newTuple();
-		
-		Author a = dm.getBasicMetadata().getAuthor( fakeIndex );
-		String email = null;
 		try{
+			DocumentMetadata dm = (DocumentMetadata) o;
+			Tuple t = TupleFactory.getInstance().newTuple();
+			Author a = dm.getBasicMetadata().getAuthor( fakeIndex );
+			String email = null;
+			
 			Object emailO = a.getEmail();
-			if(emailO!=null){
-				email = (String) normalizeExtracted(emailO);
-				if(email != null && email.length()>0){
-					t.append(email);
-				}
+			if(email == null) return db;
+			email = ( (String) normalizeExtracted(emailO) );
+			if(email.length()>0){
+				t.append(email);
 				db.add(t);
 			}
 		}catch(Exception e){
 			logger.error("Problem with extraction or normalization of email ",e);
+			PigStatusReporter reporter = PigStatusReporter.getInstance();
+			if(reporter != null){
+				reporter.getCounter("Extraction problem", "EX_EMAIL");
+			}
 		}
 		return db;
 	}
