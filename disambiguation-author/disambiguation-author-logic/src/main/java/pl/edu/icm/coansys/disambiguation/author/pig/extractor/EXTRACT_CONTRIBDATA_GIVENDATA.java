@@ -24,6 +24,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.pig.EvalFunc;
 import org.apache.pig.data.DataBag;
@@ -302,6 +304,19 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 
 			return ret;
 
+		} catch(ArrayIndexOutOfBoundsException ex){
+			try{
+				Matcher m = Pattern.compile("([0-9]+)").matcher(ex.getMessage());
+				Integer i = Integer.parseInt(m.group(1));
+				logger.error("ArrayIndexOutOfBoundException. " +
+						"Possible cause is connected either with class "
+						+des4Author.get(i).getId()+" or "+des4Doc.get(i).getId());
+				throw ex;
+			}catch(Exception e){
+				logger.error("Error in processing input row:", ex);
+				throw new IOException("Caught exception processing input row:\n"
+						+ StackTraceExtractor.getStackTrace(ex));
+			}
 		} catch (Exception e) {
 			logger.error("Error in processing input row:", e);
 			throw new IOException("Caught exception processing input row:\n"
