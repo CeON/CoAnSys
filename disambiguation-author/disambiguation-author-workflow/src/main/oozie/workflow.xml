@@ -53,7 +53,7 @@
 		<!-- Properties for Pig scripts -->
 		<property>
 			<name>and_sample</name>
-			<value>0.01</value>
+			<value>1.0</value>
 			<description>Input Sample Size: [0; 1]. Default 1 (all data).</description>
 		</property>
 		<property>
