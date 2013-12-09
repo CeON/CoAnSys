@@ -8,7 +8,7 @@ import pl.edu.icm.coansys.citations.data.{MatchableEntity, BytesPairWritable}
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 class LeftEntityExtractor extends Mapper[BytesWritable, Writable, Text, BytesWritable] {
-  type Context = Mapper[BytesWritable, BytesWritable, Text, BytesWritable]#Context
+  type Context = Mapper[BytesWritable, Writable, Text, BytesWritable]#Context
   val id = new Text()
 
   override def map(entityBytes: BytesWritable, ignore: Writable, context: Context) {
