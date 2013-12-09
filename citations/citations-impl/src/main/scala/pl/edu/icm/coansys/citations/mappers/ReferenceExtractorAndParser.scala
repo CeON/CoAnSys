@@ -7,6 +7,7 @@ import pl.edu.icm.cermine.bibref.CRFBibReferenceParser
 import pl.edu.icm.coansys.citations.data.MatchableEntity
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper
 import org.slf4j.LoggerFactory
+import pl.edu.icm.coansys.citations.data.entity_id.CitEntityId
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -36,7 +37,8 @@ class ReferenceExtractorAndParser extends Mapper[Writable, BytesWritable, Text, 
         if (ref.getRawCitationText.length > maxSupportedCitationLength) {
           logger.warn(s"Citation ${ref.getPosition} in document ${wrapper.getRowId} exceeds max supported citation length. Omitted.")
         } else {
-          val entity = MatchableEntity.fromUnparsedReferenceMetadata(parser, ref)
+          val citId = new CitEntityId(wrapper.getDocumentMetadata.getKey, ref.getPosition)
+          val entity = MatchableEntity.fromUnparsedReference(parser, citId.toString, ref.getRawCitationText)
           val bytes = entity.data.toByteArray
           keyWritable.set(entity.id)
           valueWritable.set(bytes, 0, bytes.length)
