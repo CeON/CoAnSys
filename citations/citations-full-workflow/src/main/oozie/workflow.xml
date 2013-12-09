@@ -206,11 +206,11 @@
                 </property>
                 <property>
                     <name>mapred.input.dir</name>
-                    <value>${input}</value>
+                    <value>${workingDirectory}/core_output</value>
                 </property>
                 <property>
                     <name>mapred.output.dir</name>
-                    <value>${workingDirectory}/source_entities</value>
+                    <value>${output}</value>
                 </property>
                 <property>
                     <name>mapred.mapoutput.key.class</name>
@@ -221,8 +221,8 @@
                     <value>org.apache.hadoop.io.BytesWritable</value>
                 </property>
                 <property>
-                    <name>mapred.reduce.tasks</name>
-                    <value>0</value>
+                    <name>mapreduce.reduce.class</name>
+                    <value>pl.edu.icm.coansys.citations.reducers.OutputConverter</value>
                 </property>
                 <property>
                     <name>mapred.output.key.class</name>
