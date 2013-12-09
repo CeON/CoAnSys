@@ -32,10 +32,10 @@ import pl.edu.icm.coansys.deduplication.document.voter.WorkTitleVoter;
 import pl.edu.icm.coansys.deduplication.document.voter.YearVoter;
 import pl.edu.icm.coansys.models.DocumentProtos;
 
-public class DuplicateWorkComparatorTest {
+public class WeightedMeanComparatorTest {
 
     
-    private DuplicateWorkComparator duplicateWorkComparator;
+    private WeightedMeanComparator duplicateWorkComparator;
     private WorkTitleVoter workTitleVoter;
     private AuthorsVoter workAuthorVoter;
     private YearVoter workYearVoter;
@@ -54,7 +54,7 @@ public class DuplicateWorkComparatorTest {
         voters.add(workAuthorVoter);
         voters.add(workYearVoter);
         
-        duplicateWorkComparator = new DuplicateWorkComparator();
+        duplicateWorkComparator = new WeightedMeanComparator();
         duplicateWorkComparator.setSimilarityVoters(voters);
     }
 

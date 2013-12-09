@@ -22,7 +22,7 @@
 
     </bean>
     
-    <bean id="duplicateWorkComparator" class="pl.edu.icm.coansys.deduplication.document.DuplicateWorkComparator">
+    <bean id="duplicateWorkComparator" class="pl.edu.icm.coansys.deduplication.document.VotesProductComparator">
         <property name="similarityVoters">
             <list>
                 <bean id="workDoiVoter" class="pl.edu.icm.coansys.deduplication.document.voter.DoiVoter">
@@ -51,6 +51,8 @@
                 </bean>
             </list>
         </property>
+        <property name="minVotersRequired" value="3"/>
+        <property name="probabilityTreshold" value="0.5"/>
     </bean>
 
     <context:component-scan resource-pattern="**/*.class" base-package="pl.edu.icm.coansys.deduplication.document"/>

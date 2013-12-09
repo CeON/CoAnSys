@@ -45,7 +45,7 @@ public class DuplicateWorkService {
     
     
     @Autowired
-    private DuplicateWorkComparator duplicateWorkComparator;
+    private WorkComparator duplicateWorkComparator;
      
     
     

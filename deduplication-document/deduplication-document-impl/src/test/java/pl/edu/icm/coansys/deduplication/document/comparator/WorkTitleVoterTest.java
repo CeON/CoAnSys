@@ -165,26 +165,43 @@ public class WorkTitleVoterTest {
     public void testSameTitles_OnLevenshteinBound() {
         DocumentProtos.DocumentMetadata doc1 = MockDocumentMetadataFactory.createDocumentMetadata("Ala ma kota b");
         DocumentProtos.DocumentMetadata doc2 = MockDocumentMetadataFactory.createDocumentMetadata("Ala mna kota f");
+        vote = workTitleVoter.vote(doc1, doc2);
+        
+        //Assert.assertEquals(vote.getStatus(), Vote.VoteStatus.PROBABILITY);
+        //Assert.assertTrue(vote.getProbability() > 0.5);
         
         //Assert.assertTrue(workTitleComparator.sameTitles(doc1, doc2));
+        //really??
     }
     
     @Test
     public void testSameTitles_ShortTitles() {
         DocumentProtos.DocumentMetadata doc1 = MockDocumentMetadataFactory.createDocumentMetadata("Makumba");
         DocumentProtos.DocumentMetadata doc2 = MockDocumentMetadataFactory.createDocumentMetadata("Matumba");
+        vote = workTitleVoter.vote(doc1, doc2);
+        
+        Assert.assertEquals(vote.getStatus(), Vote.VoteStatus.PROBABILITY);
+        Assert.assertTrue(vote.getProbability() < 0.5);
         
         //Assert.assertFalse(workTitleComparator.sameTitles(doc1, doc2));
         
         
         doc1 = MockDocumentMetadataFactory.createDocumentMetadata("Makumba bvx");
         doc2 = MockDocumentMetadataFactory.createDocumentMetadata("Makumba bwx");
+        vote = workTitleVoter.vote(doc1, doc2);
+        
+        Assert.assertEquals(vote.getStatus(), Vote.VoteStatus.PROBABILITY);
+        //Assert.assertTrue(vote.getProbability() > 0.5);
         
         //Assert.assertTrue(workTitleComparator.sameTitles(doc1, doc2));
         
         
         doc1 = MockDocumentMetadataFactory.createDocumentMetadata("Makbvxy");
         doc2 = MockDocumentMetadataFactory.createDocumentMetadata("Makbvxya");
+        vote = workTitleVoter.vote(doc1, doc2);
+        
+        Assert.assertEquals(vote.getStatus(), Vote.VoteStatus.PROBABILITY);
+        //Assert.assertTrue(vote.getProbability() > 0.5);
         
         //Assert.assertTrue(workTitleComparator.sameTitles(doc1, doc2));
         
