@@ -16,7 +16,7 @@
   ~ along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<workflow-app xmlns="uri:oozie:workflow:0.4" name="heuristic-wf">
+<workflow-app xmlns="uri:oozie:workflow:0.4" name="citations-core-workflow">
     <parameters>
         <property>
             <name>jobTracker</name>
