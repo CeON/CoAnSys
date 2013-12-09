@@ -305,18 +305,15 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 			return ret;
 
 		} catch(ArrayIndexOutOfBoundsException ex){
-			try{
-				Matcher m = Pattern.compile("([0-9]+)").matcher(ex.getMessage());
-				Integer i = Integer.parseInt(m.group(1));
-				logger.error("ArrayIndexOutOfBoundException. " +
-						"Possible cause is connected either with class "
-						+des4Author.get(i).getId()+" or "+des4Doc.get(i).getId());
-				throw ex;
-			}catch(Exception e){
-				logger.error("Error in processing input row:", ex);
-				throw new IOException("Caught exception processing input row:\n"
-						+ StackTraceExtractor.getStackTrace(ex));
+			logger.error("des4Doc objects: ");
+			for(int i=0; i<des4Doc.size();i++){
+				logger.error(des4Doc.get(i).getClass().getSimpleName());
 			}
+			logger.error("des4Author objects: ");
+			for(int i=0; i<des4Author.size();i++){
+				logger.error(des4Author.get(i).getClass().getSimpleName());
+			}
+			throw ex;
 		} catch (Exception e) {
 			logger.error("Error in processing input row:", e);
 			throw new IOException("Caught exception processing input row:\n"
