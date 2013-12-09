@@ -38,6 +38,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.ClassifCodeDisambiguator;
+import pl.edu.icm.coansys.disambiguation.idgenerators.UuIdGenerator;
 
 public class SvmUnnormalizedPairsCreator  extends EvalFunc<DataBag> {
 
@@ -58,9 +59,9 @@ public class SvmUnnormalizedPairsCreator  extends EvalFunc<DataBag> {
 		PigStatusReporter reporter = PigStatusReporter.getInstance();
 		boolean reporterIsNotNull = reporter!=null;
 		
-		if(tuple == null || tuple.size() !=4){
+		if(tuple == null || tuple.size() !=2){
 			if(reporterIsNotNull){
-				reporter.getCounter("data error", "input tuple is null or size is not equal to 4").increment(1);
+				reporter.getCounter("data error", "input tuple is null or size is not equal to 2").increment(1);
 			}
 			return null;
 		}
@@ -98,7 +99,7 @@ public class SvmUnnormalizedPairsCreator  extends EvalFunc<DataBag> {
 				Map<String,ArrayList<Object>> extractedMapB = extractFeatureNameFeatureValueList(mapB);
 
 				Tuple t = tf.newTuple();
-				t.append(UUID.fromString(cidA+cidB));
+				t.append(UUID.nameUUIDFromBytes((cidA+cidB).getBytes("UTF-8")).toString());
 				
 				for(int k =0; k<featureNames.length;k++){
 					List<Object> listA = extractedMapA.get(featureNames[k]);
