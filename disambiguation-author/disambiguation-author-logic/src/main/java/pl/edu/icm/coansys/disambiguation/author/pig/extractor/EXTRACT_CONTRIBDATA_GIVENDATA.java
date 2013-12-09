@@ -42,6 +42,7 @@ import org.slf4j.LoggerFactory;
 import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
 import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.AuthorToInitials;
 import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.PigNormalizer;
+import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.ToEnglishLowerCase;
 import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
 import pl.edu.icm.coansys.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
@@ -62,6 +63,7 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 			des4AuthorNameOrId = new ArrayList<String>();
 	private String language = null;
 	private boolean skipEmptyFeatures = false;
+	private boolean snameToString = false;
 	private boolean useIdsForExtractors = false;
 	private DisambiguationExtractorFactory extrFactory = new DisambiguationExtractorFactory();
 
@@ -118,6 +120,23 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 		}
 	}
 
+	public EXTRACT_CONTRIBDATA_GIVENDATA(String null0,String null1, String null2, String null3,String in_params) throws Exception {
+		String[] params = in_params.split(" ");
+		for(String p : params){
+			if(p.startsWith("featureinfo=")){
+				setDisambiguationExtractor(p.substring("featureinfo=".length()));
+			}else if(p.startsWith("lang=")){
+				this.language = p.substring("lang=".length());
+			}else if(p.startsWith("skipEmptyFeatures=")){
+				this.skipEmptyFeatures = Boolean.parseBoolean(p.substring("skipEmptyFeatures=".length()));
+			}else if(p.startsWith("snameToString=")){
+				this.snameToString = Boolean.parseBoolean(p.substring("snameToString=".length()));
+			}else if(p.startsWith("useIdsForExtractors=")){
+				this.snameToString = Boolean.parseBoolean(p.substring("useIdsForExtractors=".length()));
+			}
+		}
+	}
+	
 	public EXTRACT_CONTRIBDATA_GIVENDATA(String featureinfo) throws Exception {
 		setDisambiguationExtractor(featureinfo);
 	}
@@ -260,8 +279,12 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 			{
 				i++;
 				// here we have sure that Object = Integer
-				Object normalizedSname = auth_initials_ex
-						.normalizeExtracted( a );
+				Object normalizedSname = null;
+				if(snameToString){
+					normalizedSname = new ToEnglishLowerCase().normalize( a.getSurname() );
+				}else{
+					normalizedSname = auth_initials_ex.normalizeExtracted( a );
+				}
 				String cId = a.getKey();
 
 				finalMap = new HashMap<String, DataBag>(map);
@@ -285,7 +308,7 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 					if (extractedAuthorObj[j] == null) {
 						continue;
 					}
-					if (extractedAuthorObj[i].size() == 0 && skipEmptyFeatures) {
+					if (extractedAuthorObj[j].size() == 0 && skipEmptyFeatures) {
 						continue;
 					}
 
@@ -314,7 +337,8 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 				logger.error(des4Author.get(i).getClass().getSimpleName());
 			}
 			logger.error("Error in processing input row:", ex);
-			throw ex;
+			throw new IOException("Caught exception processing input row:\n"
+					+ StackTraceExtractor.getStackTrace(ex));
 		} catch (Exception e) {
 			logger.error("Error in processing input row:", e);
 			throw new IOException("Caught exception processing input row:\n"
