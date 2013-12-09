@@ -22,11 +22,16 @@ import org.apache.pig.data.DataBag;
 import org.apache.pig.data.DefaultDataBag;
 import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 
 public class EX_EMAIL extends DisambiguationExtractorAuthor {
+	
+	private static final Logger logger = LoggerFactory
+			.getLogger(EX_EMAIL.class);
 	
 	@Override
 	public DataBag extract( Object o, int fakeIndex, String lang ){
@@ -35,8 +40,19 @@ public class EX_EMAIL extends DisambiguationExtractorAuthor {
 		Tuple t = TupleFactory.getInstance().newTuple();
 		
 		Author a = dm.getBasicMetadata().getAuthor( fakeIndex );
-		t.append(normalizeExtracted(a.getEmail()));
-		db.add(t);
+		String email = null;
+		try{
+			Object emailO = a.getEmail();
+			if(emailO!=null){
+				email = (String) normalizeExtracted(emailO);
+				if(email != null && email.length()>0){
+					t.append(email);
+				}
+				db.add(t);
+			}
+		}catch(Exception e){
+			logger.error("Problem with extraction or normalization of email ",e);
+		}
 		return db;
 	}
 

@@ -32,7 +32,7 @@ public class EX_PERSON_ID extends DisambiguationExtractorAuthor {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(EX_PERSON_ID.class);
-	public static final String PERSON_ID_KEY_NAME = "personPbnId";
+	public static final String PERSON_ID_KEY_NAME = "orcid";
 
 	@Override
 	public DataBag extract(Object o, int fakeIndex, String lang) {
