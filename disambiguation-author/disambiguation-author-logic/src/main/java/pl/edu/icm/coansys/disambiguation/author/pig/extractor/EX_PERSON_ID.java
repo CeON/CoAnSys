@@ -42,7 +42,6 @@ public class EX_PERSON_ID extends DisambiguationExtractorAuthor {
 		Tuple t = tf.newTuple();
 
 		Author a = dm.getBasicMetadata().getAuthor(fakeIndex);
-
 		for (KeyValue kv : a.getExtIdList()) {
 			if (kv.getKey().equals(PERSON_ID_KEY_NAME)) {
 				t.append(kv.getValue());
@@ -50,15 +49,6 @@ public class EX_PERSON_ID extends DisambiguationExtractorAuthor {
 				break;
 			}
 		}
-
-		if (t.size() > 0) {
-			return db;
-		}
-		logger.info("no person id for the contributor " + a.getDocId() + "#"
-				+ a.getPositionNumber());
-		// TODO: remove '#' - special symbol in pig latin
-		t.append(a.getDocId() + "#" + a.getPositionNumber());
-		db.add(t);
 		return db;
 	}
 
