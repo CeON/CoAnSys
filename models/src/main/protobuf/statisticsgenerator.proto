@@ -1,0 +1,41 @@
+//
+// This file is part of CoAnSys project.
+// Copyright (c) 2012-2013 ICM-UW
+// 
+// CoAnSys is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// CoAnSys is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU Affero General Public License for more details.
+// 
+// You should have received a copy of the GNU Affero General Public License
+// along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
+//
+
+package pl.edu.icm.coansys.models;
+
+option java_package = "pl.edu.icm.coansys.models";
+option java_outer_classname = "StatisticsProtos";
+
+// in the future it will be replaced by import
+message KeyValue {
+    required string key = 1;
+    required string value = 2;
+    optional string comment = 3;
+    optional string language = 4; //in ISO 639 format
+}
+
+message InputEntry {
+    required string label = 1;
+    repeated KeyValue field = 2;
+}
+
+message Statistics {
+    required int64 timestamp = 1;
+    repeated KeyValue partitions = 2;
+    repeated KeyValue statistics = 3;
+}

@@ -172,13 +172,14 @@
         <module>models</module>
         <module>disambiguation</module>
         <module>disambiguation-author</module>
-        <module>disambiguation-work</module>
+        <module>deduplication-document</module>
         <module>document-classification</module>
         <module>document-similarity</module>
         <module>integration</module>
         <module>logs-analysis</module>
         <module>keywords-extraction</module>
         <module>nlm-extraction</module>
+        <module>statistics-generator</module>
     </modules>
 
     <dependencies>
