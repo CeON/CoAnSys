@@ -42,6 +42,7 @@ import org.slf4j.LoggerFactory;
 import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
 import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.AuthorToInitials;
 import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.PigNormalizer;
+import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.ToEnglishLowerCase;
 import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
 import pl.edu.icm.coansys.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
@@ -278,8 +279,12 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 			{
 				i++;
 				// here we have sure that Object = Integer
-				Object normalizedSname = auth_initials_ex
-						.normalizeExtracted( a );
+				Object normalizedSname = null;
+				if(snameToString){
+					normalizedSname = new ToEnglishLowerCase().normalize( a.getSurname() );
+				}else{
+					normalizedSname = auth_initials_ex.normalizeExtracted( a );
+				}
 				String cId = a.getKey();
 
 				finalMap = new HashMap<String, DataBag>(map);
