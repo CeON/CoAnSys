@@ -22,25 +22,34 @@ import org.apache.pig.data.DataBag;
 import org.apache.pig.data.DefaultDataBag;
 import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 
 public class EX_EMAIL_PREFIX extends DisambiguationExtractorAuthor{
 	
+	private static final Logger logger = LoggerFactory
+			.getLogger(EX_EMAIL_PREFIX.class);
+	
 	@Override
 	public DataBag extract( Object o, int fakeindex, String lang ){
-		DocumentMetadata dm = (DocumentMetadata) o;
-		Author a = dm.getBasicMetadata().getAuthor(fakeindex);
-		String email = a.getEmail();
-		
 		DataBag retBag = new DefaultDataBag();
-		
-		email = email.replaceAll("@.+", "");
-		if(email.length()>0){
-			Tuple t = TupleFactory.getInstance().newTuple();
-			t.append(email);
-			retBag.add(t);
+		try{
+			DocumentMetadata dm = (DocumentMetadata) o;
+			Author a = dm.getBasicMetadata().getAuthor(fakeindex);
+			String email = a.getEmail();
+			
+			if(email == null) return retBag;
+			email = email.replaceAll("@.+", "");
+			if(email.length()>0){
+				Tuple t = TupleFactory.getInstance().newTuple();
+				t.append(email);
+				retBag.add(t);
+			}
+		}catch(Exception e){
+			logger.error("Problem with email extraction",e);
 		}
 		return retBag;
 	}
