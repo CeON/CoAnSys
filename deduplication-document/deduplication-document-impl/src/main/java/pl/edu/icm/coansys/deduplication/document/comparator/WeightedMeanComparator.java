@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
-package pl.edu.icm.coansys.deduplication.document;
+package pl.edu.icm.coansys.deduplication.document.comparator;
 
 import java.util.List;
 import org.slf4j.Logger;
@@ -23,7 +23,6 @@ import org.slf4j.LoggerFactory;
 import pl.edu.icm.coansys.deduplication.document.voter.SimilarityVoter;
 import pl.edu.icm.coansys.deduplication.document.voter.Vote;
 import pl.edu.icm.coansys.models.DocumentProtos;
-import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
 
 /**
  *
@@ -31,14 +30,15 @@ import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
  * @author Artur Czeczko
  *
  */
-public class DuplicateWorkComparator {
+public class WeightedMeanComparator implements WorkComparator {
 
-    private static Logger logger = LoggerFactory.getLogger(DuplicateWorkComparator.class);
+    private static Logger logger = LoggerFactory.getLogger(WeightedMeanComparator.class);
     private List<SimilarityVoter> similarityVoters;
 
     /**
      * Tells whether the given documents are duplicates.
      */
+    @Override
     public boolean isDuplicate(DocumentProtos.DocumentMetadata doc1, DocumentProtos.DocumentMetadata doc2) {
 
         double weightsSum = 0.0;

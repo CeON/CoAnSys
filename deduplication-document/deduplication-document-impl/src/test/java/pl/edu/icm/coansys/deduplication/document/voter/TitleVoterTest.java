@@ -16,7 +16,7 @@
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.edu.icm.coansys.deduplication.document.comparator;
+package pl.edu.icm.coansys.deduplication.document.voter;
 
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -24,18 +24,18 @@ import org.testng.Assert;
 
 import pl.edu.icm.coansys.deduplication.document.tool.MockDocumentMetadataFactory;
 import pl.edu.icm.coansys.deduplication.document.voter.Vote;
-import pl.edu.icm.coansys.deduplication.document.voter.WorkTitleVoter;
+import pl.edu.icm.coansys.deduplication.document.voter.TitleVoter;
 import pl.edu.icm.coansys.models.DocumentProtos;
 
-public class WorkTitleVoterTest {
+public class TitleVoterTest {
 
     
-    private WorkTitleVoter workTitleVoter;
+    private TitleVoter workTitleVoter;
     private Vote vote;
     
     @BeforeTest
     public void setUp() throws Exception {
-        workTitleVoter = new WorkTitleVoter();
+        workTitleVoter = new TitleVoter();
         workTitleVoter.setApproveLevel(0.03f);
         workTitleVoter.setDisapproveLevel(0.15f);
         workTitleVoter.setDigitsPercentageTreshold(15);
@@ -165,26 +165,43 @@ public class WorkTitleVoterTest {
     public void testSameTitles_OnLevenshteinBound() {
         DocumentProtos.DocumentMetadata doc1 = MockDocumentMetadataFactory.createDocumentMetadata("Ala ma kota b");
         DocumentProtos.DocumentMetadata doc2 = MockDocumentMetadataFactory.createDocumentMetadata("Ala mna kota f");
+        vote = workTitleVoter.vote(doc1, doc2);
+        
+        //Assert.assertEquals(vote.getStatus(), Vote.VoteStatus.PROBABILITY);
+        //Assert.assertTrue(vote.getProbability() > 0.5);
         
         //Assert.assertTrue(workTitleComparator.sameTitles(doc1, doc2));
+        //really??
     }
     
     @Test
     public void testSameTitles_ShortTitles() {
         DocumentProtos.DocumentMetadata doc1 = MockDocumentMetadataFactory.createDocumentMetadata("Makumba");
         DocumentProtos.DocumentMetadata doc2 = MockDocumentMetadataFactory.createDocumentMetadata("Matumba");
+        vote = workTitleVoter.vote(doc1, doc2);
+        
+        Assert.assertEquals(vote.getStatus(), Vote.VoteStatus.PROBABILITY);
+        Assert.assertTrue(vote.getProbability() < 0.5);
         
         //Assert.assertFalse(workTitleComparator.sameTitles(doc1, doc2));
         
         
         doc1 = MockDocumentMetadataFactory.createDocumentMetadata("Makumba bvx");
         doc2 = MockDocumentMetadataFactory.createDocumentMetadata("Makumba bwx");
+        vote = workTitleVoter.vote(doc1, doc2);
+        
+        Assert.assertEquals(vote.getStatus(), Vote.VoteStatus.PROBABILITY);
+        //Assert.assertTrue(vote.getProbability() > 0.5);
         
         //Assert.assertTrue(workTitleComparator.sameTitles(doc1, doc2));
         
         
         doc1 = MockDocumentMetadataFactory.createDocumentMetadata("Makbvxy");
         doc2 = MockDocumentMetadataFactory.createDocumentMetadata("Makbvxya");
+        vote = workTitleVoter.vote(doc1, doc2);
+        
+        Assert.assertEquals(vote.getStatus(), Vote.VoteStatus.PROBABILITY);
+        //Assert.assertTrue(vote.getProbability() > 0.5);
         
         //Assert.assertTrue(workTitleComparator.sameTitles(doc1, doc2));
         

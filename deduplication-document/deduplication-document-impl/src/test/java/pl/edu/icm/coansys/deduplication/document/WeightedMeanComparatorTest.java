@@ -18,6 +18,7 @@
 
 package pl.edu.icm.coansys.deduplication.document;
 
+import pl.edu.icm.coansys.deduplication.document.comparator.WeightedMeanComparator;
 import java.util.ArrayList;
 import java.util.List;
 import org.testng.Assert;
@@ -28,15 +29,15 @@ import pl.edu.icm.coansys.deduplication.document.tool.MockDocumentMetadataFactor
 import pl.edu.icm.coansys.deduplication.document.voter.AuthorsVoter;
 import pl.edu.icm.coansys.deduplication.document.voter.SimilarityVoter;
 import pl.edu.icm.coansys.deduplication.document.voter.Vote;
-import pl.edu.icm.coansys.deduplication.document.voter.WorkTitleVoter;
+import pl.edu.icm.coansys.deduplication.document.voter.TitleVoter;
 import pl.edu.icm.coansys.deduplication.document.voter.YearVoter;
 import pl.edu.icm.coansys.models.DocumentProtos;
 
-public class DuplicateWorkComparatorTest {
+public class WeightedMeanComparatorTest {
 
     
-    private DuplicateWorkComparator duplicateWorkComparator;
-    private WorkTitleVoter workTitleVoter;
+    private WeightedMeanComparator duplicateWorkComparator;
+    private TitleVoter workTitleVoter;
     private AuthorsVoter workAuthorVoter;
     private YearVoter workYearVoter;
     
@@ -47,14 +48,14 @@ public class DuplicateWorkComparatorTest {
     @BeforeMethod
     public void setUp() throws Exception {
         List<SimilarityVoter> voters = new ArrayList<SimilarityVoter>();
-        workTitleVoter = mock(WorkTitleVoter.class);
+        workTitleVoter = mock(TitleVoter.class);
         workAuthorVoter = mock(AuthorsVoter.class);
         workYearVoter = mock(YearVoter.class);
         voters.add(workTitleVoter);
         voters.add(workAuthorVoter);
         voters.add(workYearVoter);
         
-        duplicateWorkComparator = new DuplicateWorkComparator();
+        duplicateWorkComparator = new WeightedMeanComparator();
         duplicateWorkComparator.setSimilarityVoters(voters);
     }
 

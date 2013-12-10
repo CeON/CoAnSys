@@ -7,22 +7,7 @@
     					http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
         
 
-    <bean id="workTitleComparatorConfiguration" class="pl.edu.icm.coansys.deduplication.document.comparator.WorkTitleComparatorConfiguration">
-        <property name="titleMaxLevenshteinDistance" value="5"/>
-        <property name="titleMostMeaningfulEndLength" value="8"/>
-        <property name="titleEndMaxLevenshteinDistance" value="2"/>
-        <property name="titleLevenshteinDistancePerPart" value="1"/>
-        <property name="titlePartLength" value="7"/>
-        <property name="titleLengthExactComparison" value="7"/>
-
-    </bean>
-        
-    <bean id="workYearComparatorConfiguration" class="pl.edu.icm.coansys.deduplication.document.comparator.WorkYearComparatorConfiguration">
-        <property name="publicationYearMaxDistance" value="0"/>
-
-    </bean>
-    
-    <bean id="duplicateWorkComparator" class="pl.edu.icm.coansys.deduplication.document.DuplicateWorkComparator">
+    <bean id="duplicateWorkComparator" class="pl.edu.icm.coansys.deduplication.document.comparator.VotesProductComparator">
         <property name="similarityVoters">
             <list>
                 <bean id="workDoiVoter" class="pl.edu.icm.coansys.deduplication.document.voter.DoiVoter">
@@ -35,10 +20,12 @@
                     <property name="weight" value="0.2"/>
                     <property name="yearMaxDistance" value="0"/>
                 </bean>
-                <bean id="journalVoter" class="pl.edu.icm.coansys.deduplication.document.voter.JournalSimilarityVoter">
+                <bean id="journalVoter" class="pl.edu.icm.coansys.deduplication.document.voter.JournalVoter">
                     <property name="weight" value="0.3"/>
+                    <property name="disapproveLevel" value="0.2"/>
+                    <property name="approveLevel" value="0.03"/>
                 </bean>
-                <bean id="workTitleVoter" class="pl.edu.icm.coansys.deduplication.document.voter.WorkTitleVoter">
+                <bean id="workTitleVoter" class="pl.edu.icm.coansys.deduplication.document.voter.TitleVoter">
                     <property name="weight" value="0.8"/>
                     <property name="disapproveLevel" value="0.2"/>
                     <property name="approveLevel" value="0.03"/>
@@ -51,6 +38,8 @@
                 </bean>
             </list>
         </property>
+        <property name="minVotersRequired" value="3"/>
+        <property name="probabilityTreshold" value="0.5"/>
     </bean>
 
     <context:component-scan resource-pattern="**/*.class" base-package="pl.edu.icm.coansys.deduplication.document"/>

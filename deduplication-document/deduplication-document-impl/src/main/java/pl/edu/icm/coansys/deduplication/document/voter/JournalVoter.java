@@ -18,7 +18,7 @@
 package pl.edu.icm.coansys.deduplication.document.voter;
 
 import pl.edu.icm.coansys.commons.java.StringTools;
-import pl.edu.icm.coansys.commons.stringsimilarity.LCSSimilarity;
+import pl.edu.icm.coansys.commons.stringsimilarity.EditDistanceSimilarity;
 import pl.edu.icm.coansys.commons.stringsimilarity.SimilarityCalculator;
 import pl.edu.icm.coansys.models.DocumentProtos;
 
@@ -26,7 +26,10 @@ import pl.edu.icm.coansys.models.DocumentProtos;
  *
  * @author Artur Czeczko <a.czeczko@icm.edu.pl>
  */
-public class JournalSimilarityVoter extends AbstractSimilarityVoter {
+public class JournalVoter extends AbstractSimilarityVoter {
+    
+    private float disapproveLevel;
+    private float approveLevel;
 
     @Override
     public Vote vote(DocumentProtos.DocumentMetadata doc1, DocumentProtos.DocumentMetadata doc2) {
@@ -39,13 +42,26 @@ public class JournalSimilarityVoter extends AbstractSimilarityVoter {
         journal1 = StringTools.normalize(journal1);
         journal2 = StringTools.normalize(journal2);
         
-        SimilarityCalculator calculator = new LCSSimilarity();
+        //SimilarityCalculator calculator = new LCSSimilarity();
+        SimilarityCalculator calculator = new EditDistanceSimilarity(approveLevel, disapproveLevel);
         float similarity = calculator.calculateSimilarity(journal1, journal2);
-        return new Vote(Vote.VoteStatus.PROBABILITY, similarity);
+        if (similarity > 0) {
+            return new Vote(Vote.VoteStatus.PROBABILITY, similarity);
+        } else {
+            return new Vote(Vote.VoteStatus.NOT_EQUALS);
+        }
     }
 
     private static String extractJournal(DocumentProtos.DocumentMetadata doc) {
         DocumentProtos.BasicMetadata basicMetadata = doc.getBasicMetadata();
         return basicMetadata.hasJournal() ? basicMetadata.getJournal() : null;
+    }
+
+    public void setDisapproveLevel(float disapproveLevel) {
+        this.disapproveLevel = disapproveLevel;
+    }
+
+    public void setApproveLevel(float approveLevel) {
+        this.approveLevel = approveLevel;
     }
 }
