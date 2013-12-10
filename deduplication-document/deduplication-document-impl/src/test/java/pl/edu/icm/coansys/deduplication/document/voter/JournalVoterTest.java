@@ -16,21 +16,25 @@
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.edu.icm.coansys.deduplication.document.comparator;
+package pl.edu.icm.coansys.deduplication.document.voter;
 
+import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import pl.edu.icm.coansys.deduplication.document.tool.MockDocumentMetadataFactory;
 import pl.edu.icm.coansys.models.DocumentProtos;
 
-public class WorkJournalComparatorTest {
+public class JournalVoterTest {
 
-    private WorkJournalComparator workJournalComparator = new WorkJournalComparator();
+    private JournalVoter journalVoter;
+    private Vote vote;
     
     @BeforeTest
     public void setUp() throws Exception {
-        
+        journalVoter = new JournalVoter();
+        journalVoter.setDisapproveLevel(0.2f);
+        journalVoter.setApproveLevel(0.03f);
     }
 
     
@@ -42,13 +46,23 @@ public class WorkJournalComparatorTest {
         DocumentProtos.DocumentMetadata doc4 = MockDocumentMetadataFactory.createDocumentMetadata("Ala ma kota", "", "JamboBambo");
         DocumentProtos.DocumentMetadata doc5 = MockDocumentMetadataFactory.createDocumentMetadata("Ala ma kota", "4444-4444", "Jojko Journal");
         
-        //Assert.assertTrue(workJournalComparator.sameJournals(doc1, doc2));
-        //Assert.assertTrue(workJournalComparator.sameJournals(doc1, doc3));
-        //Assert.assertFalse(workJournalComparator.sameJournals(doc1, doc4));
-        //Assert.assertFalse(workJournalComparator.sameJournals(doc1, doc5));
-        //Assert.assertFalse(workJournalComparator.sameJournals(doc3, doc5));
+        vote = journalVoter.vote(doc1, doc2);
+        Assert.assertEquals(vote.getStatus(), Vote.VoteStatus.PROBABILITY);
+        Assert.assertTrue(vote.getProbability() > 0.5);
         
-    }
-    
+        vote = journalVoter.vote(doc1, doc3);
+        Assert.assertEquals(vote.getStatus(), Vote.VoteStatus.PROBABILITY);
+        Assert.assertTrue(vote.getProbability() < 0.5);
+        
+        vote = journalVoter.vote(doc1, doc4);
+        Assert.assertEquals(vote.getStatus(), Vote.VoteStatus.NOT_EQUALS);
 
+        vote = journalVoter.vote(doc1, doc5);
+        Assert.assertEquals(vote.getStatus(), Vote.VoteStatus.PROBABILITY);
+        Assert.assertTrue(vote.getProbability() < 0.5);
+        
+        vote = journalVoter.vote(doc3, doc5);
+        Assert.assertEquals(vote.getStatus(), Vote.VoteStatus.PROBABILITY);
+        Assert.assertTrue(vote.getProbability() > 0.5);
+    }
 }

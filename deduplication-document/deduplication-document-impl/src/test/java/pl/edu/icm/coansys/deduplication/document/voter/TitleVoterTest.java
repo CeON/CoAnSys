@@ -16,7 +16,7 @@
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.edu.icm.coansys.deduplication.document.comparator;
+package pl.edu.icm.coansys.deduplication.document.voter;
 
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -24,18 +24,18 @@ import org.testng.Assert;
 
 import pl.edu.icm.coansys.deduplication.document.tool.MockDocumentMetadataFactory;
 import pl.edu.icm.coansys.deduplication.document.voter.Vote;
-import pl.edu.icm.coansys.deduplication.document.voter.WorkTitleVoter;
+import pl.edu.icm.coansys.deduplication.document.voter.TitleVoter;
 import pl.edu.icm.coansys.models.DocumentProtos;
 
-public class WorkTitleVoterTest {
+public class TitleVoterTest {
 
     
-    private WorkTitleVoter workTitleVoter;
+    private TitleVoter workTitleVoter;
     private Vote vote;
     
     @BeforeTest
     public void setUp() throws Exception {
-        workTitleVoter = new WorkTitleVoter();
+        workTitleVoter = new TitleVoter();
         workTitleVoter.setApproveLevel(0.03f);
         workTitleVoter.setDisapproveLevel(0.15f);
         workTitleVoter.setDigitsPercentageTreshold(15);

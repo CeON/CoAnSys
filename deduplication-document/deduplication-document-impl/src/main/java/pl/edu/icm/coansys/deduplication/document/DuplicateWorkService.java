@@ -18,6 +18,7 @@
 
 package pl.edu.icm.coansys.deduplication.document;
 
+import pl.edu.icm.coansys.deduplication.document.comparator.WorkComparator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

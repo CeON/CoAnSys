@@ -16,7 +16,7 @@
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.edu.icm.coansys.deduplication.document;
+package pl.edu.icm.coansys.deduplication.document.comparator;
 
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 

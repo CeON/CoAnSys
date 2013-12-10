@@ -16,29 +16,27 @@
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.edu.icm.coansys.deduplication.document.comparator;
+package pl.edu.icm.coansys.deduplication.document.voter;
 
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import org.testng.Assert;
 
 import pl.edu.icm.coansys.deduplication.document.tool.MockDocumentMetadataFactory;
-import pl.edu.icm.coansys.deduplication.document.voter.AuthorsVoter;
-import pl.edu.icm.coansys.deduplication.document.voter.Vote;
 import pl.edu.icm.coansys.models.DocumentProtos;
 import pl.edu.icm.coansys.models.DocumentProtos.Author;
 
-public class WorkAuthorComparatorTest {
+public class AuthorVoterTest {
 
-    private AuthorsVoter workAuthorComparator;
+    private AuthorsVoter workAuthorVoter;
     private Vote vote;
     
     @BeforeTest
     public void setUp() throws Exception {
         
-        workAuthorComparator = new AuthorsVoter();
-        workAuthorComparator.setDisapproveLevel(0.2f);
-        workAuthorComparator.setApproveLevel(0.03f);
+        workAuthorVoter = new AuthorsVoter();
+        workAuthorVoter.setDisapproveLevel(0.2f);
+        workAuthorVoter.setApproveLevel(0.03f);
     }
 
     
@@ -49,7 +47,7 @@ public class WorkAuthorComparatorTest {
         Author adamNowak = MockDocumentMetadataFactory.createAuthor("Adam", "Nowak", 2);
         DocumentProtos.DocumentMetadata doc1 = MockDocumentMetadataFactory.createDocumentMetadata("Ala m kota", 2012, janKowalski, adamNowak);
         DocumentProtos.DocumentMetadata doc2 = MockDocumentMetadataFactory.createDocumentMetadata("Ala ma kota", 2012, janKowalski, adamNowak);
-        vote = workAuthorComparator.vote(doc1, doc2);
+        vote = workAuthorVoter.vote(doc1, doc2);
         
         Assert.assertEquals(vote.getStatus(), Vote.VoteStatus.PROBABILITY);
         Assert.assertTrue(vote.getProbability() > 0.5);
@@ -66,7 +64,7 @@ public class WorkAuthorComparatorTest {
         Author johnSmith = MockDocumentMetadataFactory.createAuthor("John", "Smith", 1);
         DocumentProtos.DocumentMetadata doc2 = MockDocumentMetadataFactory.createDocumentMetadata("Ala ma kota", 2012, johnSmith);
         
-        vote = workAuthorComparator.vote(doc1, doc2);
+        vote = workAuthorVoter.vote(doc1, doc2);
         
         Assert.assertEquals(vote.getStatus(), Vote.VoteStatus.NOT_EQUALS);
     }
@@ -85,7 +83,7 @@ public class WorkAuthorComparatorTest {
         
         DocumentProtos.DocumentMetadata doc2 = MockDocumentMetadataFactory.createDocumentMetadata("Ala ma kota", 2012, janKowalski, adamNowak, adamZbik);
         
-        vote = workAuthorComparator.vote(doc1, doc2);
+        vote = workAuthorVoter.vote(doc1, doc2);
         
         Assert.assertEquals(vote.getStatus(), Vote.VoteStatus.PROBABILITY);
         Assert.assertTrue(vote.getProbability() < 0.5f);
@@ -115,7 +113,7 @@ public class WorkAuthorComparatorTest {
         
         janKowalski = MockDocumentMetadataFactory.createAuthor("Jan", "Kowalski", 3);
         adamNowak = MockDocumentMetadataFactory.createAuthor("Adam", "Nowak", 2);
-        Author noname = MockDocumentMetadataFactory.createAuthor("A", WorkAuthorComparator.NONAME_SURNAME, 1);
+        Author noname = MockDocumentMetadataFactory.createAuthor("A", "", 1);
         DocumentProtos.DocumentMetadata doc3 = MockDocumentMetadataFactory.createDocumentMetadata("Ala ma kota", 2012, janKowalski, adamNowak, noname);
         
         //Assert.assertTrue(workAuthorComparator.sameAuthors(doc1, doc3));

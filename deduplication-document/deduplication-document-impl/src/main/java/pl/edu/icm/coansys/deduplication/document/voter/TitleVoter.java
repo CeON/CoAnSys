@@ -25,16 +25,15 @@ import pl.edu.icm.coansys.commons.java.StringTools;
 import pl.edu.icm.coansys.commons.stringsimilarity.EditDistanceSimilarity;
 import pl.edu.icm.coansys.commons.stringsimilarity.TrailingNumbersSimilarity;
 import pl.edu.icm.coansys.models.DocumentProtos;
-import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
 
 /**
  *
  * @author Łukasz Dumiszewski
  * @author Artur Czeczko
  */
-public class WorkTitleVoter extends AbstractSimilarityVoter {
+public class TitleVoter extends AbstractSimilarityVoter {
     
-    Logger log = LoggerFactory.getLogger(WorkTitleVoter.class);
+    Logger log = LoggerFactory.getLogger(TitleVoter.class);
     
     private float disapproveLevel;
     private float approveLevel;

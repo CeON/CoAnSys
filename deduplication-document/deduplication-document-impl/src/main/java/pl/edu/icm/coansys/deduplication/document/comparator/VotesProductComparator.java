@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
-package pl.edu.icm.coansys.deduplication.document;
+package pl.edu.icm.coansys.deduplication.document.comparator;
 
 import java.util.List;
 import org.slf4j.Logger;
@@ -30,10 +30,12 @@ import pl.edu.icm.coansys.models.DocumentProtos;
  * @author Artur Czeczko
  *
  */
-public class WeightedMeanComparator implements WorkComparator {
+public class VotesProductComparator implements WorkComparator {
 
-    private static Logger logger = LoggerFactory.getLogger(WeightedMeanComparator.class);
+    private static Logger logger = LoggerFactory.getLogger(VotesProductComparator.class);
     private List<SimilarityVoter> similarityVoters;
+    private int minVotersRequired;
+    private float probabilityTreshold;
 
     /**
      * Tells whether the given documents are duplicates.
@@ -41,8 +43,8 @@ public class WeightedMeanComparator implements WorkComparator {
     @Override
     public boolean isDuplicate(DocumentProtos.DocumentMetadata doc1, DocumentProtos.DocumentMetadata doc2) {
 
-        double weightsSum = 0.0;
-        double probabilitiesSum = 0.0;
+        int collectedProbabilities = 0;
+        double probabilitiesProduct = 1.0;
 
         String ids = doc1.getKey() + ", " + doc2.getKey();
         StringBuilder logBuilder = new StringBuilder();
@@ -63,21 +65,35 @@ public class WeightedMeanComparator implements WorkComparator {
                     case PROBABILITY:
                         logBuilder.append(" -- voter ").append(voter.getClass().getName())
                                 .append(" returned probability ").append(vote.getProbability())
-                                .append(", weight ").append(voter.getWeight()).append('\n');
-                        weightsSum += voter.getWeight();
-                        probabilitiesSum += vote.getProbability() * voter.getWeight();
+                                .append('\n');
+                        collectedProbabilities++;
+                        probabilitiesProduct *= vote.getProbability();
                 }
             }
         }
 
-        logger.info(ids + " considered as duplicates because:\n" + logBuilder.toString());
-        //logger.info("doc1:\n" + doc1.getDocumentMetadata());
-        //logger.info("doc2:\n" + doc2.getDocumentMetadata());
-        return (weightsSum > 0) && (probabilitiesSum / weightsSum > 0.5);
+        boolean isDuplicateResult = (collectedProbabilities >= minVotersRequired) && (probabilitiesProduct > probabilityTreshold);
+
+        if (isDuplicateResult) {
+            logger.info(ids + " considered as duplicates because:\n" + logBuilder.toString()
+                    + "  collectedProbabilities: " + collectedProbabilities + ", minVotersRequired: " + minVotersRequired);
+        
+            logger.info("doc1:\n" + doc1);
+            logger.info("doc2:\n" + doc2);
+        }
+        return isDuplicateResult;
     }
 
     //******************** SETTERS ********************
     public void setSimilarityVoters(List<SimilarityVoter> similarityVoters) {
         this.similarityVoters = similarityVoters;
+    }
+
+    public void setMinVotersRequired(int minVotersRequired) {
+        this.minVotersRequired = minVotersRequired;
+    }
+
+    public void setProbabilityTreshold(float probabilityTreshold) {
+        this.probabilityTreshold = probabilityTreshold;
     }
 }
