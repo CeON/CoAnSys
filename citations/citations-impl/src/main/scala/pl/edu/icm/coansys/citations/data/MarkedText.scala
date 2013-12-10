@@ -10,6 +10,10 @@ import org.apache.hadoop.io.LongWritable.Comparator
  */
 class MarkedText(val marked: Boolean) extends WritableComparable[MarkedText]  {
   def this() = this(false)
+  def this(text: String, marked: Boolean = false) = {
+    this(marked)
+    this.text.set(text)
+  }
 
   val text = new Text
   val isMarked = new BooleanWritable(marked)

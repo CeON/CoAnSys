@@ -8,6 +8,10 @@ import org.apache.hadoop.io.{BooleanWritable, BytesWritable, Writable}
  */
 class MarkedBytesWritable(val marked: Boolean) extends Writable {
   def this() = this(false)
+  def this(bytes: Array[Byte], marked: Boolean = false) = {
+    this(marked)
+    this.bytes.set(bytes, 0, bytes.length)
+  }
 
   val bytes = new BytesWritable()
   val isMarked = new BooleanWritable(marked)
