@@ -54,6 +54,7 @@ public class EXTRACT_ONLYDOCUMENTDATA_GIVENDATA extends EvalFunc<Tuple> {
 	private List<DisambiguationExtractorDocument> des4Doc = new ArrayList<DisambiguationExtractorDocument>();
 	private String language = null;
 	private boolean skipEmptyFeatures = false;
+	private boolean returnNull = false;
 
 	@Override
 	public Schema outputSchema(@SuppressWarnings("unused") Schema p_input) {
@@ -109,6 +110,21 @@ public class EXTRACT_ONLYDOCUMENTDATA_GIVENDATA extends EvalFunc<Tuple> {
 		}
 	}
 
+	public EXTRACT_ONLYDOCUMENTDATA_GIVENDATA(String null0,String null1,String null2,String in_params) throws Exception {
+		String[] params = in_params.split(" ");
+		for(String p : params){
+			if(p.startsWith("featureinfo=")){
+				setDisambiguationExtractor(p.substring("featureinfo=".length()));
+			}else if(p.startsWith("lang=")){
+				this.language = p.substring("lang=".length());
+			}else if(p.startsWith("skipEmptyFeatures=")){
+				this.skipEmptyFeatures = Boolean.parseBoolean(p.substring("skipEmptyFeatures=".length()));
+			}else if(p.startsWith("returnNull=")){
+				this.returnNull  = Boolean.parseBoolean(p.substring("returnNull=".length()));
+			}
+		}
+	}
+	
 	public EXTRACT_ONLYDOCUMENTDATA_GIVENDATA(String featureinfo)
 			throws Exception {
 		setDisambiguationExtractor(featureinfo);
@@ -191,7 +207,10 @@ public class EXTRACT_ONLYDOCUMENTDATA_GIVENDATA extends EvalFunc<Tuple> {
 						extractedDocObj[i]);
 			}
 			extractedDocObj = null;
-
+			
+			if(returnNull){
+				return null;
+			}
 			Tuple t = TupleFactory.getInstance().newTuple();
 			t.append(docId);
 			t.append(map);
