@@ -6,10 +6,9 @@ import org.apache.hadoop.io.{BooleanWritable, BytesWritable, Writable}
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
-class BytesPairWritable extends Writable {
-
-  val left = new BytesWritable()
-  val right = new BytesWritable()
+class BytesPairWritable(val left: BytesWritable, val right: BytesWritable) extends Writable {
+  def this() = this(new BytesWritable(), new BytesWritable())
+  def this(left: Array[Byte], right: Array[Byte]) = this(new BytesWritable(left), new BytesWritable(right))
 
   def readFields(in: DataInput) {
     left.readFields(in)

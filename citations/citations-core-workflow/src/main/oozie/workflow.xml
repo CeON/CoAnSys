@@ -289,6 +289,18 @@
                     <value>pl.edu.icm.coansys.citations.data.BytesPairWritable</value>
                 </property>
                 <property>
+                    <name>mapreduce.partitioner.class</name>
+                    <value>pl.edu.icm.coansys.citations.data.TextNumericWritablePartitioner</value>
+                </property>
+                <property>
+                    <name>mapred.output.value.groupfn.class</name>
+                    <value>pl.edu.icm.coansys.citations.data.TextNumericWritableGroupComparator</value>
+                </property>
+                <property>
+                    <name>mapred.output.key.comparator.class</name>
+                    <value>pl.edu.icm.coansys.citations.data.TextNumericWritableSortComparator</value>
+                </property>
+                <property>
                     <name>mapred.output.key.class</name>
                     <value>org.apache.hadoop.io.BytesWritable</value>
                 </property>
