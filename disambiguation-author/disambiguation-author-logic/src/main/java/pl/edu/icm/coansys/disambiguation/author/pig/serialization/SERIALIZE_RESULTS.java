@@ -45,7 +45,7 @@ public class SERIALIZE_RESULTS extends EvalFunc<Tuple> {
 	@Override
 	public Schema outputSchema(Schema p_input) {
 		try {
-			return Schema.generateNestedSchema(DataType.TUPLE, DataType.CHARARRAY,  DataType.BAG);
+			return Schema.generateNestedSchema(DataType.TUPLE, DataType.CHARARRAY,  DataType.BYTEARRAY);
 		} catch (FrontendException e) {
 			logger.error("Error in creating output schema:", e);
 			throw new IllegalStateException(e);

@@ -1,0 +1,27 @@
+<configuration>
+  <property>
+    <name>partitions_names</name>
+    <value>key0;key1</value>
+  </property>
+  <property>
+    <name>partitions_classes</name>
+    <value>EQUALS;EQUALS</value>
+  </property>
+  <property>
+    <name>partitions_classes_args</name>
+    <value> </value>
+  </property>
+  <property>
+    <name>statistics_names</name>
+    <value>COUNT</value>
+  </property>
+  <property>
+    <name>statistics_classes</name>
+    <value>COUNT</value>
+  </property>
+  <property>
+    <name>statistics_classes_args</name>
+    <value> </value>
+  </property>
+</configuration>
+

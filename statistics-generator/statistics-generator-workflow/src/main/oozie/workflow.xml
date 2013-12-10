@@ -1,0 +1,101 @@
+<workflow-app xmlns="uri:oozie:workflow:0.4" name="statistics-generator-wf">
+    <start to="generatestatistics" />
+    <action name="generatestatistics">
+        <map-reduce>
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <prepare>
+                <delete path="${hdfsWorkingDirURI}/intermediate-data" />
+            </prepare>
+            <configuration>
+                <!-- This is required for new api usage -->
+                <property>
+                    <name>mapred.mapper.new-api</name>
+                    <value>true</value>
+                </property>
+                <property>
+                    <name>mapred.reducer.new-api</name>
+                    <value>true</value>
+                </property>
+                <property>
+                    <name>mapreduce.map.class</name>
+                    <value>pl.edu.icm.coansys.statisticsgenerator.jobs.StatisticsGenerator$StatisticsMap</value>
+                </property>
+                <property>
+                    <name>mapreduce.reduce.class</name>
+                    <value>pl.edu.icm.coansys.statisticsgenerator.jobs.StatisticsGenerator$StatisticsReduce</value>
+                </property>
+                <property>
+                    <name>mapred.map.tasks</name>
+                    <value>6</value>
+                </property>
+                <property>
+                    <name>mapred.input.dir</name>
+                    <value>${hdfsDirInputData}</value>
+                </property>
+                <property>
+                    <name>mapred.output.dir</name>
+                    <value>${hdfsDirOutputData}</value>
+                </property>
+                <property>
+                  <name>mapred.job.queue.name</name>
+                  <value>${queueName}</value>
+                </property>
+                <property>
+                    <name>mapreduce.inputformat.class</name>
+                    <value>org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat</value>
+                </property>
+                <property>
+                    <name>mapreduce.outputformat.class</name>
+                    <value>org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat</value>
+                </property>
+                <property>
+                    <name>mapred.mapoutput.key.class</name>
+                    <value>pl.edu.icm.coansys.statisticsgenerator.mrtypes.SortedMapWritableComparable</value>
+                </property>                
+                <property>
+                    <name>mapred.mapoutput.value.class</name>
+                    <value>org.apache.hadoop.io.BytesWritable</value>
+                </property>                
+                <property>
+                    <name>mapred.output.key.class</name>
+                    <value>org.apache.hadoop.io.Text</value>
+                </property>                
+                <property>
+                    <name>mapred.output.value.class</name>
+                    <value>org.apache.hadoop.io.BytesWritable</value>
+                </property>
+                <property>
+                    <name>partitions_names</name>
+                    <value>${partitions_names}</value>
+                </property>
+                <property>
+                    <name>partitions_classes</name>
+                    <value>${partitions_classes}</value>
+                </property>
+                <property>
+                    <name>partitions_classes_args</name>
+                    <value>${partitions_classes_args}</value>
+                </property>
+                <property>
+                    <name>statistics_names</name>
+                    <value>${statistics_names}</value>
+                </property>
+                <property>
+                    <name>statistics_classes</name>
+                    <value>${statistics_classes}</value>
+                </property>
+                <property>
+                    <name>statistics_classes_args</name>
+                    <value>${statistics_classes_args}</value>
+                </property>
+            </configuration>
+        </map-reduce>
+        <ok to="end" />
+        <error to="fail" />
+    </action>
+    <kill name="fail">
+        <message>Workflow failed</message>
+    </kill>
+    <end name="end" />
+</workflow-app>

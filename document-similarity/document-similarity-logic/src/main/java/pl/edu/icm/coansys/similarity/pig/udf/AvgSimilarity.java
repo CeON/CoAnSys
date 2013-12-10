@@ -98,16 +98,4 @@ public class AvgSimilarity extends EvalFunc<Double> {
         }
         throw new IllegalArgumentException("Unsupported type: " + type);
     }
-    
-    @Override
-    public Schema outputSchema(Schema input) {
-        try{
-            Schema doubleSchema = new Schema();
-            return new Schema(new Schema.FieldSchema(getSchemaName(this.getClass().getName().toLowerCase(), input),doubleSchema, DataType.DOUBLE));
-        }catch (Exception e){
-        	log.error("Error in the output Schema creation",e);
-        	log.error(StackTraceExtractor.getStackTrace(e));
-            return null;
-        }
-    }
 }

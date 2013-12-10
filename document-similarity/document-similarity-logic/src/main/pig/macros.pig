@@ -91,7 +91,7 @@ DEFINE remove_stopwords(doc_word, stopwords, doc_field, term_field, CC) RETURNS 
 -------------------------------------------------------
 -- calculate tf-idf
 -------------------------------------------------------
-DEFINE calculate_tfidf(in_relation, id_field, token_field, tfidfMinValue) RETURNS tfidf_values { 
+DEFINE calculate_tfidf(in_relation, id_field, token_field, in_tfidfMinValue) RETURNS tfidf_values { 
   	-- Calculate the term count per document
 	doc_word_group = group $in_relation by ($id_field, $token_field);
   	doc_word_totals = foreach doc_word_group generate 
@@ -136,7 +136,7 @@ DEFINE calculate_tfidf(in_relation, id_field, token_field, tfidfMinValue) RETURN
 			num_docs_with_token;
   	};
 	-- get only important terms
-	$tfidf_values = FILTER tfidf_all BY tfidf >= $tfidfMinValue;
+	$tfidf_values = FILTER tfidf_all BY tfidf >= $in_tfidfMinValue;
 };
 
 
