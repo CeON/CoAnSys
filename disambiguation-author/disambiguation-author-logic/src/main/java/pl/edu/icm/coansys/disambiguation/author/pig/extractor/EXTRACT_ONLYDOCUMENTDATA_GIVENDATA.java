@@ -59,7 +59,7 @@ public class EXTRACT_ONLYDOCUMENTDATA_GIVENDATA extends
 	@Override
 	public Schema outputSchema(Schema p_input) {
 		try {
-			return Schema.generateNestedSchema(DataType.BAG);
+			return Schema.generateNestedSchema(DataType.TUPLE, DataType.CHARARRAY,DataType.BAG);
 		} catch (FrontendException e) {
 			logger.error("Error in creating output schema:", e);
 			throw new IllegalStateException(e);
