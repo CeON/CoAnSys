@@ -146,9 +146,10 @@ public class EXTRACT_ONLYDOCUMENTDATA_GIVENDATA extends
 
 			// metadata
 			DocumentMetadata dm = dw.getDocumentMetadata();
+			String docId = dw.getDocumentMetadata().getKey();
 			dw = null;
 
-			String docId = dw.getDocumentMetadata().getKey();
+			
 			
 			// in arrays we are storing DataBags from extractors
 			DataBag[] extractedDocObj = new DataBag[des4Doc.size()];
