@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.pig.EvalFunc;
+import org.apache.pig.backend.executionengine.ExecException;
 import org.apache.pig.data.DataBag;
 import org.apache.pig.data.DataByteArray;
 import org.apache.pig.data.DataType;
@@ -157,11 +158,11 @@ public class EXTRACT_ONLYDOCUMENTDATA_GIVENDATA extends
 			// DOCUMENT DATA EXTRACTINTG
 			if (checkLanguage()) {
 				for (int i = 0; i < des4Doc.size(); i++) {
-					extractedDocObj[i] = des4Doc.get(i).extract(dm, language);
+					extractedDocObj[i] = removeEmptyValues(des4Doc.get(i).extract(dm, language));
 				}
 			} else {
 				for (int i = 0; i < des4Doc.size(); i++) {
-					extractedDocObj[i] = des4Doc.get(i).extract(dm);
+					extractedDocObj[i] = removeEmptyValues(des4Doc.get(i).extract(dm));
 				}
 			}
 			// adding to map extractor name and features' data
@@ -189,5 +190,15 @@ public class EXTRACT_ONLYDOCUMENTDATA_GIVENDATA extends
 			throw new IOException("Caught exception processing input row:\n"
 					+ StackTraceExtractor.getStackTrace(e));
 		}
+	}
+	
+	public static DataBag removeEmptyValues(DataBag in) throws ExecException{
+		DataBag ret = new DefaultDataBag();
+		for(Tuple t : in){
+			if(t.get(0).hashCode()!=0){
+				ret.add(t);
+			}
+		}
+		return ret;
 	}
 }
