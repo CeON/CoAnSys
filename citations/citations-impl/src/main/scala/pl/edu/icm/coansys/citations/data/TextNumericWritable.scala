@@ -7,9 +7,9 @@ import org.apache.hadoop.mapreduce.Partitioner
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
-class TextNumericWritable extends WritableComparable[TextNumericWritable] {
-  val text = new Text()
-  val numeric = new DoubleWritable()
+class TextNumericWritable(val text: Text, val numeric: DoubleWritable) extends WritableComparable[TextNumericWritable] {
+  def this() = this(new Text(), new DoubleWritable())
+  def this(text: String, numeric: Double) = this(new Text(text), new DoubleWritable(numeric))
 
   def readFields(in: DataInput) {
     text.readFields(in)
