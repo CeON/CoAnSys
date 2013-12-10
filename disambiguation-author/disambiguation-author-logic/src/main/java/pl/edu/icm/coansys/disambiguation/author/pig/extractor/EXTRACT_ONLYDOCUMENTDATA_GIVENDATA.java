@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.pig.EvalFunc;
+import org.apache.pig.backend.executionengine.ExecException;
 import org.apache.pig.data.DataBag;
 import org.apache.pig.data.DataByteArray;
 import org.apache.pig.data.DataType;
@@ -38,7 +39,6 @@ import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
 import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
-import pl.edu.icm.coansys.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
 
@@ -47,8 +47,7 @@ import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
  * @author pdendek
  * @author mwos
  */
-public class EXTRACT_ONLYDOCUMENTDATA_GIVENDATA extends
-		EvalFunc<Tuple> {
+public class EXTRACT_ONLYDOCUMENTDATA_GIVENDATA extends EvalFunc<Tuple> {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(EXTRACT_ONLYDOCUMENTDATA_GIVENDATA.class);
@@ -57,16 +56,19 @@ public class EXTRACT_ONLYDOCUMENTDATA_GIVENDATA extends
 	private boolean skipEmptyFeatures = false;
 
 	@Override
-	public Schema outputSchema(Schema p_input) {
+	public Schema outputSchema(@SuppressWarnings("unused") Schema p_input) {
 		try {
-			return Schema.generateNestedSchema(DataType.TUPLE, DataType.CHARARRAY,DataType.MAP);
+			return Schema.generateNestedSchema(DataType.TUPLE,
+					DataType.CHARARRAY, DataType.MAP);
 		} catch (FrontendException e) {
 			logger.error("Error in creating output schema:", e);
 			throw new IllegalStateException(e);
 		}
 	}
 
-	private void setDisambiguationExtractor(String featureinfo) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+	private void setDisambiguationExtractor(String featureinfo)
+			throws ClassNotFoundException, InstantiationException,
+			IllegalAccessException {
 
 		List<FeatureInfo> features = FeatureInfo
 				.parseFeatureInfoString(featureinfo);
@@ -96,7 +98,7 @@ public class EXTRACT_ONLYDOCUMENTDATA_GIVENDATA extends
 			if (currentSuperClassName.equals(ExtractorDocClassName)) {
 				des4Doc.add((DisambiguationExtractorDocument) c.newInstance());
 			} else if (currentSuperClassName.equals(ExtractorAuthorClassName)) {
-				logger.warn("skipping class: "+c.getSimpleName());
+				logger.warn("skipping class: " + c.getSimpleName());
 			} else {
 				String m = "Cannot create extractor: " + c.getSimpleName()
 						+ ". Its superclass: " + currentSuperClassName
@@ -107,17 +109,21 @@ public class EXTRACT_ONLYDOCUMENTDATA_GIVENDATA extends
 		}
 	}
 
-	public EXTRACT_ONLYDOCUMENTDATA_GIVENDATA(String featureinfo) throws Exception {
+	public EXTRACT_ONLYDOCUMENTDATA_GIVENDATA(String featureinfo)
+			throws Exception {
 		setDisambiguationExtractor(featureinfo);
 	}
 
-	public EXTRACT_ONLYDOCUMENTDATA_GIVENDATA(String featureinfo, String lang) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+	public EXTRACT_ONLYDOCUMENTDATA_GIVENDATA(String featureinfo, String lang)
+			throws ClassNotFoundException, InstantiationException,
+			IllegalAccessException {
 		setDisambiguationExtractor(featureinfo);
 		language = lang;
 	}
 
 	public EXTRACT_ONLYDOCUMENTDATA_GIVENDATA(String featureinfo, String lang,
-			String skipEmptyFeatures) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+			String skipEmptyFeatures) throws ClassNotFoundException,
+			InstantiationException, IllegalAccessException {
 		setDisambiguationExtractor(featureinfo);
 		language = lang;
 		this.skipEmptyFeatures = Boolean.parseBoolean(skipEmptyFeatures);
@@ -132,7 +138,7 @@ public class EXTRACT_ONLYDOCUMENTDATA_GIVENDATA extends
 	public Tuple exec(Tuple input) throws IOException {
 
 		PigStatusReporter reporter = PigStatusReporter.getInstance();
-		
+
 		if (input == null || input.size() == 0) {
 			return null;
 		}
@@ -145,10 +151,9 @@ public class EXTRACT_ONLYDOCUMENTDATA_GIVENDATA extends
 
 			// metadata
 			DocumentMetadata dm = dw.getDocumentMetadata();
+			String docId = dw.getDocumentMetadata().getKey();
 			dw = null;
 
-			String docId = dw.getDocumentMetadata().getKey();
-			
 			// in arrays we are storing DataBags from extractors
 			DataBag[] extractedDocObj = new DataBag[des4Doc.size()];
 
@@ -157,25 +162,33 @@ public class EXTRACT_ONLYDOCUMENTDATA_GIVENDATA extends
 			// DOCUMENT DATA EXTRACTINTG
 			if (checkLanguage()) {
 				for (int i = 0; i < des4Doc.size(); i++) {
-					extractedDocObj[i] = des4Doc.get(i).extract(dm, language);
+					extractedDocObj[i] = removeEmptyValues(des4Doc.get(i)
+							.extract(dm, language));
 				}
 			} else {
 				for (int i = 0; i < des4Doc.size(); i++) {
-					extractedDocObj[i] = des4Doc.get(i).extract(dm);
+					extractedDocObj[i] = removeEmptyValues(des4Doc.get(i)
+							.extract(dm));
 				}
 			}
 			// adding to map extractor name and features' data
 			for (int i = 0; i < des4Doc.size(); i++) {
 				if (extractedDocObj[i] == null) {
-					reporter.getCounter("Missing", des4Doc.get(i).getClass().getSimpleName()).increment(1);
+					reporter.getCounter("Missing",
+							des4Doc.get(i).getClass().getSimpleName())
+							.increment(1);
 					continue;
 				}
 				if (extractedDocObj[i].size() == 0 && skipEmptyFeatures) {
-					reporter.getCounter("Missing", des4Doc.get(i).getClass().getSimpleName()).increment(1);
+					reporter.getCounter("Missing",
+							des4Doc.get(i).getClass().getSimpleName())
+							.increment(1);
 					continue;
 				}
-				reporter.getCounter("Existing", des4Doc.get(i).getClass().getSimpleName()).increment(1);
-				map.put(des4Doc.get(i).getClass().getSimpleName(), extractedDocObj[i]);
+				reporter.getCounter("Existing",
+						des4Doc.get(i).getClass().getSimpleName()).increment(1);
+				map.put(des4Doc.get(i).getClass().getSimpleName(),
+						extractedDocObj[i]);
 			}
 			extractedDocObj = null;
 
@@ -189,5 +202,15 @@ public class EXTRACT_ONLYDOCUMENTDATA_GIVENDATA extends
 			throw new IOException("Caught exception processing input row:\n"
 					+ StackTraceExtractor.getStackTrace(e));
 		}
+	}
+
+	public static DataBag removeEmptyValues(DataBag in) throws ExecException {
+		DataBag ret = new DefaultDataBag();
+		for (Tuple t : in) {
+			if (t.get(0).hashCode() != 0) {
+				ret.add(t);
+			}
+		}
+		return ret;
 	}
 }
