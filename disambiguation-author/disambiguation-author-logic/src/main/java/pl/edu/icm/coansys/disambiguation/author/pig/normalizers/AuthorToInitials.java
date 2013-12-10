@@ -14,11 +14,7 @@ public class AuthorToInitials implements PigNormalizer {
 		
 		if (obj instanceof Author) {
 			Author author = (Author) obj;
-			String fname = author.getForenames();
-
-			//TODO: rewrite forename(s) initials generation  
-			//we should not act as we know the forenames 
-			//NULL value usage and later handling is more proper in this case 
+			String fname = author.getForenames(); 
 			if (fname == null || fname.isEmpty()) {
 				logger.info("No forenames for author with key: " + author.getKey());
 				return "";

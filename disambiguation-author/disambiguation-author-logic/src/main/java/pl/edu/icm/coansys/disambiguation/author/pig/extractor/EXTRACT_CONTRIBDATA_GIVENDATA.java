@@ -132,7 +132,7 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 			}else if(p.startsWith("snameToString=")){
 				this.snameToString = Boolean.parseBoolean(p.substring("snameToString=".length()));
 			}else if(p.startsWith("useIdsForExtractors=")){
-				this.snameToString = Boolean.parseBoolean(p.substring("useIdsForExtractors=".length()));
+				this.useIdsForExtractors = Boolean.parseBoolean(p.substring("useIdsForExtractors=".length()));
 			}
 		}
 	}
