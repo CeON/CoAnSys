@@ -12,7 +12,7 @@ class TopSelector extends Reducer[TextNumericWritable, BytesPairWritable, BytesW
   type Context = Reducer[TextNumericWritable, BytesPairWritable, BytesWritable, BytesWritable]#Context
   val n = 100
   override def reduce(key: TextNumericWritable, values: java.lang.Iterable[BytesPairWritable], context: Context) {
-    for(value <- values.take(n)) {
+    for(value <- values.iterator().take(n)) {
       context.write(value.left, value.right)
     }
   }
