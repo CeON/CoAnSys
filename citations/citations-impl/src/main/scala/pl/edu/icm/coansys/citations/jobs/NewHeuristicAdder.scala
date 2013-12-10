@@ -21,8 +21,8 @@ import com.nicta.scoobi.Scoobi._
 import Reduction._
 import pl.edu.icm.coansys.citations.util.{misc, MyScoobiApp}
 import pl.edu.icm.coansys.citations.data.MatchableEntity
-import scala.util.Try
 import pl.edu.icm.coansys.citations.util.misc.stopWords
+import pl.edu.icm.coansys.citations.util.misc.approximateYear
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -30,11 +30,6 @@ import pl.edu.icm.coansys.citations.util.misc.stopWords
 object NewHeuristicAdder extends MyScoobiApp {
   def minMatchingTitleTokens = 3
   def indexedTitleTokens = 4
-
-  def approximateYear(year: String) = for {
-      diff <- -1 to 1
-      year <- Try(year.toInt).toOption
-    } yield (year + diff).toString
 
   def run() {
     val entitiesUrl = args(0)
