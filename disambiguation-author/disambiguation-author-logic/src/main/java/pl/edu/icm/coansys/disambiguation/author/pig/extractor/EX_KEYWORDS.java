@@ -22,10 +22,19 @@ import org.apache.pig.data.DataBag;
 import org.apache.pig.data.DefaultDataBag;
 import org.apache.pig.data.TupleFactory;
 
+import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.PigNormalizer;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.models.DocumentProtos.KeywordsList;
 
 public class EX_KEYWORDS extends DisambiguationExtractorDocument {
+
+	public EX_KEYWORDS() {
+		super();
+	}
+
+	public EX_KEYWORDS(PigNormalizer[] new_normalizers) {
+		super(new_normalizers);
+	}
 
 	@Override
 	public DataBag extract(Object o, String lang) {

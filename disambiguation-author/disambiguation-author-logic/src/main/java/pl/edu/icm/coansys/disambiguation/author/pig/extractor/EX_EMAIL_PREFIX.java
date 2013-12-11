@@ -26,10 +26,19 @@ import org.apache.pig.tools.pigstats.PigStatusReporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.PigNormalizer;
 import pl.edu.icm.coansys.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 
 public class EX_EMAIL_PREFIX extends DisambiguationExtractorAuthor {
+
+	public EX_EMAIL_PREFIX() {
+		super();
+	}
+
+	public EX_EMAIL_PREFIX(PigNormalizer[] new_normalizers) {
+		super(new_normalizers);
+	}
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(EX_EMAIL_PREFIX.class);

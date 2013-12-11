@@ -23,11 +23,20 @@ import org.apache.pig.data.DefaultDataBag;
 import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
 
+import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.PigNormalizer;
 import pl.edu.icm.coansys.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 
 public class EX_AUTH_SNAMES extends DisambiguationExtractorDocument {
 	
+	public EX_AUTH_SNAMES() {
+		super();
+	}
+
+	public EX_AUTH_SNAMES(PigNormalizer[] new_normalizers) {
+		super(new_normalizers);
+	}
+
 	@Override
 	public DataBag extract( Object o, String lang ){
 		TupleFactory tf = TupleFactory.getInstance();

@@ -18,6 +18,7 @@
 
 package pl.edu.icm.coansys.disambiguation.author.pig.extractor;
 
+import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.PigNormalizer;
 import pl.edu.icm.coansys.models.DocumentProtos.TextWithLanguage;
 
 import org.apache.pig.data.DataBag;
@@ -28,6 +29,14 @@ import org.apache.pig.data.TupleFactory;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 
 public class EX_TITLE extends DisambiguationExtractorDocument {
+
+	public EX_TITLE() {
+		super();
+	}
+
+	public EX_TITLE(PigNormalizer[] new_normalizers) {
+		super(new_normalizers);
+	}
 
 	@Override
 	public DataBag extract(Object o, String lang) {

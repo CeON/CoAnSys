@@ -22,11 +22,20 @@ import org.apache.pig.data.DataBag;
 import org.apache.pig.data.DefaultDataBag;
 import org.apache.pig.data.TupleFactory;
 
+import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.PigNormalizer;
 import pl.edu.icm.coansys.models.DocumentProtos.ClassifCode;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.models.DocumentProtos.KeywordsList;
 
 public class EX_CLASSIFICATION_CODES extends DisambiguationExtractorDocument {
+
+	public EX_CLASSIFICATION_CODES() {
+		super();
+	}
+
+	public EX_CLASSIFICATION_CODES(PigNormalizer[] new_normalizers) {
+		super(new_normalizers);
+	}
 
 	@Override
 	public DataBag extract(Object o, String lang) {

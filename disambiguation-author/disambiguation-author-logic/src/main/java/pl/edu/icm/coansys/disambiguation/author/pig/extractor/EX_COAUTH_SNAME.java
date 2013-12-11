@@ -23,10 +23,19 @@ import org.apache.pig.data.DefaultDataBag;
 import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
 
+import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.PigNormalizer;
 import pl.edu.icm.coansys.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 
 public class EX_COAUTH_SNAME extends DisambiguationExtractorAuthor {
+
+	public EX_COAUTH_SNAME() {
+		super();
+	}
+
+	public EX_COAUTH_SNAME(PigNormalizer[] new_normalizers) {
+		super(new_normalizers);
+	}
 
 	@Override
 	public DataBag extract(Object o, int fakeIndex, String lang) {
