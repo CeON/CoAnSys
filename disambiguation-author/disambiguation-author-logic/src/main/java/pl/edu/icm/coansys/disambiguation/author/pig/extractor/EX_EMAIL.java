@@ -45,11 +45,11 @@ public class EX_EMAIL extends DisambiguationExtractorAuthor {
 			if (email == null || email.length() == 0) {
 				return db;
 			}
-			Object normalized_email = normalizeExtracted(email);
-			if (normalized_email == null) {
+			Object normalized = normalizeExtracted(email);
+			if (normalized == null) {
 				return db;
 			}
-			t.append(normalized_email);
+			t.append(normalized);
 			db.add(t);
 		} catch (Exception e) {
 			logger.error("Problem with extraction or normalization of email ",

@@ -24,43 +24,37 @@ import org.apache.pig.data.DataBag;
 import org.apache.pig.data.DefaultDataBag;
 import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 
 public class EX_TITLE_SPLIT extends DisambiguationExtractorDocument {
-	
-    private static final Logger logger = LoggerFactory.getLogger( EX_TITLE_SPLIT.class );
 
 	@Override
-	public DataBag extract( Object o, String lang ) {
-		
+	public DataBag extract(Object o, String lang) {
+
 		DocumentMetadata dm = (DocumentMetadata) o;
 		DataBag db = new DefaultDataBag();
-		
-        for ( TextWithLanguage title : dm.getBasicMetadata().getTitleList() ) {
-            if ( lang == null || lang.equalsIgnoreCase( title.getLanguage() ) ) {
-            	String[] normals = title.getText().split("[\\W]+");
-            	for(String s : normals){
-            		if(s.length()==0){
-            			continue;
-            		}
-            		Tuple t = TupleFactory.getInstance().newTuple( 
-            				normalizeExtracted( s ) );
-            		db.add( t );
-            	}
-            }
-        }
-        
-        if ( db.size() == 0 ){
-        	logger.info("No title IN GIVEN LANG (" + lang + ") out of " 
-        			+ dm.getBasicMetadata().getTitleCount() + " titles!");
-        }
-        
-        return db;
+
+		for (TextWithLanguage title : dm.getBasicMetadata().getTitleList()) {
+			if (lang == null || lang.equalsIgnoreCase(title.getLanguage())) {
+				String[] normals = title.getText().split("[\\W]+");
+				for (String s : normals) {
+					if (s.isEmpty()) {
+						continue;
+					}
+					Object normalized = normalizeExtracted(s);
+					if (normalized == null) {
+						continue;
+					}
+					Tuple t = TupleFactory.getInstance().newTuple(normalized);
+					db.add(t);
+				}
+			}
+		}
+
+		return db;
 	}
-	
+
 	@Override
 	public String getId() {
 		return "9";

@@ -52,10 +52,10 @@ public class EX_EMAIL_PREFIX extends DisambiguationExtractorAuthor {
 				return db;
 			}
 			
-			Object normalized_mail = normalizeExtracted(email);
+			Object normalized = normalizeExtracted(email);
 			
-			if ( normalized_mail != null ) {
-				t.append(normalized_mail);
+			if ( normalized != null ) {
+				t.append(normalized);
 				db.add(t);
 			}
 		} catch (Exception e) {

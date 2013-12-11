@@ -25,52 +25,28 @@ import org.apache.pig.data.TupleFactory;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.models.DocumentProtos.KeywordsList;
 
-public class EX_KEYWORDS extends DisambiguationExtractorDocument  {
-	
-    //private static final Logger logger = LoggerFactory.getLogger( EX_KEYWORDS.class );
-	
+public class EX_KEYWORDS extends DisambiguationExtractorDocument {
+
 	@Override
-	public DataBag extract( Object o ){
+	public DataBag extract(Object o, String lang) {
+
 		DocumentMetadata dm = (DocumentMetadata) o;
 		DataBag db = new DefaultDataBag();
-		
-		for ( KeywordsList k : dm.getKeywordsList() ){
-			for ( String s : k.getKeywordsList() ){
-				if ( !isClassifCode( s ) ) {
-					db.add(TupleFactory.getInstance().newTuple(
-							normalizeExtracted( s ) ));
-				}
-			}
-		}
-		/*if ( db.size() == 0) {
-			logger.info("No keywords IN ALL LANG out of " 
-					+ dm.getKeywordsCount() + " keywords!");
-		}*/	
-		return db;		
-	}
-	
-	@Override
-	public DataBag extract( Object o, String lang ) {
-		
-		DocumentMetadata dm = (DocumentMetadata) o;
-		DataBag db = new DefaultDataBag();
-		
-		
-		for ( KeywordsList k : dm.getKeywordsList() ){
-			if ( k.getLanguage().equalsIgnoreCase( lang ) ) {
-				for ( String s : k.getKeywordsList() ){
-					if ( !isClassifCode( s ) ) {
-						db.add(TupleFactory.getInstance().newTuple(
-								normalizeExtracted( s ) ));
+
+		for (KeywordsList k : dm.getKeywordsList()) {
+			if (lang == null || k.getLanguage().equalsIgnoreCase(lang)) {
+				for (String s : k.getKeywordsList()) {
+					if (!s.isEmpty() && !isClassifCode(s)) {
+						Object normalized = normalizeExtracted(s);
+						if (normalized != null) {
+							db.add(TupleFactory.getInstance().newTuple(
+									normalized));
+						}
 					}
 				}
 			}
 		}
-        
-		/*if ( db.size() == 0) {
-			logger.info("No keywords IN GIVEN LANG (" + lang + ") out of " 
-					+ dm.getKeywordsCount() + " keywords!");
-		}*/
+
 		return db;
 	}
 

@@ -140,13 +140,6 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 	}
 
 	public EXTRACT_CONTRIBDATA_GIVENDATA(String featureinfo, String lang,
-			String skipEmptyFeatures) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-		this.language = lang;
-		this.skipEmptyFeatures = Boolean.parseBoolean(skipEmptyFeatures);
-		setDisambiguationExtractor(featureinfo);
-	}
-
-	public EXTRACT_CONTRIBDATA_GIVENDATA(String featureinfo, String lang,
 			String skipEmptyFeatures, String useIdsForExtractors) throws InstantiationException, IllegalAccessException, ClassNotFoundException
 			 {
 		this.language = lang;

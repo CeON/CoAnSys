@@ -32,7 +32,20 @@ public class EX_YEAR extends DisambiguationExtractorDocument {
 		DocumentMetadata dm = (DocumentMetadata) o;
 		
 		DataBag db = new DefaultDataBag();
-		Tuple t = TupleFactory.getInstance().newTuple( dm.getBasicMetadata().getYear() );
+		String year = dm.getBasicMetadata().getYear();
+		if ( year.isEmpty() ) {
+			return db;
+		}
+		
+		int intYear;
+		
+		try {
+			intYear = Integer.parseInt( year );
+		} catch( NumberFormatException e ) {
+			return db;
+		}
+		
+		Tuple t = TupleFactory.getInstance().newTuple( intYear );
 		db.add( t );
 		
 		return db;

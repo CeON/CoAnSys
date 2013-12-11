@@ -21,8 +21,6 @@ import org.apache.pig.data.DataBag;
 import org.apache.pig.data.DefaultDataBag;
 import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
@@ -30,8 +28,6 @@ import pl.edu.icm.coansys.models.DocumentProtos.KeyValue;
 
 public class EX_PERSON_ID extends DisambiguationExtractorAuthor {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(EX_PERSON_ID.class);
 	public static final String PERSON_ID_KEY_NAME = "orcid";
 
 	@Override
