@@ -16,7 +16,7 @@
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.edu.icm.coansys.deduplication.document;
+package pl.edu.icm.coansys.deduplication.document.keygenerator;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -24,15 +24,17 @@ import org.testng.annotations.Test;
 import pl.edu.icm.coansys.deduplication.document.tool.MockDocumentMetadataFactory;
 import pl.edu.icm.coansys.models.DocumentProtos;
 
-public class WorkKeyGeneratorTest {
+public class OddsCharsKeyGeneratorTest {
+    
+    private OddsCharsKeyGenerator keyGen = new OddsCharsKeyGenerator();
 
     
     @Test
     public void testGenerateKey() {
         DocumentProtos.DocumentMetadata doc = MockDocumentMetadataFactory.createDocumentMetadata("A comparison of associated dsd sd");
         
-        Assert.assertEquals("cmaio", WorkKeyGenerator.generateKey(doc, 0));
-        Assert.assertEquals("cmaioascae", WorkKeyGenerator.generateKey(doc, 1));
-        Assert.assertEquals("cmaioascaeddd", WorkKeyGenerator.generateKey(doc, 2));
+        Assert.assertEquals("cmaio", keyGen.generateKey(doc, 0));
+        Assert.assertEquals("cmaioascae", keyGen.generateKey(doc, 1));
+        Assert.assertEquals("cmaioascaeddd", keyGen.generateKey(doc, 2));
     }
 }
