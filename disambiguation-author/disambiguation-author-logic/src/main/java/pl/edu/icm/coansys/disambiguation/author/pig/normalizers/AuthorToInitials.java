@@ -14,20 +14,13 @@ public class AuthorToInitials implements PigNormalizer {
 		
 		if (obj instanceof Author) {
 			Author author = (Author) obj;
-			String name = author.getName();
-			String sname = author.getSurname();
-
-			if (name == null) {
-				logger.info("No name for author with key: " + author.getKey());
-				return sname;
+			String fname = author.getForenames(); 
+			if (fname == null || fname.isEmpty()) {
+				logger.info("No forenames for author with key: " + author.getKey());
+				return "";
 			}
 
-			if (sname == null) {
-				logger.info("No surname for author with key: "
-						+ author.getKey());
-			}
-
-			return name.substring(0, 1) + ". " + sname;
+			return fname.substring(0, 1);
 			
 		} else {
 			logger.info("Given object is not instance of Author class");			

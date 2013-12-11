@@ -22,21 +22,41 @@ import org.apache.pig.data.DataBag;
 import org.apache.pig.data.DefaultDataBag;
 import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
+import org.apache.pig.tools.pigstats.PigStatusReporter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 
 public class EX_EMAIL extends DisambiguationExtractorAuthor {
 	
+	private static final Logger logger = LoggerFactory
+			.getLogger(EX_EMAIL.class);
+	
 	@Override
 	public DataBag extract( Object o, int fakeIndex, String lang ){
-		DocumentMetadata dm = (DocumentMetadata) o;
 		DataBag db = new DefaultDataBag();
-		Tuple t = TupleFactory.getInstance().newTuple();
-		
-		Author a = dm.getBasicMetadata().getAuthor( fakeIndex );
-		t.append(normalizeExtracted(a.getEmail()));
-		db.add(t);
+		try{
+			DocumentMetadata dm = (DocumentMetadata) o;
+			Tuple t = TupleFactory.getInstance().newTuple();
+			Author a = dm.getBasicMetadata().getAuthor( fakeIndex );
+			String email = null;
+			
+			Object emailO = a.getEmail();
+			if(email == null) return db;
+			email = ( (String) normalizeExtracted(emailO) );
+			if(email.length()>0){
+				t.append(email);
+				db.add(t);
+			}
+		}catch(Exception e){
+			logger.error("Problem with extraction or normalization of email ",e);
+			PigStatusReporter reporter = PigStatusReporter.getInstance();
+			if(reporter != null){
+				reporter.getCounter("Extraction problem", "EX_EMAIL");
+			}
+		}
 		return db;
 	}
 
