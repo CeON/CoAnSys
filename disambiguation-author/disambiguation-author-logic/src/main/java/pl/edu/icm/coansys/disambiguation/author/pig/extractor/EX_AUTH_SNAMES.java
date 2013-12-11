@@ -23,11 +23,20 @@ import org.apache.pig.data.DefaultDataBag;
 import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
 
+import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.PigNormalizer;
 import pl.edu.icm.coansys.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 
 public class EX_AUTH_SNAMES extends DisambiguationExtractorDocument {
 	
+	public EX_AUTH_SNAMES() {
+		super();
+	}
+
+	public EX_AUTH_SNAMES(PigNormalizer[] new_normalizers) {
+		super(new_normalizers);
+	}
+
 	@Override
 	public DataBag extract( Object o, String lang ){
 		TupleFactory tf = TupleFactory.getInstance();
@@ -35,8 +44,19 @@ public class EX_AUTH_SNAMES extends DisambiguationExtractorDocument {
 		DataBag db = new DefaultDataBag();
 		
 		for ( Author a : dm.getBasicMetadata().getAuthorList() ){
+			if ( a == null ) {
+				continue;
+			}
 			Tuple t = tf.newTuple();
-			t.append( normalizeExtracted( a.getSurname() ) );
+			String sname = a.getSurname();
+			if ( sname == null || sname.isEmpty() ) {
+				continue;
+			}
+			Object normalized = normalizeExtracted( sname );
+			if ( normalized == null ) {
+				continue;
+			}
+			t.append( normalized );
 			db.add(t);
 		}
 		

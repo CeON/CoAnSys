@@ -41,13 +41,23 @@ import pl.edu.icm.coansys.disambiguation.author.pig.AproximateAND_BFS;
 import pl.edu.icm.coansys.disambiguation.author.pig.extractor.DisambiguationExtractor;
 import pl.edu.icm.coansys.disambiguation.author.pig.extractor.DisambiguationExtractorDocument;
 import pl.edu.icm.coansys.disambiguation.author.pig.extractor.DisambiguationExtractorFactory;
-import pl.edu.icm.coansys.disambiguation.author.pig.extractor.EX_AUTH_INITIALS;
-import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.AuthorToInitials;
 import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.ToEnglishLowerCase;
 import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.ToHashCode;
 import pl.edu.icm.coansys.disambiguation.features.Disambiguator;
 import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
-import pl.edu.icm.coansys.models.DocumentProtos.Author;
+
+// TODO:
+/* EXTRACTORS test build example author for it like this:
+// 
+		import pl.edu.icm.coansys.models.DocumentProtos.Author;
+		Author.Builder ab =  Author.newBuilder();
+		ab.setName("Piotr");
+		ab.setSurname("Dendek");
+		ab.setKey("needed");
+		Author author = ab.build();
+		String toInitExpected = "P. Dendek";
+*/
+
 
 public class DisambiguationTests {
 	 
@@ -60,7 +70,7 @@ public class DisambiguationTests {
 		String toELCExpected = "e zaaaazolc gesla jaz n ae 1234567890 _ -";
 		Integer toHashExpected = -1486600746;
 		Integer DisExtrExpected = -1399651159;
-		Object a, b, c, d;
+		Object a, b, c, d, e;
 		String tmp;
 		
 		// testing critical changes in DiacriticsRemover
@@ -77,32 +87,28 @@ public class DisambiguationTests {
 		a = (new ToHashCode()).normalize( (Object) text );
 		assert( a.equals( toHashExpected ) );
 		
-		// testing Author initials normalizer
-		Author.Builder ab =  Author.newBuilder();
-		ab.setName("Piotr");
-		ab.setSurname("Dendek");
-		ab.setKey("needed");
-		Author author = ab.build();
-		String toInitExpected = "P. Dendek";
-		c = (new AuthorToInitials()).normalize( (Object) author );
-		assert( c.equals( toInitExpected ) );
-   	
+		
+		// checking null argument / multi spaces:
+		String doublespace = "  ";
+		c = (new ToEnglishLowerCase()).normalize( doublespace );
+		assert( c == null );
+		
+		String manyspaces = "  a  b  ";
+		d = (new ToEnglishLowerCase()).normalize( manyspaces );
+		assert( d.equals("a b") );			
+		
+		e = (new ToEnglishLowerCase()).normalize( null );
+		assert( e == null );		
+		e = (new ToHashCode()).normalize( null );
+		assert( e == null );		
+
 		
 		// DisambiguationExtractor - normalizeExtracted tests:
-		
 		// testing normalize tool, which is using after data extraction
 		DisambiguationExtractorDocument DED = 
 				new DisambiguationExtractorDocument();
 		a = DED.normalizeExtracted( text );
 		assert( a.equals( DisExtrExpected ) );
-		
-		// simulation of normalizeExtracted function from EX_AUTH_INITIALS
-		d = (new AuthorToInitials()).normalize( author );
-   		d = (new ToEnglishLowerCase()).normalize( d );
-		d = (new ToHashCode()).normalize( d );
-   		
-		DisambiguationExtractor DE = new EX_AUTH_INITIALS();
-		assert( d.equals( DE.normalizeExtracted(author) ) );
    	}
    	
    	

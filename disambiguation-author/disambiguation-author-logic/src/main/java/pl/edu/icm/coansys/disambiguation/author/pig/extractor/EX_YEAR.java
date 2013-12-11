@@ -23,16 +23,38 @@ import org.apache.pig.data.DefaultDataBag;
 import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
 
+import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.PigNormalizer;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 
 public class EX_YEAR extends DisambiguationExtractorDocument {
 	
+	public EX_YEAR() {
+		super();
+	}
+
+	public EX_YEAR(PigNormalizer[] new_normalizers) {
+		super(new_normalizers);
+	}
+
 	@Override
 	public DataBag extract( Object o, String lang ) {
 		DocumentMetadata dm = (DocumentMetadata) o;
 		
 		DataBag db = new DefaultDataBag();
-		Tuple t = TupleFactory.getInstance().newTuple( dm.getBasicMetadata().getYear() );
+		String year = dm.getBasicMetadata().getYear();
+		if ( year.isEmpty() ) {
+			return db;
+		}
+		
+		int intYear;
+		
+		try {
+			intYear = Integer.parseInt( year );
+		} catch( NumberFormatException e ) {
+			return db;
+		}
+		
+		Tuple t = TupleFactory.getInstance().newTuple( intYear );
 		db.add( t );
 		
 		return db;
