@@ -16,7 +16,7 @@
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.edu.icm.coansys.deduplication.document;
+package pl.edu.icm.coansys.deduplication.document.keygenerator;
 
 import pl.edu.icm.coansys.commons.java.DocumentWrapperUtils;
 import pl.edu.icm.coansys.commons.java.StringTools;
@@ -29,21 +29,16 @@ import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
  * @author Łukasz Dumiszewski
  *
  */
-abstract class WorkKeyGenerator {
+public class OddsCharsKeyGenerator implements WorkKeyGenerator {
     
     private static final int KEY_PART_LENGTH = 5;
-    
-    
-    private WorkKeyGenerator() {
-        throw new IllegalStateException("not to instantiate");
-    }
-    
-    
+        
     /**
      * Generates key for the given {@link DocumentWrapper}
      * @param level influences the keyLength, the keyLength is a multiplication of the level and {@link #KEY_PART_LENGTH} 
      */
-    public static String generateKey(DocumentProtos.DocumentMetadata doc, int level) {
+    @Override
+    public String generateKey(DocumentProtos.DocumentMetadata doc, int level) {
         String docKey = DocumentWrapperUtils.getMainTitle(doc);
         docKey = StringTools.normalize(docKey);
         docKey = StringTools.removeStopWords(docKey);
