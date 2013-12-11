@@ -248,14 +248,14 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 			// adding to map extractor name and features' data
 			for (int i = 0; i < des4Doc.size(); i++) {
 				if (extractedDocObj[i] == null) {
-					reporter.getCounter("Missing", "DOC: "+des4Doc.get(i).getClass().getSimpleName()).increment(1);
+					reporter.getCounter("Missing_Doc", des4Doc.get(i).getClass().getSimpleName()).increment(1);
 					continue;
 				}
 				if (extractedDocObj[i].size() == 0 && skipEmptyFeatures) {
-					reporter.getCounter("Missing", "DOC: "+des4Doc.get(i).getClass().getSimpleName()).increment(1);
+					reporter.getCounter("Missing_Doc", des4Doc.get(i).getClass().getSimpleName()).increment(1);
 					continue;
 				}
-				reporter.getCounter("Existing", "DOC: "+des4Doc.get(i).getClass().getSimpleName()).increment(1);
+				reporter.getCounter("Existing_Doc", des4Doc.get(i).getClass().getSimpleName()).increment(1);
 				map.put(des4DocNameOrId.get(i), extractedDocObj[i]);
 			}
 			extractedDocObj = null;
@@ -297,12 +297,14 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 				// adding to map extractor name and features' data
 				for (int j = 0; j < des4Author.size(); j++) {
 					if (extractedAuthorObj[j] == null) {
+						reporter.getCounter("Missing_Contrib", des4Author.get(i).getClass().getSimpleName()).increment(1);
 						continue;
 					}
 					if (extractedAuthorObj[j].size() == 0 && skipEmptyFeatures) {
+						reporter.getCounter("Missing_Contrib", des4Author.get(i).getClass().getSimpleName()).increment(1);
 						continue;
 					}
-
+					reporter.getCounter("Existing_Contrib", des4Author.get(i).getClass().getSimpleName()).increment(1);
 					finalMap.put(des4AuthorNameOrId.get(j),
 							extractedAuthorObj[j]);
 				}
