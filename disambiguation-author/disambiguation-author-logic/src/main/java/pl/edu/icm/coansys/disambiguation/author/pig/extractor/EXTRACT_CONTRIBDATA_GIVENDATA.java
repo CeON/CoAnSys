@@ -34,6 +34,7 @@ import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
 import org.apache.pig.impl.logicalLayer.FrontendException;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
+import org.apache.pig.tools.pigstats.PigStatusReporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,6 +63,7 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 	private boolean snameToString = false;
 	private boolean useIdsForExtractors = false;
 	private DisambiguationExtractorFactory extrFactory = new DisambiguationExtractorFactory();
+	private boolean returnNull = false;
 
 	@Override
 	public Schema outputSchema(Schema p_input) {
@@ -129,6 +131,10 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 				this.snameToString = Boolean.parseBoolean(p.substring("snameToString=".length()));
 			}else if(p.startsWith("useIdsForExtractors=")){
 				this.useIdsForExtractors = Boolean.parseBoolean(p.substring("useIdsForExtractors=".length()));
+			}else if(p.startsWith("returnNull=")){
+				this.returnNull = Boolean.parseBoolean(p.substring("returnNull=".length()));
+			}else if(p.startsWith("onlyBasicDocStats=")){
+				this.onlyBasicDocStats = Boolean.parseBoolean(p.substring("onlyBasicDocStats=".length()));
 			}
 		}
 	}
@@ -156,6 +162,8 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 	@Override
 	public DataBag exec(Tuple input) throws IOException {
 
+		PigStatusReporter reporter = PigStatusReporter.getInstance(); 
+		
 		if (input == null || input.size() == 0) {
 			return null;
 		}
@@ -242,12 +250,14 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 			// adding to map extractor name and features' data
 			for (int i = 0; i < des4Doc.size(); i++) {
 				if (extractedDocObj[i] == null) {
+					reporter.getCounter("Missing", "DOC: "+des4Doc.get(i).getClass().getSimpleName()).increment(1);
 					continue;
 				}
 				if (extractedDocObj[i].size() == 0 && skipEmptyFeatures) {
+					reporter.getCounter("Missing", "DOC: "+des4Doc.get(i).getClass().getSimpleName()).increment(1);
 					continue;
 				}
-
+				reporter.getCounter("Existing", "DOC: "+des4Doc.get(i).getClass().getSimpleName()).increment(1);
 				map.put(des4DocNameOrId.get(i), extractedDocObj[i]);
 			}
 			extractedDocObj = null;
@@ -308,6 +318,9 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 			map = null;
 			dm = null;
 
+			if(returnNull){
+				return null;
+			}
 			return ret;
 
 		} catch (Exception e) {
