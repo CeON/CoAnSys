@@ -70,7 +70,7 @@ public class DisambiguationTests {
 		String toELCExpected = "e zaaaazolc gesla jaz n ae 1234567890 _ -";
 		Integer toHashExpected = -1486600746;
 		Integer DisExtrExpected = -1399651159;
-		Object a, b;
+		Object a, b, c, d, e;
 		String tmp;
 		
 		// testing critical changes in DiacriticsRemover
@@ -88,8 +88,22 @@ public class DisambiguationTests {
 		assert( a.equals( toHashExpected ) );
 		
 		
-		// DisambiguationExtractor - normalizeExtracted tests:
+		// checking null argument / multi spaces:
+		String doublespace = "  ";
+		c = (new ToEnglishLowerCase()).normalize( doublespace );
+		assert( c == null );
 		
+		String manyspaces = "  a  b  ";
+		d = (new ToEnglishLowerCase()).normalize( manyspaces );
+		assert( d.equals("a b") );			
+		
+		e = (new ToEnglishLowerCase()).normalize( null );
+		assert( e == null );		
+		e = (new ToHashCode()).normalize( null );
+		assert( e == null );		
+
+		
+		// DisambiguationExtractor - normalizeExtracted tests:
 		// testing normalize tool, which is using after data extraction
 		DisambiguationExtractorDocument DED = 
 				new DisambiguationExtractorDocument();

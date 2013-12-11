@@ -35,8 +35,19 @@ public class EX_AUTH_SNAMES extends DisambiguationExtractorDocument {
 		DataBag db = new DefaultDataBag();
 		
 		for ( Author a : dm.getBasicMetadata().getAuthorList() ){
+			if ( a == null ) {
+				continue;
+			}
 			Tuple t = tf.newTuple();
-			t.append( normalizeExtracted( a.getSurname() ) );
+			String sname = a.getSurname();
+			if ( sname == null || sname.isEmpty() ) {
+				continue;
+			}
+			Object normalized = normalizeExtracted( sname );
+			if ( normalized == null ) {
+				continue;
+			}
+			t.append( normalized );
 			db.add(t);
 		}
 		
