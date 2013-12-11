@@ -66,7 +66,7 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 	private boolean returnNull = false;
 
 	@Override
-	public Schema outputSchema(Schema p_input) {
+	public Schema outputSchema(@SuppressWarnings("unused") Schema p_input) {
 		try {
 			return Schema.generateNestedSchema(DataType.BAG);
 		} catch (FrontendException e) {
@@ -297,14 +297,14 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 				// adding to map extractor name and features' data
 				for (int j = 0; j < des4Author.size(); j++) {
 					if (extractedAuthorObj[j] == null) {
-						reporter.getCounter("Missing_Contrib", des4Author.get(i).getClass().getSimpleName()).increment(1);
+						reporter.getCounter("Missing_Contrib", des4Author.get(j).getClass().getSimpleName()).increment(1);
 						continue;
 					}
 					if (extractedAuthorObj[j].size() == 0 && skipEmptyFeatures) {
-						reporter.getCounter("Missing_Contrib", des4Author.get(i).getClass().getSimpleName()).increment(1);
+						reporter.getCounter("Missing_Contrib", des4Author.get(j).getClass().getSimpleName()).increment(1);
 						continue;
 					}
-					reporter.getCounter("Existing_Contrib", des4Author.get(i).getClass().getSimpleName()).increment(1);
+					reporter.getCounter("Existing_Contrib", des4Author.get(j).getClass().getSimpleName()).increment(1);
 					finalMap.put(des4AuthorNameOrId.get(j),
 							extractedAuthorObj[j]);
 				}
