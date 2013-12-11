@@ -26,6 +26,7 @@ import pl.edu.icm.coansys.citations.data.CitationMatchingProtos.{KeyValue, Match
 import pl.edu.icm.coansys.citations.util.{misc, BytesConverter}
 import pl.edu.icm.coansys.commons.java.DiacriticsRemover.removeDiacritics
 import pl.edu.icm.coansys.models.DocumentProtos.{DocumentMetadata, BasicMetadata, ReferenceMetadata}
+import org.apache.commons.lang.StringUtils
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -83,7 +84,7 @@ object MatchableEntity {
     new MatchableEntity(MatchableEntityData.parseFrom(bytes))
   }
 
-  def fromParameters(id: String = "",
+  def fromParameters(id: String,
                      author: String = "",
                      source: String = "",
                      title: String = "",
@@ -92,12 +93,18 @@ object MatchableEntity {
                      rawText: String = ""): MatchableEntity = {
     val data = MatchableEntityData.newBuilder()
     data.setId(id)
-    data.setAuthor(author)
-    data.setSource(source)
-    data.setTitle(title)
-    data.setPages(pages)
-    data.setYear(year)
-    data.addAuxiliary(KeyValue.newBuilder().setKey("rawText").setValue(rawText))
+    if (StringUtils.isNotBlank(author))
+      data.setAuthor(author)
+    if (StringUtils.isNotBlank(source))
+      data.setSource(source)
+    if (StringUtils.isNotBlank(title))
+      data.setTitle(title)
+    if (StringUtils.isNotBlank(pages))
+      data.setPages(pages)
+    if (StringUtils.isNotBlank(year))
+      data.setYear(year)
+    if (StringUtils.isNotBlank(rawText))
+      data.addAuxiliary(KeyValue.newBuilder().setKey("rawText").setValue(rawText))
 
     new MatchableEntity(data.build())
   }
