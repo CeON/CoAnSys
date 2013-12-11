@@ -17,7 +17,6 @@
  */
 package pl.edu.icm.coansys.deduplication.document;
 
-//import pl.edu.icm.coansys.deduplication.document.keygenerator.OddsCharsKeyGenerator;
 import pl.edu.icm.coansys.commons.java.DocumentWrapperUtils;
 import java.io.IOException;
 
