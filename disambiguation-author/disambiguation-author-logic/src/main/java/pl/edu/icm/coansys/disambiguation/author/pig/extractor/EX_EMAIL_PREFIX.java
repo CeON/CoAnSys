@@ -26,41 +26,57 @@ import org.apache.pig.tools.pigstats.PigStatusReporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.PigNormalizer;
 import pl.edu.icm.coansys.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 
-public class EX_EMAIL_PREFIX extends DisambiguationExtractorAuthor{
-	
+public class EX_EMAIL_PREFIX extends DisambiguationExtractorAuthor {
+
+	public EX_EMAIL_PREFIX() {
+		super();
+	}
+
+	public EX_EMAIL_PREFIX(PigNormalizer[] new_normalizers) {
+		super(new_normalizers);
+	}
+
 	private static final Logger logger = LoggerFactory
 			.getLogger(EX_EMAIL_PREFIX.class);
-	
+
 	@Override
-	public DataBag extract( Object o, int fakeIndex, String lang ){
-		
+	public DataBag extract(Object o, int fakeIndex, String lang) {
+
 		DataBag db = new DefaultDataBag();
-		try{
+		try {
 			DocumentMetadata dm = (DocumentMetadata) o;
 			Tuple t = TupleFactory.getInstance().newTuple();
-			Author a = dm.getBasicMetadata().getAuthor( fakeIndex );
-			String email = null;
+			Author a = dm.getBasicMetadata().getAuthor(fakeIndex);
+			String email = a.getEmail();
 			
-			Object emailO = a.getEmail();
-			if(email == null) return db;
-			email = ( (String) normalizeExtracted(emailO) ).replaceAll("@.+", "");
-			if(email.length()>0){
-				t.append(email);
+			if ( email == null ) {
+				return db;
+			}
+			email = email.replaceAll("@.+", "");
+			if ( email.length() == 0 ) {
+				return db;
+			}
+			
+			Object normalized = normalizeExtracted(email);
+			
+			if ( normalized != null ) {
+				t.append(normalized);
 				db.add(t);
 			}
-		}catch(Exception e){
-			logger.error("Problem with extraction or normalization of email ",e);
+		} catch (Exception e) {
+			logger.error("Problem with extraction or normalization of email ",
+					e);
 			PigStatusReporter reporter = PigStatusReporter.getInstance();
-			if(reporter != null){
+			if (reporter != null) {
 				reporter.getCounter("Extraction problem", "EX_EMAIL");
 			}
 		}
 		return db;
 	}
-	
 
 	@Override
 	public String getId() {

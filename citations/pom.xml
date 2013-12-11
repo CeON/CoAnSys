@@ -15,6 +15,8 @@
         <module>citations-impl</module>
         <module>citations-main-workflow</module>
         <module>citations-inner-workflow</module>
+        <module>citations-core-workflow</module>
+        <module>citations-full-workflow</module>
     </modules>
 
 

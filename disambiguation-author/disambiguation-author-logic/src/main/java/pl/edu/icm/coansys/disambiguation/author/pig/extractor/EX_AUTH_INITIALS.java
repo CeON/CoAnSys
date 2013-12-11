@@ -23,25 +23,20 @@ import org.apache.pig.data.DefaultDataBag;
 import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
 
-import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.AuthorToInitials;
 import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.PigNormalizer;
-import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.ToEnglishLowerCase;
-import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.ToHashCode;
 import pl.edu.icm.coansys.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 
 public class EX_AUTH_INITIALS extends DisambiguationExtractorDocument {
 	
-	private final static PigNormalizer new_normalizers[] = {
-		new AuthorToInitials(),
-		new ToEnglishLowerCase(), 
-		new ToHashCode()
-	};
-	
-	public EX_AUTH_INITIALS(){
-		super( new_normalizers );
+	public EX_AUTH_INITIALS() {
+		super();
 	}
-	
+
+	public EX_AUTH_INITIALS(PigNormalizer[] new_normalizers) {
+		super(new_normalizers);
+	}
+
 	@Override
 	public DataBag extract( Object o, String lang ){
 		TupleFactory tf = TupleFactory.getInstance();
@@ -49,8 +44,20 @@ public class EX_AUTH_INITIALS extends DisambiguationExtractorDocument {
 		DataBag db = new DefaultDataBag();
 		
 		for ( Author a : dm.getBasicMetadata().getAuthorList() ){
+			if ( a == null ) {
+				continue;
+			}
+			String fname = a.getForenames(); 
+			if ( fname == null || fname.isEmpty() ) {
+				continue;
+			}
+			String initial = fname.substring(0, 1);
 			Tuple t = tf.newTuple();
-			t.append( normalizeExtracted( a ) );
+			Object normalized = normalizeExtracted( initial );
+			if ( normalized == null ) {
+				continue;
+			}
+			t.append( normalized );
 			db.add(t);
 		}
 		

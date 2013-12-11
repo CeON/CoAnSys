@@ -24,8 +24,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.pig.EvalFunc;
 import org.apache.pig.data.DataBag;
@@ -36,12 +34,11 @@ import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
 import org.apache.pig.impl.logicalLayer.FrontendException;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
+import org.apache.pig.tools.pigstats.PigStatusReporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
-import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.AuthorToInitials;
-import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.PigNormalizer;
 import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.ToEnglishLowerCase;
 import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
 import pl.edu.icm.coansys.models.DocumentProtos.Author;
@@ -66,6 +63,7 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 	private boolean snameToString = false;
 	private boolean useIdsForExtractors = false;
 	private DisambiguationExtractorFactory extrFactory = new DisambiguationExtractorFactory();
+	private boolean returnNull = false;
 
 	@Override
 	public Schema outputSchema(Schema p_input) {
@@ -120,7 +118,7 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 		}
 	}
 
-	public EXTRACT_CONTRIBDATA_GIVENDATA(String null0,String null1, String null2, String null3,String in_params) throws Exception {
+	public EXTRACT_CONTRIBDATA_GIVENDATA(String in_params) throws Exception {
 		String[] params = in_params.split(" ");
 		for(String p : params){
 			if(p.startsWith("featureinfo=")){
@@ -133,24 +131,17 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 				this.snameToString = Boolean.parseBoolean(p.substring("snameToString=".length()));
 			}else if(p.startsWith("useIdsForExtractors=")){
 				this.useIdsForExtractors = Boolean.parseBoolean(p.substring("useIdsForExtractors=".length()));
+			}else if(p.startsWith("returnNull=")){
+				this.returnNull = Boolean.parseBoolean(p.substring("returnNull=".length()));
+			}else if(p.startsWith("onlyBasicDocStats=")){
+				this.onlyBasicDocStats = Boolean.parseBoolean(p.substring("onlyBasicDocStats=".length()));
 			}
 		}
 	}
 	
-	public EXTRACT_CONTRIBDATA_GIVENDATA(String featureinfo) throws Exception {
-		setDisambiguationExtractor(featureinfo);
-	}
-
 	public EXTRACT_CONTRIBDATA_GIVENDATA(String featureinfo, String lang) throws InstantiationException, IllegalAccessException, ClassNotFoundException
 		{
 		this.language = lang;
-		setDisambiguationExtractor(featureinfo);
-	}
-
-	public EXTRACT_CONTRIBDATA_GIVENDATA(String featureinfo, String lang,
-			String skipEmptyFeatures) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-		this.language = lang;
-		this.skipEmptyFeatures = Boolean.parseBoolean(skipEmptyFeatures);
 		setDisambiguationExtractor(featureinfo);
 	}
 
@@ -171,6 +162,8 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 	@Override
 	public DataBag exec(Tuple input) throws IOException {
 
+		PigStatusReporter reporter = PigStatusReporter.getInstance(); 
+		
 		if (input == null || input.size() == 0) {
 			return null;
 		}
@@ -197,8 +190,6 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 			Map <String, Author> filteredAuthors = 
 					new HashMap <String, Author> ( dplAuthors.size() );
 			
-			// removing clones or duplicates (cid - initials hash)
-			PigNormalizer toInitials = new AuthorToInitials();
 			// creating disambiguation extractor only for normalizer
 			DisambiguationExtractor disam_extractor = 
 					new DisambiguationExtractor();
@@ -208,8 +199,8 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 				if ( b != null ) {
 					//cId is inside map already. Checking whether cId is cloned or
 					//duplicated for different data or incorrectly attributed for different authors
-					String aInit = (String) toInitials.normalize( a );
-					String bInit = (String) toInitials.normalize( b );
+					String aInit =  a.getSurname();
+					String bInit =  b.getSurname();
 					Object aNorm = disam_extractor.normalizeExtracted( aInit );
 					Object bNorm = disam_extractor.normalizeExtracted( bInit );
 					
@@ -220,7 +211,7 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 								" in document with key: " + docKey );
 					} else if ( aNorm.equals( bNorm ) ) {
 						logger.info( "Duplicated author key: " 
-								+ a.getKey() +  " for different metadata (except initials)" +
+								+ a.getKey() +  " for different metadata (except surname!)" +
 								" in document with key: " + docKey );
 					} else {
 						logger.error( "Duplicated aurhor key: " 
@@ -245,7 +236,7 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 			DataBag[] extractedAuthorObj;
 			Map<String, DataBag> map = new HashMap<String, DataBag>();
 			Map<String, DataBag> finalMap;
-
+			
 			if (checkLanguage()) {
 				for (int i = 0; i < des4Doc.size(); i++) {
 					extractedDocObj[i] = des4Doc.get(i).extract(dm, language);
@@ -259,18 +250,20 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 			// adding to map extractor name and features' data
 			for (int i = 0; i < des4Doc.size(); i++) {
 				if (extractedDocObj[i] == null) {
+					reporter.getCounter("Missing", "DOC: "+des4Doc.get(i).getClass().getSimpleName()).increment(1);
 					continue;
 				}
 				if (extractedDocObj[i].size() == 0 && skipEmptyFeatures) {
+					reporter.getCounter("Missing", "DOC: "+des4Doc.get(i).getClass().getSimpleName()).increment(1);
 					continue;
 				}
-
+				reporter.getCounter("Existing", "DOC: "+des4Doc.get(i).getClass().getSimpleName()).increment(1);
 				map.put(des4DocNameOrId.get(i), extractedDocObj[i]);
 			}
 			extractedDocObj = null;
 			
 			// creating disambiguation extractor only for normalizer
-			EX_AUTH_INITIALS auth_initials_ex = new EX_AUTH_INITIALS ();
+			DisambiguationExtractor extractor = new DisambiguationExtractor();
 			
 			// bag making tuples (one tuple for one contributor from document)
 			// with replicated metadata for
@@ -283,7 +276,7 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 				if(snameToString){
 					normalizedSname = new ToEnglishLowerCase().normalize( a.getSurname() );
 				}else{
-					normalizedSname = auth_initials_ex.normalizeExtracted( a );
+					normalizedSname = extractor.normalizeExtracted( a );
 				}
 				String cId = a.getKey();
 
@@ -325,20 +318,11 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 			map = null;
 			dm = null;
 
+			if(returnNull){
+				return null;
+			}
 			return ret;
 
-		} catch(ArrayIndexOutOfBoundsException ex){
-			logger.error("des4Doc objects: ");
-			for(int i=0; i<des4Doc.size();i++){
-				logger.error(des4Doc.get(i).getClass().getSimpleName());
-			}
-			logger.error("des4Author objects: ");
-			for(int i=0; i<des4Author.size();i++){
-				logger.error(des4Author.get(i).getClass().getSimpleName());
-			}
-			logger.error("Error in processing input row:", ex);
-			throw new IOException("Caught exception processing input row:\n"
-					+ StackTraceExtractor.getStackTrace(ex));
 		} catch (Exception e) {
 			logger.error("Error in processing input row:", e);
 			throw new IOException("Caught exception processing input row:\n"

@@ -22,55 +22,40 @@ import org.apache.pig.data.DataBag;
 import org.apache.pig.data.DefaultDataBag;
 import org.apache.pig.data.TupleFactory;
 
+import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.PigNormalizer;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.models.DocumentProtos.KeywordsList;
 
-public class EX_KEYWORDS extends DisambiguationExtractorDocument  {
-	
-    //private static final Logger logger = LoggerFactory.getLogger( EX_KEYWORDS.class );
-	
-	@Override
-	public DataBag extract( Object o ){
-		DocumentMetadata dm = (DocumentMetadata) o;
-		DataBag db = new DefaultDataBag();
-		
-		for ( KeywordsList k : dm.getKeywordsList() ){
-			for ( String s : k.getKeywordsList() ){
-				if ( !isClassifCode( s ) ) {
-					db.add(TupleFactory.getInstance().newTuple(
-							normalizeExtracted( s ) ));
-				}
-			}
-		}
-		/*if ( db.size() == 0) {
-			logger.info("No keywords IN ALL LANG out of " 
-					+ dm.getKeywordsCount() + " keywords!");
-		}*/	
-		return db;		
+public class EX_KEYWORDS extends DisambiguationExtractorDocument {
+
+	public EX_KEYWORDS() {
+		super();
 	}
-	
+
+	public EX_KEYWORDS(PigNormalizer[] new_normalizers) {
+		super(new_normalizers);
+	}
+
 	@Override
-	public DataBag extract( Object o, String lang ) {
-		
+	public DataBag extract(Object o, String lang) {
+
 		DocumentMetadata dm = (DocumentMetadata) o;
 		DataBag db = new DefaultDataBag();
-		
-		
-		for ( KeywordsList k : dm.getKeywordsList() ){
-			if ( k.getLanguage().equalsIgnoreCase( lang ) ) {
-				for ( String s : k.getKeywordsList() ){
-					if ( !isClassifCode( s ) ) {
-						db.add(TupleFactory.getInstance().newTuple(
-								normalizeExtracted( s ) ));
+
+		for (KeywordsList k : dm.getKeywordsList()) {
+			if (lang == null || k.getLanguage().equalsIgnoreCase(lang)) {
+				for (String s : k.getKeywordsList()) {
+					if (!s.isEmpty() && !isClassifCode(s)) {
+						Object normalized = normalizeExtracted(s);
+						if (normalized != null) {
+							db.add(TupleFactory.getInstance().newTuple(
+									normalized));
+						}
 					}
 				}
 			}
 		}
-        
-		/*if ( db.size() == 0) {
-			logger.info("No keywords IN GIVEN LANG (" + lang + ") out of " 
-					+ dm.getKeywordsCount() + " keywords!");
-		}*/
+
 		return db;
 	}
 

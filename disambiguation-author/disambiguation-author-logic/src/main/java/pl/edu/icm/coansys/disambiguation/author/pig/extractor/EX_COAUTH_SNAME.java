@@ -23,26 +23,46 @@ import org.apache.pig.data.DefaultDataBag;
 import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
 
+import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.PigNormalizer;
 import pl.edu.icm.coansys.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 
 public class EX_COAUTH_SNAME extends DisambiguationExtractorAuthor {
-	
+
+	public EX_COAUTH_SNAME() {
+		super();
+	}
+
+	public EX_COAUTH_SNAME(PigNormalizer[] new_normalizers) {
+		super(new_normalizers);
+	}
+
 	@Override
-	public DataBag extract( Object o, int fakeIndex, String lang ){
+	public DataBag extract(Object o, int fakeIndex, String lang) {
 		TupleFactory tf = TupleFactory.getInstance();
 		DocumentMetadata dm = (DocumentMetadata) o;
 		DataBag db = new DefaultDataBag();
-		
-		for ( Author a : dm.getBasicMetadata().getAuthorList() ){
-			if ( a.getPositionNumber() == fakeIndex ){
+
+		for (Author a : dm.getBasicMetadata().getAuthorList()) {
+			if (a == null) {
+				continue;
+			}
+			if (a.getPositionNumber() == fakeIndex) {
+				continue;
+			}
+			String sname = a.getSurname();
+			if (sname == null || sname.isEmpty()) {
+				continue;
+			}
+			Object normalized = normalizeExtracted(sname);
+			if (normalized == null) {
 				continue;
 			}
 			Tuple t = tf.newTuple();
-			t.append( normalizeExtracted( a.getSurname() ) );
+			t.append(normalized);
 			db.add(t);
 		}
-		
+
 		return db;
 	}
 

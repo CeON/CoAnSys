@@ -29,9 +29,6 @@ import scala.annotation.tailrec
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 object HeuristicFilter extends MyScoobiApp {
-  def niceTokens(s: String) =
-    tokensFromCermine(s.toLowerCase(Locale.ENGLISH)).filter(x => x.length > 2 || x.exists(_.isDigit)).take(50).toSet
-
   def merge(xs: List[(Double, String)], ys: List[(Double, String)], limit: Int): List[(Double, String)] = {
     import scala.util.control.TailCalls._
     def helper: (List[(Double, String)], List[(Double, String)], Int, List[(Double, String)]) => TailRec[List[(Double, String)]] = {

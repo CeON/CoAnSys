@@ -63,7 +63,7 @@ public class DuplicateWorkServiceTest extends AbstractTestNGSpringContextTests {
         DocumentProtos.DocumentMetadata documentWrapper3 = MockDocumentMetadataFactory.createDocumentMetadata("Ala ma kota g", 2012, janKowalski, adamNowak);
         DocumentProtos.DocumentMetadata documentWrapper4 = MockDocumentMetadataFactory.createDocumentMetadata("Ala mna kota f", 2012, janKowalski, adamNowak);
         documentWrapper5 = MockDocumentMetadataFactory.createDocumentMetadata("Ola ma fajnego psiaka 300", 2012, janKowalski, adamNowak);
-        DocumentProtos.DocumentMetadata documentWrapper6 = MockDocumentMetadataFactory.createDocumentMetadata("Ola mma fajnego pisaka 300", 2012, janKowalski, adamNowak);
+        DocumentProtos.DocumentMetadata documentWrapper6 = MockDocumentMetadataFactory.createDocumentMetadata("Ola ma fajnego pisaka 300", 2012, janKowalski, adamNowak);
         
         documentWrappers.add(documentWrapper1);
         documentWrappers.add(documentWrapper2);
@@ -82,13 +82,13 @@ public class DuplicateWorkServiceTest extends AbstractTestNGSpringContextTests {
                 log.info("------ title0: {}", DocumentWrapperUtils.getMainTitle(documentMetadata));
             }
         }
-        Assert.assertEquals(2, duplicates.size());
+        Assert.assertEquals(duplicates.size(), 2);
         for (Map.Entry<Integer, Set<DocumentProtos.DocumentMetadata>> entry : duplicates.entrySet()) {
             if (entry.getValue().contains(documentWrapper1)) {
-                Assert.assertEquals(4, entry.getValue().size());
+                Assert.assertEquals(entry.getValue().size(), 3);
             }
             else if (entry.getValue().contains(documentWrapper5)) {
-                Assert.assertEquals(2, entry.getValue().size());
+                Assert.assertEquals(entry.getValue().size(), 2);
             } else {
                 Assert.fail();
             }

@@ -22,38 +22,54 @@ import org.apache.pig.data.DataBag;
 import org.apache.pig.data.DefaultDataBag;
 import org.apache.pig.data.TupleFactory;
 
+import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.PigNormalizer;
 import pl.edu.icm.coansys.models.DocumentProtos.ClassifCode;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.models.DocumentProtos.KeywordsList;
 
-public class EX_CLASSIFICATION_CODES extends DisambiguationExtractorDocument{
-	
+public class EX_CLASSIFICATION_CODES extends DisambiguationExtractorDocument {
+
+	public EX_CLASSIFICATION_CODES() {
+		super();
+	}
+
+	public EX_CLASSIFICATION_CODES(PigNormalizer[] new_normalizers) {
+		super(new_normalizers);
+	}
+
 	@Override
-	public DataBag extract( Object o, String lang ){
+	public DataBag extract(Object o, String lang) {
 		DocumentMetadata dm = (DocumentMetadata) o;
 		DataBag db = new DefaultDataBag();
-		
-		//classification codes:
-		for(ClassifCode cc : dm.getBasicMetadata().getClassifCodeList()){ 
-			for(String s : cc.getValueList()){
-				db.add( TupleFactory.getInstance().newTuple( 
-						normalizeExtracted( s ) ) );
-			}
-		}
-		
-		//classification codes from keywords
-		for ( KeywordsList k : dm.getKeywordsList() ){
-			if ( lang == null || k.getLanguage().equalsIgnoreCase( lang ) ) {
-				for ( String s : k.getKeywordsList() ){
-					if ( isClassifCode( s ) ) {
-						db.add(TupleFactory.getInstance().newTuple(
-								normalizeExtracted( s ) ));
+
+		// classification codes:
+		for (ClassifCode cc : dm.getBasicMetadata().getClassifCodeList()) {
+			for (String s : cc.getValueList()) {
+				if ( s != null && !s.isEmpty() ) {
+					Object normalized = normalizeExtracted(s);
+					if (normalized != null) {
+						db.add(TupleFactory.getInstance().newTuple(normalized));
 					}
 				}
 			}
 		}
-			
-		return db;		
+
+		// classification codes from keywords
+		for (KeywordsList k : dm.getKeywordsList()) {
+			if (lang == null || k.getLanguage().equalsIgnoreCase(lang)) {
+				for (String s : k.getKeywordsList()) {
+					if ( s != null && !s.isEmpty() && isClassifCode(s)) {
+						Object normalized = normalizeExtracted(s);
+						if (normalized != null) {
+							db.add(TupleFactory.getInstance().newTuple(
+									normalizeExtracted(normalized)));
+						}
+					}
+				}
+			}
+		}
+
+		return db;
 	}
 
 	@Override
