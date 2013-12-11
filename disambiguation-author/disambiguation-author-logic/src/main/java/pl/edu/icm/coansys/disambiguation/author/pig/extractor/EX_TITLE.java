@@ -41,6 +41,9 @@ public class EX_TITLE extends DisambiguationExtractorDocument {
 		
         for ( TextWithLanguage title : dm.getBasicMetadata().getTitleList() ) {
             if ( lang == null || lang.equalsIgnoreCase( title.getLanguage()) ) {
+        		if ( title.getText().length()==0 ){
+        			continue;
+        		}
             	Tuple t = TupleFactory.getInstance().newTuple( 
         				normalizeExtracted( title.getText() ) );
         		db.add( t );
