@@ -39,6 +39,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.hadoop.conf.Configuration;
 import org.springframework.beans.factory.annotation.Value;
+import pl.edu.icm.coansys.deduplication.document.keygenerator.WorkKeyGenerator;
 import pl.edu.icm.coansys.models.DocumentProtos;
 
 
@@ -57,6 +58,9 @@ public class DuplicateWorkDetectReduceService implements DiReduceService<Text, B
     
     @Autowired
     private DuplicateWorkService duplicateWorkService;
+    
+    @Autowired
+    WorkKeyGenerator keyGen;
         
     private int initialMaxDocsSetSize;
     private int maxDocsSetSizeInc;
@@ -144,7 +148,7 @@ public class DuplicateWorkDetectReduceService implements DiReduceService<Text, B
     Map<Text, List<DocumentProtos.DocumentMetadata>> splitDocuments(Text key, List<DocumentProtos.DocumentMetadata> documents, int level) {
         Map<Text, List<DocumentProtos.DocumentMetadata>> splitDocuments = Maps.newHashMap();
         for (DocumentProtos.DocumentMetadata doc : documents) {
-            Text newKey = new Text(WorkKeyGenerator.generateKey(doc, level));
+            Text newKey = new Text(keyGen.generateKey(doc, level));
             List<DocumentProtos.DocumentMetadata> list = splitDocuments.get(newKey);
             if (list == null) {
                 list = Lists.newArrayList();

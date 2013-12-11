@@ -26,9 +26,11 @@ import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import pl.edu.icm.coansys.commons.spring.DiMapService;
+import pl.edu.icm.coansys.deduplication.document.keygenerator.WorkKeyGenerator;
 import pl.edu.icm.coansys.models.DocumentProtos;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
 
@@ -42,6 +44,9 @@ public class DuplicateWorkDetectMapService implements DiMapService<Writable, Byt
 
     @SuppressWarnings("unused")
     private static Logger log = LoggerFactory.getLogger(DuplicateWorkDetectMapService.class);
+    
+    @Autowired
+    private WorkKeyGenerator keyGen;
 
     @Override
     public void map(Writable key, BytesWritable value, Mapper<Writable, BytesWritable, Text, BytesWritable>.Context context)
@@ -49,7 +54,7 @@ public class DuplicateWorkDetectMapService implements DiMapService<Writable, Byt
 
         DocumentWrapper docWrapper = DocumentProtos.DocumentWrapper.parseFrom(value.copyBytes());
 
-        String docKey = WorkKeyGenerator.generateKey(docWrapper.getDocumentMetadata(), 0);
+        String docKey = keyGen.generateKey(docWrapper.getDocumentMetadata(), 0);
 
         if (!docKey.isEmpty()) {
             DocumentWrapper thinDocWrapper = DocumentWrapperUtils.cloneDocumentMetadata(docWrapper);
