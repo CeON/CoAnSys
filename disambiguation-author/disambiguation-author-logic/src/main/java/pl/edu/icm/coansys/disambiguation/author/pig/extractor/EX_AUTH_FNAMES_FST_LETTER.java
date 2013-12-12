@@ -44,17 +44,26 @@ public class EX_AUTH_FNAMES_FST_LETTER extends DisambiguationExtractorAuthor {
 		DocumentMetadata dm = (DocumentMetadata) o;
 		DataBag db = new DefaultDataBag();
 
-		Author a = dm.getBasicMetadata().getAuthor(fakeIndex);
-		String[] names = a.getForenames().split("[\\W]+");
 		ToEnglishLowerCase TELC = new ToEnglishLowerCase();
+
+		Author a = dm.getBasicMetadata().getAuthor(fakeIndex);
+		String fnames = a.getForenames();
+		if (fnames.isEmpty()) {
+			return db;
+		}
+		String normalized_fnames = (String) TELC.normalize(fnames);
+		if (normalized_fnames == null) {
+			return db;
+		}
+		
+		String[] names = normalized_fnames.split("[\\W]+");
 		
 		for( String name : names ) {
-			String normalized_name = (String)TELC.normalize(name);
-			if ( normalized_name == null ) {
+			if ( name.isEmpty() ) {
 				continue;
 			}
 			Tuple t = tf.newTuple();
-			Object normalized_fst_letter = normalizeExtracted( normalized_name.substring(0, 1) );
+			Object normalized_fst_letter = normalizeExtracted( name.substring(0, 1) );
 			t.append( normalized_fst_letter );
 			db.add(t);
 		}
