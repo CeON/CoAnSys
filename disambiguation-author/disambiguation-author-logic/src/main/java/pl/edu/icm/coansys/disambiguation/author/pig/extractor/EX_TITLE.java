@@ -45,18 +45,19 @@ public class EX_TITLE extends DisambiguationExtractorDocument {
 		DataBag db = new DefaultDataBag();
 
 		for (TextWithLanguage title : dm.getBasicMetadata().getTitleList()) {
-			if (lang == null || lang.equalsIgnoreCase(title.getLanguage())) {
-				String sTitle = title.getText();
-				if (sTitle.isEmpty()) {
-					continue;
-				}
-				Object normalized = normalizeExtracted(sTitle);
-				if ( normalized == null ) {
-					continue;
-				}
-				Tuple t = TupleFactory.getInstance().newTuple(normalized);
-				db.add(t);
+			if (lang != null && !lang.equalsIgnoreCase(title.getLanguage())) {
+				continue;
 			}
+			String sTitle = title.getText();
+			if (sTitle.isEmpty()) {
+				continue;
+			}
+			Object normalized = normalizeExtracted(sTitle);
+			if (normalized == null) {
+				continue;
+			}
+			Tuple t = TupleFactory.getInstance().newTuple(normalized);
+			db.add(t);
 		}
 
 		return db;

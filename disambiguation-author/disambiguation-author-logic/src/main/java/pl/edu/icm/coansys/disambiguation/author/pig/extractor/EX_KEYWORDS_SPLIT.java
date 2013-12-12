@@ -49,22 +49,26 @@ public class EX_KEYWORDS_SPLIT extends DisambiguationExtractorDocument {
 		ToEnglishLowerCase TELC = new ToEnglishLowerCase();
 
 		for (KeywordsList k : dm.getKeywordsList()) {
-			if (lang == null || k.getLanguage().equalsIgnoreCase(lang)) {
-				for (String keyphrase : k.getKeywordsList()) {
-					if (!keyphrase.isEmpty() && !isClassifCode(keyphrase)) {
-						String normalized_keyphrase = (String) TELC
-								.normalize(keyphrase);
-						if (normalized_keyphrase == null) {
-							continue;
-						}
-						for (String word : normalized_keyphrase.split("[\\W]+")) {
-							if (!word.isEmpty()) {
-								Object normalized = normalizeExtracted(word);
-								if (normalized != null) {
-									set.add(normalized);
-								}
-							}
-						}
+			if (lang != null && !k.getLanguage().equalsIgnoreCase(lang)) {
+				continue;
+			}
+
+			for (String keyphrase : k.getKeywordsList()) {
+				if (keyphrase.isEmpty() || isClassifCode(keyphrase)) {
+					continue;
+				}
+				String normalized_keyphrase = (String) TELC
+						.normalize(keyphrase);
+				if (normalized_keyphrase == null) {
+					continue;
+				}
+				for (String word : normalized_keyphrase.split("[\\W]+")) {
+					if (word.isEmpty()) {
+						continue;
+					}
+					Object normalized = normalizeExtracted(word);
+					if (normalized != null) {
+						set.add(normalized);
 					}
 				}
 			}

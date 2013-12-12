@@ -45,26 +45,27 @@ public class EX_TITLE_SPLIT extends DisambiguationExtractorDocument {
 		DocumentMetadata dm = (DocumentMetadata) o;
 		DataBag db = new DefaultDataBag();
 		ToEnglishLowerCase TELC = new ToEnglishLowerCase();
-		
+
 		for (TextWithLanguage title : dm.getBasicMetadata().getTitleList()) {
-			if (lang == null || lang.equalsIgnoreCase(title.getLanguage())) {
-				String sTitle = title.getText();
-				String normalized_title = (String)TELC.normalize(sTitle);
-				if ( normalized_title == null ) {
+			if (lang != null && !lang.equalsIgnoreCase(title.getLanguage())) {
+				continue;
+			}
+			String sTitle = title.getText();
+			String normalized_title = (String) TELC.normalize(sTitle);
+			if (normalized_title == null) {
+				continue;
+			}
+			String[] normals = normalized_title.split("[\\W]+");
+			for (String s : normals) {
+				if (s.isEmpty()) {
 					continue;
 				}
-				String[] normals = normalized_title.split("[\\W]+");
-				for (String s : normals) {
-					if (s.isEmpty()) {
-						continue;
-					}
-					Object normalized = normalizeExtracted(s);
-					if (normalized == null) {
-						continue;
-					}
-					Tuple t = TupleFactory.getInstance().newTuple(normalized);
-					db.add(t);
+				Object normalized = normalizeExtracted(s);
+				if (normalized == null) {
+					continue;
 				}
+				Tuple t = TupleFactory.getInstance().newTuple(normalized);
+				db.add(t);
 			}
 		}
 
