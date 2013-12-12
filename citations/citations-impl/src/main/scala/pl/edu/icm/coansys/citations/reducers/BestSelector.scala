@@ -27,13 +27,16 @@ import org.apache.hadoop.io.Text
  */
 class BestSelector extends Reducer[Text, Text, Text, Text] {
   type Context = Reducer[Text, Text, Text, Text]#Context
+  val bestWritable = new Text
 
   override def reduce(key: Text, values: java.lang.Iterable[Text], context: Context) {
-    if (values.isEmpty)
+    val iter = values.iterator()
+    if (iter.isEmpty)
       return
 
-    val best = values.maxBy(_.toString.split(":", 2)(0).toDouble)
-    context.write(key, best)
+    val best = iter.map(_.toString).maxBy(_.split(":", 2)(0).toDouble)
+    bestWritable.set(best)
+    context.write(key, bestWritable)
   }
 
 }
