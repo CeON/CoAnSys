@@ -120,7 +120,7 @@ public class DisambiguationTests {
    				new DisambiguationExtractorFactory();
    		
    		String[] extractors = {
-   			   	"EX_AUTH_SNAMES",
+   			   	"EX_DOC_AUTHS_SNAMES",
    			   	"EX_KEYWORDS_SPLIT",
    			   	"EX_EMAIL",
    			   	"EX_YEAR",
@@ -130,9 +130,10 @@ public class DisambiguationTests {
    			   	"EX_KEYWORDS",
    			   	"EX_COAUTH_SNAME",
    			   	"EX_CLASSIFICATION_CODES",
-   			   	"EX_FORENAMES_INITS",
+   			   	"EX_AUTH_FNAMES_FST_LETTER",
    			   	"EX_EMAIL_PREFIX" ,
-   			   	"EX_AUTH_INITIALS"
+   			   	"EX_DOC_AUTHS_FNAME_FST_LETTER",
+   			   	"EX_AUTH_FNAME_FST_LETTER"
    		};
    		String[] ids = {
    				"0",
@@ -147,7 +148,8 @@ public class DisambiguationTests {
    				"1",
    				"5",
    				"3",
-   				"C"
+   				"C",
+   				"D"
    		};
    		
    		assert ( ids.length == extractors.length );
