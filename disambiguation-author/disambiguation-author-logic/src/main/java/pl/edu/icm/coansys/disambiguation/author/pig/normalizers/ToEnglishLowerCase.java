@@ -42,7 +42,7 @@ public class ToEnglishLowerCase implements PigNormalizer {
 
 		tmp = tmp.toLowerCase();
 		tmp = DiacriticsRemover.removeDiacritics(tmp);
-		tmp = tmp.replaceAll("[^a-z 0-9 _\\-]", " ").replaceAll("\\s++", " ")
+		tmp = tmp.replaceAll("[^a-z0-9]", " ").replaceAll("\\s++", " ")
 				.trim();
 
 		if ( tmp.isEmpty() ) {

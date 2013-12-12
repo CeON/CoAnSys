@@ -67,9 +67,9 @@ public class DisambiguationTests {
    	public void pig_normalizers_ALL() {
 		String text = "é{(Zaaaażółć 'gęślą', \"jaź(ń)\"}]# æ 1234567890 !@#$%^&*() _+=?/>.<,-";
 		String diacRmExpected = "e{(zaaaazolc 'gesla', \"jaz(n)\"}]# ae 1234567890 !@#$%^&*() _+=?/>.<,-";
-		String toELCExpected = "e zaaaazolc gesla jaz n ae 1234567890 _ -";
+		String toELCExpected = "e zaaaazolc gesla jaz n ae 1234567890";
 		Integer toHashExpected = -1486600746;
-		Integer DisExtrExpected = -1399651159;
+		Integer DisExtrExpected = -115235171;
 		Object a, b, c, d, e;
 		String tmp;
 		
