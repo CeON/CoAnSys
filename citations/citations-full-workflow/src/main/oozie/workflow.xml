@@ -37,6 +37,10 @@
             <value>${inputSeqFile}</value>
         </property>
         <property>
+            <name>inputCitations</name>
+            <value>${input}</value>
+        </property>
+        <property>
             <name>output</name>
             <value>${outputSeqFile}</value>
         </property>
@@ -139,7 +143,7 @@
                 </property>
                 <property>
                     <name>mapred.input.dir</name>
-                    <value>${input}</value>
+                    <value>${inputCitations}</value>
                 </property>
                 <property>
                     <name>mapred.output.dir</name>
