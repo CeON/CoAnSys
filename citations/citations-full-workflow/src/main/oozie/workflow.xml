@@ -199,10 +199,13 @@
 
     <action name="output-converter">
         <map-reduce>
+            <prepare>
+                <delete path="${output}"/>
+            </prepare>
             <configuration>
                 <property>
                     <name>mapreduce.map.class</name>
-                    <value>pl.edu.icm.coansys.citations.mappers.ReferenceExtractorAndParser</value>
+                    <value>pl.edu.icm.coansys.citations.mappers.OutputConverter</value>
                 </property>
                 <property>
                     <name>mapred.input.dir</name>
