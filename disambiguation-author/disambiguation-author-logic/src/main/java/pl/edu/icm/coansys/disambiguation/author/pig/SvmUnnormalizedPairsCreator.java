@@ -132,6 +132,7 @@ public class SvmUnnormalizedPairsCreator extends EvalFunc<DataBag> {
 		for (int k = 0; k < featureNames.length; k++) {
 			DataBag db = mapA.get(featureNames[k]);
 			ArrayList<Object> al = new ArrayList<Object>();
+			if(db == null) return translated;
 			for (Tuple t : db) {
 				Object tmp = t.get(0);
 				

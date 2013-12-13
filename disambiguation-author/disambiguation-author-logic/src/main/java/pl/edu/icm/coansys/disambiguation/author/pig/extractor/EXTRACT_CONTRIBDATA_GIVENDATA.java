@@ -54,6 +54,7 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(EXTRACT_CONTRIBDATA_GIVENDATA.class);
+	private PigStatusReporter reporter = null;	
 	private List<DisambiguationExtractorDocument> des4Doc = new ArrayList<DisambiguationExtractorDocument>();
 	private List<DisambiguationExtractorAuthor> des4Author = new ArrayList<DisambiguationExtractorAuthor>();
 	private List<String> des4DocNameOrId = new ArrayList<String>(),
@@ -171,8 +172,9 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 	@Override
 	public DataBag exec(Tuple input) throws IOException {
 
-		PigStatusReporter reporter = PigStatusReporter.getInstance();
-
+		reporter = PigStatusReporter.getInstance();
+		initializePigReporterWithZeroes();
+		
 		if (input == null || input.size() == 0) {
 			return null;
 		}
@@ -254,7 +256,7 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 
 			// adding to map extractor name and features' data
 			for (int i = 0; i < des4Doc.size(); i++) {
-				raportDocumentDataExistance(reporter, extractedDocObj, i);
+				raportDocumentDataExistance(extractedDocObj, i);
 				if (extractedDocObj[i] == null
 						|| (extractedDocObj[i].size() == 0 && skipEmptyFeatures)) {
 					continue;
@@ -293,7 +295,7 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 
 				// adding to map extractor name and features' data
 				for (int j = 0; j < des4Author.size(); j++) {
-					reportAuthorDataExistance(reporter, extractedAuthorObj, j);
+					reportAuthorDataExistance(extractedAuthorObj, j);
 					if (extractedAuthorObj[j] == null
 							|| (extractedAuthorObj[j].size() == 0 && skipEmptyFeatures)) {
 						continue;
@@ -324,25 +326,49 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 		}
 	}
 
-	private void reportAuthorDataExistance(PigStatusReporter reporter,
-			DataBag[] extractedAuthorObj, int j) {
+	private void initializePigReporterWithZeroes() {
+		for(int i=0; i<des4Doc.size();i++){
+			reporter.getCounter(REPORTER_CONST.DOC_MS,
+					des4Doc.get(i).getClass().getSimpleName()).increment(0);
+		}
+		for(int i=0; i<des4Doc.size();i++){
+			reporter.getCounter(REPORTER_CONST.DOC_EX,
+					des4Doc.get(i).getClass().getSimpleName()).increment(0);
+		}
+		for(int i=0; i<des4Author.size();i++){
+			reporter.getCounter(REPORTER_CONST.CONTRIB_MS,
+					des4Author.get(i).getClass().getSimpleName()).increment(0);
+		}
+		for(int i=0; i<des4Author.size();i++){
+			reporter.getCounter(REPORTER_CONST.CONTRIB_EX,
+					des4Author.get(i).getClass().getSimpleName()).increment(0);
+		}
+	}
+
+	private void reportAuthorDataExistance(DataBag[] extractedAuthorObj, int j) {
 		if (extractedAuthorObj[j] == null || extractedAuthorObj[j].size() == 0) {
-			reporter.getCounter("Contrib_Missing",
+			reporter.getCounter(REPORTER_CONST.CONTRIB_MS,
 					des4Author.get(j).getClass().getSimpleName()).increment(1);
 		} else {
-			reporter.getCounter("Contrib_Existing",
+			reporter.getCounter(REPORTER_CONST.CONTRIB_EX,
 					des4Author.get(j).getClass().getSimpleName()).increment(1);
 		}
 	}
 
-	private void raportDocumentDataExistance(PigStatusReporter reporter,
-			DataBag[] extractedDocObj, int i) {
+	private void raportDocumentDataExistance(DataBag[] extractedDocObj, int i) {
 		if (extractedDocObj[i] == null || extractedDocObj[i].size() == 0) {
-			reporter.getCounter("Doc_Missing",
+			reporter.getCounter(REPORTER_CONST.DOC_MS,
 					des4Doc.get(i).getClass().getSimpleName()).increment(1);
 		} else {
-			reporter.getCounter("Doc_Existing",
+			reporter.getCounter(REPORTER_CONST.DOC_EX,
 					des4Doc.get(i).getClass().getSimpleName()).increment(1);
 		}
+	}
+	
+	static class REPORTER_CONST{
+		public final static String CONTRIB_EX = "Contrib_Existing";
+		public final static String CONTRIB_MS = "Contrib_Missing";
+		public final static String DOC_EX = "Doc_Existing";
+		public final static String DOC_MS = "Doc_Missing";
 	}
 }
