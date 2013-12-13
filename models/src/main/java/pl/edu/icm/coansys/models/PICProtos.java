@@ -1,7 +1,7 @@
 /*
  * This file is part of CoAnSys project.
  * Copyright (c) 2012-2013 ICM-UW
- * 
+ *
  * CoAnSys is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -11,7 +11,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Affero General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Affero General Public License
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -975,6 +975,10 @@ public final class PICProtos {
     boolean hasDocId();
     String getDocId();
     
+    // optional string rawText = 4;
+    boolean hasRawText();
+    String getRawText();
+    
     // repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;
     java.util.List<pl.edu.icm.coansys.models.PICProtos.Auxiliar> 
         getAuxsList();
@@ -1056,6 +1060,38 @@ public final class PICProtos {
       }
     }
     
+    // optional string rawText = 4;
+    public static final int RAWTEXT_FIELD_NUMBER = 4;
+    private java.lang.Object rawText_;
+    public boolean hasRawText() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    public String getRawText() {
+      java.lang.Object ref = rawText_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+          rawText_ = s;
+        }
+        return s;
+      }
+    }
+    private com.google.protobuf.ByteString getRawTextBytes() {
+      java.lang.Object ref = rawText_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+        rawText_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    
     // repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;
     public static final int AUXS_FIELD_NUMBER = 3;
     private java.util.List<pl.edu.icm.coansys.models.PICProtos.Auxiliar> auxs_;
@@ -1080,6 +1116,7 @@ public final class PICProtos {
     private void initFields() {
       refNum_ = 0;
       docId_ = "";
+      rawText_ = "";
       auxs_ = java.util.Collections.emptyList();
     }
     private byte memoizedIsInitialized = -1;
@@ -1111,6 +1148,9 @@ public final class PICProtos {
       for (int i = 0; i < auxs_.size(); i++) {
         output.writeMessage(3, auxs_.get(i));
       }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        output.writeBytes(4, getRawTextBytes());
+      }
       getUnknownFields().writeTo(output);
     }
     
@@ -1131,6 +1171,10 @@ public final class PICProtos {
       for (int i = 0; i < auxs_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(3, auxs_.get(i));
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(4, getRawTextBytes());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -1261,9 +1305,11 @@ public final class PICProtos {
         bitField0_ = (bitField0_ & ~0x00000001);
         docId_ = "";
         bitField0_ = (bitField0_ & ~0x00000002);
+        rawText_ = "";
+        bitField0_ = (bitField0_ & ~0x00000004);
         if (auxsBuilder_ == null) {
           auxs_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000004);
+          bitField0_ = (bitField0_ & ~0x00000008);
         } else {
           auxsBuilder_.clear();
         }
@@ -1313,10 +1359,14 @@ public final class PICProtos {
           to_bitField0_ |= 0x00000002;
         }
         result.docId_ = docId_;
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        result.rawText_ = rawText_;
         if (auxsBuilder_ == null) {
-          if (((bitField0_ & 0x00000004) == 0x00000004)) {
+          if (((bitField0_ & 0x00000008) == 0x00000008)) {
             auxs_ = java.util.Collections.unmodifiableList(auxs_);
-            bitField0_ = (bitField0_ & ~0x00000004);
+            bitField0_ = (bitField0_ & ~0x00000008);
           }
           result.auxs_ = auxs_;
         } else {
@@ -1344,11 +1394,14 @@ public final class PICProtos {
         if (other.hasDocId()) {
           setDocId(other.getDocId());
         }
+        if (other.hasRawText()) {
+          setRawText(other.getRawText());
+        }
         if (auxsBuilder_ == null) {
           if (!other.auxs_.isEmpty()) {
             if (auxs_.isEmpty()) {
               auxs_ = other.auxs_;
-              bitField0_ = (bitField0_ & ~0x00000004);
+              bitField0_ = (bitField0_ & ~0x00000008);
             } else {
               ensureAuxsIsMutable();
               auxs_.addAll(other.auxs_);
@@ -1361,7 +1414,7 @@ public final class PICProtos {
               auxsBuilder_.dispose();
               auxsBuilder_ = null;
               auxs_ = other.auxs_;
-              bitField0_ = (bitField0_ & ~0x00000004);
+              bitField0_ = (bitField0_ & ~0x00000008);
               auxsBuilder_ = 
                 com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
                    getAuxsFieldBuilder() : null;
@@ -1423,6 +1476,11 @@ public final class PICProtos {
               pl.edu.icm.coansys.models.PICProtos.Auxiliar.Builder subBuilder = pl.edu.icm.coansys.models.PICProtos.Auxiliar.newBuilder();
               input.readMessage(subBuilder, extensionRegistry);
               addAuxs(subBuilder.buildPartial());
+              break;
+            }
+            case 34: {
+              bitField0_ |= 0x00000004;
+              rawText_ = input.readBytes();
               break;
             }
           }
@@ -1488,13 +1546,49 @@ public final class PICProtos {
         onChanged();
       }
       
+      // optional string rawText = 4;
+      private java.lang.Object rawText_ = "";
+      public boolean hasRawText() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      public String getRawText() {
+        java.lang.Object ref = rawText_;
+        if (!(ref instanceof String)) {
+          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+          rawText_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
+      }
+      public Builder setRawText(String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
+        rawText_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearRawText() {
+        bitField0_ = (bitField0_ & ~0x00000004);
+        rawText_ = getDefaultInstance().getRawText();
+        onChanged();
+        return this;
+      }
+      void setRawText(com.google.protobuf.ByteString value) {
+        bitField0_ |= 0x00000004;
+        rawText_ = value;
+        onChanged();
+      }
+      
       // repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;
       private java.util.List<pl.edu.icm.coansys.models.PICProtos.Auxiliar> auxs_ =
         java.util.Collections.emptyList();
       private void ensureAuxsIsMutable() {
-        if (!((bitField0_ & 0x00000004) == 0x00000004)) {
+        if (!((bitField0_ & 0x00000008) == 0x00000008)) {
           auxs_ = new java.util.ArrayList<pl.edu.icm.coansys.models.PICProtos.Auxiliar>(auxs_);
-          bitField0_ |= 0x00000004;
+          bitField0_ |= 0x00000008;
          }
       }
       
@@ -1610,7 +1704,7 @@ public final class PICProtos {
       public Builder clearAuxs() {
         if (auxsBuilder_ == null) {
           auxs_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000004);
+          bitField0_ = (bitField0_ & ~0x00000008);
           onChanged();
         } else {
           auxsBuilder_.clear();
@@ -1666,7 +1760,7 @@ public final class PICProtos {
           auxsBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
               pl.edu.icm.coansys.models.PICProtos.Auxiliar, pl.edu.icm.coansys.models.PICProtos.Auxiliar.Builder, pl.edu.icm.coansys.models.PICProtos.AuxiliarOrBuilder>(
                   auxs_,
-                  ((bitField0_ & 0x00000004) == 0x00000004),
+                  ((bitField0_ & 0x00000008) == 0x00000008),
                   getParentForChildren(),
                   isClean());
           auxs_ = null;
@@ -2182,11 +2276,12 @@ public final class PICProtos {
       "ls\"~\n\006PicOut\022\r\n\005docId\030\001 \002(\t\0222\n\004refs\030\002 \003(" +
       "\0132$.pl.edu.icm.coansys.models.Reference\022" +
       "1\n\004auxs\030\003 \003(\0132#.pl.edu.icm.coansys.model" +
-      "s.Auxiliar\"]\n\tReference\022\016\n\006refNum\030\001 \002(\005\022" +
-      "\r\n\005docId\030\002 \002(\t\0221\n\004auxs\030\003 \003(\0132#.pl.edu.ic" +
-      "m.coansys.models.Auxiliar\"\'\n\010Auxiliar\022\014\n" +
-      "\004type\030\001 \001(\t\022\r\n\005value\030\002 \001(\tB&\n\031pl.edu.icm" +
-      ".coansys.modelsB\tPICProtos"
+      "s.Auxiliar\"n\n\tReference\022\016\n\006refNum\030\001 \002(\005\022" +
+      "\r\n\005docId\030\002 \002(\t\022\017\n\007rawText\030\004 \001(\t\0221\n\004auxs\030" +
+      "\003 \003(\0132#.pl.edu.icm.coansys.models.Auxili" +
+      "ar\"\'\n\010Auxiliar\022\014\n\004type\030\001 \001(\t\022\r\n\005value\030\002 " +
+      "\001(\tB&\n\031pl.edu.icm.coansys.modelsB\tPICPro" +
+      "tos"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -2206,7 +2301,7 @@ public final class PICProtos {
           internal_static_pl_edu_icm_coansys_models_Reference_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_pl_edu_icm_coansys_models_Reference_descriptor,
-              new java.lang.String[] { "RefNum", "DocId", "Auxs", },
+              new java.lang.String[] { "RefNum", "DocId", "RawText", "Auxs", },
               pl.edu.icm.coansys.models.PICProtos.Reference.class,
               pl.edu.icm.coansys.models.PICProtos.Reference.Builder.class);
           internal_static_pl_edu_icm_coansys_models_Auxiliar_descriptor =
