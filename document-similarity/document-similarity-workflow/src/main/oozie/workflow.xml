@@ -1,4 +1,4 @@
-<workflow-app name='${project}*${subproject}*ver3' xmlns="uri:oozie:workflow:0.4">
+<workflow-app name='${project}___${subproject}___ver3' xmlns="uri:oozie:workflow:0.4">
 	<start to='easy_load_and_tfidf' />
 	<action name='easy_load_and_tfidf'>
 		<pig>
