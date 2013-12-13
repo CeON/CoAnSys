@@ -182,7 +182,9 @@ public class DisambiguationTests {
    		Disambiguator COAUTH = new CoAuthorsSnameDisambiguatorFullList(1,1);
    		Disambiguator IPS = new IntersectionPerSum(1,1);
    		Disambiguator IPM = new IntersectionPerMaxval(1,1);
+   		Disambiguator IPM2 = new IntersectionPerMaxval(3.0,10.0);
    		Disambiguator I = new Intersection();
+   		
    		
    		Object atab[] = {-1,"one", "two", "three", "four", 5, 6, 7, 8, 9.0, 10.0};
    		Object btab[] = {-2,-1,"one", "two", 5, 9.0, "eleven", 12, 13.0};		
@@ -191,6 +193,7 @@ public class DisambiguationTests {
    		
   		assert( IPS.calculateAffinity(a, b) == 5.0 / 15.0 );
   		assert( IPM.calculateAffinity(a, b) == 5.0 );
+  		assert( IPM2.calculateAffinity(a, b) == 5.0 / 10.0 * 3.0  );
   		assert( I.calculateAffinity(a, b) == 5.0 );
   		assert( COAUTH.calculateAffinity(a, b) == 4.0 );
    	}
@@ -238,16 +241,18 @@ public class DisambiguationTests {
    	public void pig_AproximateAND_BFS_exec_0() throws Exception {
    		AND<DataBag> aproximate = new AproximateAND_BFS(
    				"-2.0", 
-  				"CoAuthorsSnameDisambiguatorFullList#EX_AUTH_SNAMES#1#2,ClassifCodeDisambiguator#EX_CLASSIFICATION_CODES#1#3,KeyphraseDisambiguator#EX_KEYWORDS_SPLIT#1#3,KeywordDisambiguator#EX_KEYWORDS#1#3",
+  				"CoAuthorsSnameDisambiguatorFullList#EX_DOC_AUTHS_SNAMES#1#2,IntersectionPerMaxval#EX_CLASSIFICATION_CODES#1#3,IntersectionPerMaxval#EX_KEYWORDS_SPLIT#1#3,IntersectionPerMaxval#EX_KEYWORDS#1#3",
    				"true",
    				"true",
    				"false");
    		
    		DisambiguationExtractorFactory factory = new DisambiguationExtractorFactory();
-  		String COAUTH = factory.convertExNameToId("EX_AUTH_SNAMES");
+  		String COAUTH = factory.convertExNameToId("EX_DOC_AUTHS_SNAMES");
   		String CC = factory.convertExNameToId("EX_CLASSIFICATION_CODES");
   		String KP = factory.convertExNameToId("EX_KEYWORDS_SPLIT");
   		String KW = factory.convertExNameToId("EX_KEYWORDS");
+  		
+  		assert( COAUTH != null && CC != null && KP != null && KW != null );
   		
    		List<Tuple> contribs = new ArrayList<Tuple>();
    		
