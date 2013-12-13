@@ -41,109 +41,122 @@ import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.CosineSi
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.Disambiguator;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.Intersection;
 
-public class SvmUnnormalizedPairsCreator  extends EvalFunc<DataBag> {
+public class SvmUnnormalizedPairsCreator extends EvalFunc<DataBag> {
 
-	private static final Logger logger = LoggerFactory.getLogger(SvmUnnormalizedPairsCreator.class);
-			
+	private static final Logger logger = LoggerFactory
+			.getLogger(SvmUnnormalizedPairsCreator.class);
+	private PigStatusReporter reporter = null;
+
 	private String[] featureNames = null;
 
-	public SvmUnnormalizedPairsCreator(String maxValsString){
+	public SvmUnnormalizedPairsCreator(String maxValsString) {
 		String[] fns = maxValsString.split(",");
 		featureNames = new String[fns.length];
-		for(int i=0;i<fns.length;i++){
+		for (int i = 0; i < fns.length; i++) {
 			featureNames[i] = fns[i].split("#")[1];
 		}
 	}
-    
+
 	@SuppressWarnings("boxing")
 	@Override
 	public DataBag exec(Tuple tuple) throws IOException {
-		PigStatusReporter reporter = PigStatusReporter.getInstance();
-		boolean reporterIsNotNull = reporter!=null;
-		
-		if(tuple == null || tuple.size() !=2){
-			if(reporterIsNotNull){
-				reporter.getCounter("data error", "input tuple is null or size is not equal to 2").increment(1);
+		reporter = PigStatusReporter.getInstance();
+		boolean reporterIsNotNull = reporter != null;
+
+		if (tuple == null || tuple.size() != 2) {
+			if (reporterIsNotNull) {
+				reporter.getCounter("data error",
+						"input tuple is null or size is not equal to 2")
+						.increment(1);
 			}
 			return null;
 		}
-		
+
 		// String sname = (String) tuple.get(0);
-		DataBag contribs = (DataBag) tuple.get(1); 
-		
-		Tuple[] contribsT = new Tuple[(int) contribs.size()]; 
-		
+		DataBag contribs = (DataBag) tuple.get(1);
+
+		Tuple[] contribsT = new Tuple[(int) contribs.size()];
+
 		int counter = 0;
-		for(Tuple contrib : contribs){
+		for (Tuple contrib : contribs) {
 			contribsT[counter] = contrib;
 			counter++;
 		}
-		
+
 		TupleFactory tf = TupleFactory.getInstance();
-		
+
 		Disambiguator intersectionDisambiguator = new Intersection();
 		Disambiguator cosineSimDisambiguator = new CosineSimilarity();
-		
-		
+
 		DataBag retBag = new DefaultDataBag();
-		
-		for(int i = 0; i<counter;i++){
-			for(int j =i+1; j<counter;j++){
-				Tuple cA = contribsT[i]; 
+
+		for (int i = 0; i < counter; i++) {
+			for (int j = i + 1; j < counter; j++) {
+				Tuple cA = contribsT[i];
 				Tuple cB = contribsT[j];
-				
+
 				String cidA = (String) cA.get(0);
 				String snA = (String) cA.get(1);
 				Map<String, DataBag> mapA = (Map<String, DataBag>) cA.get(2);
-				Map<String,ArrayList<Object>> extractedMapA = extractFeatureNameFeatureValueList(mapA);
-				
+				Map<String, ArrayList<Object>> extractedMapA = extractFeatureNameFeatureValueList(mapA);
+
 				String cidB = (String) cB.get(0);
 				String snB = (String) cB.get(1);
 				Map<String, DataBag> mapB = (Map<String, DataBag>) cB.get(2);
-				Map<String,ArrayList<Object>> extractedMapB = extractFeatureNameFeatureValueList(mapB);
+				Map<String, ArrayList<Object>> extractedMapB = extractFeatureNameFeatureValueList(mapB);
 
 				Tuple t = tf.newTuple();
-				t.append(UUID.nameUUIDFromBytes((cidA+cidB).getBytes("UTF-8")).toString());
-				
-				for(int k =0; k<featureNames.length;k++){
+				t.append(UUID
+						.nameUUIDFromBytes((cidA + cidB).getBytes("UTF-8"))
+						.toString());
+
+				for (int k = 0; k < featureNames.length; k++) {
 					List<Object> listA = extractedMapA.get(featureNames[k]);
 					List<Object> listB = extractedMapB.get(featureNames[k]);
-					
+
 					t.append(featureNames[k]);
-					t.append(intersectionDisambiguator.calculateAffinity(listA,listB));
-					t.append(cosineSimDisambiguator.calculateAffinity(listA,listB));
+					t.append(intersectionDisambiguator.calculateAffinity(listA,
+							listB));
+					t.append(cosineSimDisambiguator.calculateAffinity(listA,
+							listB));
 				}
 				retBag.add(t);
 			}
 		}
 		return retBag;
 	}
-	
-    private Map<String, ArrayList<Object>> extractFeatureNameFeatureValueList(
+
+	private Map<String, ArrayList<Object>> extractFeatureNameFeatureValueList(
 			Map<String, DataBag> mapA) throws ExecException {
-    	HashMap<String,ArrayList<Object>> translated = new HashMap<String,ArrayList<Object>>();
-    	for(int k = 0; k<featureNames.length;k++){
-    		DataBag db = mapA.get(featureNames[k]);
-    		ArrayList<Object> al = new ArrayList<Object>();
-    		for(Tuple t : db){
-    			Object tmp = t.get(0);
-    			if(tmp.hashCode()!=0){
-    				al.add(tmp);    				
-    			}
-    			
-    		}
-    		translated.put(featureNames[k], al);
-    	}
+		HashMap<String, ArrayList<Object>> translated = new HashMap<String, ArrayList<Object>>();
+		for (int k = 0; k < featureNames.length; k++) {
+			DataBag db = mapA.get(featureNames[k]);
+			ArrayList<Object> al = new ArrayList<Object>();
+			for (Tuple t : db) {
+				Object tmp = t.get(0);
+				
+				if(tmp!=null){
+					if (tmp.hashCode() != 0) {
+						al.add(tmp);
+					}
+				}else{
+					reporter.getCounter("Bizarre error",
+							"Empty tuple in bag with feature " + featureNames[k])
+							.increment(1);	
+				}
+			}
+			translated.put(featureNames[k], al);
+		}
 		return translated;
 	}
 
 	@Override
-    public Schema outputSchema(@SuppressWarnings("unused") Schema p_input) {
-        try {
-            return Schema.generateNestedSchema(DataType.TUPLE);
-        } catch (FrontendException e) {
-            logger.error("Error in creating output schema:", e);
-            throw new IllegalStateException(e);
-        }
-    }
+	public Schema outputSchema(@SuppressWarnings("unused") Schema p_input) {
+		try {
+			return Schema.generateNestedSchema(DataType.TUPLE);
+		} catch (FrontendException e) {
+			logger.error("Error in creating output schema:", e);
+			throw new IllegalStateException(e);
+		}
+	}
 }
