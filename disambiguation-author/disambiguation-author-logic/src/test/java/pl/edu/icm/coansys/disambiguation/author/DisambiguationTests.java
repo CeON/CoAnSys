@@ -33,9 +33,11 @@ import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
 
 import pl.edu.icm.coansys.commons.java.DiacriticsRemover;
-import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.ClassifCodeDisambiguator;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.CoAuthorsSnameDisambiguatorFullList;
-import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.KeyphraseDisambiguator;
+import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.Disambiguator;
+import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.Intersection;
+import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.IntersectionPerMaxval;
+import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.IntersectionPerSum;
 import pl.edu.icm.coansys.disambiguation.author.pig.AND;
 import pl.edu.icm.coansys.disambiguation.author.pig.AproximateAND_BFS;
 import pl.edu.icm.coansys.disambiguation.author.pig.extractor.DisambiguationExtractor;
@@ -43,7 +45,6 @@ import pl.edu.icm.coansys.disambiguation.author.pig.extractor.DisambiguationExtr
 import pl.edu.icm.coansys.disambiguation.author.pig.extractor.DisambiguationExtractorFactory;
 import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.ToEnglishLowerCase;
 import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.ToHashCode;
-import pl.edu.icm.coansys.disambiguation.features.Disambiguator;
 import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
 
 // TODO:
@@ -176,26 +177,22 @@ public class DisambiguationTests {
    	
    	
    	@Test(groups = {"fast"})
-   	public void features_disambiguator_SOME_calculateAffinity() {
+   	public void features_disambiguator_calculateAffinity() {
    		//'CoAuthorsSnameDisambiguatorFullList#EX_AUTH_SNAMES#-0.0000166#8,ClassifCodeDisambiguator#EX_CLASSIFICATION_CODES#0.99#12,KeyphraseDisambiguator#EX_KEYWORDS_SPLIT#0.99#22,KeywordDisambiguator#EX_KEYWORDS#0.0000369#40'
-   		Disambiguator COAUTH = new CoAuthorsSnameDisambiguatorFullList();
-   		Disambiguator CC = new ClassifCodeDisambiguator();
-   		Disambiguator KP = new KeyphraseDisambiguator();
+   		Disambiguator COAUTH = new CoAuthorsSnameDisambiguatorFullList(1,1);
+   		Disambiguator IPS = new IntersectionPerSum(1,1);
+   		Disambiguator IPM = new IntersectionPerMaxval(1,1);
+   		Disambiguator I = new Intersection();
    		
    		Object atab[] = {-1,"one", "two", "three", "four", 5, 6, 7, 8, 9.0, 10.0};
    		Object btab[] = {-2,-1,"one", "two", 5, 9.0, "eleven", 12, 13.0};		
    		List<Object> a = Arrays.asList(atab);
    		List<Object> b = Arrays.asList(btab);
-  		////double res = 5.0 / 15.0;
-   		double res = 5.0;
    		
-  		assert( new Disambiguator().calculateAffinity(a, b) == res );
-  		assert( CC.calculateAffinity(a, b) == res );
-  		assert( KP.calculateAffinity(a, b) == res );
-  		
-  		//res = 4.0 / 14.0;
-  		res = 4.0;
-  		assert( COAUTH.calculateAffinity(a, b) == res );
+  		assert( IPS.calculateAffinity(a, b) == 5.0 / 15.0 );
+  		assert( IPM.calculateAffinity(a, b) == 5.0 );
+  		assert( I.calculateAffinity(a, b) == 5.0 );
+  		assert( COAUTH.calculateAffinity(a, b) == 4.0 );
    	}
    	
    	

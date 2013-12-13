@@ -66,7 +66,7 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 	private boolean returnNull = false;
 
 	@Override
-	public Schema outputSchema(@SuppressWarnings("unused") Schema p_input) {
+	public Schema outputSchema(Schema p_input) {
 		try {
 			return Schema.generateNestedSchema(DataType.BAG);
 		} catch (FrontendException e) {
@@ -118,7 +118,7 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 		}
 	}
 
-	public EXTRACT_CONTRIBDATA_GIVENDATA(String in_params) throws Exception {
+	public EXTRACT_CONTRIBDATA_GIVENDATA(String in_params) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 		String[] params = in_params.split(" ");
 		for (String p : params) {
 			if (p.startsWith("featureinfo=")) {
