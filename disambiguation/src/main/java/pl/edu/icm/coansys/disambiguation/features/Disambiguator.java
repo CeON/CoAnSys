@@ -19,10 +19,7 @@
 package pl.edu.icm.coansys.disambiguation.features;
 
 import java.util.AbstractMap.SimpleEntry;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -92,6 +89,6 @@ public class Disambiguator {
 	 * @return {@link Disambiguator} id.
 	 */
 	public String getName() {
-		return Disambiguator.class.getSimpleName();
+		return this.getClass().getSimpleName();
 	}
 }
