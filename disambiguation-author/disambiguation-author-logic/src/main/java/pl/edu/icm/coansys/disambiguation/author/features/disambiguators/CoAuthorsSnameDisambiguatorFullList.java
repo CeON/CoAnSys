@@ -21,8 +21,6 @@ package pl.edu.icm.coansys.disambiguation.author.features.disambiguators;
 import java.util.List;
 import java.util.AbstractMap.SimpleEntry;
 
-import pl.edu.icm.coansys.disambiguation.features.Disambiguator;
-
 /**
  * Disambiguator for contributors with the same sname. It requires placing their
  * own sname on the list of authors.
@@ -33,12 +31,12 @@ import pl.edu.icm.coansys.disambiguation.features.Disambiguator;
  */
 public class CoAuthorsSnameDisambiguatorFullList extends Disambiguator {
 
-	//private static final org.slf4j.Logger logger = LoggerFactory
-	//		.getLogger(CoAuthorsSnameDisambiguatorFullList.class);
+	public CoAuthorsSnameDisambiguatorFullList() {
+		super();
+	}
 
-	@Override
-	public String getName() {
-		return CoAuthorsSnameDisambiguatorFullList.class.getSimpleName();
+	public CoAuthorsSnameDisambiguatorFullList(double weight, double maxVal) {
+		super(weight, maxVal);
 	}
 
 	@Override
@@ -52,17 +50,13 @@ public class CoAuthorsSnameDisambiguatorFullList extends Disambiguator {
 		int sum = p.getValue() - 1;
 
 		if (sum <= 0) {
-			//logger.warn("Negative or zero value of lists sum. Returning 0.");
-			// TODO: ? 0 or 1
 			return 0;
 		}
 		if (intersection < 0) {
-			//should not get in here, because sum >= intersection
-			//logger.warn("Negative value of intersection. Returning 0.");
 			return 0;
 		}
 
 		//return (double) intersection / sum;
-		return intersection;
+		return intersection / maxVal * weight;
 	}
 }

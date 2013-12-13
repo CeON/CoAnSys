@@ -33,9 +33,11 @@ import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
 
 import pl.edu.icm.coansys.commons.java.DiacriticsRemover;
-import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.ClassifCodeDisambiguator;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.CoAuthorsSnameDisambiguatorFullList;
-import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.KeyphraseDisambiguator;
+import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.Disambiguator;
+import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.Intersection;
+import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.IntersectionPerMaxval;
+import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.IntersectionPerSum;
 import pl.edu.icm.coansys.disambiguation.author.pig.AND;
 import pl.edu.icm.coansys.disambiguation.author.pig.AproximateAND_BFS;
 import pl.edu.icm.coansys.disambiguation.author.pig.extractor.DisambiguationExtractor;
@@ -43,7 +45,6 @@ import pl.edu.icm.coansys.disambiguation.author.pig.extractor.DisambiguationExtr
 import pl.edu.icm.coansys.disambiguation.author.pig.extractor.DisambiguationExtractorFactory;
 import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.ToEnglishLowerCase;
 import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.ToHashCode;
-import pl.edu.icm.coansys.disambiguation.features.Disambiguator;
 import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
 
 // TODO:
@@ -67,9 +68,9 @@ public class DisambiguationTests {
    	public void pig_normalizers_ALL() {
 		String text = "é{(Zaaaażółć 'gęślą', \"jaź(ń)\"}]# æ 1234567890 !@#$%^&*() _+=?/>.<,-";
 		String diacRmExpected = "e{(zaaaazolc 'gesla', \"jaz(n)\"}]# ae 1234567890 !@#$%^&*() _+=?/>.<,-";
-		String toELCExpected = "e zaaaazolc gesla jaz n ae 1234567890 _ -";
+		String toELCExpected = "ezaaaazolc gesla jazn ae 1234567890";
 		Integer toHashExpected = -1486600746;
-		Integer DisExtrExpected = -1399651159;
+		Integer DisExtrExpected = toELCExpected.hashCode();
 		Object a, b, c, d, e;
 		String tmp;
 		
@@ -79,6 +80,7 @@ public class DisambiguationTests {
 		
 		// testing normalizers
 		a = (new ToEnglishLowerCase()).normalize( text );
+		System.out.println(a);
 		assert( a.equals( toELCExpected ) );
 		b = (new ToEnglishLowerCase()).normalize( a );
 		assert( a.equals( b ) );
@@ -120,7 +122,7 @@ public class DisambiguationTests {
    				new DisambiguationExtractorFactory();
    		
    		String[] extractors = {
-   			   	"EX_AUTH_SNAMES",
+   			   	"EX_DOC_AUTHS_SNAMES",
    			   	"EX_KEYWORDS_SPLIT",
    			   	"EX_EMAIL",
    			   	"EX_YEAR",
@@ -130,9 +132,10 @@ public class DisambiguationTests {
    			   	"EX_KEYWORDS",
    			   	"EX_COAUTH_SNAME",
    			   	"EX_CLASSIFICATION_CODES",
-   			   	"EX_FORENAMES_INITS",
+   			   	"EX_AUTH_FNAMES_FST_LETTER",
    			   	"EX_EMAIL_PREFIX" ,
-   			   	"EX_AUTH_INITIALS"
+   			   	"EX_DOC_AUTHS_FNAME_FST_LETTER",
+   			   	"EX_AUTH_FNAME_FST_LETTER"
    		};
    		String[] ids = {
    				"0",
@@ -147,7 +150,8 @@ public class DisambiguationTests {
    				"1",
    				"5",
    				"3",
-   				"C"
+   				"C",
+   				"D"
    		};
    		
    		assert ( ids.length == extractors.length );
@@ -173,26 +177,25 @@ public class DisambiguationTests {
    	
    	
    	@Test(groups = {"fast"})
-   	public void features_disambiguator_SOME_calculateAffinity() {
+   	public void features_disambiguator_calculateAffinity() {
    		//'CoAuthorsSnameDisambiguatorFullList#EX_AUTH_SNAMES#-0.0000166#8,ClassifCodeDisambiguator#EX_CLASSIFICATION_CODES#0.99#12,KeyphraseDisambiguator#EX_KEYWORDS_SPLIT#0.99#22,KeywordDisambiguator#EX_KEYWORDS#0.0000369#40'
-   		Disambiguator COAUTH = new CoAuthorsSnameDisambiguatorFullList();
-   		Disambiguator CC = new ClassifCodeDisambiguator();
-   		Disambiguator KP = new KeyphraseDisambiguator();
+   		Disambiguator COAUTH = new CoAuthorsSnameDisambiguatorFullList(1,1);
+   		Disambiguator IPS = new IntersectionPerSum(1,1);
+   		Disambiguator IPM = new IntersectionPerMaxval(1,1);
+   		Disambiguator IPM2 = new IntersectionPerMaxval(3.0,10.0);
+   		Disambiguator I = new Intersection();
+   		
    		
    		Object atab[] = {-1,"one", "two", "three", "four", 5, 6, 7, 8, 9.0, 10.0};
    		Object btab[] = {-2,-1,"one", "two", 5, 9.0, "eleven", 12, 13.0};		
    		List<Object> a = Arrays.asList(atab);
    		List<Object> b = Arrays.asList(btab);
-  		////double res = 5.0 / 15.0;
-   		double res = 5.0;
    		
-  		assert( new Disambiguator().calculateAffinity(a, b) == res );
-  		assert( CC.calculateAffinity(a, b) == res );
-  		assert( KP.calculateAffinity(a, b) == res );
-  		
-  		//res = 4.0 / 14.0;
-  		res = 4.0;
-  		assert( COAUTH.calculateAffinity(a, b) == res );
+  		assert( IPS.calculateAffinity(a, b) == 5.0 / 15.0 );
+  		assert( IPM.calculateAffinity(a, b) == 5.0 );
+  		assert( IPM2.calculateAffinity(a, b) == 5.0 / 10.0 * 3.0  );
+  		assert( I.calculateAffinity(a, b) == 5.0 );
+  		assert( COAUTH.calculateAffinity(a, b) == 4.0 );
    	}
    	
    	
@@ -238,16 +241,18 @@ public class DisambiguationTests {
    	public void pig_AproximateAND_BFS_exec_0() throws Exception {
    		AND<DataBag> aproximate = new AproximateAND_BFS(
    				"-2.0", 
-  				"CoAuthorsSnameDisambiguatorFullList#EX_AUTH_SNAMES#1#2,ClassifCodeDisambiguator#EX_CLASSIFICATION_CODES#1#3,KeyphraseDisambiguator#EX_KEYWORDS_SPLIT#1#3,KeywordDisambiguator#EX_KEYWORDS#1#3",
+  				"CoAuthorsSnameDisambiguatorFullList#EX_DOC_AUTHS_SNAMES#1#2,IntersectionPerMaxval#EX_CLASSIFICATION_CODES#1#3,IntersectionPerMaxval#EX_KEYWORDS_SPLIT#1#3,IntersectionPerMaxval#EX_KEYWORDS#1#3",
    				"true",
    				"true",
    				"false");
    		
    		DisambiguationExtractorFactory factory = new DisambiguationExtractorFactory();
-  		String COAUTH = factory.convertExNameToId("EX_AUTH_SNAMES");
+  		String COAUTH = factory.convertExNameToId("EX_DOC_AUTHS_SNAMES");
   		String CC = factory.convertExNameToId("EX_CLASSIFICATION_CODES");
   		String KP = factory.convertExNameToId("EX_KEYWORDS_SPLIT");
   		String KW = factory.convertExNameToId("EX_KEYWORDS");
+  		
+  		assert( COAUTH != null && CC != null && KP != null && KW != null );
   		
    		List<Tuple> contribs = new ArrayList<Tuple>();
    		

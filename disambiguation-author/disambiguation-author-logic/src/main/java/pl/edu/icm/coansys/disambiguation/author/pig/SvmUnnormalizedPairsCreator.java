@@ -37,8 +37,8 @@ import org.apache.pig.tools.pigstats.PigStatusReporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.ClassifCodeDisambiguator;
-import pl.edu.icm.coansys.disambiguation.idgenerators.UuIdGenerator;
+import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.Disambiguator;
+import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.Intersection;
 
 public class SvmUnnormalizedPairsCreator  extends EvalFunc<DataBag> {
 
@@ -66,7 +66,7 @@ public class SvmUnnormalizedPairsCreator  extends EvalFunc<DataBag> {
 			return null;
 		}
 		
-		String sname = (String) tuple.get(0);
+		// String sname = (String) tuple.get(0);
 		DataBag contribs = (DataBag) tuple.get(1); 
 		
 		Tuple[] contribsT = new Tuple[(int) contribs.size()]; 
@@ -79,7 +79,7 @@ public class SvmUnnormalizedPairsCreator  extends EvalFunc<DataBag> {
 		
 		TupleFactory tf = TupleFactory.getInstance();
 		
-		ClassifCodeDisambiguator univDisambiguator = new ClassifCodeDisambiguator();
+		Disambiguator univDisambiguator = new Intersection();
 		
 		DataBag retBag = new DefaultDataBag();
 		

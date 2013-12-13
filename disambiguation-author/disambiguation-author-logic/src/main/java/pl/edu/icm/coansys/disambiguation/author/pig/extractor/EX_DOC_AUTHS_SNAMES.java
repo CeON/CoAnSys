@@ -27,13 +27,13 @@ import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.PigNormalizer;
 import pl.edu.icm.coansys.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 
-public class EX_AUTH_INITIALS extends DisambiguationExtractorDocument {
+public class EX_DOC_AUTHS_SNAMES extends DisambiguationExtractorDocument {
 	
-	public EX_AUTH_INITIALS() {
+	public EX_DOC_AUTHS_SNAMES() {
 		super();
 	}
 
-	public EX_AUTH_INITIALS(PigNormalizer[] new_normalizers) {
+	public EX_DOC_AUTHS_SNAMES(PigNormalizer[] new_normalizers) {
 		super(new_normalizers);
 	}
 
@@ -47,13 +47,12 @@ public class EX_AUTH_INITIALS extends DisambiguationExtractorDocument {
 			if ( a == null ) {
 				continue;
 			}
-			String fname = a.getForenames(); 
-			if ( fname == null || fname.isEmpty() ) {
+			Tuple t = tf.newTuple();
+			String sname = a.getSurname();
+			if ( sname == null || sname.isEmpty() ) {
 				continue;
 			}
-			String initial = fname.substring(0, 1);
-			Tuple t = tf.newTuple();
-			Object normalized = normalizeExtracted( initial );
+			Object normalized = normalizeExtracted( sname );
 			if ( normalized == null ) {
 				continue;
 			}
@@ -66,6 +65,6 @@ public class EX_AUTH_INITIALS extends DisambiguationExtractorDocument {
 
 	@Override
 	public String getId() {
-		return "C";
+		return "0";
 	}
 }

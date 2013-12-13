@@ -26,6 +26,7 @@ import org.apache.pig.data.DefaultDataBag;
 import org.apache.pig.data.TupleFactory;
 
 import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.PigNormalizer;
+import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.ToEnglishLowerCase;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.models.DocumentProtos.KeywordsList;
 
@@ -45,19 +46,29 @@ public class EX_KEYWORDS_SPLIT extends DisambiguationExtractorDocument {
 		DocumentMetadata dm = (DocumentMetadata) o;
 		DataBag db = new DefaultDataBag();
 		Set<Object> set = new HashSet<Object>();
+		ToEnglishLowerCase TELC = new ToEnglishLowerCase();
 
 		for (KeywordsList k : dm.getKeywordsList()) {
-			if (lang == null || k.getLanguage().equalsIgnoreCase(lang)) {
-				for (String keyphrase : k.getKeywordsList()) {
-					if (!keyphrase.isEmpty() && !isClassifCode(keyphrase)) {
-						for (String word : keyphrase.split("[\\W]+")) {
-							if (!word.isEmpty()) {
-								Object normalized = normalizeExtracted(word);
-								if (normalized != null) {
-									set.add(normalized);
-								}
-							}
-						}
+			if (lang != null && !k.getLanguage().equalsIgnoreCase(lang)) {
+				continue;
+			}
+
+			for (String keyphrase : k.getKeywordsList()) {
+				if (keyphrase.isEmpty() || isClassifCode(keyphrase)) {
+					continue;
+				}
+				String normalized_keyphrase = (String) TELC
+						.normalize(keyphrase);
+				if (normalized_keyphrase == null) {
+					continue;
+				}
+				for (String word : normalized_keyphrase.split("[\\W]+")) {
+					if (word.isEmpty()) {
+						continue;
+					}
+					Object normalized = normalizeExtracted(word);
+					if (normalized != null) {
+						set.add(normalized);
 					}
 				}
 			}

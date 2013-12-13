@@ -24,47 +24,55 @@ import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
 
 import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.PigNormalizer;
+import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.ToEnglishLowerCase;
 import pl.edu.icm.coansys.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 
-public class EX_AUTH_SNAMES extends DisambiguationExtractorDocument {
-	
-	public EX_AUTH_SNAMES() {
+public class EX_AUTH_FNAMES_FST_LETTER extends DisambiguationExtractorAuthor {
+
+	public EX_AUTH_FNAMES_FST_LETTER() {
 		super();
 	}
 
-	public EX_AUTH_SNAMES(PigNormalizer[] new_normalizers) {
+	public EX_AUTH_FNAMES_FST_LETTER(PigNormalizer[] new_normalizers) {
 		super(new_normalizers);
 	}
 
 	@Override
-	public DataBag extract( Object o, String lang ){
+	public DataBag extract(Object o, int fakeIndex, String lang) {
 		TupleFactory tf = TupleFactory.getInstance();
 		DocumentMetadata dm = (DocumentMetadata) o;
 		DataBag db = new DefaultDataBag();
+
+		ToEnglishLowerCase TELC = new ToEnglishLowerCase();
+
+		Author a = dm.getBasicMetadata().getAuthor(fakeIndex);
+		String fnames = a.getForenames();
+		if (fnames.isEmpty()) {
+			return db;
+		}
+		String normalized_fnames = (String) TELC.normalize(fnames);
+		if (normalized_fnames == null) {
+			return db;
+		}
 		
-		for ( Author a : dm.getBasicMetadata().getAuthorList() ){
-			if ( a == null ) {
+		String[] names = normalized_fnames.split("[\\W]+");
+		
+		for( String name : names ) {
+			if ( name.isEmpty() ) {
 				continue;
 			}
 			Tuple t = tf.newTuple();
-			String sname = a.getSurname();
-			if ( sname == null || sname.isEmpty() ) {
-				continue;
-			}
-			Object normalized = normalizeExtracted( sname );
-			if ( normalized == null ) {
-				continue;
-			}
-			t.append( normalized );
+			Object normalized_fst_letter = normalizeExtracted( name.substring(0, 1) );
+			t.append( normalized_fst_letter );
 			db.add(t);
 		}
-		
+
 		return db;
 	}
 
 	@Override
 	public String getId() {
-		return "0";
+		return "5";
 	}
 }

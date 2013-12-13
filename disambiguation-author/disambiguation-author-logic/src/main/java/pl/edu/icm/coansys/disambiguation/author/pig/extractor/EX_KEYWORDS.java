@@ -43,15 +43,16 @@ public class EX_KEYWORDS extends DisambiguationExtractorDocument {
 		DataBag db = new DefaultDataBag();
 
 		for (KeywordsList k : dm.getKeywordsList()) {
-			if (lang == null || k.getLanguage().equalsIgnoreCase(lang)) {
-				for (String s : k.getKeywordsList()) {
-					if (!s.isEmpty() && !isClassifCode(s)) {
-						Object normalized = normalizeExtracted(s);
-						if (normalized != null) {
-							db.add(TupleFactory.getInstance().newTuple(
-									normalized));
-						}
-					}
+			if (lang != null && !k.getLanguage().equalsIgnoreCase(lang)) {
+				continue;
+			}
+			for (String s : k.getKeywordsList()) {
+				if (s.isEmpty() || isClassifCode(s)) {
+					continue;
+				}
+				Object normalized = normalizeExtracted(s);
+				if (normalized != null) {
+					db.add(TupleFactory.getInstance().newTuple(normalized));
 				}
 			}
 		}

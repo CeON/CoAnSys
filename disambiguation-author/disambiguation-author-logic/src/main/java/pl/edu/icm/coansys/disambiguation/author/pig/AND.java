@@ -6,9 +6,10 @@ import java.util.Map;
 
 import org.apache.pig.EvalFunc;
 
+import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.Disambiguator;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.DisambiguatorFactory;
+import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.IntersectionPerSum;
 import pl.edu.icm.coansys.disambiguation.author.pig.extractor.DisambiguationExtractorFactory;
-import pl.edu.icm.coansys.disambiguation.features.Disambiguator;
 import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
 
 public abstract class AND<T> extends EvalFunc<T> {
@@ -21,7 +22,8 @@ public abstract class AND<T> extends EvalFunc<T> {
 	protected org.slf4j.Logger logger = null;
 	private DisambiguationExtractorFactory extrFactory;
 	private boolean useIdsForExtractors = false;
-
+	
+	private Disambiguator defaultDisambiguator = new IntersectionPerSum();
 	// private float sim[][];
 	// private Tuple datain[];
 	// private int N;
@@ -62,8 +64,8 @@ public abstract class AND<T> extends EvalFunc<T> {
 				// continue;
 			}
 			if (fi.getDisambiguatorName().equals("")) {
-				// creating default disambiguator
-				d = new Disambiguator();
+				// giving default disambiguator
+				d = defaultDisambiguator;
 				logger.info("Empty disambiguator name. Creating default disambiguator for this feature.");
 			} else if ((d = ff.create(fi)) == null) {
 				String errMsg = "Cannot create disambugiator from given feature info (disambiguator name: "
@@ -72,7 +74,7 @@ public abstract class AND<T> extends EvalFunc<T> {
 				throw new ClassNotFoundException(errMsg);
 				// if you do not want to throw an exception, uncomment the
 				// following creating default disambiguator
-				// d = new Disambiguator();
+				// d = defaultDisambiguator;
 			}
 			// wrong max value (would cause dividing by zero)
 			if (fi.getMaxValue() == 0) {
@@ -140,9 +142,6 @@ public abstract class AND<T> extends EvalFunc<T> {
 			Object featureDescriptionB, int featureIndex) {
 		double partial = features[featureIndex].calculateAffinity(
 				featureDescriptionA, featureDescriptionB);
-
-		partial = partial / featureInfos[featureIndex].getMaxValue()
-				* featureInfos[featureIndex].getWeight();
 
 		return partial;
 	}

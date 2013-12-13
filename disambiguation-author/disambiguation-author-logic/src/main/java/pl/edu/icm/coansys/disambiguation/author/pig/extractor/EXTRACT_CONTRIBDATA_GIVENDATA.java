@@ -34,6 +34,7 @@ import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
 import org.apache.pig.impl.logicalLayer.FrontendException;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
+import org.apache.pig.tools.pigstats.PigStatusReporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,11 +58,12 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 	private List<DisambiguationExtractorAuthor> des4Author = new ArrayList<DisambiguationExtractorAuthor>();
 	private List<String> des4DocNameOrId = new ArrayList<String>(),
 			des4AuthorNameOrId = new ArrayList<String>();
-	private String language = null;
+	private String language = null; // null means all
 	private boolean skipEmptyFeatures = false;
 	private boolean snameToString = false;
 	private boolean useIdsForExtractors = false;
 	private DisambiguationExtractorFactory extrFactory = new DisambiguationExtractorFactory();
+	private boolean returnNull = false;
 
 	@Override
 	public Schema outputSchema(Schema p_input) {
@@ -73,8 +75,9 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 		}
 	}
 
-	private void setDisambiguationExtractor(String featureinfo) throws InstantiationException, IllegalAccessException, ClassNotFoundException
-			{
+	private void setDisambiguationExtractor(String featureinfo)
+			throws InstantiationException, IllegalAccessException,
+			ClassNotFoundException {
 
 		List<FeatureInfo> features = FeatureInfo
 				.parseFeatureInfoString(featureinfo);
@@ -98,7 +101,6 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 				currentClassNameOrId = extractor.getClass().getSimpleName();
 			}
 
-
 			if (currentSuperClassName.equals(ExtractorDocClassName)) {
 				des4Doc.add((DisambiguationExtractorDocument) extractor);
 				des4DocNameOrId.add(currentClassNameOrId);
@@ -116,45 +118,58 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 		}
 	}
 
-	public EXTRACT_CONTRIBDATA_GIVENDATA(String in_params) throws Exception {
+	public EXTRACT_CONTRIBDATA_GIVENDATA(String in_params) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 		String[] params = in_params.split(" ");
-		for(String p : params){
-			if(p.startsWith("featureinfo=")){
+		for (String p : params) {
+			if (p.startsWith("featureinfo=")) {
 				setDisambiguationExtractor(p.substring("featureinfo=".length()));
-			}else if(p.startsWith("lang=")){
-				this.language = p.substring("lang=".length());
-			}else if(p.startsWith("skipEmptyFeatures=")){
-				this.skipEmptyFeatures = Boolean.parseBoolean(p.substring("skipEmptyFeatures=".length()));
-			}else if(p.startsWith("snameToString=")){
-				this.snameToString = Boolean.parseBoolean(p.substring("snameToString=".length()));
-			}else if(p.startsWith("useIdsForExtractors=")){
-				this.useIdsForExtractors = Boolean.parseBoolean(p.substring("useIdsForExtractors=".length()));
+			} else if (p.startsWith("lang=")) {
+				this.language = parseLng(p.substring("lang=".length()));
+			} else if (p.startsWith("skipEmptyFeatures=")) {
+				this.skipEmptyFeatures = Boolean.parseBoolean(p
+						.substring("skipEmptyFeatures=".length()));
+			} else if (p.startsWith("snameToString=")) {
+				this.snameToString = Boolean.parseBoolean(p
+						.substring("snameToString=".length()));
+			} else if (p.startsWith("useIdsForExtractors=")) {
+				this.useIdsForExtractors = Boolean.parseBoolean(p
+						.substring("useIdsForExtractors=".length()));
+			} else if (p.startsWith("returnNull=")) {
+				this.returnNull = Boolean.parseBoolean(p
+						.substring("returnNull=".length()));
 			}
 		}
 	}
-	
-	public EXTRACT_CONTRIBDATA_GIVENDATA(String featureinfo, String lang) throws InstantiationException, IllegalAccessException, ClassNotFoundException
-		{
-		this.language = lang;
+
+	public EXTRACT_CONTRIBDATA_GIVENDATA(String featureinfo, String lang)
+			throws InstantiationException, IllegalAccessException,
+			ClassNotFoundException {
+		this.language = parseLng(lang);
 		setDisambiguationExtractor(featureinfo);
 	}
 
 	public EXTRACT_CONTRIBDATA_GIVENDATA(String featureinfo, String lang,
-			String skipEmptyFeatures, String useIdsForExtractors) throws InstantiationException, IllegalAccessException, ClassNotFoundException
-			 {
-		this.language = lang;
+			String skipEmptyFeatures, String useIdsForExtractors)
+			throws InstantiationException, IllegalAccessException,
+			ClassNotFoundException {
+		this.language = parseLng(lang);
 		this.skipEmptyFeatures = Boolean.parseBoolean(skipEmptyFeatures);
 		this.useIdsForExtractors = Boolean.parseBoolean(useIdsForExtractors);
 		setDisambiguationExtractor(featureinfo);
 	}
 
-	private boolean checkLanguage() {
-		return (language != null && !language.equalsIgnoreCase("all")
-				&& !language.equalsIgnoreCase("null") && !language.equals(""));
+	private String parseLng(String lng) {
+		if (lng == null || lng.equalsIgnoreCase("all")
+				|| lng.equalsIgnoreCase("null") || lng.equals("")) {
+			return null;
+		}
+		return lng;
 	}
 
 	@Override
 	public DataBag exec(Tuple input) throws IOException {
+
+		PigStatusReporter reporter = PigStatusReporter.getInstance();
 
 		if (input == null || input.size() == 0) {
 			return null;
@@ -173,100 +188,103 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 
 			// result bag with tuples, which des4Doccribes each contributor
 			DataBag ret = new DefaultDataBag();
-			
+
 			// TODO: Checking for author clones should be in importers
 			// START IMPORTER PART
 			// getting full author list (probably with duplicates)
 			List<Author> dplAuthors = dm.getBasicMetadata().getAuthorList();
-			
-			Map <String, Author> filteredAuthors = 
-					new HashMap <String, Author> ( dplAuthors.size() );
-			
+
+			Map<String, Author> filteredAuthors = new HashMap<String, Author>(
+					dplAuthors.size());
+
 			// creating disambiguation extractor only for normalizer
-			DisambiguationExtractor disam_extractor = 
-					new DisambiguationExtractor();
-			
-			for ( Author a : dplAuthors ) {
-				Author b = filteredAuthors.put( a.getKey(), a );
-				if ( b != null ) {
-					//cId is inside map already. Checking whether cId is cloned or
-					//duplicated for different data or incorrectly attributed for different authors
-					String aInit =  a.getSurname();
-					String bInit =  b.getSurname();
-					Object aNorm = disam_extractor.normalizeExtracted( aInit );
-					Object bNorm = disam_extractor.normalizeExtracted( bInit );
-					
-					if ( a.equals( b ) ) {
+			DisambiguationExtractor disam_extractor = new DisambiguationExtractor();
+
+			for (Author a : dplAuthors) {
+				Author b = filteredAuthors.put(a.getKey(), a);
+				if (b != null) {
+					// cId is inside map already. Checking whether cId is cloned
+					// or
+					// duplicated for different data or incorrectly attributed
+					// for different authors
+					String aInit = a.getSurname();
+					String bInit = b.getSurname();
+					Object aNorm = disam_extractor.normalizeExtracted(aInit);
+					Object bNorm = disam_extractor.normalizeExtracted(bInit);
+
+					if (a.equals(b)) {
 						// all authors data are equal
-						// AUTHOR B (AS CLONE A) SCHOULD BE REMOVED FROM DOCUMENT'S AUTHOR LIST IN IMPORTERS
-						logger.info( "Author metadata clones with key: " + a.getKey() + 
-								" in document with key: " + docKey );
-					} else if ( aNorm.equals( bNorm ) ) {
-						logger.info( "Duplicated author key: " 
-								+ a.getKey() +  " for different metadata (except surname!)" +
-								" in document with key: " + docKey );
+						// AUTHOR B (AS CLONE A) SCHOULD BE REMOVED FROM
+						// DOCUMENT'S AUTHOR LIST IN IMPORTERS
+						logger.info("Author metadata clones with key: "
+								+ a.getKey() + " in document with key: "
+								+ docKey);
+					} else if (aNorm.equals(bNorm)) {
+						logger.info("Duplicated author key: " + a.getKey()
+								+ " for different metadata (except surname!)"
+								+ " in document with key: " + docKey);
 					} else {
-						logger.error( "Duplicated aurhor key: " 
-								+ a.getKey() + " for different authors: " + aInit 
-								+ ", " + bInit + 
-								" in document with key: " + docKey );
+						logger.error("Duplicated aurhor key: " + a.getKey()
+								+ " for different authors: " + aInit + ", "
+								+ bInit + " in document with key: " + docKey);
 					}
 				}
 			}
 			Collection<Author> authors = filteredAuthors.values();
-			//END IMPORTER PART
-			
+			// END IMPORTER PART
+
 			// TODO: builder for document metadata,
 			// replace old author list (with duplicates) with new (filtered)
 			// we want replace it, because in the other way EX_AUTH_SNAMES will
 			// give us feature description with duplicates OR we would need to
 			// write there the same filter as above.
 			// Or include author clones checking in IMPORTERS.
-			
+
 			// in arrays we are storing DataBags from extractors
 			DataBag[] extractedDocObj = new DataBag[des4Doc.size()];
 			DataBag[] extractedAuthorObj;
 			Map<String, DataBag> map = new HashMap<String, DataBag>();
 			Map<String, DataBag> finalMap;
-			
-			if (checkLanguage()) {
-				for (int i = 0; i < des4Doc.size(); i++) {
-					extractedDocObj[i] = des4Doc.get(i).extract(dm, language);
-				}
-			} else {
-				for (int i = 0; i < des4Doc.size(); i++) {
-					extractedDocObj[i] = des4Doc.get(i).extract(dm);
-				}
+
+			for (int i = 0; i < des4Doc.size(); i++) {
+				extractedDocObj[i] = des4Doc.get(i).extract(dm, language);
 			}
 
 			// adding to map extractor name and features' data
 			for (int i = 0; i < des4Doc.size(); i++) {
 				if (extractedDocObj[i] == null) {
+					reporter.getCounter("Doc_Missing",
+							des4Doc.get(i).getClass().getSimpleName())
+							.increment(1);
 					continue;
 				}
 				if (extractedDocObj[i].size() == 0 && skipEmptyFeatures) {
+					reporter.getCounter("Doc_Missing",
+							des4Doc.get(i).getClass().getSimpleName())
+							.increment(1);
 					continue;
 				}
-
+				reporter.getCounter("Doc_Existing",
+						des4Doc.get(i).getClass().getSimpleName()).increment(1);
 				map.put(des4DocNameOrId.get(i), extractedDocObj[i]);
 			}
 			extractedDocObj = null;
-			
+
 			// creating disambiguation extractor only for normalizer
 			DisambiguationExtractor extractor = new DisambiguationExtractor();
-			
+
 			// bag making tuples (one tuple for one contributor from document)
 			// with replicated metadata for
 			int i = -1;
-			for ( Author a : authors )
-			{
+			for (Author a : authors) {
 				i++;
 				// here we have sure that Object = Integer
 				Object normalizedSname = null;
-				if(snameToString){
-					normalizedSname = new ToEnglishLowerCase().normalize( a.getSurname() );
-				}else{
-					normalizedSname = extractor.normalizeExtracted( a );
+				if (snameToString) {
+					normalizedSname = new ToEnglishLowerCase().normalize(a
+							.getSurname());
+				} else {
+					normalizedSname = extractor.normalizeExtracted(a);
 				}
 				String cId = a.getKey();
 
@@ -274,33 +292,36 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 
 				// put author metadata into finalMap
 				extractedAuthorObj = new DataBag[des4Author.size()];
-				if (checkLanguage()) {
-					for (int j = 0; j < des4Author.size(); j++) {
-						extractedAuthorObj[j] = des4Author.get(j).extract(dm,
-								i, language);
-					}
-				} else {
-					for (int j = 0; j < des4Author.size(); j++) {
-						extractedAuthorObj[j] = des4Author.get(j)
-								.extract(dm, i);
-					}
+
+				for (int j = 0; j < des4Author.size(); j++) {
+					extractedAuthorObj[j] = des4Author.get(j).extract(dm,
+							i, language);
 				}
 
 				// adding to map extractor name and features' data
 				for (int j = 0; j < des4Author.size(); j++) {
 					if (extractedAuthorObj[j] == null) {
+						reporter.getCounter("Contrib_Missing",
+								des4Author.get(j).getClass().getSimpleName())
+								.increment(1);
 						continue;
 					}
 					if (extractedAuthorObj[j].size() == 0 && skipEmptyFeatures) {
+						reporter.getCounter("Contrib_Missing",
+								des4Author.get(j).getClass().getSimpleName())
+								.increment(1);
 						continue;
 					}
-
+					reporter.getCounter("Contrib_Existing",
+							des4Author.get(j).getClass().getSimpleName())
+							.increment(1);
 					finalMap.put(des4AuthorNameOrId.get(j),
 							extractedAuthorObj[j]);
 				}
 				extractedAuthorObj = null;
 
-				Object[] to = new Object[] { docKey, cId, normalizedSname, finalMap };
+				Object[] to = new Object[] { docKey, cId, normalizedSname,
+						finalMap };
 				Tuple t = TupleFactory.getInstance()
 						.newTuple(Arrays.asList(to));
 				ret.add(t);
@@ -308,6 +329,9 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 			map = null;
 			dm = null;
 
+			if (returnNull) {
+				return null;
+			}
 			return ret;
 
 		} catch (Exception e) {

@@ -25,7 +25,8 @@ import java.util.List;
 import org.apache.pig.data.DataBag;
 import org.apache.pig.data.Tuple;
 
-import pl.edu.icm.coansys.disambiguation.features.Disambiguator;
+import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.Disambiguator;
+
 
 /**
  * A heuristic for assessing whether two objects, described by two lists of feature values,
@@ -35,7 +36,7 @@ import pl.edu.icm.coansys.disambiguation.features.Disambiguator;
  * @version 1.0
  * @since 2012-08-07
  */
-public class PigDisambiguator extends Disambiguator{
+public class PigDisambiguator{
 	private Disambiguator d = null;
 	
 	public PigDisambiguator(Disambiguator d) {
@@ -80,14 +81,5 @@ public class PigDisambiguator extends Disambiguator{
 		List <Object> fl2 = Arrays.asList( f2str );
 		
 		return d.calculateAffinity( fl1, fl2 );
-	}
-	
-	/**
-	 * 
-	 * @return {@link PigDisambiguator} id.
-	 */
-    @Override
-	public String getName(){
-		return d.getName();
 	}
 }
