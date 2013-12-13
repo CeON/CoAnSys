@@ -66,7 +66,7 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 	private boolean returnNull = false;
 
 	@Override
-	public Schema outputSchema(Schema p_input) {
+	public Schema outputSchema(@SuppressWarnings("unused") Schema p_input) {
 		try {
 			return Schema.generateNestedSchema(DataType.BAG);
 		} catch (FrontendException e) {

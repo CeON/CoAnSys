@@ -37,6 +37,7 @@ import org.apache.pig.tools.pigstats.PigStatusReporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.CosineSimilarity;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.Disambiguator;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.Intersection;
 
@@ -54,6 +55,7 @@ public class SvmUnnormalizedPairsCreator  extends EvalFunc<DataBag> {
 		}
 	}
     
+	@SuppressWarnings("boxing")
 	@Override
 	public DataBag exec(Tuple tuple) throws IOException {
 		PigStatusReporter reporter = PigStatusReporter.getInstance();
@@ -79,7 +81,9 @@ public class SvmUnnormalizedPairsCreator  extends EvalFunc<DataBag> {
 		
 		TupleFactory tf = TupleFactory.getInstance();
 		
-		Disambiguator univDisambiguator = new Intersection();
+		Disambiguator intersectionDisambiguator = new Intersection();
+		Disambiguator cosineSimDisambiguator = new CosineSimilarity();
+		
 		
 		DataBag retBag = new DefaultDataBag();
 		
@@ -104,7 +108,10 @@ public class SvmUnnormalizedPairsCreator  extends EvalFunc<DataBag> {
 				for(int k =0; k<featureNames.length;k++){
 					List<Object> listA = extractedMapA.get(featureNames[k]);
 					List<Object> listB = extractedMapB.get(featureNames[k]);
-					t.append(univDisambiguator.calculateAffinity(listA,listB));
+					
+					t.append(featureNames[k]);
+					t.append(intersectionDisambiguator.calculateAffinity(listA,listB));
+					t.append(cosineSimDisambiguator.calculateAffinity(listA,listB));
 				}
 				retBag.add(t);
 			}
@@ -131,7 +138,7 @@ public class SvmUnnormalizedPairsCreator  extends EvalFunc<DataBag> {
 	}
 
 	@Override
-    public Schema outputSchema(Schema p_input) {
+    public Schema outputSchema(@SuppressWarnings("unused") Schema p_input) {
         try {
             return Schema.generateNestedSchema(DataType.TUPLE);
         } catch (FrontendException e) {
