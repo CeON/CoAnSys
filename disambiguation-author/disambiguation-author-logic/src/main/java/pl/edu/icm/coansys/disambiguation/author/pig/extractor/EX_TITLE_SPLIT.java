@@ -19,6 +19,7 @@
 package pl.edu.icm.coansys.disambiguation.author.pig.extractor;
 
 import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.PigNormalizer;
+import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.ToEnglishLowerCase;
 import pl.edu.icm.coansys.models.DocumentProtos.TextWithLanguage;
 
 import org.apache.pig.data.DataBag;
@@ -43,21 +44,28 @@ public class EX_TITLE_SPLIT extends DisambiguationExtractorDocument {
 
 		DocumentMetadata dm = (DocumentMetadata) o;
 		DataBag db = new DefaultDataBag();
+		ToEnglishLowerCase TELC = new ToEnglishLowerCase();
 
 		for (TextWithLanguage title : dm.getBasicMetadata().getTitleList()) {
-			if (lang == null || lang.equalsIgnoreCase(title.getLanguage())) {
-				String[] normals = title.getText().split("[\\W]+");
-				for (String s : normals) {
-					if (s.isEmpty()) {
-						continue;
-					}
-					Object normalized = normalizeExtracted(s);
-					if (normalized == null) {
-						continue;
-					}
-					Tuple t = TupleFactory.getInstance().newTuple(normalized);
-					db.add(t);
+			if (lang != null && !lang.equalsIgnoreCase(title.getLanguage())) {
+				continue;
+			}
+			String sTitle = title.getText();
+			String normalized_title = (String) TELC.normalize(sTitle);
+			if (normalized_title == null) {
+				continue;
+			}
+			String[] normals = normalized_title.split("[\\W]+");
+			for (String s : normals) {
+				if (s.isEmpty()) {
+					continue;
 				}
+				Object normalized = normalizeExtracted(s);
+				if (normalized == null) {
+					continue;
+				}
+				Tuple t = TupleFactory.getInstance().newTuple(normalized);
+				db.add(t);
 			}
 		}
 

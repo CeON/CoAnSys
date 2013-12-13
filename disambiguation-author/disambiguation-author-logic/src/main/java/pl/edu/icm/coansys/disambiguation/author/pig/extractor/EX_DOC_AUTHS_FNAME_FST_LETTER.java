@@ -24,52 +24,59 @@ import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
 
 import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.PigNormalizer;
+import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.ToEnglishLowerCase;
 import pl.edu.icm.coansys.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 
-public class EX_FORENAMES_INITS extends DisambiguationExtractorAuthor {
+public class EX_DOC_AUTHS_FNAME_FST_LETTER extends DisambiguationExtractorDocument {
 
-	public EX_FORENAMES_INITS() {
+	public EX_DOC_AUTHS_FNAME_FST_LETTER() {
 		super();
 	}
 
-	public EX_FORENAMES_INITS(PigNormalizer[] new_normalizers) {
+	public EX_DOC_AUTHS_FNAME_FST_LETTER(PigNormalizer[] new_normalizers) {
 		super(new_normalizers);
 	}
 
 	@Override
-	public DataBag extract(Object o, int fakeIndex, String lang) {
+	public DataBag extract(Object o, String lang) {
 		TupleFactory tf = TupleFactory.getInstance();
 		DocumentMetadata dm = (DocumentMetadata) o;
 		DataBag db = new DefaultDataBag();
 
-		Author a = dm.getBasicMetadata().getAuthor(fakeIndex);
-		String[] fs = a.getForenames().split("[\\W]+");
-		StringBuilder sb = new StringBuilder();
-
-		for (int i = 0; i < fs.length; i++) {
-			if (fs[i].length() > 0) {
-				sb.append(fs[i].substring(0, 1));
+		for (Author a : dm.getBasicMetadata().getAuthorList()) {
+			if (a == null) {
+				continue;
 			}
-		}
+			String fname = a.getForenames();
+			if (fname == null || fname.isEmpty()) {
+				continue;
+			}
+			Object normalized_fname = (new ToEnglishLowerCase())
+					.normalize(fname);
 
-		Tuple t = tf.newTuple();
-		String res = sb.toString();
-		if ( res.isEmpty() ) {
-			return db;
+			if (normalized_fname == null) {
+				continue;
+			}
+
+			String str_normalized_fname = (String) normalized_fname;
+
+			String initial = str_normalized_fname.substring(0, 1);
+			Tuple t = tf.newTuple();
+
+			Object normalized = normalizeExtracted(initial);
+			if (normalized == null) {
+				continue;
+			}
+			t.append(normalized);
+			db.add(t);
 		}
-		Object normalized = normalizeExtracted(res);
-		if ( normalized == null ) {
-			return db;
-		}
-		t.append(normalized);
-		db.add(t);
 
 		return db;
 	}
 
 	@Override
 	public String getId() {
-		return "5";
+		return "C";
 	}
 }

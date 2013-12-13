@@ -18,53 +18,53 @@
 
 package pl.edu.icm.coansys.disambiguation.author.pig.extractor;
 
-import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.PigNormalizer;
-import pl.edu.icm.coansys.models.DocumentProtos.TextWithLanguage;
-
 import org.apache.pig.data.DataBag;
 import org.apache.pig.data.DefaultDataBag;
 import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
 
+import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.PigNormalizer;
+import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.ToEnglishLowerCase;
+import pl.edu.icm.coansys.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 
-public class EX_TITLE extends DisambiguationExtractorDocument {
+public class EX_AUTH_FNAME_FST_LETTER extends DisambiguationExtractorAuthor {
 
-	public EX_TITLE() {
+	public EX_AUTH_FNAME_FST_LETTER() {
 		super();
 	}
 
-	public EX_TITLE(PigNormalizer[] new_normalizers) {
+	public EX_AUTH_FNAME_FST_LETTER(PigNormalizer[] new_normalizers) {
 		super(new_normalizers);
 	}
 
 	@Override
-	public DataBag extract(Object o, String lang) {
-
+	public DataBag extract(Object o, int fakeIndex, String lang) {
+		TupleFactory tf = TupleFactory.getInstance();
 		DocumentMetadata dm = (DocumentMetadata) o;
 		DataBag db = new DefaultDataBag();
+		ToEnglishLowerCase TELC = new ToEnglishLowerCase();
 
-		for (TextWithLanguage title : dm.getBasicMetadata().getTitleList()) {
-			if (lang != null && !lang.equalsIgnoreCase(title.getLanguage())) {
-				continue;
-			}
-			String sTitle = title.getText();
-			if (sTitle.isEmpty()) {
-				continue;
-			}
-			Object normalized = normalizeExtracted(sTitle);
-			if (normalized == null) {
-				continue;
-			}
-			Tuple t = TupleFactory.getInstance().newTuple(normalized);
-			db.add(t);
+		Author a = dm.getBasicMetadata().getAuthor(fakeIndex);
+		String fnames = a.getForenames();
+		if (fnames.isEmpty()) {
+			return db;
 		}
+		String normalized_fnames = (String) TELC.normalize(fnames);
+		if (normalized_fnames == null) {
+			return db;
+		}
+		Tuple t = tf.newTuple();
+		String fst_letter = normalized_fnames.substring(0, 1);
+		Object normalized_fst_letter = normalizeExtracted(fst_letter);
+		t.append(normalized_fst_letter);
+		db.add(t);
 
 		return db;
 	}
 
 	@Override
 	public String getId() {
-		return "A";
+		return "D";
 	}
 }
