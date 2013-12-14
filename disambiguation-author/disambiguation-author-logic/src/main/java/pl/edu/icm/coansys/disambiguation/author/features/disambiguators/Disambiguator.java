@@ -35,7 +35,7 @@ public abstract class Disambiguator {
 			int size = 0;
 			if(f1!=null){
 				size = f1.size();
-			}else{
+			}else if(f2!=null){
 				size = f2.size();
 			}
 			return new SimpleEntry<Integer, Integer>(0,size);
