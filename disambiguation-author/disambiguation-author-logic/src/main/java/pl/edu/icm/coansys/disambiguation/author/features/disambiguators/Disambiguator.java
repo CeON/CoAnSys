@@ -31,6 +31,15 @@ public abstract class Disambiguator {
 	public SimpleEntry<Integer, Integer> intersectionAndSum(
 			List<Object> f1, List<Object> f2) {
 		
+		if(f1==null || f2==null){
+			int size = 0;
+			if(f1!=null){
+				size = f1.size();
+			}else{
+				size = f2.size();
+			}
+			return new SimpleEntry<Integer, Integer>(0,size);
+		}
 		Set <Object> all = new HashSet<Object>( f1.size() + f2.size() );
 		
 		all.addAll( f1 );
