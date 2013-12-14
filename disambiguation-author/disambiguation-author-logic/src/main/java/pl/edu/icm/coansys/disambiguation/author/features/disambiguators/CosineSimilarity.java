@@ -24,12 +24,17 @@ public class CosineSimilarity extends Disambiguator {
 	public double calculateAffinity(List<Object> f1, List<Object> f2) {
         Map<Object, Integer> v1 = calculateVector(f1);
         Map<Object, Integer> v2 = calculateVector(f2);
-
+        if(v1.size()==0 && v2.size()==0){
+        	return 0;
+        }
         return dotProduct(v1, v2) / (vectorLength(v1) * vectorLength(v2));
     }
 
     private Map<Object, Integer> calculateVector(List<Object> tokens) {
         HashMap<Object, Integer> vector = new HashMap<Object, Integer>();
+        if(tokens==null){
+        	return vector;
+        }
         for (Object token : tokens) {
             if (vector.containsKey(token)) {
                 vector.put(token, vector.get(token) + 1);
