@@ -40,6 +40,7 @@ import org.slf4j.LoggerFactory;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.CosineSimilarity;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.Disambiguator;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.Intersection;
+import pl.edu.icm.coansys.disambiguation.author.pig.extractor.EX_PERSON_ID;
 
 public class SvmUnnormalizedPairsCreator extends EvalFunc<DataBag> {
 
@@ -115,10 +116,12 @@ public class SvmUnnormalizedPairsCreator extends EvalFunc<DataBag> {
 					List<Object> listB = extractedMapB.get(featureNames[k]);
 
 					t.append(featureNames[k]);
-					t.append(intersectionDisambiguator.calculateAffinity(listA,
-							listB));
-					t.append(cosineSimDisambiguator.calculateAffinity(listA,
-							listB));
+					double intersection = intersectionDisambiguator.calculateAffinity(listA,listB);
+					if("EX_PERSON_ID".equals(featureNames[k])){
+						reporter.getCounter("Is Same Person", (intersection==1)+"").increment(1);
+					}
+					t.append(intersection);
+					t.append(cosineSimDisambiguator.calculateAffinity(listA,listB));
 				}
 				retBag.add(t);
 			}
