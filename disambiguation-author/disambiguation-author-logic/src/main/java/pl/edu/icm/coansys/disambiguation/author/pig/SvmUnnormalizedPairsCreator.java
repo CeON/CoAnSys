@@ -40,7 +40,6 @@ import org.slf4j.LoggerFactory;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.CosineSimilarity;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.Disambiguator;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.Intersection;
-import pl.edu.icm.coansys.disambiguation.author.pig.extractor.EX_PERSON_ID;
 
 public class SvmUnnormalizedPairsCreator extends EvalFunc<DataBag> {
 
@@ -49,12 +48,25 @@ public class SvmUnnormalizedPairsCreator extends EvalFunc<DataBag> {
 	private PigStatusReporter reporter = null;
 
 	private String[] featureNames = null;
-
-	public SvmUnnormalizedPairsCreator(String maxValsString) {
-		String[] fns = maxValsString.split(",");
-		featureNames = new String[fns.length];
-		for (int i = 0; i < fns.length; i++) {
-			featureNames[i] = fns[i].split("#")[1];
+	private String sameFeatureName = null;
+	
+	public SvmUnnormalizedPairsCreator(String inputParams) {
+		String[] in = inputParams.split(" ");
+		for(String i : in){
+			i = i.trim();
+			if(i.length()==0){
+				continue;
+			}
+			if(i.startsWith("featureInfo=")){
+				i = i.substring("featureInfo=".length());
+				String[] fns = i.split(",");
+				featureNames = new String[fns.length];
+				for (int j = 0; j < fns.length; j++) {
+					featureNames[j] = fns[j].split("#")[1];
+				}
+			}else if(i.startsWith("sameFeatureName=")){
+				this.sameFeatureName = i.substring("sameFeatureName=".length());
+			}
 		}
 	}
 
@@ -117,7 +129,7 @@ public class SvmUnnormalizedPairsCreator extends EvalFunc<DataBag> {
 
 					t.append(featureNames[k]);
 					double intersection = intersectionDisambiguator.calculateAffinity(listA,listB);
-					if("EX_PERSON_ID".equals(featureNames[k])){
+					if(sameFeatureName!=null && sameFeatureName.equals(featureNames[k])){
 						reporter.getCounter("Is Same Person", (intersection==1)+"").increment(1);
 					}
 					t.append(intersection);
