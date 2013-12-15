@@ -48,7 +48,8 @@ public class SvmUnnormalizedPairsCreator extends EvalFunc<DataBag> {
 	private PigStatusReporter reporter = null;
 
 	private String[] featureNames = null;
-	private String sameFeatureName = null;
+	private String sameFeatureName = "";
+	private boolean reduceNotSame = false;
 	
 	public SvmUnnormalizedPairsCreator(String inputParams) {
 		String[] in = inputParams.split(" ");
@@ -66,6 +67,8 @@ public class SvmUnnormalizedPairsCreator extends EvalFunc<DataBag> {
 				}
 			}else if(i.startsWith("sameFeatureName=")){
 				this.sameFeatureName = i.substring("sameFeatureName=".length());
+			}else if(i.startsWith("reduceNotSame=")){
+				this.reduceNotSame = Boolean.parseBoolean(i.substring("reduceNotSame=".length()));
 			}
 		}
 	}
@@ -132,6 +135,15 @@ public class SvmUnnormalizedPairsCreator extends EvalFunc<DataBag> {
 					if(sameFeatureName!=null && sameFeatureName.equals(featureNames[k])){
 						reporter.getCounter("Is Same Person", (intersection==1)+"").increment(1);
 					}
+					
+					if(reduceNotSame){
+						boolean notAdd = 10*reporter.getCounter("Is Same Person", "false").getValue() > 
+						reporter.getCounter("Is Same Person", "true").getValue(); 
+						if(intersection==0 && notAdd){
+							continue;
+						}
+					}
+					
 					t.append(intersection);
 					t.append(cosineSimDisambiguator.calculateAffinity(listA,listB));
 				}
