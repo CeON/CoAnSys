@@ -50,25 +50,26 @@ public class SvmUnnormalizedPairsCreator extends EvalFunc<DataBag> {
 	private String[] featureNames = null;
 	private String sameFeatureName = "";
 	private boolean reduceNotSame = false;
-	
+
 	public SvmUnnormalizedPairsCreator(String inputParams) {
 		String[] in = inputParams.split(" ");
-		for(String i : in){
+		for (String i : in) {
 			i = i.trim();
-			if(i.length()==0){
+			if (i.length() == 0) {
 				continue;
 			}
-			if(i.startsWith("featureInfo=")){
+			if (i.startsWith("featureInfo=")) {
 				i = i.substring("featureInfo=".length());
 				String[] fns = i.split(",");
 				featureNames = new String[fns.length];
 				for (int j = 0; j < fns.length; j++) {
 					featureNames[j] = fns[j].split("#")[1];
 				}
-			}else if(i.startsWith("sameFeatureName=")){
+			} else if (i.startsWith("sameFeatureName=")) {
 				this.sameFeatureName = i.substring("sameFeatureName=".length());
-			}else if(i.startsWith("reduceNotSame=")){
-				this.reduceNotSame = Boolean.parseBoolean(i.substring("reduceNotSame=".length()));
+			} else if (i.startsWith("reduceNotSame=")) {
+				this.reduceNotSame = Boolean.parseBoolean(i
+						.substring("reduceNotSame=".length()));
 			}
 		}
 	}
@@ -131,21 +132,35 @@ public class SvmUnnormalizedPairsCreator extends EvalFunc<DataBag> {
 					List<Object> listB = extractedMapB.get(featureNames[k]);
 
 					t.append(featureNames[k]);
-					double intersection = intersectionDisambiguator.calculateAffinity(listA,listB);
-					if(sameFeatureName!=null && sameFeatureName.equals(featureNames[k])){
-						reporter.getCounter("Is Same Person", (intersection==1)+"").increment(1);
+					double intersection = intersectionDisambiguator
+							.calculateAffinity(listA, listB);
+					if (sameFeatureName != null
+							&& sameFeatureName.equals(featureNames[k])) {
+						reporter.getCounter("Is_Same_Person",
+								(intersection == 1) + "").increment(1);
 					}
-					
-					if(reduceNotSame){
-						boolean notAdd = 10*reporter.getCounter("Is Same Person", "false").getValue() > 
-						reporter.getCounter("Is Same Person", "true").getValue(); 
-						if(intersection==0 && notAdd){
+
+					if (reduceNotSame) {
+						long notSameCount = reporter.getCounter(
+								"Is_Same_Person", "false").getValue();
+						long sameCount = reporter.getCounter(
+								"Is_Same_Person", "true").getValue();
+						
+						boolean notAdd = 10 * notSameCount > sameCount;
+						logger.debug("Counter [Is_Same_Person,true] = "
+								+ sameCount);
+						logger.debug("Counter [Is_Same_Person,false] = "
+								+ notSameCount);
+						logger.debug("Should I add next tuple? "+notAdd);
+						if (intersection == 0 && notAdd) {
+							logger.debug("Have I add next tuple? false");
 							continue;
 						}
 					}
-					
+					logger.debug("Have I add next tuple? true");
 					t.append(intersection);
-					t.append(cosineSimDisambiguator.calculateAffinity(listA,listB));
+					t.append(cosineSimDisambiguator.calculateAffinity(listA,
+							listB));
 				}
 				retBag.add(t);
 			}
@@ -159,18 +174,20 @@ public class SvmUnnormalizedPairsCreator extends EvalFunc<DataBag> {
 		for (int k = 0; k < featureNames.length; k++) {
 			DataBag db = mapA.get(featureNames[k]);
 			ArrayList<Object> al = new ArrayList<Object>();
-			if(db == null) return translated;
+			if (db == null)
+				return translated;
 			for (Tuple t : db) {
 				Object tmp = t.get(0);
-				
-				if(tmp!=null){
+
+				if (tmp != null) {
 					if (tmp.hashCode() != 0) {
 						al.add(tmp);
 					}
-				}else{
-					reporter.getCounter("Bizarre error",
-							"Empty tuple in bag with feature " + featureNames[k])
-							.increment(1);	
+				} else {
+					reporter.getCounter(
+							"Bizarre error",
+							"Empty tuple in bag with feature "
+									+ featureNames[k]).increment(1);
 				}
 			}
 			translated.put(featureNames[k], al);
