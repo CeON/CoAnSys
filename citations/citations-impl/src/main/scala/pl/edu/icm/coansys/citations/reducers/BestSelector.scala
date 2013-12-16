@@ -25,11 +25,11 @@ import org.apache.hadoop.io.Text
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
-class BestSelector extends Reducer[Text, Text, Text, Text] {
-  type Context = Reducer[Text, Text, Text, Text]#Context
+class BestSelector[K] extends Reducer[K, Text, K, Text] {
+  type Context = Reducer[K, Text, K, Text]#Context
   val bestWritable = new Text
 
-  override def reduce(key: Text, values: java.lang.Iterable[Text], context: Context) {
+  override def reduce(key: K, values: java.lang.Iterable[Text], context: Context) {
     val iter = values.iterator()
     if (iter.isEmpty)
       return
