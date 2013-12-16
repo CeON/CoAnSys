@@ -567,7 +567,7 @@
                 </property>
                 <property>
                     <name>mapred.output.key.class</name>
-                    <value>org.apache.hadoop.io.Text</value>
+                    <value>pl.edu.icm.coansys.citations.data.TextWithBytesWritable</value>
                 </property>
                 <property>
                     <name>mapred.output.value.class</name>
