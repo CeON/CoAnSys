@@ -20,16 +20,15 @@ package pl.edu.icm.coansys.citations.mappers
 
 import org.apache.hadoop.io.{Text, BytesWritable}
 import org.apache.hadoop.mapreduce.Mapper
-import pl.edu.icm.coansys.citations.data.{MatchableEntity, SimilarityMeasurer}
-import pl.edu.icm.coansys.citations.indices.EntityIndex
+import pl.edu.icm.coansys.citations.data.{TextWithBytesWritable, MatchableEntity, SimilarityMeasurer}
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
-class EntityAssesor extends Mapper[BytesWritable, BytesWritable, Text, Text] {
-  type Context = Mapper[BytesWritable, BytesWritable, Text, Text]#Context
-  val outKey: Text = new Text()
-  val outValue: Text = new Text()
+class EntityAssesor extends Mapper[BytesWritable, BytesWritable, TextWithBytesWritable, Text] {
+  type Context = Mapper[BytesWritable, BytesWritable, TextWithBytesWritable, Text]#Context
+  val outKey = new TextWithBytesWritable()
+  val outValue= new Text()
   val similarityMeasurer = new SimilarityMeasurer
   val minimalSimilarity = 0.5
 
@@ -38,7 +37,8 @@ class EntityAssesor extends Mapper[BytesWritable, BytesWritable, Text, Text] {
     val entity = MatchableEntity.fromBytes(value.copyBytes())
     val similarity = similarityMeasurer.similarity(cit, entity)
     if (similarity >= minimalSimilarity) {
-      outKey.set(cit.id)
+      outKey.text.set(cit.id)
+      outKey.bytes.set(key)
       outValue.set(similarity + ":" + entity.id)
       context.write(outKey, outValue)
     }

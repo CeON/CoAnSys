@@ -1,13 +1,12 @@
 package pl.edu.icm.coansys.citations.jobs
 
-import pl.edu.icm.coansys.citations.data.{BytesPairWritable, MatchableEntity}
-import pl.edu.icm.coansys.citations.data.CitationMatchingProtos.MatchableEntityData
+import org.apache.hadoop.io.BytesWritable
 import org.apache.hadoop.mrunit.mapreduce.MapReduceDriver
-import org.apache.hadoop.io.{Text, BytesWritable}
-import pl.edu.icm.coansys.citations.mappers.{EntityAssesor, IdExtractor}
-import pl.edu.icm.coansys.citations.reducers.{BestSelector, Distinctor}
 import org.testng.Assert._
 import org.testng.annotations.Test
+import pl.edu.icm.coansys.citations.data.{TextWithBytesWritable, MatchableEntity}
+import pl.edu.icm.coansys.citations.mappers.EntityAssesor
+import pl.edu.icm.coansys.citations.reducers.BestSelector
 
 
 /**
@@ -43,13 +42,10 @@ class AssessorTest {
   @Test(groups = Array("fast"))
   def jobTest() {
 
-    val driver = new MapReduceDriver[BytesWritable, BytesWritable, Text, Text, Text, Text]()
-      .withMapper(new EntityAssesor)
+    val driver = MapReduceDriver.newMapReduceDriver(new EntityAssesor, new BestSelector[TextWithBytesWritable], new BestSelector[TextWithBytesWritable])
       .withInput(new BytesWritable(cit1), new BytesWritable(doc0))
       .withInput(new BytesWritable(cit1), new BytesWritable(doc1))
       .withInput(new BytesWritable(cit1), new BytesWritable(doc0))
-      .withReducer(new BestSelector)
-      .withCombiner(new BestSelector)
 
     val results = driver.run()
     assertEquals(results.size(), 1)

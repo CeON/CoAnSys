@@ -77,9 +77,13 @@
                 <name>mapreduce.outputformat.class</name>
                 <value>org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat</value>
             </property>
+            <!--<property>-->
+                <!--<name>mapred.max.split.size</name>-->
+                <!--<value>500000000</value>-->
+            <!--</property>-->
             <property>
-                <name>mapred.max.split.size</name>
-                <value>50000000</value>
+                <name>mapred.reduce.tasks</name>
+                <value>36</value>
             </property>
         </configuration>
     </global>
@@ -563,7 +567,7 @@
                 </property>
                 <property>
                     <name>mapred.output.key.class</name>
-                    <value>org.apache.hadoop.io.Text</value>
+                    <value>pl.edu.icm.coansys.citations.data.TextWithBytesWritable</value>
                 </property>
                 <property>
                     <name>mapred.output.value.class</name>
