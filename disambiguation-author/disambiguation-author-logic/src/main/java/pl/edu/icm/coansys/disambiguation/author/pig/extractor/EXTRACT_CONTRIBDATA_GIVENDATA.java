@@ -54,6 +54,7 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(EXTRACT_CONTRIBDATA_GIVENDATA.class);
+	private PigStatusReporter reporter = null;	
 	private List<DisambiguationExtractorDocument> des4Doc = new ArrayList<DisambiguationExtractorDocument>();
 	private List<DisambiguationExtractorAuthor> des4Author = new ArrayList<DisambiguationExtractorAuthor>();
 	private List<String> des4DocNameOrId = new ArrayList<String>(),
@@ -66,7 +67,7 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 	private boolean returnNull = false;
 
 	@Override
-	public Schema outputSchema(Schema p_input) {
+	public Schema outputSchema(@SuppressWarnings("unused") Schema p_input) {
 		try {
 			return Schema.generateNestedSchema(DataType.BAG);
 		} catch (FrontendException e) {
@@ -118,7 +119,9 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 		}
 	}
 
-	public EXTRACT_CONTRIBDATA_GIVENDATA(String in_params) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+	public EXTRACT_CONTRIBDATA_GIVENDATA(String in_params)
+			throws InstantiationException, IllegalAccessException,
+			ClassNotFoundException {
 		String[] params = in_params.split(" ");
 		for (String p : params) {
 			if (p.startsWith("featureinfo=")) {
@@ -169,8 +172,9 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 	@Override
 	public DataBag exec(Tuple input) throws IOException {
 
-		PigStatusReporter reporter = PigStatusReporter.getInstance();
-
+		reporter = PigStatusReporter.getInstance();
+		initializePigReporterWithZeroes();
+		
 		if (input == null || input.size() == 0) {
 			return null;
 		}
@@ -252,20 +256,11 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 
 			// adding to map extractor name and features' data
 			for (int i = 0; i < des4Doc.size(); i++) {
-				if (extractedDocObj[i] == null) {
-					reporter.getCounter("Doc_Missing",
-							des4Doc.get(i).getClass().getSimpleName())
-							.increment(1);
+				raportDocumentDataExistance(extractedDocObj, i);
+				if (extractedDocObj[i] == null
+						|| (extractedDocObj[i].size() == 0 && skipEmptyFeatures)) {
 					continue;
 				}
-				if (extractedDocObj[i].size() == 0 && skipEmptyFeatures) {
-					reporter.getCounter("Doc_Missing",
-							des4Doc.get(i).getClass().getSimpleName())
-							.increment(1);
-					continue;
-				}
-				reporter.getCounter("Doc_Existing",
-						des4Doc.get(i).getClass().getSimpleName()).increment(1);
 				map.put(des4DocNameOrId.get(i), extractedDocObj[i]);
 			}
 			extractedDocObj = null;
@@ -294,27 +289,17 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 				extractedAuthorObj = new DataBag[des4Author.size()];
 
 				for (int j = 0; j < des4Author.size(); j++) {
-					extractedAuthorObj[j] = des4Author.get(j).extract(dm,
-							i, language);
+					extractedAuthorObj[j] = des4Author.get(j).extract(dm, i,
+							language);
 				}
 
 				// adding to map extractor name and features' data
 				for (int j = 0; j < des4Author.size(); j++) {
-					if (extractedAuthorObj[j] == null) {
-						reporter.getCounter("Contrib_Missing",
-								des4Author.get(j).getClass().getSimpleName())
-								.increment(1);
+					reportAuthorDataExistance(extractedAuthorObj, j);
+					if (extractedAuthorObj[j] == null
+							|| (extractedAuthorObj[j].size() == 0 && skipEmptyFeatures)) {
 						continue;
 					}
-					if (extractedAuthorObj[j].size() == 0 && skipEmptyFeatures) {
-						reporter.getCounter("Contrib_Missing",
-								des4Author.get(j).getClass().getSimpleName())
-								.increment(1);
-						continue;
-					}
-					reporter.getCounter("Contrib_Existing",
-							des4Author.get(j).getClass().getSimpleName())
-							.increment(1);
 					finalMap.put(des4AuthorNameOrId.get(j),
 							extractedAuthorObj[j]);
 				}
@@ -339,5 +324,51 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 			throw new IOException("Caught exception processing input row:\n"
 					+ StackTraceExtractor.getStackTrace(e));
 		}
+	}
+
+	private void initializePigReporterWithZeroes() {
+		for(int i=0; i<des4Doc.size();i++){
+			reporter.getCounter(REPORTER_CONST.DOC_MS,
+					des4Doc.get(i).getClass().getSimpleName()).increment(0);
+		}
+		for(int i=0; i<des4Doc.size();i++){
+			reporter.getCounter(REPORTER_CONST.DOC_EX,
+					des4Doc.get(i).getClass().getSimpleName()).increment(0);
+		}
+		for(int i=0; i<des4Author.size();i++){
+			reporter.getCounter(REPORTER_CONST.CONTRIB_MS,
+					des4Author.get(i).getClass().getSimpleName()).increment(0);
+		}
+		for(int i=0; i<des4Author.size();i++){
+			reporter.getCounter(REPORTER_CONST.CONTRIB_EX,
+					des4Author.get(i).getClass().getSimpleName()).increment(0);
+		}
+	}
+
+	private void reportAuthorDataExistance(DataBag[] extractedAuthorObj, int j) {
+		if (extractedAuthorObj[j] == null || extractedAuthorObj[j].size() == 0) {
+			reporter.getCounter(REPORTER_CONST.CONTRIB_MS,
+					des4Author.get(j).getClass().getSimpleName()).increment(1);
+		} else {
+			reporter.getCounter(REPORTER_CONST.CONTRIB_EX,
+					des4Author.get(j).getClass().getSimpleName()).increment(1);
+		}
+	}
+
+	private void raportDocumentDataExistance(DataBag[] extractedDocObj, int i) {
+		if (extractedDocObj[i] == null || extractedDocObj[i].size() == 0) {
+			reporter.getCounter(REPORTER_CONST.DOC_MS,
+					des4Doc.get(i).getClass().getSimpleName()).increment(1);
+		} else {
+			reporter.getCounter(REPORTER_CONST.DOC_EX,
+					des4Doc.get(i).getClass().getSimpleName()).increment(1);
+		}
+	}
+	
+	static class REPORTER_CONST{
+		public final static String CONTRIB_EX = "Contrib_Existing";
+		public final static String CONTRIB_MS = "Contrib_Missing";
+		public final static String DOC_EX = "Doc_Existing";
+		public final static String DOC_MS = "Doc_Missing";
 	}
 }
