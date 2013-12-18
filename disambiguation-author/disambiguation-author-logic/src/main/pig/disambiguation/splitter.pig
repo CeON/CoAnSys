@@ -22,11 +22,10 @@
 -- -----------------------------------------------------
 %DEFAULT and_inputDocsData /srv/bwndata/seqfile/bazekon-20130314.sf
 %DEFAULT and_cid_dockey 'cid_dockey'
-%DEFAULT and_splitter_output 'splitted'
-%DEFAULT one 'one'
-%DEFAULT exh 'exh'
-%DEFAULT appSim 'app_sim'
-%DEFAULT appNoSim 'app_no_sim'
+%DEFAULT and_splitted_output_one 'splitted/one'
+%DEFAULT and_splitted_output_exh 'splitted/exh'
+%DEFAULT and_splitted_output_app_sim 'splitted/app-sim'
+%DEFAULT and_splitted_output_app_no_sim 'splitted/app-no-sim
 
 %DEFAULT and_time 20130709_1009
 %DEFAULT and_sample 1.0
@@ -104,7 +103,6 @@ split FC into
 D1A = foreach BAD generate sname as sname, {(cId,sname,metadata)} as datagroup, 1 as count;
 
 
-
 -- -----------------------------------------------------
 -- PROCESSING CONTRIBUDORS SIMILAR TO THEMSELVES
 -- -----------------------------------------------------
@@ -128,10 +126,10 @@ split D into
 -- add contributors with bad data to table D (single contributors)
 D1 = union D1A, D1B;
 
-store D1 into '$and_splitter_output/$one';
-store D100 into '$and_splitter_output/$exh';
-store D1000 into '$and_splitter_output/$appSim';
-store DX into '$and_splitter_output/$appNoSim';
+store D1 into '$and_splitted_output_one';
+store D100 into '$and_splitted_output_exh';
+store D1000 into '$and_splitted_output_app_sim';
+store DX into '$and_splitted_output_app_no_sim';
 
 -- storing relation contributor id - document id, which we need in future during serialization
 Q = foreach B generate cId, dockey;

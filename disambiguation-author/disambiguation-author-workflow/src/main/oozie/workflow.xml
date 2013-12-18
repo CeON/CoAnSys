@@ -145,10 +145,10 @@
 			<!--pig parameters: data paths, cluster config, etc-->
 			<param>and_sample=${and_sample}</param>
 			<param>and_inputDocsData=${and_inputDocsData}</param>
-			<param>and_splitter_output_one=${and_splitted_output_one}</param>
-			<param>and_splitter_output_exh=${and_splitted_output_exh}</param>
-			<param>and_splitter_output_apr_sim=${and_splitted_output_apr_sim}</param>
-			<param>and_splitter_output_apr_no_sim=${and_splitted_output_apr_no_sim}</param>
+			<param>and_splitted_output_one=${and_splitted_output_one}</param>
+			<param>and_splitted_output_exh=${and_splitted_output_exh}</param>
+			<param>and_splitted_output_apr_sim=${and_splitted_output_apr_sim}</param>
+			<param>and_splitted_output_apr_no_sim=${and_splitted_output_apr_no_sim}</param>
 			<param>and_cid_dockey=${and_cid_dockey}</param>
 			<param>and_aproximate_sim_limit=${and_aproximate_sim_limit}</param>
 			<param>and_exhaustive_limit=${and_exhaustive_limit}</param>
@@ -188,7 +188,7 @@
 			<script>disambiguation_exh.pig</script>
 			<!--pig parameters: data paths, cluster config, etc-->
 			<param>and_sample=1.0</param>
-			<param>and_inputDocsData=${and_splitted_output_exh/*</param>
+			<param>and_inputDocsData=${and_splitted_output_exh}/*</param>
 			<param>and_outputContribs=${and_outputContribs}/exh</param>
 			<param>mapredChildJavaOpts=${and_mapredChildJavaOpts_exh}</param>
 			<!--UDF config-->
