@@ -86,7 +86,7 @@ split E2 into
 -- -----------------------------------------------------
 -- TODO maybe MagicAND for such big clusters in future
 -- then storing data below and add new node in workflow after aproximates:
--- store EBIG into '$and_failedContribs/$appNoSim';
+-- store EBIG into '$and_failedContribs';
 --
 -- For now: each contributor from too big cluster is going to get his own UUID
 -- so we need to "ungroup by sname".

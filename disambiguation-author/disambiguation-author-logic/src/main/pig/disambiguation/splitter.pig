@@ -24,8 +24,8 @@
 %DEFAULT and_cid_dockey 'cid_dockey'
 %DEFAULT and_splitted_output_one 'splitted/one'
 %DEFAULT and_splitted_output_exh 'splitted/exh'
-%DEFAULT and_splitted_output_app_sim 'splitted/app-sim'
-%DEFAULT and_splitted_output_app_no_sim 'splitted/app-no-sim
+%DEFAULT and_splitted_output_apr_sim 'splitted/apr-sim'
+%DEFAULT and_splitted_output_apr_no_sim 'splitted/apr-no-sim
 
 %DEFAULT and_time 20130709_1009
 %DEFAULT and_sample 1.0
@@ -128,8 +128,8 @@ D1 = union D1A, D1B;
 
 store D1 into '$and_splitted_output_one';
 store D100 into '$and_splitted_output_exh';
-store D1000 into '$and_splitted_output_app_sim';
-store DX into '$and_splitted_output_app_no_sim';
+store D1000 into '$and_splitted_output_apr_sim';
+store DX into '$and_splitted_output_apr_no_sim';
 
 -- storing relation contributor id - document id, which we need in future during serialization
 Q = foreach B generate cId, dockey;

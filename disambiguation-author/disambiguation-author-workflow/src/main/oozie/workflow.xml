@@ -20,12 +20,12 @@
 			<description>Java options for mappers in disambiguation-exhaustive Pig scripts.</description>
 		</property>
 		<property>
-			<name>and_mapredChildJavaOpts_app_sim</name>
+			<name>and_mapredChildJavaOpts_apr_sim</name>
 			<value>-Xmx8000m</value>
 			<description>Java options for mappers in disambiguation-aproximate with storing similarities Pig scripts.</description>
 		</property>
 		<property>
-			<name>and_mapredChildJavaOpts_app_no_sim</name>
+			<name>and_mapredChildJavaOpts_apr_no_sim</name>
 			<value>-Xmx8000m</value>
 			<description>Java options for mappers in disambiguation-aproximate without storing similarities Pig scripts.</description>
 		</property>
@@ -41,13 +41,13 @@
 			<description>Check and_splitted_output property. Path for single contributors.</description>
 		</property>
 		<property>
-			<name>and_splitted_output_app_sim</name>
-			<value>${and_splitted_output}/app-sim</value>
+			<name>and_splitted_output_apr_sim</name>
+			<value>${and_splitted_output}/apr-sim</value>
 			<description>Check and_splitted_output property. Path for aproximate disambiguation with saving similarity values.</description>
 		</property>
 		<property>
-			<name>and_splitted_output_app_no_sim</name>
-			<value>${and_splitted_output}/app-no-sim</value>
+			<name>and_splitted_output_apr_no_sim</name>
+			<value>${and_splitted_output}/apr-no-sim</value>
 			<description>Check and_splitted_output property. Path for aproximate disambiguation without saving similarity values.</description>
 		</property>
 		<property>
@@ -204,13 +204,13 @@
 	</action>
 	<action name="do_and_forked_node_2">
 		<pig>
-			<script>disambiguation_app.pig</script>
+			<script>disambiguation_apr.pig</script>
 			<!--pig parameters: data paths, cluster config, etc-->
 			<param>and_aproximate_remember_sim=true</param>
 			<param>and_sample=1.0</param>
-			<param>and_inputDocsData=${and_splitted_output_app_sim}/*</param>
-			<param>and_outputContribs=${and_outputContribs}/app-sim</param>
-			<param>mapredChildJavaOpts=${and_mapredChildJavaOpts_app_sim}</param>
+			<param>and_inputDocsData=${and_splitted_output_apr_sim}/*</param>
+			<param>and_outputContribs=${and_outputContribs}/apr-sim</param>
+			<param>mapredChildJavaOpts=${and_mapredChildJavaOpts_apr_sim}</param>
 			<param>and_exhaustive_limit=${and_exhaustive_limit}</param>
 			<param>and_failedContribs=${and_failedContribs}</param>
 			<!--UDF config-->
@@ -226,13 +226,13 @@
 	</action>
 	<action name="do_and_forked_node_3">
 		<pig>
-			<script>disambiguation_app.pig</script>
+			<script>disambiguation_apr.pig</script>
 			<!--pig parameters: data paths, cluster config, etc-->
 			<param>and_aproximate_remember_sim=false</param>
 			<param>and_sample=1.0</param>
-			<param>and_inputDocsData=${and_splitted_output_app_no_sim}/*</param>
-			<param>and_outputContribs=${and_outputContribs}/app-no-sim</param>
-			<param>mapredChildJavaOpts=${and_mapredChildJavaOpts_app_no_sim}</param>
+			<param>and_inputDocsData=${and_splitted_output_apr_no_sim}/*</param>
+			<param>and_outputContribs=${and_outputContribs}/apr-no-sim</param>
+			<param>mapredChildJavaOpts=${and_mapredChildJavaOpts_apr_no_sim}</param>
 			<param>and_exhaustive_limit=${and_exhaustive_limit}</param>
 			<param>and_failedContribs=${and_failedContribs}</param>
 			<!--UDF config-->
