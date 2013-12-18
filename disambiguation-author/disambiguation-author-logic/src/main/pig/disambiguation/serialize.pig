@@ -39,7 +39,7 @@ DEFINE serialize pl.edu.icm.coansys.disambiguation.author.pig.serialization.SERI
 %DEFAULT job_priority normal
 %DEFAULT pig_cachedbag_mem_usage 0.1
 %DEFAULT pig_skewedjoin_reduce_memusage 0.3
-%DEFAULT mapredChildJavaOpts -Xmx1024m
+%DEFAULT mapredChildJavaOpts -Xmx4096m
 
 set default_parallel $and_parallel_param
 set pig.tmpfilecompression $pig_tmpfilecompression_param
