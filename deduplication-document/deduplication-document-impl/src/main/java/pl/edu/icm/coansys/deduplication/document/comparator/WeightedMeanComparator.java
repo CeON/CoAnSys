@@ -18,8 +18,6 @@
 package pl.edu.icm.coansys.deduplication.document.comparator;
 
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -28,8 +26,6 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class WeightedMeanComparator extends AbstractWorkComparator {
-
-    private static Logger logger = LoggerFactory.getLogger(WeightedMeanComparator.class);
     
     @Override
     protected boolean calculateResult(List<Float> probabilities, List<Float> weights) {

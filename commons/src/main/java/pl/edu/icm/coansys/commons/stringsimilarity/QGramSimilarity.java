@@ -18,7 +18,6 @@
 package pl.edu.icm.coansys.commons.stringsimilarity;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -47,7 +46,6 @@ public class QGramSimilarity extends SimilarityCalculator {
     };
 
     private class Counter {
-
         int count = 1;
     }
 

@@ -29,7 +29,9 @@ import pl.edu.icm.coansys.statisticsgenerator.operationcomponents.OperationCompo
  * @author Artur Czeczko <a.czeczko@icm.edu.pl>
  */
 public class ComponentsMapping {
-
+    
+    private ComponentsMapping() {}
+    
     public static final Map<String, Class<? extends OperationComponent>> mapping = new HashMap<String, Class<? extends OperationComponent>>();
 
     static {

@@ -21,8 +21,6 @@ package pl.edu.icm.coansys.statisticsgenerator.conf;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import org.apache.hadoop.conf.Configuration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import pl.edu.icm.coansys.statisticsgenerator.operationcomponents.OperationComponent;
 
 /**
@@ -31,7 +29,7 @@ import pl.edu.icm.coansys.statisticsgenerator.operationcomponents.OperationCompo
  */
 public class ConfigReader {
 
-    private static Logger logger = LoggerFactory.getLogger(ConfigReader.class);
+    private ConfigReader() {}
 
     public static <T extends OperationComponent> SortedMap<String, T> readConf(Configuration conf, String confPrefix) {
         SortedMap<String, T> result = new TreeMap<String, T>();
