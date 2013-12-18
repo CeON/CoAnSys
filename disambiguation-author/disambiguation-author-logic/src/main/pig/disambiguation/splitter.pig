@@ -25,7 +25,7 @@
 %DEFAULT and_splitted_output_one 'splitted/one'
 %DEFAULT and_splitted_output_exh 'splitted/exh'
 %DEFAULT and_splitted_output_apr_sim 'splitted/apr-sim'
-%DEFAULT and_splitted_output_apr_no_sim 'splitted/apr-no-sim
+%DEFAULT and_splitted_output_apr_no_sim 'splitted/apr-no-sim'
 
 %DEFAULT and_time 20130709_1009
 %DEFAULT and_sample 1.0
@@ -53,7 +53,7 @@ DEFINE featuresCheck pl.edu.icm.coansys.disambiguation.author.pig.FeaturesCheck(
 %DEFAULT job_priority normal
 %DEFAULT pig_cachedbag_mem_usage 0.1
 %DEFAULT pig_skewedjoin_reduce_memusage 0.3
-%DEFAULT mapredChildJavaOpts -Xmx8000m
+%DEFAULT mapredChildJavaOpts -Xmx1024m
 
 set default_parallel $and_parallel_param
 set pig.tmpfilecompression $pig_tmpfilecompression_param

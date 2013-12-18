@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<workflow-app name="${project}*${subproject}" xmlns="uri:oozie:workflow:0.4">
+<workflow-app name="${project}___${subproject}" xmlns="uri:oozie:workflow:0.4">
 
 	<parameters>
 		<!-- Properties associated with cluster parameters -->
@@ -107,6 +107,11 @@
 			<value>false</value>
 			<description>Log ANDs algorithms statistics.</description>
 		</property>
+                <property>
+                        <name>and_skip_empty_features</name>
+                        <value>true</value>
+                        <description>Data extractor skips contributor's features, when feature bag is empty (no data for feature).</description>
+                </property>
 	</parameters>
 	<global>
 		<job-tracker>${jobTracker}</job-tracker>
@@ -153,6 +158,7 @@
 			<param>and_aproximate_sim_limit=${and_aproximate_sim_limit}</param>
 			<param>and_exhaustive_limit=${and_exhaustive_limit}</param>
 			<!-- UDF config -->
+			<param>and_skip_empty_features=${and_skip_empty_features}</param>
 			<param>and_feature_info=${and_feature_info}</param>
 			<param>and_lang=${and_lang}</param>
 			<param>and_statistics=${and_statistics}</param>
