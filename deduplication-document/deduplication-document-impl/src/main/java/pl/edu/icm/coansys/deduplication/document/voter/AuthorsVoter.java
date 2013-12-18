@@ -88,12 +88,19 @@ public class AuthorsVoter extends AbstractSimilarityVoter {
                 surname = author.getSurname();
             } else {
                 String fullname = author.getName();
-                try {
-                    Node authorNode = authorParser.parse(fullname);
-                    Node surnameNode = authorNode.getFirstField("surname");
-                    surname = surnameNode.getValue();
-                } catch (NullPointerException ex) {
-                    surname = fullname;
+                Node authorNode = authorParser.parse(fullname);
+                Node surnameNode;
+                if(authorNode != null) {
+                    surnameNode = authorNode.getFirstField("surname");
+                    if(surnameNode != null) {
+                        surname = surnameNode.getValue();
+                    }
+                    else {
+                        surname = fullname;
+                    }
+                }
+                else {
+                    surname = fullname;                        
                 }
             }
             

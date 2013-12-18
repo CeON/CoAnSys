@@ -31,7 +31,7 @@ import pl.edu.icm.coansys.models.StatisticsProtos;
  *
  * @author Artur Czeczko <a.czeczko@icm.edu.pl>
  */
-public class ViewResults {
+public final class ViewResults {
     
     private ViewResults() {}
 
