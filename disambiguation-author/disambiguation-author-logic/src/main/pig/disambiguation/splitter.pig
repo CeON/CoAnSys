@@ -22,6 +22,12 @@
 -- -----------------------------------------------------
 %DEFAULT and_inputDocsData /srv/bwndata/seqfile/bazekon-20130314.sf
 %DEFAULT and_cid_dockey 'cid_dockey'
+%DEFAULT and_splitter_output 'splitted'
+%DEFAULT one 'one'
+%DEFAULT exh 'exh'
+%DEFAULT appSim 'app_sim'
+%DEFAULT appNoSim 'app_no_sim'
+
 %DEFAULT and_time 20130709_1009
 %DEFAULT and_sample 1.0
 %DEFAULT and_exhaustive_limit 6627
@@ -80,10 +86,6 @@ B1 = foreach A2 generate flatten(snameDocumentMetaExtractor($1)) as (dockey:char
 
 B = FILTER B1 BY (dockey is not null);
 
--- storing relation contributor id - document id, which we need in future during serialization
-Q = foreach B generate cId, dockey;
-store Q into '$and_cid_dockey';
-
 -- removing docId column 
 -- add bool - true when contributor is similar to himself
 FC = foreach B generate cId as cId, sname as sname, metadata as metadata, featuresCheck(cId, sname, metadata) as gooddata;
@@ -126,16 +128,11 @@ split D into
 -- add contributors with bad data to table D (single contributors)
 D1 = union D1A, D1B;
 
-%DEFAULT semi 'tmp'
-%DEFAULT final 'identities'
-%DEFAULT and_splitter_output 'splitted'
-%DEFAULT one 'one'
-%DEFAULT exh 'exh'
-%DEFAULT appSim 'app-sim'
-%DEFAULT appNoSim 'app-no-sim'
-%DEFAULT cid_dockey 'cid_dockey'
-
 store D1 into '$and_splitter_output/$one';
 store D100 into '$and_splitter_output/$exh';
 store D1000 into '$and_splitter_output/$appSim';
 store DX into '$and_splitter_output/$appNoSim';
+
+-- storing relation contributor id - document id, which we need in future during serialization
+Q = foreach B generate cId, dockey;
+store Q into '$and_cid_dockey';
