@@ -8,6 +8,9 @@ import java.io.InputStreamReader;
 import javax.xml.transform.stream.StreamSource;
 
 public class ResourceManager {
+    
+        private ResourceManager() {}
+    
 	public static InputStream resourceToInputStream(Object obj,String localization){
 		return obj.getClass().getClassLoader().getResourceAsStream(localization);
 	}
@@ -20,11 +23,9 @@ public class ResourceManager {
 		InputStream is = resourceToInputStream(obj, localization);
 		BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
 		String line;
-		StringBuffer xmlInputSB = new StringBuffer(); 
+		StringBuilder xmlInputSB = new StringBuilder(); 
 		while((line=br.readLine())!=null){
-			xmlInputSB.append(line            
-					+"\n"
-					);
+			xmlInputSB.append(line).append("\n");
 		}
 		br.close();
 		return xmlInputSB.toString();

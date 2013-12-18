@@ -18,8 +18,6 @@
 package pl.edu.icm.coansys.deduplication.document.voter;
 
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import pl.edu.icm.coansys.commons.java.Pair;
 import pl.edu.icm.coansys.commons.java.StringTools;
 import pl.edu.icm.coansys.commons.reparser.Node;
@@ -33,8 +31,6 @@ import pl.edu.icm.coansys.models.DocumentProtos;
  * @author Artur Czeczko <a.czeczko@icm.edu.pl>
  */
 public class AuthorsVoter extends AbstractSimilarityVoter {
-    
-    private static Logger logger = LoggerFactory.getLogger(AuthorsVoter.class);
     
     private float disapproveLevel;
     private float approveLevel;
