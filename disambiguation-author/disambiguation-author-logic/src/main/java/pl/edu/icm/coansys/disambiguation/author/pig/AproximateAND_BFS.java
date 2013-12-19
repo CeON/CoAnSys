@@ -32,6 +32,7 @@ import org.apache.pig.data.DefaultDataBag;
 import org.apache.pig.data.DefaultTuple;
 import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
+import org.apache.pig.tools.pigstats.PigStatusReporter;
 import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
@@ -56,7 +57,8 @@ public class AproximateAND_BFS extends AND<DataBag> {
 
 	public AproximateAND_BFS(String threshold, String featureDescription,
 			String rememberSim, String useIdsForExtractors,
-			String printStatistics) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
+			String printStatistics) throws ClassNotFoundException,
+			InstantiationException, IllegalAccessException {
 		super(logger, threshold, featureDescription, useIdsForExtractors);
 		this.rememberSim = Boolean.parseBoolean(rememberSim);
 
@@ -80,7 +82,6 @@ public class AproximateAND_BFS extends AND<DataBag> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public DataBag exec(Tuple input) /* throws IOException */{
-
 		if (input == null || input.size() == 0)
 			return null;
 		try {
@@ -111,7 +112,8 @@ public class AproximateAND_BFS extends AND<DataBag> {
 
 			datain = new DefaultTuple[N];
 
-			List<Map<String, Object>> contribsT = new ArrayList<Map<String, Object>>();
+			List<Map<String, Object>> contribsT = new ArrayList<Map<String, Object>>(
+					N);
 
 			int k = 0;
 			// iterating through bag, dumping bug to Tuple array
@@ -124,6 +126,8 @@ public class AproximateAND_BFS extends AND<DataBag> {
 				// benchmark
 				sname = t.get(1);
 			}
+
+			pigReporterSizeInfo("AproximateAND input block", contribsT.size());
 
 			// 1. clustering ( and similarities calculating )
 			// 2. creating records for each cluster: contribs in cluster,
@@ -191,14 +195,15 @@ public class AproximateAND_BFS extends AND<DataBag> {
 		}
 		toCluster.add(guard);
 
-		// iterating through all nodes (contributors) to cluster; (>1) because
-		// of GUARD
+		// iterating through all nodes (contributors) to cluster - have not been
+		// clustered so far; (>1) because of GUARD
 		while (toCluster.size() > 1) {
-
 			// if there are already clustered nodes, we are going to their
 			// adjacent nodes, where "adjacent nodes" - all nodes which have not
 			// been clustered so far (on toCluster list).
 			if (p < clustered.size()) {
+				// taking clustered parent, for which we are going to find
+				// children
 				int v = clustered.get(p++);
 				// while exist some unvisited adjacent node
 				while (toCluster.getFirst() != guard) {
@@ -243,32 +248,11 @@ public class AproximateAND_BFS extends AND<DataBag> {
 				toCluster.add(toCluster.pollFirst());
 
 			} else {
-				// if not a first run - add cluster to result bag
-				if (clusterContribDatas != null) {
-
-					// adding similarities for nodes which had not been
-					// connected in first time ( similarity < 0 )
-					for (SimTriple t : otherSimilaritiesTriples) {
-						// checking if clusters of both nodes are identical.
-						// One of them is in examined cluster.
-						if (idToCluster[t.v] == idToCluster[t.u]) {
-							clusterSimilarities.add(t.toClusterTuple());
-						}
-					}
-
-					Object[] to = new Object[] { clusterContribDatas,
-							clusterSimilarities };
-					ret.add(TupleFactory.getInstance().newTuple(
-							Arrays.asList(to)));
-
-					// benchmark
-					if (isStatistics) {
-						calculatedSimCounter += clusterSimilarities.size();
-						if (presentClusterSize > 1) {
-							clustersSizes.add(presentClusterSize);
-						}
-					}
-				}
+				// there is no possibility to enlarge present cluster, 
+				// adding this to resoult, starting new one
+				addClusterToResultBag(idToCluster, presentClusterSize, ret,
+						clusterContribDatas, clusterSimilarities,
+						otherSimilaritiesTriples);
 
 				// next cluster begin
 				clusterContribDatas = new DefaultDataBag();
@@ -285,12 +269,29 @@ public class AproximateAND_BFS extends AND<DataBag> {
 		}
 
 		// add last cluster to result bag
+		addClusterToResultBag(idToCluster, presentClusterSize, ret,
+				clusterContribDatas, clusterSimilarities,
+				otherSimilaritiesTriples);
+
+		return ret;
+	}
+
+	private void addClusterToResultBag(int[] idToCluster,
+			int presentClusterSize, DataBag ret, DataBag clusterContribDatas,
+			DataBag clusterSimilarities,
+			List<SimTriple> otherSimilaritiesTriples) {
 		if (clusterContribDatas != null) {
+
+			// adding similarities for nodes which had not been
+			// connected in first time ( similarity < 0 )
 			for (SimTriple t : otherSimilaritiesTriples) {
+				// checking if clusters of both nodes are identical.
+				// One of them is in examined cluster.
 				if (idToCluster[t.v] == idToCluster[t.u]) {
 					clusterSimilarities.add(t.toClusterTuple());
 				}
 			}
+			pigReporterSizeInfo( "AproximateAND output cluster", clusterContribDatas.size() );
 			Object[] to = new Object[] { clusterContribDatas,
 					clusterSimilarities };
 			ret.add(TupleFactory.getInstance().newTuple(Arrays.asList(to)));
@@ -303,8 +304,6 @@ public class AproximateAND_BFS extends AND<DataBag> {
 				}
 			}
 		}
-
-		return ret;
 	}
 
 	class SimTriple {

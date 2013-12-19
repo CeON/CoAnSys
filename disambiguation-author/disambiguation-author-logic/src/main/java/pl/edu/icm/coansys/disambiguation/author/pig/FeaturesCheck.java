@@ -20,6 +20,7 @@ package pl.edu.icm.coansys.disambiguation.author.pig;
 
 import org.apache.pig.backend.executionengine.ExecException;
 import org.apache.pig.data.Tuple;
+import org.apache.pig.tools.pigstats.PigStatusReporter;
 import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
@@ -59,10 +60,17 @@ public class FeaturesCheck extends AND<Boolean> {
 		this.isStatistics = Boolean.parseBoolean(printStatistics);
 	}
 
+	private void reportDisimilar() {
+		PigStatusReporter.getInstance()
+				.getCounter("Contributors", "Disimilar to themselves")
+				.increment(1);
+	}
+
 	@Override
 	public Boolean exec(Tuple input) {
 
 		if (input == null || input.size() == 0) {
+			reportDisimilar();
 			return false;
 		}
 
@@ -77,6 +85,7 @@ public class FeaturesCheck extends AND<Boolean> {
 			// Throwing an exception would cause the task to fail.
 			logger.error("Caught exception processing input row:\n"
 					+ StackTraceExtractor.getStackTrace(e));
+			reportDisimilar();
 			return false;
 		}
 
@@ -85,6 +94,7 @@ public class FeaturesCheck extends AND<Boolean> {
 					+ allContribCounter + " contrib: cid = " + cid
 					+ ", sname = " + sname
 					+ ". Cid or sname or feature map with null value.");
+			reportDisimilar();
 			return false;
 		}
 
@@ -121,6 +131,7 @@ public class FeaturesCheck extends AND<Boolean> {
 					+ ", sname = " + sname + ". Not enough features.");
 		}
 
+		reportDisimilar();
 		return false;
 	}
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.pig.EvalFunc;
+import org.apache.pig.tools.pigstats.PigStatusReporter;
 
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.Disambiguator;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.DisambiguatorFactory;
@@ -22,8 +23,9 @@ public abstract class AND<T> extends EvalFunc<T> {
 	protected org.slf4j.Logger logger = null;
 	private DisambiguationExtractorFactory extrFactory;
 	private boolean useIdsForExtractors = false;
-	
+
 	private Disambiguator defaultDisambiguator = new IntersectionPerSum();
+
 	// private float sim[][];
 	// private Tuple datain[];
 	// private int N;
@@ -146,4 +148,20 @@ public abstract class AND<T> extends EvalFunc<T> {
 		return partial;
 	}
 
+	protected void pigReporterSizeInfo(String blockName, long l) {
+
+		// 6627 is limit for exhaustive contributors block size input
+		// DESC order required!
+		int periodStarts[] = { 6628, 1 };
+
+		for (int start : periodStarts) {
+			if (l >= start) {
+				PigStatusReporter
+						.getInstance()
+						.getCounter(blockName,
+								"Size from " + Integer.toString(start))
+						.increment(1);
+			}
+		}
+	}
 }

@@ -178,7 +178,6 @@ public class DisambiguationTests {
    	
    	@Test(groups = {"fast"})
    	public void features_disambiguator_calculateAffinity() {
-   		//'CoAuthorsSnameDisambiguatorFullList#EX_AUTH_SNAMES#-0.0000166#8,ClassifCodeDisambiguator#EX_CLASSIFICATION_CODES#0.99#12,KeyphraseDisambiguator#EX_KEYWORDS_SPLIT#0.99#22,KeywordDisambiguator#EX_KEYWORDS#0.0000369#40'
    		Disambiguator COAUTH = new CoAuthorsSnameDisambiguatorFullList(1,1);
    		Disambiguator IPS = new IntersectionPerSum(1,1);
    		Disambiguator IPM = new IntersectionPerMaxval(1,1);
