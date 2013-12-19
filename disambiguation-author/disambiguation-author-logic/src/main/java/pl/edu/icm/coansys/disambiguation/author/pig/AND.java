@@ -142,10 +142,9 @@ public abstract class AND<T> extends EvalFunc<T> {
 
 	protected double calculateAffinity(Object featureDescriptionA,
 			Object featureDescriptionB, int featureIndex) {
-		double partial = features[featureIndex].calculateAffinity(
-				featureDescriptionA, featureDescriptionB);
 
-		return partial;
+		return features[featureIndex].calculateAffinity(
+				featureDescriptionA, featureDescriptionB);
 	}
 
 	protected void pigReporterSizeInfo(String blockName, long l) {
@@ -153,12 +152,14 @@ public abstract class AND<T> extends EvalFunc<T> {
 		// 6627 is limit for exhaustive contributors block size input
 		// DESC order required!
 		int periodStarts[] = { 6628, 1 };
-
+		PigStatusReporter myreporter = PigStatusReporter.getInstance();
+		if ( myreporter == null || myreporter.getCounter( "", "" ) == null ) {
+			return;
+		}
+		
 		for (int start : periodStarts) {
 			if (l >= start) {
-				PigStatusReporter
-						.getInstance()
-						.getCounter(blockName,
+						myreporter.getCounter(blockName,
 								"Size from " + Integer.toString(start))
 						.increment(1);
 			}

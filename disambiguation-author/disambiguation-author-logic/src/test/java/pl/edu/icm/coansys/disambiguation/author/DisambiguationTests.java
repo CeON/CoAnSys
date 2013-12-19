@@ -80,7 +80,6 @@ public class DisambiguationTests {
 		
 		// testing normalizers
 		a = (new ToEnglishLowerCase()).normalize( text );
-		System.out.println(a);
 		assert( a.equals( toELCExpected ) );
 		b = (new ToEnglishLowerCase()).normalize( a );
 		assert( a.equals( b ) );

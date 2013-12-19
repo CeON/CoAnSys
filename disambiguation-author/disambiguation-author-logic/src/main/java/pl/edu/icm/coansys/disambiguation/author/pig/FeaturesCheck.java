@@ -60,12 +60,6 @@ public class FeaturesCheck extends AND<Boolean> {
 		this.isStatistics = Boolean.parseBoolean(printStatistics);
 	}
 
-	private void reportDisimilar() {
-		PigStatusReporter.getInstance()
-				.getCounter("Contributors", "Disimilar to themselves")
-				.increment(1);
-	}
-
 	@Override
 	public Boolean exec(Tuple input) {
 
@@ -121,6 +115,7 @@ public class FeaturesCheck extends AND<Boolean> {
 			// contributor is similar to himself so maybe comparable to other
 			// contributors
 			if (simil >= 0) {
+				reportSimilar();
 				return true;
 			}
 		}
@@ -133,5 +128,24 @@ public class FeaturesCheck extends AND<Boolean> {
 
 		reportDisimilar();
 		return false;
+	}
+	
+
+	private void reportDisimilar() {
+		PigStatusReporter myreporter = PigStatusReporter.getInstance();
+		if ( myreporter == null || myreporter.getCounter( "", "" ) == null  ) {
+			return;
+		}
+		myreporter.getCounter("Contributors", "Disimilar to themselves")
+				.increment(1);
+	}
+	
+	private void reportSimilar() {
+		PigStatusReporter myreporter = PigStatusReporter.getInstance();
+		if ( myreporter == null || myreporter.getCounter( "", "" ) == null  ) {
+			return;
+		}
+		myreporter.getCounter("Contributors", "Similar to themselves")
+				.increment(1);
 	}
 }
