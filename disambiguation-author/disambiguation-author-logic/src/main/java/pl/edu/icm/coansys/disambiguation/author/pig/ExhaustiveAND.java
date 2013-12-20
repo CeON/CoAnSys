@@ -53,7 +53,7 @@ public class ExhaustiveAND extends AND<DataBag> {
 	private int finalClusterNumber = 0;
 	private List<Integer> clustersSizes;
 	private boolean gotSim = false;
-	private Object sname;
+	private Object sname = null;
 
 	public ExhaustiveAND(String threshold, String featureDescription,
 			String useIdsForExtractors, String printStatistics) 
