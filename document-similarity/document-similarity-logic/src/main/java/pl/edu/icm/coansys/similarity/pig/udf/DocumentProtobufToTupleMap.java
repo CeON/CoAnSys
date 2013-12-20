@@ -52,7 +52,7 @@ import org.apache.pig.impl.logicalLayer.FrontendException;
  */
 public final class DocumentProtobufToTupleMap extends EvalFunc<Tuple> {
 
-	private static class C {
+	private static final class C {
 		private C() {
 		}
 
