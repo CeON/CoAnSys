@@ -46,12 +46,14 @@ public class CoAuthorsSnameDisambiguatorFullList extends Disambiguator {
 		// because this cotributor is in sum and intersection for sure, but we
 		// do not want to take himself as his co-author.
 		int intersection = p.getKey() - 1;
-
-		//int sum = p.getValue() - 1;
-		//if (sum <= 0) {
-		//	return 0;
-		//}
-		//return (double) intersection / sum;
+		if (intersection < 0) {
+			return 0;
+		}
+		// int sum = p.getValue() - 1;
+		// if (sum <= 0) {
+		// return 0;
+		// }
+		// return (double) intersection / sum;
 		return intersection / maxVal * weight;
 	}
 }
