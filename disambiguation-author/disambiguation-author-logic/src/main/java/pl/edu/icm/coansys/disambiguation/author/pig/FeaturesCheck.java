@@ -18,6 +18,7 @@
 
 package pl.edu.icm.coansys.disambiguation.author.pig;
 
+import org.apache.hadoop.mapreduce.Counter;
 import org.apache.pig.backend.executionengine.ExecException;
 import org.apache.pig.data.Tuple;
 import org.apache.pig.tools.pigstats.PigStatusReporter;
@@ -64,7 +65,7 @@ public class FeaturesCheck extends AND<Boolean> {
 	public Boolean exec(Tuple input) {
 
 		if (input == null || input.size() == 0) {
-			reportDisimilar();
+			reportEmpty();
 			return false;
 		}
 
@@ -79,16 +80,17 @@ public class FeaturesCheck extends AND<Boolean> {
 			// Throwing an exception would cause the task to fail.
 			logger.error("Caught exception processing input row:\n"
 					+ StackTraceExtractor.getStackTrace(e));
-			reportDisimilar();
+			reportEmpty();
 			return false;
 		}
 
-		if (cid == null || sname == null || featuresMap == null) {
+		if (cid == null || sname == null || featuresMap == null
+				|| cid.isEmpty() || sname.isEmpty()) {
 			logger.info("Skipping " + (++skipedContribCounter) + " / "
 					+ allContribCounter + " contrib: cid = " + cid
 					+ ", sname = " + sname
 					+ ". Cid or sname or feature map with null value.");
-			reportDisimilar();
+			reportEmpty();
 			return false;
 		}
 
@@ -129,23 +131,31 @@ public class FeaturesCheck extends AND<Boolean> {
 		reportDisimilar();
 		return false;
 	}
-	
+
+	// Pig Status Reporter staff:
+
+	private Counter counterEmpty = myreporter.getCounter("Contributors",
+			"Some info null or empty");
+	private Counter counterDisimilar = myreporter.getCounter("Contributors",
+			"Disimilar to themselves");
+	private Counter counterSimilar = myreporter.getCounter("Contributors",
+			"Similar to themselves");
+
+	private void reportEmpty() {
+		if (counterEmpty != null) {
+			counterEmpty.increment(1);
+		}
+	}
 
 	private void reportDisimilar() {
-		PigStatusReporter myreporter = PigStatusReporter.getInstance();
-		if ( myreporter == null || myreporter.getCounter( "", "" ) == null  ) {
-			return;
+		if (counterDisimilar != null) {
+			counterDisimilar.increment(1);
 		}
-		myreporter.getCounter("Contributors", "Disimilar to themselves")
-				.increment(1);
 	}
-	
+
 	private void reportSimilar() {
-		PigStatusReporter myreporter = PigStatusReporter.getInstance();
-		if ( myreporter == null || myreporter.getCounter( "", "" ) == null  ) {
-			return;
+		if (counterSimilar != null) {
+			counterSimilar.increment(1);
 		}
-		myreporter.getCounter("Contributors", "Similar to themselves")
-				.increment(1);
 	}
 }

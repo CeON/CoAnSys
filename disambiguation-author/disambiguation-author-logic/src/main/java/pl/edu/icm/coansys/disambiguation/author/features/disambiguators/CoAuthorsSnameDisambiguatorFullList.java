@@ -27,7 +27,6 @@ import java.util.AbstractMap.SimpleEntry;
  * 
  * @author mwos
  * @version 1.0
- * @since 2012-08-07
  */
 public class CoAuthorsSnameDisambiguatorFullList extends Disambiguator {
 
@@ -45,17 +44,13 @@ public class CoAuthorsSnameDisambiguatorFullList extends Disambiguator {
 		SimpleEntry<Integer, Integer> p = intersectionAndSum(f1, f2);
 
 		// because this cotributor is in sum and intersection for sure, but we
-		// do not want to take him as his co-author.
+		// do not want to take himself as his co-author.
 		int intersection = p.getKey() - 1;
-		int sum = p.getValue() - 1;
 
-		if (sum <= 0) {
-			return 0;
-		}
-		if (intersection < 0) {
-			return 0;
-		}
-
+		//int sum = p.getValue() - 1;
+		//if (sum <= 0) {
+		//	return 0;
+		//}
 		//return (double) intersection / sum;
 		return intersection / maxVal * weight;
 	}

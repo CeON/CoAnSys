@@ -107,11 +107,11 @@
 			<value>false</value>
 			<description>Log ANDs algorithms statistics.</description>
 		</property>
-                <property>
-                        <name>and_skip_empty_features</name>
-                        <value>true</value>
-                        <description>Data extractor skips contributor's features, when feature bag is empty (no data for feature).</description>
-                </property>
+		<property>
+			<name>and_skip_empty_features</name>
+			<value>true</value>
+			<description>Data extractor skips contributor's features, when feature bag is empty (no data for feature).</description>
+		</property>
 	</parameters>
 	<global>
 		<job-tracker>${jobTracker}</job-tracker>

@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.hadoop.mapreduce.Counter;
 import org.apache.pig.EvalFunc;
 import org.apache.pig.tools.pigstats.PigStatusReporter;
 
@@ -21,6 +22,7 @@ public abstract class AND<T> extends EvalFunc<T> {
 	protected FeatureInfo[] featureInfos;
 
 	protected org.slf4j.Logger logger = null;
+	protected PigStatusReporter myreporter = PigStatusReporter.getInstance();
 	private DisambiguationExtractorFactory extrFactory;
 	private boolean useIdsForExtractors = false;
 
@@ -143,8 +145,8 @@ public abstract class AND<T> extends EvalFunc<T> {
 	protected double calculateAffinity(Object featureDescriptionA,
 			Object featureDescriptionB, int featureIndex) {
 
-		return features[featureIndex].calculateAffinity(
-				featureDescriptionA, featureDescriptionB);
+		return features[featureIndex].calculateAffinity(featureDescriptionA,
+				featureDescriptionB);
 	}
 
 	protected void pigReporterSizeInfo(String blockName, long l) {
@@ -152,16 +154,15 @@ public abstract class AND<T> extends EvalFunc<T> {
 		// 6627 is limit for exhaustive contributors block size input
 		// DESC order required!
 		int periodStarts[] = { 6628, 1 };
-		PigStatusReporter myreporter = PigStatusReporter.getInstance();
-		if ( myreporter == null || myreporter.getCounter( "", "" ) == null ) {
-			return;
-		}
-		
+
 		for (int start : periodStarts) {
 			if (l >= start) {
-						myreporter.getCounter(blockName,
-								"Size from " + Integer.toString(start))
-						.increment(1);
+				Counter c = myreporter.getCounter(blockName, "Size from "
+						+ Integer.toString(start));
+				if (c == null) {
+					return;
+				}
+				c.increment(1);
 			}
 		}
 	}

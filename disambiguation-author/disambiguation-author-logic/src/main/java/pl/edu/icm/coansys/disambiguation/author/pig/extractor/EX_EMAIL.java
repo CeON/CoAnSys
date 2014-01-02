@@ -63,10 +63,6 @@ public class EX_EMAIL extends DisambiguationExtractorAuthor {
 		} catch (Exception e) {
 			logger.error("Problem with extraction or normalization of email ",
 					e);
-			PigStatusReporter reporter = PigStatusReporter.getInstance();
-			if (reporter != null) {
-				reporter.getCounter("Extraction problem", "EX_EMAIL");
-			}
 		}
 		return db;
 	}
