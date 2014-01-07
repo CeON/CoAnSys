@@ -7,7 +7,7 @@ import java.io.InputStreamReader;
 
 import javax.xml.transform.stream.StreamSource;
 
-public class ResourceManager {
+public final class ResourceManager {
     
         private ResourceManager() {}
     

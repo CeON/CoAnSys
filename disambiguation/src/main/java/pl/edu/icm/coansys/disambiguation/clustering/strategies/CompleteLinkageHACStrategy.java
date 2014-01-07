@@ -65,7 +65,7 @@ public abstract class CompleteLinkageHACStrategy implements ClusteringStrategy {
     public int[] clusterize(float sim[][]) {
     	
     	if (sim == null){
-    		throw new NullPointerException("You are kindly asked to provide similarity matrix that exists");
+    		throw new IllegalArgumentException("You are kindly asked to provide similarity matrix that exists");
     	}
         if (sim.length == 1) {
             return new int[]{0};

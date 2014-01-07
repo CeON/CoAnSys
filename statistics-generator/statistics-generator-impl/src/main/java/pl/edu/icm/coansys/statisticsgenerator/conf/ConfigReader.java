@@ -27,7 +27,7 @@ import pl.edu.icm.coansys.statisticsgenerator.operationcomponents.OperationCompo
  *
  * @author acz
  */
-public class ConfigReader {
+public final class ConfigReader {
 
     private ConfigReader() {}
 
@@ -88,9 +88,7 @@ public class ConfigReader {
                 throw new IllegalArgumentException("configuration error -- " + ex);
             } catch (IllegalAccessException ex) {
                 throw new IllegalArgumentException("configuration error -- " + ex);
-            } catch (NullPointerException ex) {
-                throw new IllegalArgumentException("configuration error -- cannot find class for label " + classLabel);
-            }
+            } 
         }
 
         return result;

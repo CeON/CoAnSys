@@ -21,12 +21,6 @@
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 
-%DEFAULT and_splitter_output 'splitted'
-%DEFAULT one 'one'
-%DEFAULT exh 'exh'
-%DEFAULT appSim 'app-sim'
-%DEFAULT appNoSim 'app-no-sim'
-
 %DEFAULT and_outputContribs disambiguation/outputContribs$and_time
 
 DEFINE GenUUID pl.edu.icm.coansys.disambiguation.author.pig.GenUUID();
@@ -43,7 +37,7 @@ DEFINE GenUUID pl.edu.icm.coansys.disambiguation.author.pig.GenUUID();
 %DEFAULT job_priority normal
 %DEFAULT pig_cachedbag_mem_usage 0.1
 %DEFAULT pig_skewedjoin_reduce_memusage 0.3
-%DEFAULT mapredChildJavaOpts -Xmx8000m
+%DEFAULT mapredChildJavaOpts -Xmx256m
 set mapred.child.java.opts $mapredChildJavaOpts
 set default_parallel $and_parallel_param
 set pig.tmpfilecompression $pig_tmpfilecompression_param
@@ -69,13 +63,5 @@ D1A = foreach D1 generate flatten( datagroup );-- as (cId:chararray, sname:int, 
 -- E1: {cId: chararray,uuid: chararray}
 E1 = foreach D1A generate cId as cId, FLATTEN(GenUUID(TOBAG(cId))) as uuid;
 
-%DEFAULT semi 'tmp'
-%DEFAULT final 'identities'
-%DEFAULT and_splitter_output 'splitted'
-%DEFAULT one 'one'
-%DEFAULT exh 'exh'
-%DEFAULT appSim 'app-sim'
-%DEFAULT appNoSim 'app-no-sim'
 
-
-store E1 into '$and_outputContribs/$one';
+store E1 into '$and_outputContribs';

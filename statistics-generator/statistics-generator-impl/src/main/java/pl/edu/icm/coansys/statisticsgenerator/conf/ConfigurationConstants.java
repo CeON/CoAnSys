@@ -25,7 +25,7 @@ import java.util.Map;
  *
  * @author Artur Czeczko <a.czeczko@icm.edu.pl>
  */
-public class ConfigurationConstants {
+public final class ConfigurationConstants {
     
     private ConfigurationConstants() {}
     

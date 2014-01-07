@@ -28,7 +28,7 @@ import pl.edu.icm.coansys.statisticsgenerator.operationcomponents.OperationCompo
  *
  * @author Artur Czeczko <a.czeczko@icm.edu.pl>
  */
-public class ComponentsMapping {
+public final class ComponentsMapping {
     
     private ComponentsMapping() {}
     
