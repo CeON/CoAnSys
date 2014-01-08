@@ -53,7 +53,6 @@ public class AproximateAND_BFS extends AND<DataBag> {
 	private int calculatedSimCounter;
 	private int timerPlayId = 0;
 	private List<Integer> clustersSizes;
-	private Object sname;
 
 	public AproximateAND_BFS(String threshold, String featureDescription,
 			String rememberSim, String useIdsForExtractors,
@@ -82,8 +81,9 @@ public class AproximateAND_BFS extends AND<DataBag> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public DataBag exec(Tuple input) /* throws IOException */{
-		if (input == null || input.size() == 0)
+		if (input == null || input.size() == 0) {
 			return null;
+		}
 		try {
 			// instance of reporter may change in each exec(...) run
 			myreporter = PigStatusReporter.getInstance();
@@ -98,9 +98,9 @@ public class AproximateAND_BFS extends AND<DataBag> {
 			DataBag contribs = (DataBag) input.get(0); // taking bag with
 														// contribs
 
-			if (contribs == null || contribs.size() == 0)
+			if (contribs == null || contribs.size() == 0) {
 				return null;
-
+			}
 			// start benchmark
 			if (isStatistics) {
 				timer.play();
@@ -120,6 +120,7 @@ public class AproximateAND_BFS extends AND<DataBag> {
 
 			int k = 0;
 			// iterating through bag, dumping bug to Tuple array
+			Object sname = null;
 			while (it.hasNext()) {
 				Tuple t = it.next();
 				datain[k++] = t;

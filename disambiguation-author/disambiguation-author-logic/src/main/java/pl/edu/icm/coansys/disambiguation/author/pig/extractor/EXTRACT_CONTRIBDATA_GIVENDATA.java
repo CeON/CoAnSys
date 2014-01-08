@@ -335,12 +335,12 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 	private Counter counters4Doc[][], counters4Author[][];
 
 	static class REPORTER_CONST {
-		public final static String CONTRIB_EX = "Contrib_Existing";
-		public final static String CONTRIB_MS = "Contrib_Missing";
-		public final static String DOC_EX = "Doc_Existing";
-		public final static String DOC_MS = "Doc_Missing";
-		public final static int MISS = 0;
-		public final static int EXIST = 1;
+		public static final String CONTRIB_EX = "Contrib_Existing";
+		public static final String CONTRIB_MS = "Contrib_Missing";
+		public static final String DOC_EX = "Doc_Existing";
+		public static final String DOC_MS = "Doc_Missing";
+		public static final int MISS = 0;
+		public static final int EXIST = 1;
 	}
 	
 	// cannot be run in constructor, have to take instance of reporter in each
