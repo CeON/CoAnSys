@@ -252,7 +252,14 @@
 		<ok to="do_and_join"/>
 		<error to="kill"/>
 	</action>
-	<join name="do_and_join" to="serialize"/>
+	<join name="do_and_join" to="do_and_cleaning"/>
+	<action name="do_and_cleaning">
+		<fs>
+			<delete path='${and_splitted_output}'/>
+		</fs>
+		<ok to="serialize"/>
+		<error to="kill"/>
+	</action>
 	<action name="serialize">
 		<pig>
 			<script>serialize.pig</script>
@@ -264,6 +271,14 @@
 			<!--commons-->
 			<param>and_scheduler=${and_pool}</param>
 		</pig>
+		<ok to="finall_cleaning"/>
+		<error to="kill"/>
+	</action>
+	<action name="finall_cleaning">
+		<fs>
+			<delete path='${and_cid_dockey}'/>
+			<delete path='${and_outputContribs}'/>
+		</fs>
 		<ok to="end"/>
 		<error to="kill"/>
 	</action>
