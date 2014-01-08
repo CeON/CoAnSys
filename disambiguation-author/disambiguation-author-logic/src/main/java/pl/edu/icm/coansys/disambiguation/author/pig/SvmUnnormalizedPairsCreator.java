@@ -89,7 +89,7 @@ public class SvmUnnormalizedPairsCreator extends EvalFunc<DataBag> {
 			return null;
 		}
 
-		// String sname = (String) tuple.get(0);
+		// Note that String sname in tuple.get(0);
 		DataBag contribs = (DataBag) tuple.get(1);
 
 		Tuple[] contribsT = new Tuple[(int) contribs.size()];

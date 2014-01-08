@@ -23,40 +23,28 @@ public abstract class AND<T> extends EvalFunc<T> {
 
 	protected org.slf4j.Logger logger = null;
 	protected PigStatusReporter myreporter = null;
-	private DisambiguationExtractorFactory extrFactory;
-	private boolean useIdsForExtractors = false;
 
 	private Disambiguator defaultDisambiguator = new IntersectionPerSum();
-
-	// private float sim[][];
-	// private Tuple datain[];
-	// private int N;
 
 	protected float getThreshold() {
 		return threshold;
 	}
 
 	// benchmark staff
-	/*
-	 * protected boolean isStatistics = false; private TimerSyso timer = new
-	 * TimerSyso(); private int calculatedSimCounter; private int timerPlayId =
-	 * 0; private int finalClusterNumber = 0; private
-	 * List<Integer>clustersSizes;
-	 */
 	public AND(org.slf4j.Logger logger, String threshold,
-			String featureDescription, String useIdsForExtractors)
+			String featureDescription, String useIdsForExtractorsStr)
 			throws ClassNotFoundException, InstantiationException,
 			IllegalAccessException {
 		this.logger = logger;
 		this.threshold = Float.parseFloat(threshold);
-		this.useIdsForExtractors = Boolean.parseBoolean(useIdsForExtractors);
+		boolean useIdsForExtractors = Boolean.parseBoolean(useIdsForExtractorsStr);
 
 		List<FeatureInfo> FIwithEmpties = FeatureInfo
 				.parseFeatureInfoString(featureDescription);
 		List<FeatureInfo> FIFinall = new LinkedList<FeatureInfo>();
 		List<PigDisambiguator> FeaturesFinall = new LinkedList<PigDisambiguator>();
 
-		extrFactory = new DisambiguationExtractorFactory();
+		DisambiguationExtractorFactory extrFactory = new DisambiguationExtractorFactory();
 		DisambiguatorFactory ff = new DisambiguatorFactory();
 		Disambiguator d;
 
@@ -65,7 +53,6 @@ public abstract class AND<T> extends EvalFunc<T> {
 			if (fi.getFeatureExtractorName().equals("")) {
 				logger.error("Empty extractor name in feature info. Leaving this feature.");
 				throw new IllegalArgumentException("Empty extractor name.");
-				// continue;
 			}
 			if (fi.getDisambiguatorName().equals("")) {
 				// giving default disambiguator
@@ -76,9 +63,8 @@ public abstract class AND<T> extends EvalFunc<T> {
 						+ fi.getDisambiguatorName() + ")";
 				logger.error(errMsg);
 				throw new ClassNotFoundException(errMsg);
-				// if you do not want to throw an exception, uncomment the
-				// following creating default disambiguator
-				// d = defaultDisambiguator;
+				// if you do not want to throw an exception, paste the
+				// following creating default disambiguator: d = defaultDisambiguator
 			}
 			// wrong max value (would cause dividing by zero)
 			if (fi.getMaxValue() == 0) {
@@ -89,7 +75,7 @@ public abstract class AND<T> extends EvalFunc<T> {
 				throw new IllegalArgumentException(errMsg);
 			}
 
-			if (this.useIdsForExtractors) {
+			if (useIdsForExtractors) {
 				fi.setFeatureExtractorName(extrFactory.toExId(fi
 						.getFeatureExtractorName()));
 			}

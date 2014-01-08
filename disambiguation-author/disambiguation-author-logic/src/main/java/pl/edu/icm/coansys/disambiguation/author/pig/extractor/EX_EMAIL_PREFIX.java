@@ -22,7 +22,6 @@ import org.apache.pig.data.DataBag;
 import org.apache.pig.data.DefaultDataBag;
 import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
-import org.apache.pig.tools.pigstats.PigStatusReporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
