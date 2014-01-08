@@ -22,7 +22,7 @@ public abstract class AND<T> extends EvalFunc<T> {
 	protected FeatureInfo[] featureInfos;
 
 	protected org.slf4j.Logger logger = null;
-	protected PigStatusReporter myreporter = PigStatusReporter.getInstance();
+	protected PigStatusReporter myreporter = null;
 	private DisambiguationExtractorFactory extrFactory;
 	private boolean useIdsForExtractors = false;
 
@@ -151,6 +151,9 @@ public abstract class AND<T> extends EvalFunc<T> {
 
 	protected void pigReporterSizeInfo(String blockName, long l) {
 
+		if ( myreporter == null ) {
+			return;
+		}
 		// 6627 is limit for exhaustive contributors block size input
 		// DESC order required!
 		int periodStarts[] = { 6628, 1 };

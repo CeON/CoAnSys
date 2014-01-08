@@ -85,6 +85,9 @@ public class AproximateAND_BFS extends AND<DataBag> {
 		if (input == null || input.size() == 0)
 			return null;
 		try {
+			// instance of reporter may change in each exec(...) run
+			myreporter = PigStatusReporter.getInstance();
+			
 			// TODO optional:
 			// it would be enough to take as argument only map bag with
 			// datagroup.

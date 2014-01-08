@@ -97,10 +97,10 @@ public class SERIALIZE_RESULTS extends EvalFunc<Tuple> {
 		}
 	}
 
-	private Counter counter = PigStatusReporter.getInstance().getCounter(
-			"Output data info", "Number of contributors");
-
 	private void incrementContribNumber(long number) {
+		Counter counter = PigStatusReporter.getInstance().getCounter(
+				"Output data info", "Number of contributors");
+		
 		if (counter != null) {
 			counter.increment(number);
 		}

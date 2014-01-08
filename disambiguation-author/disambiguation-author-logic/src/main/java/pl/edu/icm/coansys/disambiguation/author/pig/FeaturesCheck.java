@@ -63,9 +63,11 @@ public class FeaturesCheck extends AND<Boolean> {
 
 	@Override
 	public Boolean exec(Tuple input) {
-
+		// instance of reporter may change in each exec(...) run
+		myreporter = PigStatusReporter.getInstance();
+		
 		if (input == null || input.size() == 0) {
-			reportEmpty();
+			reportContrib(REPORTER_CONST.EMPTY);
 			return false;
 		}
 
@@ -80,7 +82,7 @@ public class FeaturesCheck extends AND<Boolean> {
 			// Throwing an exception would cause the task to fail.
 			logger.error("Caught exception processing input row:\n"
 					+ StackTraceExtractor.getStackTrace(e));
-			reportEmpty();
+			reportContrib(REPORTER_CONST.EMPTY);
 			return false;
 		}
 
@@ -90,7 +92,7 @@ public class FeaturesCheck extends AND<Boolean> {
 					+ allContribCounter + " contrib: cid = " + cid
 					+ ", sname = " + sname
 					+ ". Cid or sname or feature map with null value.");
-			reportEmpty();
+			reportContrib(REPORTER_CONST.EMPTY);
 			return false;
 		}
 
@@ -117,7 +119,7 @@ public class FeaturesCheck extends AND<Boolean> {
 			// contributor is similar to himself so maybe comparable to other
 			// contributors
 			if (simil >= 0) {
-				reportSimilar();
+				reportContrib(REPORTER_CONST.SIMILAR);
 				return true;
 			}
 		}
@@ -128,34 +130,25 @@ public class FeaturesCheck extends AND<Boolean> {
 					+ ", sname = " + sname + ". Not enough features.");
 		}
 
-		reportDisimilar();
+		reportContrib(REPORTER_CONST.DISIMILAR);
 		return false;
 	}
 
 	// Pig Status Reporter staff:
-
-	private Counter counterEmpty = myreporter.getCounter("Contributors",
-			"Some info null or empty");
-	private Counter counterDisimilar = myreporter.getCounter("Contributors",
-			"Disimilar to themselves");
-	private Counter counterSimilar = myreporter.getCounter("Contributors",
-			"Similar to themselves");
-
-	private void reportEmpty() {
-		if (counterEmpty != null) {
-			counterEmpty.increment(1);
-		}
+	static class REPORTER_CONST {
+		public final static String EMPTY = "Some info null or empty";
+		public final static String DISIMILAR = "Disimilar to themselves";
+		public final static String SIMILAR = "Similar to themselves";
 	}
-
-	private void reportDisimilar() {
-		if (counterDisimilar != null) {
-			counterDisimilar.increment(1);
+	
+	private void reportContrib(String which) {
+		if ( myreporter == null ) {
+			return;
 		}
-	}
-
-	private void reportSimilar() {
-		if (counterSimilar != null) {
-			counterSimilar.increment(1);
+		Counter counter = myreporter.getCounter("Contributors", which);
+		
+		if (counter != null) {
+			counter.increment(1);
 		}
 	}
 }

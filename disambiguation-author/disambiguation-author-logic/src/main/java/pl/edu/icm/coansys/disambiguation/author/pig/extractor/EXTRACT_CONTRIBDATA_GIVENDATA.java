@@ -327,7 +327,7 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 
 	// Pig Status Reporter staff:
 
-	private PigStatusReporter myreporter = PigStatusReporter.getInstance();
+	private PigStatusReporter myreporter = null;
 	private Counter counters4Doc[][], counters4Author[][];
 
 	static class REPORTER_CONST {
@@ -338,8 +338,12 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 		public final static int MISS = 0;
 		public final static int EXIST = 1;
 	}
-
+	
+	// cannot be run in constructor, have to take instance of reporter in each
+	// exec(...) call
 	private void initializePigReporterWithZeroes() {
+		// instance of reporter may change in each exec(...) run
+		myreporter = PigStatusReporter.getInstance();
 		counters4Doc = new Counter[des4Doc.size()][2];
 		counters4Author = new Counter[des4Author.size()][2];
 
