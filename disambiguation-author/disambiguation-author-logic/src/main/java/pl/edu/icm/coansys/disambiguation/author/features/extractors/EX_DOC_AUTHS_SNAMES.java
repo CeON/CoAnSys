@@ -16,52 +16,56 @@
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.edu.icm.coansys.disambiguation.author.pig.extractor;
+package pl.edu.icm.coansys.disambiguation.author.features.extractors;
 
 import org.apache.pig.data.DataBag;
 import org.apache.pig.data.DefaultDataBag;
 import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
 
-import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.PigNormalizer;
+import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DisambiguationExtractorDocument;
+import pl.edu.icm.coansys.disambiguation.author.normalizers.PigNormalizer;
+import pl.edu.icm.coansys.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 
-public class EX_YEAR extends DisambiguationExtractorDocument {
+public class EX_DOC_AUTHS_SNAMES extends DisambiguationExtractorDocument {
 	
-	public EX_YEAR() {
+	public EX_DOC_AUTHS_SNAMES() {
 		super();
 	}
 
-	public EX_YEAR(PigNormalizer[] new_normalizers) {
+	public EX_DOC_AUTHS_SNAMES(PigNormalizer[] new_normalizers) {
 		super(new_normalizers);
 	}
 
 	@Override
-	public DataBag extract( Object o, String lang ) {
+	public DataBag extract( Object o, String lang ){
+		TupleFactory tf = TupleFactory.getInstance();
 		DocumentMetadata dm = (DocumentMetadata) o;
-		
 		DataBag db = new DefaultDataBag();
-		String year = dm.getBasicMetadata().getYear();
-		if ( year.isEmpty() ) {
-			return db;
+		
+		for ( Author a : dm.getBasicMetadata().getAuthorList() ){
+			if ( a == null ) {
+				continue;
+			}
+			Tuple t = tf.newTuple();
+			String sname = a.getSurname();
+			if ( sname == null || sname.isEmpty() ) {
+				continue;
+			}
+			Object normalized = normalizeExtracted( sname );
+			if ( normalized == null ) {
+				continue;
+			}
+			t.append( normalized );
+			db.add(t);
 		}
-		
-		int intYear;
-		
-		try {
-			intYear = Integer.parseInt( year );
-		} catch( NumberFormatException e ) {
-			return db;
-		}
-		
-		Tuple t = TupleFactory.getInstance().newTuple( intYear );
-		db.add( t );
 		
 		return db;
 	}
 
 	@Override
 	public String getId() {
-		return "B";
+		return "0";
 	}
 }

@@ -16,25 +16,10 @@
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.edu.icm.coansys.disambiguation.author.pig.extractor;
+package pl.edu.icm.coansys.disambiguation.author.normalizers;
 
-import org.apache.pig.data.DataBag;
-
-import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.PigNormalizer;
-
-public class DisambiguationExtractorAuthor extends DisambiguationExtractor {
+public interface PigNormalizer {
 	
-	public DisambiguationExtractorAuthor() {}
-	public DisambiguationExtractorAuthor( PigNormalizer[] new_normalizers ) {
-		super( new_normalizers );
-	}
+    Object normalize( Object text );
 	
-	public DataBag extract( Object o, int authorIndex, String lang ) {
-		return null;
-	}
-
-	public DataBag extract( Object o, int authorIndex ) {
-		return extract( o, authorIndex, null );
-	}
 }
-	

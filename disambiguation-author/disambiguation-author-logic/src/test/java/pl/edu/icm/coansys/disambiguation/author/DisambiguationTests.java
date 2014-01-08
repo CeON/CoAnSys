@@ -38,13 +38,13 @@ import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.Disambig
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.Intersection;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.IntersectionPerMaxval;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.IntersectionPerSum;
+import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DisambiguationExtractor;
+import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DisambiguationExtractorDocument;
+import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DisambiguationExtractorFactory;
+import pl.edu.icm.coansys.disambiguation.author.normalizers.ToEnglishLowerCase;
+import pl.edu.icm.coansys.disambiguation.author.normalizers.ToHashCode;
 import pl.edu.icm.coansys.disambiguation.author.pig.AND;
 import pl.edu.icm.coansys.disambiguation.author.pig.AproximateAND_BFS;
-import pl.edu.icm.coansys.disambiguation.author.pig.extractor.DisambiguationExtractor;
-import pl.edu.icm.coansys.disambiguation.author.pig.extractor.DisambiguationExtractorDocument;
-import pl.edu.icm.coansys.disambiguation.author.pig.extractor.DisambiguationExtractorFactory;
-import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.ToEnglishLowerCase;
-import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.ToHashCode;
 import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
 
 // TODO:

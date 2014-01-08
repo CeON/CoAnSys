@@ -16,23 +16,27 @@
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.edu.icm.coansys.disambiguation.author.pig.extractor;
+package pl.edu.icm.coansys.disambiguation.author.features.extractors;
+
+import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DisambiguationExtractorDocument;
+import pl.edu.icm.coansys.disambiguation.author.normalizers.PigNormalizer;
+import pl.edu.icm.coansys.disambiguation.author.normalizers.ToEnglishLowerCase;
+import pl.edu.icm.coansys.models.DocumentProtos.TextWithLanguage;
 
 import org.apache.pig.data.DataBag;
 import org.apache.pig.data.DefaultDataBag;
+import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
 
-import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.PigNormalizer;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
-import pl.edu.icm.coansys.models.DocumentProtos.KeywordsList;
 
-public class EX_KEYWORDS extends DisambiguationExtractorDocument {
+public class EX_TITLE_SPLIT extends DisambiguationExtractorDocument {
 
-	public EX_KEYWORDS() {
+	public EX_TITLE_SPLIT() {
 		super();
 	}
 
-	public EX_KEYWORDS(PigNormalizer[] new_normalizers) {
+	public EX_TITLE_SPLIT(PigNormalizer[] new_normalizers) {
 		super(new_normalizers);
 	}
 
@@ -41,19 +45,28 @@ public class EX_KEYWORDS extends DisambiguationExtractorDocument {
 
 		DocumentMetadata dm = (DocumentMetadata) o;
 		DataBag db = new DefaultDataBag();
+		ToEnglishLowerCase TELC = new ToEnglishLowerCase();
 
-		for (KeywordsList k : dm.getKeywordsList()) {
-			if (lang != null && !k.getLanguage().equalsIgnoreCase(lang)) {
+		for (TextWithLanguage title : dm.getBasicMetadata().getTitleList()) {
+			if (lang != null && !lang.equalsIgnoreCase(title.getLanguage())) {
 				continue;
 			}
-			for (String s : k.getKeywordsList()) {
-				if (s.isEmpty() || isClassifCode(s)) {
+			String sTitle = title.getText();
+			String normalized_title = (String) TELC.normalize(sTitle);
+			if (normalized_title == null) {
+				continue;
+			}
+			String[] normals = normalized_title.split("[\\W]+");
+			for (String s : normals) {
+				if (s.isEmpty()) {
 					continue;
 				}
 				Object normalized = normalizeExtracted(s);
-				if (normalized != null) {
-					db.add(TupleFactory.getInstance().newTuple(normalized));
+				if (normalized == null) {
+					continue;
 				}
+				Tuple t = TupleFactory.getInstance().newTuple(normalized);
+				db.add(t);
 			}
 		}
 
@@ -62,6 +75,6 @@ public class EX_KEYWORDS extends DisambiguationExtractorDocument {
 
 	@Override
 	public String getId() {
-		return "7";
+		return "9";
 	}
 }

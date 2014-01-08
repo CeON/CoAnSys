@@ -16,55 +16,53 @@
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.edu.icm.coansys.disambiguation.author.pig.extractor;
-
-import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.PigNormalizer;
-import pl.edu.icm.coansys.models.DocumentProtos.TextWithLanguage;
+package pl.edu.icm.coansys.disambiguation.author.features.extractors;
 
 import org.apache.pig.data.DataBag;
 import org.apache.pig.data.DefaultDataBag;
 import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
 
+import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DisambiguationExtractorDocument;
+import pl.edu.icm.coansys.disambiguation.author.normalizers.PigNormalizer;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 
-public class EX_TITLE extends DisambiguationExtractorDocument {
-
-	public EX_TITLE() {
+public class EX_YEAR extends DisambiguationExtractorDocument {
+	
+	public EX_YEAR() {
 		super();
 	}
 
-	public EX_TITLE(PigNormalizer[] new_normalizers) {
+	public EX_YEAR(PigNormalizer[] new_normalizers) {
 		super(new_normalizers);
 	}
 
 	@Override
-	public DataBag extract(Object o, String lang) {
-
+	public DataBag extract( Object o, String lang ) {
 		DocumentMetadata dm = (DocumentMetadata) o;
+		
 		DataBag db = new DefaultDataBag();
-
-		for (TextWithLanguage title : dm.getBasicMetadata().getTitleList()) {
-			if (lang != null && !lang.equalsIgnoreCase(title.getLanguage())) {
-				continue;
-			}
-			String sTitle = title.getText();
-			if (sTitle.isEmpty()) {
-				continue;
-			}
-			Object normalized = normalizeExtracted(sTitle);
-			if (normalized == null) {
-				continue;
-			}
-			Tuple t = TupleFactory.getInstance().newTuple(normalized);
-			db.add(t);
+		String year = dm.getBasicMetadata().getYear();
+		if ( year.isEmpty() ) {
+			return db;
 		}
-
+		
+		int intYear;
+		
+		try {
+			intYear = Integer.parseInt( year );
+		} catch( NumberFormatException e ) {
+			return db;
+		}
+		
+		Tuple t = TupleFactory.getInstance().newTuple( intYear );
+		db.add( t );
+		
 		return db;
 	}
 
 	@Override
 	public String getId() {
-		return "A";
+		return "B";
 	}
 }

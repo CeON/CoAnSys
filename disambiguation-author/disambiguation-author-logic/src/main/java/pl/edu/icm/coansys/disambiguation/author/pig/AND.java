@@ -11,7 +11,7 @@ import org.apache.pig.tools.pigstats.PigStatusReporter;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.Disambiguator;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.DisambiguatorFactory;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.IntersectionPerSum;
-import pl.edu.icm.coansys.disambiguation.author.pig.extractor.DisambiguationExtractorFactory;
+import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DisambiguationExtractorFactory;
 import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
 
 public abstract class AND<T> extends EvalFunc<T> {

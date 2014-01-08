@@ -16,50 +16,48 @@
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.edu.icm.coansys.disambiguation.author.pig.extractor;
+package pl.edu.icm.coansys.disambiguation.author.features.extractors;
+
+import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DisambiguationExtractorDocument;
+import pl.edu.icm.coansys.disambiguation.author.normalizers.PigNormalizer;
+import pl.edu.icm.coansys.models.DocumentProtos.TextWithLanguage;
 
 import org.apache.pig.data.DataBag;
 import org.apache.pig.data.DefaultDataBag;
 import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
 
-import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.PigNormalizer;
-import pl.edu.icm.coansys.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 
-public class EX_COAUTH_SNAME extends DisambiguationExtractorAuthor {
+public class EX_TITLE extends DisambiguationExtractorDocument {
 
-	public EX_COAUTH_SNAME() {
+	public EX_TITLE() {
 		super();
 	}
 
-	public EX_COAUTH_SNAME(PigNormalizer[] new_normalizers) {
+	public EX_TITLE(PigNormalizer[] new_normalizers) {
 		super(new_normalizers);
 	}
 
 	@Override
-	public DataBag extract(Object o, int fakeIndex, String lang) {
-		TupleFactory tf = TupleFactory.getInstance();
+	public DataBag extract(Object o, String lang) {
+
 		DocumentMetadata dm = (DocumentMetadata) o;
 		DataBag db = new DefaultDataBag();
 
-		for (Author a : dm.getBasicMetadata().getAuthorList()) {
-			if (a == null) {
+		for (TextWithLanguage title : dm.getBasicMetadata().getTitleList()) {
+			if (lang != null && !lang.equalsIgnoreCase(title.getLanguage())) {
 				continue;
 			}
-			if (a.getPositionNumber() == fakeIndex) {
+			String sTitle = title.getText();
+			if (sTitle.isEmpty()) {
 				continue;
 			}
-			String sname = a.getSurname();
-			if (sname == null || sname.isEmpty()) {
-				continue;
-			}
-			Object normalized = normalizeExtracted(sname);
+			Object normalized = normalizeExtracted(sTitle);
 			if (normalized == null) {
 				continue;
 			}
-			Tuple t = tf.newTuple();
-			t.append(normalized);
+			Tuple t = TupleFactory.getInstance().newTuple(normalized);
 			db.add(t);
 		}
 
@@ -68,6 +66,6 @@ public class EX_COAUTH_SNAME extends DisambiguationExtractorAuthor {
 
 	@Override
 	public String getId() {
-		return "2";
+		return "A";
 	}
 }

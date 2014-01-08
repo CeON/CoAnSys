@@ -1,4 +1,4 @@
-package pl.edu.icm.coansys.disambiguation.author.pig.extractor;
+package pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators;
 
 import java.util.HashMap;
 import java.util.IdentityHashMap;

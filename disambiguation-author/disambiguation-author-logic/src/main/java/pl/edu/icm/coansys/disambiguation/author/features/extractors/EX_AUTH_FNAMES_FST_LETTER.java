@@ -16,57 +16,57 @@
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.edu.icm.coansys.disambiguation.author.pig.extractor;
-
-import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.PigNormalizer;
-import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.ToEnglishLowerCase;
-import pl.edu.icm.coansys.models.DocumentProtos.TextWithLanguage;
+package pl.edu.icm.coansys.disambiguation.author.features.extractors;
 
 import org.apache.pig.data.DataBag;
 import org.apache.pig.data.DefaultDataBag;
 import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
 
+import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DisambiguationExtractorAuthor;
+import pl.edu.icm.coansys.disambiguation.author.normalizers.PigNormalizer;
+import pl.edu.icm.coansys.disambiguation.author.normalizers.ToEnglishLowerCase;
+import pl.edu.icm.coansys.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 
-public class EX_TITLE_SPLIT extends DisambiguationExtractorDocument {
+public class EX_AUTH_FNAMES_FST_LETTER extends DisambiguationExtractorAuthor {
 
-	public EX_TITLE_SPLIT() {
+	public EX_AUTH_FNAMES_FST_LETTER() {
 		super();
 	}
 
-	public EX_TITLE_SPLIT(PigNormalizer[] new_normalizers) {
+	public EX_AUTH_FNAMES_FST_LETTER(PigNormalizer[] new_normalizers) {
 		super(new_normalizers);
 	}
 
 	@Override
-	public DataBag extract(Object o, String lang) {
-
+	public DataBag extract(Object o, int fakeIndex, String lang) {
+		TupleFactory tf = TupleFactory.getInstance();
 		DocumentMetadata dm = (DocumentMetadata) o;
 		DataBag db = new DefaultDataBag();
+
 		ToEnglishLowerCase TELC = new ToEnglishLowerCase();
 
-		for (TextWithLanguage title : dm.getBasicMetadata().getTitleList()) {
-			if (lang != null && !lang.equalsIgnoreCase(title.getLanguage())) {
+		Author a = dm.getBasicMetadata().getAuthor(fakeIndex);
+		String fnames = a.getForenames();
+		if (fnames.isEmpty()) {
+			return db;
+		}
+		String normalized_fnames = (String) TELC.normalize(fnames);
+		if (normalized_fnames == null) {
+			return db;
+		}
+		
+		String[] names = normalized_fnames.split("[\\W]+");
+		
+		for( String name : names ) {
+			if ( name.isEmpty() ) {
 				continue;
 			}
-			String sTitle = title.getText();
-			String normalized_title = (String) TELC.normalize(sTitle);
-			if (normalized_title == null) {
-				continue;
-			}
-			String[] normals = normalized_title.split("[\\W]+");
-			for (String s : normals) {
-				if (s.isEmpty()) {
-					continue;
-				}
-				Object normalized = normalizeExtracted(s);
-				if (normalized == null) {
-					continue;
-				}
-				Tuple t = TupleFactory.getInstance().newTuple(normalized);
-				db.add(t);
-			}
+			Tuple t = tf.newTuple();
+			Object normalized_fst_letter = normalizeExtracted( name.substring(0, 1) );
+			t.append( normalized_fst_letter );
+			db.add(t);
 		}
 
 		return db;
@@ -74,6 +74,6 @@ public class EX_TITLE_SPLIT extends DisambiguationExtractorDocument {
 
 	@Override
 	public String getId() {
-		return "9";
+		return "5";
 	}
 }

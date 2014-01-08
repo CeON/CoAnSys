@@ -19,9 +19,11 @@
 package pl.edu.icm.coansys.disambiguation.author.pig;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.pig.backend.executionengine.ExecException;
 import org.apache.pig.data.DataBag;
 import org.apache.pig.data.Tuple;
 
@@ -70,7 +72,7 @@ public class PigDisambiguator{
 	
 
 	public double calculateAffinity( DataBag f1, DataBag f2 ) {
-		return d.calculateAffinity( ToList.execute( f1 ), ToList.execute( f2 ) );
+		return d.calculateAffinity( toList( f1 ), toList( f2 ) );
 	}
 	
 	public double calculateAffinity( String f1, String f2 ) {
@@ -82,4 +84,21 @@ public class PigDisambiguator{
 		
 		return d.calculateAffinity( fl1, fl2 );
 	}
+	
+	private List<Object> toList( DataBag db ) {
+        Iterator<Tuple> it = db.iterator();
+        List<Object> ret = new LinkedList<Object>();
+
+        while ( it.hasNext() ) {
+        	if ( it.next().size() == 0 ) {
+        		continue;
+        	}
+        	try {
+				ret.add( it.next().get(0) );
+			} catch (ExecException e) {
+				e.printStackTrace();
+			}
+        }
+        return ret;
+    }
 }

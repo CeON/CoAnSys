@@ -1,4 +1,4 @@
-package pl.edu.icm.coansys.disambiguation.author.pig.normalizers;
+package pl.edu.icm.coansys.disambiguation.author.normalizers;
 
 public class ToHashCode implements PigNormalizer {
 

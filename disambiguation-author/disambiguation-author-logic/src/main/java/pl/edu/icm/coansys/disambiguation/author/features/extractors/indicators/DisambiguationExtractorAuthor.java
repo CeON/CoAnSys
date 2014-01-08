@@ -18,14 +18,23 @@
 
 package pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators;
 
+import org.apache.pig.data.DataBag;
 
-/**
- * The interface for indicating that an {@link Extractor} results are not author specific and may be calculated once per document 
- * (and e.g. add to all authors feature value map) 
- * 
- * @author pdendek
- * @version 1.0
- * @since 2012-08-07
- */
-public interface DocumentBased {
+import pl.edu.icm.coansys.disambiguation.author.normalizers.PigNormalizer;
+
+public class DisambiguationExtractorAuthor extends DisambiguationExtractor {
+	
+	public DisambiguationExtractorAuthor() {}
+	public DisambiguationExtractorAuthor( PigNormalizer[] new_normalizers ) {
+		super( new_normalizers );
+	}
+	
+	public DataBag extract( Object o, int authorIndex, String lang ) {
+		return null;
+	}
+
+	public DataBag extract( Object o, int authorIndex ) {
+		return extract( o, authorIndex, null );
+	}
 }
+	

@@ -15,50 +15,60 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
-package pl.edu.icm.coansys.disambiguation.author.pig.extractor;
+
+package pl.edu.icm.coansys.disambiguation.author.features.extractors;
 
 import org.apache.pig.data.DataBag;
 import org.apache.pig.data.DefaultDataBag;
 import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
 
-import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.PigNormalizer;
+import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DisambiguationExtractorAuthor;
+import pl.edu.icm.coansys.disambiguation.author.normalizers.PigNormalizer;
 import pl.edu.icm.coansys.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
-import pl.edu.icm.coansys.models.DocumentProtos.KeyValue;
 
-public class EX_PERSON_ID extends DisambiguationExtractorAuthor {
+public class EX_COAUTH_SNAME extends DisambiguationExtractorAuthor {
 
-	public EX_PERSON_ID() {
+	public EX_COAUTH_SNAME() {
 		super();
 	}
 
-	public EX_PERSON_ID(PigNormalizer[] new_normalizers) {
+	public EX_COAUTH_SNAME(PigNormalizer[] new_normalizers) {
 		super(new_normalizers);
 	}
-
-	public static final String PERSON_ID_KEY_NAME = "orcid";
 
 	@Override
 	public DataBag extract(Object o, int fakeIndex, String lang) {
 		TupleFactory tf = TupleFactory.getInstance();
 		DocumentMetadata dm = (DocumentMetadata) o;
 		DataBag db = new DefaultDataBag();
-		Tuple t = tf.newTuple();
 
-		Author a = dm.getBasicMetadata().getAuthor(fakeIndex);
-		for (KeyValue kv : a.getExtIdList()) {
-			if (kv.getKey().equals(PERSON_ID_KEY_NAME)) {
-				t.append(kv.getValue());
-				db.add(t);
-				break;
+		for (Author a : dm.getBasicMetadata().getAuthorList()) {
+			if (a == null) {
+				continue;
 			}
+			if (a.getPositionNumber() == fakeIndex) {
+				continue;
+			}
+			String sname = a.getSurname();
+			if (sname == null || sname.isEmpty()) {
+				continue;
+			}
+			Object normalized = normalizeExtracted(sname);
+			if (normalized == null) {
+				continue;
+			}
+			Tuple t = tf.newTuple();
+			t.append(normalized);
+			db.add(t);
 		}
+
 		return db;
 	}
 
 	@Override
 	public String getId() {
-		return "8";
+		return "2";
 	}
 }

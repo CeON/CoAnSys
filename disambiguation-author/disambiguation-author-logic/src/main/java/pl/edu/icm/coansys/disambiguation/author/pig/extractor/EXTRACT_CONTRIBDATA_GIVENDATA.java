@@ -40,7 +40,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
-import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.ToEnglishLowerCase;
+import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DisambiguationExtractor;
+import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DisambiguationExtractorAuthor;
+import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DisambiguationExtractorDocument;
+import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DisambiguationExtractorFactory;
+import pl.edu.icm.coansys.disambiguation.author.normalizers.ToEnglishLowerCase;
 import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
 import pl.edu.icm.coansys.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;

@@ -16,7 +16,7 @@
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.edu.icm.coansys.disambiguation.author.pig.extractor;
+package pl.edu.icm.coansys.disambiguation.author.features.extractors;
 
 import org.apache.pig.data.DataBag;
 import org.apache.pig.data.DefaultDataBag;
@@ -25,7 +25,8 @@ import org.apache.pig.data.TupleFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.PigNormalizer;
+import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DisambiguationExtractorAuthor;
+import pl.edu.icm.coansys.disambiguation.author.normalizers.PigNormalizer;
 import pl.edu.icm.coansys.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 

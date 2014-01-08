@@ -16,55 +16,68 @@
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.edu.icm.coansys.disambiguation.author.pig.extractor;
+package pl.edu.icm.coansys.disambiguation.author.features.extractors;
 
 import org.apache.pig.data.DataBag;
 import org.apache.pig.data.DefaultDataBag;
 import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
 
-import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.PigNormalizer;
+import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DisambiguationExtractorDocument;
+import pl.edu.icm.coansys.disambiguation.author.normalizers.PigNormalizer;
+import pl.edu.icm.coansys.disambiguation.author.normalizers.ToEnglishLowerCase;
 import pl.edu.icm.coansys.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 
-public class EX_DOC_AUTHS_SNAMES extends DisambiguationExtractorDocument {
-	
-	public EX_DOC_AUTHS_SNAMES() {
+public class EX_DOC_AUTHS_FNAME_FST_LETTER extends DisambiguationExtractorDocument {
+
+	public EX_DOC_AUTHS_FNAME_FST_LETTER() {
 		super();
 	}
 
-	public EX_DOC_AUTHS_SNAMES(PigNormalizer[] new_normalizers) {
+	public EX_DOC_AUTHS_FNAME_FST_LETTER(PigNormalizer[] new_normalizers) {
 		super(new_normalizers);
 	}
 
 	@Override
-	public DataBag extract( Object o, String lang ){
+	public DataBag extract(Object o, String lang) {
 		TupleFactory tf = TupleFactory.getInstance();
 		DocumentMetadata dm = (DocumentMetadata) o;
 		DataBag db = new DefaultDataBag();
-		
-		for ( Author a : dm.getBasicMetadata().getAuthorList() ){
-			if ( a == null ) {
+
+		for (Author a : dm.getBasicMetadata().getAuthorList()) {
+			if (a == null) {
 				continue;
 			}
+			String fname = a.getForenames();
+			if (fname == null || fname.isEmpty()) {
+				continue;
+			}
+			Object normalized_fname = (new ToEnglishLowerCase())
+					.normalize(fname);
+
+			if (normalized_fname == null) {
+				continue;
+			}
+
+			String str_normalized_fname = (String) normalized_fname;
+
+			String initial = str_normalized_fname.substring(0, 1);
 			Tuple t = tf.newTuple();
-			String sname = a.getSurname();
-			if ( sname == null || sname.isEmpty() ) {
+
+			Object normalized = normalizeExtracted(initial);
+			if (normalized == null) {
 				continue;
 			}
-			Object normalized = normalizeExtracted( sname );
-			if ( normalized == null ) {
-				continue;
-			}
-			t.append( normalized );
+			t.append(normalized);
 			db.add(t);
 		}
-		
+
 		return db;
 	}
 
 	@Override
 	public String getId() {
-		return "0";
+		return "C";
 	}
 }

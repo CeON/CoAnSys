@@ -16,28 +16,38 @@
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.edu.icm.coansys.disambiguation.author.pig.extractor;
+package pl.edu.icm.coansys.disambiguation.author.normalizers;
 
-import org.apache.pig.data.DataBag;
+import pl.edu.icm.coansys.commons.java.DiacriticsRemover;
 
-import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.PigNormalizer;
+public class ToEnglishLowerCase implements PigNormalizer {
 
-public class DisambiguationExtractorDocument extends DisambiguationExtractor {
+	@Override
+	public Object normalize(Object text) {
 
-	public DisambiguationExtractorDocument() {}
-	
-	public DisambiguationExtractorDocument( PigNormalizer[] new_normalizers ) {
-		super( new_normalizers );
+		if (text == null) {
+			return null;
+		}
+		String tmp;
+
+		if (text instanceof String) {
+			tmp = (String) text;
+		} else {
+			tmp = text.toString();
+		}
+
+		if (tmp.isEmpty()) {
+			return null;
+		}
+
+		tmp = tmp.toLowerCase();
+		tmp = DiacriticsRemover.removeDiacritics(tmp);
+		tmp = tmp.replaceAll("[^a-z0-9 ]", "").replaceAll("\\s++", " ").trim();
+
+		if (tmp.isEmpty()) {
+			return null;
+		}
+
+		return tmp;
 	}
-	
-	public DataBag extract( Object o, String lang ) {
-		return null;
-	}
-
-	public DataBag extract( Object o ) {
-		return extract( o, null );
-	}
-	
-	
 }
-	

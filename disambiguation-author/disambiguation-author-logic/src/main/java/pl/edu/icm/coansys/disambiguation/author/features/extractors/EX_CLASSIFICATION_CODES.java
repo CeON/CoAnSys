@@ -16,66 +16,58 @@
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.edu.icm.coansys.disambiguation.author.pig.extractor;
-
-import java.util.HashSet;
-import java.util.Set;
+package pl.edu.icm.coansys.disambiguation.author.features.extractors;
 
 import org.apache.pig.data.DataBag;
 import org.apache.pig.data.DefaultDataBag;
 import org.apache.pig.data.TupleFactory;
 
-import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.PigNormalizer;
-import pl.edu.icm.coansys.disambiguation.author.pig.normalizers.ToEnglishLowerCase;
+import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DisambiguationExtractorDocument;
+import pl.edu.icm.coansys.disambiguation.author.normalizers.PigNormalizer;
+import pl.edu.icm.coansys.models.DocumentProtos.ClassifCode;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.models.DocumentProtos.KeywordsList;
 
-public class EX_KEYWORDS_SPLIT extends DisambiguationExtractorDocument {
+public class EX_CLASSIFICATION_CODES extends DisambiguationExtractorDocument {
 
-	public EX_KEYWORDS_SPLIT() {
+	public EX_CLASSIFICATION_CODES() {
 		super();
 	}
 
-	public EX_KEYWORDS_SPLIT(PigNormalizer[] new_normalizers) {
+	public EX_CLASSIFICATION_CODES(PigNormalizer[] new_normalizers) {
 		super(new_normalizers);
 	}
 
 	@Override
 	public DataBag extract(Object o, String lang) {
-
 		DocumentMetadata dm = (DocumentMetadata) o;
 		DataBag db = new DefaultDataBag();
-		Set<Object> set = new HashSet<Object>();
-		ToEnglishLowerCase TELC = new ToEnglishLowerCase();
 
-		for (KeywordsList k : dm.getKeywordsList()) {
-			if (lang != null && !k.getLanguage().equalsIgnoreCase(lang)) {
-				continue;
-			}
-
-			for (String keyphrase : k.getKeywordsList()) {
-				if (keyphrase.isEmpty() || isClassifCode(keyphrase)) {
-					continue;
-				}
-				String normalized_keyphrase = (String) TELC
-						.normalize(keyphrase);
-				if (normalized_keyphrase == null) {
-					continue;
-				}
-				for (String word : normalized_keyphrase.split("[\\W]+")) {
-					if (word.isEmpty()) {
-						continue;
-					}
-					Object normalized = normalizeExtracted(word);
+		// classification codes:
+		for (ClassifCode cc : dm.getBasicMetadata().getClassifCodeList()) {
+			for (String s : cc.getValueList()) {
+				if ( s != null && !s.isEmpty() ) {
+					Object normalized = normalizeExtracted(s);
 					if (normalized != null) {
-						set.add(normalized);
+						db.add(TupleFactory.getInstance().newTuple(normalized));
 					}
 				}
 			}
 		}
 
-		for (Object single : set.toArray()) {
-			db.add(TupleFactory.getInstance().newTuple(single));
+		// classification codes from keywords
+		for (KeywordsList k : dm.getKeywordsList()) {
+			if (lang == null || k.getLanguage().equalsIgnoreCase(lang)) {
+				for (String s : k.getKeywordsList()) {
+					if ( s != null && !s.isEmpty() && isClassifCode(s)) {
+						Object normalized = normalizeExtracted(s);
+						if (normalized != null) {
+							db.add(TupleFactory.getInstance().newTuple(
+									normalizeExtracted(normalized)));
+						}
+					}
+				}
+			}
 		}
 
 		return db;
@@ -83,6 +75,6 @@ public class EX_KEYWORDS_SPLIT extends DisambiguationExtractorDocument {
 
 	@Override
 	public String getId() {
-		return "6";
+		return "1";
 	}
 }
