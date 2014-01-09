@@ -87,16 +87,9 @@ public class AproximateAND_BFS extends AND<DataBag> {
 		try {
 			// instance of reporter may change in each exec(...) run
 			myreporter = PigStatusReporter.getInstance();
-			
-			// TODO optional:
-			// it would be enough to take as argument only map bag with
-			// datagroup.
-			// In that case this function would be proof against table changes.
-			// This change should be done during generating tables in pig
-			// script.
 
-			DataBag contribs = (DataBag) input.get(0); // taking bag with
-														// contribs
+			// taking bag with contribs
+			DataBag contribs = (DataBag) input.get(0); 
 
 			if (contribs == null || contribs.size() == 0) {
 				return null;
@@ -126,7 +119,6 @@ public class AproximateAND_BFS extends AND<DataBag> {
 				datain[k++] = t;
 				// map with features
 				contribsT.add((Map<String, Object>) t.get(2));
-
 				// benchmark
 				sname = t.get(1);
 			}

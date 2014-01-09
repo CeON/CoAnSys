@@ -226,7 +226,7 @@ public class ExhaustiveAND extends AND<DataBag> {
 				if (sim[i][j] != NOT_CALCULATED) {
 					continue;
 				}
-				// sim[i][j] = threshold;
+
 				sim[i][j] = calculateContribsAffinityForAllFeatures(contribsT,
 						i, j, false);
 			}
