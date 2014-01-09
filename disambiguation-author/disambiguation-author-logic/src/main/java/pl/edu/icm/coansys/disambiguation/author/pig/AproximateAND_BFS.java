@@ -139,9 +139,9 @@ public class AproximateAND_BFS extends AND<DataBag> {
 				// stopping timer for current play (not thread)
 				/*
 				 * STATISTICS DESCRIPTION: ## #STAT# ## smame ## tag for parser
-				 * ## this algorithm name, ## is sim matrix created and some sim
-				 * values stored , ## aproximate execution id, ## number of
-				 * contribs, ## clusters number after aproximate, ## calculated
+				 * ## this algorithm name ## is sim matrix created and some sim
+				 * values stored ## aproximate execution id ## number of
+				 * contribs ## clusters number after aproximate ## calculated
 				 * sim values which are stored (note that it doesn't count all
 				 * calculated - only stored, e.g. if 2 contributors are not in
 				 * the same cluster, their sim value would not be stored.) ##
