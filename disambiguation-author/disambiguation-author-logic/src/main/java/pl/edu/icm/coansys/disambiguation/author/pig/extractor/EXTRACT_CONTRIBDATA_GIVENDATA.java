@@ -193,27 +193,9 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 			// TODO: remove filtering, when we are sure that there are no duplicates
 			Collection<Author> authors = filterDuplicatedAuthors(dm.getBasicMetadata().getAuthorList(), docKey);
 
-			// in arrays we are storing DataBags from extractors
-			DataBag[] extractedDocObj = new DataBag[des4Doc.size()];
-			DataBag[] extractedAuthorObj;
-			Map<String, DataBag> map = new HashMap<String, DataBag>();
-			Map<String, DataBag> finalMap;
-
-			for (int i = 0; i < des4Doc.size(); i++) {
-				extractedDocObj[i] = des4Doc.get(i).extract(dm, language);
-			}
-
-			// adding to map extractor name and features' data
-			for (int i = 0; i < des4Doc.size(); i++) {
-				raportDocumentDataExistance(extractedDocObj, i);
-				if (extractedDocObj[i] == null
-						|| (extractedDocObj[i].size() == 0 && skipEmptyFeatures)) {
-					continue;
-				}
-				map.put(des4DocNameOrId.get(i), extractedDocObj[i]);
-			}
-			extractedDocObj = null;
-
+			Map<String, DataBag> finalAuthorMap;
+			// taking from document metadata data universal for all contribs
+			Map<String, DataBag> DocumentMap = extractDocBasedFeatures(dm);
 			// creating disambiguation extractor only for normalizer
 			DisambiguationExtractor extractor = new DisambiguationExtractor();
 
@@ -231,37 +213,15 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 					normalizedSname = extractor.normalizeExtracted(a);
 				}
 				String cId = a.getKey();
-
-				finalMap = new HashMap<String, DataBag>(map);
-
-				// put author metadata into finalMap
-				extractedAuthorObj = new DataBag[des4Author.size()];
-
-				for (int j = 0; j < des4Author.size(); j++) {
-					extractedAuthorObj[j] = des4Author.get(j).extract(dm, i,
-							language);
-				}
-
-				// adding to map extractor name and features' data
-				for (int j = 0; j < des4Author.size(); j++) {
-					reportAuthorDataExistance(extractedAuthorObj, j);
-					if (extractedAuthorObj[j] == null
-							|| (extractedAuthorObj[j].size() == 0 && skipEmptyFeatures)) {
-						continue;
-					}
-					finalMap.put(des4AuthorNameOrId.get(j),
-							extractedAuthorObj[j]);
-				}
-				extractedAuthorObj = null;
-
+				// taking from document metadata data specific for each contrib
+				finalAuthorMap = extractAuthBasedFeatures(dm, DocumentMap, i);
 				Object[] to = new Object[] { docKey, cId, normalizedSname,
-						finalMap };
+						finalAuthorMap };
 				Tuple t = TupleFactory.getInstance()
 						.newTuple(Arrays.asList(to));
+				
 				ret.add(t);
 			}
-			map = null;
-			dm = null;
 
 			if (returnNull) {
 				return null;
@@ -273,6 +233,51 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 			throw new IOException("Caught exception processing input row:\n"
 					+ StackTraceExtractor.getStackTrace(e));
 		}
+	}
+
+	private Map<String, DataBag> extractAuthBasedFeatures(DocumentMetadata dm,
+			Map<String, DataBag> InitialMap, int authorIndex) {
+		
+		Map<String, DataBag> finalAuthorMap = new HashMap<String, DataBag>(InitialMap);
+		// in arrays we are storing DataBags from extractors
+		DataBag[] extractedAuthorObj = new DataBag[des4Author.size()];
+
+		for (int j = 0; j < des4Author.size(); j++) {
+			extractedAuthorObj[j] = des4Author.get(j).extract(dm, authorIndex,
+					language);
+		}
+
+		// adding to map extractor name and features' data
+		for (int j = 0; j < des4Author.size(); j++) {
+			reportAuthorDataExistance(extractedAuthorObj, j);
+			if (extractedAuthorObj[j] == null
+					|| (extractedAuthorObj[j].size() == 0 && skipEmptyFeatures)) {
+				continue;
+			}
+			finalAuthorMap.put(des4AuthorNameOrId.get(j),
+					extractedAuthorObj[j]);
+		}
+		return finalAuthorMap;
+	}
+
+	private Map<String, DataBag> extractDocBasedFeatures(DocumentMetadata dm) {
+		Map<String, DataBag> map = new HashMap<String, DataBag>();
+		// in arrays we are storing DataBags from extractors
+		DataBag[] extractedDocObj = new DataBag[des4Doc.size()];
+		for (int i = 0; i < des4Doc.size(); i++) {
+			extractedDocObj[i] = des4Doc.get(i).extract(dm, language);
+		}
+
+		// adding to map extractor name and features' data
+		for (int i = 0; i < des4Doc.size(); i++) {
+			raportDocumentDataExistance(extractedDocObj, i);
+			if (extractedDocObj[i] == null
+					|| (extractedDocObj[i].size() == 0 && skipEmptyFeatures)) {
+				continue;
+			}
+			map.put(des4DocNameOrId.get(i), extractedDocObj[i]);
+		}
+		return map;
 	}
 
 	
@@ -323,7 +328,6 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 	
 	
 	// Pig Status Reporter staff:
-
 	private PigStatusReporter myreporter = null;
 	private Counter counters4Doc[][], counters4Author[][];
 
