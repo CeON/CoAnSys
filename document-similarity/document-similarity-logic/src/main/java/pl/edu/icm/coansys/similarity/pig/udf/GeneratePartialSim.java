@@ -59,7 +59,6 @@ public class GeneratePartialSim extends EvalFunc<DataBag> {
         
         int docsNum = (int)docIdTermTfidf.size();
         Pair[] docidTfidf = new Pair[docsNum];
-        Arrays.sort(docidTfidf);
         int idx = 0;
         for(Tuple t : docIdTermTfidf){
         	String docId = (String) t.get(0);
@@ -68,7 +67,7 @@ public class GeneratePartialSim extends EvalFunc<DataBag> {
         	docidTfidf[idx] = new Pair(docId,tfidf); 
         	idx++;
         }
-        
+        Arrays.sort(docidTfidf);
         TupleFactory tf = TupleFactory.getInstance(); 
         DataBag db = new DefaultDataBag();
         
