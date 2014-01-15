@@ -186,11 +186,11 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 			String docKey = dm.getKey();
 			dw = null;
 
-			// result bag with tuples, which des4Doccribes each contributor
+			// result bag with tuples, which describe each contributor
 			DataBag ret = new DefaultDataBag();
 			
 			// removing duplicated authors
-			// TODO: remove filtering, when we are sure that there are no duplicates
+			// TODO: remove filtering, when we make sure that there are no duplicates
 			Collection<Author> authors = filterDuplicatedAuthors(dm.getBasicMetadata().getAuthorList(), docKey);
 
 			Map<String, DataBag> finalAuthorMap;
