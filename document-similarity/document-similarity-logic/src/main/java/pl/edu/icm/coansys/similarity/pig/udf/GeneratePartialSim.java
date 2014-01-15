@@ -31,6 +31,8 @@ import org.apache.pig.data.DefaultDataBag;
 import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
 
+import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
+
 public class GeneratePartialSim extends EvalFunc<DataBag> {
 	
 	public static class Pair implements Comparable<Pair>{
@@ -54,37 +56,42 @@ public class GeneratePartialSim extends EvalFunc<DataBag> {
 	
 	@Override
 	public DataBag exec(Tuple input) throws IOException {
-		String term = (String) input.get(0);
-        DataBag docIdTermTfidf = (DataBag) input.get(1);
-        
-        int docsNum = (int)docIdTermTfidf.size();
-        Pair[] docidTfidf = new Pair[docsNum];
-        int idx = 0;
-        for(Tuple t : docIdTermTfidf){
-        	String docId = (String) t.get(0);
-        	//String term = (String) t.get(1);
-        	Float tfidf = (Float) t.get(2);
-        	docidTfidf[idx] = new Pair(docId,tfidf); 
-        	idx++;
-        }
-        Arrays.sort(docidTfidf);
-        TupleFactory tf = TupleFactory.getInstance(); 
-        DataBag db = new DefaultDataBag();
-        
-        for(int i=0;i<docsNum;i++){
-        	for(int j=i+1;j<docsNum;j++){
-        		Pair a = docidTfidf[i];
-        		Pair b = docidTfidf[j];
-        		Tuple t = tf.newTuple();
-        		t.append(a.docId);
-        		t.append(b.docId);
-//        		t.append(term);
-//        		t.append(a.tfidf);
-//        		t.append(b.tfidf);
-        		t.append(a.tfidf*b.tfidf);
-        		db.add(t);
-            }	
-        }
-		return db;
+		try{
+			String term = (String) input.get(0);
+	        DataBag docIdTermTfidf = (DataBag) input.get(1);
+	        
+	        int docsNum = (int)docIdTermTfidf.size();
+	        Pair[] docidTfidf = new Pair[docsNum];
+	        int idx = 0;
+	        for(Tuple t : docIdTermTfidf){
+	        	String docId = (String) t.get(0);
+	        	//String term = (String) t.get(1);
+	        	Float tfidf = (Float) t.get(2);
+	        	docidTfidf[idx] = new Pair(docId,tfidf); 
+	        	idx++;
+	        }
+	        Arrays.sort(docidTfidf);
+	        TupleFactory tf = TupleFactory.getInstance(); 
+	        DataBag db = new DefaultDataBag();
+	        
+	        for(int i=0;i<docsNum;i++){
+	        	for(int j=i+1;j<docsNum;j++){
+	        		Pair a = docidTfidf[i];
+	        		Pair b = docidTfidf[j];
+	        		Tuple t = tf.newTuple();
+	        		t.append(a.docId);
+	        		t.append(b.docId);
+	//        		t.append(term);
+	//        		t.append(a.tfidf);
+	//        		t.append(b.tfidf);
+	        		t.append(a.tfidf*b.tfidf);
+	        		db.add(t);
+	            }	
+	        }
+			return db;
+		}catch(Exception e){
+			System.out.println(StackTraceExtractor.getStackTrace(e));
+			return null;
+		}
 	}
 }
