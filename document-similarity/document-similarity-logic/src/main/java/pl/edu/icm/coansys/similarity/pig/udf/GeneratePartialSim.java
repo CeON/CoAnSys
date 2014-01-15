@@ -72,7 +72,7 @@ public class GeneratePartialSim extends EvalFunc<DataBag> {
         DataBag db = new DefaultDataBag();
         
         for(int i=0;i<docsNum;i++){
-        	for(int j=0;j<docsNum;j++){
+        	for(int j=i+1;j<docsNum;j++){
         		Pair a = docidTfidf[i];
         		Pair b = docidTfidf[j];
         		Tuple t = tf.newTuple();
