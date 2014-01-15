@@ -62,9 +62,10 @@ public class GeneratePartialSim extends EvalFunc<DataBag> {
 	        DataBag docIdTermTfidf = (DataBag) input.get(1);
 	        PigStatusReporter myreporter = PigStatusReporter.getInstance();
 	        
-	        myreporter.getCounter("partialsim-udf", "inside").increment(1);
+	        myreporter.getCounter("partialsim-udf", "01.inside").increment(1);
 	        
 	        int docsNum = (int)docIdTermTfidf.size();
+	        myreporter.getCounter("partialsim-udf-count", ""+docsNum).increment(1);
 	        Pair[] docidTfidf = new Pair[docsNum];
 	        int idx = 0;
 	        for(Tuple t : docIdTermTfidf){
@@ -74,9 +75,9 @@ public class GeneratePartialSim extends EvalFunc<DataBag> {
 	        	docidTfidf[idx] = new Pair(docId,tfidf); 
 	        	idx++;
 	        }
-	        myreporter.getCounter("partialsim-udf", "after filling array").increment(1);
+	        myreporter.getCounter("partialsim-udf", "02.after filling array").increment(1);
 	        Arrays.sort(docidTfidf);
-	        myreporter.getCounter("partialsim-udf", "after sorting").increment(1);
+	        myreporter.getCounter("partialsim-udf", "03.after sorting").increment(1);
 	        TupleFactory tf = TupleFactory.getInstance(); 
 	        DataBag db = new DefaultDataBag();
 	        
@@ -94,7 +95,7 @@ public class GeneratePartialSim extends EvalFunc<DataBag> {
 	        		db.add(t);
 	            }	
 	        }
-	        myreporter.getCounter("partialsim-udf", "after ret data bag creation").increment(1);
+	        myreporter.getCounter("partialsim-udf", "04.after ret data bag creation").increment(1);
 			return db;
 		}catch(Exception e){
 			System.out.println(StackTraceExtractor.getStackTrace(e));
