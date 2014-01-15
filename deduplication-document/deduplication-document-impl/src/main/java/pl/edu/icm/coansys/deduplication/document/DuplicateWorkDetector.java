@@ -56,7 +56,7 @@ public class DuplicateWorkDetector extends Configured implements Tool {
 
     
     @Override
-    public int run(String[] args) throws IOException, InterruptedException, ClassNotFoundException {
+    public int run(String[] args) throws Exception {
         checkArguments(args);
         
         String inputFile = args[0];

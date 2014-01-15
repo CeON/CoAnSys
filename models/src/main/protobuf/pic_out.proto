@@ -15,8 +15,9 @@ message PicOut {
 message Reference{
 	required int32 refNum = 1;
 	required string docId = 2;
+	optional string rawText = 4;
 	repeated Auxiliar auxs = 3;
-}  
+}
 
 message Auxiliar{
 	optional string type = 1;

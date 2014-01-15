@@ -25,7 +25,10 @@ import java.util.Map;
  *
  * @author Artur Czeczko <a.czeczko@icm.edu.pl>
  */
-public class ConfigurationConstants {
+public final class ConfigurationConstants {
+    
+    private ConfigurationConstants() {}
+    
     public static final String PARTITIONS_PREFIX = "partitions_";
     public static final String STATISTICS_PREFIX = "statistics_";
 

@@ -66,7 +66,7 @@ public class RegexpParser {
         }
         log.debug("Found nodes: " + nodes.keySet());
         if (!nodes.containsKey(mainNode)) {
-            throw new RuntimeException("Main node not found in the configuration file.  The required node is: " + mainNode);
+            throw new IllegalArgumentException("Main node not found in the configuration file.  The required node is: " + mainNode);
         }
 
         for (Map.Entry<String, NodeCategory> entry : nodes.entrySet()) {

@@ -18,11 +18,8 @@
 package pl.edu.icm.coansys.statisticsgenerator.tools;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
 import java.net.URISyntaxException;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.SequenceFile.Reader;
@@ -34,7 +31,9 @@ import pl.edu.icm.coansys.models.StatisticsProtos;
  *
  * @author Artur Czeczko <a.czeczko@icm.edu.pl>
  */
-public class ViewResults {
+public final class ViewResults {
+    
+    private ViewResults() {}
 
     public static void main(String[] args) throws IOException, URISyntaxException {
         if (args.length == 0) {
@@ -44,8 +43,6 @@ public class ViewResults {
         Configuration conf = new Configuration();
         String ptStr = args[0];
         Path pt = new Path(ptStr);
-        FileSystem fs = FileSystem.get(new URI(ptStr), conf);
-        InputStream is = fs.open(pt);
         Reader sfReader = new Reader(conf, Reader.file(pt));
 
         WritableComparable key = (WritableComparable) ReflectionUtils.newInstance(sfReader.getKeyClass(), conf);

@@ -67,11 +67,5 @@ D100 = LOAD '$and_inputDocsData' as (sname:int, datagroup:{(cId:chararray, sname
 D100A = foreach D100 generate flatten( exhaustiveAND( datagroup ) ) as (uuid:chararray, cIds:{(chararray)});
 E100 = foreach D100A generate flatten( cIds ) as cId, uuid;
 
-%DEFAULT one 'one'
-%DEFAULT exh 'exh'
-%DEFAULT appSim 'app-sim'
-%DEFAULT appNoSim 'app-no-sim'
-
-
-store E100 into '$and_outputContribs/$exh';
+store E100 into '$and_outputContribs';
 

@@ -60,7 +60,7 @@ public class DuplicateWorkDetectReduceService implements DiReduceService<Text, B
     private DuplicateWorkService duplicateWorkService;
     
     @Autowired
-    WorkKeyGenerator keyGen;
+    private WorkKeyGenerator keyGen;
         
     private int initialMaxDocsSetSize;
     private int maxDocsSetSizeInc;

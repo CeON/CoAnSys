@@ -9,8 +9,8 @@ import java.util.Arrays;
  */
 public class RankedUnionFindPathCompressed {
 	
-	int[] cluster = null;
-	int[] rank = null; 
+	private int[] cluster = null;
+	private int[] rank = null; 
 	
 	public RankedUnionFindPathCompressed(int elementNumber){
 		cluster = new int[elementNumber];

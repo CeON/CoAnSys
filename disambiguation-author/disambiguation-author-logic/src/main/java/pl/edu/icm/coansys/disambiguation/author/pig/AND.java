@@ -19,14 +19,11 @@ public abstract class AND<T> extends EvalFunc<T> {
 	protected PigDisambiguator[] features;
 	protected FeatureInfo[] featureInfos;
 
-	protected org.slf4j.Logger logger = null;
+	private org.slf4j.Logger logger = null;
 	private DisambiguationExtractorFactory extrFactory;
 	private boolean useIdsForExtractors = false;
 	
 	private Disambiguator defaultDisambiguator = new IntersectionPerSum();
-	// private float sim[][];
-	// private Tuple datain[];
-	// private int N;
 
 	protected float getThreshold() {
 		return threshold;

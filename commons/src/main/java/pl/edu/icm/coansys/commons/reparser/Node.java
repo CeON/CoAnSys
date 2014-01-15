@@ -64,8 +64,9 @@ public class Node {
 		if (fields == null)
 			fields = new HashMap<String, List<Node>>();
 		List<Node> values;
-		if (fields.containsKey(key))
+		if (fields.containsKey(key)) {
 			values = fields.get(key);
+                }
 		else {
 			values = new ArrayList<Node>(1);
 			fields.put(key, values);
