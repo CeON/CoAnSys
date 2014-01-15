@@ -32,6 +32,9 @@ import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
 import org.apache.pig.tools.pigstats.PigStatusReporter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
 
 public class GeneratePartialSim extends EvalFunc<DataBag> {
@@ -55,6 +58,8 @@ public class GeneratePartialSim extends EvalFunc<DataBag> {
 		}
 	}
 	
+    private static final Logger logger = LoggerFactory.getLogger(GeneratePartialSim .class);
+	
 	@Override
 	public DataBag exec(Tuple input) throws IOException {
 		try{
@@ -65,9 +70,9 @@ public class GeneratePartialSim extends EvalFunc<DataBag> {
 	        myreporter.getCounter("partialsim-udf", "01.inside").increment(1);
 	        
 	        int docsNum = (int)docIdTermTfidf.size();
-	        System.out.println("============IN SIZE===================");
-	        System.out.println(docsNum);
-	        System.out.println("======================================");
+	        logger.error("============IN SIZE===================");
+	        logger.error(docsNum+"");
+	        logger.error("======================================");
 	        //myreporter.getCounter("partialsim-udf-count", ""+docsNum).increment(1);
 	        Pair[] docidTfidf = new Pair[docsNum];
 	        int idx = 0;
@@ -96,9 +101,10 @@ public class GeneratePartialSim extends EvalFunc<DataBag> {
 	//        		t.append(b.tfidf);
 	        		t.append(a.tfidf*b.tfidf);
 	        		db.add(t);
+	        		myreporter.getCounter("partialsim-udf", "02.contrib added").increment(1);
 	            }	
 	        }
-	        myreporter.getCounter("partialsim-udf", "02.after ret data bag creation").increment(1);
+	        myreporter.getCounter("partialsim-udf", "03.after ret data bag creation").increment(1);
 			return db;
 		}catch(Exception e){
 			System.out.println(StackTraceExtractor.getStackTrace(e));
