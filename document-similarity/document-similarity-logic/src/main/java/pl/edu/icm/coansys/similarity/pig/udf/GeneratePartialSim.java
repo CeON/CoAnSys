@@ -30,6 +30,7 @@ import org.apache.pig.data.DataBag;
 import org.apache.pig.data.DefaultDataBag;
 import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
+import org.apache.pig.tools.pigstats.PigStatusReporter;
 
 import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
 
@@ -59,6 +60,9 @@ public class GeneratePartialSim extends EvalFunc<DataBag> {
 		try{
 			String term = (String) input.get(0);
 	        DataBag docIdTermTfidf = (DataBag) input.get(1);
+	        PigStatusReporter myreporter = PigStatusReporter.getInstance();
+	        
+	        myreporter.getCounter("partialsim-udf", "inside").increment(1);
 	        
 	        int docsNum = (int)docIdTermTfidf.size();
 	        Pair[] docidTfidf = new Pair[docsNum];
@@ -70,7 +74,9 @@ public class GeneratePartialSim extends EvalFunc<DataBag> {
 	        	docidTfidf[idx] = new Pair(docId,tfidf); 
 	        	idx++;
 	        }
+	        myreporter.getCounter("partialsim-udf", "after filling array").increment(1);
 	        Arrays.sort(docidTfidf);
+	        myreporter.getCounter("partialsim-udf", "after sorting").increment(1);
 	        TupleFactory tf = TupleFactory.getInstance(); 
 	        DataBag db = new DefaultDataBag();
 	        
@@ -88,6 +94,7 @@ public class GeneratePartialSim extends EvalFunc<DataBag> {
 	        		db.add(t);
 	            }	
 	        }
+	        myreporter.getCounter("partialsim-udf", "after ret data bag creation").increment(1);
 			return db;
 		}catch(Exception e){
 			System.out.println(StackTraceExtractor.getStackTrace(e));
