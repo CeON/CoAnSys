@@ -32,13 +32,11 @@ import org.apache.pig.data.TupleFactory;
 import org.apache.pig.impl.logicalLayer.FrontendException;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
 
+import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
+
 public class PowForBag extends EvalFunc<DataBag> {
 
     public DataBag exec(Tuple input) throws IOException {
-        if (input == null || input.size() == 0) {
-            return null;
-        }
-
         try {
             TupleFactory tf = TupleFactory.getInstance();
             DataBag db = (DataBag) input.get(0);
@@ -52,7 +50,8 @@ public class PowForBag extends EvalFunc<DataBag> {
             }
             return ret;
         } catch (Exception e) {
-            throw new IOException("Caught exception processing input row ", e);
+            System.out.println(StackTraceExtractor.getStackTrace(e));
+            return null;
         }
     }
 
