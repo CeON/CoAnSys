@@ -134,29 +134,11 @@ tfidf_all_topn_projectedX = FOREACH tfidf_all_topn GENERATE top::docId AS docId,
 STORE tfidf_all_topn_projectedX  INTO '$outputPath$TFIDF_TOPN_ALL_TEMP';
 ***********************************************************/
 
-tfidf_all_topn_projected = load '$outputPath2$TFIDF_TOPN_ALL_TEMP' as (docId:chararray, term:chararray, tfidf:float);
----------------denominators-----------------
-tfidfInDoc = group tfidf_all_topn_projected by docId;
-Xdenominator1 = foreach tfidfInDoc generate group as docId, pl.edu.icm.coansys.similarity.pig.udf.PowForBag(tfidf_all_topn_projected.tfidf) as pows:bag{(val:float)}; 
-Xdenominator = foreach Xdenominator1 generate docId, SQRT(SUM(pows)) as value;   
-%default DENOMINATOR '/denominator' 
-STORE Xdenominator  INTO '$outputPath$DENOMINATOR';
----------------pairwise sim----------------- 
+---------------pairwise sim-----------------
+tfidf_all_topn_projected = load '$outputPath2$TFIDF_TOPN_ALL_TEMP' as (docId:chararray, term:chararray, tfidf:float); 
 docIdTermTfidfGr = group tfidf_all_topn_projected by term;
 partialSimX = foreach docIdTermTfidfGr generate FLATTEN(pl.edu.icm.coansys.similarity.pig.udf.GeneratePartialSim(*)) as (docA:chararray, docB:chararray, sim:float);
 %default PARTIAL_SIM '/partial-sim'
 STORE partialSimX  INTO '$outputPath$PARTIAL_SIM';
-partialSim = LOAD '$outputPath$PARTIAL_SIM' as (docA:chararray, docB:chararray, sim:float);
-partialSimGr = group partialSim by (docA,docB); 
-fullSimNominator = foreach partialSimGr generate group.docA as docA,group.docB as docB, (float)SUM(partialSim.sim)/(float)COUNT(partialSim.sim) as nominator;
 
-denominatorA = load '$outputPath$DENOMINATOR' as (DdocIdA:chararray, valueA:float);
-denominatorB = load '$outputPath$DENOMINATOR' as (DdocIdB:chararray, valueB:float);
-fullSimTmp = join fullSimNominator by docA, denominatorA by DdocIdA , denominatorB by DdocIdB; 
-fullSim = foreach fullSimTmp generate docA,docB, nominator/(valueA*valueB) as sim;
-
-summed_ord = order fullSim by sim desc;
-finalResult = limit summed_ord  $similarityTopnDocumentPerDocument;
-%default FINALRES '/ranked_final_val';
-store finalResult into '$outputPath$FINALRES';
 
