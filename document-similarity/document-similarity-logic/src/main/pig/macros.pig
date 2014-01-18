@@ -91,99 +91,98 @@ DEFINE remove_stopwords(doc_word, stopwords, doc_field, term_field, CC) RETURNS 
 -------------------------------------------------------
 -- calculate tf-idf
 -------------------------------------------------------
-DEFINE calculate_tfidf_nofiltering(doc_all, docId, token_field) RETURNS tfidf_all { 
-  	-- Calculate the term count per document
-	doc_word_group = group $doc_all by ($docId, $token_field);
-  	doc_word_totals = foreach doc_word_group generate 
-    		FLATTEN(group) as ($docId, token), 
-		COUNT($doc_all) as doc_total;
+DEFINE calculate_tfidf(in_relation, id_field, token_field, in_tfidfMinValue) RETURNS tfidf_values { 
+          -- Calculate the term count per document
+        doc_word_group = group $in_relation by ($id_field, $token_field);
+          doc_word_totals = foreach doc_word_group generate 
+                    FLATTEN(group) as ($id_field, token), 
+                COUNT($in_relation) as doc_total;
 
-  	-- Calculate the document size
-	pre_term_group = group doc_word_totals by $id_field;
-  	pre_term_counts = foreach pre_term_group generate
-    		group AS $id_field,
-    		FLATTEN(doc_word_totals.(token, doc_total)) as (token, doc_total), 
-    		SUM(doc_word_totals.doc_total) as doc_size;
+          -- Calculate the document size
+        pre_term_group = group doc_word_totals by $id_field;
+          pre_term_counts = foreach pre_term_group generate
+                    group AS $id_field,
+                    FLATTEN(doc_word_totals.(token, doc_total)) as (token, doc_total), 
+                    SUM(doc_word_totals.doc_total) as doc_size;
  
-  	-- Calculate the TF
-  	term_freqs = foreach pre_term_counts generate $id_field as $id_field,
-    		token as token,
-    		((double)doc_total / (double)doc_size) AS term_freq;
+          -- Calculate the TF
+          term_freqs = foreach pre_term_counts generate $id_field as $id_field,
+                    token as token,
+                    ((double)doc_total / (double)doc_size) AS term_freq;
  
-  	-- Get count of documents using each token, for idf
-	token_usages_group = group term_freqs by token;
-  	token_usages = foreach token_usages_group generate
-    		FLATTEN(term_freqs) as ($id_field, token, term_freq),
-    		COUNT(term_freqs) as num_docs_with_token;
+          -- Get count of documents using each token, for idf
+        token_usages_group = group term_freqs by token;
+          token_usages = foreach token_usages_group generate
+                    FLATTEN(term_freqs) as ($id_field, token, term_freq),
+                    COUNT(term_freqs) as num_docs_with_token;
 
-  	-- Get document count
-  	just_ids = foreach $doc_all generate $id_field;
-	just_unique_ids = distinct just_ids;
-	ndocs_group = group just_unique_ids all;
-  	ndocs = foreach ndocs_group generate 
-		COUNT(just_unique_ids) as total_docs;
+          -- Get document count
+          just_ids = foreach $in_relation generate $id_field;
+        just_unique_ids = distinct just_ids;
+        ndocs_group = group just_unique_ids all;
+          ndocs = foreach ndocs_group generate 
+                COUNT(just_unique_ids) as total_docs;
  
 
-  	-- Note the use of Pig Scalars to calculate idf
-  	$tfidf_all = foreach token_usages {
-    		idf    = LOG((double)ndocs.total_docs/(double)num_docs_with_token);
-    		tf_idf = (double)term_freq * idf;
-    		generate $id_field as $id_field,
-      			token as $token_field,
-      			tf_idf as tfidf,
-			idf,
-			ndocs.total_docs,
-			num_docs_with_token;
-  	};
+          -- Note the use of Pig Scalars to calculate idf
+          tfidf_all = foreach token_usages {
+                    idf    = LOG((double)ndocs.total_docs/(double)num_docs_with_token);
+                    tf_idf = (double)term_freq * idf;
+                    generate $id_field as $id_field,
+                              token as $token_field,
+                              tf_idf as tfidf,
+                        idf,
+                        ndocs.total_docs,
+                        num_docs_with_token;
+          };
+        -- get only important terms
+        $tfidf_values = FILTER tfidf_all BY tfidf >= $in_tfidfMinValue;
 };
 
+DEFINE calculate_tfidf_nofiltering(in_relation, id_field, token_field) RETURNS tfidf_all { 
+          -- Calculate the term count per document
+        doc_word_group = group $in_relation by ($id_field, $token_field);
+          doc_word_totals = foreach doc_word_group generate 
+                    FLATTEN(group) as ($id_field, token), 
+                COUNT($in_relation) as doc_total;
 
-DEFINE calculate_tfidf(doc_all, docId, token_field, in_tfidfMinValue) RETURNS tfidf_values { 
-  	-- Calculate the term count per document
-	doc_word_group = group $doc_all by ($docId, $token_field);
-  	doc_word_totals = foreach doc_word_group generate 
-    		FLATTEN(group) as ($docId, token), 
-		COUNT($doc_all) as doc_total;
-
-  	-- Calculate the document size
-	pre_term_group = group doc_word_totals by $id_field;
-  	pre_term_counts = foreach pre_term_group generate
-    		group AS $id_field,
-    		FLATTEN(doc_word_totals.(token, doc_total)) as (token, doc_total), 
-    		SUM(doc_word_totals.doc_total) as doc_size;
+          -- Calculate the document size
+        pre_term_group = group doc_word_totals by $id_field;
+          pre_term_counts = foreach pre_term_group generate
+                    group AS $id_field,
+                    FLATTEN(doc_word_totals.(token, doc_total)) as (token, doc_total), 
+                    SUM(doc_word_totals.doc_total) as doc_size;
  
-  	-- Calculate the TF
-  	term_freqs = foreach pre_term_counts generate $id_field as $id_field,
-    		token as token,
-    		((double)doc_total / (double)doc_size) AS term_freq;
+          -- Calculate the TF
+          term_freqs = foreach pre_term_counts generate $id_field as $id_field,
+                    token as token,
+                    ((double)doc_total / (double)doc_size) AS term_freq;
  
-  	-- Get count of documents using each token, for idf
-	token_usages_group = group term_freqs by token;
-  	token_usages = foreach token_usages_group generate
-    		FLATTEN(term_freqs) as ($id_field, token, term_freq),
-    		COUNT(term_freqs) as num_docs_with_token;
+          -- Get count of documents using each token, for idf
+        token_usages_group = group term_freqs by token;
+          token_usages = foreach token_usages_group generate
+                    FLATTEN(term_freqs) as ($id_field, token, term_freq),
+                    COUNT(term_freqs) as num_docs_with_token;
 
-  	-- Get document count
-  	just_ids = foreach $doc_all generate $id_field;
-	just_unique_ids = distinct just_ids;
-	ndocs_group = group just_unique_ids all;
-  	ndocs = foreach ndocs_group generate 
-		COUNT(just_unique_ids) as total_docs;
+          -- Get document count
+          just_ids = foreach $in_relation generate $id_field;
+        just_unique_ids = distinct just_ids;
+        ndocs_group = group just_unique_ids all;
+          ndocs = foreach ndocs_group generate 
+                COUNT(just_unique_ids) as total_docs;
  
 
-  	-- Note the use of Pig Scalars to calculate idf
-  	tfidf_all = foreach token_usages {
-    		idf    = LOG((double)ndocs.total_docs/(double)num_docs_with_token);
-    		tf_idf = (double)term_freq * idf;
-    		generate $id_field as $id_field,
-      			token as $token_field,
-      			tf_idf as tfidf,
-			idf,
-			ndocs.total_docs,
-			num_docs_with_token;
-  	};
-	-- get only important terms
-	$tfidf_values = FILTER tfidf_all BY tfidf >= $in_tfidfMinValue;
+          -- Note the use of Pig Scalars to calculate idf
+          $tfidf_all = foreach token_usages {
+                    idf    = LOG((double)ndocs.total_docs/(double)num_docs_with_token);
+                    tf_idf = (double)term_freq * idf;
+                    generate $id_field as $id_field,
+                              token as $token_field,
+                              tf_idf as tfidf,
+                        idf,
+                        ndocs.total_docs,
+                        num_docs_with_token;
+          };
 };
 -------------------------------------------------------
 -- find N most importants group_field
