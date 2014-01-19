@@ -47,7 +47,7 @@ docIn = LOAD '$inputPath' USING pl.edu.icm.coansys.commons.pig.udf.
 A = SAMPLE docIn $sample;
 A1 = foreach A generate 
 	flatten(pl.edu.icm.coansys.similarity.pig.udf.DocSimDemo_Documents(value)) as (doi:chararray, year:chararray, title:chararray), key, value;
-A2 = filter A1 by (doi is not null or doi!='') and (year is not null or year!='') and (title is not null or title != '');
+A2 = filter A1 by (doi is not null and doi!='') and (year is not null and year!='') and (title is not null and title != '');
 B = foreach A2 generate doi,value;
 
 STORE B INTO '$inputPath$DOI';

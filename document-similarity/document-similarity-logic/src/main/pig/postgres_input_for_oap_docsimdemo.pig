@@ -47,13 +47,13 @@ protos_pig1 = LOAD '$input' USING $SEQFILE_LOADER (
 documentsX = foreach protos_pig1 generate 
 	flatten(pl.edu.icm.coansys.similarity.pig.udf.DocSimDemo_Documents(v)) as (doi:chararray, year:chararray, title:chararray);
 xdoc_count = countstar(documentsX);
-documents = filter documentsX by (doi is not null or doi!='') and (year is not null or year!='') and (title is not null or title != '');
+documents = filter documentsX by (doi is not null and  doi!='') and (year is not null and year!='') and (title is not null and title != '');
 doc_count = countstar(documents);
 --------------------------------------------------------
-dump xdoc_count;------------------- count documents
-dump doc_count;-------------------- count documents after filter
-fs -rm -r -f $output/documents.csv
-store documents into '$output/documents.csv' using PigStorage(';');
+--dump xdoc_count;------------------- count documents
+--dump doc_count;-------------------- count documents after filter
+fs -rm -r -f $output/5sep/documents.csv
+store documents into '$output/5sep/documents.csv' using PigStorage('@');
 
 
 /*************** authors info *************/
@@ -61,11 +61,11 @@ authorsX = foreach protos_pig1 generate
 	flatten(pl.edu.icm.coansys.similarity.pig.udf.DocSimDemo_Authors(v)) as (doi:chararray, authNum:int, name:chararray);
 --dump authorsX;
 xauth_count = countstar(authorsX);
-authors = filter authorsX by (name is not null or name!='') and (doi is not null or doi != '');
+authors = filter authorsX by (name is not null and name!='') and (doi is not null and doi != '');
 auth_count = countstar(authorsX);
 --------------------------------------------------------
-dump xauth_count; ---------------------- count authors in general
-dump auth_count;-------------------- count authors after filter
-fs -rm -r -f $output/authors.csv
-store authors into '$output/authors.csv' using PigStorage(';');
+--dump xauth_count; ---------------------- count authors in general
+--dump auth_count;-------------------- count authors after filter
+fs -rm -r -f $output/5sep/authors.csv
+store authors into '$output/5sep/authors.csv' using PigStorage('@');
 

@@ -247,5 +247,5 @@ DEFINE calculate_pairwise_similarity_cosine_denominator(in_relation, doc_field, 
 	A = foreach $in_relation generate $doc_field as docId, $term_field as term, $tfidf_field as tfidf;
 	B = group A by docId;
 	C = foreach B generate group as docId, BagPow(A.$tfidf_field) as pows:bag{(pow:float)};
-	$out_relation = foreach C generate docId, SUM(pows) as denominator;
+	$out_relation = foreach C generate docId, SQRT(SUM(pows)) as denominator;
 };

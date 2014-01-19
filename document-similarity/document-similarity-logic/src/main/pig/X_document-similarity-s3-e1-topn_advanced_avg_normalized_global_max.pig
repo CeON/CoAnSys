@@ -62,12 +62,24 @@ IMPORT 'macros.pig';
 -------------------------------------------------------
 /******************************* BLEND RESULTS ************************************/
 -- consider both <docIdA, docIdB,sim> and <docIdB,docIdA,sim>
-mix_l = LOAD '$outputPath$SIMILARITY_ALL_DOCS_SUBDIR' as (chararray,chararray,double);
-mix_r = foreach mix_l generate $1,$0,$2;
-mix_f = union mix_l,mix_r;
---mix_o = foreach mix_f generate $0 as (docIdA:chararray), $1 as (docIdB:chararray),$2 as (similarity:double);
--- calculate and store topn similar documents for each document
-document_similarity_topn = get_topn_per_group(mix_f, val_0, val_2, 'desc', $similarityTopnDocumentPerDocument);
-STORE document_similarity_topn INTO '$outputPath$SIMILARITY_TOPN_DOCS_SUBDIR';
+XleftSim = LOAD '$outputPath$SIMILARITY_ALL_DOCS_SUBDIR' 
+	as (docIdA:chararray,docIdB:chararray,sim:float);
 
+leftSim = foreach XleftSim generate sim;
+x = limit leftSim 1;
+dump x;
 
+/******
+
+grMax = group leftSim all;
+XmaxSim = foreach grMax generate MAX(leftSim.sim) as val;
+
+%default MAX_SIM '/simililarity/max_sim'
+STORE XmaxSim INTO '$outputPath$MAX_SIM';
+/*******
+maxSim = LOAD '$outputPath$MAX_SIM' as (val:float);
+
+leftSim_normalized = foreach XleftSim generate docIdA, docIdB, sim/maxSim.val;
+
+STORE leftSim_normalized INTO '$outputPath$SIMILARITY_NORMALIZED_ALL_DOCS_SUBDIR';
+*******/
