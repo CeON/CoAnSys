@@ -20,7 +20,7 @@
 
 %default tfidfPath 'hdfs://hadoop-master:8020/user/akawa/full/similarity/tfidf-new9/weighted'
 %default outputPath 'hdfs://hadoop-master:8020/user/akawa/full/similarity/docsim-11'
-%default commonJarsPath '../oozie/similarity/workflow/lib/*.jar'
+%default commonJarsPath 'lib/*.jar'
 %default parallel 10
 %default tmpCompressionCodec gz
 

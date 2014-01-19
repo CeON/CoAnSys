@@ -94,3 +94,4 @@ document_similarity = calculate_pairwise_similarity
                 tfidf_all_topn_dupl_sorted, docId, term, tfidf, '::',$parallel);
 STORE document_similarity INTO '$outputPath$SIMILARITY_ALL_DOCS_SUBDIR';
 /********************* END:MERGE-SORT ZONE *****************************************/
+
