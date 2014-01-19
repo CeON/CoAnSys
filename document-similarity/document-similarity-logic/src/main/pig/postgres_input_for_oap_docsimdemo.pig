@@ -69,19 +69,3 @@ dump auth_count;-------------------- count authors after filter
 fs -rm -r -f $output/authors.csv
 store authors into '$output/authors.csv' using PigStorage(';');
 
-/************** commended out stub 
-documents2X = foreach documents generate *;
-documents2A = foreach documents2X generate doi as doiA;
-documents2B = foreach documents2X generate doi as doiB;
-sims_tmp = cross documents2A, documents2B;
-sims_tmp_count = countstar(sims_tmp);
-
-sims_tmp2 = filter sims_tmp by doiA < doiB;
-sims_tmp2_count = countstar(sims_tmp2);
-sims = foreach sims_tmp generate doiA, doiB, RANDOM() as sim;
---------------------------------------------------------
-dump sims_tmp_count;-------------------- count cross in general
-dump sims_tmp2_count;-------------------- count cross after filter
-fs -rm -r -f $output/sims.csv
-store sims into '$output/sims.csv' using PigStorage(';');
-**************/

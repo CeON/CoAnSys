@@ -36,8 +36,8 @@
 %default tmpCompressionCodec gz
 %default mapredChildJavaOpts -Xmx8000m
 
-%default inputPath 'hdfs://hadoop-master.vls.icm.edu.pl:8020/srv/bwndata/seqfile/springer-metadata/springer-20120419-springer0*.sq'
-%default time '2013-09-28--10-37'
+%default inputPath '/srv/polindex/seqfile/polindex-yadda-20130729-text.sf'
+%default time ''
 %default outputPath 'document-similarity-output/$time/'
 %default jars '*.jar'
 %default commonJarsPath '../../../../document-similarity-workflow/target/oozie-wf/lib/$jars'
@@ -58,43 +58,40 @@ SET mapred.fairscheduler.pool $ds_scheduler
 --SET pig.noSplitCombination true;
 IMPORT 'macros.pig';
 
+/********************* BEG:MERGE-SORT ZONE *****************************************/
+/********* Follwing advices from http://tinyurl.com/mqn638w ************************/
+/****`exec;` command has been used to guarantee corect merge-join execution ********/
+/*** Other good pieces of advice may be found at ***********************************/
+/*** http://pig.apache.org/docs/r0.11.0/perf.html#merge-joins **********************/
+/***********************************************************************************/
+
 -------------------------------------------------------
 -- business code section
 -------------------------------------------------------
+/*** (a) load, order and assign to tfidf_all_topn_projected ************************/
+/*** (b) store results (c) close current tasks *************************************/
+tfidf_all_topn_projected = LOAD '$outputPath$TFIDF_TOPN_ALL_TEMP' 
+        AS (docId: chararray, term: chararray, tfidf: double);
+tfidf_all_topn_sorted = order tfidf_all_topn_projected by term asc;
+%default one '1'
+%default two '2'
+STORE tfidf_all_topn_sorted  INTO '$outputPath$TFIDF_TOPN_ALL_SUBDIR$one';
+STORE tfidf_all_topn_sorted  INTO '$outputPath$TFIDF_TOPN_ALL_SUBDIR$two';
+exec;
+/*** (d) load sorted data and duplicate *******************************************/
+/*** (f) perform doc-sim calculation [MERGE-SORT] (g) close current tasks *********/
+tfidf_all_topn_orig = LOAD '$outputPath$TFIDF_TOPN_ALL_SUBDIR$one' 
+        AS (docId: chararray, term: chararray, tfidf: double);
+tfidf_all_topn_orig_sorted = order tfidf_all_topn_orig by term asc;
 
-docIn = LOAD '$inputPath' USING pl.edu.icm.coansys.commons.pig.udf.
-	RichSequenceFileLoader('org.apache.hadoop.io.Text','org.apache.hadoop.io.BytesWritable') 
-	as (key:chararray, value:bytearray);
-A = SAMPLE docIn $sample;
-A1 = foreach A generate 
-	flatten(pl.edu.icm.coansys.similarity.pig.udf.DocSimDemo_Documents(v)) as (doi:chararray, year:chararray, title:chararray), key as k, value as v;
-A2 = filter A1 by (doi is not null or doi!='') and (year is not null or year!='') and (title is not null or title != '');
-B = foreach A2 generate k,v;
+tfidf_all_topn_dupl = LOAD '$outputPath$TFIDF_TOPN_ALL_SUBDIR$two' 
+        AS (docId: chararray, term: chararray, tfidf: double);
+tfidf_all_topn_dupl_sorted = order tfidf_all_topn_dupl by term asc;
 
---B = limit docIn 100;
-doc = FOREACH B GENERATE $0 as docId, pl.edu.icm.coansys.similarity.pig.udf.DocumentProtobufToTupleMap($1) as document ;
---doc = load_from_hdfs('$inputPath', $sample);
---doc = foreach doc generate $0 as docId, $1 as document;
+-- calculate and store document similarity for all documents
+document_similarity = calculate_pairwise_similarity
+	(tfidf_all_topn_orig_sorted,
+                tfidf_all_topn_dupl_sorted, docId, term, tfidf, '::',$parallel);
+STORE document_similarity INTO '$outputPath$SIMILARITY_ALL_DOCS_SUBDIR';
+/********************* END:MERGE-SORT ZONE *****************************************/
 
-doc_raw = foreach doc generate docId, document.title as title, document.abstract as abstract;
--- speparated line as FLATTEN w a hidden CROSS
-doc_keyword_raw = foreach doc generate docId, FLATTEN(document.keywords) AS keywords;
--- stem, clean, filter out
-doc_keyword_all = stem_words(doc_keyword_raw, docId, keywords);
-doc_title_all = stem_words(doc_raw, docId, title);
-doc_abstract_all = stem_words(doc_raw, docId, abstract);
-
--- get all words (with duplicates for tfidf)
-doc_all = UNION doc_keyword_all, doc_title_all, doc_abstract_all;
--- store document and terms
---STORE doc_title_all INTO '$outputPath$DOC_TERM_TITLE';
---STORE doc_keyword_all INTO '$outputPath$DOC_TERM_KEYWORDS';
-STORE doc_all INTO '$outputPath$DOC_TERM_ALL';
--- calculate tf-idf for each group of terms
-tfidf_all = calculate_tfidf(doc_all, docId, term, $tfidfMinValue);
--- store tfidf values into separate direcotires
-STORE tfidf_all INTO '$outputPath$TFIDF_NON_WEIGHTED_SUBDIR';
--- calculate and store topn terms per document in all results
-tfidf_all_topn = get_topn_per_group(tfidf_all, docId, tfidf, 'desc', $tfidfTopnTermPerDocument);
-tfidf_all_topn_projected = FOREACH tfidf_all_topn GENERATE top::docId AS docId, top::term AS term, top::tfidf AS tfidf;
-STORE tfidf_all_topn_projected  INTO '$outputPath$TFIDF_TOPN_ALL_TEMP';

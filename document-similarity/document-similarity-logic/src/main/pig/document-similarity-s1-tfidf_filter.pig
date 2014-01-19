@@ -31,15 +31,17 @@
 %default similarityTopnDocumentPerDocument 20
 %default tfidfMinValue 0.4
 
-%default sample 1.0
-%default parallel 40
+%default sample 0.1
+%default parallel 10
 %default tmpCompressionCodec gz
 %default mapredChildJavaOpts -Xmx8000m
 
 %default inputPath 'hdfs://hadoop-master.vls.icm.edu.pl:8020/srv/bwndata/seqfile/springer-metadata/springer-20120419-springer0*.sq'
-
+%default time '2013-09-28--10-37'
+%default outputPath 'document-similarity-output/$time/'
 %default jars '*.jar'
-%default commonJarsPath 'lib/$jars'
+%default commonJarsPath '../../../../document-similarity-workflow/target/oozie-wf/lib/$jars'
+
 REGISTER '$commonJarsPath'
 
 DEFINE WeightedTFIDF pl.edu.icm.coansys.similarity.pig.udf.TFIDF('weighted');
@@ -59,11 +61,17 @@ IMPORT 'macros.pig';
 -------------------------------------------------------
 -- business code section
 -------------------------------------------------------
-/*************************************************
+fs -rm -r -f $outputPath
+
 docIn = LOAD '$inputPath' USING pl.edu.icm.coansys.commons.pig.udf.
 	RichSequenceFileLoader('org.apache.hadoop.io.Text','org.apache.hadoop.io.BytesWritable') 
 	as (key:chararray, value:bytearray);
-B = SAMPLE docIn $sample;
+A = SAMPLE docIn $sample;
+A1 = foreach A generate 
+	flatten(pl.edu.icm.coansys.similarity.pig.udf.DocSimDemo_Documents(value)) as (doi:chararray, year:chararray, title:chararray), key, value;
+A2 = filter A1 by (doi is not null or doi!='') and (year is not null or year!='') and (title is not null or title != '');
+B = foreach A2 generate doi,value;
+
 --B = limit docIn 100;
 doc = FOREACH B GENERATE $0 as docId, pl.edu.icm.coansys.similarity.pig.udf.DocumentProtobufToTupleMap($1) as document ;
 --doc = load_from_hdfs('$inputPath', $sample);
@@ -78,77 +86,16 @@ doc_title_all = stem_words(doc_raw, docId, title);
 doc_abstract_all = stem_words(doc_raw, docId, abstract);
 
 -- get all words (with duplicates for tfidf)
-doc_allX = UNION doc_keyword_all, doc_title_all, doc_abstract_all;
+doc_all = UNION doc_keyword_all, doc_title_all, doc_abstract_all;
 -- store document and terms
 --STORE doc_title_all INTO '$outputPath$DOC_TERM_TITLE';
 --STORE doc_keyword_all INTO '$outputPath$DOC_TERM_KEYWORDS';
-STORE doc_allX INTO '$outputPath$DOC_TERM_ALL';
-**********************************************************/
-
-
-%default ds_removal_rate 0.95
-%default time '1'
-%default oldtime '3'
-%default outputPath2 'document-similarity-test-output/$oldtime/'
-%default outputPath 'document-similarity-test-output/$time/'
-%default bla 'hdfs://hadoop-master.vls.icm.edu.pl:8020/user/mhorst/documentssimilarity/chain/working_dir/results/term/all'
-in = LOAD '$bla' as (docId:chararray, term:chararray);
-
-/***********************************************************
---**************** term count *****************
---in = LOAD '$bla' as (docId:chararray, term:chararray);
-terms = foreach in generate term;
-group_by_terms = group terms by term;
-X = foreach group_by_terms generate group as term;
-X1 = group X all; 
-tcX = foreach X1 generate COUNT(X) as count;
-%default tc '/term-count' 
-store tcX into '$outputPath$tc';
---**************** term count *****************
-
-***********************************************************/
-/***********************************************************
-%default bla2 '/user/mhorst/documentssimilarity/chain/working_dir/results/term-count'
---**************** word count rank *****************
-%default tc '/term-count'
---tc = load '$outputPath$tc' as (val:double);
-tc = load  '$outputPath$tc' as (val:double);
-group_by_terms = group in by term;
-wc = foreach group_by_terms generate COUNT(in) as count, group as term, in.docId as docs;
-wc_ranked = rank wc by count;
-term_lower_tmp = filter wc_ranked by $0 < (double)tc.val*$ds_removal_rate;
-doc_selected_termsX = foreach term_lower_tmp generate FLATTEN(docs) as docId, term;
-%default wc '/word-count-ranked';
-store doc_selected_termsX into '$outputPath$wc';
---**************** word count rank *****************
-***********************************************************/
-/***********************************************************
-doc_selected_terms = load '$outputPath2$wc' as (docId:chararray, term:chararray);
-tfidf_all = calculate_tfidf_nofiltering(doc_selected_terms, docId, term);
+STORE doc_all INTO '$outputPath$DOC_TERM_ALL';
+-- calculate tf-idf for each group of terms
+tfidf_all = calculate_tfidf(doc_all, docId, term, $tfidfMinValue);
 -- store tfidf values into separate direcotires
---STORE tfidf_allX INTO '$outputPath$TFIDF_NON_WEIGHTED_SUBDIR';
---tfidf_all = load '$outputPath$TFIDF_NON_WEIGHTED_SUBDIR' as ;
+STORE tfidf_all INTO '$outputPath$TFIDF_NON_WEIGHTED_SUBDIR';
 -- calculate and store topn terms per document in all results
 tfidf_all_topn = get_topn_per_group(tfidf_all, docId, tfidf, 'desc', $tfidfTopnTermPerDocument);
-tfidf_all_topn_projectedX = FOREACH tfidf_all_topn GENERATE top::docId AS docId, top::term AS term, top::tfidf AS tfidf;
-STORE tfidf_all_topn_projectedX  INTO '$outputPath$TFIDF_TOPN_ALL_TEMP';
-***********************************************************/
-
-%default DENOMINATOR '/denominator' 
-%default PARTIAL_SIM '/partial-sim'
-
-
-partialSim = LOAD '$outputPath$PARTIAL_SIM' as (docA:chararray, docB:chararray, sim:float);
-partialSimGr = group partialSim by (docA,docB); 
-fullSimNominator = foreach partialSimGr generate group.docA as docA,group.docB as docB, (float)SUM(partialSim.sim)/(float)COUNT(partialSim.sim) as nominator;
-
-denominatorA = load '$outputPath$DENOMINATOR' as (DdocIdA:chararray, valueA:float);
-denominatorB = load '$outputPath$DENOMINATOR' as (DdocIdB:chararray, valueB:float);
-fullSimTmp = join fullSimNominator by docA, denominatorA by DdocIdA , denominatorB by DdocIdB; 
-fullSim = foreach fullSimTmp generate docA,docB, nominator/(valueA*valueB) as sim;
-
-summed_ord = order fullSim by sim desc;
-finalResult = limit summed_ord  $similarityTopnDocumentPerDocument;
-%default FINALRES '/ranked_final_val';
-store finalResult into '$outputPath$FINALRES';
-
+tfidf_all_topn_projected = FOREACH tfidf_all_topn GENERATE top::docId AS docId, top::term AS term, top::tfidf AS tfidf;
+STORE tfidf_all_topn_projected  INTO '$outputPath$TFIDF_TOPN_ALL_TEMP';

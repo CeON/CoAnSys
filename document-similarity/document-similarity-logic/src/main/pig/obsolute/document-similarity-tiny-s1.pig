@@ -21,6 +21,7 @@
 %default DOC_TERM_TITLE '/term/title'
 %default TFIDF_NON_WEIGHTED_SUBDIR '/tfidf/nonweighted'
 %default TFIDF_TOPN_WEIGHTED_SUBDIR '/tfidf/weighted-topn'
+%default TFIDF_TOPN_ALL_TEMP '/tfidf/all-topn-tmp'
 %default TFIDF_TOPN_ALL_SUBDIR '/tfidf/all-topn'
 %default TFIDF_TF_ALL_SUBDIR '/tfidf/tf-all-topn'
 %default SIMILARITY_ALL_DOCS_SUBDIR '/similarity/alldocs'
@@ -35,12 +36,11 @@
 %default tmpCompressionCodec gz
 %default mapredChildJavaOpts -Xmx8000m
 
-%default inputPath 'working_dir/in/document/'
-%default time '1'
-%default outputPath 'doc-sim/output/$time/'
+%default inputPath 'hdfs://hadoop-master.vls.icm.edu.pl:8020/srv/bwndata/seqfile/springer-metadata/springer-20120419-springer0*.sq'
+%default time '2013-09-28--10-37'
+%default outputPath 'document-similarity-output/$time/'
 %default jars '*.jar'
-%default commonJarsPath 'lib/$jars'
---%default commonJarsPath '../../../../document-similarity-workflow/target/oozie-wf/lib/$jars'
+%default commonJarsPath '../../../../document-similarity-workflow/target/oozie-wf/lib/$jars'
 
 REGISTER '$commonJarsPath'
 
@@ -55,17 +55,18 @@ SET pig.tmpfilecompression true
 SET pig.tmpfilecompression.codec $tmpCompressionCodec
 %DEFAULT ds_scheduler default
 SET mapred.fairscheduler.pool $ds_scheduler
-
+--SET pig.noSplitCombination true;
 IMPORT 'macros.pig';
 
 -------------------------------------------------------
 -- business code section
 -------------------------------------------------------
+
 docIn = LOAD '$inputPath' USING pl.edu.icm.coansys.commons.pig.udf.
 	RichSequenceFileLoader('org.apache.hadoop.io.Text','org.apache.hadoop.io.BytesWritable') 
 	as (key:chararray, value:bytearray);
---B = SAMPLE A $sampling;
-B = limit docIn 100;
+B = SAMPLE docIn $sample;
+--B = limit docIn 100;
 doc = FOREACH B GENERATE $0 as docId, pl.edu.icm.coansys.similarity.pig.udf.DocumentProtobufToTupleMap($1) as document ;
 --doc = load_from_hdfs('$inputPath', $sample);
 --doc = foreach doc generate $0 as docId, $1 as document;
@@ -80,7 +81,6 @@ doc_abstract_all = stem_words(doc_raw, docId, abstract);
 
 -- get all words (with duplicates for tfidf)
 doc_all = UNION doc_keyword_all, doc_title_all, doc_abstract_all;
-
 -- store document and terms
 --STORE doc_title_all INTO '$outputPath$DOC_TERM_TITLE';
 --STORE doc_keyword_all INTO '$outputPath$DOC_TERM_KEYWORDS';
@@ -92,30 +92,4 @@ STORE tfidf_all INTO '$outputPath$TFIDF_NON_WEIGHTED_SUBDIR';
 -- calculate and store topn terms per document in all results
 tfidf_all_topn = get_topn_per_group(tfidf_all, docId, tfidf, 'desc', $tfidfTopnTermPerDocument);
 tfidf_all_topn_projected = FOREACH tfidf_all_topn GENERATE top::docId AS docId, top::term AS term, top::tfidf AS tfidf;
-
-/********************* BEG:MERGE-SORT ZONE *****************************************/
-/*** (a) order tfidf_all_topn_projected (b) store results (c) close current tasks***/
-tfidf_all_topn_sorted = order tfidf_all_topn_projected by docId asc;
-STORE tfidf_all_topn_sorted  INTO '$outputPath$TFIDF_TOPN_ALL_SUBDIR';
-exec;
-/*** (d) load sorted results (e) duplicate it *************************************/
-/*** (f) perform doc-sim calculation [MERGE-SORT] (g) close current tasks *********/
-tfidf_all_topn_sorted_orig = LOAD '$outputPath$TFIDF_TOPN_ALL_SUBDIR' AS (docId: chararray, term: chararray, tfidf: double);
-tfidf_all_topn_sorted_dupl = LOAD '$outputPath$TFIDF_TOPN_ALL_SUBDIR' AS (docId: chararray, term: chararray, tfidf: double);
--- calculate and store document similarity for all documents
-document_similarity = calculate_pairwise_similarity(tfidf_all_topn_sorted_orig,
-		tfidf_all_topn_sorted_dupl, docId, term, tfidf, '::',$parallel);
-STORE document_similarity INTO '$outputPath$SIMILARITY_ALL_DOCS_SUBDIR';
-exec;
-/********************* END:MERGE-SORT ZONE *****************************************/
-
--- consider both <docIdA, docIdB,sim> and <docIdB,docIdA,sim>
-mix_l = LOAD '$outputPath$SIMILARITY_ALL_DOCS_SUBDIR' as (chararray,chararray,double);
-mix_r = foreach mix_l generate $1,$0,$2;
-mix_f = union mix_l,mix_r;
---mix_o = foreach mix_f generate $0 as (docIdA:chararray), $1 as (docIdB:chararray),$2 as (similarity:double);
--- calculate and store topn similar documents for each document
-document_similarity_topn = get_topn_per_group(mix_f, val_0, val_2, 'desc', $similarityTopnDocumentPerDocument);
-STORE document_similarity_topn INTO '$outputPath$SIMILARITY_TOPN_DOCS_SUBDIR';
-
-
+STORE tfidf_all_topn_projected  INTO '$outputPath$TFIDF_TOPN_ALL_TEMP';
