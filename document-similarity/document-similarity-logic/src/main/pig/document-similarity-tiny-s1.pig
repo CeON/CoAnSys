@@ -40,7 +40,7 @@
 %default time '2013-09-28--10-37'
 %default outputPath 'document-similarity-output/$time/'
 %default jars '*.jar'
-%default commonJarsPath '../../../../document-similarity-workflow/target/oozie-wf/lib/$jars'
+%default commonJarsPath 'lib/$jars'
 
 REGISTER '$commonJarsPath'
 
@@ -61,6 +61,9 @@ IMPORT 'macros.pig';
 -------------------------------------------------------
 -- business code section
 -------------------------------------------------------
+fs -rm -r -f '$outputPath$DOC_TERM_ALL'
+fs -rm -r -f '$outputPath$TFIDF_NON_WEIGHTED_SUBDIR'
+fs -rm -r -f '$outputPath$TFIDF_TOPN_ALL_TEMP'
 
 docIn = LOAD '$inputPath' USING pl.edu.icm.coansys.commons.pig.udf.
 	RichSequenceFileLoader('org.apache.hadoop.io.Text','org.apache.hadoop.io.BytesWritable') 

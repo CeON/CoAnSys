@@ -196,12 +196,6 @@ DEFINE get_topn_per_group(in_relation, group_field, order_field, order_direction
 	};
 };
 
-
--------------------------------------------------------
--- calculate similarity using pairwise similarity method
--- that compares only those document that have at least
--- one common words
--------------------------------------------------------
 -------------------------------------------------------
 -- calculate similarity using pairwise similarity method
 -- that compares only those document that have at least
@@ -249,3 +243,4 @@ DEFINE calculate_pairwise_similarity_cosine_denominator(in_relation, doc_field, 
 	C = foreach B generate group as docId, BagPow(A.$tfidf_field) as pows:bag{(pow:float)};
 	$out_relation = foreach C generate docId, SQRT(SUM(pows)) as denominator;
 };
+
