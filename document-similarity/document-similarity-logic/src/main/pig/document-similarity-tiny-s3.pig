@@ -62,12 +62,9 @@ IMPORT 'macros.pig';
 -------------------------------------------------------
 /******************************* BLEND RESULTS ************************************/
 -- consider both <docIdA, docIdB,sim> and <docIdB,docIdA,sim>
-mix_l = LOAD '$outputPath$SIMILARITY_ALL_DOCS_SUBDIR' as (chararray,chararray,double);
-mix_r = foreach mix_l generate $1,$0,$2;
-mix_f = union mix_l,mix_r;
---mix_o = foreach mix_f generate $0 as (docIdA:chararray), $1 as (docIdB:chararray),$2 as (similarity:double);
--- calculate and store topn similar documents for each document
-document_similarity_topn = get_topn_per_group(mix_f, val_0, val_2, 'desc', $similarityTopnDocumentPerDocument);
+fs -rm -r -f '$outputPath$SIMILARITY_TOPN_DOCS_SUBDIR'
+mix_f = LOAD '$outputPath$SIMILARITY_ALL_DOCS_SUBDIR' as (docIdA:chararray,docIdB:chararray,sim:double);
+document_similarity_topn = get_topn_per_group(mix_f, docIdA, sim, 'desc', $similarityTopnDocumentPerDocument);
 STORE document_similarity_topn INTO '$outputPath$SIMILARITY_TOPN_DOCS_SUBDIR';
 
 
