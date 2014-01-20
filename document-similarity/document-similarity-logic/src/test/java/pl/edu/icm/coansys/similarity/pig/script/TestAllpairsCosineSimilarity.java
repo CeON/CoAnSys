@@ -57,7 +57,7 @@ public class TestAllpairsCosineSimilarity {
     @org.testng.annotations.Test(groups = {"fast"})
     public void testSingle() throws IOException, ParseException {
 
-        LinkedList<String> script = PigScriptExtractor.extract(PIG_SCRIPT_DIR + "allpairs_similarity.pig");
+        LinkedList<String> script = PigScriptExtractor.extract(PIG_SCRIPT_DIR + "document-similarity-s2,3-leftsim_basic,topn_basic.pig");
         test = new PigTest(script.toArray(new String[]{}), params);
 
         String[] input = {

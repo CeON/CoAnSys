@@ -31,7 +31,7 @@
 %DEFAULT dc_m_str_feature_info 'TitleDisambiguator#EX_TITLE#1#1,YearDisambiguator#EX_YEAR#1#1'
 
 DEFINE keyTiKwAbsCatExtractor pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_MAP_WHEN_CATEG_LIM('en','removeall');
-DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_CONTRIBDATA_GIVENDATA('$dc_m_str_feature_info');
+DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_CONTRIBDATA_GIVENDATA('feature_info=$dc_m_str_feature_info');
 DEFINE exhaustiveAND pl.edu.icm.coansys.disambiguation.author.pig.ExhaustiveAND('-1.0','$dc_m_str_feature_info');
 DEFINE aproximateAND pl.edu.icm.coansys.disambiguation.author.pig.AproximateAND('-1.0','$dc_m_str_feature_info');
 DEFINE sinlgeAND pl.edu.icm.coansys.disambiguation.author.pig.SingleAND();

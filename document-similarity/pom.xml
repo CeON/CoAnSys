@@ -19,7 +19,8 @@
     </properties>
 
     <modules>
-        <module>document-similarity-workflow</module>
         <module>document-similarity-logic</module>
+        <module>document-similarity-workflow</module>
+		<module>document-similarity-oap-demo-workflow</module>
     </modules>    
 </project>
