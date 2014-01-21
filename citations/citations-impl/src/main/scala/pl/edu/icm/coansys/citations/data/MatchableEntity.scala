@@ -110,9 +110,9 @@ object MatchableEntity {
   }
 
   private def fillUsingBasicMetadata(data: MatchableEntityData.Builder, meta: BasicMetadata) {
-    data.setAuthor(meta.getAuthorList.map(a => if (a.hasName) a.getName else a.getForenames + " " + a.getSurname).mkString(" "))
+    data.setAuthor(meta.getAuthorList.map(a => if (a.hasName) a.getName else a.getForenames + " " + a.getSurname).mkString(", "))
     data.setSource(meta.getJournal)
-    data.setTitle(meta.getTitleList.map(_.getText).mkString(" "))
+    data.setTitle(meta.getTitleList.map(_.getText).mkString(". "))
     data.setPages(meta.getPages)
     data.setYear(meta.getYear)
   }
