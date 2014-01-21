@@ -77,6 +77,7 @@ public class DocSimDemo_Documents extends EvalFunc<Tuple> {
 				for(TextWithLanguage twl : dm.getBasicMetadata().getTitleList()){
 					if(twl.getLanguage().toLowerCase().startsWith("en")){
 						title=twl.getText();
+						
 						break;
 					}
 				}
@@ -85,6 +86,7 @@ public class DocSimDemo_Documents extends EvalFunc<Tuple> {
 				}
 				if(title != null && !title.trim().isEmpty()){
 					title = title.replaceAll("[^A-Za-z_0-9 ]", " ");
+					title = title.replaceAll("[\\p{Space}]+", " ");
 				}
 			}catch(Exception e){
 			}finally{
@@ -125,4 +127,11 @@ public class DocSimDemo_Documents extends EvalFunc<Tuple> {
 			throw new IOException(e);
 		}
 	}
+    
+    public static void main(String[] args){
+    	String title = "a\n\nb\t\tc\r\rd";
+    	title = title.replaceAll("[\\p{Space}]+", " ");
+    	System.out.println(title);
+    }
+    
 }

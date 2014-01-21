@@ -91,6 +91,7 @@ public class DocSimDemo_Authors extends EvalFunc<DataBag> {
 							&& fname != null && !fname.trim().isEmpty()) {
 						name = sname.trim() + ", "
 								+ fname.trim().substring(0, 1)+".";
+						name = name.replaceAll("[\\p{Space}]+", " ");
 					}
 					if (name != null) {
 						Tuple t = tf.newTuple();
