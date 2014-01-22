@@ -19,6 +19,7 @@
 package pl.edu.icm.coansys.similarity.pig.udf;
 
 import java.io.IOException;
+import java.util.HashSet;
 
 import org.apache.pig.EvalFunc;
 import org.apache.pig.data.DataBag;
@@ -30,6 +31,7 @@ import org.apache.pig.tools.pigstats.PigStatusReporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pl.edu.icm.coansys.commons.java.DiacriticsRemover;
 import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
 import pl.edu.icm.coansys.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
@@ -58,9 +60,9 @@ public class DocSimDemo_Authors extends EvalFunc<DataBag> {
 		try {
 			TupleFactory tf = TupleFactory.getInstance();
 			DataByteArray dba = null;
+			
 			DocumentMetadata dm = null;
 			String doi = null;
-			String[] year = null;
 
 			try {
 				dba = (DataByteArray) input.get(0);
@@ -82,6 +84,9 @@ public class DocSimDemo_Authors extends EvalFunc<DataBag> {
 			DataBag ret = new DefaultDataBag();
 
 			int authNum = 0;
+			
+			HashSet hs = new HashSet();
+			
 			for (Author a : dm.getBasicMetadata().getAuthorList()) {
 				try {
 					String sname = a.getSurname();
@@ -89,11 +94,19 @@ public class DocSimDemo_Authors extends EvalFunc<DataBag> {
 					String name = null;
 					if (sname != null && !sname.trim().isEmpty()
 							&& fname != null && !fname.trim().isEmpty()) {
-						name = sname.trim() + ", "
-								+ fname.trim().substring(0, 1)+".";
-						name = name.replaceAll("[\\p{Space}]+", " ");
+						
+						sname = DiacriticsRemover.removeDiacritics(sname);
+						sname = sname.replaceAll("[^A-Za-z]", " ").replaceAll("\\s++", " ").trim();
+						
+						fname = DiacriticsRemover.removeDiacritics(fname);
+						fname = fname.replaceAll("[^A-Za-z]", " ").replaceAll("\\s++", " ").trim();
+						
+						name = sname + ", " + fname.trim().substring(0, 1)+".";
 					}
 					if (name != null) {
+						if(hs.contains(name)){
+							return null;
+						}
 						Tuple t = tf.newTuple();
 						t.append(doi);
 						t.append(authNum);

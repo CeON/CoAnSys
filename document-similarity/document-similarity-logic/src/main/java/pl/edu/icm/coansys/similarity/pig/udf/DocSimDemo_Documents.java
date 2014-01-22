@@ -28,6 +28,7 @@ import org.apache.pig.tools.pigstats.PigStatusReporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pl.edu.icm.coansys.commons.java.DiacriticsRemover;
 import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
@@ -85,8 +86,8 @@ public class DocSimDemo_Documents extends EvalFunc<Tuple> {
 					title = dm.getBasicMetadata().getTitle(0).getText();
 				}
 				if(title != null && !title.trim().isEmpty()){
-					title = title.replaceAll("[^A-Za-z_0-9 ]", " ");
-					title = title.replaceAll("[\\p{Space}]+", " ");
+					title = DiacriticsRemover.removeDiacritics(title);
+					title = title.replaceAll("[^A-Za-z0-9\\-_]", " ").replaceAll("\\s++", " ").trim();
 				}
 			}catch(Exception e){
 			}finally{
@@ -97,7 +98,7 @@ public class DocSimDemo_Documents extends EvalFunc<Tuple> {
 			}
 			
 			try{
-				doi = dm.getBasicMetadata().getDoi();
+				doi = dm.getBasicMetadata().getDoi().replaceAll("\\s++", " ").trim();
 			}catch(Exception e){
 			}finally{
 				if(doi == null || doi.trim().isEmpty()){
