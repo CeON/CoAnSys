@@ -74,7 +74,7 @@ public class DocSimDemo_Authors extends EvalFunc<DataBag> {
 
 			try {
 				dm = DocumentWrapper.parseFrom(dba.get()).getDocumentMetadata();
-				doi = dm.getBasicMetadata().getDoi();
+				doi = dm.getBasicMetadata().getDoi().replaceAll("\\s++", " ").trim();
 			} catch (Exception e) {
 				myreporter.getCounter("extraction problems",
 						"document metadata");
