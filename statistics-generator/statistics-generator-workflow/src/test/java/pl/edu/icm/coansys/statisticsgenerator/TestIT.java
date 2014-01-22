@@ -15,7 +15,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package pl.edu.icm.coansys.statisticsgenerator;
 
 import java.io.File;
@@ -43,6 +42,7 @@ public class TestIT {
 
         int foundRecords = 0;
         int statistics = 0;
+        int selectedStats = 0;
         double counter = 0;
 
         for (File f : FileUtils.listFiles(workflowOutputData, null, true)) {
@@ -50,14 +50,17 @@ public class TestIT {
                 Configuration conf = new Configuration();
                 Path path = new Path("file://" + f.getAbsolutePath());
                 Reader reader = new Reader(conf, Reader.file(path));
-                Text key  = new Text();
+                Text key = new Text();
                 BytesWritable value = new BytesWritable();
                 while (reader.next(key, value)) {
                     statistics++;
-                    StatisticsProtos.Statistics protoValue = StatisticsProtos.Statistics.parseFrom(value.copyBytes());
-                    for (StatisticsProtos.KeyValue summary : protoValue.getStatisticsList()) {
-                        foundRecords++;
-                        counter += Double.parseDouble(summary.getValue());
+                    StatisticsProtos.SelectedStatistics protoValue = StatisticsProtos.SelectedStatistics.parseFrom(value.copyBytes());
+                    for (StatisticsProtos.Statistics stat : protoValue.getStatsList()) {
+                        selectedStats++;
+                        for (StatisticsProtos.KeyValue summary : stat.getStatisticsList()) {
+                            foundRecords++;
+                            counter += Double.parseDouble(summary.getValue());
+                        }
                     }
                 }
             }
@@ -66,5 +69,6 @@ public class TestIT {
         assertEquals(foundRecords, 20);
         assertEquals(counter, 20.0);
         assertEquals(statistics, 20);
+        assertEquals(selectedStats, 20);
     }
 }
