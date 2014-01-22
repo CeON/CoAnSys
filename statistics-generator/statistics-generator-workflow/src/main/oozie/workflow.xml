@@ -26,16 +26,12 @@
                     <value>pl.edu.icm.coansys.statisticsgenerator.jobs.StatisticsGenerator$StatisticsReduce</value>
                 </property>
                 <property>
-                    <name>mapred.map.tasks</name>
-                    <value>6</value>
-                </property>
-                <property>
                     <name>mapred.input.dir</name>
                     <value>${hdfsDirInputData}</value>
                 </property>
                 <property>
                     <name>mapred.output.dir</name>
-                    <value>${hdfsDirOutputData}</value>
+                    <value>${hdfsWorkingDirURI}/intermediate-data</value>
                 </property>
                 <property>
                   <name>mapred.job.queue.name</name>
@@ -88,6 +84,93 @@
                 <property>
                     <name>statistics_classes_args</name>
                     <value>${statistics_classes_args}</value>
+                </property>
+            </configuration>
+        </map-reduce>
+        <ok to="groupsortlimit" />
+        <error to="fail" />
+    </action>
+    <action name="groupsortlimit">
+        <map-reduce>
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <configuration>
+                <!-- This is required for new api usage -->
+                <property>
+                    <name>mapred.mapper.new-api</name>
+                    <value>true</value>
+                </property>
+                <property>
+                    <name>mapred.reducer.new-api</name>
+                    <value>true</value>
+                </property>
+                <property>
+                    <name>mapreduce.map.class</name>
+                    <value>pl.edu.icm.coansys.statisticsgenerator.jobs.GroupSortLimit$GroupSortLimitMap</value>
+                </property>
+                <property>
+                    <name>mapreduce.combine.class</name>
+                    <value>pl.edu.icm.coansys.statisticsgenerator.jobs.GroupSortLimit$GroupSortLimitCombine</value>
+                </property>
+                <property>
+                    <name>mapreduce.reduce.class</name>
+                    <value>pl.edu.icm.coansys.statisticsgenerator.jobs.GroupSortLimit$GroupSortLimitReduce</value>
+                </property>
+                <property>
+                    <name>mapred.reduce.tasks</name>
+                    <value>1</value>
+                </property>
+                <property>
+                    <name>mapred.input.dir</name>
+                    <value>${hdfsWorkingDirURI}/intermediate-data</value>
+                </property>
+                <property>
+                    <name>mapred.output.dir</name>
+                    <value>${hdfsDirOutputData}</value>
+                </property>
+                <property>
+                  <name>mapred.job.queue.name</name>
+                  <value>${queueName}</value>
+                </property>
+                <property>
+                    <name>mapreduce.inputformat.class</name>
+                    <value>org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat</value>
+                </property>
+                <property>
+                    <name>mapreduce.outputformat.class</name>
+                    <value>org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat</value>
+                </property>
+                <property>
+                    <name>mapred.mapoutput.key.class</name>
+                    <value>pl.edu.icm.coansys.statisticsgenerator.mrtypes.SortedMapWritableComparable</value>
+                </property>                
+                <property>
+                    <name>mapred.mapoutput.value.class</name>
+                    <value>org.apache.hadoop.io.BytesWritable</value>
+                </property>                
+                <property>
+                    <name>mapred.output.key.class</name>
+                    <value>org.apache.hadoop.io.Text</value>
+                </property>                
+                <property>
+                    <name>mapred.output.value.class</name>
+                    <value>org.apache.hadoop.io.BytesWritable</value>
+                </property>
+                <property>
+                    <name>group_keys</name>
+                    <value>${group_keys}</value>
+                </property>
+                <property>
+                    <name>sort_stat</name>
+                    <value>${sort_stat}</value>
+                </property>
+                <property>
+                    <name>sort_order</name>
+                    <value>${sort_order}</value>
+                </property>
+                <property>
+                    <name>limit</name>
+                    <value>${limit}</value>
                 </property>
             </configuration>
         </map-reduce>

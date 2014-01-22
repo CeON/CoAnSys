@@ -2283,6 +2283,1126 @@ public final class StatisticsProtos {
     // @@protoc_insertion_point(class_scope:pl.edu.icm.coansys.models.Statistics)
   }
   
+  public interface SelectedStatisticsOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+    
+    // required string selected_stat = 1;
+    boolean hasSelectedStat();
+    String getSelectedStat();
+    
+    // required string sort_order = 2;
+    boolean hasSortOrder();
+    String getSortOrder();
+    
+    // required int32 limit = 3;
+    boolean hasLimit();
+    int getLimit();
+    
+    // repeated .pl.edu.icm.coansys.models.KeyValue fixed_partitions = 4;
+    java.util.List<pl.edu.icm.coansys.models.StatisticsProtos.KeyValue> 
+        getFixedPartitionsList();
+    pl.edu.icm.coansys.models.StatisticsProtos.KeyValue getFixedPartitions(int index);
+    int getFixedPartitionsCount();
+    java.util.List<? extends pl.edu.icm.coansys.models.StatisticsProtos.KeyValueOrBuilder> 
+        getFixedPartitionsOrBuilderList();
+    pl.edu.icm.coansys.models.StatisticsProtos.KeyValueOrBuilder getFixedPartitionsOrBuilder(
+        int index);
+    
+    // repeated .pl.edu.icm.coansys.models.Statistics stats = 5;
+    java.util.List<pl.edu.icm.coansys.models.StatisticsProtos.Statistics> 
+        getStatsList();
+    pl.edu.icm.coansys.models.StatisticsProtos.Statistics getStats(int index);
+    int getStatsCount();
+    java.util.List<? extends pl.edu.icm.coansys.models.StatisticsProtos.StatisticsOrBuilder> 
+        getStatsOrBuilderList();
+    pl.edu.icm.coansys.models.StatisticsProtos.StatisticsOrBuilder getStatsOrBuilder(
+        int index);
+  }
+  public static final class SelectedStatistics extends
+      com.google.protobuf.GeneratedMessage
+      implements SelectedStatisticsOrBuilder {
+    // Use SelectedStatistics.newBuilder() to construct.
+    private SelectedStatistics(Builder builder) {
+      super(builder);
+    }
+    private SelectedStatistics(boolean noInit) {}
+    
+    private static final SelectedStatistics defaultInstance;
+    public static SelectedStatistics getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public SelectedStatistics getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return pl.edu.icm.coansys.models.StatisticsProtos.internal_static_pl_edu_icm_coansys_models_SelectedStatistics_descriptor;
+    }
+    
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return pl.edu.icm.coansys.models.StatisticsProtos.internal_static_pl_edu_icm_coansys_models_SelectedStatistics_fieldAccessorTable;
+    }
+    
+    private int bitField0_;
+    // required string selected_stat = 1;
+    public static final int SELECTED_STAT_FIELD_NUMBER = 1;
+    private java.lang.Object selectedStat_;
+    public boolean hasSelectedStat() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    public String getSelectedStat() {
+      java.lang.Object ref = selectedStat_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+          selectedStat_ = s;
+        }
+        return s;
+      }
+    }
+    private com.google.protobuf.ByteString getSelectedStatBytes() {
+      java.lang.Object ref = selectedStat_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+        selectedStat_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    
+    // required string sort_order = 2;
+    public static final int SORT_ORDER_FIELD_NUMBER = 2;
+    private java.lang.Object sortOrder_;
+    public boolean hasSortOrder() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    public String getSortOrder() {
+      java.lang.Object ref = sortOrder_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+          sortOrder_ = s;
+        }
+        return s;
+      }
+    }
+    private com.google.protobuf.ByteString getSortOrderBytes() {
+      java.lang.Object ref = sortOrder_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+        sortOrder_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    
+    // required int32 limit = 3;
+    public static final int LIMIT_FIELD_NUMBER = 3;
+    private int limit_;
+    public boolean hasLimit() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    public int getLimit() {
+      return limit_;
+    }
+    
+    // repeated .pl.edu.icm.coansys.models.KeyValue fixed_partitions = 4;
+    public static final int FIXED_PARTITIONS_FIELD_NUMBER = 4;
+    private java.util.List<pl.edu.icm.coansys.models.StatisticsProtos.KeyValue> fixedPartitions_;
+    public java.util.List<pl.edu.icm.coansys.models.StatisticsProtos.KeyValue> getFixedPartitionsList() {
+      return fixedPartitions_;
+    }
+    public java.util.List<? extends pl.edu.icm.coansys.models.StatisticsProtos.KeyValueOrBuilder> 
+        getFixedPartitionsOrBuilderList() {
+      return fixedPartitions_;
+    }
+    public int getFixedPartitionsCount() {
+      return fixedPartitions_.size();
+    }
+    public pl.edu.icm.coansys.models.StatisticsProtos.KeyValue getFixedPartitions(int index) {
+      return fixedPartitions_.get(index);
+    }
+    public pl.edu.icm.coansys.models.StatisticsProtos.KeyValueOrBuilder getFixedPartitionsOrBuilder(
+        int index) {
+      return fixedPartitions_.get(index);
+    }
+    
+    // repeated .pl.edu.icm.coansys.models.Statistics stats = 5;
+    public static final int STATS_FIELD_NUMBER = 5;
+    private java.util.List<pl.edu.icm.coansys.models.StatisticsProtos.Statistics> stats_;
+    public java.util.List<pl.edu.icm.coansys.models.StatisticsProtos.Statistics> getStatsList() {
+      return stats_;
+    }
+    public java.util.List<? extends pl.edu.icm.coansys.models.StatisticsProtos.StatisticsOrBuilder> 
+        getStatsOrBuilderList() {
+      return stats_;
+    }
+    public int getStatsCount() {
+      return stats_.size();
+    }
+    public pl.edu.icm.coansys.models.StatisticsProtos.Statistics getStats(int index) {
+      return stats_.get(index);
+    }
+    public pl.edu.icm.coansys.models.StatisticsProtos.StatisticsOrBuilder getStatsOrBuilder(
+        int index) {
+      return stats_.get(index);
+    }
+    
+    private void initFields() {
+      selectedStat_ = "";
+      sortOrder_ = "";
+      limit_ = 0;
+      fixedPartitions_ = java.util.Collections.emptyList();
+      stats_ = java.util.Collections.emptyList();
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+      
+      if (!hasSelectedStat()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasSortOrder()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasLimit()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      for (int i = 0; i < getFixedPartitionsCount(); i++) {
+        if (!getFixedPartitions(i).isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
+      for (int i = 0; i < getStatsCount(); i++) {
+        if (!getStats(i).isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeBytes(1, getSelectedStatBytes());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeBytes(2, getSortOrderBytes());
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        output.writeInt32(3, limit_);
+      }
+      for (int i = 0; i < fixedPartitions_.size(); i++) {
+        output.writeMessage(4, fixedPartitions_.get(i));
+      }
+      for (int i = 0; i < stats_.size(); i++) {
+        output.writeMessage(5, stats_.get(i));
+      }
+      getUnknownFields().writeTo(output);
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(1, getSelectedStatBytes());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(2, getSortOrderBytes());
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(3, limit_);
+      }
+      for (int i = 0; i < fixedPartitions_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(4, fixedPartitions_.get(i));
+      }
+      for (int i = 0; i < stats_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(5, stats_.get(i));
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+    
+    public static pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatisticsOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return pl.edu.icm.coansys.models.StatisticsProtos.internal_static_pl_edu_icm_coansys_models_SelectedStatistics_descriptor;
+      }
+      
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return pl.edu.icm.coansys.models.StatisticsProtos.internal_static_pl_edu_icm_coansys_models_SelectedStatistics_fieldAccessorTable;
+      }
+      
+      // Construct using pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+      
+      private Builder(BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          getFixedPartitionsFieldBuilder();
+          getStatsFieldBuilder();
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+      
+      public Builder clear() {
+        super.clear();
+        selectedStat_ = "";
+        bitField0_ = (bitField0_ & ~0x00000001);
+        sortOrder_ = "";
+        bitField0_ = (bitField0_ & ~0x00000002);
+        limit_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000004);
+        if (fixedPartitionsBuilder_ == null) {
+          fixedPartitions_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000008);
+        } else {
+          fixedPartitionsBuilder_.clear();
+        }
+        if (statsBuilder_ == null) {
+          stats_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000010);
+        } else {
+          statsBuilder_.clear();
+        }
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+      
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics.getDescriptor();
+      }
+      
+      public pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics getDefaultInstanceForType() {
+        return pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics.getDefaultInstance();
+      }
+      
+      public pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics build() {
+        pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+      
+      private pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return result;
+      }
+      
+      public pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics buildPartial() {
+        pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics result = new pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.selectedStat_ = selectedStat_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.sortOrder_ = sortOrder_;
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        result.limit_ = limit_;
+        if (fixedPartitionsBuilder_ == null) {
+          if (((bitField0_ & 0x00000008) == 0x00000008)) {
+            fixedPartitions_ = java.util.Collections.unmodifiableList(fixedPartitions_);
+            bitField0_ = (bitField0_ & ~0x00000008);
+          }
+          result.fixedPartitions_ = fixedPartitions_;
+        } else {
+          result.fixedPartitions_ = fixedPartitionsBuilder_.build();
+        }
+        if (statsBuilder_ == null) {
+          if (((bitField0_ & 0x00000010) == 0x00000010)) {
+            stats_ = java.util.Collections.unmodifiableList(stats_);
+            bitField0_ = (bitField0_ & ~0x00000010);
+          }
+          result.stats_ = stats_;
+        } else {
+          result.stats_ = statsBuilder_.build();
+        }
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+      
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics) {
+          return mergeFrom((pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+      
+      public Builder mergeFrom(pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics other) {
+        if (other == pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics.getDefaultInstance()) return this;
+        if (other.hasSelectedStat()) {
+          setSelectedStat(other.getSelectedStat());
+        }
+        if (other.hasSortOrder()) {
+          setSortOrder(other.getSortOrder());
+        }
+        if (other.hasLimit()) {
+          setLimit(other.getLimit());
+        }
+        if (fixedPartitionsBuilder_ == null) {
+          if (!other.fixedPartitions_.isEmpty()) {
+            if (fixedPartitions_.isEmpty()) {
+              fixedPartitions_ = other.fixedPartitions_;
+              bitField0_ = (bitField0_ & ~0x00000008);
+            } else {
+              ensureFixedPartitionsIsMutable();
+              fixedPartitions_.addAll(other.fixedPartitions_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.fixedPartitions_.isEmpty()) {
+            if (fixedPartitionsBuilder_.isEmpty()) {
+              fixedPartitionsBuilder_.dispose();
+              fixedPartitionsBuilder_ = null;
+              fixedPartitions_ = other.fixedPartitions_;
+              bitField0_ = (bitField0_ & ~0x00000008);
+              fixedPartitionsBuilder_ = 
+                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
+                   getFixedPartitionsFieldBuilder() : null;
+            } else {
+              fixedPartitionsBuilder_.addAllMessages(other.fixedPartitions_);
+            }
+          }
+        }
+        if (statsBuilder_ == null) {
+          if (!other.stats_.isEmpty()) {
+            if (stats_.isEmpty()) {
+              stats_ = other.stats_;
+              bitField0_ = (bitField0_ & ~0x00000010);
+            } else {
+              ensureStatsIsMutable();
+              stats_.addAll(other.stats_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.stats_.isEmpty()) {
+            if (statsBuilder_.isEmpty()) {
+              statsBuilder_.dispose();
+              statsBuilder_ = null;
+              stats_ = other.stats_;
+              bitField0_ = (bitField0_ & ~0x00000010);
+              statsBuilder_ = 
+                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
+                   getStatsFieldBuilder() : null;
+            } else {
+              statsBuilder_.addAllMessages(other.stats_);
+            }
+          }
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+      
+      public final boolean isInitialized() {
+        if (!hasSelectedStat()) {
+          
+          return false;
+        }
+        if (!hasSortOrder()) {
+          
+          return false;
+        }
+        if (!hasLimit()) {
+          
+          return false;
+        }
+        for (int i = 0; i < getFixedPartitionsCount(); i++) {
+          if (!getFixedPartitions(i).isInitialized()) {
+            
+            return false;
+          }
+        }
+        for (int i = 0; i < getStatsCount(); i++) {
+          if (!getStats(i).isInitialized()) {
+            
+            return false;
+          }
+        }
+        return true;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder(
+            this.getUnknownFields());
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              this.setUnknownFields(unknownFields.build());
+              onChanged();
+              return this;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                this.setUnknownFields(unknownFields.build());
+                onChanged();
+                return this;
+              }
+              break;
+            }
+            case 10: {
+              bitField0_ |= 0x00000001;
+              selectedStat_ = input.readBytes();
+              break;
+            }
+            case 18: {
+              bitField0_ |= 0x00000002;
+              sortOrder_ = input.readBytes();
+              break;
+            }
+            case 24: {
+              bitField0_ |= 0x00000004;
+              limit_ = input.readInt32();
+              break;
+            }
+            case 34: {
+              pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.Builder subBuilder = pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.newBuilder();
+              input.readMessage(subBuilder, extensionRegistry);
+              addFixedPartitions(subBuilder.buildPartial());
+              break;
+            }
+            case 42: {
+              pl.edu.icm.coansys.models.StatisticsProtos.Statistics.Builder subBuilder = pl.edu.icm.coansys.models.StatisticsProtos.Statistics.newBuilder();
+              input.readMessage(subBuilder, extensionRegistry);
+              addStats(subBuilder.buildPartial());
+              break;
+            }
+          }
+        }
+      }
+      
+      private int bitField0_;
+      
+      // required string selected_stat = 1;
+      private java.lang.Object selectedStat_ = "";
+      public boolean hasSelectedStat() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      public String getSelectedStat() {
+        java.lang.Object ref = selectedStat_;
+        if (!(ref instanceof String)) {
+          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+          selectedStat_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
+      }
+      public Builder setSelectedStat(String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        selectedStat_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearSelectedStat() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        selectedStat_ = getDefaultInstance().getSelectedStat();
+        onChanged();
+        return this;
+      }
+      void setSelectedStat(com.google.protobuf.ByteString value) {
+        bitField0_ |= 0x00000001;
+        selectedStat_ = value;
+        onChanged();
+      }
+      
+      // required string sort_order = 2;
+      private java.lang.Object sortOrder_ = "";
+      public boolean hasSortOrder() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      public String getSortOrder() {
+        java.lang.Object ref = sortOrder_;
+        if (!(ref instanceof String)) {
+          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+          sortOrder_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
+      }
+      public Builder setSortOrder(String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        sortOrder_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearSortOrder() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        sortOrder_ = getDefaultInstance().getSortOrder();
+        onChanged();
+        return this;
+      }
+      void setSortOrder(com.google.protobuf.ByteString value) {
+        bitField0_ |= 0x00000002;
+        sortOrder_ = value;
+        onChanged();
+      }
+      
+      // required int32 limit = 3;
+      private int limit_ ;
+      public boolean hasLimit() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      public int getLimit() {
+        return limit_;
+      }
+      public Builder setLimit(int value) {
+        bitField0_ |= 0x00000004;
+        limit_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearLimit() {
+        bitField0_ = (bitField0_ & ~0x00000004);
+        limit_ = 0;
+        onChanged();
+        return this;
+      }
+      
+      // repeated .pl.edu.icm.coansys.models.KeyValue fixed_partitions = 4;
+      private java.util.List<pl.edu.icm.coansys.models.StatisticsProtos.KeyValue> fixedPartitions_ =
+        java.util.Collections.emptyList();
+      private void ensureFixedPartitionsIsMutable() {
+        if (!((bitField0_ & 0x00000008) == 0x00000008)) {
+          fixedPartitions_ = new java.util.ArrayList<pl.edu.icm.coansys.models.StatisticsProtos.KeyValue>(fixedPartitions_);
+          bitField0_ |= 0x00000008;
+         }
+      }
+      
+      private com.google.protobuf.RepeatedFieldBuilder<
+          pl.edu.icm.coansys.models.StatisticsProtos.KeyValue, pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.Builder, pl.edu.icm.coansys.models.StatisticsProtos.KeyValueOrBuilder> fixedPartitionsBuilder_;
+      
+      public java.util.List<pl.edu.icm.coansys.models.StatisticsProtos.KeyValue> getFixedPartitionsList() {
+        if (fixedPartitionsBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(fixedPartitions_);
+        } else {
+          return fixedPartitionsBuilder_.getMessageList();
+        }
+      }
+      public int getFixedPartitionsCount() {
+        if (fixedPartitionsBuilder_ == null) {
+          return fixedPartitions_.size();
+        } else {
+          return fixedPartitionsBuilder_.getCount();
+        }
+      }
+      public pl.edu.icm.coansys.models.StatisticsProtos.KeyValue getFixedPartitions(int index) {
+        if (fixedPartitionsBuilder_ == null) {
+          return fixedPartitions_.get(index);
+        } else {
+          return fixedPartitionsBuilder_.getMessage(index);
+        }
+      }
+      public Builder setFixedPartitions(
+          int index, pl.edu.icm.coansys.models.StatisticsProtos.KeyValue value) {
+        if (fixedPartitionsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureFixedPartitionsIsMutable();
+          fixedPartitions_.set(index, value);
+          onChanged();
+        } else {
+          fixedPartitionsBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      public Builder setFixedPartitions(
+          int index, pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.Builder builderForValue) {
+        if (fixedPartitionsBuilder_ == null) {
+          ensureFixedPartitionsIsMutable();
+          fixedPartitions_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          fixedPartitionsBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      public Builder addFixedPartitions(pl.edu.icm.coansys.models.StatisticsProtos.KeyValue value) {
+        if (fixedPartitionsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureFixedPartitionsIsMutable();
+          fixedPartitions_.add(value);
+          onChanged();
+        } else {
+          fixedPartitionsBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      public Builder addFixedPartitions(
+          int index, pl.edu.icm.coansys.models.StatisticsProtos.KeyValue value) {
+        if (fixedPartitionsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureFixedPartitionsIsMutable();
+          fixedPartitions_.add(index, value);
+          onChanged();
+        } else {
+          fixedPartitionsBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      public Builder addFixedPartitions(
+          pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.Builder builderForValue) {
+        if (fixedPartitionsBuilder_ == null) {
+          ensureFixedPartitionsIsMutable();
+          fixedPartitions_.add(builderForValue.build());
+          onChanged();
+        } else {
+          fixedPartitionsBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      public Builder addFixedPartitions(
+          int index, pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.Builder builderForValue) {
+        if (fixedPartitionsBuilder_ == null) {
+          ensureFixedPartitionsIsMutable();
+          fixedPartitions_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          fixedPartitionsBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      public Builder addAllFixedPartitions(
+          java.lang.Iterable<? extends pl.edu.icm.coansys.models.StatisticsProtos.KeyValue> values) {
+        if (fixedPartitionsBuilder_ == null) {
+          ensureFixedPartitionsIsMutable();
+          super.addAll(values, fixedPartitions_);
+          onChanged();
+        } else {
+          fixedPartitionsBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      public Builder clearFixedPartitions() {
+        if (fixedPartitionsBuilder_ == null) {
+          fixedPartitions_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000008);
+          onChanged();
+        } else {
+          fixedPartitionsBuilder_.clear();
+        }
+        return this;
+      }
+      public Builder removeFixedPartitions(int index) {
+        if (fixedPartitionsBuilder_ == null) {
+          ensureFixedPartitionsIsMutable();
+          fixedPartitions_.remove(index);
+          onChanged();
+        } else {
+          fixedPartitionsBuilder_.remove(index);
+        }
+        return this;
+      }
+      public pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.Builder getFixedPartitionsBuilder(
+          int index) {
+        return getFixedPartitionsFieldBuilder().getBuilder(index);
+      }
+      public pl.edu.icm.coansys.models.StatisticsProtos.KeyValueOrBuilder getFixedPartitionsOrBuilder(
+          int index) {
+        if (fixedPartitionsBuilder_ == null) {
+          return fixedPartitions_.get(index);  } else {
+          return fixedPartitionsBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      public java.util.List<? extends pl.edu.icm.coansys.models.StatisticsProtos.KeyValueOrBuilder> 
+           getFixedPartitionsOrBuilderList() {
+        if (fixedPartitionsBuilder_ != null) {
+          return fixedPartitionsBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(fixedPartitions_);
+        }
+      }
+      public pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.Builder addFixedPartitionsBuilder() {
+        return getFixedPartitionsFieldBuilder().addBuilder(
+            pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.getDefaultInstance());
+      }
+      public pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.Builder addFixedPartitionsBuilder(
+          int index) {
+        return getFixedPartitionsFieldBuilder().addBuilder(
+            index, pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.getDefaultInstance());
+      }
+      public java.util.List<pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.Builder> 
+           getFixedPartitionsBuilderList() {
+        return getFixedPartitionsFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilder<
+          pl.edu.icm.coansys.models.StatisticsProtos.KeyValue, pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.Builder, pl.edu.icm.coansys.models.StatisticsProtos.KeyValueOrBuilder> 
+          getFixedPartitionsFieldBuilder() {
+        if (fixedPartitionsBuilder_ == null) {
+          fixedPartitionsBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
+              pl.edu.icm.coansys.models.StatisticsProtos.KeyValue, pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.Builder, pl.edu.icm.coansys.models.StatisticsProtos.KeyValueOrBuilder>(
+                  fixedPartitions_,
+                  ((bitField0_ & 0x00000008) == 0x00000008),
+                  getParentForChildren(),
+                  isClean());
+          fixedPartitions_ = null;
+        }
+        return fixedPartitionsBuilder_;
+      }
+      
+      // repeated .pl.edu.icm.coansys.models.Statistics stats = 5;
+      private java.util.List<pl.edu.icm.coansys.models.StatisticsProtos.Statistics> stats_ =
+        java.util.Collections.emptyList();
+      private void ensureStatsIsMutable() {
+        if (!((bitField0_ & 0x00000010) == 0x00000010)) {
+          stats_ = new java.util.ArrayList<pl.edu.icm.coansys.models.StatisticsProtos.Statistics>(stats_);
+          bitField0_ |= 0x00000010;
+         }
+      }
+      
+      private com.google.protobuf.RepeatedFieldBuilder<
+          pl.edu.icm.coansys.models.StatisticsProtos.Statistics, pl.edu.icm.coansys.models.StatisticsProtos.Statistics.Builder, pl.edu.icm.coansys.models.StatisticsProtos.StatisticsOrBuilder> statsBuilder_;
+      
+      public java.util.List<pl.edu.icm.coansys.models.StatisticsProtos.Statistics> getStatsList() {
+        if (statsBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(stats_);
+        } else {
+          return statsBuilder_.getMessageList();
+        }
+      }
+      public int getStatsCount() {
+        if (statsBuilder_ == null) {
+          return stats_.size();
+        } else {
+          return statsBuilder_.getCount();
+        }
+      }
+      public pl.edu.icm.coansys.models.StatisticsProtos.Statistics getStats(int index) {
+        if (statsBuilder_ == null) {
+          return stats_.get(index);
+        } else {
+          return statsBuilder_.getMessage(index);
+        }
+      }
+      public Builder setStats(
+          int index, pl.edu.icm.coansys.models.StatisticsProtos.Statistics value) {
+        if (statsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureStatsIsMutable();
+          stats_.set(index, value);
+          onChanged();
+        } else {
+          statsBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      public Builder setStats(
+          int index, pl.edu.icm.coansys.models.StatisticsProtos.Statistics.Builder builderForValue) {
+        if (statsBuilder_ == null) {
+          ensureStatsIsMutable();
+          stats_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          statsBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      public Builder addStats(pl.edu.icm.coansys.models.StatisticsProtos.Statistics value) {
+        if (statsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureStatsIsMutable();
+          stats_.add(value);
+          onChanged();
+        } else {
+          statsBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      public Builder addStats(
+          int index, pl.edu.icm.coansys.models.StatisticsProtos.Statistics value) {
+        if (statsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureStatsIsMutable();
+          stats_.add(index, value);
+          onChanged();
+        } else {
+          statsBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      public Builder addStats(
+          pl.edu.icm.coansys.models.StatisticsProtos.Statistics.Builder builderForValue) {
+        if (statsBuilder_ == null) {
+          ensureStatsIsMutable();
+          stats_.add(builderForValue.build());
+          onChanged();
+        } else {
+          statsBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      public Builder addStats(
+          int index, pl.edu.icm.coansys.models.StatisticsProtos.Statistics.Builder builderForValue) {
+        if (statsBuilder_ == null) {
+          ensureStatsIsMutable();
+          stats_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          statsBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      public Builder addAllStats(
+          java.lang.Iterable<? extends pl.edu.icm.coansys.models.StatisticsProtos.Statistics> values) {
+        if (statsBuilder_ == null) {
+          ensureStatsIsMutable();
+          super.addAll(values, stats_);
+          onChanged();
+        } else {
+          statsBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      public Builder clearStats() {
+        if (statsBuilder_ == null) {
+          stats_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000010);
+          onChanged();
+        } else {
+          statsBuilder_.clear();
+        }
+        return this;
+      }
+      public Builder removeStats(int index) {
+        if (statsBuilder_ == null) {
+          ensureStatsIsMutable();
+          stats_.remove(index);
+          onChanged();
+        } else {
+          statsBuilder_.remove(index);
+        }
+        return this;
+      }
+      public pl.edu.icm.coansys.models.StatisticsProtos.Statistics.Builder getStatsBuilder(
+          int index) {
+        return getStatsFieldBuilder().getBuilder(index);
+      }
+      public pl.edu.icm.coansys.models.StatisticsProtos.StatisticsOrBuilder getStatsOrBuilder(
+          int index) {
+        if (statsBuilder_ == null) {
+          return stats_.get(index);  } else {
+          return statsBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      public java.util.List<? extends pl.edu.icm.coansys.models.StatisticsProtos.StatisticsOrBuilder> 
+           getStatsOrBuilderList() {
+        if (statsBuilder_ != null) {
+          return statsBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(stats_);
+        }
+      }
+      public pl.edu.icm.coansys.models.StatisticsProtos.Statistics.Builder addStatsBuilder() {
+        return getStatsFieldBuilder().addBuilder(
+            pl.edu.icm.coansys.models.StatisticsProtos.Statistics.getDefaultInstance());
+      }
+      public pl.edu.icm.coansys.models.StatisticsProtos.Statistics.Builder addStatsBuilder(
+          int index) {
+        return getStatsFieldBuilder().addBuilder(
+            index, pl.edu.icm.coansys.models.StatisticsProtos.Statistics.getDefaultInstance());
+      }
+      public java.util.List<pl.edu.icm.coansys.models.StatisticsProtos.Statistics.Builder> 
+           getStatsBuilderList() {
+        return getStatsFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilder<
+          pl.edu.icm.coansys.models.StatisticsProtos.Statistics, pl.edu.icm.coansys.models.StatisticsProtos.Statistics.Builder, pl.edu.icm.coansys.models.StatisticsProtos.StatisticsOrBuilder> 
+          getStatsFieldBuilder() {
+        if (statsBuilder_ == null) {
+          statsBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
+              pl.edu.icm.coansys.models.StatisticsProtos.Statistics, pl.edu.icm.coansys.models.StatisticsProtos.Statistics.Builder, pl.edu.icm.coansys.models.StatisticsProtos.StatisticsOrBuilder>(
+                  stats_,
+                  ((bitField0_ & 0x00000010) == 0x00000010),
+                  getParentForChildren(),
+                  isClean());
+          stats_ = null;
+        }
+        return statsBuilder_;
+      }
+      
+      // @@protoc_insertion_point(builder_scope:pl.edu.icm.coansys.models.SelectedStatistics)
+    }
+    
+    static {
+      defaultInstance = new SelectedStatistics(true);
+      defaultInstance.initFields();
+    }
+    
+    // @@protoc_insertion_point(class_scope:pl.edu.icm.coansys.models.SelectedStatistics)
+  }
+  
   private static com.google.protobuf.Descriptors.Descriptor
     internal_static_pl_edu_icm_coansys_models_KeyValue_descriptor;
   private static
@@ -2298,6 +3418,11 @@ public final class StatisticsProtos {
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_pl_edu_icm_coansys_models_Statistics_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_pl_edu_icm_coansys_models_SelectedStatistics_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_pl_edu_icm_coansys_models_SelectedStatistics_fieldAccessorTable;
   
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -2315,9 +3440,14 @@ public final class StatisticsProtos {
       "s.KeyValue\"\221\001\n\nStatistics\022\021\n\ttimestamp\030\001" +
       " \002(\003\0227\n\npartitions\030\002 \003(\0132#.pl.edu.icm.co" +
       "ansys.models.KeyValue\0227\n\nstatistics\030\003 \003(" +
-      "\0132#.pl.edu.icm.coansys.models.KeyValueB-" +
-      "\n\031pl.edu.icm.coansys.modelsB\020StatisticsP",
-      "rotos"
+      "\0132#.pl.edu.icm.coansys.models.KeyValue\"\303" +
+      "\001\n\022SelectedStatistics\022\025\n\rselected_stat\030\001",
+      " \002(\t\022\022\n\nsort_order\030\002 \002(\t\022\r\n\005limit\030\003 \002(\005\022" +
+      "=\n\020fixed_partitions\030\004 \003(\0132#.pl.edu.icm.c" +
+      "oansys.models.KeyValue\0224\n\005stats\030\005 \003(\0132%." +
+      "pl.edu.icm.coansys.models.StatisticsB-\n\031" +
+      "pl.edu.icm.coansys.modelsB\020StatisticsPro" +
+      "tos"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -2348,6 +3478,14 @@ public final class StatisticsProtos {
               new java.lang.String[] { "Timestamp", "Partitions", "Statistics", },
               pl.edu.icm.coansys.models.StatisticsProtos.Statistics.class,
               pl.edu.icm.coansys.models.StatisticsProtos.Statistics.Builder.class);
+          internal_static_pl_edu_icm_coansys_models_SelectedStatistics_descriptor =
+            getDescriptor().getMessageTypes().get(3);
+          internal_static_pl_edu_icm_coansys_models_SelectedStatistics_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_pl_edu_icm_coansys_models_SelectedStatistics_descriptor,
+              new java.lang.String[] { "SelectedStat", "SortOrder", "Limit", "FixedPartitions", "Stats", },
+              pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics.class,
+              pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics.Builder.class);
           return null;
         }
       };
