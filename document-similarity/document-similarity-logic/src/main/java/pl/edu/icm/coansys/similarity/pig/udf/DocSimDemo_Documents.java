@@ -108,7 +108,7 @@ public class DocSimDemo_Documents extends EvalFunc<Tuple> {
 			}
 			
 			try{
-				year = dm.getBasicMetadata().getYear();
+				year = dm.getBasicMetadata().getYear().replaceAll("\\s++", " ").trim();
 			}catch(Exception e){
 			}finally{
 				if(year == null || year.trim().isEmpty()){
