@@ -9,7 +9,7 @@
     
     <artifactId>document-similarity-ranked-workflow</artifactId>
     <packaging>oozie</packaging>
-    <name>Document Similarity Tool: Ranked Workflow</name>
+    <name>Document Similarity Tool: Rank Filtered Workflow</name>
     <url>http://maven.apache.org</url>
 
     <properties>

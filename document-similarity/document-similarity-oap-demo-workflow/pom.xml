@@ -9,7 +9,7 @@
     
     <artifactId>document-similarity-oap-demo-workflow</artifactId>
     <packaging>oozie</packaging>
-    <name>Document Similarity Tool: Workflow Demonstration</name>
+    <name>Document Similarity Tool: Workflow for OA+ Demonstration</name>
     <url>http://maven.apache.org</url>
 
     <properties>

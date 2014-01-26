@@ -9,7 +9,7 @@
     
     <artifactId>document-similarity-workflow</artifactId>
     <packaging>oozie</packaging>
-    <name>Document Similarity Tool: Workflow</name>
+    <name>Document Similarity Tool: Tf-Idf Filtered Workflow</name>
     <url>http://maven.apache.org</url>
 
     <properties>
