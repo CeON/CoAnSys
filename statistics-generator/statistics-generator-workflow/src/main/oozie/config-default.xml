@@ -23,5 +23,22 @@
     <name>statistics_classes_args</name>
     <value> </value>
   </property>
+  
+  <property>
+    <name>group_keys</name>
+    <value>key0</value>
+  </property>
+  <property>
+    <name>sort_stat</name>
+    <value>COUNT</value>
+  </property>
+  <property>
+    <name>sort_order</name>
+    <value>DESC</value>
+  </property>
+  <property>
+    <name>limit</name>
+    <value>3</value>
+  </property>
 </configuration>
 

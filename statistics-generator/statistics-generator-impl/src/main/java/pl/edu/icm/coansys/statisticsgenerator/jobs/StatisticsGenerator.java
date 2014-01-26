@@ -21,9 +21,7 @@ package pl.edu.icm.coansys.statisticsgenerator.jobs;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.SortedMap;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.BytesWritable;
@@ -40,10 +38,9 @@ import org.apache.hadoop.util.ToolRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.edu.icm.coansys.models.StatisticsProtos;
-import pl.edu.icm.coansys.statisticsgenerator.conf.ConfigurationConstants;
 import pl.edu.icm.coansys.statisticsgenerator.mrtypes.SortedMapWritableComparable;
 import pl.edu.icm.coansys.statisticsgenerator.operationcomponents.Partitioner;
-import pl.edu.icm.coansys.statisticsgenerator.conf.ConfigReader;
+import pl.edu.icm.coansys.statisticsgenerator.conf.StatGeneratorConfiguration;
 import pl.edu.icm.coansys.statisticsgenerator.operationcomponents.StatisticCalculator;
 
 /**
@@ -54,16 +51,15 @@ public class StatisticsGenerator implements Tool {
 
     private static Logger logger = LoggerFactory.getLogger(StatisticsGenerator.class);
     private Configuration conf;
-
-    
+        
     public static class StatisticsMap extends Mapper<Text, BytesWritable, SortedMapWritableComparable, BytesWritable> {
+        
+        private StatGeneratorConfiguration statGenConfiguration;
 
-        private Map<String, Partitioner> partitioners = new HashMap<String, Partitioner>();
-   
         @Override
         protected void setup(Context context) throws IOException, InterruptedException {
-            Configuration conf = context.getConfiguration();            
-            partitioners = ConfigReader.readConf(conf, ConfigurationConstants.PARTITIONS_PREFIX);
+            Configuration conf = context.getConfiguration();
+            statGenConfiguration = new StatGeneratorConfiguration(conf);
         }
 
         @Override
@@ -71,6 +67,7 @@ public class StatisticsGenerator implements Tool {
 
             StatisticsProtos.InputEntry inputEntry = StatisticsProtos.InputEntry.parseFrom(value.copyBytes());
             SortedMapWritableComparable outputKeyMap = new SortedMapWritableComparable();
+            Map<String, Partitioner> partitioners = statGenConfiguration.getPartitioners();
             
             for (StatisticsProtos.KeyValue field : inputEntry.getFieldList()) {
                 String fieldKey = field.getKey();
@@ -87,12 +84,12 @@ public class StatisticsGenerator implements Tool {
     
     public static class StatisticsReduce extends Reducer<SortedMapWritableComparable, BytesWritable, Text, BytesWritable> {
         
-        private SortedMap<String, StatisticCalculator> statistics;
-   
+        private StatGeneratorConfiguration statGenConfiguration;
+        
         @Override
         protected void setup(Context context) throws IOException, InterruptedException {
-            Configuration conf = context.getConfiguration();            
-            statistics = ConfigReader.readConf(conf, ConfigurationConstants.STATISTICS_PREFIX);
+            Configuration conf = context.getConfiguration();
+            statGenConfiguration = new StatGeneratorConfiguration(conf);
         }
         
         @Override
@@ -108,7 +105,7 @@ public class StatisticsGenerator implements Tool {
                 kvBuilder.setValue(vText.toString());
                 statisticsBuilder.addPartitions(kvBuilder);
             }
-            for (Map.Entry<String, StatisticCalculator> statisticEntry : this.statistics.entrySet()) {
+            for (Map.Entry<String, StatisticCalculator> statisticEntry : this.statGenConfiguration.getStatisticCalculators().entrySet()) {
                 kvBuilder.clear();
                 double result = statisticEntry.getValue().calculate(values);
                 kvBuilder.setKey(statisticEntry.getKey());
@@ -119,6 +116,8 @@ public class StatisticsGenerator implements Tool {
             context.write(new Text("abc"), new BytesWritable(statisticsBuilder.build().toByteArray()));
         }
     }
+    
+    
 
     @Override
     public int run(String[] args) throws Exception {
