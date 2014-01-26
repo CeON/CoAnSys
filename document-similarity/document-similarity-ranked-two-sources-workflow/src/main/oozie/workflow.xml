@@ -1,0 +1,98 @@
+<workflow-app name='${project}___${subproject}___ver3' xmlns="uri:oozie:workflow:0.4">
+	<start to='easy_load_and_tfidf' />
+	<action name='easy_load_and_tfidf'>
+		<pig>
+			<job-tracker>${jobTracker}</job-tracker>
+			<name-node>${nameNode}</name-node>
+			<prepare>
+				<delete path="${ds_similarityOutputPath}" />
+			</prepare>
+			<configuration>
+				<property>
+					<name>mapred.job.queue.name</name>
+					<value>${queueName}</value>
+				</property>
+                                <property>
+                                        <name>oozie.launcher.mapred.fairscheduler.pool</name>
+                                        <value>${pool}</value>
+                                </property>
+			</configuration>
+			<script>document-similarity-tiny-s1.pig</script>
+			<param>inputPath=${ds_bwndataMetadataInputPath}</param>
+			<param>outputPath=${ds_similarityOutputPath}</param>
+			<param>commonJarsPath=${commonJarsPath}</param>
+			<param>parallel=${ds_parallel}</param>
+			<param>tmpCompressionCodec=${ds_tmpCompressionCodec}</param>
+			<param>sample=${ds_sample}</param>
+			<param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>
+			<param>ds_scheduler=${ds_scheduler}</param>
+			<param>tfidfMinValue=${ds_tfidfMinValue}</param>
+		</pig>
+		<ok to='pairwise-sim' />
+		<error to='kill' />
+	</action>
+
+	<action name='pairwise-sim'>
+		<pig>
+			<job-tracker>${jobTracker}</job-tracker>
+			<name-node>${nameNode}</name-node>
+			<configuration>
+				<property>
+					<name>mapred.job.queue.name</name>
+					<value>${queueName}</value>
+				</property>
+                                <property>
+                                        <name>oozie.launcher.mapred.fairscheduler.pool</name>
+                                        <value>${pool}</value>
+                                </property>
+			</configuration>
+			<script>document-similarity-tiny-s2.pig</script>
+			<param>inputPath=${ds_bwndataMetadataInputPath}</param>
+			<param>outputPath=${ds_similarityOutputPath}</param>
+			<param>commonJarsPath=${commonJarsPath}</param>
+			<param>parallel=${ds_parallel}</param>
+			<param>tmpCompressionCodec=${ds_tmpCompressionCodec}</param>
+			<param>sample=${ds_sample}</param>
+			<param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>
+			<param>ds_scheduler=${ds_scheduler}</param>
+			<param>tfidfMinValue=${ds_tfidfMinValue}</param>
+		</pig>
+		<ok to='calculate_final_results' />
+		<error to='kill' />
+	</action>
+
+	<action name='calculate_final_results'>
+		<pig>
+			<job-tracker>${jobTracker}</job-tracker>
+			<name-node>${nameNode}</name-node>
+			<configuration>
+				<property>
+					<name>mapred.job.queue.name</name>
+					<value>${queueName}</value>
+				</property>
+                                <property>
+                                        <name>oozie.launcher.mapred.fairscheduler.pool</name>
+                                        <value>${pool}</value>
+                                </property>
+			</configuration>
+			<script>document-similarity-tiny-s3.pig</script>
+			<param>inputPath=${ds_bwndataMetadataInputPath}</param>
+			<param>outputPath=${ds_similarityOutputPath}</param>
+			<param>commonJarsPath=${commonJarsPath}</param>
+			<param>parallel=${ds_parallel}</param>
+			<param>tmpCompressionCodec=${ds_tmpCompressionCodec}</param>
+			<param>sample=${ds_sample}</param>
+			<param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>
+			<param>ds_scheduler=${ds_scheduler}</param>
+			<param>tfidfMinValue=${ds_tfidfMinValue}</param>
+		</pig>
+		<ok to='end' />
+		<error to='kill' />
+	</action>
+
+	<kill name='kill'>
+		<message>Workflow failed, error
+			message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+	</kill>
+	<end name='end' />
+</workflow-app>
