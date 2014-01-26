@@ -65,10 +65,10 @@ public class ExtendedStemmedPairs extends EvalFunc<DataBag> {
         
         PorterStemmer ps = new PorterStemmer();
         for (String s : StringUtils.split(tmp, SPACE)) {
-        	s = s.replaceAll("^[-]+", "");
-        	s = s.replaceAll("[-]+$", "");
-        	s = s.replaceAll("^[0-9]+$", "");
-        	if(s.length()==0){
+        	s = s.replaceAll("^[/-]+", "");
+        	s = s.replaceAll("[-/]+$", "");
+        	s = s.replaceAll("^[/-_0-9]+$", "");
+        	if(s.length()<=3){
         		continue;
         	}
             if (!StopWordsRemover.isAnEnglishStopWords(s)) {;
