@@ -256,7 +256,7 @@ DEFINE calculate_pairwise_similarity(in_relation, in_relation2, doc_field, term_
         $out_relation = FOREACH docs_terms_similarity GENERATE docId1, docId2, similarity;
 };
 
-DEFINE calculate_pairwise_similarity_cosine_nominator_no_filtering(in_relation, in_relation2, doc_field, term_field, tfidf_field, CC, joinParallel) RETURNS out_relation {
+DEFINE calculate_pairwise_similarity_cosine_nominator_FS_filtering(in_relation, in_relation2, doc_field, term_field, tfidf_field, CC, joinParallel) RETURNS out_relation {
 
 	-- join on terms
 	joined = JOIN $in_relation BY $term_field, $in_relation2 BY $term_field USING 'merge' PARALLEL $joinParallel;
@@ -264,6 +264,12 @@ DEFINE calculate_pairwise_similarity_cosine_nominator_no_filtering(in_relation, 
 		$in_relation$CC$term_field AS term,
        	$in_relation$CC$doc_field AS docId1, $in_relation2$CC$doc_field As docId2,
        	$in_relation$CC$tfidf_field AS tfidf1, $in_relation2$CC$tfidf_field As tfidf2;
+
+  filteredX = filter projected by INDEXOF(docId1,'F') == 0 and INDEXOF(docId2,'S') == 0;
+	filtered = foreach filteredX generate term, 
+			SUBSTRING(docId1,1,SIZE(docId1)) as docId1,
+			SUBSTRING(docId1,1,SIZE(docId2)) as docId2,
+			tfidf1, tfidf2;
 
 	-- calculate similarity for <docIdA,docIdB,sim>
 	term_doc_similarity = FOREACH filtered GENERATE docId1, docId2, tfidf1*tfidf2 as partial;

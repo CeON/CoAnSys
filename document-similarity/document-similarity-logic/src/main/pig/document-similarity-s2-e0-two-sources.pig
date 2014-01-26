@@ -67,19 +67,23 @@ IMPORT 'macros.pig';
 -------------------------------------------------------
 %default two '2'
 %default one '1'
-fs -rm -f -r $outputPath$TFIDF_TOPN_ALL_TEMP$one
-fs -rm -f -r $outputPath$TFIDF_TOPN_ALL_TEMP$two
+--fs -rm -f -r $outputPath$TFIDF_TOPN_ALL_TEMP$one
+--fs -rm -f -r $outputPath$TFIDF_TOPN_ALL_TEMP$two
 
 
 
-tfidf_all_topn_projected = LOAD '$outputPathOne$TFIDF_TOPN_ALL_TEMP' 
+tfidf_all_topn_projectedX = LOAD '$outputPathOne$TFIDF_TOPN_ALL_TEMP' 
         AS (docId: chararray, term: chararray, tfidf: double);
+tfidf_all_topn_projected = foreach tfidf_all_topn_projectedX generate
+	CONCAT('F',docId) as docId, term,tfidf;
 tfidf_all_topn_sorted = order tfidf_all_topn_projected by term asc;
 STORE tfidf_all_topn_sorted  INTO '$outputPath$TFIDF_TOPN_ALL_TEMP$one';
 
 
 
-tfidf_all_topn_projected = LOAD '$outputPathTwo$TFIDF_TOPN_ALL_TEMP' 
+tfidf_all_topn_projectedX = LOAD '$outputPathTwo$TFIDF_TOPN_ALL_TEMP' 
         AS (docId: chararray, term: chararray, tfidf: double);
+tfidf_all_topn_projected = foreach tfidf_all_topn_projectedX generate
+	CONCAT('S',docId) as docId, term,tfidf;
 tfidf_all_topn_sorted = order tfidf_all_topn_projected by term asc;
 STORE tfidf_all_topn_sorted  INTO '$outputPath$TFIDF_TOPN_ALL_TEMP$two';

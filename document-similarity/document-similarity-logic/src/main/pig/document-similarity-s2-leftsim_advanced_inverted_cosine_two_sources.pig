@@ -68,7 +68,7 @@ IMPORT 'macros.pig';
 -------------------------------------------------------
 %default two '2'
 %default one '1'
-fs -rm -f -r $outputPath$NOMINATOR
+--fs -rm -f -r $outputPath$NOMINATOR
 
 
 
@@ -83,7 +83,7 @@ tfidf_all_topn_dupl_sorted = order tfidf_all_topn_dupl by term asc;
 
 
 -- calculate and store document similarity for all documents
-document_similarity_nominator = calculate_pairwise_similarity_cosine_nominator_no_filtering
+document_similarity_nominator = calculate_pairwise_similarity_cosine_nominator_FS_filtering
 	(tfidf_all_topn_orig_sorted, tfidf_all_topn_dupl_sorted, 
 	docId, term, tfidf, '::',$parallel);
 STORE document_similarity_nominator INTO '$outputPath$NOMINATOR';
