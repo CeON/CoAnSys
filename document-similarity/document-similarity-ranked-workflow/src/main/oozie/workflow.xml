@@ -26,6 +26,8 @@
 			<param>sample=${ds_sample}</param>
 			<param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>
 			<param>ds_scheduler=${ds_scheduler}</param>
+			<param>tfidfTopnTermPerDocument=${ds_tfidfTopnTermPerDocument}</param>
+			<param>similarityTopnDocumentPerDocument=${ds_similarityTopnDocumentPerDocument}</param>
 			<param>removal_least_used=${ds_removal_least_used}</param>
 			<param>removal_rate=${ds_removal_rate}</param>
 		</pig>
@@ -56,6 +58,8 @@
 			<param>sample=${ds_sample}</param>
 			<param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>
 			<param>ds_scheduler=${ds_scheduler}</param>
+			<param>tfidfTopnTermPerDocument=${ds_tfidfTopnTermPerDocument}</param>
+			<param>similarityTopnDocumentPerDocument=${ds_similarityTopnDocumentPerDocument}</param>
 			<param>removal_least_used=${ds_removal_least_used}</param>
 			<param>removal_rate=${ds_removal_rate}</param>
 		</pig>
@@ -86,6 +90,8 @@
 			<param>sample=${ds_sample}</param>
 			<param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>
 			<param>ds_scheduler=${ds_scheduler}</param>
+			<param>tfidfTopnTermPerDocument=${ds_tfidfTopnTermPerDocument}</param>
+			<param>similarityTopnDocumentPerDocument=${ds_similarityTopnDocumentPerDocument}</param>
 			<param>removal_least_used=${ds_removal_least_used}</param>
 			<param>removal_rate=${ds_removal_rate}</param>
 		</pig>
@@ -116,6 +122,8 @@
 			<param>sample=${ds_sample}</param>
 			<param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>
 			<param>ds_scheduler=${ds_scheduler}</param>
+			<param>tfidfTopnTermPerDocument=${ds_tfidfTopnTermPerDocument}</param>
+			<param>similarityTopnDocumentPerDocument=${ds_similarityTopnDocumentPerDocument}</param>
 			<param>removal_least_used=${ds_removal_least_used}</param>
 			<param>removal_rate=${ds_removal_rate}</param>
 		</pig>
@@ -146,6 +154,8 @@
 			<param>sample=${ds_sample}</param>
 			<param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>
 			<param>ds_scheduler=${ds_scheduler}</param>
+			<param>tfidfTopnTermPerDocument=${ds_tfidfTopnTermPerDocument}</param>
+			<param>similarityTopnDocumentPerDocument=${ds_similarityTopnDocumentPerDocument}</param>
 			<param>removal_least_used=${ds_removal_least_used}</param>
 			<param>removal_rate=${ds_removal_rate}</param>
 		</pig>
