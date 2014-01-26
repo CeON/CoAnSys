@@ -21,11 +21,15 @@
 %default DOC_TERM_TITLE '/term/title'
 %default TFIDF_NON_WEIGHTED_SUBDIR '/tfidf/nonweighted'
 %default TFIDF_TOPN_WEIGHTED_SUBDIR '/tfidf/weighted-topn'
-%default TFIDF_TOPN_ALL_TEMP '/tfidf/all-topn-tmp'
 %default TFIDF_TOPN_ALL_SUBDIR '/tfidf/all-topn'
+%default TFIDF_TOPN_ALL_TEMP '/tfidf/all-topn-tmp'
 %default TFIDF_TF_ALL_SUBDIR '/tfidf/tf-all-topn'
 %default SIMILARITY_ALL_DOCS_SUBDIR '/similarity/alldocs'
+%default SIMILARITY_ALL_LEFT_DOCS_SUBDIR '/similarity/alldocs'
 %default SIMILARITY_TOPN_DOCS_SUBDIR '/similarity/topn'
+%default SIMILARITY_NORMALIZED_ALL_DOCS_SUBDIR '/similarity/normalizedalldocs'
+%default DENOMINATOR '/similarity/denominator'
+%default NOMINATOR '/similarity/nominator'
 
 %default tfidfTopnTermPerDocument 20
 %default similarityTopnDocumentPerDocument 20
@@ -36,11 +40,11 @@
 %default tmpCompressionCodec gz
 %default mapredChildJavaOpts -Xmx8000m
 
-%default inputPath 'hdfs://hadoop-master.vls.icm.edu.pl:8020/srv/bwndata/seqfile/springer-metadata/springer-20120419-springer0*.sq'
-%default time '2013-09-28--10-37'
-%default outputPath 'document-similarity-output/$time/'
+%default outputPath 'document-similarity-output'
+%default outputPathOne 'document-similarity-output-one'
+%default outputPathTwo 'document-similarity-output-two'
 %default jars '*.jar'
-%default commonJarsPath '../../../../document-similarity-workflow/target/oozie-wf/lib/$jars'
+%default commonJarsPath 'lib/$jars'
 
 REGISTER '$commonJarsPath'
 
@@ -61,35 +65,21 @@ IMPORT 'macros.pig';
 -------------------------------------------------------
 -- business code section
 -------------------------------------------------------
+%default two '2'
+%default one '1'
+fs -rm -f -r $outputPath$TFIDF_TOPN_ALL_TEMP$one
+fs -rm -f -r $outputPath$TFIDF_TOPN_ALL_TEMP$two
 
-docIn = LOAD '$inputPath' USING pl.edu.icm.coansys.commons.pig.udf.
-	RichSequenceFileLoader('org.apache.hadoop.io.Text','org.apache.hadoop.io.BytesWritable') 
-	as (key:chararray, value:bytearray);
-B = SAMPLE docIn $sample;
---B = limit docIn 100;
-doc = FOREACH B GENERATE $0 as docId, pl.edu.icm.coansys.similarity.pig.udf.DocumentProtobufToTupleMap($1) as document ;
---doc = load_from_hdfs('$inputPath', $sample);
---doc = foreach doc generate $0 as docId, $1 as document;
 
-doc_raw = foreach doc generate docId, document.title as title, document.abstract as abstract;
--- speparated line as FLATTEN w a hidden CROSS
-doc_keyword_raw = foreach doc generate docId, FLATTEN(document.keywords) AS keywords;
--- stem, clean, filter out
-doc_keyword_all = stem_words(doc_keyword_raw, docId, keywords);
-doc_title_all = stem_words(doc_raw, docId, title);
-doc_abstract_all = stem_words(doc_raw, docId, abstract);
 
--- get all words (with duplicates for tfidf)
-doc_all = UNION doc_keyword_all, doc_title_all, doc_abstract_all;
--- store document and terms
---STORE doc_title_all INTO '$outputPath$DOC_TERM_TITLE';
---STORE doc_keyword_all INTO '$outputPath$DOC_TERM_KEYWORDS';
-STORE doc_all INTO '$outputPath$DOC_TERM_ALL';
--- calculate tf-idf for each group of terms
-tfidf_all = calculate_tfidf(doc_all, docId, term, $tfidfMinValue);
--- store tfidf values into separate direcotires
-STORE tfidf_all INTO '$outputPath$TFIDF_NON_WEIGHTED_SUBDIR';
--- calculate and store topn terms per document in all results
-tfidf_all_topn = get_topn_per_group(tfidf_all, docId, tfidf, 'desc', $tfidfTopnTermPerDocument);
-tfidf_all_topn_projected = FOREACH tfidf_all_topn GENERATE top::docId AS docId, top::term AS term, top::tfidf AS tfidf;
-STORE tfidf_all_topn_projected  INTO '$outputPath$TFIDF_TOPN_ALL_TEMP';
+tfidf_all_topn_projected = LOAD '$outputPathOne$TFIDF_TOPN_ALL_TEMP' 
+        AS (docId: chararray, term: chararray, tfidf: double);
+tfidf_all_topn_sorted = order tfidf_all_topn_projected by term asc;
+STORE tfidf_all_topn_sorted  INTO '$outputPath$TFIDF_TOPN_ALL_TEMP$one';
+
+
+
+tfidf_all_topn_projected = LOAD '$outputPathTwo$TFIDF_TOPN_ALL_TEMP' 
+        AS (docId: chararray, term: chararray, tfidf: double);
+tfidf_all_topn_sorted = order tfidf_all_topn_projected by term asc;
+STORE tfidf_all_topn_sorted  INTO '$outputPath$TFIDF_TOPN_ALL_TEMP$two';

@@ -26,10 +26,11 @@
 %default TFIDF_TF_ALL_SUBDIR '/tfidf/tf-all-topn'
 %default SIMILARITY_ALL_DOCS_SUBDIR '/similarity/alldocs'
 %default SIMILARITY_ALL_LEFT_DOCS_SUBDIR '/similarity/alldocs'
-%default SIMILARITY_NORMALIZED_ALL_DOCS_SUBDIR '/similarity/normalizedalldocs'
+%default SIMILARITY_NORMALIZED_LEFT_DOCS_SUBDIR '/similarity/normalizedalldocs'
+%default SIMILARITY_NORMALIZED_ALL_DOCS_SUBDIR '/similarity/normalizedleftdocs'
 %default SIMILARITY_TOPN_DOCS_SUBDIR '/similarity/topn'
-%default DENOMINATOR '/denominator'
-%default NOMINATOR '/nominator'
+%default DENOMINATOR '/similarity/denominator'
+%default NOMINATOR '/similarity/nominator'
 
 %default tfidfTopnTermPerDocument 20
 %default similarityTopnDocumentPerDocument 20
@@ -41,10 +42,9 @@
 %default mapredChildJavaOpts -Xmx8000m
 
 %default inputPath '/srv/polindex/seqfile/polindex-yadda-20130729-text.sf'
-%default time '2013-09-28--10-37'
-%default outputPath 'document-similarity-output/$time/'
+%default outputPath 'document-similarity-output/'
 %default jars '*.jar'
-%default commonJarsPath '../../../../document-similarity-workflow/target/oozie-wf/lib/$jars'
+%default commonJarsPath 'lib/$jars'
 
 REGISTER '$commonJarsPath'
 
@@ -66,11 +66,12 @@ IMPORT 'macros.pig';
 -------------------------------------------------------
 -- business code section
 -------------------------------------------------------
-/******************************* BLEND RESULTS ************************************/
+
 -- consider both <docIdA, docIdB,sim> and <docIdB,docIdA,sim>
 mix_l = LOAD '$outputPath$SIMILARITY_NORMALIZED_ALL_DOCS_SUBDIR' as (docA:chararray,docB:chararray,sim:float);
 mix_r = foreach mix_l generate $1 as docA:chararray,$0 as docB:chararray,$2 as sim:float;
-mix_f = union mix_l,mix_r;
+mix_xf = union mix_l,mix_r;
+mix_f = distinct mix_xf;
 describe mix_f;
 -- calculate and store topn similar documents for each document
 document_similarity_topn = get_topn_per_group(mix_f, docA, sim, 'desc', $similarityTopnDocumentPerDocument);

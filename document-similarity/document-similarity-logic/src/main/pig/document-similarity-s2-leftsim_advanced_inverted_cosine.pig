@@ -21,17 +21,20 @@
 %default DOC_TERM_TITLE '/term/title'
 %default TFIDF_NON_WEIGHTED_SUBDIR '/tfidf/nonweighted'
 %default TFIDF_TOPN_WEIGHTED_SUBDIR '/tfidf/weighted-topn'
-%default TFIDF_TOPN_ALL_TEMP '/tfidf/all-topn-tmp'
 %default TFIDF_TOPN_ALL_SUBDIR '/tfidf/all-topn'
+%default TFIDF_TOPN_ALL_TEMP '/tfidf/all-topn-tmp'
 %default TFIDF_TF_ALL_SUBDIR '/tfidf/tf-all-topn'
 %default SIMILARITY_ALL_DOCS_SUBDIR '/similarity/alldocs'
+%default SIMILARITY_ALL_LEFT_DOCS_SUBDIR '/similarity/alldocs'
 %default SIMILARITY_TOPN_DOCS_SUBDIR '/similarity/topn'
-%default DENOMINATOR '/denominator'
-%default NOMINATOR '/nominator'
+%default SIMILARITY_NORMALIZED_ALL_DOCS_SUBDIR '/similarity/normalizedalldocs'
+%default DENOMINATOR '/similarity/denominator'
+%default NOMINATOR '/similarity/nominator'
 
 %default tfidfTopnTermPerDocument 20
 %default similarityTopnDocumentPerDocument 20
 %default tfidfMinValue 0.4
+%default in_filter ' docId1<docId2 '
 
 %default sample 0.1
 %default parallel 10
@@ -42,7 +45,7 @@
 %default time ''
 %default outputPath 'document-similarity-output/$time/'
 %default jars '*.jar'
-%default commonJarsPath '../../../../document-similarity-workflow/target/oozie-wf/lib/$jars'
+%default commonJarsPath 'lib/$jars'
 
 REGISTER '$commonJarsPath'
 
@@ -60,35 +63,28 @@ SET mapred.fairscheduler.pool $ds_scheduler
 --SET pig.noSplitCombination true;
 IMPORT 'macros.pig';
 
-/********************* BEG:MERGE-SORT ZONE *****************************************/
-/********* Follwing advices from http://tinyurl.com/mqn638w ************************/
-/****`exec;` command has been used to guarantee corect merge-join execution ********/
-/*** Other good pieces of advice may be found at ***********************************/
-/*** http://pig.apache.org/docs/r0.11.0/perf.html#merge-joins **********************/
-/***********************************************************************************/
-
 -------------------------------------------------------
 -- business code section
 -------------------------------------------------------
-/*** (a) load, order and assign to tfidf_all_topn_projected ************************/
-/*** (b) store results (c) close current tasks *************************************/
-tfidf_all_topn_projected = LOAD '$outputPath$TFIDF_TOPN_ALL_TEMP' 
-	AS (docId: chararray, term: chararray, tfidf: float);
-tfidf_all_topn_sorted = order tfidf_all_topn_projected by term asc;
-%default one '1'
 %default two '2'
-STORE tfidf_all_topn_sorted  INTO '$outputPath$TFIDF_TOPN_ALL_SUBDIR$one';
-STORE tfidf_all_topn_sorted  INTO '$outputPath$TFIDF_TOPN_ALL_SUBDIR$two';
-exec;
-/*** (d) load sorted data and duplicate *******************************************/
-/*** (f) perform doc-sim calculation [MERGE-SORT] (g) close current tasks *********/
-tfidf_all_topn_sorted_orig = LOAD '$outputPath$TFIDF_TOPN_ALL_SUBDIR$one' 
-	AS (docId: chararray, term: chararray, tfidf: double);
-tfidf_all_topn_sorted_dupl = LOAD '$outputPath$TFIDF_TOPN_ALL_SUBDIR$two' 
-	AS (docId: chararray, term: chararray, tfidf: double);
+%default one '1'
+fs -rm -f -r $outputPath$NOMINATOR
+
+
+
+tfidf_all_topn_orig = LOAD '$outputPath$TFIDF_TOPN_ALL_TEMP$one' 
+        AS (docId: chararray, term: chararray, tfidf: double);
+tfidf_all_topn_orig_sorted = order tfidf_all_topn_orig by term asc;
+
+tfidf_all_topn_dupl = LOAD '$outputPath$TFIDF_TOPN_ALL_TEMP$two' 
+        AS (docId: chararray, term: chararray, tfidf: double);
+tfidf_all_topn_dupl_sorted = order tfidf_all_topn_dupl by term asc;
+
+
+
 -- calculate and store document similarity for all documents
 document_similarity_nominator = calculate_pairwise_similarity_cosine_nominator
-		(tfidf_all_topn_sorted_orig, tfidf_all_topn_sorted_dupl, 
-		docId, term, tfidf, '::',$parallel);
-STORE tfidf_all_topn_sorted  INTO '$outputPath$NOMINATOR';
-/********************* END:MERGE-SORT ZONE *****************************************/
+	(tfidf_all_topn_orig_sorted, tfidf_all_topn_dupl_sorted, 
+	docId, term, tfidf, '::',$parallel);
+STORE document_similarity_nominator INTO '$outputPath$NOMINATOR';
+

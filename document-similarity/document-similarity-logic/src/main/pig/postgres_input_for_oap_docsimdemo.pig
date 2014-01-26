@@ -18,6 +18,7 @@
 
 %default jars '*.jar'
 REGISTER './lib/$jars';
+REGISTER '/usr/lib/pig/piggybank.jar'
 
 %declare SEQFILE_LOADER 'com.twitter.elephantbird.pig.load.SequenceFileLoader';
 %declare SEQFILE_STORAGE 'com.twitter.elephantbird.pig.store.SequenceFileStorage';
@@ -31,11 +32,11 @@ DEFINE countstar(in) RETURNS out {
 	$out = foreach gr generate COUNT($in) as count;
 }
 
-set default_parallel 40
+set default_parallel 1
 
 --%default input 'test.sf'
 %default  input '/user/pdendek/oap-document-similarity-demo/mainInputData/p*'
-%default output '/user/pdendek/oap-document-similarity-demo/mainOutputData/' 
+%default output '/user/pdendek/oap-document-similarity-demo/mainOutputData/dump' 
 
 protos_pig1 = LOAD '$input' USING $SEQFILE_LOADER (
   '-c $TEXT_CONVERTER', '-c $BYTESWRITABLE_CONVERTER'
@@ -48,24 +49,36 @@ documentsX = foreach protos_pig1 generate
 	flatten(pl.edu.icm.coansys.similarity.pig.udf.DocSimDemo_Documents(v)) as (doi:chararray, year:chararray, title:chararray);
 xdoc_count = countstar(documentsX);
 documents = filter documentsX by (doi is not null and  doi!='') and (year is not null and year!='') and (title is not null and title != '');
+dfin = distinct documents;
 doc_count = countstar(documents);
 --------------------------------------------------------
 --dump xdoc_count;------------------- count documents
 --dump doc_count;-------------------- count documents after filter
 fs -rm -r -f $output/5sep/documents.csv
-store documents into '$output/5sep/documents.csv' using PigStorage('@');
-
-
+--/******
+--store documents into '$output/5sep/documents.csv' 
+store dfin into '$output/5sep/documents.csv' 
+using PigStorage('@');
+--	USING org.apache.pig.piggybank.storage.CSVExcelStorage('@' ,'NO_MULTILINE','UNIX');
+--****/
+--dump documents;
 /*************** authors info *************/
 authorsX = foreach protos_pig1 generate 
 	flatten(pl.edu.icm.coansys.similarity.pig.udf.DocSimDemo_Authors(v)) as (doi:chararray, authNum:int, name:chararray);
 --dump authorsX;
 xauth_count = countstar(authorsX);
 authors = filter authorsX by (name is not null and name!='') and (doi is not null and doi != '');
+afin = distinct authors;
 auth_count = countstar(authorsX);
 --------------------------------------------------------
 --dump xauth_count; ---------------------- count authors in general
 --dump auth_count;-------------------- count authors after filter
 fs -rm -r -f $output/5sep/authors.csv
-store authors into '$output/5sep/authors.csv' using PigStorage('@');
+--/********
+--store authors into '$output/5sep/authors.csv' 
+store afin into '$output/5sep/authors.csv' 
+using PigStorage('@');
+--	USING org.apache.pig.piggybank.storage.CSVExcelStorage('@' ,'NO_MULTILINE','UNIX');
+--*******/
+--dump authors;
 

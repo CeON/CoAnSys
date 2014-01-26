@@ -26,6 +26,8 @@
 %default TFIDF_TF_ALL_SUBDIR '/tfidf/tf-all-topn'
 %default SIMILARITY_ALL_DOCS_SUBDIR '/similarity/alldocs'
 %default SIMILARITY_TOPN_DOCS_SUBDIR '/similarity/topn'
+%default TERM_COUNT '/term-count'
+%default WORD_COUNT '/filtered-by-ranked-word-count';
 
 %default tfidfTopnTermPerDocument 20
 %default similarityTopnDocumentPerDocument 20
@@ -62,6 +64,15 @@ IMPORT 'macros.pig';
 -------------------------------------------------------
 -- business code section
 -------------------------------------------------------
+--fs -rm -r -f $outputPath
+fs -rm -r -f '$outputPath$DOC_TERM_TITLE';
+fs -rm -r -f '$outputPath$DOC_TERM_KEYWORDS';
+fs -rm -r -f '$outputPath$DOC_TERM_ALL';
+fs -rm -r -f '$outputPath$TERM_COUNT';
+fs -rm -r -f '$outputPath$WORD_COUNT';
+fs -rm -r -f '$outputPath$TFIDF_NON_WEIGHTED_SUBDIR';
+fs -rm -r -f '$outputPath$TFIDF_TOPN_ALL_TEMP';
+
 docIn = LOAD '$inputPath' USING pl.edu.icm.coansys.commons.pig.udf.
 	RichSequenceFileLoader('org.apache.hadoop.io.Text','org.apache.hadoop.io.BytesWritable') 
 	as (key:chararray, value:bytearray);
@@ -91,12 +102,12 @@ group_by_terms = group terms by term;
 X = foreach group_by_terms generate group as term;
 X1 = group X all; 
 tcX = foreach X1 generate COUNT(X) as count;
-%default tc '/term-count' 
-store tcX into '$outputPath$tc';
+
+store tcX into '$outputPath$TERM_COUNT';
 --**************** term count **********************
 
 --**************** word count rank *****************
-tc = load '$outputPath$tc' as (val:double);
+tc = load '$outputPath$TERM_COUNT' as (val:double);
 group_by_terms = group doc_all by term;
 wc = foreach group_by_terms generate COUNT(doc_all) as count, group as term, doc_all.docId as docs;
 wc_ranked = rank wc by count asc;
@@ -104,12 +115,12 @@ term_lower_tmp = filter wc_ranked by
 		($0 <= (double)tc.val*$removal_rate 
 		and $0 >= $removal_least_used);
 doc_selected_termsX = foreach term_lower_tmp generate FLATTEN(docs) as docId, term;
-%default wc '/word-count-ranked';
-store doc_selected_termsX into '$outputPath$wc';
+
+store doc_selected_termsX into '$outputPath$WORD_COUNT';
 --**************** word count rank *****************
 
 --****************** tfidf calc ********************
-doc_selected_terms = load '$outputPath$wc' as (docId:chararray, term:chararray);
+doc_selected_terms = load '$outputPath$WORD_COUNT' as (docId:chararray, term:chararray);
 tfidf_allX = calculate_tfidf_nofiltering(doc_selected_terms, docId, term);
 -- store tfidf values into separate direcotires
 STORE tfidf_allX INTO '$outputPath$TFIDF_NON_WEIGHTED_SUBDIR';

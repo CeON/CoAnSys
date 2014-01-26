@@ -40,7 +40,7 @@
 %default time ''
 %default outputPath 'document-similarity-output/$time/'
 %default jars '*.jar'
-%default commonJarsPath 'lib/$jars'
+%default commonJarsPath '../../../../document-similarity-workflow/target/oozie-wf/lib/$jars'
 
 REGISTER '$commonJarsPath'
 
@@ -64,19 +64,17 @@ IMPORT 'macros.pig';
 /*** Other good pieces of advice may be found at ***********************************/
 /*** http://pig.apache.org/docs/r0.11.0/perf.html#merge-joins **********************/
 /***********************************************************************************/
-%default one '1'
-%default two '2'
-fs -rm -r -f '$outputPath$TFIDF_TOPN_ALL_SUBDIR$one'
-fs -rm -r -f '$outputPath$TFIDF_TOPN_ALL_SUBDIR$two'
-fs -rm -r -f '$outputPath$SIMILARITY_ALL_DOCS_SUBDIR'
+
 -------------------------------------------------------
 -- business code section
 -------------------------------------------------------
 /*** (a) load, order and assign to tfidf_all_topn_projected ************************/
+/*** (b) store results (c) close current tasks *************************************/
 tfidf_all_topn_projected = LOAD '$outputPath$TFIDF_TOPN_ALL_TEMP' 
         AS (docId: chararray, term: chararray, tfidf: double);
 tfidf_all_topn_sorted = order tfidf_all_topn_projected by term asc;
-/*** (b) store results (c) close current tasks *************************************/
+%default one '1'
+%default two '2'
 STORE tfidf_all_topn_sorted  INTO '$outputPath$TFIDF_TOPN_ALL_SUBDIR$one';
 STORE tfidf_all_topn_sorted  INTO '$outputPath$TFIDF_TOPN_ALL_SUBDIR$two';
 exec;
@@ -92,7 +90,7 @@ tfidf_all_topn_dupl_sorted = order tfidf_all_topn_dupl by term asc;
 
 -- calculate and store document similarity for all documents
 document_similarity = calculate_pairwise_similarity
-	(tfidf_all_topn_orig_sorted, tfidf_all_topn_dupl_sorted, 
-	 docId, term, tfidf, '::',$parallel);
+	(tfidf_all_topn_orig_sorted,
+                tfidf_all_topn_dupl_sorted, docId, term, tfidf, '::',$parallel);
 STORE document_similarity INTO '$outputPath$SIMILARITY_ALL_DOCS_SUBDIR';
 /********************* END:MERGE-SORT ZONE *****************************************/
