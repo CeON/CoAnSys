@@ -26,15 +26,16 @@
 %default TFIDF_TF_ALL_SUBDIR '/tfidf/tf-all-topn'
 %default SIMILARITY_ALL_DOCS_SUBDIR '/similarity/alldocs'
 %default SIMILARITY_ALL_LEFT_DOCS_SUBDIR '/similarity/alldocs'
+%default SIMILARITY_NORMALIZED_LEFT_DOCS_SUBDIR '/similarity/normalizedalldocs'
+%default SIMILARITY_NORMALIZED_ALL_DOCS_SUBDIR '/similarity/normalizedleftdocs'
 %default SIMILARITY_TOPN_DOCS_SUBDIR '/similarity/topn'
-%default SIMILARITY_NORMALIZED_ALL_DOCS_SUBDIR '/similarity/normalizedalldocs'
-%default DENOMINATOR '/denominator'
-%default NOMINATOR '/nominator'
-
+%default DENOMINATOR '/similarity/denominator'
+%default NOMINATOR '/similarity/nominator'
 
 %default tfidfTopnTermPerDocument 20
 %default similarityTopnDocumentPerDocument 20
 %default tfidfMinValue 0.4
+%default in_filter ' docId1 < docId2 '
 
 %default sample 0.1
 %default parallel 10
@@ -42,10 +43,9 @@
 %default mapredChildJavaOpts -Xmx8000m
 
 %default inputPath '/srv/polindex/seqfile/polindex-yadda-20130729-text.sf'
-%default time '2013-09-28--10-37'
-%default outputPath 'document-similarity-output/$time/'
+%default outputPath 'document-similarity-output/'
 %default jars '*.jar'
-%default commonJarsPath '../../../../document-similarity-workflow/target/oozie-wf/lib/$jars'
+%default commonJarsPath 'lib/$jars'
 
 REGISTER '$commonJarsPath'
 
@@ -67,20 +67,19 @@ IMPORT 'macros.pig';
 -------------------------------------------------------
 -- business code section
 -------------------------------------------------------
-/******************************* BLEND RESULTS ************************************/
--- normalize results
+
+-- calculate denominator (simultanously left and right normalizer)
 tfidf_all_topn_projected = LOAD '$outputPath$TFIDF_TOPN_ALL_TEMP' as (docId:chararray,term:chararray,tfidf:float);
 Xdocument_similarity_denominator = calculate_pairwise_similarity_cosine_denominator
 		(tfidf_all_topn_projected, docId, term, tfidf);
 STORE Xdocument_similarity_denominator INTO '$outputPath$DENOMINATOR';
 
+-- normalize results
 simDenominator = LOAD '$outputPath$DENOMINATOR' AS (docId:chararray, denominator:float);
-
-leftSimNominator = LOAD '$outputPath$SIMILARITY_ALL_DOCS_SUBDIR' 
+leftSimNominator = LOAD '$outputPath$NOMINATOR' 
 	as (docA:chararray,docB:chararray,nominator:float);
-
 L = join leftSimNominator by docA, simDenominator by docId;
 L1 = foreach L generate docA, docB, nominator, denominator as denominatorA;
 P = join L1 by docB, simDenominator by docId;
-leftSim = foreach P generate docA, docB, nominator/SQRT(denominatorA*denominator) as sim;
+leftSim = foreach P generate docA, docB, nominator/denominatorA/denominator as sim;
 STORE leftSim INTO '$outputPath$SIMILARITY_NORMALIZED_ALL_DOCS_SUBDIR';

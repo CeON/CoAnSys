@@ -28,6 +28,7 @@ import org.apache.pig.tools.pigstats.PigStatusReporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pl.edu.icm.coansys.commons.java.DiacriticsRemover;
 import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
@@ -77,6 +78,7 @@ public class DocSimDemo_Documents extends EvalFunc<Tuple> {
 				for(TextWithLanguage twl : dm.getBasicMetadata().getTitleList()){
 					if(twl.getLanguage().toLowerCase().startsWith("en")){
 						title=twl.getText();
+						
 						break;
 					}
 				}
@@ -84,7 +86,8 @@ public class DocSimDemo_Documents extends EvalFunc<Tuple> {
 					title = dm.getBasicMetadata().getTitle(0).getText();
 				}
 				if(title != null && !title.trim().isEmpty()){
-					title = title.replaceAll("[^A-Za-z_0-9 ]", " ");
+					title = DiacriticsRemover.removeDiacritics(title);
+					title = title.replaceAll("[^A-Za-z0-9\\-_]", " ").replaceAll("\\s++", " ").trim();
 				}
 			}catch(Exception e){
 			}finally{
@@ -95,7 +98,7 @@ public class DocSimDemo_Documents extends EvalFunc<Tuple> {
 			}
 			
 			try{
-				doi = dm.getBasicMetadata().getDoi();
+				doi = dm.getBasicMetadata().getDoi().replaceAll("\\s++", " ").trim();
 			}catch(Exception e){
 			}finally{
 				if(doi == null || doi.trim().isEmpty()){
@@ -105,7 +108,7 @@ public class DocSimDemo_Documents extends EvalFunc<Tuple> {
 			}
 			
 			try{
-				year = dm.getBasicMetadata().getYear();
+				year = dm.getBasicMetadata().getYear().replaceAll("\\s++", " ").trim();
 			}catch(Exception e){
 			}finally{
 				if(year == null || year.trim().isEmpty()){
@@ -125,4 +128,11 @@ public class DocSimDemo_Documents extends EvalFunc<Tuple> {
 			throw new IOException(e);
 		}
 	}
+    
+    public static void main(String[] args){
+    	String title = "a\n\nb\t\tc\r\rd";
+    	title = title.replaceAll("[\\p{Space}]+", " ");
+    	System.out.println(title);
+    }
+    
 }

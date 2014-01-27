@@ -196,43 +196,108 @@ DEFINE get_topn_per_group(in_relation, group_field, order_field, order_direction
 	};
 };
 
+
 -------------------------------------------------------
 -- calculate similarity using pairwise similarity method
 -- that compares only those document that have at least
 -- one common words
 -------------------------------------------------------
-DEFINE calculate_pairwise_similarity(in_relation, in_relation2, doc_field, term_field, tfidf_field, CC, joinParallel) RETURNS out_relation {
+-------------------------------------------------------
+-- calculate similarity using pairwise similarity method
+-- that compares only those document that have at least
+-- one common words
+-------------------------------------------------------
+DEFINE calculate_pairwise_similarity_filter(in_relation, in_relation2, doc_field, term_field, tfidf_field, CC, joinParallel,in_filter) RETURNS out_relation {
+
+		-- join on terms
         joined = JOIN $in_relation BY $term_field, $in_relation2 BY $term_field USING 'merge' PARALLEL $joinParallel;
         projected = FOREACH joined GENERATE 
                 $in_relation$CC$term_field AS term,
                 $in_relation$CC$doc_field AS docId1, $in_relation2$CC$doc_field As docId2,
                 $in_relation$CC$tfidf_field AS tfidf1, $in_relation2$CC$tfidf_field As tfidf2;
 
-        filtered = FILTER projected BY docId1 < docId2;
+		-- represent each <docIdA,docIdB,sim> by one record
+        filtered = FILTER projected BY $in_filter;
+
+		-- calculate similarity for <docIdA,docIdB,sim>
         term_doc_similarity = FOREACH filtered GENERATE term, docId1, docId2, tfidf1, tfidf2,
                 KeywordSimilarity(term, docId1, tfidf1, docId2, tfidf2) AS similarity;
 
         docs_terms_group = GROUP term_doc_similarity BY (docId1, docId2);
         docs_terms_similarity = FOREACH docs_terms_group GENERATE FLATTEN(group) AS (docId1, docId2),
-                DocsCombinedSimilarity(term_doc_similarity.docId1, term_doc_similarity.docId2, term_doc_similarity.similarity) AS similarity;
+		DocsCombinedSimilarity(term_doc_similarity.docId1, term_doc_similarity.docId2, term_doc_similarity.similarity) AS similarity;
 
-        docs_similarity = FOREACH docs_terms_similarity GENERATE docId1, docId2, similarity;
-        docs_similarity2 = FOREACH docs_similarity GENERATE docId2 AS docId1, docId1 AS docId2, similarity;
-        docs_similarity_union = UNION docs_similarity, docs_similarity2;
-        $out_relation = FOREACH docs_similarity_union GENERATE *;
+        $out_relation = FOREACH docs_terms_similarity GENERATE docId1, docId2, similarity;
 };
 
-DEFINE calculate_pairwise_similarity_cosine_nominator(in_relation, in_relation2, doc_field, term_field, tfidf_field, CC, joinParallel) RETURNS out_relation {
+
+
+
+DEFINE calculate_pairwise_similarity(in_relation, in_relation2, doc_field, term_field, tfidf_field, CC, joinParallel) RETURNS out_relation {
+
+		-- join on terms
+        joined = JOIN $in_relation BY $term_field, $in_relation2 BY $term_field USING 'merge' PARALLEL $joinParallel;
+        projected = FOREACH joined GENERATE 
+                $in_relation$CC$term_field AS term,
+                $in_relation$CC$doc_field AS docId1, $in_relation2$CC$doc_field As docId2,
+                $in_relation$CC$tfidf_field AS tfidf1, $in_relation2$CC$tfidf_field As tfidf2;
+
+		-- represent each <docIdA,docIdB,sim> by one record
+        filtered = FILTER projected BY docId1 < docId2;
+
+		-- calculate similarity for <docIdA,docIdB,sim>
+        term_doc_similarity = FOREACH filtered GENERATE term, docId1, docId2, tfidf1, tfidf2,
+                KeywordSimilarity(term, docId1, tfidf1, docId2, tfidf2) AS similarity;
+
+        docs_terms_group = GROUP term_doc_similarity BY (docId1, docId2);
+        docs_terms_similarity = FOREACH docs_terms_group GENERATE FLATTEN(group) AS (docId1, docId2),
+		DocsCombinedSimilarity(term_doc_similarity.docId1, term_doc_similarity.docId2, term_doc_similarity.similarity) AS similarity;
+
+        $out_relation = FOREACH docs_terms_similarity GENERATE docId1, docId2, similarity;
+};
+
+DEFINE calculate_pairwise_similarity_cosine_nominator_FS_filtering(in_relation, in_relation2, doc_field, term_field, tfidf_field, CC, joinParallel) RETURNS out_relation {
+
+	-- join on terms
 	joined = JOIN $in_relation BY $term_field, $in_relation2 BY $term_field USING 'merge' PARALLEL $joinParallel;
 	projected = FOREACH joined GENERATE 
-		$in_relation$CC$term_field 
-AS term,
-        	$in_relation$CC$doc_field AS docId1, $in_relation2$CC$doc_field As docId2,
-        	$in_relation$CC$tfidf_field AS tfidf1, $in_relation2$CC$tfidf_field As tfidf2;
+		$in_relation$CC$term_field AS term,
+       	$in_relation$CC$doc_field AS docId1, $in_relation2$CC$doc_field As docId2,
+       	$in_relation$CC$tfidf_field AS tfidf1, $in_relation2$CC$tfidf_field As tfidf2;
 
+  filteredX = filter projected by INDEXOF(docId1,'F') == 0 and INDEXOF(docId2,'S') == 0;
+	filtered = foreach filteredX generate term, 
+			SUBSTRING(docId1,1,SIZE(docId1)) as docId1,
+			SUBSTRING(docId1,1,SIZE(docId2)) as docId2,
+			tfidf1, tfidf2;
+
+	-- calculate similarity for <docIdA,docIdB,sim>
+	term_doc_similarity = FOREACH filtered GENERATE docId1, docId2, tfidf1*tfidf2 as partial;
+	docs_terms_group = GROUP term_doc_similarity BY (docId1, docId2);
+	$out_relation = FOREACH docs_terms_group GENERATE FLATTEN(group) AS (docId1, docId2), SUM(term_doc_similarity.partial) as similarity;
+};
+
+
+
+
+
+
+
+
+DEFINE calculate_pairwise_similarity_cosine_nominator(in_relation, in_relation2, doc_field, term_field, tfidf_field, CC, joinParallel) RETURNS out_relation {
+
+	-- join on terms
+	joined = JOIN $in_relation BY $term_field, $in_relation2 BY $term_field USING 'merge' PARALLEL $joinParallel;
+	projected = FOREACH joined GENERATE 
+		$in_relation$CC$term_field AS term,
+       	$in_relation$CC$doc_field AS docId1, $in_relation2$CC$doc_field As docId2,
+       	$in_relation$CC$tfidf_field AS tfidf1, $in_relation2$CC$tfidf_field As tfidf2;
+
+	-- represent each <docIdA,docIdB,sim> by one record
 	filtered = FILTER projected BY docId1 < docId2;
-	term_doc_similarity = FOREACH filtered GENERATE 
-		docId1, docId2, tfidf1*tfidf2 as partial;
+
+	-- calculate similarity for <docIdA,docIdB,sim>
+	term_doc_similarity = FOREACH filtered GENERATE docId1, docId2, tfidf1*tfidf2 as partial;
 	docs_terms_group = GROUP term_doc_similarity BY (docId1, docId2);
 	$out_relation = FOREACH docs_terms_group GENERATE FLATTEN(group) AS (docId1, docId2), SUM(term_doc_similarity.partial) as similarity;
 };
@@ -243,4 +308,3 @@ DEFINE calculate_pairwise_similarity_cosine_denominator(in_relation, doc_field, 
 	C = foreach B generate group as docId, BagPow(A.$tfidf_field) as pows:bag{(pow:float)};
 	$out_relation = foreach C generate docId, SQRT(SUM(pows)) as denominator;
 };
-

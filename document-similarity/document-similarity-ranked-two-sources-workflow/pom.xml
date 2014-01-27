@@ -7,9 +7,9 @@
         <version>1.5-SNAPSHOT</version>
     </parent>
     
-    <artifactId>document-similarity-oap-demo-workflow</artifactId>
+    <artifactId>document-similarity-ranked-two-sources-workflow</artifactId>
     <packaging>oozie</packaging>
-    <name>Document Similarity Tool: Workflow for OA+ Demonstration</name>
+    <name>Document Similarity Tool: Rank Filtered Workflow, Two Sources</name>
     <url>http://maven.apache.org</url>
 
     <properties>

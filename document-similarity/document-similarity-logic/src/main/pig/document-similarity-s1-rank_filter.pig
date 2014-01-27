@@ -15,7 +15,7 @@
 -- You should have received a copy of the GNU Affero General Public License
 -- along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
 --
-
+%default RAW_DATA '/raw'
 %default DOC_TERM_ALL '/term/all'
 %default DOC_TERM_KEYWORDS '/term/keywords'
 %default DOC_TERM_TITLE '/term/title'
@@ -26,6 +26,8 @@
 %default TFIDF_TF_ALL_SUBDIR '/tfidf/tf-all-topn'
 %default SIMILARITY_ALL_DOCS_SUBDIR '/similarity/alldocs'
 %default SIMILARITY_TOPN_DOCS_SUBDIR '/similarity/topn'
+%default TERM_COUNT '/term-count'
+%default WORD_COUNT '/filtered-by-ranked-word-count';
 
 %default tfidfTopnTermPerDocument 20
 %default similarityTopnDocumentPerDocument 20
@@ -45,7 +47,7 @@
 REGISTER '$commonJarsPath'
 
 DEFINE WeightedTFIDF pl.edu.icm.coansys.similarity.pig.udf.TFIDF('weighted');
-DEFINE StemmedPairs pl.edu.icm.coansys.similarity.pig.udf.StemmedPairs();
+DEFINE StemmedPairs pl.edu.icm.coansys.similarity.pig.udf.ExtendedStemmedPairs();
 DEFINE KeywordSimilarity pl.edu.icm.coansys.similarity.pig.udf.AvgSimilarity('dks');
 DEFINE DocsCombinedSimilarity pl.edu.icm.coansys.similarity.pig.udf.AvgSimilarity('dkcs');
 DEFINE DocToTupleMap pl.edu.icm.coansys.similarity.pig.udf.DocumentProtobufToTupleMap();
@@ -56,12 +58,21 @@ SET pig.tmpfilecompression true
 SET pig.tmpfilecompression.codec $tmpCompressionCodec
 %DEFAULT ds_scheduler default
 SET mapred.fairscheduler.pool $ds_scheduler
---SET pig.noSplitCombination true;
 IMPORT 'macros.pig';
 
 -------------------------------------------------------
 -- business code section
 -------------------------------------------------------
+--fs -rm -r -f $outputPath
+/**********
+fs -rm -r -f '$outputPath$DOC_TERM_TITLE';
+fs -rm -r -f '$outputPath$DOC_TERM_KEYWORDS';
+fs -rm -r -f '$outputPath$DOC_TERM_ALL';
+fs -rm -r -f '$outputPath$TERM_COUNT';
+fs -rm -r -f '$outputPath$WORD_COUNT';
+fs -rm -r -f '$outputPath$TFIDF_NON_WEIGHTED_SUBDIR';
+fs -rm -r -f '$outputPath$TFIDF_TOPN_ALL_TEMP';
+***********/
 docIn = LOAD '$inputPath' USING pl.edu.icm.coansys.commons.pig.udf.
 	RichSequenceFileLoader('org.apache.hadoop.io.Text','org.apache.hadoop.io.BytesWritable') 
 	as (key:chararray, value:bytearray);
@@ -69,9 +80,13 @@ B = SAMPLE docIn $sample;
 --B = limit docIn 100;
 doc = FOREACH B GENERATE $0 as docId, DocToTupleMap($1) as document;
 
-doc_raw = foreach doc generate docId, document.title as title, document.abstract as abstract;
--- speparated line as FLATTEN w a hidden CROSS
-doc_keyword_raw = foreach doc generate docId, FLATTEN(document.keywords) AS keywords;
+doc_raportX = foreach doc generate docId, document.title as title, document.abstract as abstract, document.keywords as keywords;
+STORE doc_raportX INTO '$outputPath$RAW_DATA';
+doc_raport = LOAD '$outputPath$RAW_DATA' as (docId:chararray, title:chararray, abstract:chararray, keywords:{keyword:(value:chararray)});
+
+doc_raw = foreach doc_raport generate docId, title, abstract;
+doc_keyword_raw = foreach doc_raport generate docId, FLATTEN(keywords) as keywords;
+
 -- stem, clean, filter out
 doc_keyword_all = stem_words(doc_keyword_raw, docId, keywords);
 doc_title_all = stem_words(doc_raw, docId, title);
@@ -79,6 +94,7 @@ doc_abstract_all = stem_words(doc_raw, docId, abstract);
 
 -- get all words (with duplicates for tfidf)
 doc_allX = UNION doc_keyword_all, doc_title_all, doc_abstract_all;
+
 -- store document and terms
 STORE doc_title_all INTO '$outputPath$DOC_TERM_TITLE';
 STORE doc_keyword_all INTO '$outputPath$DOC_TERM_KEYWORDS';
@@ -91,12 +107,12 @@ group_by_terms = group terms by term;
 X = foreach group_by_terms generate group as term;
 X1 = group X all; 
 tcX = foreach X1 generate COUNT(X) as count;
-%default tc '/term-count' 
-store tcX into '$outputPath$tc';
+
+store tcX into '$outputPath$TERM_COUNT';
 --**************** term count **********************
 
 --**************** word count rank *****************
-tc = load '$outputPath$tc' as (val:double);
+tc = load '$outputPath$TERM_COUNT' as (val:double);
 group_by_terms = group doc_all by term;
 wc = foreach group_by_terms generate COUNT(doc_all) as count, group as term, doc_all.docId as docs;
 wc_ranked = rank wc by count asc;
@@ -104,12 +120,12 @@ term_lower_tmp = filter wc_ranked by
 		($0 <= (double)tc.val*$removal_rate 
 		and $0 >= $removal_least_used);
 doc_selected_termsX = foreach term_lower_tmp generate FLATTEN(docs) as docId, term;
-%default wc '/word-count-ranked';
-store doc_selected_termsX into '$outputPath$wc';
+
+store doc_selected_termsX into '$outputPath$WORD_COUNT';
 --**************** word count rank *****************
 
 --****************** tfidf calc ********************
-doc_selected_terms = load '$outputPath$wc' as (docId:chararray, term:chararray);
+doc_selected_terms = load '$outputPath$WORD_COUNT' as (docId:chararray, term:chararray);
 tfidf_allX = calculate_tfidf_nofiltering(doc_selected_terms, docId, term);
 -- store tfidf values into separate direcotires
 STORE tfidf_allX INTO '$outputPath$TFIDF_NON_WEIGHTED_SUBDIR';
