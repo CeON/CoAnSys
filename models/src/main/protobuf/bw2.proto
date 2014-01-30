@@ -90,6 +90,7 @@ message DocumentMetadata{
 	required BasicMetadata basicMetadata = 2;
 	repeated TextWithLanguage documentAbstract = 3;
 	repeated KeywordsList keywords = 10;
+	repeated SimilarDocumentInfo similarDocumentInfo = 20;
 	repeated KeyValue extId = 5;
 	repeated KeyValue auxiliarInfo = 6;
 	repeated Affiliation affiliations = 12;
@@ -97,6 +98,13 @@ message DocumentMetadata{
 	repeated string collection = 8;
 	optional string sourcePath = 9;
 	repeated string origKey = 11;
+}
+
+// Information about similar documents to the given one
+// (which carry its id in the field DocumentMetadata.key)
+message SimilarDocumentInfo {
+	required string docIdB = 1;
+	required double similarity = 2;
 }
 
 // position -- citation's position in reference list, starting by 1
