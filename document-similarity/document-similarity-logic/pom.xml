@@ -85,5 +85,10 @@
 			<artifactId>antlr-runtime</artifactId>
 			<version>3.2</version>
 		</dependency>
+		<dependency>
+		<groupId>org.apache.oozie</groupId>
+		<artifactId>oozie-client</artifactId>
+		<version>3.3.2-cdh4.3.0</version>
+		</dependency>
 	</dependencies>
 </project>
