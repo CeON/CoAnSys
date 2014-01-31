@@ -108,7 +108,7 @@ public class EvaluateWorkflows {
 		conf.setProperty("oozie.wf.application.path", ooziewfapplicationpath);
 		conf.setProperty(OozieClient.APP_PATH, ooziewfapplicationpath);
 		conf.setProperty("workflowPath", workflowPath);
-		conf.setProperty("commonJarPAth", commonJarsPath);
+		conf.setProperty("commonJarPath", commonJarsPath);
 		conf.setProperty("ds_bwndataMetadataInputPath",
 				ds_bwndataMetadataInputPath);
 		conf.setProperty("ds_bwndataMetadataOutputPath",
