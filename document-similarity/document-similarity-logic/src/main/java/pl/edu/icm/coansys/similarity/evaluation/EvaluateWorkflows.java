@@ -35,7 +35,7 @@ public class EvaluateWorkflows {
 				"0.9", "0.8", "0.6", "0.4", };
 		String[] ds_tfidfTopnTermPerDocument_arr = new String[] { "20", "10",
 				"5", "60", "80", "100", };
-		String[] ds_sample_arr = new String[] { "1", "0.7", "0.4", "0.1",
+		String[] ds_sample_arr = new String[] { "1.0", "0.7", "0.4", "0.1",
 				"0.05", "0.01", };
 		String[] ds_mapredChildJavaOpts_arr = new String[] { "10", "8", "6",
 				"4", "2", };
@@ -99,7 +99,7 @@ public class EvaluateWorkflows {
 		conf.setProperty("ds_removal_least_used", ds_removal_least_used);
 		conf.setProperty("ds_removal_rate", ds_removal_rate);
 		conf.setProperty("ds_similarityTopnDocumentPerDocument", "20");
-		conf.setProperty("ds_mapredChildJavaOpts", ds_mapredChildJavaOpts); 
+		conf.setProperty("ds_mapredChildJavaOpts", "-Xmx"+ds_mapredChildJavaOpts+"g"); 
 		conf.setProperty("ds_parallel", ds_parallel);
 		conf.setProperty("ds_tfidfTopnTermPerDocument", ds_tfidfTopnTermPerDocument);
 		conf.setProperty("commonJarsPath", commonJarsPath);
@@ -121,7 +121,7 @@ public class EvaluateWorkflows {
 		conf.setProperty("commonJarPath", commonJarsPath);
 		conf.setProperty("ds_bwndataMetadataInputPath",
 				ds_bwndataMetadataInputPath);
-		conf.setProperty("ds_similarityOutputPath", ds_similarityOutputPath);
+		conf.setProperty("ds_similarityOutputPath", ds_similarityOutputPath+"/"+params);
 		conf.setProperty("ds_scheduler", ds_scheduler);
 		conf.setProperty("ds_tmpCompressionCodec", ds_tmpCompressionCodec);
 
