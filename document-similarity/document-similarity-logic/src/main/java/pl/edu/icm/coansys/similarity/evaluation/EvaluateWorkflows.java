@@ -23,7 +23,7 @@ public class EvaluateWorkflows {
 	static final String ds_bwndataMetadataInputPath = "" + nameNode
 			+ "/user/mhorst/documentssimilarity/input_protobuf/2014-01-30";
 	static final String ds_similarityOutputPath = workflowPath
-			+ "/../results_poview_normal";
+			+ "/../results_oap_eval";
 	static final String ds_scheduler = "bigjobs";
 	static final String ds_tmpCompressionCodec = "gz";
 
@@ -87,12 +87,22 @@ public class EvaluateWorkflows {
 
 		String params = StringUtils.join(new String[] { ds_removal_least_used,
 				ds_removal_rate, ds_tfidfTopnTermPerDocument, ds_sample,
-				ds_mapredChildJavaOpts, ds_parallel });
+				ds_mapredChildJavaOpts, ds_parallel },"*");
+		params = params.replaceAll(".", "_");
 
 		OozieClient wc = new OozieClient(
 				"http://hadoop-master.vls.icm.edu.pl:11000/oozie");
 		Properties conf = wc.createConfiguration();
 
+		conf.setProperty("masterNode", masterNode);
+		conf.setProperty("ds_sample", ds_sample); 
+		conf.setProperty("ds_removal_least_used", ds_removal_least_used);
+		conf.setProperty("ds_removal_rate", ds_removal_rate);
+		conf.setProperty("ds_similarityTopnDocumentPerDocument", "20");
+		conf.setProperty("ds_mapredChildJavaOpts", ds_mapredChildJavaOpts); 
+		conf.setProperty("ds_parallel", ds_parallel);
+		conf.setProperty("ds_tfidfTopnTermPerDocument", ds_tfidfTopnTermPerDocument);
+		conf.setProperty("commonJarsPath", commonJarsPath);
 		conf.setProperty("nameNode", nameNode);
 		conf.setProperty("jobTracker", jobTracker);
 		conf.setProperty("queueName", queueName);
@@ -102,7 +112,7 @@ public class EvaluateWorkflows {
 
 		conf.setProperty("project", project);
 		conf.setProperty("subproject", "eval_" + params);
-		conf.setProperty("oozie.launcher.mapred.fairscheduler.pool ",
+		conf.setProperty("oozie.launcher.mapred.fairscheduler.pool",
 				oozielaunchermapredfairschedulerpool);
 		conf.setProperty("pool", pool);
 		conf.setProperty("oozie.wf.application.path", ooziewfapplicationpath);
@@ -111,8 +121,6 @@ public class EvaluateWorkflows {
 		conf.setProperty("commonJarPath", commonJarsPath);
 		conf.setProperty("ds_bwndataMetadataInputPath",
 				ds_bwndataMetadataInputPath);
-		conf.setProperty("ds_bwndataMetadataOutputPath",
-				"/user/pdendek/eval_oap_docsim/" + params);
 		conf.setProperty("ds_similarityOutputPath", ds_similarityOutputPath);
 		conf.setProperty("ds_scheduler", ds_scheduler);
 		conf.setProperty("ds_tmpCompressionCodec", ds_tmpCompressionCodec);
