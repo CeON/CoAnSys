@@ -30,7 +30,7 @@ public class EvaluateWorkflows {
 	public static void main(String[] args) throws Exception {
 
 		String[] ds_removal_least_used_arr = new String[] { "10", "0", "1",
-				"2", "3", "5", "20", "40", };
+				"2", "3", "5", "20", "40", "60" };
 		String[] ds_removal_rate_arr = new String[] { "0.99", "0.97", "0.95",
 				"0.9", "0.8", "0.6", "0.4", };
 		String[] ds_tfidfTopnTermPerDocument_arr = new String[] { "20", "10",
