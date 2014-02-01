@@ -35,7 +35,7 @@ public class EvaluateWorkflows {
 				"0.9", "0.8", "0.6", "0.4", };
 		String[] ds_tfidfTopnTermPerDocument_arr = new String[] { "20", "10",
 				"5", "60", "80", "100", };
-		String[] ds_sample_arr = new String[] { "1.0", "0.7", "0.4", "0.1",
+		String[] ds_sample_arr = new String[] { "0.122", "0.7", "0.4", "1.0",
 				"0.05", "0.01", };
 		String[] ds_mapredChildJavaOpts_arr = new String[] { "10", "8", "6",
 				"4", "2", };
