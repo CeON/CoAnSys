@@ -88,7 +88,7 @@ public class EvaluateWorkflows {
 		String params = StringUtils.join(new String[] { ds_removal_least_used,
 				ds_removal_rate, ds_tfidfTopnTermPerDocument, ds_sample,
 				ds_mapredChildJavaOpts, ds_parallel },"*");
-		params = params.replaceAll(".", "_");
+		params = params.replaceAll("\\.", "_");
 
 		OozieClient wc = new OozieClient(
 				"http://hadoop-master.vls.icm.edu.pl:11000/oozie");
