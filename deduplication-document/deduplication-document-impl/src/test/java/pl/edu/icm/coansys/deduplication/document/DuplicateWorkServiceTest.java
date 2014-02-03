@@ -75,7 +75,7 @@ public class DuplicateWorkServiceTest extends AbstractTestNGSpringContextTests {
 
     @Test
     public void testFindDuplicates() {
-        Map<Integer, Set<DocumentProtos.DocumentMetadata>> duplicates = duplicateWorkService.findDuplicates(documentWrappers);
+        Map<Integer, Set<DocumentProtos.DocumentMetadata>> duplicates = duplicateWorkService.findDuplicates(documentWrappers, null);
         for (Map.Entry<Integer, Set<DocumentProtos.DocumentMetadata>> entry : duplicates.entrySet()) {
             log.info("key   : {}", ""+entry.getKey());
             for (DocumentProtos.DocumentMetadata documentMetadata: entry.getValue()) {
