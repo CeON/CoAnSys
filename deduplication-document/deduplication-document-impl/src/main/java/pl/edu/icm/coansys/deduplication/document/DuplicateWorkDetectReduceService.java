@@ -125,8 +125,12 @@ public class DuplicateWorkDetectReduceService implements DiReduceService<Text, B
             
 
         } else {
-            Map<Integer, Set<DocumentProtos.DocumentMetadata>> duplicateWorksMap = duplicateWorkService.findDuplicates(documents);
-            saveDuplicatesToContext(duplicateWorksMap, key, context);
+            if (isDebugMode(context.getConfiguration())) {
+                duplicateWorkService.findDuplicates(documents, context);
+            } else {
+                Map<Integer, Set<DocumentProtos.DocumentMetadata>> duplicateWorksMap = duplicateWorkService.findDuplicates(documents, null);
+                saveDuplicatesToContext(duplicateWorksMap, key, context);
+            }
             context.progress();
         }
         log.info(dashes+ "end process, key: {}", key);
@@ -139,6 +143,11 @@ public class DuplicateWorkDetectReduceService implements DiReduceService<Text, B
             sb.append("-");
         }
         return sb.toString();
+    }
+    
+    private boolean isDebugMode(Configuration conf) {
+        String debugOptionValue = conf.get("DEDUPLICATION_DEBUG_MODE", "false");
+        return debugOptionValue.equals("true");
     }
     
     /**
