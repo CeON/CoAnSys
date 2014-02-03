@@ -17,10 +17,17 @@
  */
 package pl.edu.icm.coansys.deduplication.document.comparator;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import org.apache.hadoop.io.BytesWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Reducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.edu.icm.coansys.commons.java.DocumentWrapperUtils;
+import pl.edu.icm.coansys.commons.java.StringTools;
 import pl.edu.icm.coansys.deduplication.document.voter.SimilarityVoter;
 import pl.edu.icm.coansys.deduplication.document.voter.Vote;
 import pl.edu.icm.coansys.models.DocumentProtos;
@@ -40,22 +47,29 @@ public abstract class AbstractWorkComparator implements WorkComparator {
      * Tells whether the given documents are duplicates.
      */
     @Override
-    public boolean isDuplicate(DocumentProtos.DocumentMetadata doc1, DocumentProtos.DocumentMetadata doc2) {
-        
+    public boolean isDuplicate(DocumentProtos.DocumentMetadata doc1, DocumentProtos.DocumentMetadata doc2, Reducer<Text, BytesWritable, Text, Text>.Context context) {
+
         List<Float> probabilities = new ArrayList<Float>();
         List<Float> weights = new ArrayList<Float>();
 
         String ids = doc1.getKey() + ", " + doc2.getKey();
         StringBuilder logBuilder = new StringBuilder();
 
+        StringBuilder shortLogBuilder = new StringBuilder();
+        shortLogBuilder.append(compactTitle(doc1)).append(", ").append(compactTitle(doc2));
+
         if (similarityVoters != null) {
             for (SimilarityVoter voter : similarityVoters) {
+                shortLogBuilder.append("#").append(voter.getClass().getSimpleName());
                 Vote vote = voter.vote(doc1, doc2);
+                Vote.VoteStatus status = vote.getStatus();
+                shortLogBuilder.append(":").append(vote.getStatus().name());
 
                 switch (vote.getStatus()) {
                     case EQUALS:
                         logger.info("Documents " + ids + " considered as duplicates because of result EQUALS of voter "
                                 + voter.getClass().getName());
+                        writeToContext(context, ids, shortLogBuilder.toString());
                         return true;
                     case NOT_EQUALS:
                         return false;
@@ -67,22 +81,41 @@ public abstract class AbstractWorkComparator implements WorkComparator {
                                 .append(", weight ").append(voter.getWeight()).append('\n');
                         probabilities.add(vote.getProbability());
                         weights.add(voter.getWeight());
+                        shortLogBuilder.append("-").append(vote.getProbability());
                 }
             }
         }
-        
-        boolean result = calculateResult(probabilities, weights);
+
+        boolean result = calculateResult(probabilities, weights, shortLogBuilder);
 
         if (result) {
             logger.info(ids + " considered as duplicates because:\n" + logBuilder.toString());
             //logger.info("doc1:\n" + doc1.getDocumentMetadata());
             //logger.info("doc2:\n" + doc2.getDocumentMetadata());
+            writeToContext(context, ids, shortLogBuilder.toString());
         }
-        
+
         return result;
     }
-    
-    protected abstract boolean calculateResult(List<Float> probabilites, List<Float> weights);
+
+    private static void writeToContext(Reducer<Text, BytesWritable, Text, Text>.Context context, String key, String value) {
+        if (context != null) {
+            try {
+                context.write(new Text(key), new Text(value));
+            } catch (IOException ex) {
+                java.util.logging.Logger.getLogger(AbstractWorkComparator.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InterruptedException ex) {
+                java.util.logging.Logger.getLogger(AbstractWorkComparator.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    private static String compactTitle(DocumentProtos.DocumentMetadata doc) {
+        String docKey = DocumentWrapperUtils.getMainTitle(doc);
+        return StringTools.normalize(docKey);
+    }
+
+    protected abstract boolean calculateResult(List<Float> probabilites, List<Float> weights, StringBuilder logBuilder);
 
     //******************** SETTERS ********************
     public void setSimilarityVoters(List<SimilarityVoter> similarityVoters) {

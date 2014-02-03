@@ -125,8 +125,8 @@ public class DuplicateWorkDetectReduceService implements DiReduceService<Text, B
             
 
         } else {
-            Map<Integer, Set<DocumentProtos.DocumentMetadata>> duplicateWorksMap = duplicateWorkService.findDuplicates(documents);
-            saveDuplicatesToContext(duplicateWorksMap, key, context);
+            Map<Integer, Set<DocumentProtos.DocumentMetadata>> duplicateWorksMap = duplicateWorkService.findDuplicates(documents, context);
+            //saveDuplicatesToContext(duplicateWorksMap, key, context);
             context.progress();
         }
         log.info(dashes+ "end process, key: {}", key);
