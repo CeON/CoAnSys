@@ -146,6 +146,9 @@ public class DuplicateWorkDetectReduceService implements DiReduceService<Text, B
     }
     
     private boolean isDebugMode(Configuration conf) {
+        if (conf == null) {
+            return false;
+        }
         String debugOptionValue = conf.get("DEDUPLICATION_DEBUG_MODE", "false");
         return debugOptionValue.equals("true");
     }
