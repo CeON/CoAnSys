@@ -32,7 +32,7 @@ public class VotesProductComparator extends AbstractWorkComparator {
 
     
     @Override
-    protected boolean calculateResult(List<Float> probabilities, List<Float> weights, StringBuilder logBuilder) {
+    protected boolean calculateResult(List<Float> probabilities, List<Float> weights, StringBuilder debugOutputBuilder) {
         if (probabilities.size() < minVotersRequired) {
             return false;
         }
@@ -41,7 +41,7 @@ public class VotesProductComparator extends AbstractWorkComparator {
         for (int i = 0; i < probabilities.size(); i++) {
             probabilitiesProduct *= probabilities.get(i);
         }
-        logBuilder.append("##PROBABILITIES_PRODUCT=").append(probabilitiesProduct);
+        debugOutputBuilder.append("##PROBABILITIES_PRODUCT=").append(probabilitiesProduct);
         return probabilitiesProduct > probabilityTreshold;
     }
 

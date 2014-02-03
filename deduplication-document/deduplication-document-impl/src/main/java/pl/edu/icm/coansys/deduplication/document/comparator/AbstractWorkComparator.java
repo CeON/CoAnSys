@@ -55,21 +55,21 @@ public abstract class AbstractWorkComparator implements WorkComparator {
         String ids = doc1.getKey() + ", " + doc2.getKey();
         StringBuilder logBuilder = new StringBuilder();
 
-        StringBuilder shortLogBuilder = new StringBuilder();
-        shortLogBuilder.append(compactTitle(doc1)).append(", ").append(compactTitle(doc2));
+        StringBuilder debugOutputBuilder = new StringBuilder();
+        debugOutputBuilder.append(compactTitle(doc1)).append(", ").append(compactTitle(doc2));
 
         if (similarityVoters != null) {
             for (SimilarityVoter voter : similarityVoters) {
-                shortLogBuilder.append("#").append(voter.getClass().getSimpleName());
+                debugOutputBuilder.append("#").append(voter.getClass().getSimpleName());
                 Vote vote = voter.vote(doc1, doc2);
                 Vote.VoteStatus status = vote.getStatus();
-                shortLogBuilder.append(":").append(vote.getStatus().name());
+                debugOutputBuilder.append(":").append(vote.getStatus().name());
 
                 switch (vote.getStatus()) {
                     case EQUALS:
                         logger.info("Documents " + ids + " considered as duplicates because of result EQUALS of voter "
                                 + voter.getClass().getName());
-                        writeToContext(context, ids, shortLogBuilder.toString());
+                        writeDebugOutputToContext(context, ids, debugOutputBuilder.toString());
                         return true;
                     case NOT_EQUALS:
                         return false;
@@ -81,24 +81,24 @@ public abstract class AbstractWorkComparator implements WorkComparator {
                                 .append(", weight ").append(voter.getWeight()).append('\n');
                         probabilities.add(vote.getProbability());
                         weights.add(voter.getWeight());
-                        shortLogBuilder.append("-").append(vote.getProbability());
+                        debugOutputBuilder.append("-").append(vote.getProbability());
                 }
             }
         }
 
-        boolean result = calculateResult(probabilities, weights, shortLogBuilder);
+        boolean result = calculateResult(probabilities, weights, debugOutputBuilder);
 
         if (result) {
             logger.info(ids + " considered as duplicates because:\n" + logBuilder.toString());
             //logger.info("doc1:\n" + doc1.getDocumentMetadata());
             //logger.info("doc2:\n" + doc2.getDocumentMetadata());
-            writeToContext(context, ids, shortLogBuilder.toString());
+            writeDebugOutputToContext(context, ids, debugOutputBuilder.toString());
         }
 
         return result;
     }
 
-    private static void writeToContext(Reducer<Text, BytesWritable, Text, Text>.Context context, String key, String value) {
+    private static void writeDebugOutputToContext(Reducer<Text, BytesWritable, Text, Text>.Context context, String key, String value) {
         if (context != null) {
             try {
                 context.write(new Text(key), new Text(value));
