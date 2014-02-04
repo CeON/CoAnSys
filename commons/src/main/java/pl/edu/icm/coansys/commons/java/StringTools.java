@@ -215,10 +215,9 @@ public final class StringTools {
         if (value == null || value.isEmpty()) {
             return value;
         }
-        String result = value.trim();
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < result.length(); ++i) {
-            char c = result.charAt(i);
+        for (int i = 0; i < value.length(); ++i) {
+            char c = value.charAt(i);
             if (Character.isLetterOrDigit(c)) {
                 sb.append(c);
             } else if (Character.isWhitespace(c)) {
@@ -227,8 +226,8 @@ public final class StringTools {
                 sb.append(" ");
             }
         }
-        result = sb.toString();
-        result = result.replaceAll(" +", " ");
+        String result = sb.toString();
+        result = result.trim().replaceAll(" +", " ");
         result = DiacriticsRemover.removeDiacritics(result);
         result = result.toLowerCase();
         return result;
