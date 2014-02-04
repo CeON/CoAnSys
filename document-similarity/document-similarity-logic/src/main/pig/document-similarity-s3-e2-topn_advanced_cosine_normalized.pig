@@ -31,6 +31,7 @@
 %default SIMILARITY_TOPN_DOCS_SUBDIR '/similarity/topn'
 %default DENOMINATOR '/similarity/denominator'
 %default NOMINATOR '/similarity/nominator'
+%default SIMILARITY_TOPN_DOCS_PB_SUBDIR '/similarity/protobuf'
 
 %default tfidfTopnTermPerDocument 20
 %default similarityTopnDocumentPerDocument 20
@@ -76,3 +77,10 @@ describe mix_f;
 -- calculate and store topn similar documents for each document
 document_similarity_topn = get_topn_per_group(mix_f, docA, sim, 'desc', $similarityTopnDocumentPerDocument);
 STORE document_similarity_topn INTO '$outputPath$SIMILARITY_TOPN_DOCS_SUBDIR';
+
+beforepb = group document_similarity_topn by $0;
+pb = foreach beforepb generate pl.edu.icm.coansys.similarity.pig.serializers.SERIALIZE_RESULTS(*);
+STORE pb INTO '$outputPath$SIMILARITY_TOPN_DOCS_PB_SUBDIR' 
+	USING pl.edu.icm.coansys.commons.pig.udf.
+	RichSequenceFileLoader('org.apache.hadoop.io.Text',
+	'org.apache.hadoop.io.BytesWritable');

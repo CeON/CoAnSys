@@ -44,9 +44,9 @@ public class SERIALIZE_RESULTS extends EvalFunc<Tuple> {
 	private static final Logger logger = LoggerFactory.getLogger(SERIALIZE_RESULTS.class);
 	
 	@Override
-	public Schema outputSchema(@SuppressWarnings("unused") Schema input) {
+	public Schema outputSchema(Schema input) {
 		try {
-			return Schema.generateNestedSchema(DataType.TUPLE, DataType.CHARARRAY,  DataType.BAG);
+			return Schema.generateNestedSchema(DataType.TUPLE, DataType.CHARARRAY,  DataType.BYTEARRAY);
 		} catch (FrontendException e) {
 			logger.error("Error in creating output schema:", e);
 			throw new IllegalStateException(e);
