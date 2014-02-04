@@ -18,6 +18,9 @@
 
 package pl.edu.icm.coansys.deduplication.document.comparator;
 
+import org.apache.hadoop.io.BytesWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Reducer;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 
 /**
@@ -25,5 +28,5 @@ import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
  * @author Artur Czeczko <a.czeczko@icm.edu.pl>
  */
 public interface WorkComparator  {
-    public boolean isDuplicate(DocumentMetadata doc1, DocumentMetadata doc2);
+    public boolean isDuplicate(DocumentMetadata doc1, DocumentMetadata doc2, Reducer<Text, BytesWritable, Text, Text>.Context context);
 }

@@ -74,7 +74,7 @@ public class WeightedMeanComparatorTest {
                 .thenReturn(new Vote(Vote.VoteStatus.PROBABILITY, 1.0f));
         when(workYearVoter.getWeight()).thenReturn(0.5f);
         
-        Assert.assertTrue(duplicateWorkComparator.isDuplicate(doc1, doc2));
+        Assert.assertTrue(duplicateWorkComparator.isDuplicate(doc1, doc2, null));
         
         verify(workTitleVoter, times(1)).vote(any(DocumentProtos.DocumentMetadata.class), any(DocumentProtos.DocumentMetadata.class));
         verify(workAuthorVoter, times(1)).vote(any(DocumentProtos.DocumentMetadata.class), any(DocumentProtos.DocumentMetadata.class));
@@ -96,7 +96,7 @@ public class WeightedMeanComparatorTest {
                 .thenReturn(new Vote(Vote.VoteStatus.NOT_EQUALS));
         when(workYearVoter.getWeight()).thenReturn(0.5f);
         
-        Assert.assertFalse(duplicateWorkComparator.isDuplicate(doc1, doc2));
+        Assert.assertFalse(duplicateWorkComparator.isDuplicate(doc1, doc2, null));
         
         verify(workTitleVoter, times(1)).vote(any(DocumentProtos.DocumentMetadata.class), any(DocumentProtos.DocumentMetadata.class));
         verify(workAuthorVoter, times(1)).vote(any(DocumentProtos.DocumentMetadata.class), any(DocumentProtos.DocumentMetadata.class));
@@ -117,7 +117,7 @@ public class WeightedMeanComparatorTest {
                 .thenReturn(new Vote(Vote.VoteStatus.PROBABILITY, 1.0f));
         when(workYearVoter.getWeight()).thenReturn(0.5f);
         
-        Assert.assertFalse(duplicateWorkComparator.isDuplicate(doc1, doc2));
+        Assert.assertFalse(duplicateWorkComparator.isDuplicate(doc1, doc2, null));
         
         verify(workTitleVoter, times(1)).vote(any(DocumentProtos.DocumentMetadata.class), any(DocumentProtos.DocumentMetadata.class));
         verify(workAuthorVoter, times(1)).vote(any(DocumentProtos.DocumentMetadata.class), any(DocumentProtos.DocumentMetadata.class));
@@ -140,7 +140,7 @@ public class WeightedMeanComparatorTest {
                 .thenReturn(new Vote(Vote.VoteStatus.PROBABILITY, 1.0f));
         when(workYearVoter.getWeight()).thenReturn(0.5f);
         
-        Assert.assertFalse(duplicateWorkComparator.isDuplicate(doc1, doc2));
+        Assert.assertFalse(duplicateWorkComparator.isDuplicate(doc1, doc2, null));
         
         verify(workTitleVoter, times(1)).vote(any(DocumentProtos.DocumentMetadata.class), any(DocumentProtos.DocumentMetadata.class));
         verify(workAuthorVoter, times(0)).vote(any(DocumentProtos.DocumentMetadata.class), any(DocumentProtos.DocumentMetadata.class));
