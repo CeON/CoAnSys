@@ -73,7 +73,7 @@ public class SERIALIZE_RESULTS extends EvalFunc<Tuple> {
 			for(Tuple in : bd){
 				SecondDocInfo.Builder sdib = SecondDocInfo.newBuilder();
 				sdib.setDocIdB((String) in.get(1));
-				sdib.setSimilarity((Double) in.get(2));
+				sdib.setSimilarity(new Double((Float) in.get(2)));
 				sdil.add(sdib.build());
 			}
 			outb.addAllSecondDocInfo(sdil);
