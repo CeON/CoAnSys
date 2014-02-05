@@ -72,8 +72,8 @@ public class SERIALIZE_RESULTS extends EvalFunc<Tuple> {
 			ArrayList<SecondDocInfo> sdil = new ArrayList<SecondDocInfo>(); 
 			for(Tuple in : bd){
 				SecondDocInfo.Builder sdib = SecondDocInfo.newBuilder();
-				sdib.setDocIdB((String) in.get(0));
-				sdib.setSimilarity((Double) in.get(1));
+				sdib.setDocIdB((String) in.get(1));
+				sdib.setSimilarity((Double) in.get(2));
 				sdil.add(sdib.build());
 			}
 			outb.addAllSecondDocInfo(sdil);
