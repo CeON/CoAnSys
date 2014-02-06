@@ -75,12 +75,12 @@ mix_xf = union mix_l,mix_r;
 mix_f = distinct mix_xf;
 describe mix_f;
 -- calculate and store topn similar documents for each document
-document_similarity_topn = get_topn_per_group(mix_f, docA, sim, 'desc', $similarityTopnDocumentPerDocument);
-STORE document_similarity_topn INTO '$outputPath$SIMILARITY_TOPN_DOCS_SUBDIR';
+document_similarity_topnX = get_topn_per_group(mix_f, docA, sim, 'desc', $similarityTopnDocumentPerDocument);
+STORE document_similarity_topnX INTO '$outputPath$SIMILARITY_TOPN_DOCS_SUBDIR';
 
-beforepb = group document_similarity_topn by $0;
-pb = foreach beforepb generate pl.edu.icm.coansys.similarity.pig.serializers.SERIALIZE_RESULTS(*);
-STORE pb INTO '$outputPath$SIMILARITY_TOPN_DOCS_PB_SUBDIR' 
-	USING pl.edu.icm.coansys.commons.pig.udf.
-	RichSequenceFileLoader('org.apache.hadoop.io.Text',
-	'org.apache.hadoop.io.BytesWritable');
+document_similarity_topn = load '$outputPath$SIMILARITY_TOPN_DOCS_SUBDIR' as (docA:chararray,docB:chararray,sim:float);
+
+beforepbX = group document_similarity_topn by docA;
+beforepb = foreach beforepbX generate group as docA, document_similarity_topn as simdocs;
+pb = foreach beforepb generate FLATTEN(pl.edu.icm.coansys.similarity.pig.serializers.SERIALIZE_RESULTS(*,'cosine')) as (docId:chararray,docsim_out_proto:bytearray);
+STORE pb INTO '$outputPath$SIMILARITY_TOPN_DOCS_PB_SUBDIR';

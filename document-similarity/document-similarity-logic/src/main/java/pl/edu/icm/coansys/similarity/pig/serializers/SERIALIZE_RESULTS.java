@@ -32,7 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
-import pl.edu.icm.coansys.models.DocumentSimilarityProtos.DocumentSimilarityOut;
+import pl.edu.icm.coansys.models.DocumentSimilarityProtos.DocumentSimilarityInfo;
 import pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo;
 
 /**
@@ -64,16 +64,18 @@ public class SERIALIZE_RESULTS extends EvalFunc<Tuple> {
 		}
 
 		try {
-			DocumentSimilarityOut.Builder outb = DocumentSimilarityOut.newBuilder();
+			DocumentSimilarityInfo.Builder outb = DocumentSimilarityInfo.newBuilder();
 			String docIdA = (String) input.get(0);
 			outb.setDocIdA(docIdA);
+			String type = (String) input.get(2);
+			outb.setType(type);
 			
 			DataBag bd = (DataBag)input.get(1);
 			ArrayList<SecondDocInfo> sdil = new ArrayList<SecondDocInfo>(); 
 			for(Tuple in : bd){
 				SecondDocInfo.Builder sdib = SecondDocInfo.newBuilder();
 				sdib.setDocIdB((String) in.get(1));
-				sdib.setSimilarity(new Double((Float) in.get(2)));
+				sdib.setSimilarity((Float) in.get(2));
 				sdil.add(sdib.build());
 			}
 			outb.addAllSecondDocInfo(sdil);
