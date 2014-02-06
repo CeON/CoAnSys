@@ -67,6 +67,8 @@ public class SERIALIZE_RESULTS extends EvalFunc<Tuple> {
 			DocumentSimilarityOut.Builder outb = DocumentSimilarityOut.newBuilder();
 			String docIdA = (String) input.get(0);
 			outb.setDocIdA(docIdA);
+			String type = (String) input.get(2);
+			
 			
 			DataBag bd = (DataBag)input.get(1);
 			ArrayList<SecondDocInfo> sdil = new ArrayList<SecondDocInfo>(); 
