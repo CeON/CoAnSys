@@ -337,7 +337,7 @@ public class RichSequenceFileLoader extends FileInputLoadFunc implements StoreFu
 			String message = "Unable to write key/value pair to output, key: "
 					+ key.getClass() + ", value: " + value.getClass()
 					+ ", writer " + writer + " ex " + ex;
-			LOG.error(StackTraceExtractor.getStackTrace(ex));
+			LOG.error(StackTraceExtractor.getStackTrace(ex).replaceAll("\n", " -- "));
 			LOG.error(message);
 			throw new BackendException(message+" -- "+StackTraceExtractor.getStackTrace(ex));
 		}
