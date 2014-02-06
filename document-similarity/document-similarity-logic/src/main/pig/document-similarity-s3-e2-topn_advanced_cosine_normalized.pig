@@ -80,9 +80,7 @@ STORE document_similarity_topnX INTO '$outputPath$SIMILARITY_TOPN_DOCS_SUBDIR';
 
 document_similarity_topn = load '$outputPath$SIMILARITY_TOPN_DOCS_SUBDIR' as (docA:chararray,docB:chararray,sim:float);
 
-beforepb = group document_similarity_topn by $0;
-pb = foreach beforepb generate pl.edu.icm.coansys.similarity.pig.serializers.SERIALIZE_RESULTS(*);
-STORE pb INTO '$outputPath$SIMILARITY_TOPN_DOCS_PB_SUBDIR' 
-	USING pl.edu.icm.coansys.commons.pig.udf.
-	RichSequenceFileLoader('org.apache.hadoop.io.Text',
-	'org.apache.hadoop.io.BytesWritable');
+beforepbX = group document_similarity_topn by docA;
+beforepb = foreach beforepbX generate group as docA, document_similarity_topn as simdocs;
+pb = foreach beforepb generate FLATTEN(pl.edu.icm.coansys.similarity.pig.serializers.SERIALIZE_RESULTS(*,'cosine')) as (docId:chararray,docsim_out_proto:bytearray);
+STORE pb INTO '$outputPath$SIMILARITY_TOPN_DOCS_PB_SUBDIR';
