@@ -297,13 +297,17 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 
 		Map<String, Author> filteredAuthors = new HashMap<String, Author>(
 				dplAuthors.size());
-
+		
 		// creating disambiguation extractor only for normalizer
 		DisambiguationExtractor disam_extractor = new DisambiguationExtractor();
 
+		Counter dpl_cntr = myreporter.getCounter("Contrib", "duplicated");
+		dpl_cntr.increment(0);
+		
 		for (Author a : dplAuthors) {
 			Author b = filteredAuthors.put(a.getKey(), a);
 			if (b != null) {
+				dpl_cntr.increment(1);
 				// cId is inside map already. Checking whether cId is cloned
 				// or
 				// duplicated for different data or incorrectly attributed
