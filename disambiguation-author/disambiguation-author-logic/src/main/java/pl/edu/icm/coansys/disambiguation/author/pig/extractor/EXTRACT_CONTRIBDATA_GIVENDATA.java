@@ -192,8 +192,13 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 
 			// result bag with tuples, which describe each contributor
 			DataBag ret = new DefaultDataBag();
-
+			
 			Collection<Author> authors = dm.getBasicMetadata().getAuthorList();
+			reportAuthors(authors);
+			if ( authors.isEmpty() ) {
+				// returning empty bag
+				return ret;
+			}
 
 			Map<String, DataBag> finalAuthorMap;
 			// taking from document metadata data universal for all contribs
@@ -282,10 +287,10 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 		return map;
 	}
 
-	
 	// Pig Status Reporter staff:
 	private PigStatusReporter myreporter = null;
-	private Counter counters4Doc[][], counters4Author[][], counterSname[];
+	private Counter counters4Doc[][], counters4Author[][], counterSname[],
+			countersExist;
 
 	static class REPORTER_CONST {
 		public static final String CONTRIB_EX = "Contrib_Existing";
@@ -304,6 +309,11 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 		counters4Doc = new Counter[des4Doc.size()][2];
 		counters4Author = new Counter[des4Author.size()][2];
 		counterSname = new Counter[2];
+		countersExist = myreporter.getCounter("unused", "unused");
+
+		if (countersExist == null) {
+			return;
+		}
 
 		for (int i = 0; i < des4Doc.size(); i++) {
 			counters4Doc[i][REPORTER_CONST.MISS] = myreporter.getCounter(
@@ -313,9 +323,6 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 					REPORTER_CONST.DOC_EX, des4Doc.get(i).getClass()
 							.getSimpleName());
 
-			if (counters4Doc[i][REPORTER_CONST.MISS] == null) {
-				continue;
-			}
 			counters4Doc[i][REPORTER_CONST.MISS].increment(0);
 			counters4Doc[i][REPORTER_CONST.EXIST].increment(0);
 		}
@@ -326,9 +333,7 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 			counters4Author[i][REPORTER_CONST.EXIST] = myreporter.getCounter(
 					REPORTER_CONST.CONTRIB_EX, des4Author.get(i).getClass()
 							.getSimpleName());
-			if (counters4Author[i][REPORTER_CONST.MISS] == null) {
-				continue;
-			}
+
 			counters4Author[i][REPORTER_CONST.MISS].increment(0);
 			counters4Author[i][REPORTER_CONST.EXIST].increment(0);
 		}
@@ -337,48 +342,48 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 				REPORTER_CONST.CONTRIB_MS, "Normalized sname");
 		counterSname[REPORTER_CONST.EXIST] = myreporter.getCounter(
 				REPORTER_CONST.CONTRIB_EX, "Normalized sname");
-		if (counterSname[REPORTER_CONST.MISS] != null) {
-			counterSname[REPORTER_CONST.MISS].increment(0);
-			counterSname[REPORTER_CONST.EXIST].increment(0);
-		}
+		counterSname[REPORTER_CONST.MISS].increment(0);
+		counterSname[REPORTER_CONST.EXIST].increment(0);
 	}
 
 	private void reportAuthorDataExistance(DataBag extractedAuthorObj, int j) {
-
+		if (countersExist == null) {
+			return;
+		}
 		if (extractedAuthorObj == null || extractedAuthorObj.size() == 0) {
-			if (counters4Author[j][REPORTER_CONST.MISS] != null) {
-				counters4Author[j][REPORTER_CONST.MISS].increment(1);
-			}
+			counters4Author[j][REPORTER_CONST.MISS].increment(1);
 		} else {
-			if (counters4Author[j][REPORTER_CONST.EXIST] != null) {
-				counters4Author[j][REPORTER_CONST.EXIST].increment(1);
-			}
+			counters4Author[j][REPORTER_CONST.EXIST].increment(1);
 		}
 	}
 
 	private void raportDocumentDataExistance(DataBag extractedDocObj, int i) {
-
+		if (countersExist == null) {
+			return;
+		}
 		if (extractedDocObj == null || extractedDocObj.size() == 0) {
-			if (counters4Doc[i][REPORTER_CONST.MISS] != null) {
-				counters4Doc[i][REPORTER_CONST.MISS].increment(1);
-			}
+			counters4Doc[i][REPORTER_CONST.MISS].increment(1);
 		} else {
-			if (counters4Doc[i][REPORTER_CONST.EXIST] != null) {
-				counters4Doc[i][REPORTER_CONST.EXIST].increment(1);
-			}
+			counters4Doc[i][REPORTER_CONST.EXIST].increment(1);
 		}
 	}
 
 	private void reportSname(Object sname) {
-
-		if (sname == null) {
-			if (counterSname[REPORTER_CONST.MISS] != null) {
-				counterSname[REPORTER_CONST.MISS].increment(1);
-			}
-		} else {
-			if (counterSname[REPORTER_CONST.EXIST] != null) {
-				counterSname[REPORTER_CONST.EXIST].increment(1);
-			}
+		if (countersExist == null) {
+			return;
 		}
+		if (sname == null) {
+			counterSname[REPORTER_CONST.MISS].increment(1);
+		} else {
+			counterSname[REPORTER_CONST.EXIST].increment(1);
+		}
+	}
+
+	private void reportAuthors(Collection<Author> authors) {
+		if ( countersExist == null ) {
+			return;
+		}
+		myreporter.getCounter(REPORTER_CONST.DOC_MS, "Any author").increment( authors.isEmpty() ? 1 : 0 );
+		myreporter.getCounter(REPORTER_CONST.DOC_EX, "Any author").increment( authors.isEmpty() ? 0 : 1 );		
 	}
 }
