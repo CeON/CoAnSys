@@ -42,6 +42,7 @@ import org.slf4j.LoggerFactory;
 import com.beust.jcommander.IStringConverter;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
+import com.beust.jcommander.ParameterException;
 
 import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DisambiguationExtractor;
@@ -67,20 +68,20 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 	private List<DisambiguationExtractorAuthor> des4Author = new ArrayList<DisambiguationExtractorAuthor>();
 	private List<String> des4DocNameOrId = new ArrayList<String>(),
 			des4AuthorNameOrId = new ArrayList<String>();
-	
+
 	@Parameter(names = { "-lang", "-language" }, description = "Filter metadata by language", converter = LangConverter.class)
 	private String language = null; // null means all
-	@Parameter(names = "-skipEmptyFeatures", description = "Skip contributor's features, when feature bag is empty (no data for feature).")
+	@Parameter(names = "-skipEmptyFeatures", arity = 1, description = "Skip contributor's features, when feature bag is empty (no data for feature).")
 	private boolean skipEmptyFeatures = false;
-	@Parameter(names = "-snameToString", description = "Does not normalize surname using to blocking when true. Use only for debuging.")
+	@Parameter(names = "-snameToString", arity = 1, description = "Does not normalize surname using to blocking when true. Use only for debuging.")
 	private boolean snameToString = false;
-	@Parameter(names = "-useIdsForExtractors", description = "Use short ids for extractors (features) names in temporary sequance files.")
+	@Parameter(names = "-useIdsForExtractors", arity = 1, description = "Use short ids for extractors (features) names in temporary sequance files.")
 	private boolean useIdsForExtractors = false;
-	@Parameter(names = "-returnNull", description = "Return null data bag after processing. Use only for debuging.")
+	@Parameter(names = "-returnNull", arity = 1, description = "Return null data bag after processing. Use only for debuging.")
 	private boolean returnNull = false;
-	@Parameter(names = "-featureinfo", description = "Features description - model for calculating affinity and contributors clustering.", required = true)
+	@Parameter(names = { "-featureinfo", "-featureInfo" }, required = true, description = "Features description - model for calculating affinity and contributors clustering.")
 	private String featureinfo = null;
-	
+
 	private DisambiguationExtractorFactory extrFactory = new DisambiguationExtractorFactory();
 
 	@Override
@@ -96,11 +97,11 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 	private void setDisambiguationExtractor(String featureInfo)
 			throws InstantiationException, IllegalAccessException,
 			ClassNotFoundException {
-		
-		if ( featureInfo == null || featureInfo.isEmpty() ) {
+
+		if (featureInfo == null || featureInfo.isEmpty()) {
 			throw new IllegalArgumentException("FeatureInfo model is required");
 		}
-		
+
 		List<FeatureInfo> features = FeatureInfo
 				.parseFeatureInfoString(featureinfo);
 
@@ -112,7 +113,6 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 		String currentClassNameOrId;
 
 		for (int i = 0; i < features.size(); i++) {
-
 			extractor = extrFactory.create(features.get(i));
 			String currentSuperClassName = extractor.getClass().getSuperclass()
 					.getSimpleName();
@@ -143,27 +143,33 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 	public EXTRACT_CONTRIBDATA_GIVENDATA(String params)
 			throws InstantiationException, IllegalAccessException,
 			ClassNotFoundException {
-		
+
 		String[] argv = params.split(" ");
-		new JCommander(EXTRACT_CONTRIBDATA_GIVENDATA.class, argv);
-		
-		setDisambiguationExtractor( featureinfo );
+		new JCommander(this, argv);
+		setDisambiguationExtractor(featureinfo);
 	}
 
-	// for JCommander
-	private class LangConverter implements IStringConverter<String> {
-		@Override
-		public String convert(String arg0) {
-			return parseLng(arg0);
+	public Map<String, Object> debugComponents() {
+		HashMap<String, Object> ret = new HashMap<String, Object>();
+		if (language != null) {
+			ret.put("-lang", language);
 		}
-	}
-	
-	private String parseLng(String lng) {
-		if (lng == null || lng.equalsIgnoreCase("all")
-				|| lng.equalsIgnoreCase("null") || lng.equals("")) {
-			return null;
+		if (skipEmptyFeatures) {
+			ret.put("-skipEmptyFeatures", skipEmptyFeatures);
 		}
-		return lng;
+		if (snameToString) {
+			ret.put("-snameToString", snameToString);
+		}
+		if (useIdsForExtractors) {
+			ret.put("-useIdsForExtractors", useIdsForExtractors);		
+		}
+		if (returnNull) {
+			ret.put("-returnNull", returnNull);	
+		}
+		if (featureinfo != null) {
+			ret.put("-featureinfo", featureinfo);			
+		}
+		return ret;
 	}
 
 	@Override
@@ -188,10 +194,12 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 
 			// result bag with tuples, which describe each contributor
 			DataBag ret = new DefaultDataBag();
-			
+
 			// removing duplicated authors
-			// TODO: remove filtering, when we make sure that there are no duplicates
-			Collection<Author> authors = filterDuplicatedAuthors(dm.getBasicMetadata().getAuthorList(), docKey);
+			// TODO: remove filtering, when we make sure that there are no
+			// duplicates
+			Collection<Author> authors = filterDuplicatedAuthors(dm
+					.getBasicMetadata().getAuthorList(), docKey);
 
 			Map<String, DataBag> finalAuthorMap;
 			// taking from document metadata data universal for all contribs
@@ -219,7 +227,7 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 						finalAuthorMap };
 				Tuple t = TupleFactory.getInstance()
 						.newTuple(Arrays.asList(to));
-				
+
 				ret.add(t);
 			}
 
@@ -237,8 +245,9 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 
 	private Map<String, DataBag> extractAuthBasedFeatures(DocumentMetadata dm,
 			Map<String, DataBag> InitialMap, int authorIndex) {
-		
-		Map<String, DataBag> finalAuthorMap = new HashMap<String, DataBag>(InitialMap);
+
+		Map<String, DataBag> finalAuthorMap = new HashMap<String, DataBag>(
+				InitialMap);
 		// in arrays we are storing DataBags from extractors
 		DataBag[] extractedAuthorObj = new DataBag[des4Author.size()];
 
@@ -254,8 +263,8 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 					|| (extractedAuthorObj[j].size() == 0 && skipEmptyFeatures)) {
 				continue;
 			}
-			finalAuthorMap.put(des4AuthorNameOrId.get(j),
-					extractedAuthorObj[j]);
+			finalAuthorMap
+					.put(des4AuthorNameOrId.get(j), extractedAuthorObj[j]);
 		}
 		return finalAuthorMap;
 	}
@@ -280,53 +289,52 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 		return map;
 	}
 
-	
 	// START IMPORTER PART
 	// TODO: Checking for author clones should be in importers
 	// getting full author list (probably with duplicates)
-	private Collection<Author> filterDuplicatedAuthors( List<Author> dplAuthors, String docKey ) {
+	private Collection<Author> filterDuplicatedAuthors(List<Author> dplAuthors,
+			String docKey) {
 
-	Map<String, Author> filteredAuthors = new HashMap<String, Author>(
-			dplAuthors.size());
+		Map<String, Author> filteredAuthors = new HashMap<String, Author>(
+				dplAuthors.size());
 
-	// creating disambiguation extractor only for normalizer
-	DisambiguationExtractor disam_extractor = new DisambiguationExtractor();
+		// creating disambiguation extractor only for normalizer
+		DisambiguationExtractor disam_extractor = new DisambiguationExtractor();
 
-	for (Author a : dplAuthors) {
-		Author b = filteredAuthors.put(a.getKey(), a);
-		if (b != null) {
-			// cId is inside map already. Checking whether cId is cloned
-			// or
-			// duplicated for different data or incorrectly attributed
-			// for different authors
-			String aInit = a.getSurname();
-			String bInit = b.getSurname();
-			Object aNorm = disam_extractor.normalizeExtracted(aInit);
-			Object bNorm = disam_extractor.normalizeExtracted(bInit);
+		for (Author a : dplAuthors) {
+			Author b = filteredAuthors.put(a.getKey(), a);
+			if (b != null) {
+				// cId is inside map already. Checking whether cId is cloned
+				// or
+				// duplicated for different data or incorrectly attributed
+				// for different authors
+				String aInit = a.getSurname();
+				String bInit = b.getSurname();
+				Object aNorm = disam_extractor.normalizeExtracted(aInit);
+				Object bNorm = disam_extractor.normalizeExtracted(bInit);
 
-			if (a.equals(b)) {
-				// all authors data are equal
-				// AUTHOR B (AS CLONE A) SCHOULD BE REMOVED FROM
-				// DOCUMENT'S AUTHOR LIST IN IMPORTERS
-				logger.info("Author metadata clones with key: "
-						+ a.getKey() + " in document with key: "
-						+ docKey);
-			} else if (aNorm.equals(bNorm)) {
-				logger.info("Duplicated author key: " + a.getKey()
-						+ " for different metadata (except surname!)"
-						+ " in document with key: " + docKey);
-			} else {
-				logger.error("Duplicated aurhor key: " + a.getKey()
-						+ " for different authors: " + aInit + ", "
-						+ bInit + " in document with key: " + docKey);
+				if (a.equals(b)) {
+					// all authors data are equal
+					// AUTHOR B (AS CLONE A) SCHOULD BE REMOVED FROM
+					// DOCUMENT'S AUTHOR LIST IN IMPORTERS
+					logger.info("Author metadata clones with key: "
+							+ a.getKey() + " in document with key: " + docKey);
+				} else if (aNorm.equals(bNorm)) {
+					logger.info("Duplicated author key: " + a.getKey()
+							+ " for different metadata (except surname!)"
+							+ " in document with key: " + docKey);
+				} else {
+					logger.error("Duplicated aurhor key: " + a.getKey()
+							+ " for different authors: " + aInit + ", " + bInit
+							+ " in document with key: " + docKey);
+				}
 			}
 		}
+		return filteredAuthors.values();
 	}
-	return filteredAuthors.values();
-	}
+
 	// END IMPORTER PART
-	
-	
+
 	// Pig Status Reporter staff:
 	private PigStatusReporter myreporter = null;
 	private Counter counters4Doc[][], counters4Author[][];
@@ -339,7 +347,7 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 		public static final int MISS = 0;
 		public static final int EXIST = 1;
 	}
-	
+
 	// cannot be run in constructor, have to take instance of reporter in each
 	// exec(...) call
 	private void initializePigReporterWithZeroes() {

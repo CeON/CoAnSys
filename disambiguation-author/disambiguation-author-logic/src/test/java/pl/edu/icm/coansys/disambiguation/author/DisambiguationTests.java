@@ -20,6 +20,7 @@ package pl.edu.icm.coansys.disambiguation.author;
 
 import org.testng.annotations.Test;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -31,6 +32,8 @@ import org.apache.pig.data.DefaultDataBag;
 import org.apache.pig.data.DefaultTuple;
 import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
+
+import com.beust.jcommander.Parameter;
 
 import pl.edu.icm.coansys.commons.java.DiacriticsRemover;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.CoAuthorsSnameDisambiguatorFullList;
@@ -45,6 +48,7 @@ import pl.edu.icm.coansys.disambiguation.author.normalizers.ToEnglishLowerCase;
 import pl.edu.icm.coansys.disambiguation.author.normalizers.ToHashCode;
 import pl.edu.icm.coansys.disambiguation.author.pig.AND;
 import pl.edu.icm.coansys.disambiguation.author.pig.AproximateAND_BFS;
+import pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_CONTRIBDATA_GIVENDATA;
 import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
 
 // TODO:
@@ -156,12 +160,12 @@ public class DisambiguationTests {
    		assert ( ids.length == extractors.length );
    		
    		for ( int i = 0; i < extractors.length; i++ ) {
-   			assert( factory.convertExNameToId( extractors[i] ).equals( ids[i] ) );
-   			assert( factory.convertExIdToName( ids[i] ).equals( extractors[i] ) );
-   			assert( factory.toExId( ids[i] ).equals( ids[i] ) );
-   			assert( factory.toExId( extractors[i] ).equals( ids[i] ) );
-   			assert( factory.toExName( ids[i] ).equals( extractors[i] ) );
-   			assert( factory.toExName( extractors[i] ).equals( extractors[i] ) );
+   			assert( ids[i].equals(factory.convertExNameToId( extractors[i] )) );
+   			assert( extractors[i].equals( factory.convertExIdToName( ids[i] ) ));
+   			assert( ids[i].equals( factory.toExId( ids[i] ) ) );
+   			assert( ids[i].equals( factory.toExId( extractors[i] ) ) );
+   			assert( extractors[i].equals( factory.toExName( ids[i] ) ) );
+   			assert( extractors[i].equals( factory.toExName( extractors[i] ) ) );
    			
    			// testing disambiguator class creating for both type of 
    			// extractor names: explicit class name and extractor id
@@ -196,7 +200,42 @@ public class DisambiguationTests {
   		assert( COAUTH.calculateAffinity(a, b) == 4.0 );
    	}
    	
-   	
+   	@Test(groups = {"fast"})
+   	public void pig_extractor_EXTRACT_CONTRIBDATE_parsing_arguments() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+   		
+   		// testing required
+   		boolean catched = false;
+   		try {
+   			new EXTRACT_CONTRIBDATA_GIVENDATA("");
+   		} catch (com.beust.jcommander.ParameterException e) {
+   			catched = true;
+   		}
+   		assert( catched );
+   		
+   		// only required arguments
+   		String featureinfo = "IntersectionPerMaxval#EX_DOC_AUTHS_FNAME_FST_LETTER#1.0#1";
+		HashMap<String,Object> minimum = new HashMap<String,Object>();		
+		EXTRACT_CONTRIBDATA_GIVENDATA ex1 = new EXTRACT_CONTRIBDATA_GIVENDATA("-featureinfo " + featureinfo );
+		minimum.put( "-featureinfo", featureinfo );
+		assert( minimum.equals( ex1.debugComponents() ) );
+   		
+   		// all parameters
+		HashMap<String,Object> full = new HashMap<String,Object>();
+		full.put( "-lang", "pl" );
+		// Note, that boolean parameters do not take arguments
+		full.put( "-skipEmptyFeatures", true );
+		full.put( "-snameToString", true );
+		full.put( "-useIdsForExtractors", true );
+		full.put( "-returnNull", true );
+		full.put( "-featureinfo", featureinfo );
+		
+		String arg = full.toString();
+		arg = arg.substring(1, arg.length() - 1).replace('=', ' ').replace(",", "");
+		
+		EXTRACT_CONTRIBDATA_GIVENDATA ex2 = new EXTRACT_CONTRIBDATA_GIVENDATA( arg );
+		assert( full.equals( ex2.debugComponents() ) );
+   	}
+   	    
     // Tools:
    	private Tuple contribCreator(Object id, Object sname, 
    			Map<String,DataBag>features){

@@ -9,6 +9,7 @@ import org.reflections.Reflections;
 import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
+import pl.edu.icm.coansys.disambiguation.author.features.extractors.EX_TITLE;
 import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
 
 public class DisambiguationExtractorFactory {
@@ -18,7 +19,8 @@ public class DisambiguationExtractorFactory {
 
 	private Map<String, String> nameToId;
 	private Map<String, String> idToName;
-	private final String THIS_PACKAGE = new DisambiguationExtractor()
+	// taking package with extractors using any of them
+	private final String THIS_PACKAGE = new EX_TITLE()
 			.getClass().getPackage().getName();
 
 	public DisambiguationExtractorFactory() throws InstantiationException, IllegalAccessException {
@@ -46,8 +48,9 @@ public class DisambiguationExtractorFactory {
 
 			DisambiguationExtractor e = c.newInstance();
 			eid = e.getId();
-
-			if (eid == null) {
+			
+			// all extractors must have id
+			if (eid == null || eid.isEmpty() ) {
 				String m = "Creating extractor: " + name
 						+ " with no id value given (null).";
 				logger.error(m);
