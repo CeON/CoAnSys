@@ -184,13 +184,14 @@ public class DuplicateWorkDetectReduceService implements DiReduceService<Text, B
 
         if (level > maxSplitLevel && splitDocuments.size() == 1) {
             //force split into 2 parts
-            String commonKey = splitDocuments.keySet().iterator().next().toString();
-            if (!commonKey.contains("-")) {
-                commonKey += "-";
+            Text commonKey = splitDocuments.keySet().iterator().next();
+            String commonKeyStr = commonKey.toString();
+            if (!commonKeyStr.contains("-")) {
+                commonKeyStr += "-";
             }
-            Text firstKey = new Text(commonKey + "0");
-            Text secondKey = new Text(commonKey + "1");
-            List<DocumentProtos.DocumentMetadata> fullList = splitDocuments.get(firstKey);
+            Text firstKey = new Text(commonKeyStr + "0");
+            Text secondKey = new Text(commonKeyStr + "1");
+            List<DocumentProtos.DocumentMetadata> fullList = splitDocuments.get(commonKey);
             int items = fullList.size();
             List<DocumentProtos.DocumentMetadata> firstHalf = fullList.subList(0, items/2);
             List<DocumentProtos.DocumentMetadata> secondHalf = fullList.subList(items/2, items);
