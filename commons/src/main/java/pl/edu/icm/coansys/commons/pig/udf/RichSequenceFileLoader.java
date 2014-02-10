@@ -67,6 +67,8 @@ import org.apache.pig.impl.PigContext;
 import org.apache.pig.impl.io.NullableTuple;
 import org.apache.pig.impl.util.UDFContext;
 
+import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
+
 /**
  * A Loader for Hadoop-Standard SequenceFiles able to work with the following
  * types as keys or values: Text, IntWritable, LongWritable, FloatWritable,
@@ -335,8 +337,9 @@ public class RichSequenceFileLoader extends FileInputLoadFunc implements StoreFu
 			String message = "Unable to write key/value pair to output, key: "
 					+ key.getClass() + ", value: " + value.getClass()
 					+ ", writer " + writer + " ex " + ex;
+			LOG.error(StackTraceExtractor.getStackTrace(ex).replaceAll("\n", " -- "));
 			LOG.error(message);
-			throw new BackendException(message);
+			throw new BackendException(message+" -- "+StackTraceExtractor.getStackTrace(ex));
 		}
 	}
 

@@ -11,12 +11,11 @@ message DocumentSimilarityInfo {
   repeated SecondDocInfo secondDocInfo = 2;
   required string type = 3;
   repeated Auxiliar auxs = 4;
-  optional ProvenanceInfo provenanceInfo = 5;
 }
 
 message SecondDocInfo {
 	required string docIdB = 1;
-	required double similarity = 2;
+	required float similarity = 2;
 	repeated Auxiliar auxs = 3;
 }
 
