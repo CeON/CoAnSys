@@ -18,8 +18,6 @@
 package pl.edu.icm.coansys.deduplication.document.comparator;
 
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -28,11 +26,9 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class WeightedMeanComparator extends AbstractWorkComparator {
-
-    private static Logger logger = LoggerFactory.getLogger(WeightedMeanComparator.class);
     
     @Override
-    protected boolean calculateResult(List<Float> probabilities, List<Float> weights) {
+    protected boolean calculateResult(List<Float> probabilities, List<Float> weights, StringBuilder debugOutputBuilder) {
         double weightsSum = 0.0;
         double probabilitiesSum = 0.0;
         
@@ -45,6 +41,7 @@ public class WeightedMeanComparator extends AbstractWorkComparator {
             probabilitiesSum += probabilities.get(i);
             weightsSum += weights.get(i);
         }
+        debugOutputBuilder.append("##WEIGHTED_MEAN=").append(probabilitiesSum);
         return (weightsSum > 0) && (probabilitiesSum / weightsSum > 0.5);
     }
 }

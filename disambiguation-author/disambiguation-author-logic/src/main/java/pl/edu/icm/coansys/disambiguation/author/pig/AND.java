@@ -20,7 +20,6 @@ public abstract class AND<T> extends EvalFunc<T> {
 
 	protected PigDisambiguator[] features;
 	protected FeatureInfo[] featureInfos;
-
 	protected org.slf4j.Logger logger = null;
 	protected PigStatusReporter myreporter = null;
 

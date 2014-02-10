@@ -18,8 +18,6 @@
 package pl.edu.icm.coansys.deduplication.document.comparator;
 
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -29,13 +27,12 @@ import org.slf4j.LoggerFactory;
  */
 public class VotesProductComparator extends AbstractWorkComparator {
 
-    private static Logger logger = LoggerFactory.getLogger(VotesProductComparator.class);
     private int minVotersRequired;
     private float probabilityTreshold;
 
     
     @Override
-    protected boolean calculateResult(List<Float> probabilities, List<Float> weights) {
+    protected boolean calculateResult(List<Float> probabilities, List<Float> weights, StringBuilder debugOutputBuilder) {
         if (probabilities.size() < minVotersRequired) {
             return false;
         }
@@ -44,6 +41,7 @@ public class VotesProductComparator extends AbstractWorkComparator {
         for (int i = 0; i < probabilities.size(); i++) {
             probabilitiesProduct *= probabilities.get(i);
         }
+        debugOutputBuilder.append("##PROBABILITIES_PRODUCT=").append(probabilitiesProduct);
         return probabilitiesProduct > probabilityTreshold;
     }
 

@@ -174,7 +174,8 @@ public class TfidfJob_Proto implements Tool {
      * Job configuration and ignition
      *
      */
-    public int run(String[] args) throws IOException, InterruptedException, ClassNotFoundException {
+    @Override
+    public int run(String[] args) throws Exception {
         /////////////////////////// CONSUME ARGS /////////////////////////////
         String[] otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();
         parseArgs(otherArgs);

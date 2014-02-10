@@ -39,3 +39,11 @@ message Statistics {
     repeated KeyValue partitions = 2;
     repeated KeyValue statistics = 3;
 }
+
+message SelectedStatistics {
+    required string selected_stat = 1;
+    required string sort_order = 2;
+    required int32 limit = 3;
+    repeated KeyValue fixed_partitions = 4;
+    repeated Statistics stats = 5;
+}

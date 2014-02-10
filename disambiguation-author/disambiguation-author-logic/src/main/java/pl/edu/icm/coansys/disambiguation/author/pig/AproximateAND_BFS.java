@@ -86,6 +86,7 @@ public class AproximateAND_BFS extends AND<DataBag> {
 		}
 		try {
 			// instance of reporter may change in each exec(...) run
+			// so each time we need to take
 			myreporter = PigStatusReporter.getInstance();
 
 			// taking bag with contribs

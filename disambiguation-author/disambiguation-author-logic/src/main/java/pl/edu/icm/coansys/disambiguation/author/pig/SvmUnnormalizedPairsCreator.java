@@ -45,7 +45,7 @@ public class SvmUnnormalizedPairsCreator extends EvalFunc<DataBag> {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(SvmUnnormalizedPairsCreator.class);
-	private PigStatusReporter reporter = null;
+	private PigStatusReporter myreporter = null;
 
 	private String[] featureNames = null;
 	private String sameFeatureName = "";
@@ -77,12 +77,12 @@ public class SvmUnnormalizedPairsCreator extends EvalFunc<DataBag> {
 	@SuppressWarnings("boxing")
 	@Override
 	public DataBag exec(Tuple tuple) throws IOException {
-		reporter = PigStatusReporter.getInstance();
-		boolean reporterIsNotNull = reporter != null;
+		myreporter = PigStatusReporter.getInstance();
+		boolean reporterIsNotNull = myreporter != null;
 
 		if (tuple == null || tuple.size() != 2) {
 			if (reporterIsNotNull) {
-				reporter.getCounter("data error",
+				myreporter.getCounter("data error",
 						"input tuple is null or size is not equal to 2")
 						.increment(1);
 			}
@@ -113,12 +113,10 @@ public class SvmUnnormalizedPairsCreator extends EvalFunc<DataBag> {
 				Tuple cB = contribsT[j];
 
 				String cidA = (String) cA.get(0);
-				String snA = (String) cA.get(1);
 				Map<String, DataBag> mapA = (Map<String, DataBag>) cA.get(2);
 				Map<String, ArrayList<Object>> extractedMapA = extractFeatureNameFeatureValueList(mapA);
 
 				String cidB = (String) cB.get(0);
-				String snB = (String) cB.get(1);
 				Map<String, DataBag> mapB = (Map<String, DataBag>) cB.get(2);
 				Map<String, ArrayList<Object>> extractedMapB = extractFeatureNameFeatureValueList(mapB);
 
@@ -136,14 +134,14 @@ public class SvmUnnormalizedPairsCreator extends EvalFunc<DataBag> {
 							.calculateAffinity(listA, listB);
 					if (sameFeatureName != null
 							&& sameFeatureName.equals(featureNames[k])) {
-						reporter.getCounter("Is_Same_Person",
+						myreporter.getCounter("Is_Same_Person",
 								(intersection == 1) + "").increment(1);
 					}
 
 					if (reduceNotSame) {
-						long notSameCount = reporter.getCounter(
+						long notSameCount = myreporter.getCounter(
 								"Is_Same_Person", "false").getValue();
-						long sameCount = reporter.getCounter(
+						long sameCount = myreporter.getCounter(
 								"Is_Same_Person", "true").getValue();
 						
 						boolean notAdd = 10 * notSameCount > sameCount;
@@ -185,7 +183,7 @@ public class SvmUnnormalizedPairsCreator extends EvalFunc<DataBag> {
 						al.add(tmp);
 					}
 				} else {
-					reporter.getCounter(
+					myreporter.getCounter(
 							"Bizarre error",
 							"Empty tuple in bag with feature "
 									+ featureNames[k]).increment(1);

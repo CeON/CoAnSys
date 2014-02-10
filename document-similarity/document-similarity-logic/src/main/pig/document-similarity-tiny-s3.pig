@@ -39,7 +39,7 @@
 %default time '2013-09-28--10-37'
 %default outputPath 'document-similarity-output/$time/'
 %default jars '*.jar'
-%default commonJarsPath '../../../../document-similarity-workflow/target/oozie-wf/lib/$jars'
+%default commonJarsPath 'lib/$jars'
 
 REGISTER '$commonJarsPath'
 

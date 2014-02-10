@@ -4,6 +4,8 @@
 
 //  @since 2012-08-07
 
+import "document_similarity_out.proto";
+
 option java_package = "pl.edu.icm.coansys.models";
 option java_outer_classname = "DocumentProtos";
 
@@ -90,6 +92,7 @@ message DocumentMetadata{
 	required BasicMetadata basicMetadata = 2;
 	repeated TextWithLanguage documentAbstract = 3;
 	repeated KeywordsList keywords = 10;
+	repeated pl.edu.icm.coansys.models.DocumentSimilarityInfo similarDocumentInfo = 20;
 	repeated KeyValue extId = 5;
 	repeated KeyValue auxiliarInfo = 6;
 	repeated Affiliation affiliations = 12;
@@ -98,6 +101,7 @@ message DocumentMetadata{
 	optional string sourcePath = 9;
 	repeated string origKey = 11;
 }
+
 
 // position -- citation's position in reference list, starting by 1
 message ReferenceMetadata{
