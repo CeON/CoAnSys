@@ -99,7 +99,7 @@
 		<property>
 			<name>and_feature_info</name>
 			<!--<value>"CoAuthorsSnameDisambiguatorFullList#EX_AUTH_SNAMES#-0.0000166#8,ClassifCodeDisambiguator#EX_CLASSIFICATION_CODES#0.99#12,KeyphraseDisambiguator#EX_KEYWORDS_SPLIT#0.99#22,KeywordDisambiguator#EX_KEYWORDS#0.0000369#40".</value>-->
-			<value>"IntersectionPerMaxval#EX_DOC_AUTHS_FNAME_FST_LETTER#1.0#1"</value>
+			<value>"IntersectionPerMaxval#EX_DOC_AUTHS_SNAMES#1.0#1"</value>
 			<description>Features description - model for calculating affinity and contributors clustering. Value in format: "Disambiguator_name#Feature_extractor_name#weight#coefficient_of_the_maximum_number_of_occurrences,...".</description>
 		</property>
 		<property>
@@ -193,7 +193,7 @@
 		<pig>
 			<script>disambiguation_exh.pig</script>
 			<!--pig parameters: data paths, cluster config, etc-->
-			<param>and_sample=1.0</param>
+			<param>and_sample=0.2</param>
 			<param>and_inputDocsData=${and_splitted_output_exh}/*</param>
 			<param>and_outputContribs=${and_outputContribs}/exh</param>
 			<param>mapredChildJavaOpts=${and_mapredChildJavaOpts_exh}</param>

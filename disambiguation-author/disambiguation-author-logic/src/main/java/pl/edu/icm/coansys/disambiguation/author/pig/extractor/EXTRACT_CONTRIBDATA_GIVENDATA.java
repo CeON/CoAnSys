@@ -39,10 +39,8 @@ import org.apache.pig.tools.pigstats.PigStatusReporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.beust.jcommander.IStringConverter;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
-import com.beust.jcommander.ParameterException;
 
 import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DisambiguationExtractor;
@@ -161,13 +159,13 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 			ret.put("-snameToString", snameToString);
 		}
 		if (useIdsForExtractors) {
-			ret.put("-useIdsForExtractors", useIdsForExtractors);		
+			ret.put("-useIdsForExtractors", useIdsForExtractors);
 		}
 		if (returnNull) {
-			ret.put("-returnNull", returnNull);	
+			ret.put("-returnNull", returnNull);
 		}
 		if (featureinfo != null) {
-			ret.put("-featureinfo", featureinfo);			
+			ret.put("-featureinfo", featureinfo);
 		}
 		return ret;
 	}
@@ -195,11 +193,7 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 			// result bag with tuples, which describe each contributor
 			DataBag ret = new DefaultDataBag();
 
-			// removing duplicated authors
-			// TODO: remove filtering, when we make sure that there are no
-			// duplicates
-			Collection<Author> authors = filterDuplicatedAuthors(dm
-					.getBasicMetadata().getAuthorList(), docKey);
+			Collection<Author> authors = dm.getBasicMetadata().getAuthorList();
 
 			Map<String, DataBag> finalAuthorMap;
 			// taking from document metadata data universal for all contribs
@@ -220,6 +214,10 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 				} else {
 					normalizedSname = extractor.normalizeExtracted(a);
 				}
+
+				// pig status reporter
+				reportSname(normalizedSname);
+
 				String cId = a.getKey();
 				// taking from document metadata data specific for each contrib
 				finalAuthorMap = extractAuthBasedFeatures(dm, DocumentMap, i);
@@ -249,22 +247,19 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 		Map<String, DataBag> finalAuthorMap = new HashMap<String, DataBag>(
 				InitialMap);
 		// in arrays we are storing DataBags from extractors
-		DataBag[] extractedAuthorObj = new DataBag[des4Author.size()];
+		DataBag extractedAuthorObj;
 
 		for (int j = 0; j < des4Author.size(); j++) {
-			extractedAuthorObj[j] = des4Author.get(j).extract(dm, authorIndex,
+			extractedAuthorObj = des4Author.get(j).extract(dm, authorIndex,
 					language);
-		}
 
-		// adding to map extractor name and features' data
-		for (int j = 0; j < des4Author.size(); j++) {
+			// adding to map extractor name and features' data
 			reportAuthorDataExistance(extractedAuthorObj, j);
-			if (extractedAuthorObj[j] == null
-					|| (extractedAuthorObj[j].size() == 0 && skipEmptyFeatures)) {
+			if (extractedAuthorObj == null
+					|| (extractedAuthorObj.size() == 0 && skipEmptyFeatures)) {
 				continue;
 			}
-			finalAuthorMap
-					.put(des4AuthorNameOrId.get(j), extractedAuthorObj[j]);
+			finalAuthorMap.put(des4AuthorNameOrId.get(j), extractedAuthorObj);
 		}
 		return finalAuthorMap;
 	}
@@ -272,76 +267,25 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 	private Map<String, DataBag> extractDocBasedFeatures(DocumentMetadata dm) {
 		Map<String, DataBag> map = new HashMap<String, DataBag>();
 		// in arrays we are storing DataBags from extractors
-		DataBag[] extractedDocObj = new DataBag[des4Doc.size()];
+		DataBag extractedDocObj;
 		for (int i = 0; i < des4Doc.size(); i++) {
-			extractedDocObj[i] = des4Doc.get(i).extract(dm, language);
-		}
-
-		// adding to map extractor name and features' data
-		for (int i = 0; i < des4Doc.size(); i++) {
+			extractedDocObj = des4Doc.get(i).extract(dm, language);
+			// monit to pig status reporter
 			raportDocumentDataExistance(extractedDocObj, i);
-			if (extractedDocObj[i] == null
-					|| (extractedDocObj[i].size() == 0 && skipEmptyFeatures)) {
+			// adding to map extractor name and features' data
+			if (extractedDocObj == null
+					|| (extractedDocObj.size() == 0 && skipEmptyFeatures)) {
 				continue;
 			}
-			map.put(des4DocNameOrId.get(i), extractedDocObj[i]);
+			map.put(des4DocNameOrId.get(i), extractedDocObj);
 		}
 		return map;
 	}
 
-	// START IMPORTER PART
-	// TODO: Checking for author clones should be in importers
-	// getting full author list (probably with duplicates)
-	private Collection<Author> filterDuplicatedAuthors(List<Author> dplAuthors,
-			String docKey) {
-
-		Map<String, Author> filteredAuthors = new HashMap<String, Author>(
-				dplAuthors.size());
-		
-		// creating disambiguation extractor only for normalizer
-		DisambiguationExtractor disam_extractor = new DisambiguationExtractor();
-
-		Counter dpl_cntr = myreporter.getCounter("Contrib", "duplicated");
-		dpl_cntr.increment(0);
-		
-		for (Author a : dplAuthors) {
-			Author b = filteredAuthors.put(a.getKey(), a);
-			if (b != null) {
-				dpl_cntr.increment(1);
-				// cId is inside map already. Checking whether cId is cloned
-				// or
-				// duplicated for different data or incorrectly attributed
-				// for different authors
-				String aInit = a.getSurname();
-				String bInit = b.getSurname();
-				Object aNorm = disam_extractor.normalizeExtracted(aInit);
-				Object bNorm = disam_extractor.normalizeExtracted(bInit);
-
-				if (a.equals(b)) {
-					// all authors data are equal
-					// AUTHOR B (AS CLONE A) SCHOULD BE REMOVED FROM
-					// DOCUMENT'S AUTHOR LIST IN IMPORTERS
-					logger.info("Author metadata clones with key: "
-							+ a.getKey() + " in document with key: " + docKey);
-				} else if (aNorm.equals(bNorm)) {
-					logger.info("Duplicated author key: " + a.getKey()
-							+ " for different metadata (except surname!)"
-							+ " in document with key: " + docKey);
-				} else {
-					logger.error("Duplicated aurhor key: " + a.getKey()
-							+ " for different authors: " + aInit + ", " + bInit
-							+ " in document with key: " + docKey);
-				}
-			}
-		}
-		return filteredAuthors.values();
-	}
-
-	// END IMPORTER PART
-
+	
 	// Pig Status Reporter staff:
 	private PigStatusReporter myreporter = null;
-	private Counter counters4Doc[][], counters4Author[][];
+	private Counter counters4Doc[][], counters4Author[][], counterSname[];
 
 	static class REPORTER_CONST {
 		public static final String CONTRIB_EX = "Contrib_Existing";
@@ -359,6 +303,7 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 		myreporter = PigStatusReporter.getInstance();
 		counters4Doc = new Counter[des4Doc.size()][2];
 		counters4Author = new Counter[des4Author.size()][2];
+		counterSname = new Counter[2];
 
 		for (int i = 0; i < des4Doc.size(); i++) {
 			counters4Doc[i][REPORTER_CONST.MISS] = myreporter.getCounter(
@@ -387,11 +332,20 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 			counters4Author[i][REPORTER_CONST.MISS].increment(0);
 			counters4Author[i][REPORTER_CONST.EXIST].increment(0);
 		}
+
+		counterSname[REPORTER_CONST.MISS] = myreporter.getCounter(
+				REPORTER_CONST.CONTRIB_MS, "Normalized sname");
+		counterSname[REPORTER_CONST.EXIST] = myreporter.getCounter(
+				REPORTER_CONST.CONTRIB_EX, "Normalized sname");
+		if (counterSname[REPORTER_CONST.MISS] != null) {
+			counterSname[REPORTER_CONST.MISS].increment(0);
+			counterSname[REPORTER_CONST.EXIST].increment(0);
+		}
 	}
 
-	private void reportAuthorDataExistance(DataBag[] extractedAuthorObj, int j) {
+	private void reportAuthorDataExistance(DataBag extractedAuthorObj, int j) {
 
-		if (extractedAuthorObj[j] == null || extractedAuthorObj[j].size() == 0) {
+		if (extractedAuthorObj == null || extractedAuthorObj.size() == 0) {
 			if (counters4Author[j][REPORTER_CONST.MISS] != null) {
 				counters4Author[j][REPORTER_CONST.MISS].increment(1);
 			}
@@ -402,9 +356,9 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 		}
 	}
 
-	private void raportDocumentDataExistance(DataBag[] extractedDocObj, int i) {
+	private void raportDocumentDataExistance(DataBag extractedDocObj, int i) {
 
-		if (extractedDocObj[i] == null || extractedDocObj[i].size() == 0) {
+		if (extractedDocObj == null || extractedDocObj.size() == 0) {
 			if (counters4Doc[i][REPORTER_CONST.MISS] != null) {
 				counters4Doc[i][REPORTER_CONST.MISS].increment(1);
 			}
@@ -415,4 +369,16 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 		}
 	}
 
+	private void reportSname(Object sname) {
+
+		if (sname == null) {
+			if (counterSname[REPORTER_CONST.MISS] != null) {
+				counterSname[REPORTER_CONST.MISS].increment(1);
+			}
+		} else {
+			if (counterSname[REPORTER_CONST.EXIST] != null) {
+				counterSname[REPORTER_CONST.EXIST].increment(1);
+			}
+		}
+	}
 }
