@@ -195,6 +195,7 @@ public class DuplicateWorkDetectReduceService implements DiReduceService<Text, B
             int items = fullList.size();
             List<DocumentProtos.DocumentMetadata> firstHalf = fullList.subList(0, items/2);
             List<DocumentProtos.DocumentMetadata> secondHalf = fullList.subList(items/2, items);
+            splitDocuments.clear();
             splitDocuments.put(firstKey, firstHalf);
             splitDocuments.put(secondKey, secondHalf);
         }
