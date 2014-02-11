@@ -75,7 +75,7 @@ public class DuplicateWorkDetector extends Configured implements Tool {
         
         Job job = new Job(getConf(), "duplicateWorkDetector");
         
-        job.setNumReduceTasks(8);
+        job.setNumReduceTasks(32);
         
         job.setJarByClass(getClass());
         
