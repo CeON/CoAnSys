@@ -192,10 +192,10 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 
 			// result bag with tuples, which describe each contributor
 			DataBag ret = new DefaultDataBag();
-			
+
 			Collection<Author> authors = dm.getBasicMetadata().getAuthorList();
 			reportAuthors(authors);
-			if ( authors.isEmpty() ) {
+			if (authors.isEmpty()) {
 				// returning empty bag
 				return ret;
 			}
@@ -217,7 +217,8 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 					normalizedSname = new ToEnglishLowerCase().normalize(a
 							.getSurname());
 				} else {
-					normalizedSname = extractor.normalizeExtracted(a);
+					normalizedSname = extractor.normalizeExtracted(a
+							.getSurname());
 				}
 
 				// pig status reporter
@@ -339,9 +340,11 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 		}
 
 		counterSname[REPORTER_CONST.MISS] = myreporter.getCounter(
-				REPORTER_CONST.CONTRIB_MS, "Normalized sname");
+				REPORTER_CONST.CONTRIB_MS,
+				"Not null normalized sname to main blocking");
 		counterSname[REPORTER_CONST.EXIST] = myreporter.getCounter(
-				REPORTER_CONST.CONTRIB_EX, "Normalized sname");
+				REPORTER_CONST.CONTRIB_EX,
+				"Not null normalized sname to main blocking");
 		counterSname[REPORTER_CONST.MISS].increment(0);
 		counterSname[REPORTER_CONST.EXIST].increment(0);
 	}
@@ -380,10 +383,14 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 	}
 
 	private void reportAuthors(Collection<Author> authors) {
-		if ( countersExist == null ) {
+		if (countersExist == null) {
 			return;
 		}
-		myreporter.getCounter(REPORTER_CONST.DOC_MS, "Any author").increment( authors.isEmpty() ? 1 : 0 );
-		myreporter.getCounter(REPORTER_CONST.DOC_EX, "Any author").increment( authors.isEmpty() ? 0 : 1 );		
+		myreporter.getCounter(REPORTER_CONST.DOC_MS,
+				"Any author (processed documents)").increment(
+				authors.isEmpty() ? 1 : 0);
+		myreporter.getCounter(REPORTER_CONST.DOC_EX,
+				"Any author (unprocessed documents)").increment(
+				authors.isEmpty() ? 0 : 1);
 	}
 }
