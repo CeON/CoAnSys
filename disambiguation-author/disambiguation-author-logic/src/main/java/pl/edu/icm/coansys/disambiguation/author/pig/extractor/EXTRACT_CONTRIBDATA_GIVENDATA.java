@@ -387,10 +387,10 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 			return;
 		}
 		myreporter.getCounter(REPORTER_CONST.DOC_MS,
-				"Any author (processed documents)").increment(
+				"Any author (unprocessed documents)").increment(
 				authors.isEmpty() ? 1 : 0);
 		myreporter.getCounter(REPORTER_CONST.DOC_EX,
-				"Any author (unprocessed documents)").increment(
+				"Any author (processed documents)").increment(
 				authors.isEmpty() ? 0 : 1);
 	}
 }

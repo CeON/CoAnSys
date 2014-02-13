@@ -96,5 +96,10 @@
 			<artifactId>jcommander</artifactId>
 			<version>1.32</version>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.2.1</version>
+		</dependency>
 	</dependencies>
 </project>
