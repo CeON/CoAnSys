@@ -17,8 +17,8 @@
  */
 package pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators;
 
+import pl.edu.icm.coansys.disambiguation.author.normalizers.DiacriticsRemover;
 import pl.edu.icm.coansys.disambiguation.author.normalizers.PigNormalizer;
-import pl.edu.icm.coansys.disambiguation.author.normalizers.ToEnglishLowerCase;
 import pl.edu.icm.coansys.disambiguation.author.normalizers.ToHashCode;
 
 public class DisambiguationExtractor {
@@ -27,7 +27,7 @@ public class DisambiguationExtractor {
 
 	public DisambiguationExtractor(){
 		normalizers = new PigNormalizer[] {
-				new ToEnglishLowerCase(), 
+				new DiacriticsRemover(), 
 				new ToHashCode()
 			};
 	}

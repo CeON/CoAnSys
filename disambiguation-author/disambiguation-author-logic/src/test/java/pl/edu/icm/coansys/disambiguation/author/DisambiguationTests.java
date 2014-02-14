@@ -20,7 +20,6 @@ package pl.edu.icm.coansys.disambiguation.author;
 
 import org.testng.annotations.Test;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -32,8 +31,6 @@ import org.apache.pig.data.DefaultDataBag;
 import org.apache.pig.data.DefaultTuple;
 import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
-
-import com.beust.jcommander.Parameter;
 
 import pl.edu.icm.coansys.commons.java.DiacriticsRemover;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.CoAuthorsSnameDisambiguatorFullList;
@@ -71,15 +68,15 @@ public class DisambiguationTests {
    	@Test(groups = {"fast"})
    	public void pig_normalizers_ALL() {
 		String text = "é{(Zaaaażółć 'gęślą', \"jaź(ń)\"}]# æ 1234567890 !@#$%^&*() _+=?/>.<,-";
-		String diacRmExpected = "e{(zaaaazolc 'gesla', \"jaz(n)\"}]# ae 1234567890 !@#$%^&*() _+=?/>.<,-";
+		String diacRmExpected = "e{(Zaaaazolc 'gesla', \"jaz(n)\"}]# ae 1234567890 !@#$%^&*() _+=?/>.<,-";
 		String toELCExpected = "ezaaaazolc gesla jazn ae 1234567890";
 		Integer toHashExpected = -1486600746;
-		Integer DisExtrExpected = toELCExpected.hashCode();
-		Object a, b, c, d, e;
+		Integer DisExtrExpected = diacRmExpected.hashCode();
+		Object a, b, c, d, e, f;
 		String tmp;
 		
 		// testing critical changes in DiacriticsRemover
-		tmp = DiacriticsRemover.removeDiacritics( text.toLowerCase() );
+		tmp = DiacriticsRemover.removeDiacritics( text );
 		assert( tmp.equals(diacRmExpected) );
 		
 		// testing normalizers
@@ -91,7 +88,8 @@ public class DisambiguationTests {
 		assert( a.equals( toHashExpected ) );
 		a = (new ToHashCode()).normalize( (Object) text );
 		assert( a.equals( toHashExpected ) );
-		
+		f = (new pl.edu.icm.coansys.disambiguation.author.normalizers.DiacriticsRemover()).normalize((Object) text);
+		assert( f.equals( diacRmExpected ) );
 		
 		// checking null argument / multi spaces:
 		String doublespace = "  ";
