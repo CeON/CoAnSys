@@ -90,11 +90,12 @@ public class PigDisambiguator{
         List<Object> ret = new LinkedList<Object>();
 
         while ( it.hasNext() ) {
-        	if ( it.next().size() == 0 ) {
+        	Tuple el = it.next();
+        	if ( el.size() == 0 ) {
         		continue;
         	}
         	try {
-				ret.add( it.next().get(0) );
+				ret.add( el.get(0) );
 			} catch (ExecException e) {
 				e.printStackTrace();
 			}
