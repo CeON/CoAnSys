@@ -246,7 +246,7 @@ public class AproximateAND_BFS extends AND<DataBag> {
 
 			} else {
 				// there is no possibility to enlarge present cluster, 
-				// adding this to resoult, starting new one
+				// adding this to result, starting new one
 				addClusterToResultBag(idToCluster, presentClusterSize, ret,
 						clusterContribDatas, clusterSimilarities,
 						otherSimilaritiesTriples);

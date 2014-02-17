@@ -109,10 +109,10 @@ public class ExhaustiveAND extends AND<DataBag> {
 			Object sname = null;
 			while (it.hasNext()) {
 				Tuple t = it.next();
-				contribsId[k++] = (String) t.get(0); // getting contrib id from
-														// tuple
-				contribsT.add((Map<String, Object>) t.get(2)); // getting map
-																// with features
+				// getting contrib id from tuple
+				contribsId[k++] = (String) t.get(0); 
+				// getting map with features
+				contribsT.add((Map<String, Object>) t.get(2)); 
 				// benchmark
 				sname = t.get(1);
 			}

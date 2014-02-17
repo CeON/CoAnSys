@@ -45,6 +45,7 @@ import pl.edu.icm.coansys.disambiguation.author.normalizers.ToEnglishLowerCase;
 import pl.edu.icm.coansys.disambiguation.author.normalizers.ToHashCode;
 import pl.edu.icm.coansys.disambiguation.author.pig.AND;
 import pl.edu.icm.coansys.disambiguation.author.pig.AproximateAND_BFS;
+import pl.edu.icm.coansys.disambiguation.author.pig.ExhaustiveAND;
 import pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_CONTRIBDATA_GIVENDATA;
 import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
 
@@ -273,14 +274,8 @@ public class DisambiguationTests {
    	
    	
    	@Test(groups = {"fast"})
-   	public void pig_AproximateAND_BFS_exec_0() throws Exception {
-   		AND<DataBag> aproximate = new AproximateAND_BFS(
-   				"-2.0", 
-  				"CoAuthorsSnameDisambiguatorFullList#EX_DOC_AUTHS_SNAMES#1#2,IntersectionPerMaxval#EX_CLASSIFICATION_CODES#1#3,IntersectionPerMaxval#EX_KEYWORDS_SPLIT#1#3,IntersectionPerMaxval#EX_KEYWORDS#1#3",
-   				"true",
-   				"true",
-   				"false");
-   		
+   	public void pig_ANDs_exec_0() throws Exception {
+   		// Test whether extractors has changed
    		DisambiguationExtractorFactory factory = new DisambiguationExtractorFactory();
   		String COAUTH = factory.convertExNameToId("EX_DOC_AUTHS_SNAMES");
   		String CC = factory.convertExNameToId("EX_CLASSIFICATION_CODES");
@@ -289,6 +284,7 @@ public class DisambiguationTests {
   		
   		assert( COAUTH != null && CC != null && KP != null && KW != null );
   		
+  		// Creating example input
    		List<Tuple> contribs = new ArrayList<Tuple>();
    		
    		// contrib#0
@@ -297,10 +293,10 @@ public class DisambiguationTests {
    		addFeatureToMap(map0, CC, 1, 2, 3); //classif codes
    		addFeatureToMap(map0, KP, 1, 2, 3); //key phrase
    		addFeatureToMap(map0, KW, 1, 2, 3); //key words
-   		contribs.add( contribCreator(0, 0, map0) );
+   		contribs.add( contribCreator("0", 0, map0) );
    		
    		// contrib#1
-   		contribs.add( contribCreator(1, 1, map0) );
+   		contribs.add( contribCreator("1", 1, map0) );
 
    		// contrib#2
    		Map<String,DataBag>map2 = new HashMap<String,DataBag>();
@@ -308,7 +304,7 @@ public class DisambiguationTests {
    		addFeatureToMap(map2, CC, 4, 5, 6); //classif codes
    		addFeatureToMap(map2, KP, 1, 2, 3); //key phrase
    		addFeatureToMap(map2, KW, 1, 2, 3); //key words
-   		contribs.add( contribCreator(2, 2, map2) );
+   		contribs.add( contribCreator("2", 2, map2) );
    		
    		// contrib#3
    		Map<String,DataBag>map3 = new HashMap<String,DataBag>();
@@ -316,10 +312,10 @@ public class DisambiguationTests {
    		addFeatureToMap(map3, CC, 7, 8, 9); //classif codes
    		addFeatureToMap(map3, KP, 7, 8, 9); //key phrase
    		addFeatureToMap(map3, KW, 7, 8, 9); //key words  		
-   		contribs.add( contribCreator(3, 3, map3) );
+   		contribs.add( contribCreator("3", 3, map3) );
    		
    		// contrib#4
-   		contribs.add( contribCreator(4, 4, map3) );
+   		contribs.add( contribCreator("4", 4, map3) );
    		
    		// contrib#5
    		Map<String,DataBag>map5 = new HashMap<String,DataBag>();
@@ -327,7 +323,7 @@ public class DisambiguationTests {
    		addFeatureToMap(map5, CC, 4, 5, 6); //classif codes
    		addFeatureToMap(map5, KP, 7, 8, 9); //key phrase
    		addFeatureToMap(map5, KW, 7, 8, 9); //key words  		
-   		contribs.add( contribCreator(5, 5, map5) );
+   		contribs.add( contribCreator("5", 5, map5) );
    		
    		/*
    		// contrib#6
@@ -342,8 +338,28 @@ public class DisambiguationTests {
    		DataBag contribsBag = tupleListToDataBag(contribs);
 		input.append( contribsBag );
 
-		String out = "{({(0,0,[1#{(1),(2),(3)},0#{(1),(2),(3)},7#{(1),(2),(3)},6#{(1),(2),(3)}]),(1,1,[1#{(1),(2),(3)},0#{(1),(2),(3)},7#{(1),(2),(3)},6#{(1),(2),(3)}]),(2,2,[1#{(4),(5),(6)},0#{(1),(2),(3)},7#{(1),(2),(3)},6#{(1),(2),(3)}]),(5,5,[1#{(4),(5),(6)},0#{(1),(2),(3)},7#{(7),(8),(9)},6#{(7),(8),(9)}]),(3,3,[1#{(7),(8),(9)},0#{(7),(8),(9)},7#{(7),(8),(9)},6#{(7),(8),(9)}]),(4,4,[1#{(7),(8),(9)},0#{(7),(8),(9)},7#{(7),(8),(9)},6#{(7),(8),(9)}])},{(1,0,2.0),(2,0,1.0),(3,2,0.0),(4,3,0.0),(5,3,0.0),(4,0,-2.0),(5,0,-2.0),(3,0,-1.0),(4,1,-2.0),(5,1,-2.0),(3,1,-1.0),(4,2,-2.0),(5,2,-2.0)})}";
-   		assert( aproximate.exec(input).toString().equals( out ) );
+		// APROXIMATE
+   		AND<DataBag> aproximate = new AproximateAND_BFS(
+   				"-2.0", 
+  				"CoAuthorsSnameDisambiguatorFullList#EX_DOC_AUTHS_SNAMES#1#2,IntersectionPerMaxval#EX_CLASSIFICATION_CODES#1#3,IntersectionPerMaxval#EX_KEYWORDS_SPLIT#1#3,IntersectionPerMaxval#EX_KEYWORDS#1#3",
+   				"true",
+   				"true",
+   				"false");
+   		
+		String apr_out = "{({(0,0,[1#{(1),(2),(3)},0#{(1),(2),(3)},7#{(1),(2),(3)},6#{(1),(2),(3)}]),(1,1,[1#{(1),(2),(3)},0#{(1),(2),(3)},7#{(1),(2),(3)},6#{(1),(2),(3)}]),(2,2,[1#{(4),(5),(6)},0#{(1),(2),(3)},7#{(1),(2),(3)},6#{(1),(2),(3)}]),(5,5,[1#{(4),(5),(6)},0#{(1),(2),(3)},7#{(7),(8),(9)},6#{(7),(8),(9)}]),(3,3,[1#{(7),(8),(9)},0#{(7),(8),(9)},7#{(7),(8),(9)},6#{(7),(8),(9)}]),(4,4,[1#{(7),(8),(9)},0#{(7),(8),(9)},7#{(7),(8),(9)},6#{(7),(8),(9)}])},{(1,0,2.0),(2,0,1.0),(3,2,0.0),(4,3,0.0),(5,3,0.0),(4,0,-2.0),(5,0,-2.0),(3,0,-1.0),(4,1,-2.0),(5,1,-2.0),(3,1,-1.0),(4,2,-2.0),(5,2,-2.0)})}";
+   		
+		assert( aproximate.exec(input).toString().equals( apr_out ) );
+   	
+   		// EXHAUSTIVE
+   		AND<DataBag> exhaustive = new ExhaustiveAND(
+   				"-2.0", 
+  				"CoAuthorsSnameDisambiguatorFullList#EX_DOC_AUTHS_SNAMES#1#2,IntersectionPerMaxval#EX_CLASSIFICATION_CODES#1#3,IntersectionPerMaxval#EX_KEYWORDS_SPLIT#1#3,IntersectionPerMaxval#EX_KEYWORDS#1#3",
+   				"true",
+   				"false"
+   			);
+   		// TODO check whether this out is correct
+   		String exh_out = "{(996dc30f-a92a-388d-9392-9ed16588ec72,{(0),(1),(2)}),(04b6c550-264c-39e8-b533-d7f7b977415e,{(3),(4),(5)})}";
+   		exhaustive.exec(input).toString().equals(exh_out);
    	}
 }
 
