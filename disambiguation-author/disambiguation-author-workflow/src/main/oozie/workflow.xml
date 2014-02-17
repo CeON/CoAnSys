@@ -88,7 +88,7 @@
 		</property>
 		<property>
 			<name>and_exhaustive_limit</name>
-			<value>6627</value>
+			<value>5000</value>
 			<description>Upper limit on the size of the contributors group for exhaustive disambiguation algorithm.</description>
 		</property>
 		<property>
