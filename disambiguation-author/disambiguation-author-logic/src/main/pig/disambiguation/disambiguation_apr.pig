@@ -24,7 +24,7 @@
 %DEFAULT and_time ''
 %DEFAULT and_outputContribs disambiguation/outputContribs$and_time
 %DEFAULT and_failedContribs disambiguation/failedContribs$and_time
-%DEFAULT and_feature_info 'IntersectionPerMaxval#EX_DOC_AUTHS_FNAME_FST_LETTER#1.0#1'
+%DEFAULT and_feature_info 'IntersectionPerMaxval#EX_DOC_AUTHS_SNAMES#1.0#1'
 %DEFAULT and_threshold '-0.8'
 %DEFAULT and_aproximate_remember_sim 'false'
 %DEFAULT and_use_extractor_id_instead_name 'true'
