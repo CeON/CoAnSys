@@ -19,6 +19,7 @@
 package pl.edu.icm.coansys.deduplication.document.debugging;
 
 import java.io.IOException;
+import java.util.Arrays;
 import org.apache.pig.EvalFunc;
 import org.apache.pig.data.DataByteArray;
 import org.apache.pig.data.Tuple;
@@ -33,14 +34,11 @@ public class ExtractTitleUDF extends EvalFunc<Tuple> {
 
     @Override
     public Tuple exec(Tuple tuple) throws IOException {
-        Tuple retTuple = TupleFactory.getInstance().newTuple();
         DataByteArray dba = (DataByteArray) tuple.get(1);
         DocumentProtos.DocumentWrapper docWrapper = DocumentProtos.DocumentWrapper.parseFrom(dba.get());
         String id = docWrapper.getDocumentMetadata().getKey();
-        retTuple.append(id);
         String title = docWrapper.getDocumentMetadata().getBasicMetadata().getTitle(0).getText();
-        retTuple.append(title);
-        
+        Tuple retTuple = TupleFactory.getInstance().newTuple(Arrays.asList(id, title));
         return retTuple;
     }
 }

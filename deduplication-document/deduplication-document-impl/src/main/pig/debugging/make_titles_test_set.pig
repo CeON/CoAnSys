@@ -14,7 +14,17 @@
 -- 
 -- You should have received a copy of the GNU Affero General Public License
 -- along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
---
+
+
+
+-- This pig script is a 3rd step of the process creating test set of 
+-- titles pairs which are and aren't duplicates. 
+-- As input data of the script you have to provide:
+-- - document metadata in protocol buffers format before deduplication 
+-- - output of the separate_duplicates.sh script
+-- (see comments in the script separate_duplicates.sh in this project)
+
+
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- default section
@@ -24,7 +34,8 @@
 %DEFAULT commonJarsPath 'lib/$JARS'
 
 %DEFAULT inputDocs /srv/polindex/seqfile
-%DEFAULT debugData /user/acz/deduplication-debug/true_duplicates/
+%DEFAULT debugData /user/acz/deduplication-debug/false_duplicates/false_duplicates_text_voter_1_0
+%DEFAULT outputFile /user/acz/deduplication-debug/false_duplicates/false_duplicates_titles_pairs_1_0
 
 -- -----------------------------------------------------
 -- -----------------------------------------------------
@@ -60,8 +71,20 @@ SET mapred.fairscheduler.pool $scheduler_pool
 -- Join id1 with id-title to obtain id1, title1, id2 triples
 -- Join id2 with id-title to obtain id1, title1, id2, title2 quadruple
 
--- IDTITLE = LOAD '$inputDocs' USING pl.edu.icm.coansys.commons.pig.udf.RichSequenceFileLoader('org.apache.hadoop.io.Text', 'org.apache.hadoop.io.BytesWritable') as (key:chararray, value:bytearray);
+PROTOBUF = LOAD '$inputDocs' USING pl.edu.icm.coansys.commons.pig.udf.RichSequenceFileLoader('org.apache.hadoop.io.Text', 'org.apache.hadoop.io.BytesWritable') as (key:chararray, value:bytearray);
+IDTITLE = FOREACH PROTOBUF GENERATE FLATTEN(pl.edu.icm.coansys.deduplication.document.debugging.ExtractTitleUDF(value)) as (id:chararray, title:chararray);
+
 IDPAIRS = LOAD '$debugData' USING PigStorage('\t') AS (ids:chararray);
 IDSSPLITTED = FOREACH IDPAIRS GENERATE FLATTEN(STRSPLIT(ids, ', ', 2)) AS (id1:chararray, id2:chararray);
 
-DUMP IDSSPLITTED;
+FIRSTTITLEASSIGNED = JOIN IDTITLE BY id, IDSSPLITTED BY id1 USING 'replicated';
+-- DESCRIBE FIRSTTITLEASSIGNED;
+-- FIRSTTITLEASSIGNED: {IDTITLE::id: chararray,IDTITLE::title: chararray,IDSSPLITTED::id1: chararray,IDSSPLITTED::id2: chararray}
+
+BOTHTITLESASSIGNED = JOIN IDTITLE BY id, FIRSTTITLEASSIGNED BY IDSSPLITTED::id2 USING 'replicated';
+-- DESCRIBE BOTHTITLESASSIGNED;
+-- BOTHTITLESASSIGNED: {IDTITLE::id: chararray,IDTITLE::title: chararray,FIRSTTITLEASSIGNED::IDTITLE::id: chararray,FIRSTTITLEASSIGNED::IDTITLE::title: chararray,FIRSTTITLEASSIGNED::IDSSPLITTED::id1: chararray,FIRSTTITLEASSIGNED::IDSSPLITTED::id2: chararray}
+
+RESULT = FOREACH BOTHTITLESASSIGNED GENERATE FIRSTTITLEASSIGNED::IDSSPLITTED::id1 AS id1, FIRSTTITLEASSIGNED::IDSSPLITTED::id2 AS id2, FIRSTTITLEASSIGNED::IDTITLE::title AS title1, IDTITLE::title AS title2;
+
+STORE RESULT INTO '$outputFile';
