@@ -28,7 +28,7 @@
 %DEFAULT and_threshold '-0.8'
 %DEFAULT and_aproximate_remember_sim 'false'
 %DEFAULT and_use_extractor_id_instead_name 'true'
-%DEFAULT and_statistics 'true'
+%DEFAULT and_statistics 'false'
 %DEFAULT and_exhaustive_limit 6627
 
 DEFINE exhaustiveAND pl.edu.icm.coansys.disambiguation.author.pig.ExhaustiveAND('$and_threshold','$and_feature_info','$and_use_extractor_id_instead_name','$and_statistics');

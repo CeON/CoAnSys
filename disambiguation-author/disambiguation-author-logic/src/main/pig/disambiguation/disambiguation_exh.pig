@@ -27,7 +27,7 @@
 %DEFAULT and_feature_info 'IntersectionPerMaxval#EX_DOC_AUTHS_SNAMES#1.0#1'
 %DEFAULT and_threshold '-0.8'
 %DEFAULT and_use_extractor_id_instead_name 'true'
-%DEFAULT and_statistics 'true'
+%DEFAULT and_statistics 'false'
 
 DEFINE exhaustiveAND pl.edu.icm.coansys.disambiguation.author.pig.ExhaustiveAND('$and_threshold','$and_feature_info','$and_use_extractor_id_instead_name','$and_statistics');
 

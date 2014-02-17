@@ -39,7 +39,7 @@
 DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_CONTRIBDATA_GIVENDATA('-featureinfo $and_feature_info -lang $and_lang -skipEmptyFeatures $and_skip_empty_features -useIdsForExtractors $and_use_extractor_id_instead_name');
 
 %DEFAULT and_threshold '-0.8'
-%DEFAULT and_statistics 'true'
+%DEFAULT and_statistics 'false'
 DEFINE featuresCheck pl.edu.icm.coansys.disambiguation.author.pig.FeaturesCheck('$and_threshold','$and_feature_info','$and_use_extractor_id_instead_name','$and_statistics');
 
 -- -----------------------------------------------------
@@ -65,7 +65,7 @@ set mapred.child.java.opts $mapredChildJavaOpts
 -- ulimit must be more than two times the heap size value !
 -- set mapred.child.ulimit unlimited
 set dfs.client.socket-timeout 60000
-%default and_scheduler default
+%default and_scheduler benchmark80
 set mapred.fairscheduler.pool $and_scheduler 
 
 -- -----------------------------------------------------

@@ -73,7 +73,7 @@
 		<!-- Properties for Pig scripts -->
 		<property>
 			<name>and_sample</name>
-			<value>1.0</value>
+			<value>0.2</value>
 			<description>Input Sample Size: [0; 1]. Default 1 (all data).</description>
 		</property>
 		<property>
@@ -193,13 +193,12 @@
 		<pig>
 			<script>disambiguation_exh.pig</script>
 			<!--pig parameters: data paths, cluster config, etc-->
-			<param>and_sample=0.2</param>
+			<param>and_sample=1.0</param>
 			<param>and_inputDocsData=${and_splitted_output_exh}/*</param>
 			<param>and_outputContribs=${and_outputContribs}/exh</param>
 			<param>mapredChildJavaOpts=${and_mapredChildJavaOpts_exh}</param>
 			<!--UDF config-->
 			<param>and_feature_info=${and_feature_info}</param>
-			<param>and_lang=${and_lang}</param>
 			<param>and_statistics=${and_statistics}</param>
 			<param>and_threshold=${and_threshold}</param>
 			<!--commons-->
@@ -221,7 +220,6 @@
 			<param>and_failedContribs=${and_failedContribs}</param>
 			<!--UDF config-->
 			<param>and_feature_info=${and_feature_info}</param>
-			<param>and_lang=${and_lang}</param>
 			<param>and_statistics=${and_statistics}</param>
 			<param>and_threshold=${and_threshold}</param>
 			<!--commons-->
@@ -243,7 +241,6 @@
 			<param>and_failedContribs=${and_failedContribs}</param>
 			<!--UDF config-->
 			<param>and_feature_info=${and_feature_info}</param>
-			<param>and_lang=${and_lang}</param>
 			<param>and_statistics=${and_statistics}</param>
 			<param>and_threshold=${and_threshold}</param>
 			<!--commons-->
