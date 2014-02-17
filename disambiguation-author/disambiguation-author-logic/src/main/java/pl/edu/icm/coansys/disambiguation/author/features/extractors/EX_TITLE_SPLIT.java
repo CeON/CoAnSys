@@ -20,7 +20,7 @@ package pl.edu.icm.coansys.disambiguation.author.features.extractors;
 
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DisambiguationExtractorDocument;
 import pl.edu.icm.coansys.disambiguation.author.normalizers.PigNormalizer;
-import pl.edu.icm.coansys.disambiguation.author.normalizers.ToEnglishLowerCase;
+import pl.edu.icm.coansys.disambiguation.author.normalizers.DiacriticsRemover;
 import pl.edu.icm.coansys.models.DocumentProtos.TextWithLanguage;
 
 import org.apache.pig.data.DataBag;
@@ -45,14 +45,14 @@ public class EX_TITLE_SPLIT extends DisambiguationExtractorDocument {
 
 		DocumentMetadata dm = (DocumentMetadata) o;
 		DataBag db = new DefaultDataBag();
-		ToEnglishLowerCase TELC = new ToEnglishLowerCase();
+		DiacriticsRemover DR = new DiacriticsRemover();
 
 		for (TextWithLanguage title : dm.getBasicMetadata().getTitleList()) {
 			if (lang != null && !lang.equalsIgnoreCase(title.getLanguage())) {
 				continue;
 			}
 			String sTitle = title.getText();
-			String normalized_title = (String) TELC.normalize(sTitle);
+			String normalized_title = (String) DR.normalize(sTitle);
 			if (normalized_title == null) {
 				continue;
 			}

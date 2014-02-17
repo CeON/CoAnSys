@@ -25,7 +25,7 @@ import org.apache.pig.data.TupleFactory;
 
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DisambiguationExtractorDocument;
 import pl.edu.icm.coansys.disambiguation.author.normalizers.PigNormalizer;
-import pl.edu.icm.coansys.disambiguation.author.normalizers.ToEnglishLowerCase;
+import pl.edu.icm.coansys.disambiguation.author.normalizers.DiacriticsRemover;
 import pl.edu.icm.coansys.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 
@@ -53,7 +53,7 @@ public class EX_DOC_AUTHS_FNAME_FST_LETTER extends DisambiguationExtractorDocume
 			if (fname == null || fname.isEmpty()) {
 				continue;
 			}
-			Object normalized_fname = (new ToEnglishLowerCase())
+			Object normalized_fname = (new DiacriticsRemover())
 					.normalize(fname);
 
 			if (normalized_fname == null) {

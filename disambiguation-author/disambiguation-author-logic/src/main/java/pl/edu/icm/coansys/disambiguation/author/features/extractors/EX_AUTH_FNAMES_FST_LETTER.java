@@ -24,8 +24,8 @@ import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
 
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DisambiguationExtractorAuthor;
+import pl.edu.icm.coansys.disambiguation.author.normalizers.DiacriticsRemover;
 import pl.edu.icm.coansys.disambiguation.author.normalizers.PigNormalizer;
-import pl.edu.icm.coansys.disambiguation.author.normalizers.ToEnglishLowerCase;
 import pl.edu.icm.coansys.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 
@@ -45,14 +45,14 @@ public class EX_AUTH_FNAMES_FST_LETTER extends DisambiguationExtractorAuthor {
 		DocumentMetadata dm = (DocumentMetadata) o;
 		DataBag db = new DefaultDataBag();
 
-		ToEnglishLowerCase TELC = new ToEnglishLowerCase();
+		DiacriticsRemover DR = new DiacriticsRemover();
 
 		Author a = dm.getBasicMetadata().getAuthor(fakeIndex);
 		String fnames = a.getForenames();
 		if (fnames.isEmpty()) {
 			return db;
 		}
-		String normalized_fnames = (String) TELC.normalize(fnames);
+		String normalized_fnames = (String) DR.normalize(fnames);
 		if (normalized_fnames == null) {
 			return db;
 		}

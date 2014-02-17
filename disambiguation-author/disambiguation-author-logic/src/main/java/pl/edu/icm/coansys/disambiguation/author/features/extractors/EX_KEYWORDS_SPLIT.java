@@ -27,7 +27,7 @@ import org.apache.pig.data.TupleFactory;
 
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DisambiguationExtractorDocument;
 import pl.edu.icm.coansys.disambiguation.author.normalizers.PigNormalizer;
-import pl.edu.icm.coansys.disambiguation.author.normalizers.ToEnglishLowerCase;
+import pl.edu.icm.coansys.disambiguation.author.normalizers.DiacriticsRemover;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.models.DocumentProtos.KeywordsList;
 
@@ -47,7 +47,7 @@ public class EX_KEYWORDS_SPLIT extends DisambiguationExtractorDocument {
 		DocumentMetadata dm = (DocumentMetadata) o;
 		DataBag db = new DefaultDataBag();
 		Set<Object> set = new HashSet<Object>();
-		ToEnglishLowerCase TELC = new ToEnglishLowerCase();
+		DiacriticsRemover DR = new DiacriticsRemover();
 
 		for (KeywordsList k : dm.getKeywordsList()) {
 			if (lang != null && !k.getLanguage().equalsIgnoreCase(lang)) {
@@ -58,7 +58,7 @@ public class EX_KEYWORDS_SPLIT extends DisambiguationExtractorDocument {
 				if (keyphrase.isEmpty() || isClassifCode(keyphrase)) {
 					continue;
 				}
-				String normalized_keyphrase = (String) TELC
+				String normalized_keyphrase = (String) DR
 						.normalize(keyphrase);
 				if (normalized_keyphrase == null) {
 					continue;
