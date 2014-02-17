@@ -21,6 +21,7 @@
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 
+%DEFAULT and_inputDocsData workflows/pl.edu.icm.coansys-disambiguation-author-workflow/results/splitted/one
 %DEFAULT and_outputContribs disambiguation/outputContribs$and_time
 
 DEFINE GenUUID pl.edu.icm.coansys.disambiguation.author.pig.GenUUID();

@@ -20,7 +20,7 @@
 -- default section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
-%DEFAULT and_inputDocsData extracted/springer_sample02/part*
+%DEFAULT and_inputDocsData workflows/pl.edu.icm.coansys-disambiguation-author-workflow/results/splitted/apr-no-sim
 %DEFAULT and_time ''
 %DEFAULT and_outputContribs disambiguation/outputContribs$and_time
 %DEFAULT and_failedContribs disambiguation/failedContribs$and_time

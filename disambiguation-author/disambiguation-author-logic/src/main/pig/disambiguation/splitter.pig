@@ -99,7 +99,7 @@ split FC into
 
 -- simulating grouping ( 'by sname' ) and counting ( = 1 )
 -- in fact we will get different groups with the same sname - and that is what we need in that case
--- because each contributor with bad data need to be in separate cluster size 1
+-- becouse each contributor with bad data need to be in separate cluster size 1
 D1A = foreach BAD generate sname as sname, {(cId,sname,metadata)} as datagroup, 1 as count;
 
 

@@ -21,7 +21,7 @@
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 
-%DEFAULT and_inputDocsData extracted/springer_sample02/part*
+%DEFAULT and_inputDocsData workflows/pl.edu.icm.coansys-disambiguation-author-workflow/results/splitted/exh
 %DEFAULT and_time 20130709_1009
 %DEFAULT and_outputContribs disambiguation/outputContribs$and_time
 %DEFAULT and_feature_info 'CoAuthorsSnameDisambiguatorFullList#EX_AUTH_INITIALS#-0.0000166#8,ClassifCodeDisambiguator#EX_CLASSIFICATION_CODES#0.99#12,KeyphraseDisambiguator#EX_KEYWORDS_SPLIT#0.99#22,KeywordDisambiguator#EX_KEYWORDS#0.0000369#40'
