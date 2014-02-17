@@ -52,7 +52,7 @@ set job.priority $job_priority
 set pig.cachedbag.memusage $pig_cachedbag_mem_usage
 set pig.skewedjoin.reduce.memusage $pig_skewedjoin_reduce_memusage
 set dfs.client.socket-timeout 60000
-%DEFAULT and_scheduler benchmark80
+%DEFAULT and_scheduler default
 SET mapred.fairscheduler.pool $and_scheduler
 -- -----------------------------------------------------
 -- -----------------------------------------------------
