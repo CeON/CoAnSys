@@ -73,7 +73,7 @@
 		<!-- Properties for Pig scripts -->
 		<property>
 			<name>and_sample</name>
-			<value>0.2</value>
+			<value>1.0</value>
 			<description>Input Sample Size: [0; 1]. Default 1 (all data).</description>
 		</property>
 		<property>
@@ -99,7 +99,8 @@
 		<property>
 			<name>and_feature_info</name>
 			<!--<value>"CoAuthorsSnameDisambiguatorFullList#EX_AUTH_SNAMES#-0.0000166#8,ClassifCodeDisambiguator#EX_CLASSIFICATION_CODES#0.99#12,KeyphraseDisambiguator#EX_KEYWORDS_SPLIT#0.99#22,KeywordDisambiguator#EX_KEYWORDS#0.0000369#40".</value>-->
-			<value>"IntersectionPerMaxval#EX_DOC_AUTHS_SNAMES#1.0#1"</value>
+			<!--<value>"IntersectionPerMaxval#EX_DOC_AUTHS_SNAMES#1.0#1"</value>-->
+			<value>"IntersectionPerSum#EX_CLASSIFICATION_CODES#0.3#1,IntersectionPerSum#EX_KEYWORDS_SPLIT#0.3#1,IntersectionPerSum#EX_TITLE_SPLIT#0.2#1,IntersectionPerSum#EX_DOC_AUTHS_SNAMES#0.4#1,IntersectionPerSum#EX_EMAIL#1.0#1,IntersectionPerSum#EX_AUTH_FNAMES_FST_LETTER#0.4#1"</value>
 			<description>Features description - model for calculating affinity and contributors clustering. Value in format: "Disambiguator_name#Feature_extractor_name#weight#coefficient_of_the_maximum_number_of_occurrences,...".</description>
 		</property>
 		<property>
