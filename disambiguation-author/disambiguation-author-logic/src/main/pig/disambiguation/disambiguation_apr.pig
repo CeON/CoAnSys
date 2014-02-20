@@ -20,15 +20,15 @@
 -- default section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
-%DEFAULT and_inputDocsData extracted/springer_sample02/part*
+%DEFAULT and_inputDocsData workflows/pl.edu.icm.coansys-disambiguation-author-workflow/results/splitted/apr-no-sim
 %DEFAULT and_time ''
 %DEFAULT and_outputContribs disambiguation/outputContribs$and_time
 %DEFAULT and_failedContribs disambiguation/failedContribs$and_time
-%DEFAULT and_feature_info 'IntersectionPerMaxval#EX_DOC_AUTHS_FNAME_FST_LETTER#1.0#1'
+%DEFAULT and_feature_info 'IntersectionPerMaxval#EX_DOC_AUTHS_SNAMES#1.0#1'
 %DEFAULT and_threshold '-0.8'
 %DEFAULT and_aproximate_remember_sim 'false'
 %DEFAULT and_use_extractor_id_instead_name 'true'
-%DEFAULT and_statistics 'true'
+%DEFAULT and_statistics 'false'
 %DEFAULT and_exhaustive_limit 6627
 
 DEFINE exhaustiveAND pl.edu.icm.coansys.disambiguation.author.pig.ExhaustiveAND('$and_threshold','$and_feature_info','$and_use_extractor_id_instead_name','$and_statistics');
@@ -59,7 +59,7 @@ set mapred.child.java.opts $mapredChildJavaOpts
 -- ulimit must be more than two times the heap size value !
 -- set mapred.child.ulimit unlimited
 set dfs.client.socket-timeout 60000
-%DEFAULT and_scheduler benchmark80
+%DEFAULT and_scheduler default
 SET mapred.fairscheduler.pool $and_scheduler
 -- -----------------------------------------------------
 -- -----------------------------------------------------

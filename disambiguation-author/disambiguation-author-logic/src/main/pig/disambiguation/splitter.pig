@@ -36,10 +36,10 @@
 %DEFAULT and_lang 'all'
 %DEFAULT and_skip_empty_features 'true'
 %DEFAULT and_use_extractor_id_instead_name 'true'
-DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_CONTRIBDATA_GIVENDATA('$and_feature_info','$and_lang','$and_skip_empty_features','$and_use_extractor_id_instead_name');
+DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_CONTRIBDATA_GIVENDATA('-featureinfo $and_feature_info -lang $and_lang -skipEmptyFeatures $and_skip_empty_features -useIdsForExtractors $and_use_extractor_id_instead_name');
 
 %DEFAULT and_threshold '-0.8'
-%DEFAULT and_statistics 'true'
+%DEFAULT and_statistics 'false'
 DEFINE featuresCheck pl.edu.icm.coansys.disambiguation.author.pig.FeaturesCheck('$and_threshold','$and_feature_info','$and_use_extractor_id_instead_name','$and_statistics');
 
 -- -----------------------------------------------------
@@ -99,7 +99,7 @@ split FC into
 
 -- simulating grouping ( 'by sname' ) and counting ( = 1 )
 -- in fact we will get different groups with the same sname - and that is what we need in that case
--- because each contributor with bad data need to be in separate cluster size 1
+-- becouse each contributor with bad data need to be in separate cluster size 1
 D1A = foreach BAD generate sname as sname, {(cId,sname,metadata)} as datagroup, 1 as count;
 
 

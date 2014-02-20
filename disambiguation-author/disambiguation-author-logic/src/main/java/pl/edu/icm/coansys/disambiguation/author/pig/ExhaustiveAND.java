@@ -53,7 +53,6 @@ public class ExhaustiveAND extends AND<DataBag> {
 	private int finalClusterNumber = 0;
 	private List<Integer> clustersSizes;
 	private boolean gotSim = false;
-	private Object sname = null;
 
 	public ExhaustiveAND(String threshold, String featureDescription,
 			String useIdsForExtractors, String printStatistics) 
@@ -107,12 +106,13 @@ public class ExhaustiveAND extends AND<DataBag> {
 			String[] contribsId = new String[N];
 
 			int k = 0;
+			Object sname = null;
 			while (it.hasNext()) {
 				Tuple t = it.next();
-				contribsId[k++] = (String) t.get(0); // getting contrib id from
-														// tuple
-				contribsT.add((Map<String, Object>) t.get(2)); // getting map
-																// with features
+				// getting contrib id from tuple
+				contribsId[k++] = (String) t.get(0); 
+				// getting map with features
+				contribsT.add((Map<String, Object>) t.get(2)); 
 				// benchmark
 				sname = t.get(1);
 			}
@@ -170,8 +170,6 @@ public class ExhaustiveAND extends AND<DataBag> {
 
 			// clusterAssociations[ index_kontrybutora ] = associated cluster id
 			ClusteringStrategy strategy = new CompleteLinkageHACStrategy_StateOfTheArt();
-			// ClusteringStrategy strategy = new
-			// SingleLinkageHACStrategy_OnlyMax();
 			int[] clusterAssociations = strategy.clusterize(sim);
 
 			int[][] clusters = splitIntoClusters(clusterAssociations);
@@ -228,7 +226,7 @@ public class ExhaustiveAND extends AND<DataBag> {
 				if (sim[i][j] != NOT_CALCULATED) {
 					continue;
 				}
-				// sim[i][j] = threshold;
+
 				sim[i][j] = calculateContribsAffinityForAllFeatures(contribsT,
 						i, j, false);
 			}
