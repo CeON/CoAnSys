@@ -4,12 +4,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.hadoop.mapreduce.Counter;
 import org.apache.pig.EvalFunc;
+import org.apache.pig.tools.pigstats.PigStatusReporter;
 
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.Disambiguator;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.DisambiguatorFactory;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.IntersectionPerSum;
-import pl.edu.icm.coansys.disambiguation.author.pig.extractor.DisambiguationExtractorFactory;
+import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DisambiguationExtractorFactory;
 import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
 
 public abstract class AND<T> extends EvalFunc<T> {
@@ -18,11 +20,9 @@ public abstract class AND<T> extends EvalFunc<T> {
 
 	protected PigDisambiguator[] features;
 	protected FeatureInfo[] featureInfos;
+	protected org.slf4j.Logger logger = null;
+	protected PigStatusReporter myreporter = null;
 
-	private org.slf4j.Logger logger = null;
-	private DisambiguationExtractorFactory extrFactory;
-	private boolean useIdsForExtractors = false;
-	
 	private Disambiguator defaultDisambiguator = new IntersectionPerSum();
 
 	protected float getThreshold() {
@@ -30,26 +30,20 @@ public abstract class AND<T> extends EvalFunc<T> {
 	}
 
 	// benchmark staff
-	/*
-	 * protected boolean isStatistics = false; private TimerSyso timer = new
-	 * TimerSyso(); private int calculatedSimCounter; private int timerPlayId =
-	 * 0; private int finalClusterNumber = 0; private
-	 * List<Integer>clustersSizes;
-	 */
 	public AND(org.slf4j.Logger logger, String threshold,
-			String featureDescription, String useIdsForExtractors)
+			String featureDescription, String useIdsForExtractorsStr)
 			throws ClassNotFoundException, InstantiationException,
 			IllegalAccessException {
 		this.logger = logger;
 		this.threshold = Float.parseFloat(threshold);
-		this.useIdsForExtractors = Boolean.parseBoolean(useIdsForExtractors);
+		boolean useIdsForExtractors = Boolean.parseBoolean(useIdsForExtractorsStr);
 
 		List<FeatureInfo> FIwithEmpties = FeatureInfo
 				.parseFeatureInfoString(featureDescription);
 		List<FeatureInfo> FIFinall = new LinkedList<FeatureInfo>();
 		List<PigDisambiguator> FeaturesFinall = new LinkedList<PigDisambiguator>();
 
-		extrFactory = new DisambiguationExtractorFactory();
+		DisambiguationExtractorFactory extrFactory = new DisambiguationExtractorFactory();
 		DisambiguatorFactory ff = new DisambiguatorFactory();
 		Disambiguator d;
 
@@ -58,7 +52,6 @@ public abstract class AND<T> extends EvalFunc<T> {
 			if (fi.getFeatureExtractorName().equals("")) {
 				logger.error("Empty extractor name in feature info. Leaving this feature.");
 				throw new IllegalArgumentException("Empty extractor name.");
-				// continue;
 			}
 			if (fi.getDisambiguatorName().equals("")) {
 				// giving default disambiguator
@@ -69,9 +62,8 @@ public abstract class AND<T> extends EvalFunc<T> {
 						+ fi.getDisambiguatorName() + ")";
 				logger.error(errMsg);
 				throw new ClassNotFoundException(errMsg);
-				// if you do not want to throw an exception, uncomment the
-				// following creating default disambiguator
-				// d = defaultDisambiguator;
+				// if you do not want to throw an exception, paste the
+				// following creating default disambiguator: d = defaultDisambiguator
 			}
 			// wrong max value (would cause dividing by zero)
 			if (fi.getMaxValue() == 0) {
@@ -82,7 +74,7 @@ public abstract class AND<T> extends EvalFunc<T> {
 				throw new IllegalArgumentException(errMsg);
 			}
 
-			if (this.useIdsForExtractors) {
+			if (useIdsForExtractors) {
 				fi.setFeatureExtractorName(extrFactory.toExId(fi
 						.getFeatureExtractorName()));
 			}
@@ -137,10 +129,29 @@ public abstract class AND<T> extends EvalFunc<T> {
 
 	protected double calculateAffinity(Object featureDescriptionA,
 			Object featureDescriptionB, int featureIndex) {
-		double partial = features[featureIndex].calculateAffinity(
-				featureDescriptionA, featureDescriptionB);
 
-		return partial;
+		return features[featureIndex].calculateAffinity(featureDescriptionA,
+				featureDescriptionB);
 	}
 
+	protected void pigReporterSizeInfo(String blockName, long l) {
+
+		if ( myreporter == null ) {
+			return;
+		}
+		// 6627 is limit for exhaustive contributors block size input
+		// DESC order required!
+		int periodStarts[] = { 6628, 1 };
+
+		for (int start : periodStarts) {
+			if (l >= start) {
+				Counter c = myreporter.getCounter(blockName, "Size from "
+						+ Integer.toString(start));
+				if (c == null) {
+					return;
+				}
+				c.increment(1);
+			}
+		}
+	}
 }

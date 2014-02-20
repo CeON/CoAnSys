@@ -21,6 +21,7 @@
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 
+%DEFAULT and_inputDocsData workflows/pl.edu.icm.coansys-disambiguation-author-workflow/results/splitted/one
 %DEFAULT and_outputContribs disambiguation/outputContribs$and_time
 
 DEFINE GenUUID pl.edu.icm.coansys.disambiguation.author.pig.GenUUID();
@@ -46,7 +47,7 @@ set job.priority $job_priority
 set pig.cachedbag.memusage $pig_cachedbag_mem_usage
 set pig.skewedjoin.reduce.memusage $pig_skewedjoin_reduce_memusage
 set dfs.client.socket-timeout 60000
-%DEFAULT and_scheduler benchmark80
+%DEFAULT and_scheduler default
 SET mapred.fairscheduler.pool $and_scheduler
 -- -----------------------------------------------------
 -- -----------------------------------------------------

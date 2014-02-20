@@ -88,7 +88,7 @@
 		</property>
 		<property>
 			<name>and_exhaustive_limit</name>
-			<value>6627</value>
+			<value>5000</value>
 			<description>Upper limit on the size of the contributors group for exhaustive disambiguation algorithm.</description>
 		</property>
 		<property>
@@ -99,7 +99,8 @@
 		<property>
 			<name>and_feature_info</name>
 			<!--<value>"CoAuthorsSnameDisambiguatorFullList#EX_AUTH_SNAMES#-0.0000166#8,ClassifCodeDisambiguator#EX_CLASSIFICATION_CODES#0.99#12,KeyphraseDisambiguator#EX_KEYWORDS_SPLIT#0.99#22,KeywordDisambiguator#EX_KEYWORDS#0.0000369#40".</value>-->
-			<value>"IntersectionPerMaxval#EX_DOC_AUTHS_FNAME_FST_LETTER#1.0#1"</value>
+			<!--<value>"IntersectionPerMaxval#EX_DOC_AUTHS_SNAMES#1.0#1"</value>-->
+			<value>"IntersectionPerSum#EX_CLASSIFICATION_CODES#0.3#1,IntersectionPerSum#EX_KEYWORDS_SPLIT#0.3#1,IntersectionPerSum#EX_TITLE_SPLIT#0.2#1,IntersectionPerSum#EX_DOC_AUTHS_SNAMES#0.4#1,IntersectionPerSum#EX_EMAIL#1.0#1,IntersectionPerSum#EX_AUTH_FNAMES_FST_LETTER#0.4#1"</value>
 			<description>Features description - model for calculating affinity and contributors clustering. Value in format: "Disambiguator_name#Feature_extractor_name#weight#coefficient_of_the_maximum_number_of_occurrences,...".</description>
 		</property>
 		<property>
@@ -107,11 +108,11 @@
 			<value>false</value>
 			<description>Log ANDs algorithms statistics.</description>
 		</property>
-                <property>
-                        <name>and_skip_empty_features</name>
-                        <value>true</value>
-                        <description>Data extractor skips contributor's features, when feature bag is empty (no data for feature).</description>
-                </property>
+		<property>
+			<name>and_skip_empty_features</name>
+			<value>true</value>
+			<description>Data extractor skips contributor's features, when feature bag is empty (no data for feature).</description>
+		</property>
 	</parameters>
 	<global>
 		<job-tracker>${jobTracker}</job-tracker>
@@ -199,7 +200,6 @@
 			<param>mapredChildJavaOpts=${and_mapredChildJavaOpts_exh}</param>
 			<!--UDF config-->
 			<param>and_feature_info=${and_feature_info}</param>
-			<param>and_lang=${and_lang}</param>
 			<param>and_statistics=${and_statistics}</param>
 			<param>and_threshold=${and_threshold}</param>
 			<!--commons-->
@@ -221,7 +221,6 @@
 			<param>and_failedContribs=${and_failedContribs}</param>
 			<!--UDF config-->
 			<param>and_feature_info=${and_feature_info}</param>
-			<param>and_lang=${and_lang}</param>
 			<param>and_statistics=${and_statistics}</param>
 			<param>and_threshold=${and_threshold}</param>
 			<!--commons-->
@@ -243,7 +242,6 @@
 			<param>and_failedContribs=${and_failedContribs}</param>
 			<!--UDF config-->
 			<param>and_feature_info=${and_feature_info}</param>
-			<param>and_lang=${and_lang}</param>
 			<param>and_statistics=${and_statistics}</param>
 			<param>and_threshold=${and_threshold}</param>
 			<!--commons-->
@@ -252,7 +250,14 @@
 		<ok to="do_and_join"/>
 		<error to="kill"/>
 	</action>
-	<join name="do_and_join" to="serialize"/>
+	<join name="do_and_join" to="do_and_cleaning"/>
+	<action name="do_and_cleaning">
+		<fs>
+			<delete path='${and_splitted_output}'/>
+		</fs>
+		<ok to="serialize"/>
+		<error to="kill"/>
+	</action>
 	<action name="serialize">
 		<pig>
 			<script>serialize.pig</script>
@@ -264,6 +269,14 @@
 			<!--commons-->
 			<param>and_scheduler=${and_pool}</param>
 		</pig>
+		<ok to="finall_cleaning"/>
+		<error to="kill"/>
+	</action>
+	<action name="finall_cleaning">
+		<fs>
+			<delete path='${and_cid_dockey}'/>
+			<delete path='${and_outputContribs}'/>
+		</fs>
 		<ok to="end"/>
 		<error to="kill"/>
 	</action>

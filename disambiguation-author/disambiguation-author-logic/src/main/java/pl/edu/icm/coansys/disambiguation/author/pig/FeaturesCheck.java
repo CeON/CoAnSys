@@ -18,8 +18,10 @@
 
 package pl.edu.icm.coansys.disambiguation.author.pig;
 
+import org.apache.hadoop.mapreduce.Counter;
 import org.apache.pig.backend.executionengine.ExecException;
 import org.apache.pig.data.Tuple;
+import org.apache.pig.tools.pigstats.PigStatusReporter;
 import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
@@ -61,8 +63,11 @@ public class FeaturesCheck extends AND<Boolean> {
 
 	@Override
 	public Boolean exec(Tuple input) {
-
+		// instance of reporter may change in each exec(...) run
+		myreporter = PigStatusReporter.getInstance();
+		
 		if (input == null || input.size() == 0) {
+			reportContrib(REPORTER_CONST.EMPTY);
 			return false;
 		}
 
@@ -77,14 +82,17 @@ public class FeaturesCheck extends AND<Boolean> {
 			// Throwing an exception would cause the task to fail.
 			logger.error("Caught exception processing input row:\n"
 					+ StackTraceExtractor.getStackTrace(e));
+			reportContrib(REPORTER_CONST.EMPTY);
 			return false;
 		}
 
-		if (cid == null || sname == null || featuresMap == null) {
+		if (cid == null || sname == null || featuresMap == null
+				|| cid.isEmpty() || sname.isEmpty()) {
 			logger.info("Skipping " + (++skipedContribCounter) + " / "
 					+ allContribCounter + " contrib: cid = " + cid
 					+ ", sname = " + sname
 					+ ". Cid or sname or feature map with null value.");
+			reportContrib(REPORTER_CONST.EMPTY);
 			return false;
 		}
 
@@ -111,6 +119,7 @@ public class FeaturesCheck extends AND<Boolean> {
 			// contributor is similar to himself so maybe comparable to other
 			// contributors
 			if (simil >= 0) {
+				reportContrib(REPORTER_CONST.SIMILAR);
 				return true;
 			}
 		}
@@ -121,6 +130,25 @@ public class FeaturesCheck extends AND<Boolean> {
 					+ ", sname = " + sname + ". Not enough features.");
 		}
 
+		reportContrib(REPORTER_CONST.DISIMILAR);
 		return false;
+	}
+
+	// Pig Status Reporter staff:
+	static class REPORTER_CONST {
+		public final static String EMPTY = "Some info null or empty";
+		public final static String DISIMILAR = "Disimilar to themselves";
+		public final static String SIMILAR = "Similar to themselves";
+	}
+	
+	private void reportContrib(String which) {
+		if ( myreporter == null ) {
+			return;
+		}
+		Counter counter = myreporter.getCounter("Contributors", which);
+		
+		if (counter != null) {
+			counter.increment(1);
+		}
 	}
 }
