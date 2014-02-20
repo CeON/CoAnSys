@@ -42,8 +42,8 @@ public class TitleVoterNGTest {
     public void setUp() throws Exception {
         workTitleVoter = new TitleVoter();
         workTitleVoter.setApproveLevel(0.001f);
-        workTitleVoter.setDisapproveLevel(0.00861f);
-        workTitleVoter.setDigitsPercentageTreshold(15);
+        workTitleVoter.setDisapproveLevel(0.059f);
+        workTitleVoter.setMaxNormalizedTitleLength(90);
     }
 
     private double readTestSetFile(String filename) throws IOException {
@@ -87,10 +87,10 @@ public class TitleVoterNGTest {
         Assert.assertEquals(readTestSetFile("/titles_pairs/false_duplicates_pairs_0_9"), 0.0);
         Assert.assertEquals(readTestSetFile("/titles_pairs/false_duplicates_pairs_1_0"), 0.0);
 
-        // higher is better... TitleVoter needs to be adjusted
-        Assert.assertTrue(readTestSetFile("/titles_pairs/real_duplicates_pairs_0_7") >= 0.0);
-        Assert.assertTrue(readTestSetFile("/titles_pairs/real_duplicates_pairs_0_8") >= 0.0);
-        Assert.assertTrue(readTestSetFile("/titles_pairs/real_duplicates_pairs_0_9") >= 0.0);
-        Assert.assertTrue(readTestSetFile("/titles_pairs/real_duplicates_pairs_1_0") >= 0.0);
+        // higher is better...
+        Assert.assertTrue(readTestSetFile("/titles_pairs/real_duplicates_pairs_0_7") >= 0.2);
+        Assert.assertTrue(readTestSetFile("/titles_pairs/real_duplicates_pairs_0_8") >= 0.3);
+        Assert.assertTrue(readTestSetFile("/titles_pairs/real_duplicates_pairs_0_9") >= 0.4);
+        Assert.assertTrue(readTestSetFile("/titles_pairs/real_duplicates_pairs_1_0") >= 0.5);
     }
 }
