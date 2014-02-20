@@ -29,20 +29,22 @@ public class VotesProductComparator extends AbstractWorkComparator {
 
     private int minVotersRequired;
     private float probabilityTreshold;
+    private float tresholdIncreasingVotersRequired;
 
     
     @Override
     protected boolean calculateResult(List<Float> probabilities, List<Float> weights, StringBuilder debugOutputBuilder) {
-        if (probabilities.size() < minVotersRequired) {
-            return false;
-        }
+        int localVotersRequired = minVotersRequired;
         
         double probabilitiesProduct = 1.0;
         for (int i = 0; i < probabilities.size(); i++) {
             probabilitiesProduct *= probabilities.get(i);
         }
+        if (probabilitiesProduct <= tresholdIncreasingVotersRequired) {
+            localVotersRequired++;
+        }
         debugOutputBuilder.append("##PROBABILITIES_PRODUCT=").append(probabilitiesProduct);
-        return probabilitiesProduct > probabilityTreshold;
+        return probabilities.size() >= localVotersRequired && probabilitiesProduct > probabilityTreshold;
     }
 
     //******************** SETTERS ********************
@@ -54,4 +56,7 @@ public class VotesProductComparator extends AbstractWorkComparator {
         this.probabilityTreshold = probabilityTreshold;
     }
 
+    public void setTresholdIncreasingVotersRequired(float tresholdIncreasingVotersRequired) {
+        this.tresholdIncreasingVotersRequired = tresholdIncreasingVotersRequired;
+    }
 }

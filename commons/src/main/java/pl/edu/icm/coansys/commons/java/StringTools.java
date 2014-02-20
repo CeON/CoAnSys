@@ -22,6 +22,10 @@ import java.util.Map;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import org.apache.commons.lang.StringUtils;
 
 /**
  *
@@ -30,7 +34,10 @@ import com.google.common.collect.Maps;
  */
 public final class StringTools {
 
-    static final Map<String, String> wordToDecimal = Maps.newHashMap();
+    private static final List<String> partNames = Arrays.asList("PART", "CZESC", "CZ");
+    private static final String PART_NAME = "part";
+    private static final Map<String, String> wordToDecimal = Maps.newHashMap();
+    private static final Map<Character, String> greekLetters = Maps.newHashMap();
 
     static {
         wordToDecimal.put("ONE", "1");
@@ -43,6 +50,38 @@ public final class StringTools {
         wordToDecimal.put("EIGHT", "8");
         wordToDecimal.put("NINE", "9");
         wordToDecimal.put("TEN", "10");
+
+        greekLetters.put('α', "alpha");
+        greekLetters.put('β', "beta");
+        greekLetters.put('γ', "gamma");
+        greekLetters.put('δ', "delta");
+        greekLetters.put('ε', "epsilon");
+        greekLetters.put('κ', "kappa");
+        greekLetters.put('λ', "lambda");
+        greekLetters.put('σ', "sigma");
+        greekLetters.put('π', "pi");
+    }
+
+    public static String normalizePartQualifiers(String str) {
+        String[] tokens = str.split(" ");
+        List<String> newTokens = new ArrayList<String>();
+
+        boolean recentlyPartName = false;
+        
+        for (int i = 0; i < tokens.length; i++) {
+            if (partNames.contains(tokens[i].toUpperCase())) {
+                newTokens.add(PART_NAME);
+                recentlyPartName = true;
+            } else if (!recentlyPartName && isDecimalNumber(tokens[i])) {
+                newTokens.add(PART_NAME);
+                newTokens.add(tokens[i]);
+                recentlyPartName = false;
+            } else {
+                newTokens.add(tokens[i]);
+                recentlyPartName = false;
+            }
+        }
+        return StringUtils.join(newTokens, " ");
     }
 
     private StringTools() {
@@ -92,12 +131,16 @@ public final class StringTools {
     public static boolean isRomanNumber(String value) {
         return value.toUpperCase().matches("^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$");
     }
+    
+    public static boolean isDecimalNumber(String value) {
+        return value.matches("^\\d+$");
+    }
 
     /**
      * Converts roman number to decimal.
      *
-     * @throws IllegalArgumentException if the number is not a valid roman
-     * number, see: {@link StringTools#isRomanNumber(String)}
+     * @throws IllegalArgumentException if the number is not a valid roman number, see:
+     * {@link StringTools#isRomanNumber(String)}
      */
     public static int romanToDecimal(String romanNumber) {
         Preconditions.checkArgument(isRomanNumber(romanNumber));
@@ -186,6 +229,26 @@ public final class StringTools {
         return value;
     }
 
+    public static String replaceNumbersToDecimal(String value) {
+        if (value == null) {
+            return value;
+        }
+
+        String[] tokens = value.split(" ");
+        String[] newTokens = new String[tokens.length];
+        for (int i = 0; i < tokens.length; i++) {
+            String token = tokens[i];
+            if (isRomanNumber(token)) {
+                newTokens[i] = String.valueOf(romanToDecimal(token));
+            } else if (isEngWordNumber(token)) {
+                newTokens[i] = String.valueOf(wordToDecimal.get(token.toUpperCase()));
+            } else {
+                newTokens[i] = token;
+            }
+        }
+        return StringUtils.join(newTokens, " ");
+    }
+
     public static boolean isEngWordNumber(String value) {
         return value.toUpperCase().matches("ONE|TWO|THREE|FOUR|FIVE|SIX|SEVEN|EIGHT|NINE|TEN");
     }
@@ -196,11 +259,10 @@ public final class StringTools {
      * not letters or digits, about accidental spaces, or about different
      * diacritics etc. <br/><br/>
      * This method: <br/>
-     * - Trims <br/>
-     * - Removes all characters that are not: letters, digits, spaces and
-     * dots<br/>
+     * - Replaces some greek letters by theirs "word" equivalend (eg. alpha, beta) <br/>
+     * - Replaces all characters that are not letters, digits by spaces<br/>
      * - Replaces white spaces with spaces <br/>
-     * - Replaces dots with spaces <br/>
+     * - Trims <br />
      * - Compacts many-spaces gaps to one-space gaps <br/>
      * - Removes diacritics <br/>
      * - Lower cases <br/>
@@ -218,18 +280,19 @@ public final class StringTools {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < value.length(); ++i) {
             char c = value.charAt(i);
-            if (Character.isLetterOrDigit(c)) {
+            if (greekLetters.keySet().contains(c)) {
+                sb.append(greekLetters.get(c));
+            } else if (Character.isLetterOrDigit(c)) {
                 sb.append(c);
-            } else if (Character.isWhitespace(c)) {
-                sb.append(" ");
-            } else if (c == '.') {
+            } else {
                 sb.append(" ");
             }
         }
         String result = sb.toString();
-        result = result.trim().replaceAll(" +", " ");
         result = DiacriticsRemover.removeDiacritics(result);
+        result = removeStopWords(result);
         result = result.toLowerCase();
+        result = result.trim().replaceAll(" +", " ");
         return result;
     }
 
@@ -246,7 +309,7 @@ public final class StringTools {
     public static String removeStopWords(final String value) {
         String result = value.replaceAll("^([T|t][H|h][E|e]\\s+)|\\s+[T|t][H|h][E|e]\\s+", " ");
         result = result.replaceAll("^([O|o][F|f]\\s+)|\\s+[O|o][F|f]\\s+", " ");
-        result = result.replaceAll("^[a|A]\\s+|[a|A]\\s+", " ");
+        result = result.replaceAll("^[a|A]\\s+|\\s+[a|A]\\s+", " ");
         result = result.replaceAll("^([A|a][N|n]\\s+)|\\s+[A|a][N|n]\\s+", " ");
         result = result.replaceAll("^([A|a][N|n][D|d]\\s+)|\\s+[A|a][N|n][D|d]\\s+", " ");
         result = result.replaceAll("^([O|o][R|r]\\s+)|\\s+[O|o][R|r]\\s+", " ");
@@ -264,7 +327,7 @@ public final class StringTools {
         }
         return true;
     }
-    
+
     /**
      * Counts digits to all chars in string ratio
      */

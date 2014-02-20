@@ -29,9 +29,9 @@
                 </bean>
                 <bean id="workTitleVoter" class="pl.edu.icm.coansys.deduplication.document.voter.TitleVoter">
                     <property name="weight" value="0.8"/>
-                    <property name="disapproveLevel" value="0.2"/>
-                    <property name="approveLevel" value="0.03"/>
-                    <property name="digitsPercentageTreshold" value="15"/>
+                    <property name="disapproveLevel" value="0.059"/>
+                    <property name="approveLevel" value="0.001"/>
+                    <property name="maxNormalizedTitleLength" value="90" />
                 </bean>
                 <bean id="workAuthorsVoter" class="pl.edu.icm.coansys.deduplication.document.voter.AuthorsVoter">
                     <property name="weight" value="0.7"/>
@@ -42,6 +42,7 @@
         </property>
         <property name="minVotersRequired" value="3"/>
         <property name="probabilityTreshold" value="0.5"/>
+        <property name="tresholdIncreasingVotersRequired" value="0.8" />
     </bean>
 
     <context:component-scan resource-pattern="**/*.class" base-package="pl.edu.icm.coansys.deduplication.document"/>

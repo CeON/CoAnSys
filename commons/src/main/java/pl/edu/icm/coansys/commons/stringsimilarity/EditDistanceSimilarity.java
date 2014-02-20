@@ -27,8 +27,9 @@ public class EditDistanceSimilarity extends SimilarityCalculator {
 
     private float approveLevel;
     private float disapproveLevel;
+    private int maxNormalizedStringLength;
 
-    public EditDistanceSimilarity(float approveLevel, float disapproveLevel) {
+    public EditDistanceSimilarity(float approveLevel, float disapproveLevel, int maxNormalizedStringLength) {
         if (approveLevel < 0.0 || approveLevel > 1.0 || disapproveLevel < 0.0 || disapproveLevel > 1.0) {
             throw new IllegalArgumentException("approveLevel and disapproveLevel must be between 0.0 and 1.0");
         }
@@ -37,9 +38,12 @@ public class EditDistanceSimilarity extends SimilarityCalculator {
         }
         this.approveLevel = approveLevel;
         this.disapproveLevel = disapproveLevel;
+        this.maxNormalizedStringLength = maxNormalizedStringLength;
     }
-
-
+    
+    public EditDistanceSimilarity(float approveLevel, float disapproveLevel) {
+        this(approveLevel, disapproveLevel, 0);
+    }
 
     @Override
     protected float doCalculate(String s1, String s2) {
@@ -47,15 +51,22 @@ public class EditDistanceSimilarity extends SimilarityCalculator {
         int levenshteinDistance = StringUtils.getLevenshteinDistance(s1, s2);
         int maxLength = Math.max(s1.length(), s2.length());
 
+        int normalizedLength;
+        if (maxNormalizedStringLength > 0) {
+            double factor = 2.0 * maxNormalizedStringLength / Math.PI;
+            normalizedLength = (int) Math.round(factor * Math.atan((double) maxLength / factor));
+        } else {
+            normalizedLength = maxLength;
+        }
+
         if (maxLength == 0) {
             return 1.0f;
-        } else if (levenshteinDistance > disapproveLevel * maxLength) {
+        } else if (levenshteinDistance > disapproveLevel * normalizedLength) {
             return 0.0f;
-        } else if (levenshteinDistance < approveLevel * maxLength) {
+        } else if (levenshteinDistance < approveLevel * normalizedLength) {
             return 1.0f;
         } else {
-            return (disapproveLevel * maxLength - levenshteinDistance) / ((disapproveLevel - approveLevel) * maxLength);
+            return (disapproveLevel * normalizedLength - levenshteinDistance) / ((disapproveLevel - approveLevel) * normalizedLength);
         }
     }
-
 }
