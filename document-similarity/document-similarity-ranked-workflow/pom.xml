@@ -4,7 +4,7 @@
     <parent>
         <groupId>pl.edu.icm.coansys</groupId>
         <artifactId>document-similarity</artifactId>
-        <version>1.5-SNAPSHOT</version>
+        <version>1.5</version>
     </parent>
     
     <artifactId>document-similarity-ranked-workflow</artifactId>
