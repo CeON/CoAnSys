@@ -11,7 +11,7 @@ import org.apache.pig.tools.pigstats.PigStatusReporter;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.Disambiguator;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.DisambiguatorFactory;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.IntersectionPerSum;
-import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DisambiguationExtractorFactory;
+import pl.edu.icm.coansys.disambiguation.author.features.extractors.DisambiguationExtractorFactory;
 import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
 
 public abstract class AND<T> extends EvalFunc<T> {
@@ -141,7 +141,7 @@ public abstract class AND<T> extends EvalFunc<T> {
 		}
 		// 6627 is limit for exhaustive contributors block size input
 		// DESC order required!
-		int periodStarts[] = { 6628, 1 };
+		int periodStarts[] = { 5001, 1 };
 
 		for (int start : periodStarts) {
 			if (l >= start) {

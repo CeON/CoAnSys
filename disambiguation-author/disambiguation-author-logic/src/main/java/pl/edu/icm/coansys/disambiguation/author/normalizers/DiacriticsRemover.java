@@ -34,7 +34,7 @@ public class DiacriticsRemover implements PigNormalizer {
 			tmp = text.toString();
 		}
 
-		//tmp = org.apache.commons.lang3.StringUtils.stripAccents(tmp);
+		//alternative function: org.apache.commons.lang3.StringUtils.stripAccents(tmp);
 		tmp = pl.edu.icm.coansys.commons.java.DiacriticsRemover.removeDiacritics(tmp);
 		tmp = tmp.trim();
 

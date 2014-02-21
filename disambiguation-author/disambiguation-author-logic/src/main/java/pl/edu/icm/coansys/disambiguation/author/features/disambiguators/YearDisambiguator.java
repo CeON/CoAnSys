@@ -47,7 +47,7 @@ public class YearDisambiguator extends Disambiguator{
 		int a = Integer.parseInt( first.toString() );
 		int b = Integer.parseInt( second.toString() );
 
-		//int dif = Math.abs( b - a );
+		//something like dif = Math.abs( b - a );
 		//TODO funcion(int x) = something like 1 / dif;
 		
 		return ( a == b ) ? 1 : 0; //for now
