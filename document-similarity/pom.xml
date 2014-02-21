@@ -6,7 +6,7 @@
     <parent>
         <artifactId>coansys</artifactId>
         <groupId>pl.edu.icm.coansys</groupId>
-        <version>1.5</version>
+        <version>1.6-SNAPSHOT</version>
     </parent>
     
     <artifactId>document-similarity</artifactId>
