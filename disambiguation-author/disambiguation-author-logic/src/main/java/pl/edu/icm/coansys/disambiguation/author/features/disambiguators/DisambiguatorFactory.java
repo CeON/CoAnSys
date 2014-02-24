@@ -21,7 +21,6 @@ package pl.edu.icm.coansys.disambiguation.author.features.disambiguators;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import pl.edu.icm.coansys.disambiguation.features.Disambiguator;
 import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
 
 /**
@@ -37,11 +36,15 @@ public class DisambiguatorFactory {
     private static final String THIS_PACKAGE = new DisambiguatorFactory().getClass().getPackage().getName();
     
 	public Disambiguator create(FeatureInfo fi){
+		Disambiguator res = null;
 		try {
-            return (Disambiguator) Class.forName(THIS_PACKAGE + "." + fi.getDisambiguatorName()).newInstance();
-        } catch (Exception ex) {
+            res = (Disambiguator) Class.forName(THIS_PACKAGE + "." + fi.getDisambiguatorName()).newInstance();
+    		res.setMaxVal(fi.getMaxValue());
+    		res.setWeight(fi.getWeight());
+		} catch (Exception ex) {
             Logger.getLogger(DisambiguatorFactory.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return null;
+
+        return res;
 	}
 }

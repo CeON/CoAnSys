@@ -32,7 +32,7 @@
 %DEFAULT lang 'en'
 
 -- DEFINE keyTiKwAbsCatExtractor pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_MAP_WHEN_CATEG_LIM('en','removeall');
-DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_CONTRIBDATA_GIVENDATA('$dc_m_str_feature_info','$lang');
+DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_CONTRIBDATA_GIVENDATA('-featureinfo $dc_m_str_feature_info -lang $lang');
 DEFINE pairsCreation pl.edu.icm.coansys.disambiguation.author.pig.SvmPairsCreation('$dc_m_str_feature_info');
 -- -----------------------------------------------------
 -- -----------------------------------------------------

@@ -43,15 +43,16 @@ import pl.edu.icm.coansys.models.DocumentProtos.KeywordsList;
 import pl.edu.icm.coansys.models.DocumentProtos.TextWithLanguage;
 
 import com.google.common.base.Joiner;
+import org.apache.pig.impl.logicalLayer.FrontendException;
 
 /**
  * 
  * @author akawa
  * @author pdendek
  */
-public class DocumentProtobufToTupleMap extends EvalFunc<Tuple> {
+public final class DocumentProtobufToTupleMap extends EvalFunc<Tuple> {
 
-	private static class C {
+	private static final class C {
 		private C() {
 		}
 
@@ -100,7 +101,7 @@ public class DocumentProtobufToTupleMap extends EvalFunc<Tuple> {
 			return new Schema(new Schema.FieldSchema(getSchemaName(this
 					.getClass().getName().toLowerCase(), input), tupleSchema,
 					DataType.TUPLE));
-		} catch (Exception e) {
+		} catch (FrontendException e) {
 			log.error("Error in the output Schema creation",e);
         	log.error(StackTraceExtractor.getStackTrace(e));
 			throw new RuntimeException(e);
@@ -131,7 +132,7 @@ public class DocumentProtobufToTupleMap extends EvalFunc<Tuple> {
 		List<String> al = new ArrayList<String>();
 		for (KeywordsList kl : metadata.getKeywordsList()) {
 			for (String s : kl.getKeywordsList()) {
-				al.add(s);
+				al.add(removeAllPigUnfriendlySigns(s));
 			}
 		}
 		output.set(fieldNumberMap.get(C.KEYWORDS), listToDataBag(al));
@@ -153,7 +154,7 @@ public class DocumentProtobufToTupleMap extends EvalFunc<Tuple> {
 			List<TextWithLanguage> someList) throws ExecException {
 		ArrayList<String> al = new ArrayList<String>();
 		for (TextWithLanguage twl : someList) {
-			al.add(twl.getText());
+			al.add(removeAllPigUnfriendlySigns(twl.getText()));
 		}
 		output.set(fieldNumberMap.get(field), Joiner.on(" ").join(al));
 	}
@@ -177,4 +178,11 @@ public class DocumentProtobufToTupleMap extends EvalFunc<Tuple> {
 		}
 		return output;
 	}
+	
+	private String removeAllPigUnfriendlySigns(String s){
+		s = s.replaceAll("[,;\\[\\]\\(\\)#\\{\\}]", " ")
+		.replaceAll("\\s+", " ").trim();
+		return s;
+	}
+	
 }

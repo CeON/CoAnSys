@@ -22,8 +22,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.edu.icm.coansys.commons.java.DocumentWrapperUtils;
 import pl.edu.icm.coansys.commons.java.StringTools;
+import pl.edu.icm.coansys.commons.stringsimilarity.AllNumbersSimilarity;
 import pl.edu.icm.coansys.commons.stringsimilarity.EditDistanceSimilarity;
-import pl.edu.icm.coansys.commons.stringsimilarity.TrailingNumbersSimilarity;
+import pl.edu.icm.coansys.commons.stringsimilarity.PartQualifiersSimilarity;
 import pl.edu.icm.coansys.models.DocumentProtos;
 
 /**
@@ -33,35 +34,26 @@ import pl.edu.icm.coansys.models.DocumentProtos;
  */
 public class TitleVoter extends AbstractSimilarityVoter {
     
-    Logger log = LoggerFactory.getLogger(TitleVoter.class);
-    
     private float disapproveLevel;
     private float approveLevel;
-    private int digitsPercentageTreshold;
+    private int maxNormalizedTitleLength;
 
     @Override
     public Vote vote(DocumentProtos.DocumentMetadata doc1, DocumentProtos.DocumentMetadata doc2) {
         String title1 = getNormalizedTitle(doc1);
         String title2 = getNormalizedTitle(doc2);
         
-        float appr = this.approveLevel;
-        float disappr = this.disapproveLevel;
-        
-        int digitsPercentage = Math.max(StringTools.digitsPercentage(title1), StringTools.digitsPercentage(title2));
-        if (digitsPercentage > digitsPercentageTreshold) {
-            // if the title contains many digits, we are more restrictive in comparing titles
-            appr /= 4;
-            disappr /= 4;
-        }
-        
-        TrailingNumbersSimilarity trailingNumberSimilarity = new TrailingNumbersSimilarity();
-        EditDistanceSimilarity editDistanceSimilarity = new EditDistanceSimilarity(appr, disappr);
-        
-        
-        if (trailingNumberSimilarity.calculateSimilarity(title1, title2) == 0.0f) {
+        AllNumbersSimilarity allNumberSimilarity = new AllNumbersSimilarity();
+        if (allNumberSimilarity.calculateSimilarity(title1, title2) == 0.0f) {
             return new Vote(Vote.VoteStatus.NOT_EQUALS);
         }
         
+        PartQualifiersSimilarity partQualifiersSimilarity = new PartQualifiersSimilarity();
+        if (partQualifiersSimilarity.calculateSimilarity(title1, title2) == 0.0f) {
+            return new Vote(Vote.VoteStatus.NOT_EQUALS);
+        }
+        
+        EditDistanceSimilarity editDistanceSimilarity = new EditDistanceSimilarity(approveLevel, disapproveLevel, maxNormalizedTitleLength);        
         float editDistance = editDistanceSimilarity.calculateSimilarity(title1, title2);
         if (editDistance == 0.0f) {
             return new Vote(Vote.VoteStatus.NOT_EQUALS);
@@ -73,8 +65,8 @@ public class TitleVoter extends AbstractSimilarityVoter {
     private String getNormalizedTitle(DocumentProtos.DocumentMetadata doc) {
         String title = DocumentWrapperUtils.getMainTitle(doc);
         title = StringTools.normalize(title);
-        title = StringTools.replaceLastRomanNumberToDecimal(title);
-        title = StringTools.replaceLastWordNumberToDecimal(title);
+        title = StringTools.replaceNumbersToDecimal(title);
+        title = StringTools.normalizePartQualifiers(title);
         
         return title;
     }
@@ -87,7 +79,7 @@ public class TitleVoter extends AbstractSimilarityVoter {
         this.approveLevel = approveLevel;
     }
 
-    public void setDigitsPercentageTreshold(int digitsPercentageTreshold) {
-        this.digitsPercentageTreshold = digitsPercentageTreshold;
+    public void setMaxNormalizedTitleLength(int maxNormalizedTitleLength) {
+        this.maxNormalizedTitleLength = maxNormalizedTitleLength;
     }
 }

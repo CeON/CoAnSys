@@ -20,26 +20,27 @@
 -- default section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
-
-
 %DEFAULT and_inputDocsData /srv/bwndata/seqfile/bazekon-20130314.sf
 %DEFAULT and_cid_dockey 'cid_dockey'
+%DEFAULT and_splitted_output_one 'splitted/one'
+%DEFAULT and_splitted_output_exh 'splitted/exh'
+%DEFAULT and_splitted_output_apr_sim 'splitted/apr-sim'
+%DEFAULT and_splitted_output_apr_no_sim 'splitted/apr-no-sim'
+
 %DEFAULT and_time 20130709_1009
-%DEFAULT and_feature_info 'CoAuthorsSnameDisambiguatorFullList#EX_AUTH_INITIALS#-0.0000166#8,ClassifCodeDisambiguator#EX_CLASSIFICATION_CODES#0.99#12,KeyphraseDisambiguator#EX_KEYWORDS_SPLIT#0.99#22,KeywordDisambiguator#EX_KEYWORDS#0.0000369#40'
-%DEFAULT and_lang 'all'
-%DEFAULT and_skip_empty_features 'true'
-%DEFAULT and_use_extractor_id_instead_name 'true'
-
-DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_CONTRIBDATA_GIVENDATA('$and_feature_info','$and_lang','$and_skip_empty_features','$and_use_extractor_id_instead_name');
-
-%DEFAULT and_threshold '-0.8'
-%DEFAULT and_statistics 'true'
-DEFINE featuresCheck pl.edu.icm.coansys.disambiguation.author.pig.FeaturesCheck('$and_threshold','$and_feature_info','$and_use_extractor_id_instead_name','$and_statistics');
-
-
 %DEFAULT and_sample 1.0
 %DEFAULT and_exhaustive_limit 6627
 %DEFAULT and_aproximate_sim_limit 1000000
+
+%DEFAULT and_feature_info 'IntersectionPerMaxval#EX_DOC_AUTHS_FNAME_FST_LETTER#1.0#1'
+%DEFAULT and_lang 'all'
+%DEFAULT and_skip_empty_features 'true'
+%DEFAULT and_use_extractor_id_instead_name 'true'
+DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_CONTRIBDATA_GIVENDATA('-featureinfo $and_feature_info -lang $and_lang -skipEmptyFeatures $and_skip_empty_features -useIdsForExtractors $and_use_extractor_id_instead_name');
+
+%DEFAULT and_threshold '-0.8'
+%DEFAULT and_statistics 'false'
+DEFINE featuresCheck pl.edu.icm.coansys.disambiguation.author.pig.FeaturesCheck('$and_threshold','$and_feature_info','$and_use_extractor_id_instead_name','$and_statistics');
 
 -- -----------------------------------------------------
 -- -----------------------------------------------------
@@ -52,7 +53,7 @@ DEFINE featuresCheck pl.edu.icm.coansys.disambiguation.author.pig.FeaturesCheck(
 %DEFAULT job_priority normal
 %DEFAULT pig_cachedbag_mem_usage 0.1
 %DEFAULT pig_skewedjoin_reduce_memusage 0.3
-%DEFAULT mapredChildJavaOpts -Xmx8000m
+%DEFAULT mapredChildJavaOpts -Xmx4096m
 
 set default_parallel $and_parallel_param
 set pig.tmpfilecompression $pig_tmpfilecompression_param
@@ -66,10 +67,15 @@ set mapred.child.java.opts $mapredChildJavaOpts
 set dfs.client.socket-timeout 60000
 %default and_scheduler benchmark80
 set mapred.fairscheduler.pool $and_scheduler 
+
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- code section
 -- -----------------------------------------------------
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- READING SQ, FIRST FILTERING
 -- -----------------------------------------------------
 
 A1 = LOAD '$and_inputDocsData' USING pl.edu.icm.coansys.commons.pig.udf.RichSequenceFileLoader('org.apache.hadoop.io.Text', 'org.apache.hadoop.io.BytesWritable') as (key:chararray, value:bytearray);
@@ -77,38 +83,54 @@ A2 = sample A1 $and_sample;
 
 B1 = foreach A2 generate flatten(snameDocumentMetaExtractor($1)) as (dockey:chararray, cId:chararray, sname:int, metadata:map[{(int)}]);
 
-B = FILTER B1 BY (dockey is not null) AND featuresCheck(cId, sname, metadata);
+B = FILTER B1 BY (dockey is not null);
 
--- removing docId column
-C1 = foreach B generate cId as cId, sname as sname, metadata as metadata;
+-- removing docId column 
+-- add bool - true when contributor is similar to himself
+FC = foreach B generate cId as cId, sname as sname, metadata as metadata, featuresCheck(cId, sname, metadata) as gooddata;
 
-C = group C1 by sname;
--- D: {sname: chararray, datagroup: {(cId: chararray,cPos: int,sname: chararray,data: map[{(val_0: chararray)}])}, count: long}
+split FC into
+		BAD if gooddata == false,
+		GOOD if gooddata == true;
+
+-- -----------------------------------------------------
+-- PROCESSING CONTRIBUDORS DISIMILAR TO THEMSELVES
+-- -----------------------------------------------------
+
+-- simulating grouping ( 'by sname' ) and counting ( = 1 )
+-- in fact we will get different groups with the same sname - and that is what we need in that case
+-- becouse each contributor with bad data need to be in separate cluster size 1
+D1A = foreach BAD generate sname as sname, {(cId,sname,metadata)} as datagroup, 1 as count;
+
+
+-- -----------------------------------------------------
+-- PROCESSING CONTRIBUDORS SIMILAR TO THEMSELVES
+-- -----------------------------------------------------
+
+C = group GOOD by sname;
+-- D: {sname: chararray, datagroup: {(cId: chararray,sname: int,metadata: map[{(val_0: int)}])}, count: long}
 -- TODO: remove sname from datagroup. Then in UDFs as well..
-D = foreach C generate group as sname, C1 as datagroup, COUNT(C1) as count;
+D = foreach C generate group as sname, GOOD as datagroup, COUNT(GOOD) as count;
 
 split D into
-        D1 if count == 1,
+        D1B if count == 1,
         D100 if (count > 1 and count <= $and_exhaustive_limit),
         DX if (count > $and_exhaustive_limit and count <= $and_aproximate_sim_limit),
         D1000 if count > $and_aproximate_sim_limit;
+        
 
-%DEFAULT semi 'tmp'
-%DEFAULT final 'identities'
-%DEFAULT and_splitter_output 'splitted'
-%DEFAULT one 'one'
-%DEFAULT exh 'exh'
-%DEFAULT appSim 'app-sim'
-%DEFAULT appNoSim 'app-no-sim'
-%DEFAULT cid_dockey 'cid_dockey'
+-- -----------------------------------------------------
+-- STORING DATA READY TO DISAMBIGUATION
+-- -----------------------------------------------------
 
-store D1 into '$and_splitter_output/$one';
-store D100 into '$and_splitter_output/$exh';
-store D1000 into '$and_splitter_output/$appSim';
-store DX into '$and_splitter_output/$appNoSim';
+-- add contributors with bad data to table D (single contributors)
+D1 = union D1A, D1B;
 
+store D1 into '$and_splitted_output_one';
+store D100 into '$and_splitted_output_exh';
+store D1000 into '$and_splitted_output_apr_sim';
+store DX into '$and_splitted_output_apr_no_sim';
+
+-- storing relation contributor id - document id, which we need in future during serialization
 Q = foreach B generate cId, dockey;
 store Q into '$and_cid_dockey';
--- TODO: wygenerowac tabele (dockey, cId) i zapisac
-
-

@@ -25,13 +25,24 @@ import java.util.Map;
  *
  * @author Artur Czeczko <a.czeczko@icm.edu.pl>
  */
-public class ConfigurationConstants {
+public final class ConfigurationConstants {
+    
+    private ConfigurationConstants() {}
+    
     public static final String PARTITIONS_PREFIX = "partitions_";
     public static final String STATISTICS_PREFIX = "statistics_";
 
     public static final String NAMES = "names";
     public static final String CLASSES = "classes";
     public static final String CLASSES_ARGS = "classes_args";
+    
+    public static final String GROUP_KEYS = "group_keys";
+    public static final String SORT_STAT = "sort_stat";
+    public static final String SORT_ORDER = "sort_order";
+    public static final String LIMIT = "limit";
+    
+    public static final String SORT_ASC = "ASC";
+    public static final String SORT_DESC = "DESC";
     
     public static final String CONF_FIELDS_SEPARATOR = ";";
     public static final String CONF_PARAMS_SEPARATOR = "#";

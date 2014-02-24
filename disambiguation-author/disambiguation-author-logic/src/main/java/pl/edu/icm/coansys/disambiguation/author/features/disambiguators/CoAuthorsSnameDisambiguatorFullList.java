@@ -21,24 +21,21 @@ package pl.edu.icm.coansys.disambiguation.author.features.disambiguators;
 import java.util.List;
 import java.util.AbstractMap.SimpleEntry;
 
-import pl.edu.icm.coansys.disambiguation.features.Disambiguator;
-
 /**
  * Disambiguator for contributors with the same sname. It requires placing their
  * own sname on the list of authors.
  * 
  * @author mwos
  * @version 1.0
- * @since 2012-08-07
  */
 public class CoAuthorsSnameDisambiguatorFullList extends Disambiguator {
 
-	//private static final org.slf4j.Logger logger = LoggerFactory
-	//		.getLogger(CoAuthorsSnameDisambiguatorFullList.class);
+	public CoAuthorsSnameDisambiguatorFullList() {
+		super();
+	}
 
-	@Override
-	public String getName() {
-		return CoAuthorsSnameDisambiguatorFullList.class.getSimpleName();
+	public CoAuthorsSnameDisambiguatorFullList(double weight, double maxVal) {
+		super(weight, maxVal);
 	}
 
 	@Override
@@ -47,22 +44,16 @@ public class CoAuthorsSnameDisambiguatorFullList extends Disambiguator {
 		SimpleEntry<Integer, Integer> p = intersectionAndSum(f1, f2);
 
 		// because this cotributor is in sum and intersection for sure, but we
-		// do not want to take him as his co-author.
+		// do not want to take himself as his co-author.
 		int intersection = p.getKey() - 1;
-		int sum = p.getValue() - 1;
-
-		if (sum <= 0) {
-			//logger.warn("Negative or zero value of lists sum. Returning 0.");
-			// TODO: ? 0 or 1
-			return 0;
-		}
 		if (intersection < 0) {
-			//should not get in here, because sum >= intersection
-			//logger.warn("Negative value of intersection. Returning 0.");
 			return 0;
 		}
-
-		//return (double) intersection / sum;
-		return intersection;
+		// int sum = p.getValue() - 1;
+		// if (sum <= 0) {
+		// return 0;
+		// }
+		// return (double) intersection / sum 8 weight;
+		return intersection / maxVal * weight;
 	}
 }

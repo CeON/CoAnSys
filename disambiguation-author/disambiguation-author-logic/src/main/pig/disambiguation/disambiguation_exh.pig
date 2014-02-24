@@ -21,13 +21,13 @@
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 
-%DEFAULT and_inputDocsData extracted/springer_sample02/part*
+%DEFAULT and_inputDocsData workflows/pl.edu.icm.coansys-disambiguation-author-workflow/results/splitted/exh
 %DEFAULT and_time 20130709_1009
 %DEFAULT and_outputContribs disambiguation/outputContribs$and_time
-%DEFAULT and_feature_info 'CoAuthorsSnameDisambiguatorFullList#EX_AUTH_INITIALS#-0.0000166#8,ClassifCodeDisambiguator#EX_CLASSIFICATION_CODES#0.99#12,KeyphraseDisambiguator#EX_KEYWORDS_SPLIT#0.99#22,KeywordDisambiguator#EX_KEYWORDS#0.0000369#40'
+%DEFAULT and_feature_info 'IntersectionPerMaxval#EX_DOC_AUTHS_SNAMES#1.0#1'
 %DEFAULT and_threshold '-0.8'
 %DEFAULT and_use_extractor_id_instead_name 'true'
-%DEFAULT and_statistics 'true'
+%DEFAULT and_statistics 'false'
 
 DEFINE exhaustiveAND pl.edu.icm.coansys.disambiguation.author.pig.ExhaustiveAND('$and_threshold','$and_feature_info','$and_use_extractor_id_instead_name','$and_statistics');
 
@@ -52,7 +52,7 @@ set job.priority $job_priority
 set pig.cachedbag.memusage $pig_cachedbag_mem_usage
 set pig.skewedjoin.reduce.memusage $pig_skewedjoin_reduce_memusage
 set dfs.client.socket-timeout 60000
-%DEFAULT and_scheduler benchmark80
+%DEFAULT and_scheduler default
 SET mapred.fairscheduler.pool $and_scheduler
 -- -----------------------------------------------------
 -- -----------------------------------------------------
@@ -67,11 +67,5 @@ D100 = LOAD '$and_inputDocsData' as (sname:int, datagroup:{(cId:chararray, sname
 D100A = foreach D100 generate flatten( exhaustiveAND( datagroup ) ) as (uuid:chararray, cIds:{(chararray)});
 E100 = foreach D100A generate flatten( cIds ) as cId, uuid;
 
-%DEFAULT one 'one'
-%DEFAULT exh 'exh'
-%DEFAULT appSim 'app-sim'
-%DEFAULT appNoSim 'app-no-sim'
-
-
-store E100 into '$and_outputContribs/$exh';
+store E100 into '$and_outputContribs';
 

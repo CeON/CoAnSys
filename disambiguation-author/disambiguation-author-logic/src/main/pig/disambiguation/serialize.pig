@@ -26,7 +26,6 @@
 %DEFAULT and_cid_dockey 'workflows/pl.edu.icm.coansys-disambiguation-author-workflow/results/cid_dockey'
 %DEFAULT and_outputPB 'finall_out'
 
-%DEFAULT and_sample 1.0
 DEFINE serialize pl.edu.icm.coansys.disambiguation.author.pig.serialization.SERIALIZE_RESULTS();
 
 -- -----------------------------------------------------
@@ -40,7 +39,7 @@ DEFINE serialize pl.edu.icm.coansys.disambiguation.author.pig.serialization.SERI
 %DEFAULT job_priority normal
 %DEFAULT pig_cachedbag_mem_usage 0.1
 %DEFAULT pig_skewedjoin_reduce_memusage 0.3
-%DEFAULT mapredChildJavaOpts -Xmx8000m
+%DEFAULT mapredChildJavaOpts -Xmx4096m
 
 set default_parallel $and_parallel_param
 set pig.tmpfilecompression $pig_tmpfilecompression_param
@@ -52,7 +51,7 @@ set mapred.child.java.opts $mapredChildJavaOpts
 -- ulimit must be more than two times the heap size value !
 -- set mapred.child.ulimit unlimited
 set dfs.client.socket-timeout 60000
-%default and_scheduler benchmark80
+%default and_scheduler default
 set mapred.fairscheduler.pool $and_scheduler 
 -- -----------------------------------------------------
 -- -----------------------------------------------------
@@ -60,24 +59,13 @@ set mapred.fairscheduler.pool $and_scheduler
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 
-%DEFAULT semi 'tmp'
-%DEFAULT final 'identities'
-%DEFAULT and_splitter_output 'splitted'
-%DEFAULT one 'one'
-%DEFAULT exh 'exh'
-%DEFAULT appSim 'app-sim'
-%DEFAULT appNoSim 'app-no-sim'
-
-%DEFAULT cid_dockey 'cid_dockey'
-
 CidDkey = LOAD '$and_cid_dockey' as (cId:chararray, docKey:chararray);
 CidAuuid = LOAD '$and_outputContribs/*' as (cId:chararray, uuid:chararray);
--- TODO: is that load correct with '*' ?
 
 A = JOIN CidDkey BY cId, CidAuuid BY cId;
 B = FOREACH A generate CidDkey::cId as cId, uuid as uuid, docKey as docKey;
 C = group B by docKey;
---TODO wyrzucic doc key z data bag'a
+
 -- D = FOREACH C generate group as docKey, B as trio;
 
 E = FOREACH C generate FLATTEN(serialize(*));
