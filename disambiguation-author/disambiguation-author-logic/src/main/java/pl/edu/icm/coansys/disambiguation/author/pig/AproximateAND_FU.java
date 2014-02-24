@@ -53,7 +53,6 @@ public class AproximateAND_FU extends AND<DataBag> {
 	private int timerPlayId = 0;
 	private int finalClusterNumber = 0;
 	private List<Integer> clustersSizes;
-	private Object sname;
 
 	public AproximateAND_FU(String threshold, String featureDescription,
 			String rememberSim, String useIdsForExtractors,
@@ -75,6 +74,7 @@ public class AproximateAND_FU extends AND<DataBag> {
 	 *            with bag: {(contribId:chararray, sname:chararray or int,
 	 *            metadata:map[{(chararray or int)}])}
 	 * @see org.apache.pig.EvalFunc#exec(org.apache.pig.data.Tuple)
+	 * @deprecated  Replaced by {@link #AproximateAND_BFS}
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
@@ -84,13 +84,6 @@ public class AproximateAND_FU extends AND<DataBag> {
 			return null;
 		}
 		try {
-			// TODO optional:
-			// it would be enough to take as argument only map bag with
-			// datagroup.
-			// In that case this function would be proof against table changes.
-			// This change should be done during generating tables in pig
-			// script.
-
 			DataBag contribs = (DataBag) input.get(0); // taking bag with
 														// contribs
 
@@ -113,33 +106,16 @@ public class AproximateAND_FU extends AND<DataBag> {
 			datain = new DefaultTuple[N];
 
 			List<Map<String, Object>> contribsT = new ArrayList<Map<String, Object>>();
-
+			
+			Object sname = null;
+			
 			int k = 0;
 			// iterating through bag, dumping bug to Tuple array
 			while (it.hasNext()) {
 				Tuple t = it.next();
 				datain[k++] = t;
-				contribsT.add((Map<String, Object>) t.get(2)); // map with
-																// features
-				// TODO: ?change map to list (disambiguators are created one by
-				// one
-				// as feature does, so both of them will be iterated in the same
-				// order).
-				// change map to databag in pig script? (memory for keys with
-				// strings of extractors' names would be saved)
-				// Note, that now some disambiguators may be omitted. In that
-				// case
-				// we'll need boolean ( which feature is used, which not ).
-				// UP: rather do not do this, because we will lose
-				// universality of data ability (for example, if
-				// EXTRACT_CONTRIB_GIVENDATA
-				// extracts more features than we use in aproximate
-				// OR in some records some features will be omitted (because of
-				// e.g. being empty)
-				// there would be crash)
-				// UP: or do not remove empty features during
-				// EXTRACT_CONTRIB_GIVENDATA
-
+				// map with features
+				contribsT.add((Map<String, Object>) t.get(2)); 
 				// benchmark
 				sname = t.get(1);
 			}
@@ -293,10 +269,6 @@ public class AproximateAND_FU extends AND<DataBag> {
 				}
 			}
 		}
-
-		// features = null;
-		// featureInfos = null;
-		// contribsT = null;
 	}
 
 	// o( N )

@@ -53,7 +53,7 @@ public class CoAuthorsSnameDisambiguatorFullList extends Disambiguator {
 		// if (sum <= 0) {
 		// return 0;
 		// }
-		// return (double) intersection / sum;
+		// return (double) intersection / sum 8 weight;
 		return intersection / maxVal * weight;
 	}
 }

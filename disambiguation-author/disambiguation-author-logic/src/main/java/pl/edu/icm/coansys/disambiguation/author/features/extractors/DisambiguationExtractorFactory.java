@@ -1,4 +1,4 @@
-package pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators;
+package pl.edu.icm.coansys.disambiguation.author.features.extractors;
 
 import java.util.HashMap;
 import java.util.IdentityHashMap;
@@ -9,7 +9,7 @@ import org.reflections.Reflections;
 import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
-import pl.edu.icm.coansys.disambiguation.author.features.extractors.EX_TITLE;
+import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DisambiguationExtractor;
 import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
 
 public class DisambiguationExtractorFactory {
@@ -20,11 +20,10 @@ public class DisambiguationExtractorFactory {
 	private Map<String, String> nameToId;
 	private Map<String, String> idToName;
 	// taking package with extractors using any of them
-	private final String THIS_PACKAGE = new EX_TITLE()
-			.getClass().getPackage().getName();
+	private final String THIS_PACKAGE = this.getClass().getPackage().getName();
 
 	public DisambiguationExtractorFactory() throws InstantiationException, IllegalAccessException {
-
+		
 		nameToId = new HashMap<String, String>();
 		idToName = new IdentityHashMap<String, String>();
 

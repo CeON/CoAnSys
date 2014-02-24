@@ -38,9 +38,9 @@ import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.Disambig
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.Intersection;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.IntersectionPerMaxval;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.IntersectionPerSum;
+import pl.edu.icm.coansys.disambiguation.author.features.extractors.DisambiguationExtractorFactory;
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DisambiguationExtractor;
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DisambiguationExtractorDocument;
-import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DisambiguationExtractorFactory;
 import pl.edu.icm.coansys.disambiguation.author.normalizers.ToEnglishLowerCase;
 import pl.edu.icm.coansys.disambiguation.author.normalizers.ToHashCode;
 import pl.edu.icm.coansys.disambiguation.author.pig.AND;
@@ -62,11 +62,11 @@ import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
 */
 
 
-public class DisambiguationTests {
+public class DisambiguationTest {
 	 
     // Follow name scheme of tests: package_class[_method]
     
-   	@Test(groups = {"fast"})
+   	@org.testng.annotations.Test(groups = {"fast"})
    	public void pig_normalizers_ALL() {
 		String text = "é{(Zaaaażółć 'gęślą', \"jaź(ń)\"}]# æ 1234567890 !@#$%^&*() _+=?/>.<,-";
 		String diacRmExpected = "e{(Zaaaazolc 'gesla', \"jaz(n)\"}]# ae 1234567890 !@#$%^&*() _+=?/>.<,-";
@@ -116,7 +116,7 @@ public class DisambiguationTests {
    	}
    	
    	
-   	@Test(groups = {"fast"})
+   	@org.testng.annotations.Test(groups = {"fast"})
    	public void pig_extractor_DisambiguationExtractorFactory_ALL() 
    			throws Exception {
    		
@@ -178,7 +178,7 @@ public class DisambiguationTests {
    	}
    	
    	
-   	@Test(groups = {"fast"})
+   	@org.testng.annotations.Test(groups = {"fast"})
    	public void features_disambiguator_calculateAffinity() {
    		Disambiguator COAUTH = new CoAuthorsSnameDisambiguatorFullList(1,1);
    		Disambiguator IPS = new IntersectionPerSum(1,1);
@@ -199,7 +199,7 @@ public class DisambiguationTests {
   		assert( COAUTH.calculateAffinity(a, b) == 4.0 );
    	}
    	
-   	@Test(groups = {"fast"})
+   	@org.testng.annotations.Test(groups = {"fast"})
    	public void pig_extractor_EXTRACT_CONTRIBDATE_parsing_arguments() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
    		
    		// testing required
@@ -273,7 +273,7 @@ public class DisambiguationTests {
    	// end of tools
    	
    	
-   	@Test(groups = {"fast"})
+   	@org.testng.annotations.Test(groups = {"fast"})
    	public void pig_ANDs_exec_0() throws Exception {
    		// Test whether extractors has changed
    		DisambiguationExtractorFactory factory = new DisambiguationExtractorFactory();

@@ -94,10 +94,10 @@ public class PigDisambiguator{
         	if ( el.size() == 0 ) {
         		continue;
         	}
-        	try {
+			try {
 				ret.add( el.get(0) );
 			} catch (ExecException e) {
-				e.printStackTrace();
+				//cannot happen
 			}
         }
         return ret;

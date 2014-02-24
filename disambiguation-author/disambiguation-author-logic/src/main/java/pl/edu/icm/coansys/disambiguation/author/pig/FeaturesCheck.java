@@ -136,9 +136,9 @@ public class FeaturesCheck extends AND<Boolean> {
 
 	// Pig Status Reporter staff:
 	static class REPORTER_CONST {
-		public final static String EMPTY = "Some info null or empty";
-		public final static String DISIMILAR = "Disimilar to themselves";
-		public final static String SIMILAR = "Similar to themselves";
+		public static final String EMPTY = "Some info null or empty";
+		public static final String DISIMILAR = "Disimilar to themselves";
+		public static final String SIMILAR = "Similar to themselves";
 	}
 	
 	private void reportContrib(String which) {
