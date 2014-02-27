@@ -54,7 +54,7 @@ object misc {
     normaliseTokenise(strings.lettersOnly(str))
 
   def digitsNormaliseTokenise(str: String) =
-    normaliseTokenise(strings.digitsOnly(str))
+    strings.digitsOnly(str).split(" ").toList
 
   def normaliseTokenise(str: String) =
     tokensFromCermine(DiacriticsRemover.removeDiacritics(str))
