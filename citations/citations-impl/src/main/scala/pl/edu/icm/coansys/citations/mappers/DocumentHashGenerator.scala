@@ -18,25 +18,24 @@
 
 package pl.edu.icm.coansys.citations.mappers
 
-import org.apache.hadoop.io.{BytesWritable, Writable}
-import org.apache.hadoop.mapreduce.Mapper
 import pl.edu.icm.coansys.citations.data.{MarkedBytesWritable, MarkedText, MatchableEntity}
+import pl.edu.icm.coansys.citations.util.misc
 import pl.edu.icm.coansys.citations.util.misc._
-import pl.edu.icm.ceon.scala_commons.collections
 import scala.util.Try
+import pl.edu.icm.ceon.scala_commons.{strings, collections}
+import org.apache.hadoop.mapreduce.Mapper
+import org.apache.hadoop.io.{BytesWritable, Writable}
 
 /**
- * Takes citation entity as a value and generates (hash, entity id) pairs.
- *
- * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
+ * Created by matfed on 27.02.14.
  */
-class OptimisticCitationHashGenerator extends Mapper[Writable, BytesWritable, MarkedText, MarkedText] {
+class DocumentHashGenerator extends Mapper[Writable, BytesWritable, MarkedText, MarkedText] {
   type Context = Mapper[Writable, BytesWritable, MarkedText, MarkedText]#Context
-  val outKey = new MarkedText(marked = true)
-  val outValue = new MarkedText(marked = true)
+  val outKey = new MarkedText()
+  val outValue = new MarkedText()
 
   override def setup(context: Context) {
-    val marked = context.getConfiguration.getBoolean("coansys.citations.mark.citations", true)
+    val marked = context.getConfiguration.getBoolean("coansys.citations.mark.documents", false)
     outKey.isMarked.set(marked)
     outValue.isMarked.set(marked)
   }
@@ -44,20 +43,25 @@ class OptimisticCitationHashGenerator extends Mapper[Writable, BytesWritable, Ma
   override def map(key: Writable, value: BytesWritable, context: Context) {
     val entity = MatchableEntity.fromBytes(value.copyBytes())
 
-    val hashes = OptimisticCitationHashGenerator.generate(entity)
+    val hashes = DocumentHashGenerator.generate(entity)
 
     outValue.text.set(entity.id)
-    hashes.foreach {hash =>
+    hashes.foreach{ hash =>
       outKey.text.set(hash)
       context.write(outKey, outValue)
     }
   }
 }
 
-object OptimisticCitationHashGenerator {
+object DocumentHashGenerator {
+  def blur(n: Int) = List(n-1,n,n+1)
+
   def generate(entity: MatchableEntity) = for {
-    author <- lettersNormaliseTokenise(entity.author).filterNot(stopWords).distinct.take(4)
+    author <- misc.lettersNormaliseTokenise(entity.author).filterNot(stopWords).distinct.take(4)
     year <- digitsNormaliseTokenise(entity.year).filter(_.length == 4).flatMap(x => Try(x.toInt).toOption).filter(x => x < 2050 && x > 1900)
-    (bpage, epage) <- collections.sortedPairs(collections.excludeOne(digitsNormaliseTokenise(entity.pages).flatMap(x => Try(x.toInt).toOption), (x:Int) => x == year))
-  } yield List(author, year, bpage, epage).mkString("#")
+    (bpage, epage) <- collections.sortedPairs(digitsNormaliseTokenise(entity.pages).flatMap(x => Try(x.toInt).toOption))
+    bluredYear <- blur(year)
+    bluredBpage <- blur(bpage)
+    bluredEpage <- blur(epage)
+  } yield List(author, bluredYear, bluredBpage, bluredEpage).mkString("#")
 }
