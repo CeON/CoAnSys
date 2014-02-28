@@ -196,7 +196,7 @@
                 </property>
                 <property>
                     <name>mapred.mapoutput.value.class</name>
-                    <value>org.apache.hadoop.io.Writable</value>
+                    <value>org.apache.hadoop.io.NullWritable</value>
                 </property>
                 <property>
                     <name>mapred.output.key.class</name>
