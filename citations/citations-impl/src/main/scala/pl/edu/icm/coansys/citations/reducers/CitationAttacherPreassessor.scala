@@ -20,28 +20,29 @@ package pl.edu.icm.coansys.citations.reducers
 
 import org.apache.hadoop.io.BytesWritable
 import org.apache.hadoop.mapreduce.Reducer
-import pl.edu.icm.coansys.citations.data.{TextWithBytesWritable, MarkedText}
+import pl.edu.icm.coansys.citations.data.{MatchableEntity, TextWithBytesWritable, MarkedText}
 
 /**
  * Created by matfed on 01.03.14.
  */
-class DocumentAttacher  extends Reducer[MarkedText, TextWithBytesWritable, MarkedText, BytesWritable] {
-  type Context = Reducer[MarkedText, TextWithBytesWritable, MarkedText, BytesWritable]#Context
+class CitationAttacherPreassessor  extends Reducer[MarkedText, BytesWritable, BytesWritable, BytesWritable] {
+  type Context = Reducer[MarkedText, BytesWritable, BytesWritable, BytesWritable]#Context
 
-  val outKey = new MarkedText(false)
+  val outKey = new BytesWritable()
   val outValue = new BytesWritable()
 
-  override def reduce(key: MarkedText, values: java.lang.Iterable[TextWithBytesWritable], context: Context) {
+  override def reduce(key: MarkedText, values: java.lang.Iterable[BytesWritable], context: Context) {
     val iterator = values.iterator()
     val first = iterator.next()
-    if (first.text.getLength == 0) {
-      outValue.set(first.bytes)
-    } else {
-      return
+    val citation = MatchableEntity.fromBytes(first.copyBytes())
+    outKey.set(first)
+
+    for (value: BytesWritable <- iterator) {
+      val document = MatchableEntity.fromBytes(value.copyBytes())
+      context.write(outKey, value)
+
     }
-    for (id: TextWithBytesWritable <- iterator) {
-      outKey.text.set(id.text.toString)
-      context.write(outKey, outValue)
-    }
+
+
   }
 }
