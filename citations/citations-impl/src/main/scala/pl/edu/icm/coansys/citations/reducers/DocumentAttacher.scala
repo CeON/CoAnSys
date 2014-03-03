@@ -18,6 +18,7 @@
 
 package pl.edu.icm.coansys.citations.reducers
 
+import collection.JavaConversions._
 import org.apache.hadoop.io.BytesWritable
 import org.apache.hadoop.mapreduce.Reducer
 import pl.edu.icm.coansys.citations.data.{TextWithBytesWritable, MarkedText}
