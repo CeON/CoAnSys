@@ -23,10 +23,10 @@ import pl.edu.icm.coansys.models.DocumentProtos;
  *
  * @author Artur Czeczko <a.czeczko@icm.edu.pl>
  */
-public class YearVoter extends AbstractNumbersVoter {
+public class PagesVoter extends AbstractNumbersVoter {
 
     @Override
     protected String extractNumbersString(DocumentProtos.DocumentMetadata doc) {
-        return doc.getBasicMetadata().getYear();
+        return doc.getBasicMetadata().getPages();
     }
 }

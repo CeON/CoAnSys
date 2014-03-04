@@ -31,10 +31,11 @@ import pl.edu.icm.coansys.models.DocumentProtos;
  * @author Artur Czeczko <a.czeczko@icm.edu.pl>
  */
 public class AuthorsVoter extends AbstractSimilarityVoter {
-    
+
     private float disapproveLevel;
     private float approveLevel;
-    
+    //private static Logger log = LoggerFactory.getLogger(AuthorsVoter.class);
+
     @Override
     public Vote vote(DocumentProtos.DocumentMetadata doc1, DocumentProtos.DocumentMetadata doc2) {
 
@@ -44,36 +45,35 @@ public class AuthorsVoter extends AbstractSimilarityVoter {
         if (doc1surnames.getX().length == 0 || doc2surnames.getX().length == 0) {
             return new Vote(Vote.VoteStatus.ABSTAIN);
         }
-        
+
         float firstAuthorComponent = 0.0f;
-        float allAuthorsMatchFactor = 0.75f;
-        
+        float allAuthorsMatchFactor = 0.95f;
+
         if (doc1surnames.getY() && doc2surnames.getY()) {
             String doc1firstAuthor = doc1surnames.getX()[0];
             String doc2firstAuthor = doc2surnames.getX()[0];
-            
+
             SimilarityCalculator similarity = getSimilarityCalculator();
             if (similarity.calculateSimilarity(doc1firstAuthor, doc2firstAuthor) > 0.5f) {
-                firstAuthorComponent = 0.667f;
-                allAuthorsMatchFactor = 0.333f;
+                firstAuthorComponent = 0.6f;
+                allAuthorsMatchFactor = 0.4f;
             } else {
-                allAuthorsMatchFactor = 0.667f;
+                allAuthorsMatchFactor = 0.9f;
             }
         }
-        
-        float probability = firstAuthorComponent + 
-                allAuthorsMatchFactor * allAuthorsMatching(doc1surnames.getX(), doc2surnames.getX());
+
+        float probability = firstAuthorComponent
+                + allAuthorsMatchFactor * allAuthorsMatching(doc1surnames.getX(), doc2surnames.getX());
         if (probability > 1.0f) {
             probability = 1.0f;
         }
         if (probability <= 0.0f) {
             return new Vote(Vote.VoteStatus.NOT_EQUALS);
         }
-        
+
         return new Vote(Vote.VoteStatus.PROBABILITY, probability);
     }
 
-    
     private static Pair<String[], Boolean> extractSurnames(DocumentProtos.DocumentMetadata doc) {
         RegexpParser authorParser = new RegexpParser("authorParser.properties", "author");
         List<DocumentProtos.Author> authorList = doc.getBasicMetadata().getAuthorList();
@@ -90,22 +90,20 @@ public class AuthorsVoter extends AbstractSimilarityVoter {
                 String fullname = author.getName();
                 Node authorNode = authorParser.parse(fullname);
                 Node surnameNode;
-                if(authorNode != null) {
+                if (authorNode != null) {
                     surnameNode = authorNode.getFirstField("surname");
-                    if(surnameNode != null) {
+                    if (surnameNode != null) {
                         surname = surnameNode.getValue();
-                    }
-                    else {
+                    } else {
                         surname = fullname;
                     }
-                }
-                else {
-                    surname = fullname;                        
+                } else {
+                    surname = fullname;
                 }
             }
-            
+
             surname = StringTools.normalize(surname);
-            
+
             if (positionsCorrect) {
                 if (!author.hasPositionNumber()) {
                     positionsCorrect = false;
@@ -123,23 +121,23 @@ public class AuthorsVoter extends AbstractSimilarityVoter {
         }
         return new Pair<String[], Boolean>(positionsCorrect ? resultByPositionNb : resultByOrder, positionsCorrect);
     }
-    
+
     private SimilarityCalculator getSimilarityCalculator() {
         return new EditDistanceSimilarity(approveLevel, disapproveLevel);
     }
-    
+
     /**
-     * 
-     * 
+     *
+     *
      * @param doc1authors
      * @param doc2authors
-     * @return 
+     * @return
      */
     private float allAuthorsMatching(String[] doc1authors, String[] doc2authors) {
         int intersectionSize = 0;
-        
+
         SimilarityCalculator similarity = getSimilarityCalculator();
-        
+
         for (String d1author : doc1authors) {
             for (String d2author : doc2authors) {
                 if (similarity.calculateSimilarity(d1author, d2author) > 0.5) {

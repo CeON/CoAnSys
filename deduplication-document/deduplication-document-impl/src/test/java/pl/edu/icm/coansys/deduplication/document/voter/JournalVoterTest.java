@@ -33,8 +33,8 @@ public class JournalVoterTest {
     @BeforeTest
     public void setUp() throws Exception {
         journalVoter = new JournalVoter();
-        journalVoter.setDisapproveLevel(0.2f);
-        journalVoter.setApproveLevel(0.03f);
+        journalVoter.setDisapproveLevel(0.5f);
+        journalVoter.setApproveLevel(0.05f);
     }
 
     
@@ -42,9 +42,9 @@ public class JournalVoterTest {
     public void testSameJournals() {
         DocumentProtos.DocumentMetadata doc1 = MockDocumentMetadataFactory.createDocumentMetadata("Ala ma kota", "12341234", "Koko Journal");
         DocumentProtos.DocumentMetadata doc2 = MockDocumentMetadataFactory.createDocumentMetadata("Ala ma kota", "", "Koko Journal");
-        DocumentProtos.DocumentMetadata doc3 = MockDocumentMetadataFactory.createDocumentMetadata("Ala ma kota", "1234-1234", "Jojko Journal");
+        DocumentProtos.DocumentMetadata doc3 = MockDocumentMetadataFactory.createDocumentMetadata("Ala ma kota", "1234-1234", "New Jojko Journal");
         DocumentProtos.DocumentMetadata doc4 = MockDocumentMetadataFactory.createDocumentMetadata("Ala ma kota", "", "JamboBambo");
-        DocumentProtos.DocumentMetadata doc5 = MockDocumentMetadataFactory.createDocumentMetadata("Ala ma kota", "4444-4444", "Jojko Journal");
+        DocumentProtos.DocumentMetadata doc5 = MockDocumentMetadataFactory.createDocumentMetadata("Ala ma kota", "4444-4444", "New Jojko Journal");
         
         vote = journalVoter.vote(doc1, doc2);
         Assert.assertEquals(vote.getStatus(), Vote.VoteStatus.PROBABILITY);
