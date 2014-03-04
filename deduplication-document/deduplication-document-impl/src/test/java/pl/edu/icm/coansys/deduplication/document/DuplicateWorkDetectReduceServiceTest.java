@@ -38,7 +38,7 @@ import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import pl.edu.icm.coansys.models.DocumentProtos;
 
 
-@Test
+@Test(groups = {"slow"})
 @ContextConfiguration(locations="classpath:spring/applicationContext.xml")
 public class DuplicateWorkDetectReduceServiceTest extends AbstractTestNGSpringContextTests {
 

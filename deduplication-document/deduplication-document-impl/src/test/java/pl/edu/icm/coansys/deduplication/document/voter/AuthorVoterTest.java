@@ -86,7 +86,7 @@ public class AuthorVoterTest {
         vote = workAuthorVoter.vote(doc1, doc2);
         
         Assert.assertEquals(vote.getStatus(), Vote.VoteStatus.PROBABILITY);
-        Assert.assertTrue(vote.getProbability() < 0.5f);
+        Assert.assertTrue(vote.getProbability() > 0.5f);
     }
     
    

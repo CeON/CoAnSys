@@ -15,183 +15,80 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package pl.edu.icm.coansys.deduplication.document.voter;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.net.URL;
+import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
-import org.testng.Assert;
-
 import pl.edu.icm.coansys.deduplication.document.tool.MockDocumentMetadataFactory;
-import pl.edu.icm.coansys.models.DocumentProtos;
+import pl.edu.icm.coansys.deduplication.document.voter.Vote.VoteStatus;
+import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 
+/**
+ *
+ * @author Artur Czeczko <a.czeczko@icm.edu.pl>
+ */
 public class TitleVoterTest {
 
-    
     private TitleVoter workTitleVoter;
     private Vote vote;
-    
+
     @BeforeTest
     public void setUp() throws Exception {
         workTitleVoter = new TitleVoter();
         workTitleVoter.setApproveLevel(0.001f);
-        workTitleVoter.setDisapproveLevel(0.059f);
+        workTitleVoter.setDisapproveLevel(0.11f);
         workTitleVoter.setMaxNormalizedTitleLength(90);
     }
-    
 
-    @Test
-    public void testSameTitles_Simple() {
-        DocumentProtos.DocumentMetadata doc1 = MockDocumentMetadataFactory.createDocumentMetadata("Ala m kota");
-        DocumentProtos.DocumentMetadata doc2 = MockDocumentMetadataFactory.createDocumentMetadata("Ala ma wielkiego tygrysa");
-        vote = workTitleVoter.vote(doc1, doc2);
-        
-        Assert.assertEquals(vote.getStatus(), Vote.VoteStatus.NOT_EQUALS);
-        
-        doc1 = MockDocumentMetadataFactory.createDocumentMetadata("Ala ma wielkkiego tygrysa");
-        doc2 = MockDocumentMetadataFactory.createDocumentMetadata("Ala ma wielkiego tygrysa");
-        vote = workTitleVoter.vote(doc1, doc2);
-        
-        Assert.assertEquals(vote.getStatus(), Vote.VoteStatus.PROBABILITY);
-        //Assert.assertTrue(vote.getProbability() > 0.5f);
-    }
-    
-    
-    @Test
-    public void testSameTitles_DifferentTitleNumbers() {
-        DocumentProtos.DocumentMetadata doc1 = MockDocumentMetadataFactory.createDocumentMetadata("Ala ma kota cz.1");
-        DocumentProtos.DocumentMetadata doc2 = MockDocumentMetadataFactory.createDocumentMetadata("Ala ma kota cz.2");
-        vote = workTitleVoter.vote(doc1, doc2);
-        
-        Assert.assertEquals(vote.getStatus(), Vote.VoteStatus.NOT_EQUALS);
-        
-        
-        doc1 = MockDocumentMetadataFactory.createDocumentMetadata("Ala ma kota (1)");
-        doc2 = MockDocumentMetadataFactory.createDocumentMetadata("Ala ma kota (2)");
-        vote = workTitleVoter.vote(doc1, doc2);
-        
-        Assert.assertEquals(vote.getStatus(), Vote.VoteStatus.NOT_EQUALS);
-        
-        
-        doc1 = MockDocumentMetadataFactory.createDocumentMetadata("Ala ma kota (I)");
-        doc2 = MockDocumentMetadataFactory.createDocumentMetadata("Ala ma kota (II)");
-        vote = workTitleVoter.vote(doc1, doc2);
-        
-        Assert.assertEquals(vote.getStatus(), Vote.VoteStatus.NOT_EQUALS);
+    private double readTestSetFile(String filename) throws IOException {
+        URL testSetFileURL = this.getClass().getResource(filename);
+        File testSetFile = new File(testSetFileURL.getFile());
 
-        
-        doc1 = MockDocumentMetadataFactory.createDocumentMetadata("Łatwiej i taniej przez granicę (cz.I)");
-        doc2 = MockDocumentMetadataFactory.createDocumentMetadata("Łatwiej i taniej przez granicę (cz.II)");
-        vote = workTitleVoter.vote(doc1, doc2);
-        
-        Assert.assertEquals(vote.getStatus(), Vote.VoteStatus.NOT_EQUALS);
+        int duplicatesCount = 0;
+        int nonDuplicatesCount = 0;
 
-        
-        doc1 = MockDocumentMetadataFactory.createDocumentMetadata("Łatwiej i taniej przez granicę (part one)");
-        doc2 = MockDocumentMetadataFactory.createDocumentMetadata("Łatwiej i taniej przez granicę (part 1)");
-        vote = workTitleVoter.vote(doc1, doc2);
-        
-        Assert.assertEquals(vote.getStatus(), Vote.VoteStatus.PROBABILITY);
-        Assert.assertTrue(vote.getProbability() > 0.5f);
-        
-        
-        doc1 = MockDocumentMetadataFactory.createDocumentMetadata("Łatwiej i taniej przez granicę (part one)");
-        doc2 = MockDocumentMetadataFactory.createDocumentMetadata("Łatwiej i taniej przez granicę (part two)");
-        vote = workTitleVoter.vote(doc1, doc2);
-        
-        Assert.assertEquals(vote.getStatus(), Vote.VoteStatus.NOT_EQUALS);
-    }
-    
-    @Test
-    public void testSameTitles_DocumentsInRussian() {
-        
-        DocumentProtos.DocumentMetadata doc1 = MockDocumentMetadataFactory.createDocumentMetadata("Квантовый размерный эффект в трехмерных микрокристаллах полупроводников");
-        DocumentProtos.DocumentMetadata doc2 = MockDocumentMetadataFactory.createDocumentMetadata("Квантовый размерный эффект в трехмерных микрокристаллах полупроводников");
-        vote = workTitleVoter.vote(doc1, doc2);
-        
-        Assert.assertEquals(vote.getStatus(), Vote.VoteStatus.PROBABILITY);
-        Assert.assertTrue(vote.getProbability() > 0.5f);  
-        
-        
-        doc1 = MockDocumentMetadataFactory.createDocumentMetadata("Квантовый размерный эффект в трехмерных микрокристаллах полупроводников");
-        doc2 = MockDocumentMetadataFactory.createDocumentMetadata("Квантовый размерный beledblsdjs полупроводников");
-        vote = workTitleVoter.vote(doc1, doc2);
-        
-        Assert.assertEquals(vote.getStatus(), Vote.VoteStatus.NOT_EQUALS);
-        
-        
-        doc1 = MockDocumentMetadataFactory.createDocumentMetadata("Квантовый размерный эффект в трехмерных микрокристаллах полупроводников");
-        doc2 = MockDocumentMetadataFactory.createDocumentMetadata("Квантовый трехмерных мерный эффект в микрокристаллах полупроводников");
-        vote = workTitleVoter.vote(doc1, doc2);
-        
-        Assert.assertEquals(vote.getStatus(), Vote.VoteStatus.NOT_EQUALS);
-        
-        
-        doc1 = MockDocumentMetadataFactory.createDocumentMetadata("Квантовый размерный эффект в трехмерных микрокристаллах полупроводников 1");
-        doc2 = MockDocumentMetadataFactory.createDocumentMetadata("Квантовый размерный эффект в трехмерных микрокристаллах полупроводников 2");
-        vote = workTitleVoter.vote(doc1, doc2);
-        
-        Assert.assertEquals(vote.getStatus(), Vote.VoteStatus.NOT_EQUALS);        
-    }
-    
-    @Test
-    public void testSameTitles_EndsDifferent() {
-        DocumentProtos.DocumentMetadata doc1 = MockDocumentMetadataFactory.createDocumentMetadata("Doświadczenia Unii Europejskiej w zakresie polityki proinnowacyjnej");
-        DocumentProtos.DocumentMetadata doc2 = MockDocumentMetadataFactory.createDocumentMetadata(" Doświadczenia Unii Europejskiej w zakresie polityki innowacyjnej");
-        vote = workTitleVoter.vote(doc1, doc2);
-        
-        Assert.assertEquals(vote.getStatus(), Vote.VoteStatus.NOT_EQUALS);
+        BufferedReader br = new BufferedReader(new FileReader(testSetFile));
+        String line;
+        while ((line = br.readLine()) != null) {
+            String[] fields = line.split("\t");
 
-        
-        doc1 = MockDocumentMetadataFactory.createDocumentMetadata("Aspiracje integracyjne państw śródziemnomorskich - Turcja");
-        doc2 = MockDocumentMetadataFactory.createDocumentMetadata("Aspiracje integracyjne państw śródziemnomorskich - Malta");
-        vote = workTitleVoter.vote(doc1, doc2);
-        
-        Assert.assertEquals(vote.getStatus(), Vote.VoteStatus.NOT_EQUALS);
-        
-        
-        doc1 = MockDocumentMetadataFactory.createDocumentMetadata("Atak z sieci");
-        doc2 = MockDocumentMetadataFactory.createDocumentMetadata("Atak z ulicy");
-        vote = workTitleVoter.vote(doc1, doc2);
-        
-        Assert.assertEquals(vote.getStatus(), Vote.VoteStatus.NOT_EQUALS);        
-    }
-    
-    @Test
-    public void testSameTitles_OnLevenshteinBound() {
-        DocumentProtos.DocumentMetadata doc1 = MockDocumentMetadataFactory.createDocumentMetadata("Ala ma kota b");
-        DocumentProtos.DocumentMetadata doc2 = MockDocumentMetadataFactory.createDocumentMetadata("Ala mna kota f");
-        vote = workTitleVoter.vote(doc1, doc2);
-        
-        Assert.assertEquals(vote.getStatus(), Vote.VoteStatus.NOT_EQUALS);
-        //Assert.assertTrue(vote.getProbability() > 0.5);
-        
-        //Assert.assertTrue(workTitleComparator.sameTitles(doc1, doc2));
-        //really??
-    }
-    
-    @Test
-    public void testSameTitles_ShortTitles() {
-        DocumentProtos.DocumentMetadata doc1 = MockDocumentMetadataFactory.createDocumentMetadata("Makumba");
-        DocumentProtos.DocumentMetadata doc2 = MockDocumentMetadataFactory.createDocumentMetadata("Matumba");
-        vote = workTitleVoter.vote(doc1, doc2);
-        
-        Assert.assertEquals(vote.getStatus(), Vote.VoteStatus.NOT_EQUALS);
-        
-        
-        doc1 = MockDocumentMetadataFactory.createDocumentMetadata("Makumba bvx");
-        doc2 = MockDocumentMetadataFactory.createDocumentMetadata("Makumba bwx");
-        vote = workTitleVoter.vote(doc1, doc2);
-        
-        Assert.assertEquals(vote.getStatus(), Vote.VoteStatus.NOT_EQUALS);
-        
-        
-        doc1 = MockDocumentMetadataFactory.createDocumentMetadata("Makbvxy");
-        doc2 = MockDocumentMetadataFactory.createDocumentMetadata("Makbvxya");
-        vote = workTitleVoter.vote(doc1, doc2);
-        
-        Assert.assertEquals(vote.getStatus(), Vote.VoteStatus.NOT_EQUALS);
-    }
-   
+            DocumentMetadata doc1 = MockDocumentMetadataFactory.createDocumentMetadata(fields[2]);
+            DocumentMetadata doc2 = MockDocumentMetadataFactory.createDocumentMetadata(fields[3]);
 
+            vote = workTitleVoter.vote(doc1, doc2);
+            if (voteMeansDuplicate(vote)) {
+                duplicatesCount++;
+            } else {
+                nonDuplicatesCount++;
+            }
+        }
+        br.close();
+        return 1.0 * duplicatesCount / (duplicatesCount + nonDuplicatesCount);
+    }
+
+    private boolean voteMeansDuplicate(Vote vote) {
+        return vote.getStatus().equals(VoteStatus.EQUALS)
+                || (vote.getStatus().equals(VoteStatus.PROBABILITY) && vote.getProbability() > 0.5);
+    }
+
+    @Test(groups = {"slow"})
+    public void checkFiles() throws IOException {
+        // make sure thad TitleVoter doesn't give too many false positives
+        Assert.assertTrue(readTestSetFile("/titles_pairs/false_duplicates_pairs_0_7") < 0.01);
+        Assert.assertTrue(readTestSetFile("/titles_pairs/false_duplicates_pairs_0_8") < 0.01);
+        Assert.assertTrue(readTestSetFile("/titles_pairs/false_duplicates_pairs_0_9") < 0.1);
+        Assert.assertTrue(readTestSetFile("/titles_pairs/false_duplicates_pairs_1_0") < 0.1);
+
+        // higher is better...
+        Assert.assertTrue(readTestSetFile("/titles_pairs/real_duplicates_pairs_0_7") >= 0.5);
+        Assert.assertTrue(readTestSetFile("/titles_pairs/real_duplicates_pairs_0_8") >= 0.5);
+        Assert.assertTrue(readTestSetFile("/titles_pairs/real_duplicates_pairs_0_9") >= 0.8);
+        Assert.assertTrue(readTestSetFile("/titles_pairs/real_duplicates_pairs_1_0") >= 0.9);
+    }
 }

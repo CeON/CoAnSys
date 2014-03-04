@@ -27,21 +27,27 @@ import pl.edu.icm.coansys.models.DocumentProtos;
  * @author Artur Czeczko <a.czeczko@icm.edu.pl>
  */
 public class JournalVoter extends AbstractSimilarityVoter {
-    
+
     private float disapproveLevel;
     private float approveLevel;
 
     @Override
     public Vote vote(DocumentProtos.DocumentMetadata doc1, DocumentProtos.DocumentMetadata doc2) {
+        String issn1 = extractIssn(doc1);
+        String issn2 = extractIssn(doc2);
+        if (issn1 != null && !issn1.isEmpty() && issn1.equals(issn2)) {
+            return new Vote(Vote.VoteStatus.PROBABILITY, 1.0f);
+        }
+
         String journal1 = extractJournal(doc1);
         String journal2 = extractJournal(doc2);
         if (journal1 == null || journal2 == null) {
             return new Vote(Vote.VoteStatus.ABSTAIN);
         }
-        
+
         journal1 = StringTools.normalize(journal1);
         journal2 = StringTools.normalize(journal2);
-        
+
         //SimilarityCalculator calculator = new LCSSimilarity();
         SimilarityCalculator calculator = new EditDistanceSimilarity(approveLevel, disapproveLevel);
         float similarity = calculator.calculateSimilarity(journal1, journal2);
@@ -55,6 +61,11 @@ public class JournalVoter extends AbstractSimilarityVoter {
     private static String extractJournal(DocumentProtos.DocumentMetadata doc) {
         DocumentProtos.BasicMetadata basicMetadata = doc.getBasicMetadata();
         return basicMetadata.hasJournal() ? basicMetadata.getJournal() : null;
+    }
+
+    private static String extractIssn(DocumentProtos.DocumentMetadata doc) {
+        DocumentProtos.BasicMetadata basicMetadata = doc.getBasicMetadata();
+        return basicMetadata.hasIssn() ? basicMetadata.getIssn() : null;
     }
 
     public void setDisapproveLevel(float disapproveLevel) {
