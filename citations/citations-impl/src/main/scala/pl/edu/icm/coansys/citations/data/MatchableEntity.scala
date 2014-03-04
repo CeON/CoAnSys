@@ -110,9 +110,9 @@ object MatchableEntity {
   }
 
   private def fillUsingBasicMetadata(data: MatchableEntityData.Builder, meta: BasicMetadata) {
-    data.setAuthor(meta.getAuthorList.map(a => if (a.hasName) a.getName else a.getForenames + " " + a.getSurname).mkString(" "))
+    data.setAuthor(meta.getAuthorList.map(a => if (a.hasName) a.getName else a.getForenames + " " + a.getSurname).mkString(", "))
     data.setSource(meta.getJournal)
-    data.setTitle(meta.getTitleList.map(_.getText).mkString(" "))
+    data.setTitle(meta.getTitleList.map(_.getText).mkString(". "))
     data.setPages(meta.getPages)
     data.setYear(meta.getYear)
   }
@@ -145,13 +145,13 @@ object MatchableEntity {
   }
 
   def fromUnparsedReference(bibReferenceParser: BibReferenceParser[BibEntry], id: String, rawText: String): MatchableEntity = {
-    def getField(bibEntry: BibEntry, key: String): String =
-      bibEntry.getAllFieldValues(key).mkString(" ")
+    def getField(bibEntry: BibEntry, key: String, separator: String = " "): String =
+      bibEntry.getAllFieldValues(key).mkString(separator)
 
     val bibEntry = bibReferenceParser.parseBibReference(removeDiacritics(rawText))
     val data = MatchableEntityData.newBuilder()
     data.setId(id)
-    data.setAuthor(getField(bibEntry, BibEntry.FIELD_AUTHOR))
+    data.setAuthor(getField(bibEntry, BibEntry.FIELD_AUTHOR, ", "))
     data.setSource(getField(bibEntry, BibEntry.FIELD_JOURNAL))
     data.setTitle(getField(bibEntry, BibEntry.FIELD_TITLE))
     data.setPages(getField(bibEntry, BibEntry.FIELD_PAGES))
