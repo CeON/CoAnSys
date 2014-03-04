@@ -27,10 +27,10 @@ import org.testng.annotations.Test;
 import static org.mockito.Mockito.*;
 import pl.edu.icm.coansys.deduplication.document.tool.MockDocumentMetadataFactory;
 import pl.edu.icm.coansys.deduplication.document.voter.AuthorsVoter;
+import pl.edu.icm.coansys.deduplication.document.voter.YearVoter;
 import pl.edu.icm.coansys.deduplication.document.voter.SimilarityVoter;
 import pl.edu.icm.coansys.deduplication.document.voter.Vote;
 import pl.edu.icm.coansys.deduplication.document.voter.TitleVoter;
-import pl.edu.icm.coansys.deduplication.document.voter.YearVoter;
 import pl.edu.icm.coansys.models.DocumentProtos;
 
 public class WeightedMeanComparatorTest {

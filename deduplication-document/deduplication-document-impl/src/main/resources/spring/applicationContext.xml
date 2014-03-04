@@ -15,21 +15,15 @@
                 <bean id="workDoiVoter" class="pl.edu.icm.coansys.deduplication.document.voter.DoiVoter">
                     <property name="weight" value="1.0"/>
                 </bean>
-                <bean id="workIssueVoter" class="pl.edu.icm.coansys.deduplication.document.voter.IssueVoter">
-                    <property name="weight" value="0.2"/>
-                </bean>
-                <bean id="workYearVoter" class="pl.edu.icm.coansys.deduplication.document.voter.YearVoter">
-                    <property name="weight" value="0.2"/>
-                    <property name="yearMaxDistance" value="0"/>
-                </bean>
                 <bean id="journalVoter" class="pl.edu.icm.coansys.deduplication.document.voter.JournalVoter">
                     <property name="weight" value="0.3"/>
-                    <property name="disapproveLevel" value="0.2"/>
-                    <property name="approveLevel" value="0.03"/>
+                    <property name="disapproveLevel" value="0.5"/>
+                    <property name="approveLevel" value="0.05"/>
                 </bean>
                 <bean id="workTitleVoter" class="pl.edu.icm.coansys.deduplication.document.voter.TitleVoter">
                     <property name="weight" value="0.8"/>
-                    <property name="disapproveLevel" value="0.059"/>
+                    <!-- property name="disapproveLevel" value="0.059"/ -->
+                    <property name="disapproveLevel" value="0.11"/>
                     <property name="approveLevel" value="0.001"/>
                     <property name="maxNormalizedTitleLength" value="90" />
                 </bean>
@@ -38,11 +32,34 @@
                     <property name="disapproveLevel" value="0.2"/>
                     <property name="approveLevel" value="0.03"/>
                 </bean>
+                <bean id="workIssueVolumeVoter" class="pl.edu.icm.coansys.deduplication.document.voter.IssueVolumeVoter">
+                    <property name="weight" value="1.0"/>
+                    <property name="abstainIfAbsent" value="true" />
+                    <property name="subsetResult" value="0.8" />
+                    <property name="partiallyMatchResult" value="0.52" />
+                </bean>
+                <bean id="workPagesVoter" class="pl.edu.icm.coansys.deduplication.document.voter.PagesVoter">
+                    <property name="weight" value="1.0"/>
+                    <property name="abstainIfAbsent" value="false" />
+                    <property name="absentResult" value="0.6" />
+                    <property name="subsetResult" value="0.75" />
+                    <property name="partiallyMatchResult" value="0.64" />
+                    <property name="removeRepeated" value="true" />
+                </bean>
+                <bean id="workYearVoter" class="pl.edu.icm.coansys.deduplication.document.voter.YearVoter">
+                    <property name="weight" value="1.0"/>
+                    <property name="abstainIfAbsent" value="false" />
+                    <property name="absentResult" value="0.52" />
+                    <property name="subsetResult" value="0.90" />
+                    <property name="partiallyMatchResult" value="0.75" />
+                    <property name="removeRepeated" value="true" />
+                </bean>
+
             </list>
         </property>
         <property name="minVotersRequired" value="3"/>
-        <property name="probabilityTreshold" value="0.5"/>
-        <property name="tresholdIncreasingVotersRequired" value="0.8" />
+        <property name="probabilityTreshold" value="0.3"/>
+        <property name="tresholdIncreasingVotersRequired" value="0.7" />
     </bean>
 
     <context:component-scan resource-pattern="**/*.class" base-package="pl.edu.icm.coansys.deduplication.document"/>
