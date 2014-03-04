@@ -232,7 +232,7 @@
                 <property>
                     <name>mapred.input.dir.formats</name>
                     <value>
-                        ${workingDirectory}/heuristict;org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat,${destinationEntities};org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat
+                        ${workingDirectory}/heuristic;org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat,${destinationEntities};org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat
                     </value>
                 </property>
                 <property>
@@ -277,7 +277,7 @@
                 </property>
                 <property>
                     <name>mapred.output.value.class</name>
-                    <value>org.apache.hadoop.io.BytesWritable</value>
+                    <value>pl.edu.icm.coansys.citations.data.TextWithBytesWritable</value>
                 </property>
             </configuration>
         </map-reduce>
@@ -305,7 +305,7 @@
                 <property>
                     <name>mapred.input.dir.formats</name>
                     <value>
-                        ${workingDirectory}/heuristict_with_docs;org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat,${sourceEntities};org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat
+                        ${workingDirectory}/heuristic_with_docs;org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat,${sourceEntities};org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat
                     </value>
                 </property>
                 <property>

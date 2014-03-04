@@ -21,16 +21,15 @@ package pl.edu.icm.coansys.citations.reducers
 import collection.JavaConversions._
 import org.apache.hadoop.io.BytesWritable
 import org.apache.hadoop.mapreduce.Reducer
-import pl.edu.icm.coansys.citations.data.{MarkedBytesWritable, MatchableEntity, MarkedText}
-import scala.collection.mutable
-import scala.collection.mutable.ListBuffer
+import pl.edu.icm.coansys.citations.data.{MatchableEntity, MarkedText, TextWithBytesWritable}
 import pl.edu.icm.coansys.citations.util.misc._
+import scala.collection.mutable
 
 /**
- * Created by matfed on 01.03.14.
+ * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
-class CitationAttacherPreassessor  extends Reducer[MarkedText, BytesWritable, BytesWritable, BytesWritable] {
-  type Context = Reducer[MarkedText, BytesWritable, BytesWritable, BytesWritable]#Context
+class CitationAttacherPreassessor  extends Reducer[MarkedText, TextWithBytesWritable, BytesWritable, BytesWritable] {
+  type Context = Reducer[MarkedText, TextWithBytesWritable, BytesWritable, BytesWritable]#Context
 
   /**
    * A queue that automatically dequeues when a capacity limit is reached
@@ -52,17 +51,17 @@ class CitationAttacherPreassessor  extends Reducer[MarkedText, BytesWritable, By
   val outKey = new BytesWritable()
   val outValue = new BytesWritable()
 
-  override def reduce(key: MarkedText, values: java.lang.Iterable[BytesWritable], context: Context) {
+  override def reduce(key: MarkedText, values: java.lang.Iterable[TextWithBytesWritable], context: Context) {
     val iterator = values.iterator()
     val first = iterator.next()
-    val citation = MatchableEntity.fromBytes(first.copyBytes())
+    val citation = MatchableEntity.fromBytes(first.bytes.copyBytes())
     val srcTokens = niceTokens(citation.toReferenceString)
     if (srcTokens.size <= 0) return
 
-    outKey.set(first)
+    outKey.set(first.bytes)
 
-    for (value: BytesWritable <- iterator) {
-      val document = MatchableEntity.fromBytes(value.copyBytes())
+    for (value: TextWithBytesWritable <- iterator) {
+      val document = MatchableEntity.fromBytes(value.bytes.copyBytes())
       val dstTokens = niceTokens(document.toReferenceString)
 
       val similarity =

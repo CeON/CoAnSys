@@ -26,17 +26,17 @@ import pl.edu.icm.coansys.citations.data.{TextWithBytesWritable, MarkedText}
 /**
  * Created by matfed on 01.03.14.
  */
-class DocumentAttacher  extends Reducer[MarkedText, TextWithBytesWritable, MarkedText, BytesWritable] {
-  type Context = Reducer[MarkedText, TextWithBytesWritable, MarkedText, BytesWritable]#Context
+class DocumentAttacher  extends Reducer[MarkedText, TextWithBytesWritable, MarkedText, TextWithBytesWritable] {
+  type Context = Reducer[MarkedText, TextWithBytesWritable, MarkedText, TextWithBytesWritable]#Context
 
   val outKey = new MarkedText(false)
-  val outValue = new BytesWritable()
+  val outValue = new TextWithBytesWritable()
 
   override def reduce(key: MarkedText, values: java.lang.Iterable[TextWithBytesWritable], context: Context) {
     val iterator = values.iterator()
     val first = iterator.next()
     if (first.text.getLength == 0) {
-      outValue.set(first.bytes)
+      outValue.bytes.set(first.bytes)
     } else {
       return
     }
