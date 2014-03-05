@@ -77,7 +77,7 @@ public class TitleVoterTest {
                 || (vote.getStatus().equals(VoteStatus.PROBABILITY) && vote.getProbability() > 0.5);
     }
 
-    @Test(groups = {"slow"})
+    @Test
     public void checkFiles() throws IOException {
         // make sure thad TitleVoter doesn't give too many false positives
         Assert.assertTrue(readTestSetFile("/titles_pairs/false_duplicates_pairs_0_7") < 0.01);
