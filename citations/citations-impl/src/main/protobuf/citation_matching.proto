@@ -13,6 +13,9 @@ message MatchableEntityData {
   optional string pages = 4;
   optional string source = 5;
   optional string title = 6;
+  optional string rawText = 8;
+  optional string issue = 9;
+  optional string volume = 10;
   repeated KeyValue auxiliary = 7;
 }
 
