@@ -20,8 +20,22 @@ package pl.edu.icm.coansys.statisticsgenerator.operationcomponents;
 
 /**
  *
- * @author acz
+ * @author Artur Czeczko <a.czeczko@icm.edu.pl>
  */
-public interface OperationComponent {
-    public void setup(String... params);
+public class FirstCharsPartitioner implements Partitioner {
+    
+    int numberOfCharacters;
+
+    @Override
+    public String partition(String inputField) {
+        return inputField.substring(0, numberOfCharacters);
+    }
+
+    @Override
+    public void setup(String... params) {
+        if (params.length != 1) {
+            throw new IllegalArgumentException("setup requires number of characters");
+        }
+        numberOfCharacters = Integer.parseInt(params[0]);
+    }
 }
