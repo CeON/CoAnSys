@@ -38,6 +38,6 @@ public class CountSummary implements StatisticCalculator {
     }
 
     @Override
-    public void setup(String... param) {
+    public void setup(String... params) {
     }    
 }
