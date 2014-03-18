@@ -1,4 +1,5 @@
-<workflow-app name='${project}_${subproject}_ver4_ranked_one_source' xmlns="uri:oozie:workflow:0.4">
+<workflow-app name='${project}_${subproject}_ver4_ranked_one_source'
+	xmlns="uri:oozie:workflow:0.4">
 	<start to='load_filterTerms_calcTfidf_filterTopN' />
 	<action name='load_filterTerms_calcTfidf_filterTopN'>
 		<pig>
@@ -16,6 +17,10 @@
 					<name>oozie.launcher.mapred.fairscheduler.pool</name>
 					<value>${pool}</value>
 				</property>
+				<property>
+					<name>oozie.use.system.libpath</name>
+					<value>true</value>
+				</property>
 			</configuration>
 			<script>document-similarity-s1-rank_filter.pig</script>
 			<param>inputPath=${ds_bwndataMetadataInputPath}</param>
@@ -26,8 +31,10 @@
 			<param>sample=${ds_sample}</param>
 			<param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>
 			<param>ds_scheduler=${ds_scheduler}</param>
-			<param>tfidfTopnTermPerDocument=${ds_tfidfTopnTermPerDocument}</param>
-			<param>similarityTopnDocumentPerDocument=${ds_similarityTopnDocumentPerDocument}</param>
+			<param>tfidfTopnTermPerDocument=${ds_tfidfTopnTermPerDocument}
+			</param>
+			<param>similarityTopnDocumentPerDocument=${ds_similarityTopnDocumentPerDocument}
+			</param>
 			<param>removal_least_used=${ds_removal_least_used}</param>
 			<param>removal_rate=${ds_removal_rate}</param>
 		</pig>
@@ -48,6 +55,10 @@
 					<name>oozie.launcher.mapred.fairscheduler.pool</name>
 					<value>${pool}</value>
 				</property>
+				<property>
+					<name>oozie.use.system.libpath</name>
+					<value>true</value>
+				</property>
 			</configuration>
 			<script>document-similarity-s2-e0-one-source.pig</script>
 			<param>inputPath=${ds_bwndataMetadataInputPath}</param>
@@ -58,8 +69,10 @@
 			<param>sample=${ds_sample}</param>
 			<param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>
 			<param>ds_scheduler=${ds_scheduler}</param>
-			<param>tfidfTopnTermPerDocument=${ds_tfidfTopnTermPerDocument}</param>
-			<param>similarityTopnDocumentPerDocument=${ds_similarityTopnDocumentPerDocument}</param>
+			<param>tfidfTopnTermPerDocument=${ds_tfidfTopnTermPerDocument}
+			</param>
+			<param>similarityTopnDocumentPerDocument=${ds_similarityTopnDocumentPerDocument}
+			</param>
 			<param>removal_least_used=${ds_removal_least_used}</param>
 			<param>removal_rate=${ds_removal_rate}</param>
 		</pig>
@@ -80,8 +93,13 @@
 					<name>oozie.launcher.mapred.fairscheduler.pool</name>
 					<value>${pool}</value>
 				</property>
+				<property>
+					<name>oozie.use.system.libpath</name>
+					<value>true</value>
+				</property>
 			</configuration>
-			<script>document-similarity-s2-leftsim_advanced_inverted_cosine.pig</script>
+			<script>document-similarity-s2-leftsim_advanced_inverted_cosine.pig
+			</script>
 			<param>inputPath=${ds_bwndataMetadataInputPath}</param>
 			<param>outputPath=${ds_similarityOutputPath}</param>
 			<param>commonJarsPath=${commonJarsPath}</param>
@@ -90,8 +108,10 @@
 			<param>sample=${ds_sample}</param>
 			<param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>
 			<param>ds_scheduler=${ds_scheduler}</param>
-			<param>tfidfTopnTermPerDocument=${ds_tfidfTopnTermPerDocument}</param>
-			<param>similarityTopnDocumentPerDocument=${ds_similarityTopnDocumentPerDocument}</param>
+			<param>tfidfTopnTermPerDocument=${ds_tfidfTopnTermPerDocument}
+			</param>
+			<param>similarityTopnDocumentPerDocument=${ds_similarityTopnDocumentPerDocument}
+			</param>
 			<param>removal_least_used=${ds_removal_least_used}</param>
 			<param>removal_rate=${ds_removal_rate}</param>
 		</pig>
@@ -112,8 +132,13 @@
 					<name>oozie.launcher.mapred.fairscheduler.pool</name>
 					<value>${pool}</value>
 				</property>
+				<property>
+					<name>oozie.use.system.libpath</name>
+					<value>true</value>
+				</property>
 			</configuration>
-			<script>document-similarity-s3-e1-topn_advanced_cosine_normalized.pig</script>
+			<script>document-similarity-s3-e1-topn_advanced_cosine_normalized.pig
+			</script>
 			<param>inputPath=${ds_bwndataMetadataInputPath}</param>
 			<param>outputPath=${ds_similarityOutputPath}</param>
 			<param>commonJarsPath=${commonJarsPath}</param>
@@ -122,8 +147,10 @@
 			<param>sample=${ds_sample}</param>
 			<param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>
 			<param>ds_scheduler=${ds_scheduler}</param>
-			<param>tfidfTopnTermPerDocument=${ds_tfidfTopnTermPerDocument}</param>
-			<param>similarityTopnDocumentPerDocument=${ds_similarityTopnDocumentPerDocument}</param>
+			<param>tfidfTopnTermPerDocument=${ds_tfidfTopnTermPerDocument}
+			</param>
+			<param>similarityTopnDocumentPerDocument=${ds_similarityTopnDocumentPerDocument}
+			</param>
 			<param>removal_least_used=${ds_removal_least_used}</param>
 			<param>removal_rate=${ds_removal_rate}</param>
 		</pig>
@@ -144,8 +171,13 @@
 					<name>oozie.launcher.mapred.fairscheduler.pool</name>
 					<value>${pool}</value>
 				</property>
+				<property>
+					<name>oozie.use.system.libpath</name>
+					<value>true</value>
+				</property>
 			</configuration>
-			<script>document-similarity-s3-e2-topn_advanced_cosine_normalized.pig</script>
+			<script>document-similarity-s3-e2-topn_advanced_cosine_normalized.pig
+			</script>
 			<param>inputPath=${ds_bwndataMetadataInputPath}</param>
 			<param>outputPath=${ds_similarityOutputPath}</param>
 			<param>commonJarsPath=${commonJarsPath}</param>
@@ -154,8 +186,10 @@
 			<param>sample=${ds_sample}</param>
 			<param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>
 			<param>ds_scheduler=${ds_scheduler}</param>
-			<param>tfidfTopnTermPerDocument=${ds_tfidfTopnTermPerDocument}</param>
-			<param>similarityTopnDocumentPerDocument=${ds_similarityTopnDocumentPerDocument}</param>
+			<param>tfidfTopnTermPerDocument=${ds_tfidfTopnTermPerDocument}
+			</param>
+			<param>similarityTopnDocumentPerDocument=${ds_similarityTopnDocumentPerDocument}
+			</param>
 			<param>removal_least_used=${ds_removal_least_used}</param>
 			<param>removal_rate=${ds_removal_rate}</param>
 		</pig>
@@ -166,7 +200,8 @@
 
 	<kill name='kill'>
 		<message>Workflow failed, error
-			message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+			message[${wf:errorMessage(wf:lastErrorNode())}]
+		</message>
 	</kill>
 	<end name='end' />
 </workflow-app>
