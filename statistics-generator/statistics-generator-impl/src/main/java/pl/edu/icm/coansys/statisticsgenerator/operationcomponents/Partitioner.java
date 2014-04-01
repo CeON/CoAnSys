@@ -23,5 +23,5 @@ package pl.edu.icm.coansys.statisticsgenerator.operationcomponents;
  * @author Artur Czeczko <a.czeczko@icm.edu.pl>
  */
 public interface Partitioner extends OperationComponent {
-    public String partition(String inputField);
+    public String[] partition(String inputField);
 }

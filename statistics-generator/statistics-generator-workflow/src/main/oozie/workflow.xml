@@ -34,8 +34,8 @@
                     <value>${hdfsWorkingDirURI}/intermediate-data</value>
                 </property>
                 <property>
-                  <name>mapred.job.queue.name</name>
-                  <value>${queueName}</value>
+                    <name>mapred.job.queue.name</name>
+                    <value>${queueName}</value>
                 </property>
                 <property>
                     <name>mapreduce.inputformat.class</name>
@@ -60,6 +60,22 @@
                 <property>
                     <name>mapred.output.value.class</name>
                     <value>org.apache.hadoop.io.BytesWritable</value>
+                </property>
+                <property>
+                    <name>input_filter_names</name>
+                    <value>${input_filter_names}</value>
+                </property>
+                <property>
+                    <name>input_filter_classes</name>
+                    <value>${input_filter_classes}</value>
+                </property>
+                <property>
+                    <name>input_filter_args</name>
+                    <value>${input_filter_args}</value>
+                </property>
+                <property>
+                    <name>input_filter_formula</name>
+                    <value>${input_filter_formula}</value>
                 </property>
                 <property>
                     <name>partitions_names</name>
@@ -129,8 +145,8 @@
                     <value>${hdfsDirOutputData}</value>
                 </property>
                 <property>
-                  <name>mapred.job.queue.name</name>
-                  <value>${queueName}</value>
+                    <name>mapred.job.queue.name</name>
+                    <value>${queueName}</value>
                 </property>
                 <property>
                     <name>mapreduce.inputformat.class</name>

@@ -16,27 +16,14 @@
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.edu.icm.coansys.statisticsgenerator.operationcomponents;
+package pl.edu.icm.coansys.statisticsgenerator.filters;
+
+import pl.edu.icm.coansys.models.StatisticsProtos;
 
 /**
  *
  * @author Artur Czeczko <a.czeczko@icm.edu.pl>
  */
-public class FirstCharsPartitioner implements Partitioner {
-    
-    int numberOfCharacters;
-
-    @Override
-    public String[] partition(String inputField) {
-        String[] result = { inputField.substring(0, numberOfCharacters) };
-        return result;
-    }
-
-    @Override
-    public void setup(String... params) {
-        if (params.length != 1) {
-            throw new IllegalArgumentException("setup requires number of characters");
-        }
-        numberOfCharacters = Integer.parseInt(params[0]);
-    }
+public interface Filter {
+    public boolean filter(StatisticsProtos.InputEntry entry);
 }

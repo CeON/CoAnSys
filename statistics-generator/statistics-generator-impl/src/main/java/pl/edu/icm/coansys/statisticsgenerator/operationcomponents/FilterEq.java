@@ -18,25 +18,34 @@
 
 package pl.edu.icm.coansys.statisticsgenerator.operationcomponents;
 
+import pl.edu.icm.coansys.models.StatisticsProtos;
+import pl.edu.icm.coansys.models.StatisticsProtos.KeyValue;
+
 /**
  *
  * @author Artur Czeczko <a.czeczko@icm.edu.pl>
  */
-public class FirstCharsPartitioner implements Partitioner {
-    
-    int numberOfCharacters;
+public class FilterEq implements FilterComponent {
+    private String fieldName;
+    private String value;
 
     @Override
-    public String[] partition(String inputField) {
-        String[] result = { inputField.substring(0, numberOfCharacters) };
-        return result;
+    public boolean filter(StatisticsProtos.InputEntry entry) {
+        for (KeyValue kv : entry.getFieldList()) {
+            if (kv.getKey().equals(fieldName)) {
+                return kv.getValue().equals(value);
+            }
+        }
+        return false;
     }
 
     @Override
     public void setup(String... params) {
-        if (params.length != 1) {
-            throw new IllegalArgumentException("setup requires number of characters");
+        if (params.length != 2) {
+            throw new IllegalArgumentException("setup requires 2 parameters: field name and value");
         }
-        numberOfCharacters = Integer.parseInt(params[0]);
+        fieldName = params[0];
+        value = params[1];
     }
+
 }

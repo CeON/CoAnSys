@@ -36,14 +36,15 @@ public class DateRangesPartitioner implements Partitioner {
     private List<TimeBucket> timeBuckets;
 
     @Override
-    public String partition(String inputField) {
+    public String[] partition(String inputField) {
+        List<String> resultList = new ArrayList<String>();
         DateTime dt = new DateTime(DatatypeConverter.parseTime(inputField));
         for (TimeBucket bucket : timeBuckets) {
             if (bucket.inThisBucket(dt)) {
-                return bucket.getLabel();
+                resultList.add(bucket.getLabel());
             }
         }
-        return "none";
+        return resultList.toArray(new String[resultList.size()]);
     }
 
     @Override
@@ -73,36 +74,27 @@ public class DateRangesPartitioner implements Partitioner {
         Collections.sort(numbers);
         timeBuckets = new ArrayList<TimeBucket>();
         
-        DateTime previousStart = end;
-        String previousNumber = "0";
-        
         for (Integer period : numbers) {
-            DateTime newStart = end.minusDays(period).withMillisOfDay(0);
-            String label = "[" + period + ", " + previousNumber + ")";
-            timeBuckets.add(new TimeBucket(newStart, previousStart, label));
-            previousStart = newStart;
-            previousNumber = period.toString();
+            DateTime start = end.minusDays(period).withMillisOfDay(0);
+            timeBuckets.add(new TimeBucket(start, period.toString() + " days"));
         }
-        timeBuckets.add(new TimeBucket(previousStart, "(-inf, " + previousNumber + ")"));
+        timeBuckets.add(new TimeBucket("all"));
     }
     
     private static class TimeBucket {
         boolean startInInfinity;
         private DateTime start;
-        private DateTime end;
         private String label;
         
-        public TimeBucket(DateTime start, DateTime end, String label) {
+        public TimeBucket(DateTime start, String label) {
             this.startInInfinity = false;
             this.start = start;
-            this.end = end;
             this.label = label;
 
         }
         
-        public TimeBucket(DateTime end, String label) {
+        public TimeBucket(String label) {
             this.startInInfinity = true;
-            this.end = end;
             this.label = label;
         }
 
@@ -112,7 +104,7 @@ public class DateRangesPartitioner implements Partitioner {
         }
         
         public boolean inThisBucket(DateTime time) {
-            return time.isBefore(this.end) && (startInInfinity || !time.isBefore(this.start));
+            return startInInfinity || !time.isBefore(this.start);
         }
     }
 }

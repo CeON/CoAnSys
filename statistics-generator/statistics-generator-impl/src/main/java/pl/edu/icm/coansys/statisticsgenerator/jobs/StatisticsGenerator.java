@@ -72,8 +72,10 @@ public class StatisticsGenerator implements Tool {
             for (StatisticsProtos.KeyValue field : inputEntry.getFieldList()) {
                 String fieldKey = field.getKey();
                 if (partitioners.containsKey(fieldKey)) {
-                    String partition = partitioners.get(fieldKey).partition(field.getValue());
-                    outputKeyMap.put(new Text(fieldKey), new Text(partition));
+                    String[] partitions = partitioners.get(fieldKey).partition(field.getValue());
+                    for (String partition : partitions) {
+                        outputKeyMap.put(new Text(fieldKey), new Text(partition));
+                    }
                 }
             }
 
