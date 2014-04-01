@@ -25,8 +25,9 @@ package pl.edu.icm.coansys.statisticsgenerator.operationcomponents;
 public class EqualsPartitioner implements Partitioner {
 
     @Override
-    public String partition(String inputField) {
-        return inputField;
+    public String[] partition(String inputField) {
+        String[] result = {inputField};
+        return result;
     }
 
     @Override

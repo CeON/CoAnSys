@@ -29,6 +29,7 @@ public final class ConfigurationConstants {
     
     private ConfigurationConstants() {}
     
+    public static final String INPUT_FILTER_PREFIX = "input_filter_";
     public static final String PARTITIONS_PREFIX = "partitions_";
     public static final String STATISTICS_PREFIX = "statistics_";
 

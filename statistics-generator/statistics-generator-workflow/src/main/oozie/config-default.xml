@@ -1,5 +1,21 @@
 <configuration>
   <property>
+    <name>input_filter_names</name>
+    <value> </value>
+  </property>
+  <property>
+    <name>input_filter_classes</name>
+    <value> </value>
+  </property>
+  <property>
+    <name>input_filter_args</name>
+    <value> </value>
+  </property>
+  <property>
+    <name>input_filter_formula</name>
+    <value> </value>
+  </property>
+  <property>
     <name>partitions_names</name>
     <value>key0;key1</value>
   </property>
