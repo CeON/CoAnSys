@@ -22,6 +22,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import org.apache.hadoop.conf.Configuration;
 import pl.edu.icm.coansys.statisticsgenerator.filters.Filter;
+import pl.edu.icm.coansys.statisticsgenerator.filters.InputFilter;
 import pl.edu.icm.coansys.statisticsgenerator.operationcomponents.FilterComponent;
 import pl.edu.icm.coansys.statisticsgenerator.operationcomponents.OperationComponent;
 import pl.edu.icm.coansys.statisticsgenerator.operationcomponents.Partitioner;
@@ -44,6 +45,7 @@ public class StatGeneratorConfiguration {
 
     public StatGeneratorConfiguration(Configuration conf) {
         inputFilterComponents = readConfPartStat(conf, ConfigurationConstants.INPUT_FILTER_PREFIX);
+        inputFilter = new InputFilter(conf.get(ConfigurationConstants.INPUT_FILTER_FORMULA), inputFilterComponents);
         partitioners = readConfPartStat(conf, ConfigurationConstants.PARTITIONS_PREFIX);
         statisticCalculators = readConfPartStat(conf, ConfigurationConstants.STATISTICS_PREFIX);
         groupKeys = readGroupKeys(conf);
