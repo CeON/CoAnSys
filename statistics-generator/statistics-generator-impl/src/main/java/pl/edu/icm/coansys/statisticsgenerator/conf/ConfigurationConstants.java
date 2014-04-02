@@ -26,12 +26,15 @@ import java.util.Map;
  * @author Artur Czeczko <a.czeczko@icm.edu.pl>
  */
 public final class ConfigurationConstants {
+
     
     private ConfigurationConstants() {}
     
     public static final String INPUT_FILTER_PREFIX = "input_filter_";
     public static final String PARTITIONS_PREFIX = "partitions_";
     public static final String STATISTICS_PREFIX = "statistics_";
+    
+    public static final String INPUT_FILTER_FORMULA = "input_filter_formula";
 
     public static final String NAMES = "names";
     public static final String CLASSES = "classes";
