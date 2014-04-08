@@ -58,7 +58,7 @@
             </list>
         </property>
         <property name="minVotersRequired" value="3"/>
-        <property name="probabilityTreshold" value="0.3"/>
+        <property name="probabilityTreshold" value="0.5"/>
         <property name="tresholdIncreasingVotersRequired" value="0.7" />
     </bean>
 
