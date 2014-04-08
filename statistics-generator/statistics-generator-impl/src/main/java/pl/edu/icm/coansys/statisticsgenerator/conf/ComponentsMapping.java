@@ -23,6 +23,7 @@ import java.util.Map;
 import pl.edu.icm.coansys.statisticsgenerator.operationcomponents.CountSummary;
 import pl.edu.icm.coansys.statisticsgenerator.operationcomponents.DateRangesPartitioner;
 import pl.edu.icm.coansys.statisticsgenerator.operationcomponents.EqualsPartitioner;
+import pl.edu.icm.coansys.statisticsgenerator.operationcomponents.FilterEq;
 import pl.edu.icm.coansys.statisticsgenerator.operationcomponents.FirstCharsPartitioner;
 import pl.edu.icm.coansys.statisticsgenerator.operationcomponents.LastCharsPartitioner;
 import pl.edu.icm.coansys.statisticsgenerator.operationcomponents.OperationComponent;
@@ -38,6 +39,7 @@ public final class ComponentsMapping {
     public static final Map<String, Class<? extends OperationComponent>> mapping = new HashMap<String, Class<? extends OperationComponent>>();
 
     static {
+        mapping.put("EQFILTER", FilterEq.class);
         mapping.put("EQUALS", EqualsPartitioner.class);
         mapping.put("FIRSTCHARS", FirstCharsPartitioner.class);
         mapping.put("LASTCHARS", LastCharsPartitioner.class);

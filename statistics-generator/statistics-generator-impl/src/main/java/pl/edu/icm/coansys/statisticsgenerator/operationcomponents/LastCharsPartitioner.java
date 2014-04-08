@@ -27,8 +27,9 @@ public class LastCharsPartitioner implements Partitioner {
     int numberOfCharacters;
 
     @Override
-    public String partition(String inputField) {
-        return inputField.substring(Math.max(inputField.length() - numberOfCharacters, 0));
+    public String[] partition(String inputField) {
+        String[] result = { inputField.substring(Math.max(inputField.length() - numberOfCharacters, 0)) };
+        return result;
     }
 
     @Override
