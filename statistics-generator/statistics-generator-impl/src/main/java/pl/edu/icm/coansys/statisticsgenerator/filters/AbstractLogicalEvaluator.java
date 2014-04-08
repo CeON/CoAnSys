@@ -51,12 +51,13 @@ public abstract class AbstractLogicalEvaluator extends AbstractEvaluator<String>
     }
 
     private boolean getValue(String literal) {
-        if (literal.endsWith("=true") || evaluateLiteral(literal)) {
+        if (literal.endsWith("=true")) {
             return true;
-        } else if (literal.endsWith("=false") || !evaluateLiteral(literal)) {
+        }
+        if (literal.endsWith("=false")) {
             return false;
         }
-        throw new IllegalArgumentException("Unknown literal : " + literal);
+        return evaluateLiteral(literal);
     }
 
     public abstract boolean evaluateLiteral(String literal);

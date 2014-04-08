@@ -8,7 +8,7 @@
     <value> </value>
   </property>
   <property>
-    <name>input_filter_args</name>
+    <name>input_filter_classes_args</name>
     <value> </value>
   </property>
   <property>
