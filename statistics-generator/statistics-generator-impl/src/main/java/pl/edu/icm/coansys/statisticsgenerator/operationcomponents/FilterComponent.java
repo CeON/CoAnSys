@@ -18,25 +18,12 @@
 
 package pl.edu.icm.coansys.statisticsgenerator.operationcomponents;
 
+import pl.edu.icm.coansys.statisticsgenerator.filters.Filter;
+
 /**
  *
- * @author Artur Czeczko <a.czeczko@icm.edu.pl>
+ * @author acz
  */
-public class FirstCharsPartitioner implements Partitioner {
+public interface FilterComponent extends Filter, OperationComponent {
     
-    int numberOfCharacters;
-
-    @Override
-    public String[] partition(String inputField) {
-        String[] result = { inputField.substring(0, numberOfCharacters) };
-        return result;
-    }
-
-    @Override
-    public void setup(String... params) {
-        if (params.length != 1) {
-            throw new IllegalArgumentException("setup requires number of characters");
-        }
-        numberOfCharacters = Integer.parseInt(params[0]);
-    }
 }

@@ -21,6 +21,9 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import org.apache.hadoop.conf.Configuration;
+import pl.edu.icm.coansys.statisticsgenerator.filters.Filter;
+import pl.edu.icm.coansys.statisticsgenerator.filters.InputFilter;
+import pl.edu.icm.coansys.statisticsgenerator.operationcomponents.FilterComponent;
 import pl.edu.icm.coansys.statisticsgenerator.operationcomponents.OperationComponent;
 import pl.edu.icm.coansys.statisticsgenerator.operationcomponents.Partitioner;
 import pl.edu.icm.coansys.statisticsgenerator.operationcomponents.StatisticCalculator;
@@ -31,6 +34,8 @@ import pl.edu.icm.coansys.statisticsgenerator.operationcomponents.StatisticCalcu
  */
 public class StatGeneratorConfiguration {
 
+    private Map<String, FilterComponent> inputFilterComponents;
+    private Filter inputFilter;
     private Map<String, Partitioner> partitioners;
     private Map<String, StatisticCalculator> statisticCalculators;
     private String[] groupKeys;
@@ -39,12 +44,22 @@ public class StatGeneratorConfiguration {
     private int limit = 0;
 
     public StatGeneratorConfiguration(Configuration conf) {
+        inputFilterComponents = readConfPartStat(conf, ConfigurationConstants.INPUT_FILTER_PREFIX);
+        inputFilter = new InputFilter(conf.get(ConfigurationConstants.INPUT_FILTER_FORMULA), inputFilterComponents);
         partitioners = readConfPartStat(conf, ConfigurationConstants.PARTITIONS_PREFIX);
         statisticCalculators = readConfPartStat(conf, ConfigurationConstants.STATISTICS_PREFIX);
         groupKeys = readGroupKeys(conf);
         sortStat = readSortStat(conf);
         sortOrder = readSortOrder(conf);
         limit = readLimit(conf);
+    }
+
+    public Map<String, FilterComponent> getInputFilterComponents() {
+        return inputFilterComponents;
+    }
+
+    public Filter getInputFilter() {
+        return inputFilter;
     }
 
     public Map<String, Partitioner> getPartitioners() {

@@ -16,27 +16,29 @@
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.edu.icm.coansys.statisticsgenerator.operationcomponents;
+package pl.edu.icm.coansys.statisticsgenerator.filters;
+
+import java.util.Map;
+import pl.edu.icm.coansys.models.StatisticsProtos;
+import pl.edu.icm.coansys.statisticsgenerator.operationcomponents.FilterComponent;
 
 /**
  *
  * @author Artur Czeczko <a.czeczko@icm.edu.pl>
  */
-public class FirstCharsPartitioner implements Partitioner {
+public class InputFilter implements Filter {
     
-    int numberOfCharacters;
+    private LogicalEvaluator ev;
+    private String formula;
 
-    @Override
-    public String[] partition(String inputField) {
-        String[] result = { inputField.substring(0, numberOfCharacters) };
-        return result;
+    public InputFilter(String formula, Map<String, FilterComponent> filterComponents) {
+        this.formula = formula;
+        this.ev = new LogicalEvaluator(filterComponents);
     }
 
     @Override
-    public void setup(String... params) {
-        if (params.length != 1) {
-            throw new IllegalArgumentException("setup requires number of characters");
-        }
-        numberOfCharacters = Integer.parseInt(params[0]);
+    public boolean filter(StatisticsProtos.InputEntry entry) {
+        ev.setInputEntry(entry);
+        return ev.evaluateExpression(formula);
     }
 }

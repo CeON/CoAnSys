@@ -15,7 +15,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package pl.edu.icm.coansys.statisticsgenerator.jobs;
 
 import java.io.IOException;
@@ -41,6 +40,7 @@ import pl.edu.icm.coansys.models.StatisticsProtos;
 import pl.edu.icm.coansys.statisticsgenerator.mrtypes.SortedMapWritableComparable;
 import pl.edu.icm.coansys.statisticsgenerator.operationcomponents.Partitioner;
 import pl.edu.icm.coansys.statisticsgenerator.conf.StatGeneratorConfiguration;
+import pl.edu.icm.coansys.statisticsgenerator.filters.Filter;
 import pl.edu.icm.coansys.statisticsgenerator.operationcomponents.StatisticCalculator;
 
 /**
@@ -51,9 +51,9 @@ public class StatisticsGenerator implements Tool {
 
     private static Logger logger = LoggerFactory.getLogger(StatisticsGenerator.class);
     private Configuration conf;
-        
+
     public static class StatisticsMap extends Mapper<Text, BytesWritable, SortedMapWritableComparable, BytesWritable> {
-        
+
         private StatGeneratorConfiguration statGenConfiguration;
 
         @Override
@@ -66,37 +66,42 @@ public class StatisticsGenerator implements Tool {
         protected void map(Text key, BytesWritable value, Context context) throws IOException, InterruptedException {
 
             StatisticsProtos.InputEntry inputEntry = StatisticsProtos.InputEntry.parseFrom(value.copyBytes());
-            SortedMapWritableComparable outputKeyMap = new SortedMapWritableComparable();
-            Map<String, Partitioner> partitioners = statGenConfiguration.getPartitioners();
-            
-            for (StatisticsProtos.KeyValue field : inputEntry.getFieldList()) {
-                String fieldKey = field.getKey();
-                if (partitioners.containsKey(fieldKey)) {
-                    String partition = partitioners.get(fieldKey).partition(field.getValue());
-                    outputKeyMap.put(new Text(fieldKey), new Text(partition));
-                }
-            }
+            Filter inputFilter = statGenConfiguration.getInputFilter();
 
-            context.write(outputKeyMap, value);
+            if (inputFilter.filter(inputEntry)) {
+                SortedMapWritableComparable outputKeyMap = new SortedMapWritableComparable();
+                Map<String, Partitioner> partitioners = statGenConfiguration.getPartitioners();
+
+                for (StatisticsProtos.KeyValue field : inputEntry.getFieldList()) {
+                    String fieldKey = field.getKey();
+                    if (partitioners.containsKey(fieldKey)) {
+                        String[] partitions = partitioners.get(fieldKey).partition(field.getValue());
+                        for (String partition : partitions) {
+                            outputKeyMap.put(new Text(fieldKey), new Text(partition));
+                        }
+                    }
+                }
+
+                context.write(outputKeyMap, value);
+            }
         }
     }
 
-    
     public static class StatisticsReduce extends Reducer<SortedMapWritableComparable, BytesWritable, Text, BytesWritable> {
-        
+
         private StatGeneratorConfiguration statGenConfiguration;
-        
+
         @Override
         protected void setup(Context context) throws IOException, InterruptedException {
             Configuration conf = context.getConfiguration();
             statGenConfiguration = new StatGeneratorConfiguration(conf);
         }
-        
+
         @Override
         protected void reduce(SortedMapWritableComparable key, Iterable<BytesWritable> values, Context context) throws IOException, InterruptedException {
             StatisticsProtos.Statistics.Builder statisticsBuilder = StatisticsProtos.Statistics.newBuilder();
             StatisticsProtos.KeyValue.Builder kvBuilder = StatisticsProtos.KeyValue.newBuilder();
-            
+
             for (SortedMapWritableComparable.Entry<WritableComparable, Writable> partEntry : key.entrySet()) {
                 kvBuilder.clear();
                 Text kText = (Text) partEntry.getKey();
@@ -116,8 +121,6 @@ public class StatisticsGenerator implements Tool {
             context.write(new Text("abc"), new BytesWritable(statisticsBuilder.build().toByteArray()));
         }
     }
-    
-    
 
     @Override
     public int run(String[] args) throws Exception {
