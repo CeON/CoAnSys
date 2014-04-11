@@ -79,12 +79,6 @@ A1 = LOAD '$dc_m_hdfs_inputDocsData' USING $dc_m_meth_extraction_inner('org.apac
 A3 = foreach A1 generate flatten(snameDocumentMetaExtractor($1)) as (cId:chararray, sname:chararray, metadata:map[{(chararray)}]);
 A4 = FILTER A3 BY cId is not null;
 A = group A4 by sname;
-B = foreach A generate *;
-C = join A by sname, B by sname;
-D = foreach C generate flatten($1),flatten($2);
---DX = filter D by $1<$4;
-%DEFAULT twocontribs 'twocontribs'
-store D into '$dc_m_hdfs_output$twocontribs';
-E = foreach D generate  pairsCreation(*);
+E = foreach A generate  pairsCreation(*);
 %DEFAULT unnormalizedValPairs 'unnormalizedValPairs'
 store E into '$dc_m_hdfs_output$unnormalizedValPairs';
