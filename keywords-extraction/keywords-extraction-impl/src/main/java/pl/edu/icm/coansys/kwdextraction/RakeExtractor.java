@@ -23,10 +23,12 @@ import java.nio.charset.Charset;
 import java.text.BreakIterator;
 import java.util.Map.Entry;
 import java.util.*;
+
 import org.apache.commons.io.IOUtils;
 import org.jdom.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import pl.edu.icm.cermine.DocumentTextExtractor;
 import pl.edu.icm.cermine.PdfNLMContentExtractor;
 import pl.edu.icm.cermine.PdfRawTextExtractor;
@@ -46,9 +48,21 @@ public class RakeExtractor {
     private enum Lang {
 
         // language code, stopwords path
-        PL("pl", "stopwords/stopwords_pl.txt"),
-        FR("fr", "stopwords/stopwords_fr.txt"),
-        EN("en", "stopwords/stopwords_en.txt");
+//    	DE("de", "stopwords/stopwords_de.txt"),
+//    	DK("dk", "stopwords/stopwords_dk.txt"),
+    	EN("en", "stopwords/stopwords_en.txt"),
+//    	ES("es", "stopwords/stopwords_es.txt"),
+//    	FI("fi", "stopwords/stopwords_fi.txt"),
+    	FR("fr", "stopwords/stopwords_fr.txt"),
+//    	HU("hu", "stopwords/stopwords_hu.txt"),
+//    	IT("it", "stopwords/stopwords_it.txt"),
+//    	NL("nl", "stopwords/stopwords_nl.txt"),
+//    	NO("no", "stopwords/stopwords_no.txt"),
+    	PL("pl", "stopwords/stopwords_pl.txt");
+//    	PT("pt", "stopwords/stopwords_pt.txt"),
+//    	RU("ru", "stopwords/stopwords_ru.txt"),
+//    	SE("se", "stopwords/stopwords_se.txt"),
+//    	TR("tr", "stopwords/stopwords_tr.txt");
         private String langCode;
         private String stopwordsPath;
 
@@ -395,14 +409,16 @@ public class RakeExtractor {
     public List<String> getKeywords(int n) {
         return choiceKeywords(n);
     }
-
+    
     private void setLang(String langCode) {
-        if ("fr".equals(langCode)) {
-            this.lang = Lang.FR;
-        } else if ("pl".equals(langCode)) {
-            this.lang = Lang.PL;
-        } else {
-            this.lang = Lang.EN;
+        this.lang = null;
+        for(Lang curr : Lang.values()){
+        	curr.langCode.equals(langCode);
+        	this.lang = curr;
+        	break;
+        }
+        if(this.lang==null){
+        	this.lang = Lang.EN;
         }
     }
 
