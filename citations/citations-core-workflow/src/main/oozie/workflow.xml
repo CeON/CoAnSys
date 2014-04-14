@@ -208,6 +208,71 @@
                 </property>
             </configuration>
         </map-reduce>
+        <ok to="unmatched"/>
+        <error to="fail"/>
+    </action>
+
+    <action name="unmatched">
+        <map-reduce>
+            <configuration>
+                <property>
+                    <name>mapreduce.inputformat.class</name>
+                    <value>org.apache.hadoop.mapreduce.lib.input.DelegatingInputFormat</value>
+                </property>
+                <property>
+                    <name>mapreduce.map.class</name>
+                    <value>org.apache.hadoop.mapreduce.lib.input.DelegatingMapper</value>
+                </property>
+                <property>
+                    <name>mapred.input.dir.mappers</name>
+                    <value>
+                        ${sourceEntities};pl.edu.icm.coansys.citations.mappers.CitationsMarker,${workingDirectory}/heuristic;pl.edu.icm.coansys.citations.mappers.HeuristicMarker
+                    </value>
+                </property>
+                <property>
+                    <name>mapred.input.dir.formats</name>
+                    <value>
+                        ${sourceEntities};org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat,${workingDirectory}/heuristic;org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat
+                    </value>
+                </property>
+                <property>
+                    <name>mapred.mapoutput.key.class</name>
+                    <value>pl.edu.icm.coansys.citations.data.MarkedText</value>
+                </property>
+                <property>
+                    <name>mapred.mapoutput.value.class</name>
+                    <value>pl.edu.icm.coansys.citations.data.MarkedBytesWritable</value>
+                </property>
+                <property>
+                    <name>mapreduce.partitioner.class</name>
+                    <value>pl.edu.icm.coansys.citations.data.MarkedTextPartitioner</value>
+                </property>
+                <property>
+                    <name>mapred.output.value.groupfn.class</name>
+                    <value>pl.edu.icm.coansys.citations.data.MarkedTextGroupComparator</value>
+                </property>
+                <property>
+                    <name>mapred.output.key.comparator.class</name>
+                    <value>pl.edu.icm.coansys.citations.data.MarkedTextSortComparator</value>
+                </property>
+                <property>
+                    <name>mapreduce.reduce.class</name>
+                    <value>pl.edu.icm.coansys.citations.reducers.Unmatched</value>
+                </property>
+                <property>
+                    <name>mapred.output.dir</name>
+                    <value>${workingDirectory}/unmatched</value>
+                </property>
+                <property>
+                    <name>mapred.output.key.class</name>
+                    <value>org.apache.hadoop.io.Text</value>
+                </property>
+                <property>
+                    <name>mapred.output.value.class</name>
+                    <value>org.apache.hadoop.io.BytesWritable</value>
+                </property>
+            </configuration>
+        </map-reduce>
         <ok to="doc-attacher"/>
         <error to="fail"/>
     </action>
