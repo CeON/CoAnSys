@@ -237,13 +237,13 @@
                 <property>
                     <name>mapred.input.dir.mappers</name>
                     <value>
-                        ${sourceEntities};pl.edu.icm.coansys.citations.mappers.CitationsMarker,${workingDirectory}/heuristic;pl.edu.icm.coansys.citations.mappers.HeuristicMarker
+                        ${sourceEntities};pl.edu.icm.coansys.citations.mappers.CitationsMarker,${output};pl.edu.icm.coansys.citations.mappers.HeuristicMarker
                     </value>
                 </property>
                 <property>
                     <name>mapred.input.dir.formats</name>
                     <value>
-                        ${sourceEntities};org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat,${workingDirectory}/heuristic;org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat
+                        ${sourceEntities};org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat,${output};org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat
                     </value>
                 </property>
                 <property>
@@ -272,7 +272,7 @@
                 </property>
                 <property>
                     <name>mapred.output.dir</name>
-                    <value>${workingDirectory}/unmatched</value>
+                    <value>${unmatched}</value>
                 </property>
                 <property>
                     <name>mapred.output.key.class</name>
