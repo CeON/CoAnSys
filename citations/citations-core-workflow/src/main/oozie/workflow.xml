@@ -109,11 +109,11 @@
                 </property>
                 <property>
                     <name>sourceEntities</name>
-                    <value>${workingDirectory}/source_entities</value>
+                    <value>${sourceEntities}</value>
                 </property>
                 <property>
                     <name>destinationEntities</name>
-                    <value>${workingDirectory}/destination_entities</value>
+                    <value>${destinationEntities}</value>
                 </property>
                 <property>
                     <name>output</name>

@@ -16,7 +16,7 @@
   ~ along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<workflow-app xmlns="uri:oozie:workflow:0.4" name="citations-core-workflow">
+<workflow-app xmlns="uri:oozie:workflow:0.4" name="citations-core-heuristic-workflow">
     <parameters>
         <property>
             <name>jobTracker</name>
@@ -50,7 +50,7 @@
         </property>
         <property>
             <name>unmatched</name>
-            <value></value>
+            <value>SKIP_UNMATCHED_COMPUTATION</value>
         </property>
     </parameters>
     <global>
@@ -218,7 +218,7 @@
 
     <decision name="need-unmatched">
         <switch>
-            <case to="end">${empty unmatched}</case>
+            <case to="end">${unmatched == "SKIP_UNMATCHED_COMPUTATION"}</case>
             <default to="unmatched"/>
         </switch>
     </decision>
