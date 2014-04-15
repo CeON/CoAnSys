@@ -29,6 +29,10 @@
             <value>default</value>
         </property>
         <property>
+            <name>reduceTasks</name>
+            <value>36</value>
+        </property>
+        <property>
             <name>workingDirectory</name>
             <value>${workingDir}</value>
         </property>
@@ -78,13 +82,9 @@
                 <name>mapreduce.outputformat.class</name>
                 <value>org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat</value>
             </property>
-            <!--<property>-->
-                <!--<name>mapred.max.split.size</name>-->
-                <!--<value>500000000</value>-->
-            <!--</property>-->
             <property>
                 <name>mapred.reduce.tasks</name>
-                <value>36</value>
+                <value>${reduceTasks}</value>
             </property>
         </configuration>
     </global>

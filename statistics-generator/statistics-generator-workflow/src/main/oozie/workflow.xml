@@ -70,8 +70,8 @@
                     <value>${input_filter_classes}</value>
                 </property>
                 <property>
-                    <name>input_filter_args</name>
-                    <value>${input_filter_args}</value>
+                    <name>input_filter_classes_args</name>
+                    <value>${input_filter_classes_args}</value>
                 </property>
                 <property>
                     <name>input_filter_formula</name>
