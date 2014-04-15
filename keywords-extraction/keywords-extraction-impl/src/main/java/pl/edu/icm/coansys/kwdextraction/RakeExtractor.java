@@ -413,9 +413,10 @@ public class RakeExtractor {
     private void setLang(String langCode) {
         this.lang = null;
         for(Lang curr : Lang.values()){
-        	curr.langCode.equals(langCode);
-        	this.lang = curr;
-        	break;
+        	if(curr.langCode.equals(langCode)){
+        		this.lang = curr;
+            	break;
+        	}
         }
         if(this.lang==null){
         	this.lang = Lang.EN;
