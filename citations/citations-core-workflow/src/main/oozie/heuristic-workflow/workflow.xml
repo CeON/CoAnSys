@@ -1,6 +1,6 @@
 <!--
   ~ This file is part of CoAnSys project.
-  ~ Copyright (c) 2012-2013 ICM-UW
+  ~ Copyright (c) 2012-2014 ICM-UW
   ~
   ~ CoAnSys is free software: you can redistribute it and/or modify
   ~ it under the terms of the GNU Affero General Public License as published by
@@ -47,6 +47,10 @@
         </property>
         <property>
             <name>output</name>
+        </property>
+        <property>
+            <name>unmatched</name>
+            <value></value>
         </property>
     </parameters>
     <global>
@@ -99,33 +103,6 @@
     </action>
 
     <action name="heuristic">
-        <sub-workflow>
-            <app-path>${wf:appPath()}/heuristic-workflow</app-path>
-            <propagate-configuration/>
-            <configuration>
-                <property>
-                    <name>workingDirectory</name>
-                    <value>${workingDirectory}/heuristic_workflow</value>
-                </property>
-                <property>
-                    <name>sourceEntities</name>
-                    <value>${workingDirectory}/source_entities</value>
-                </property>
-                <property>
-                    <name>destinationEntities</name>
-                    <value>${workingDirectory}/destination_entities</value>
-                </property>
-                <property>
-                    <name>output</name>
-                    <value>${workingDirectory}/heuristic</value>
-                </property>
-            </configuration>
-        </sub-workflow>
-        <ok to="doc-attacher"/>
-        <error to="fail"/>
-    </action>
-
-    <action name="doc-attacher">
         <map-reduce>
             <configuration>
                 <property>
@@ -139,91 +116,22 @@
                 <property>
                     <name>mapred.input.dir.mappers</name>
                     <value>
-                        ${workingDirectory}/heuristic;pl.edu.icm.coansys.citations.mappers.SwapperMarker,${destinationEntities};pl.edu.icm.coansys.citations.mappers.EntityMarker
+                        ${sourceEntities};pl.edu.icm.coansys.citations.mappers.OptimisticCitationHashGenerator,${destinationEntities};pl.edu.icm.coansys.citations.mappers.DocumentHashGenerator
                     </value>
                 </property>
                 <property>
-                    <name>mapred.input.dir.formats</name>
-                    <value>
-                        ${workingDirectory}/heuristic;org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat,${destinationEntities};org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat
-                    </value>
-                </property>
-                <property>
-                    <name>coansys.citations.mark.entities</name>
-                    <value>true</value>
-                </property>
-                <property>
-                    <name>coansys.citations.mark.ids</name>
+                    <name>coansys.citations.mark.citations</name>
                     <value>false</value>
                 </property>
                 <property>
-                    <name>mapred.mapoutput.key.class</name>
-                    <value>pl.edu.icm.coansys.citations.data.MarkedText</value>
-                </property>
-                <property>
-                    <name>mapred.mapoutput.value.class</name>
-                    <value>pl.edu.icm.coansys.citations.data.TextWithBytesWritable</value>
-                </property>
-                <property>
-                    <name>mapreduce.partitioner.class</name>
-                    <value>pl.edu.icm.coansys.citations.data.MarkedTextPartitioner</value>
-                </property>
-                <property>
-                    <name>mapred.output.value.groupfn.class</name>
-                    <value>pl.edu.icm.coansys.citations.data.MarkedTextGroupComparator</value>
-                </property>
-                <property>
-                    <name>mapred.output.key.comparator.class</name>
-                    <value>pl.edu.icm.coansys.citations.data.MarkedTextSortComparator</value>
-                </property>
-                <property>
-                    <name>mapreduce.reduce.class</name>
-                    <value>pl.edu.icm.coansys.citations.reducers.DocumentAttacher</value>
-                </property>
-                <property>
-                    <name>mapred.output.dir</name>
-                    <value>${workingDirectory}/heuristic_with_docs</value>
-                </property>
-                <property>
-                    <name>mapred.output.key.class</name>
-                    <value>pl.edu.icm.coansys.citations.data.MarkedText</value>
-                </property>
-                <property>
-                    <name>mapred.output.value.class</name>
-                    <value>pl.edu.icm.coansys.citations.data.TextWithBytesWritable</value>
-                </property>
-            </configuration>
-        </map-reduce>
-        <ok to="cit-attacher-and-preassessor"/>
-        <error to="fail"/>
-    </action>
-
-    <action name="cit-attacher-and-preassessor">
-        <map-reduce>
-            <configuration>
-                <property>
-                    <name>mapreduce.inputformat.class</name>
-                    <value>org.apache.hadoop.mapreduce.lib.input.DelegatingInputFormat</value>
-                </property>
-                <property>
-                    <name>mapreduce.map.class</name>
-                    <value>org.apache.hadoop.mapreduce.lib.input.DelegatingMapper</value>
-                </property>
-                <property>
-                    <name>mapred.input.dir.mappers</name>
-                    <value>
-                        ${workingDirectory}/heuristic_with_docs;org.apache.hadoop.mapreduce.Mapper,${sourceEntities};pl.edu.icm.coansys.citations.mappers.EntityMarker
-                    </value>
+                    <name>coansys.citations.mark.documents</name>
+                    <value>true</value>
                 </property>
                 <property>
                     <name>mapred.input.dir.formats</name>
                     <value>
-                        ${workingDirectory}/heuristic_with_docs;org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat,${sourceEntities};org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat
+                        ${sourceEntities};org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat,${destinationEntities};org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat
                     </value>
-                </property>
-                <property>
-                    <name>coansys.citations.mark.entities</name>
-                    <value>true</value>
                 </property>
                 <property>
                     <name>mapred.mapoutput.key.class</name>
@@ -231,7 +139,7 @@
                 </property>
                 <property>
                     <name>mapred.mapoutput.value.class</name>
-                    <value>pl.edu.icm.coansys.citations.data.TextWithBytesWritable</value>
+                    <value>pl.edu.icm.coansys.citations.data.MarkedText</value>
                 </property>
                 <property>
                     <name>mapreduce.partitioner.class</name>
@@ -247,59 +155,132 @@
                 </property>
                 <property>
                     <name>mapreduce.reduce.class</name>
-                    <value>pl.edu.icm.coansys.citations.reducers.CitationAttacherPreassessor</value>
+                    <value>pl.edu.icm.coansys.citations.reducers.HashJoiner</value>
                 </property>
                 <property>
                     <name>mapred.output.dir</name>
-                    <value>${workingDirectory}/to_assess</value>
+                    <value>${workingDirectory}/heuristic_with_dups</value>
                 </property>
                 <property>
                     <name>mapred.output.key.class</name>
-                    <value>org.apache.hadoop.io.BytesWritable</value>
+                    <value>org.apache.hadoop.io.Text</value>
                 </property>
                 <property>
                     <name>mapred.output.value.class</name>
-                    <value>org.apache.hadoop.io.BytesWritable</value>
+                    <value>org.apache.hadoop.io.Text</value>
                 </property>
             </configuration>
         </map-reduce>
-        <ok to="assessor"/>
+        <ok to="distinctor"/>
         <error to="fail"/>
     </action>
-    
-    <action name="assessor">
+
+    <action name="distinctor">
         <map-reduce>
-            <prepare>
-                <delete path="${output}"/>
-            </prepare>
             <configuration>
                 <property>
                     <name>mapreduce.map.class</name>
-                    <value>pl.edu.icm.coansys.citations.mappers.EntityAssesor</value>
+                    <value>pl.edu.icm.coansys.citations.mappers.IdCombiner</value>
                 </property>
                 <property>
                     <name>mapreduce.reduce.class</name>
-                    <value>pl.edu.icm.coansys.citations.reducers.BestSelector</value>
-                </property>
-                <property>
-                    <name>mapreduce.combine.class</name>
-                    <value>pl.edu.icm.coansys.citations.reducers.BestSelector</value>
+                    <value>pl.edu.icm.coansys.citations.reducers.IdDistinctorExtractor</value>
                 </property>
                 <property>
                     <name>mapred.input.dir</name>
-                    <value>${workingDirectory}/to_assess</value>
+                    <value>${workingDirectory}/heuristic_with_dups</value>
                 </property>
                 <property>
                     <name>mapred.output.dir</name>
                     <value>${output}</value>
                 </property>
                 <property>
+                    <name>mapred.mapoutput.key.class</name>
+                    <value>org.apache.hadoop.io.Text</value>
+                </property>
+                <property>
+                    <name>mapred.mapoutput.value.class</name>
+                    <value>org.apache.hadoop.io.NullWritable</value>
+                </property>
+                <property>
                     <name>mapred.output.key.class</name>
-                    <value>pl.edu.icm.coansys.citations.data.TextWithBytesWritable</value>
+                    <value>org.apache.hadoop.io.Text</value>
                 </property>
                 <property>
                     <name>mapred.output.value.class</name>
                     <value>org.apache.hadoop.io.Text</value>
+                </property>
+            </configuration>
+        </map-reduce>
+        <ok to="need-unmatched"/>
+        <error to="fail"/>
+    </action>
+
+    <decision name="need-unmatched">
+        <switch>
+            <case to="end">${empty unmatched}</case>
+            <default to="unmatched"/>
+        </switch>
+    </decision>
+
+    <action name="unmatched">
+        <map-reduce>
+            <configuration>
+                <property>
+                    <name>mapreduce.inputformat.class</name>
+                    <value>org.apache.hadoop.mapreduce.lib.input.DelegatingInputFormat</value>
+                </property>
+                <property>
+                    <name>mapreduce.map.class</name>
+                    <value>org.apache.hadoop.mapreduce.lib.input.DelegatingMapper</value>
+                </property>
+                <property>
+                    <name>mapred.input.dir.mappers</name>
+                    <value>
+                        ${sourceEntities};pl.edu.icm.coansys.citations.mappers.CitationsMarker,${workingDirectory}/heuristic;pl.edu.icm.coansys.citations.mappers.HeuristicMarker
+                    </value>
+                </property>
+                <property>
+                    <name>mapred.input.dir.formats</name>
+                    <value>
+                        ${sourceEntities};org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat,${workingDirectory}/heuristic;org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat
+                    </value>
+                </property>
+                <property>
+                    <name>mapred.mapoutput.key.class</name>
+                    <value>pl.edu.icm.coansys.citations.data.MarkedText</value>
+                </property>
+                <property>
+                    <name>mapred.mapoutput.value.class</name>
+                    <value>pl.edu.icm.coansys.citations.data.MarkedBytesWritable</value>
+                </property>
+                <property>
+                    <name>mapreduce.partitioner.class</name>
+                    <value>pl.edu.icm.coansys.citations.data.MarkedTextPartitioner</value>
+                </property>
+                <property>
+                    <name>mapred.output.value.groupfn.class</name>
+                    <value>pl.edu.icm.coansys.citations.data.MarkedTextGroupComparator</value>
+                </property>
+                <property>
+                    <name>mapred.output.key.comparator.class</name>
+                    <value>pl.edu.icm.coansys.citations.data.MarkedTextSortComparator</value>
+                </property>
+                <property>
+                    <name>mapreduce.reduce.class</name>
+                    <value>pl.edu.icm.coansys.citations.reducers.Unmatched</value>
+                </property>
+                <property>
+                    <name>mapred.output.dir</name>
+                    <value>${workingDirectory}/unmatched</value>
+                </property>
+                <property>
+                    <name>mapred.output.key.class</name>
+                    <value>org.apache.hadoop.io.Text</value>
+                </property>
+                <property>
+                    <name>mapred.output.value.class</name>
+                    <value>org.apache.hadoop.io.BytesWritable</value>
                 </property>
             </configuration>
         </map-reduce>
