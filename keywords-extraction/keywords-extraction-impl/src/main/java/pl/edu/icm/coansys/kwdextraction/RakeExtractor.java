@@ -15,7 +15,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package pl.edu.icm.coansys.kwdextraction;
 
 import java.io.*;
@@ -48,21 +47,21 @@ public class RakeExtractor {
     private enum Lang {
 
         // language code, stopwords path
-//    	DE("de", "stopwords/stopwords_de.txt"),
-//    	DK("dk", "stopwords/stopwords_dk.txt"),
-    	EN("en", "stopwords/stopwords_en.txt"),
-//    	ES("es", "stopwords/stopwords_es.txt"),
-//    	FI("fi", "stopwords/stopwords_fi.txt"),
-    	FR("fr", "stopwords/stopwords_fr.txt"),
-//    	HU("hu", "stopwords/stopwords_hu.txt"),
-//    	IT("it", "stopwords/stopwords_it.txt"),
-//    	NL("nl", "stopwords/stopwords_nl.txt"),
-//    	NO("no", "stopwords/stopwords_no.txt"),
-    	PL("pl", "stopwords/stopwords_pl.txt");
-//    	PT("pt", "stopwords/stopwords_pt.txt"),
-//    	RU("ru", "stopwords/stopwords_ru.txt"),
-//    	SE("se", "stopwords/stopwords_se.txt"),
-//    	TR("tr", "stopwords/stopwords_tr.txt");
+        DE("de", "stopwords/stopwords_de.txt"),
+        DK("dk", "stopwords/stopwords_dk.txt"),
+        EN("en", "stopwords/stopwords_en.txt"),
+        ES("es", "stopwords/stopwords_es.txt"),
+        FI("fi", "stopwords/stopwords_fi.txt"),
+        FR("fr", "stopwords/stopwords_fr.txt"),
+        HU("hu", "stopwords/stopwords_hu.txt"),
+        IT("it", "stopwords/stopwords_it.txt"),
+        NL("nl", "stopwords/stopwords_nl.txt"),
+        NO("no", "stopwords/stopwords_no.txt"),
+        PL("pl", "stopwords/stopwords_pl.txt"),
+        PT("pt", "stopwords/stopwords_pt.txt"),
+        RU("ru", "stopwords/stopwords_ru.txt"),
+        SE("se", "stopwords/stopwords_se.txt"),
+        TR("tr", "stopwords/stopwords_tr.txt");
         private String langCode;
         private String stopwordsPath;
 
@@ -108,12 +107,10 @@ public class RakeExtractor {
     }
 
     /**
-     * Every constructor sets this.content (document's content) and calls
-     * prepareToExtraction()
+     * Every constructor sets this.content (document's content) and calls prepareToExtraction()
      *
      * @param content Document's content as a String
-     * @param langCode Document's language (texts in other languages will be
-     * ignored)
+     * @param langCode Document's language (texts in other languages will be ignored)
      * @throws IOException
      */
     public RakeExtractor(String content, String langCode) throws IOException {
@@ -123,12 +120,10 @@ public class RakeExtractor {
     }
 
     /**
-     * Every constructor sets this.content (document's content) and calls
-     * prepareToExtraction()
+     * Every constructor sets this.content (document's content) and calls prepareToExtraction()
      *
      * @param pdfContent Byte array containing a PDF file
-     * @param langCode Document's language (texts in other languages will be
-     * ignored)
+     * @param langCode Document's language (texts in other languages will be ignored)
      * @throws AnalysisException
      * @throws IOException
      */
@@ -139,13 +134,11 @@ public class RakeExtractor {
     }
 
     /**
-     * Every constructor sets this.content (document's content) and calls
-     * prepareToExtraction()
+     * Every constructor sets this.content (document's content) and calls prepareToExtraction()
      *
      * @param docWrapper Protocol buffers message containing document
-     * @param option specifies which parts of the document are searched while
-     * extracting keywords. Possible values: ABSTRACT - only the abstract is
-     * processed, CONTENT - on the body of the document is processed,
+     * @param option specifies which parts of the document are searched while extracting keywords. Possible values:
+     * ABSTRACT - only the abstract is processed, CONTENT - on the body of the document is processed,
      * CONTENT_AND_ABSTRACT - both abstract and body are processed.
      * @throws IOException
      */
@@ -183,8 +176,7 @@ public class RakeExtractor {
      * Extract text from pdf stream
      *
      * @param pdfContent content of pdf file
-     * @param lang Document's language (texts in other languages will be
-     * ignored)
+     * @param lang Document's language (texts in other languages will be ignored)
      * @return String object containing document content
      * @throws IOException
      * @throws AnalysisException
@@ -220,8 +212,7 @@ public class RakeExtractor {
     }
 
     /**
-     * All steps of keyword extraction. Not to be called before setting of
-     * this.content, this.lang and this.option.
+     * All steps of keyword extraction. Not to be called before setting of this.content, this.lang and this.option.
      *
      * @throws IOException
      */
@@ -246,7 +237,7 @@ public class RakeExtractor {
         BufferedReader br = null;
 
         stopwordsStream = RakeExtractor.class.getClassLoader().getResourceAsStream(lang.stopwordsPath);
-        
+
         try {
             isr = new InputStreamReader(stopwordsStream, Charset.forName("UTF-8"));
             br = new BufferedReader(isr);
@@ -259,16 +250,14 @@ public class RakeExtractor {
                 }
                 stopword = br.readLine();
             }
-        }
-        finally {
+        } finally {
             IOUtils.closeQuietly(br);
         }
         return result;
     }
 
     /**
-     * Finding words or word sequences separated by stopwords, punctuation marks
-     * etc.
+     * Finding words or word sequences separated by stopwords, punctuation marks etc.
      */
     private void extractKeywordCandidates() {
 
@@ -412,14 +401,15 @@ public class RakeExtractor {
     
     private void setLang(String langCode) {
         this.lang = null;
-        for(Lang curr : Lang.values()){
-        	if(curr.langCode.equals(langCode)){
-        		this.lang = curr;
-            	break;
-        	}
+        for (Lang curr : Lang.values()) {
+            if (curr.langCode.equals(langCode)) {
+                this.lang = curr;
+                System.err.println("Wykryty język: " + langCode);
+                break;
+            }
         }
-        if(this.lang==null){
-        	this.lang = Lang.EN;
+        if (this.lang == null) {
+            this.lang = Lang.EN;
         }
     }
 
