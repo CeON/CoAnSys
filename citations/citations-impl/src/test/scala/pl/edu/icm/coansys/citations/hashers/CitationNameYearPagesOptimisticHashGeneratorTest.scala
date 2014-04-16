@@ -23,24 +23,16 @@ import org.apache.hadoop.mrunit.mapreduce.MapDriver
 import org.junit.Assert.assertEquals
 import org.testng.annotations.Test
 import pl.edu.icm.coansys.citations.data.{MarkedText, MatchableEntity}
+import pl.edu.icm.coansys.citations.mappers.CitationHashGenerator
 
 /**
-  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
-  */
-class DocumentHashGeneratorTest {
-   @Test(groups = Array("fast"))
-   def generateTest() {
-     val entity = MatchableEntity.fromParameters(id = "1", author = "Kowalski", year = "2002", pages = "1-5")
-     val hashes = new DocumentHashGenerator().generate(entity)
-     assertEquals(Set(
-       "kowalski#2001#0#4", "kowalski#2002#0#4", "kowalski#2003#0#4",
-       "kowalski#2001#0#5", "kowalski#2002#0#5", "kowalski#2003#0#5",
-       "kowalski#2001#0#6", "kowalski#2002#0#6", "kowalski#2003#0#6",
-       "kowalski#2001#1#4", "kowalski#2002#1#4", "kowalski#2003#1#4",
-       "kowalski#2001#1#5", "kowalski#2002#1#5", "kowalski#2003#1#5",
-       "kowalski#2001#1#6", "kowalski#2002#1#6", "kowalski#2003#1#6",
-       "kowalski#2001#2#4", "kowalski#2002#2#4", "kowalski#2003#2#4",
-       "kowalski#2001#2#5", "kowalski#2002#2#5", "kowalski#2003#2#5",
-       "kowalski#2001#2#6", "kowalski#2002#2#6", "kowalski#2003#2#6"), hashes.toSet)
-   }
+ * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
+ */
+class CitationNameYearPagesOptimisticHashGeneratorTest {
+  @Test(groups = Array("fast"))
+  def generateTest() {
+    val entity = MatchableEntity.fromParameters(id = "1", author = "Jan Kowalski", year = "2002", pages = "1-5")
+    val hashes = new CitationNameYearPagesOptimisticHashGenerator().generate(entity)
+    assertEquals(Set("jan#2002#1#5", "kowalski#2002#1#5"), hashes.toSet)
+  }
 }

@@ -18,21 +18,20 @@
 
 package pl.edu.icm.coansys.citations.hashers
 
-import org.apache.hadoop.io.{NullWritable, BytesWritable}
-import org.apache.hadoop.mrunit.mapreduce.MapDriver
-import org.junit.Assert.assertEquals
-import org.testng.annotations.Test
-import pl.edu.icm.coansys.citations.data.{MarkedText, MatchableEntity}
-import pl.edu.icm.coansys.citations.mappers.CitationHashGenerator
+import pl.edu.icm.coansys.citations.data.MatchableEntity
+import pl.edu.icm.coansys.citations.hashers.util._
+import pl.edu.icm.coansys.citations.util.misc
+import pl.edu.icm.coansys.citations.util.misc._
+import scala.util.Try
+
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
-class OptimisticCitationHashGeneratorTest {
-  @Test(groups = Array("fast"))
-  def generateTest() {
-    val entity = MatchableEntity.fromParameters(id = "1", author = "Jan Kowalski", year = "2002", pages = "1-5")
-    val hashes = new OptimisticCitationHashGenerator().generate(entity)
-    assertEquals(Set("jan#2002#1#5", "kowalski#2002#1#5"), hashes.toSet)
-  }
+class DocumentNameYearHashGenerator extends HashGenerator {
+  override def generate(entity: MatchableEntity): Iterable[String] = for {
+    author <- misc.lettersNormaliseTokenise(entity.author).filterNot(stopWords).distinct.take(4)
+    year <- digitsNormaliseTokenise(entity.year).filter(_.length == 4).flatMap(x => Try(x.toInt).toOption).filter(x => x < 2050 && x > 1900)
+    bluredYear <- blur(year)
+  } yield List(author, bluredYear).mkString("#")
 }

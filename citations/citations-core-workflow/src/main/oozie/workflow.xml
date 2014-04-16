@@ -117,11 +117,11 @@
                 </property>
                 <property>
                     <name>citationHasher</name>
-                    <value>pl.edu.icm.coansys.citations.hashers.OptimisticCitationHashGenerator</value>
+                    <value>pl.edu.icm.coansys.citations.hashers.CitationNameYearPagesOptimisticHashGenerator</value>
                 </property>
                 <property>
                     <name>documentHasher</name>
-                    <value>pl.edu.icm.coansys.citations.hashers.DocumentHashGenerator</value>
+                    <value>pl.edu.icm.coansys.citations.hashers.DocumentNameYearPagesHashGenerator</value>
                 </property>
                 <property>
                     <name>unmatched</name>

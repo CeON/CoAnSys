@@ -18,18 +18,22 @@
 
 package pl.edu.icm.coansys.citations.hashers
 
+import pl.edu.icm.ceon.scala_commons.collections
 import pl.edu.icm.coansys.citations.data.MatchableEntity
 import pl.edu.icm.coansys.citations.util.misc._
+import pl.edu.icm.coansys.citations.hashers.util._
 import scala.util.Try
-import pl.edu.icm.ceon.scala_commons.collections
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
-class OptimisticCitationHashGenerator extends HashGenerator {
-  def generate(entity: MatchableEntity) = for {
-    author <- lettersNormaliseTokenise(entity.author).filterNot(stopWords).distinct.take(4)
-    year <- digitsNormaliseTokenise(entity.year).filter(_.length == 4).flatMap(x => Try(x.toInt).toOption).filter(x => x < 2050 && x > 1900)
-    (bpage, epage) <- collections.sortedPairs(collections.excludeOne(digitsNormaliseTokenise(entity.pages).flatMap(x => Try(x.toInt).toOption), (x:Int) => x == year))
-  } yield List(author, year, bpage, epage).mkString("#")
+class CitationNameYearPagesHashGenerator extends HashGenerator {
+  def generate(entity: MatchableEntity) = {
+    val text = entity.rawText.getOrElse(genText(entity))
+    for {
+      author <- lettersNormaliseTokenise(text).filterNot(stopWords).distinct.take(4)
+      year <- digitsNormaliseTokenise(text).filter(_.length == 4).flatMap(x => Try(x.toInt).toOption).filter(x => x < 2050 && x > 1900)
+      (bpage, epage) <- collections.sortedPairs(collections.excludeOne(digitsNormaliseTokenise(text).flatMap(x => Try(x.toInt).toOption), (x:Int) => x == year))
+    } yield List(author, year, bpage, epage).mkString("#")
+  }
 }

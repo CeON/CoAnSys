@@ -22,7 +22,7 @@ import org.apache.hadoop.io.{BytesWritable, Writable}
 import org.apache.hadoop.mapreduce.Mapper
 import pl.edu.icm.coansys.citations.data.{MatchableEntity, MarkedBytesWritable, MarkedText}
 import pl.edu.icm.coansys.citations.util.misc._
-import pl.edu.icm.coansys.citations.hashers.OptimisticCitationHashGenerator
+import pl.edu.icm.coansys.citations.hashers.CitationNameYearPagesOptimisticHashGenerator
 
 /**
  * Takes citation entity as a value and generates (hash, entity id) pairs.

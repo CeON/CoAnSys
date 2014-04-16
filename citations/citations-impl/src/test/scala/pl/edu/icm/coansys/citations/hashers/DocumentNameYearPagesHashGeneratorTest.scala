@@ -16,28 +16,31 @@
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.edu.icm.coansys.citations.mappers
+package pl.edu.icm.coansys.citations.hashers
 
 import org.apache.hadoop.io.{NullWritable, BytesWritable}
 import org.apache.hadoop.mrunit.mapreduce.MapDriver
+import org.junit.Assert.assertEquals
 import org.testng.annotations.Test
 import pl.edu.icm.coansys.citations.data.{MarkedText, MatchableEntity}
 
 /**
   * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
   */
-class CitationHashGeneratorTest {
+class DocumentNameYearPagesHashGeneratorTest {
    @Test(groups = Array("fast"))
-   def mapperByteCopyTest() {
-     val entity = MatchableEntity.fromParameters(id = "1", author = "Jan Kowalski", year = "2002", pages = "1-5")
-     val driver = MapDriver.newMapDriver(new CitationHashGenerator)
-
-     driver.addInput(NullWritable.get(), new BytesWritable(entity.data.toByteArray))
-     driver.getConfiguration.setBoolean("coansys.citations.mark.citations", false)
-     driver.getConfiguration.set("coansys.citations.citation.hasher", "pl.edu.icm.coansys.citations.hashers.CitationNameYearPagesOptimisticHashGenerator")
-     driver.addOutput(new MarkedText("jan#2002#1#5"), new MarkedText("1"))
-     driver.addOutput(new MarkedText("kowalski#2002#1#5"), new MarkedText("1"))
-
-     driver.runTest(false)
+   def generateTest() {
+     val entity = MatchableEntity.fromParameters(id = "1", author = "Kowalski", year = "2002", pages = "1-5")
+     val hashes = new DocumentNameYearPagesHashGenerator().generate(entity)
+     assertEquals(Set(
+       "kowalski#2001#0#4", "kowalski#2002#0#4", "kowalski#2003#0#4",
+       "kowalski#2001#0#5", "kowalski#2002#0#5", "kowalski#2003#0#5",
+       "kowalski#2001#0#6", "kowalski#2002#0#6", "kowalski#2003#0#6",
+       "kowalski#2001#1#4", "kowalski#2002#1#4", "kowalski#2003#1#4",
+       "kowalski#2001#1#5", "kowalski#2002#1#5", "kowalski#2003#1#5",
+       "kowalski#2001#1#6", "kowalski#2002#1#6", "kowalski#2003#1#6",
+       "kowalski#2001#2#4", "kowalski#2002#2#4", "kowalski#2003#2#4",
+       "kowalski#2001#2#5", "kowalski#2002#2#5", "kowalski#2003#2#5",
+       "kowalski#2001#2#6", "kowalski#2002#2#6", "kowalski#2003#2#6"), hashes.toSet)
    }
- }
+}
