@@ -116,6 +116,14 @@
                     <value>${destinationEntities}</value>
                 </property>
                 <property>
+                    <name>citationHasher</name>
+                    <value>pl.edu.icm.coansys.citations.hashers.OptimisticCitationHashGenerator</value>
+                </property>
+                <property>
+                    <name>documentHasher</name>
+                    <value>pl.edu.icm.coansys.citations.hashers.DocumentHashGenerator</value>
+                </property>
+                <property>
                     <name>unmatched</name>
                     <value>${workingDirectory}/unmatched</value>
                 </property>

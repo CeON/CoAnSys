@@ -46,6 +46,12 @@
             <name>destinationEntities</name>
         </property>
         <property>
+            <name>citationHasher</name>
+        </property>
+        <property>
+            <name>documentHasher</name>
+        </property>
+        <property>
             <name>output</name>
         </property>
         <property>
@@ -116,12 +122,20 @@
                 <property>
                     <name>mapred.input.dir.mappers</name>
                     <value>
-                        ${sourceEntities};pl.edu.icm.coansys.citations.mappers.OptimisticCitationHashGenerator,${destinationEntities};pl.edu.icm.coansys.citations.mappers.DocumentHashGenerator
+                        ${sourceEntities};pl.edu.icm.coansys.citations.mappers.CitationHashGenerator,${destinationEntities};pl.edu.icm.coansys.citations.mappers.DocumentHashGenerator
                     </value>
+                </property>
+                <property>
+                    <name>coansys.citations.citation.hasher</name>
+                    <value>${citationHasher}</value>
                 </property>
                 <property>
                     <name>coansys.citations.mark.citations</name>
                     <value>false</value>
+                </property>
+                <property>
+                    <name>coansys.citations.document.hasher</name>
+                    <value>${documentHasher}</value>
                 </property>
                 <property>
                     <name>coansys.citations.mark.documents</name>
