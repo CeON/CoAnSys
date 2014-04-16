@@ -94,22 +94,100 @@
             <delete path="${workingDirectory}"/>
             <mkdir path="${workingDirectory}"/>
         </fs>
-        <ok to="heuristic"/>
+        <ok to="heuristic-1"/>
         <error to="fail"/>
     </action>
 
-    <action name="heuristic">
+    <action name="heuristic-1">
         <sub-workflow>
             <app-path>${wf:appPath()}/heuristic-workflow</app-path>
             <propagate-configuration/>
             <configuration>
                 <property>
                     <name>workingDirectory</name>
-                    <value>${workingDirectory}/heuristic_workflow</value>
+                    <value>${workingDirectory}/heuristic-1_workflow</value>
                 </property>
                 <property>
                     <name>sourceEntities</name>
                     <value>${sourceEntities}</value>
+                </property>
+                <property>
+                    <name>destinationEntities</name>
+                    <value>${destinationEntities}</value>
+                </property>
+                <property>
+                    <name>citationHasher</name>
+                    <value>pl.edu.icm.coansys.citations.hashers.CitationNameYearPagesHashGenerator</value>
+                </property>
+                <property>
+                    <name>documentHasher</name>
+                    <value>pl.edu.icm.coansys.citations.hashers.DocumentNameYearPagesHashGenerator</value>
+                </property>
+                <property>
+                    <name>unmatched</name>
+                    <value>${workingDirectory}/unmatched-1</value>
+                </property>
+                <property>
+                    <name>output</name>
+                    <value>${workingDirectory}/heuristic-out-1</value>
+                </property>
+            </configuration>
+        </sub-workflow>
+        <ok to="heuristic-2"/>
+        <error to="fail"/>
+    </action>
+
+    <action name="heuristic-2">
+        <sub-workflow>
+            <app-path>${wf:appPath()}/heuristic-workflow</app-path>
+            <propagate-configuration/>
+            <configuration>
+                <property>
+                    <name>workingDirectory</name>
+                    <value>${workingDirectory}/heuristic-2_workflow</value>
+                </property>
+                <property>
+                    <name>sourceEntities</name>
+                    <value>${workingDirectory}/unmatched-1</value>
+                </property>
+                <property>
+                    <name>destinationEntities</name>
+                    <value>${destinationEntities}</value>
+                </property>
+                <property>
+                    <name>citationHasher</name>
+                    <value>pl.edu.icm.coansys.citations.hashers.CitationNameYearHashGenerator</value>
+                </property>
+                <property>
+                    <name>documentHasher</name>
+                    <value>pl.edu.icm.coansys.citations.hashers.DocumentNameYearStrictHashGenerator</value>
+                </property>
+                <property>
+                    <name>unmatched</name>
+                    <value>${workingDirectory}/unmatched-2</value>
+                </property>
+                <property>
+                    <name>output</name>
+                    <value>${workingDirectory}/heuristic-out-2</value>
+                </property>
+            </configuration>
+        </sub-workflow>
+        <ok to="heuristic-3"/>
+        <error to="fail"/>
+    </action>
+
+    <action name="heuristic-3">
+        <sub-workflow>
+            <app-path>${wf:appPath()}/heuristic-workflow</app-path>
+            <propagate-configuration/>
+            <configuration>
+                <property>
+                    <name>workingDirectory</name>
+                    <value>${workingDirectory}/heuristic-3_workflow</value>
+                </property>
+                <property>
+                    <name>sourceEntities</name>
+                    <value>${workingDirectory}/unmatched-2</value>
                 </property>
                 <property>
                     <name>destinationEntities</name>
@@ -124,12 +202,8 @@
                     <value>pl.edu.icm.coansys.citations.hashers.DocumentNameYearPagesHashGenerator</value>
                 </property>
                 <property>
-                    <name>unmatched</name>
-                    <value>${workingDirectory}/unmatched</value>
-                </property>
-                <property>
                     <name>output</name>
-                    <value>${workingDirectory}/heuristic</value>
+                    <value>${workingDirectory}/heuristic-out-3</value>
                 </property>
             </configuration>
         </sub-workflow>
@@ -151,13 +225,13 @@
                 <property>
                     <name>mapred.input.dir.mappers</name>
                     <value>
-                        ${workingDirectory}/heuristic;pl.edu.icm.coansys.citations.mappers.SwapperMarker,${destinationEntities};pl.edu.icm.coansys.citations.mappers.EntityMarker
+                        ${workingDirectory}/heuristic-out-*;pl.edu.icm.coansys.citations.mappers.SwapperMarker,${destinationEntities};pl.edu.icm.coansys.citations.mappers.EntityMarker
                     </value>
                 </property>
                 <property>
                     <name>mapred.input.dir.formats</name>
                     <value>
-                        ${workingDirectory}/heuristic;org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat,${destinationEntities};org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat
+                        ${workingDirectory}/heuristic-out-*;org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat,${destinationEntities};org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat
                     </value>
                 </property>
                 <property>
