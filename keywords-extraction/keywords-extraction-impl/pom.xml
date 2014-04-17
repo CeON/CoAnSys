@@ -19,14 +19,19 @@
             <type>jar</type>
         </dependency>
         <dependency>
-	    	<groupId>pl.edu.icm.coansys</groupId>
-	    	<version>1.6-SNAPSHOT</version>
-	    	<artifactId>models</artifactId>
-		</dependency>
+            <groupId>${project.groupId}</groupId>
+            <version>${project.version}</version>
+            <artifactId>models</artifactId>
+        </dependency>
         <dependency>
             <groupId>pl.edu.icm.cermine</groupId>
             <artifactId>cermine-impl</artifactId>
             <version>1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>commons</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 </project>

@@ -16,26 +16,29 @@
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.edu.icm.coansys.kwdextraction.langident;
+package pl.edu.icm.coansys.commons.langident;
 
-import org.slf4j.helpers.MessageFormatter;
+/**
+*
+* @author Gra <Gołębiewski Radosław A.> r.golebiewski@icm.edu.pl
+*
+*/
+public class CategorizationException extends BusinessException {
+    private static final long serialVersionUID = 967878452720671176L;
 
-public abstract class BusinessException extends RuntimeException {
+    public CategorizationException() {
+        super();
+    }
 
-	public BusinessException() {
-		super();
-	}
+    public CategorizationException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-	public BusinessException(Throwable cause, String messagePattern, Object... args) {
-		super(MessageFormatter.arrayFormat(messagePattern, args).getMessage(), cause);
-	}
+    public CategorizationException(String message) {
+        super(message);
+    }
 
-	public BusinessException(String messagePattern, Object... args) {
-		super(MessageFormatter.arrayFormat(messagePattern, args).getMessage());
-	}
-
-	public BusinessException(Throwable cause) {
-		super(cause);
-	}
-
+    public CategorizationException(Throwable cause) {
+        super(cause);
+    }
 }

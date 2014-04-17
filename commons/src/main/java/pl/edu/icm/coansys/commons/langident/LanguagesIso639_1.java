@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
-package pl.edu.icm.coansys.kwdextraction.langident;
+package pl.edu.icm.coansys.commons.langident;
 
 import java.util.HashSet;
 import java.util.Set;
