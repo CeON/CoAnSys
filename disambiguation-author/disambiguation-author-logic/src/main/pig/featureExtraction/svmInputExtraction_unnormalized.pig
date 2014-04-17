@@ -36,7 +36,7 @@
 -- skipEmptyFeatures set to true is important for filtering snames without orcID
 DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_CONTRIBDATA_GIVENDATA('-featureinfo $dc_m_str_feature_info -lang $lang -skipEmptyFeatures true');
 --does not exist
-DEFINE pairsCreation pl.edu.icm.coansys.disambiguation.author.pig.SvmUnnormalizedPairsCreator('featureinfo=$dc_m_str_feature_info');
+DEFINE pairsCreation pl.edu.icm.coansys.disambiguation.author.pig.SvmUnnormalizedPairsCreator('featureInfo=$dc_m_str_feature_info');
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- register section
