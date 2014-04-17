@@ -27,7 +27,7 @@
 %DEFAULT time 2
 %DEFAULT dc_m_hdfs_output /user/mwos/orcid/svmPairs/cc
 %DEFAULT dc_m_meth_extraction_inner pl.edu.icm.coansys.commons.pig.udf.RichSequenceFileLoader
-%DEFAULT dc_m_str_feature_info '#EX_CLASSIFICATION_CODES#1#1,#EX_KEYWORDS_SPLIT#1#1,#EX_KEYWORDS#1#1,#EX_TITLE_SPLIT#1#1,YearDisambiguator#EX_YEAR#1#1,#EX_TITLE#1#1,CoAuthorsSnameDisambiguatorFullList#EX_DOC_AUTHS_SNAMES#1#1,#EX_DOC_AUTHS_FNAME_FST_LETTER#1#1,#EX_AUTH_FNAMES_FST_LETTER#1#1,#EX_PERSON_ID#1#1,#EX_EMAIL#1#1'
+%DEFAULT dc_m_str_feature_info '#EX_CLASSIFICATION_CODES#1#1,#EX_KEYWORDS_SPLIT#1#1,#EX_KEYWORDS#1#1,#EX_TITLE_SPLIT#1#1,YearDisambiguator#EX_YEAR#1#1,#EX_TITLE#1#1,CoAuthorsSnameDisambiguatorFullList#EX_DOC_AUTHS_SNAMES#1#1,#EX_DOC_AUTHS_FNAME_FST_LETTER#1#1,#EX_AUTH_FNAMES_FST_LETTER#1#1,#EX_AUTH_FNAME_FST_LETTER#1#1,#EX_PERSON_ID#1#1,#EX_EMAIL#1#1'
 --%DEFAULT dc_m_str_feature_info '#EX_AUTH_INITIALS#-0.0000166#8,#EX_CLASSIFICATION_CODES#0.99#12,#EX_KEYWORDS_SPLIT#0.99#22,#EX_KEYWORDS#0.0000369#40'
 %DEFAULT threshold '-0.8'
 %DEFAULT lang 'all'
@@ -79,7 +79,7 @@ A1 = LOAD '$dc_m_hdfs_inputDocsData' USING $dc_m_meth_extraction_inner('org.apac
 --A2 = limit A1 1;
 --A2 = sample A1 $dc_m_double_sample;
 A3 = foreach A1 generate flatten(snameDocumentMetaExtractor($1)) as (dockey:chararray, cId:chararray, sname:int, metadata:map[{()}]);
-A4 = FILTER A3 BY cId is not null and metadata#'EX_PERSON_ID' is not null;
+A4 = FILTER A3 BY cId is not null and metadata#'EX_PERSON_ID' is not null and not IsEmpty(metadata#'EX_PERSON_ID');
 A = group A4 by sname;
 
 /*
@@ -92,6 +92,6 @@ CNT4 = ORDER CNT3 BY contrib_no DESC;
 store CNT4 into '$dc_m_hdfs_output/contribBlocksStat';
 */
 
-D = foreach A generate pairsCreation(*);
+D = foreach A generate flatten(pairsCreation(*));
 %DEFAULT unnormalizedValPairs 'unnormalizedValPairs'
 store D into '$dc_m_hdfs_output/$unnormalizedValPairs';
