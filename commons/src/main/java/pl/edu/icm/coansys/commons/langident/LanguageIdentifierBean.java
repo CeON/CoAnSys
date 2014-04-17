@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
-package pl.edu.icm.coansys.kwdextraction.langident;
+package pl.edu.icm.coansys.commons.langident;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
  * Language identification bean. Guesses the language of a provided text by
  * performing N-gram profile comparison.
  * 
-* @author Lukasz Bolikowski (bolo@icm.edu.pl)
+ * @author Lukasz Bolikowski (bolo@icm.edu.pl)
  * @author Gra <Gołębiewski Radosław A.> r.golebiewski@icm.edu.pl
  */
 public class LanguageIdentifierBean implements LanguageIdentifier {
@@ -50,8 +50,8 @@ public class LanguageIdentifierBean implements LanguageIdentifier {
     private static final String IS_NOT_VALID_ISO_639_1_LANGUAGE_CODE = "] is not valid ISO 639-1 language code";
     private static final String LANGUAGES_PROPERTY_NAME = "languages";
     private static final String CANNOT_FIND_RESOURCE = "Cannot find resource ";
-    private static final String PROFILE_PROPERTIES = "pl/edu/icm/coansys/kwdextraction/langident/profiles.properties";
-    private static final String PROFILE_PREFIX = "pl/edu/icm/coansys/kwdextraction/langident/profile/";
+    private static final String PROFILE_PROPERTIES = "pl/edu/icm/coansys/commons/langident/profiles.properties";
+    private static final String PROFILE_PREFIX = "pl/edu/icm/coansys/commons/langident/profile/";
     private static final String PROFILE_SUFFIX = ".txt";
     public static final String LANG_NONE = "**";
     /**
