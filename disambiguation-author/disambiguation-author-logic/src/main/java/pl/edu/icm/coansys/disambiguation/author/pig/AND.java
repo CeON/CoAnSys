@@ -94,20 +94,20 @@ public abstract class AND<T> extends EvalFunc<T> {
 		Map<String, Object> mA, mB;
 		double affinity = threshold;
 
+		// Taking features from each keys (name of extractor = feature name)
+		// In contribsT.get(i) there is map we need.
+		// From this map (collection of i'th contributor's features)
+		// we take Bag with value of given feature.
+		// Here we have sure that following Object = DateBag.
+		mA = contribsT.get(indexA);
+		mB = contribsT.get(indexB);
+
+		// probably map is empty for some contrib
+		if (mA == null || mB == null) {
+			return 0;
+		}
+		
 		for (int d = 0; d < features.length; d++) {
-			// Taking features from each keys (name of extractor = feature name)
-			// In contribsT.get(i) there is map we need.
-			// From this map (collection of i'th contributor's features)
-			// we take Bag with value of given feature.
-			// Here we have sure that following Object = DateBag.
-			mA = contribsT.get(indexA);
-			mB = contribsT.get(indexB);
-
-			// probably map is empty for some contrib
-			if (mA == null || mB == null) {
-				continue;
-			}
-
 			Object oA = mA.get(featureInfos[d].getFeatureExtractorName());
 			Object oB = mB.get(featureInfos[d].getFeatureExtractorName());
 
