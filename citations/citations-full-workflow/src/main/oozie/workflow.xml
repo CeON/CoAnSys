@@ -173,6 +173,10 @@
                     <name>mapred.output.value.class</name>
                     <value>org.apache.hadoop.io.BytesWritable</value>
                 </property>
+		<property>
+		    <name>mapred.child.java.opts</name>
+		    <value>-XX:MaxPermSize=256m</value>
+		</property>
             </configuration>
         </map-reduce>
         <ok to="core-workflow"/>
