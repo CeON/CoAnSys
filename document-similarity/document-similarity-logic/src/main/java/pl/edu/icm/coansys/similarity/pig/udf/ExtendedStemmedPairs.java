@@ -48,7 +48,12 @@ public class ExtendedStemmedPairs extends EvalFunc<DataBag> {
         }
     }
     private static final String SPACE = " ";
-
+    private AllLangStopWordFilter stowordsFilter = null;
+    
+    public ExtendedStemmedPairs() throws IOException{
+    	stowordsFilter = new AllLangStopWordFilter(); 
+    }
+    
     public List<String> getStemmedPairs(final String text) throws IOException {
         String tmp  = text.toLowerCase();
         tmp = DiacriticsRemover.removeDiacritics(tmp);
@@ -71,7 +76,7 @@ public class ExtendedStemmedPairs extends EvalFunc<DataBag> {
         	if(s.length()<=3){
         		continue;
         	}
-            if (!StopWordsRemover.isAnEnglishStopWords(s)) {;
+            if (!stowordsFilter.isInAllStopwords(s)) {;
                 ps.add(s.toCharArray(), s.length());
                 ps.stem();
                 strings.add(ps.toString());

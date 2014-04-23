@@ -67,6 +67,10 @@ public class AllLangStopWordFilter extends EvalFunc<Boolean> {
 	    }
 	}
 	
+    public Boolean isInAllStopwords(String input) throws IOException {
+            return !stopwords.contains(input);
+    }
+	
     @Override
     public Boolean exec(Tuple input) throws IOException {
         if (input == null || input.size() == 0) {
