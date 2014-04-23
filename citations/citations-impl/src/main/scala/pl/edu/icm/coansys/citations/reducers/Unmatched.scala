@@ -16,13 +16,24 @@
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.edu.icm.coansys.citations.mappers
+package pl.edu.icm.coansys.citations.reducers
+
+import collection.JavaConversions._
+import org.apache.hadoop.io.{Text, BytesWritable}
+import org.apache.hadoop.mapreduce.Reducer
+import pl.edu.icm.coansys.citations.data.{MarkedBytesWritable, MarkedText, BytesPairWritable}
 
 /**
- * Created by matfed on 27.02.14.
+ * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
-class DocumentHashGenerator extends HashGenerator {
-  override protected val hasherProperty: String = "coansys.citations.document.hasher"
-  override protected val markDefault: Boolean = false
-  override protected val markProperty: String = "coansys.citations.mark.documents"
+class Unmatched extends Reducer[MarkedText, MarkedBytesWritable, Text, BytesWritable] {
+  type Context = Reducer[MarkedText, MarkedBytesWritable, Text, BytesWritable]#Context
+
+  override def reduce(key: MarkedText, values: java.lang.Iterable[MarkedBytesWritable], context: Context) {
+    for (v <- values) {
+      if (v.isMarked.get()) return
+
+      context.write(key.text, v.bytes)
+    }
+  }
 }

@@ -16,10 +16,10 @@
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.edu.icm.coansys.kwdextraction.langident;
+package pl.edu.icm.coansys.commons.langident;
 
 import java.util.Set;
-import pl.edu.icm.coansys.kwdextraction.langident.LanguageIdentifierBean.LangVariant;
+import pl.edu.icm.coansys.commons.langident.LanguageIdentifierBean.LangVariant;
 
 /**
 * @author Gra <Gołębiewski Radosław A.> r.golebiewski@icm.edu.pl
