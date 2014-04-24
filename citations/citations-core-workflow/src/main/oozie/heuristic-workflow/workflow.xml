@@ -1,0 +1,309 @@
+<!--
+  ~ This file is part of CoAnSys project.
+  ~ Copyright (c) 2012-2014 ICM-UW
+  ~
+  ~ CoAnSys is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ CoAnSys is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<workflow-app xmlns="uri:oozie:workflow:0.4" name="citations-core-heuristic-workflow">
+    <parameters>
+        <property>
+            <name>jobTracker</name>
+        </property>
+        <property>
+            <name>nameNode</name>
+        </property>
+        <property>
+            <name>queueName</name>
+            <value>default</value>
+        </property>
+        <property>
+            <name>pool</name>
+            <value>default</value>
+        </property>
+        <property>
+            <name>reduceTasks</name>
+            <value>36</value>
+        </property>
+        <property>
+            <name>workingDirectory</name>
+        </property>
+        <property>
+            <name>sourceEntities</name>
+        </property>
+        <property>
+            <name>destinationEntities</name>
+        </property>
+        <property>
+            <name>citationHasher</name>
+        </property>
+        <property>
+            <name>documentHasher</name>
+        </property>
+        <property>
+            <name>output</name>
+        </property>
+        <property>
+            <name>unmatched</name>
+            <value>SKIP_UNMATCHED_COMPUTATION</value>
+        </property>
+    </parameters>
+    <global>
+        <job-tracker>${jobTracker}</job-tracker>
+        <name-node>${nameNode}</name-node>
+        <configuration>
+            <property>
+                <name>mapred.mapper.new-api</name>
+                <value>true</value>
+            </property>
+            <property>
+                <name>mapred.reducer.new-api</name>
+                <value>true</value>
+            </property>
+            <property>
+                <name>mapred.job.queue.name</name>
+                <value>${queueName}</value>
+            </property>
+            <property>
+                <name>oozie.launcher.mapred.fairscheduler.pool</name>
+                <value>${pool}</value>
+            </property>
+            <property>
+                <name>mapred.fairscheduler.pool</name>
+                <value>${pool}</value>
+            </property>
+            <property>
+                <name>mapreduce.inputformat.class</name>
+                <value>org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat</value>
+            </property>
+            <property>
+                <name>mapreduce.outputformat.class</name>
+                <value>org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat</value>
+            </property>
+            <property>
+                <name>mapred.reduce.tasks</name>
+                <value>${reduceTasks}</value>
+            </property>
+        </configuration>
+    </global>
+    <start to="prepare"/>
+
+    <action name="prepare">
+        <fs>
+            <delete path="${workingDirectory}"/>
+            <mkdir path="${workingDirectory}"/>
+        </fs>
+        <ok to="heuristic"/>
+        <error to="fail"/>
+    </action>
+
+    <action name="heuristic">
+        <map-reduce>
+            <configuration>
+                <property>
+                    <name>mapreduce.inputformat.class</name>
+                    <value>org.apache.hadoop.mapreduce.lib.input.DelegatingInputFormat</value>
+                </property>
+                <property>
+                    <name>mapreduce.map.class</name>
+                    <value>org.apache.hadoop.mapreduce.lib.input.DelegatingMapper</value>
+                </property>
+                <property>
+                    <name>mapred.input.dir.mappers</name>
+                    <value>
+                        ${sourceEntities};pl.edu.icm.coansys.citations.mappers.CitationHashGenerator,${destinationEntities};pl.edu.icm.coansys.citations.mappers.DocumentHashGenerator
+                    </value>
+                </property>
+                <property>
+                    <name>coansys.citations.citation.hasher</name>
+                    <value>${citationHasher}</value>
+                </property>
+                <property>
+                    <name>coansys.citations.mark.citations</name>
+                    <value>false</value>
+                </property>
+                <property>
+                    <name>coansys.citations.document.hasher</name>
+                    <value>${documentHasher}</value>
+                </property>
+                <property>
+                    <name>coansys.citations.mark.documents</name>
+                    <value>true</value>
+                </property>
+                <property>
+                    <name>mapred.input.dir.formats</name>
+                    <value>
+                        ${sourceEntities};org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat,${destinationEntities};org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat
+                    </value>
+                </property>
+                <property>
+                    <name>mapred.mapoutput.key.class</name>
+                    <value>pl.edu.icm.coansys.citations.data.MarkedText</value>
+                </property>
+                <property>
+                    <name>mapred.mapoutput.value.class</name>
+                    <value>pl.edu.icm.coansys.citations.data.MarkedText</value>
+                </property>
+                <property>
+                    <name>mapreduce.partitioner.class</name>
+                    <value>pl.edu.icm.coansys.citations.data.MarkedTextPartitioner</value>
+                </property>
+                <property>
+                    <name>mapred.output.value.groupfn.class</name>
+                    <value>pl.edu.icm.coansys.citations.data.MarkedTextGroupComparator</value>
+                </property>
+                <property>
+                    <name>mapred.output.key.comparator.class</name>
+                    <value>pl.edu.icm.coansys.citations.data.MarkedTextSortComparator</value>
+                </property>
+                <property>
+                    <name>mapreduce.reduce.class</name>
+                    <value>pl.edu.icm.coansys.citations.reducers.HashJoiner</value>
+                </property>
+                <property>
+                    <name>mapred.output.dir</name>
+                    <value>${workingDirectory}/heuristic_with_dups</value>
+                </property>
+                <property>
+                    <name>mapred.output.key.class</name>
+                    <value>org.apache.hadoop.io.Text</value>
+                </property>
+                <property>
+                    <name>mapred.output.value.class</name>
+                    <value>org.apache.hadoop.io.Text</value>
+                </property>
+            </configuration>
+        </map-reduce>
+        <ok to="distinctor"/>
+        <error to="fail"/>
+    </action>
+
+    <action name="distinctor">
+        <map-reduce>
+            <configuration>
+                <property>
+                    <name>mapreduce.map.class</name>
+                    <value>pl.edu.icm.coansys.citations.mappers.IdCombiner</value>
+                </property>
+                <property>
+                    <name>mapreduce.reduce.class</name>
+                    <value>pl.edu.icm.coansys.citations.reducers.IdDistinctorExtractor</value>
+                </property>
+                <property>
+                    <name>mapred.input.dir</name>
+                    <value>${workingDirectory}/heuristic_with_dups</value>
+                </property>
+                <property>
+                    <name>mapred.output.dir</name>
+                    <value>${output}</value>
+                </property>
+                <property>
+                    <name>mapred.mapoutput.key.class</name>
+                    <value>org.apache.hadoop.io.Text</value>
+                </property>
+                <property>
+                    <name>mapred.mapoutput.value.class</name>
+                    <value>org.apache.hadoop.io.NullWritable</value>
+                </property>
+                <property>
+                    <name>mapred.output.key.class</name>
+                    <value>org.apache.hadoop.io.Text</value>
+                </property>
+                <property>
+                    <name>mapred.output.value.class</name>
+                    <value>org.apache.hadoop.io.Text</value>
+                </property>
+            </configuration>
+        </map-reduce>
+        <ok to="need-unmatched"/>
+        <error to="fail"/>
+    </action>
+
+    <decision name="need-unmatched">
+        <switch>
+            <case to="end">${unmatched == "SKIP_UNMATCHED_COMPUTATION"}</case>
+            <default to="unmatched"/>
+        </switch>
+    </decision>
+
+    <action name="unmatched">
+        <map-reduce>
+            <configuration>
+                <property>
+                    <name>mapreduce.inputformat.class</name>
+                    <value>org.apache.hadoop.mapreduce.lib.input.DelegatingInputFormat</value>
+                </property>
+                <property>
+                    <name>mapreduce.map.class</name>
+                    <value>org.apache.hadoop.mapreduce.lib.input.DelegatingMapper</value>
+                </property>
+                <property>
+                    <name>mapred.input.dir.mappers</name>
+                    <value>
+                        ${sourceEntities};pl.edu.icm.coansys.citations.mappers.CitationsMarker,${output};pl.edu.icm.coansys.citations.mappers.HeuristicMarker
+                    </value>
+                </property>
+                <property>
+                    <name>mapred.input.dir.formats</name>
+                    <value>
+                        ${sourceEntities};org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat,${output};org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat
+                    </value>
+                </property>
+                <property>
+                    <name>mapred.mapoutput.key.class</name>
+                    <value>pl.edu.icm.coansys.citations.data.MarkedText</value>
+                </property>
+                <property>
+                    <name>mapred.mapoutput.value.class</name>
+                    <value>pl.edu.icm.coansys.citations.data.MarkedBytesWritable</value>
+                </property>
+                <property>
+                    <name>mapreduce.partitioner.class</name>
+                    <value>pl.edu.icm.coansys.citations.data.MarkedTextPartitioner</value>
+                </property>
+                <property>
+                    <name>mapred.output.value.groupfn.class</name>
+                    <value>pl.edu.icm.coansys.citations.data.MarkedTextGroupComparator</value>
+                </property>
+                <property>
+                    <name>mapred.output.key.comparator.class</name>
+                    <value>pl.edu.icm.coansys.citations.data.MarkedTextSortComparator</value>
+                </property>
+                <property>
+                    <name>mapreduce.reduce.class</name>
+                    <value>pl.edu.icm.coansys.citations.reducers.Unmatched</value>
+                </property>
+                <property>
+                    <name>mapred.output.dir</name>
+                    <value>${unmatched}</value>
+                </property>
+                <property>
+                    <name>mapred.output.key.class</name>
+                    <value>org.apache.hadoop.io.Text</value>
+                </property>
+                <property>
+                    <name>mapred.output.value.class</name>
+                    <value>org.apache.hadoop.io.BytesWritable</value>
+                </property>
+            </configuration>
+        </map-reduce>
+        <ok to="end"/>
+        <error to="fail"/>
+    </action>
+
+    <kill name="fail">
+        <message>Workflow failed, error message [${wf:errorMessage(wf:lastErrorNode())}]</message>
+    </kill>
+    <end name="end"/>
+</workflow-app>

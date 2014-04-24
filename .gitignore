@@ -8,6 +8,9 @@
 .project
 .settings
 
+# Netbeans files #
+nb-configuration.xml
+
 # IntelliJ IDEA files #
 .idea
 *.iml

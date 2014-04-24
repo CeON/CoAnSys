@@ -18,24 +18,25 @@
 package pl.edu.icm.coansys.kwdextraction;
 
 import java.io.*;
-import java.nio.charset.Charset;
 import java.text.BreakIterator;
 import java.util.Map.Entry;
 import java.util.*;
 
-import org.apache.commons.io.IOUtils;
 import org.jdom.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.edu.icm.ceon.commons.CeonGeneralException;
 
 import pl.edu.icm.cermine.DocumentTextExtractor;
 import pl.edu.icm.cermine.PdfNLMContentExtractor;
 import pl.edu.icm.cermine.PdfRawTextExtractor;
 import pl.edu.icm.cermine.exception.AnalysisException;
-import pl.edu.icm.coansys.kwdextraction.langident.LanguageIdentifierBean;
+import pl.edu.icm.coansys.commons.stopwords.Stopwords;
+import pl.edu.icm.coansys.commons.stopwords.Stopwords.Lang;
 import pl.edu.icm.coansys.models.DocumentProtos;
 import pl.edu.icm.coansys.models.DocumentProtos.TextWithLanguage;
 import pl.edu.icm.coansys.models.constants.ProtoConstants;
+import pl.edu.icm.yadda.tools.textcat.LanguageIdentifierBean;
 
 /**
  * Implementation of Rapid Automatic Keyword Extraction algorithm
@@ -43,33 +44,6 @@ import pl.edu.icm.coansys.models.constants.ProtoConstants;
  * @author Artur Czeczko <a.czeczko@icm.edu.pl>
  */
 public class RakeExtractor {
-
-    private enum Lang {
-
-        // language code, stopwords path
-        DE("de", "stopwords/stopwords_de.txt"),
-        DK("dk", "stopwords/stopwords_dk.txt"),
-        EN("en", "stopwords/stopwords_en.txt"),
-        ES("es", "stopwords/stopwords_es.txt"),
-        FI("fi", "stopwords/stopwords_fi.txt"),
-        FR("fr", "stopwords/stopwords_fr.txt"),
-        HU("hu", "stopwords/stopwords_hu.txt"),
-        IT("it", "stopwords/stopwords_it.txt"),
-        NL("nl", "stopwords/stopwords_nl.txt"),
-        NO("no", "stopwords/stopwords_no.txt"),
-        PL("pl", "stopwords/stopwords_pl.txt"),
-        PT("pt", "stopwords/stopwords_pt.txt"),
-        RU("ru", "stopwords/stopwords_ru.txt"),
-        SE("se", "stopwords/stopwords_se.txt"),
-        TR("tr", "stopwords/stopwords_tr.txt");
-        private String langCode;
-        private String stopwordsPath;
-
-        Lang(String langCode, String stopwordsPath) {
-            this.langCode = langCode;
-            this.stopwordsPath = stopwordsPath;
-        }
-    }
 
     private enum ExtractionOption {
 
@@ -84,6 +58,7 @@ public class RakeExtractor {
             this.fromAbstract = fromAbstract;
         }
     }
+    
     private static final Logger logger = LoggerFactory.getLogger(RakeExtractor.class);
     private static final String ILLEGAL_CHARS = "[^\\p{L}0-9-'\\s]";
     private static final int DEFAULT_KEYWORDS_NUMBER = 8;
@@ -98,7 +73,7 @@ public class RakeExtractor {
         try {
             stopwords = new EnumMap<Lang, Set<String>>(Lang.class);
             for (Lang l : Lang.values()) {
-                stopwords.put(l, loadStopwords(l));
+                stopwords.put(l, Stopwords.loadStopwords(l));
             }
         } catch (IOException ex) {
             logger.error("Unable to load stopwords: " + ex);
@@ -115,7 +90,7 @@ public class RakeExtractor {
      */
     public RakeExtractor(String content, String langCode) throws IOException {
         setLang(langCode);
-        this.content = filterTextByLang(content, lang.langCode);
+        this.content = filterTextByLang(content, lang.getLangCode());
         prepareToExtraction();
     }
 
@@ -156,7 +131,7 @@ public class RakeExtractor {
                         logger.error("Cannot extract text from PDF: " + ex.toString() + " " + media.getSourcePath());
                     }
                 } else if (media.getMediaType().equals(ProtoConstants.mediaTypeTxt)) {
-                    sb.append(filterTextByLang(media.getContent().toStringUtf8(), lang.langCode));
+                    sb.append(filterTextByLang(media.getContent().toStringUtf8(), lang.getLangCode()));
                 }
                 sb.append("\n");
             }
@@ -164,7 +139,7 @@ public class RakeExtractor {
 
         if (extractionOption.fromAbstract) {
             for (TextWithLanguage documentAbstract : docWrapper.getDocumentMetadata().getDocumentAbstractList()) {
-                sb.append(filterTextByLang(documentAbstract.getText(), lang.langCode));
+                sb.append(filterTextByLang(documentAbstract.getText(), lang.getLangCode()));
             }
         }
 
@@ -195,7 +170,7 @@ public class RakeExtractor {
             result = extr.extractText(pdfStream);
         }
 
-        return filterTextByLang(result, lang.langCode);
+        return filterTextByLang(result, lang.getLangCode());
     }
 
     /**
@@ -207,8 +182,13 @@ public class RakeExtractor {
      * @throws IOException
      */
     private String filterTextByLang(String text, String language) throws IOException {
-        LanguageIdentifierBean li = new LanguageIdentifierBean();
-        return (language.equals(li.classify(text))) ? text : "";
+        LanguageIdentifierBean li;
+        try {
+            li = new LanguageIdentifierBean();
+            return (language.equals(li.classify(text))) ? text : "";
+        } catch (CeonGeneralException ex) {
+            throw new IOException(ex);
+        }
     }
 
     /**
@@ -222,39 +202,7 @@ public class RakeExtractor {
         countMetrics();
     }
 
-    /**
-     * Loading stopwords from a file
-     *
-     * @param lang Stopwords language
-     * @return Set of stopwords
-     * @throws IOException
-     */
-    private static Set<String> loadStopwords(Lang lang) throws IOException {
-        Set<String> result = new HashSet<String>();
 
-        InputStream stopwordsStream;
-        InputStreamReader isr;
-        BufferedReader br = null;
-
-        stopwordsStream = RakeExtractor.class.getClassLoader().getResourceAsStream(lang.stopwordsPath);
-
-        try {
-            isr = new InputStreamReader(stopwordsStream, Charset.forName("UTF-8"));
-            br = new BufferedReader(isr);
-
-            String stopword = br.readLine();
-            while (stopword != null) {
-                stopword = stopword.trim();
-                if (!stopword.isEmpty()) {
-                    result.add(stopword);
-                }
-                stopword = br.readLine();
-            }
-        } finally {
-            IOUtils.closeQuietly(br);
-        }
-        return result;
-    }
 
     /**
      * Finding words or word sequences separated by stopwords, punctuation marks etc.
@@ -402,9 +350,8 @@ public class RakeExtractor {
     private void setLang(String langCode) {
         this.lang = null;
         for (Lang curr : Lang.values()) {
-            if (curr.langCode.equals(langCode)) {
+            if (curr.getLangCode().equals(langCode)) {
                 this.lang = curr;
-                System.err.println("Wykryty język: " + langCode);
                 break;
             }
         }
@@ -435,7 +382,7 @@ public class RakeExtractor {
     public static List<String> getSupportedLanguages() {
         List<String> result = new ArrayList<String>();
         for (Lang l : Lang.values()) {
-            result.add(l.langCode);
+            result.add(l.getLangCode());
         }
         return result;
     }
