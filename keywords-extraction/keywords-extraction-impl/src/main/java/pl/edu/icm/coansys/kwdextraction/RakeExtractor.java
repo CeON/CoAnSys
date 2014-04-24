@@ -25,17 +25,18 @@ import java.util.*;
 import org.jdom.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.edu.icm.ceon.commons.CeonGeneralException;
 
 import pl.edu.icm.cermine.DocumentTextExtractor;
 import pl.edu.icm.cermine.PdfNLMContentExtractor;
 import pl.edu.icm.cermine.PdfRawTextExtractor;
 import pl.edu.icm.cermine.exception.AnalysisException;
-import pl.edu.icm.coansys.commons.langident.LanguageIdentifierBean;
 import pl.edu.icm.coansys.commons.stopwords.Stopwords;
 import pl.edu.icm.coansys.commons.stopwords.Stopwords.Lang;
 import pl.edu.icm.coansys.models.DocumentProtos;
 import pl.edu.icm.coansys.models.DocumentProtos.TextWithLanguage;
 import pl.edu.icm.coansys.models.constants.ProtoConstants;
+import pl.edu.icm.yadda.tools.textcat.LanguageIdentifierBean;
 
 /**
  * Implementation of Rapid Automatic Keyword Extraction algorithm
@@ -181,8 +182,13 @@ public class RakeExtractor {
      * @throws IOException
      */
     private String filterTextByLang(String text, String language) throws IOException {
-        LanguageIdentifierBean li = new LanguageIdentifierBean();
-        return (language.equals(li.classify(text))) ? text : "";
+        LanguageIdentifierBean li;
+        try {
+            li = new LanguageIdentifierBean();
+            return (language.equals(li.classify(text))) ? text : "";
+        } catch (CeonGeneralException ex) {
+            throw new IOException(ex);
+        }
     }
 
     /**
