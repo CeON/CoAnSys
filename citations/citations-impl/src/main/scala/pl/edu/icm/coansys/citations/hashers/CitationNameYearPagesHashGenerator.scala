@@ -28,17 +28,16 @@ import scala.util.Try
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 class CitationNameYearPagesHashGenerator extends HashGenerator {
-  def generate(entity: MatchableEntity): Iterable[String] = {
+  def generate(entity: MatchableEntity): List[String] = {
     val text = entity.rawText.getOrElse(genText(entity))
-    val digits = digitsNormaliseTokenise(text)
+    val numbers = digitsNormaliseTokenise(text)
+    // too many citations to handle
+    if (numbers.length > 10) return Nil
 
-    if (digits.length > 15) 
-      Nil //too many possible hashes to handle
-    else
-      for {
-        author <- lettersNormaliseTokenise(text).filterNot(stopWords).distinct.take(4)
-        year <- digits.filter(_.length == 4).flatMap(x => Try(x.toInt).toOption).filter(x => x < 2050 && x > 1900)
-        (bpage, epage) <- collections.sortedPairs(collections.excludeOne(digits.flatMap(x => Try(x.toInt).toOption), (x:Int) => x == year))
-      } yield List(author, year, bpage, epage).mkString("#")
+    for {
+      author <- lettersNormaliseTokenise(text).filterNot(stopWords).distinct.take(4)
+      year <- numbers.filter(_.length == 4).flatMap(x => Try(x.toInt).toOption).filter(x => x < 2050 && x > 1900)
+      (bpage, epage) <- collections.sortedPairs(collections.excludeOne(numbers.flatMap(x => Try(x.toInt).toOption), (x:Int) => x == year))
+    } yield List(author, year, bpage, epage).mkString("#")
   }
 }
