@@ -176,7 +176,6 @@
         <module>document-classification</module>
         <module>document-similarity</module>
         <module>integration</module>
-        <module>logs-analysis</module>
         <module>keywords-extraction</module>
         <module>nlm-extraction</module>
         <module>statistics-generator</module>
