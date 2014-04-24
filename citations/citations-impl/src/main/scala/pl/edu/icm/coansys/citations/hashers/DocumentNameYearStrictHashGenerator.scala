@@ -16,13 +16,20 @@
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.edu.icm.coansys.citations.mappers
+package pl.edu.icm.coansys.citations.hashers
+
+import pl.edu.icm.coansys.citations.data.MatchableEntity
+import pl.edu.icm.coansys.citations.util.misc
+import pl.edu.icm.coansys.citations.util.misc._
+import scala.util.Try
+
 
 /**
- * Created by matfed on 27.02.14.
+ * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
-class DocumentHashGenerator extends HashGenerator {
-  override protected val hasherProperty: String = "coansys.citations.document.hasher"
-  override protected val markDefault: Boolean = false
-  override protected val markProperty: String = "coansys.citations.mark.documents"
+class DocumentNameYearStrictHashGenerator extends HashGenerator {
+  override def generate(entity: MatchableEntity): Iterable[String] = for {
+    author <- misc.lettersNormaliseTokenise(entity.author).filterNot(stopWords).distinct.take(4)
+    year <- digitsNormaliseTokenise(entity.year).filter(_.length == 4).flatMap(x => Try(x.toInt).toOption).filter(x => x < 2050 && x > 1900)
+  } yield List(author, year).mkString("#")
 }
