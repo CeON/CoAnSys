@@ -24,5 +24,7 @@
         <module>document-similarity-ranked-workflow</module>
         <module>document-similarity-ranked-two-sources-workflow</module>
         <module>document-similarity-oap-demo-workflow</module>
+        <module>document-similarity-oap-postprocessing-better</module>
+	<module>document-similarity-recalculate-sim-about-1</module>
     </modules>    
 </project>
