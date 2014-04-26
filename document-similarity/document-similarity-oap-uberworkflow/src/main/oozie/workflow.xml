@@ -81,13 +81,13 @@
 		</switch>
 	</decision>
 
-	<action name="PREP_calculate-major-docsim">
+	<!-- <action name="PREP_calculate-major-docsim">
 		<fs>
 			<delete path="${outputPathDocSimMajor}" />
 		</fs>
 		<ok to="calculate-major-docsim" />
 		<error to="calculate-major-docsim" />
-	</action>
+	</action> -->
 
 	<action name="calculate-major-docsim">
 		<sub-workflow>
@@ -141,11 +141,11 @@
 				</property>
 			</configuration>
 		</sub-workflow>
-		<ok to="PREP_recalculate-sim-about-1--filter" />
+		<ok to="recalculate-sim-about-1--filter" />
 		<error to="finalize-error" />
 	</action>
 
-	<action name="PREP_recalculate-sim-about-1--filter">
+	<!--  <action name="PREP_recalculate-sim-about-1--filter">
 		<fs>
 			<delete path="${outputPathRecalc}/pairs-with-sim-lower-then-threshold" />
 			<delete path="${outputPathRecalc}/pairs-to-process" />
@@ -154,7 +154,7 @@
 		</fs>
 		<ok to="recalculate-sim-about-1--filter" />
 		<error to="finalize-error" />
-	</action>
+	</action> -->
 
 	<action name="recalculate-sim-about-1--filter">
 		<sub-workflow>
