@@ -4,14 +4,50 @@
 			<name>ds_pool</name>
 			<value>bigjobs</value>
 		</property>
+		<property>
+			<name>inputPathProto</name>
+			<value>${ds_bwndataMetadataInputPath}</value>
+		</property>
+		<property>
+			<name>outputPathDocSimMajor</name>
+			<value>${wf:appPath()}/results/major/</value>
+		</property>
+		<property>
+			<name>inputPathDocSimMajor</name>
+			<value>${wf:appPath()}/results/major/similarity/normalizedleftdocs/
+			</value>
+		</property>
+		<property>
+			<name>inputPathDocSimMinor</name>
+			<value>${wf:appPath()}/results/minor/tfidf/all-topn-tmp/</value>
+		</property>
+		<property>
+			<name>outputPathRecalc</name>
+			<value>${wf:appPath()}/results/recalc/</value>
+		</property>
+		<property>
+			<name>finalOutputPath</name>
+			<value>${wf:appPath()}/results/final/similarity/normalizedleftdocs/
+			</value>
+		</property>
+		<property>
+			<name>finalOutputPathGlobal</name>
+			<value>${wf:appPath()}/results/final/</value>
+		</property>
 	</parameters>
 
 	<global>
 		<job-tracker>${jobTracker}</job-tracker>
 		<name-node>${nameNode}</name-node>
-		
-		
 		<configuration>
+			<property>
+				<name>mapred.fairscheduler.pool</name>
+				<value>${ds_pool}</value>
+			</property>
+			<property>
+				<name>oozie.launcher.mapred.fairscheduler.pool</name>
+				<value>${ds_pool}</value>
+			</property>
 			<property>
 				<name>mapred.job.queue.name</name>
 				<value>${queueName}</value>
@@ -23,46 +59,6 @@
 			<property>
 				<name>mapred.reducer.new-api</name>
 				<value>true</value>
-			</property>
-			<property>
-				<name>mapred.fairscheduler.pool</name>
-				<value>${ds_pool}</value>
-			</property>
-			<property>
-				<name>oozie.launcher.mapred.fairscheduler.pool</name>
-				<value>${ds_pool}</value>
-			</property>
-			
-			
-			<property>
-				<name>inputPathProto</name>
-				<value>${ds_bwndataMetadataInputPath}</value>
-			</property>
-			<property>
-				<name>outputPathDocSimMajor</name>
-				<value>${wf:appPath()}/results/major/</value>
-			</property>
-			<property>
-				<name>inputPathDocSimMajor</name>
-				<value>${wf:appPath()}/results/major/similarity/normalizedleftdocs/
-				</value>
-			</property>
-			<property>
-				<name>inputPathDocSimMinor</name>
-				<value>${wf:appPath()}/results/minor/tfidf/all-topn-tmp/</value>
-			</property>
-			<property>
-				<name>outputPathRecalc</name>
-				<value>${wf:appPath()}/results/recalc/</value>
-			</property>
-			<property>
-				<name>finalOutputPath</name>
-				<value>${wf:appPath()}/results/final/similarity/normalizedleftdocs/
-				</value>
-			</property>
-			<property>
-				<name>finalOutputPathGlobal</name>
-				<value>${wf:appPath()}/results/final/</value>
 			</property>
 		</configuration>
 	</global>
@@ -230,7 +226,7 @@
 		<error to="finalize-error" />
 	</action>
 
-		<action name="get-top20-and-serialize-results">
+	<action name="get-top20-and-serialize-results">
 		<sub-workflow>
 			<app-path>${wf:appPath()}/pl.edu.icm.coansys-document-similarity-ranked-workflow
 			</app-path>
@@ -284,7 +280,7 @@
 	<!-- </fs> <ok to="end" /> <error to="fail" /> </action> <action name="finalize-error"> 
 		<fs> -->			<!-- <delete path="${workingDir}" /> -->
 	<!-- </fs> <ok to="fail" /> <error to="fail" /> </action> -->
-	
+
 	<kill name="finalize-error">
 		<message>Workflow failed</message>
 	</kill>

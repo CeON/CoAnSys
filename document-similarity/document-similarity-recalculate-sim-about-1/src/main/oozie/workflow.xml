@@ -3,8 +3,30 @@
 
 	<parameters>
 		<property>
-			<name>POOL_NAME</name>
-			<value>default</value>
+			<name>inputPathProto</name>
+			<value>${ds_bwndataMetadataInputPath}</value>
+		</property>
+		<property>
+			<name>inputPathDocSimMajor</name>
+			<value>${ds_bwndataMetadataOutputPath}/major/similarity/normalizedleftdocs
+			</value>
+		</property>
+		<property>
+			<name>inputPathDocSimMinor</name>
+			<value>${ds_bwndataMetadataOutputPath}/minor/similarity/normalizedleftdocs
+			</value>
+		</property>
+		<property>
+			<name>outputPathRecalc</name>
+			<value>${ds_bwndataMetadataOutputPath}/recalc/</value>
+		</property>
+		<property>
+			<name>finalOutputPath</name>
+			<value>${ds_bwndataMetadataOutputPath}/final/</value>
+		</property>
+		<property>
+			<name>ds_pool</name>
+			<value>bigjobs</value>
 		</property>
 		<property>
 			<name>oozie.wf.validate.ForkJoin</name>
@@ -32,7 +54,7 @@
 		</property>
 		<property>
 			<name>ds_scheduler</name>
-			<value>${POOL_NAME}</value>
+			<value>${ds_pool}</value>
 		</property>
 		<property>
 			<name>ds_parallel</name>
@@ -48,42 +70,17 @@
 		</property>
 	</parameters>
 
-
 	<global>
 		<job-tracker>${jobTracker}</job-tracker>
 		<name-node>${nameNode}</name-node>
 		<configuration>
 			<property>
 				<name>mapred.fairscheduler.pool</name>
-				<value>${POOL_NAME}</value>
+				<value>${ds_pool}</value>
 			</property>
-
-			<property>
-				<name>inputPathProto</name>
-				<value>${ds_bwndataMetadataInputPath}</value>
-			</property>
-			<property>
-				<name>inputPathDocSimMajor</name>
-				<value>${ds_bwndataMetadataOutputPath}/major/similarity/normalizedleftdocs
-				</value>
-			</property>
-			<property>
-				<name>inputPathDocSimMinor</name>
-				<value>${ds_bwndataMetadataOutputPath}/minor/similarity/normalizedleftdocs
-				</value>
-			</property>
-			<property>
-				<name>outputPathRecalc</name>
-				<value>${ds_bwndataMetadataOutputPath}/recalc/</value>
-			</property>
-			<property>
-				<name>finalOutputPath</name>
-				<value>${ds_bwndataMetadataOutputPath}/final/</value>
-			</property>
-
 			<property>
 				<name>oozie.launcher.mapred.fairscheduler.pool</name>
-				<value>${POOL_NAME}</value>
+				<value>${ds_pool}</value>
 			</property>
 			<property>
 				<name>mapred.job.queue.name</name>
@@ -97,12 +94,7 @@
 				<name>mapred.reducer.new-api</name>
 				<value>true</value>
 			</property>
-			<property>
-				<name>oozie.use.system.libpath</name>
-				<value>true</value>
-			</property>
 		</configuration>
-
 	</global>
 
 	<start to='sim1-prostprocess-s1-e1-d' />
