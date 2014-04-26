@@ -101,24 +101,24 @@
 		</configuration>
 	</global>
 
-	<start to='sim1-prostprocess-s1-e1-d' />
+	<start to='sim1_postprocess_s1_e1_d' />
 
-	<decision name="sim1-prostprocess-s1-e1-d">
+	<decision name="sim1_postprocess_s1_e1_d">
 		<switch>
-			<case to="sim1-prostprocess-s1-e1-filter-input">${sim1-prostprocess-s1-e1 eq "true"}
+			<case to="sim1_postprocess_s1_e1_filter_input">${sim1_postprocess_s1_e1 eq "true"}
 			</case>
-			<default to="sim1-prostprocess-s2-e1-d" />
+			<default to="sim1_postprocess_s2_e1_d" />
 		</switch>
 	</decision>
 
-	<action name='sim1-prostprocess-s1-e1-filter-input'>
+	<action name='sim1_postprocess_s1_e1_filter_input'>
 		<pig>
 			<job-tracker>${jobTracker}</job-tracker>
 			<name-node>${nameNode}</name-node>
 			<prepare>
 				<delete path="${outputPathRecalc}" />
 			</prepare>
-			<script>sim1-prostprocess-s1-e1.pig</script>
+			<script>sim1-postprocess-s1-e1-filter-sims.pig</script>
 			<param>inputPathProto=${inputPathProto}</param>
 			<param>inputPathDocSimMajor=${inputPathDocSimMajor}</param>
 			<param>inputPathDocSimMinor=${inputPathDocSimMinor}</param>
@@ -131,21 +131,21 @@
 			<param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>
 			<param>ds_scheduler=${ds_scheduler}</param>
 		</pig>
-		<ok to='sim1-prostprocess-s2-e1-d' />
+		<ok to='sim1_postprocess_s2_e1_d' />
 		<error to='kill' />
 	</action>
 
-	<decision name="sim1-prostprocess-s2-e1-d">
+	<decision name="sim1_postprocess_s2_e1_d">
 		<switch>
-			<case to="sim1-prostprocess-s2-e1-calculate-sims">${sim1-prostprocess-s2-e1 eq "true"}
+			<case to="sim1_postprocess_s2_e1_calculate_sims">${sim1_postprocess_s2_e1 eq "true"}
 			</case>
-			<default to="sim1-prostprocess-s3-e1-d" />
+			<default to="sim1_postprocess_s3_e1_d" />
 		</switch>
 	</decision>
 
-	<action name='sim1-prostprocess-s2-e1-calculate-sims'>
+	<action name='sim1_postprocess_s2_e1_calculate_sims'>
 		<pig>
-			<script>sim1-prostprocess-s2-e1.pig</script>
+			<script>sim1-postprocess-s2-e1-calc-cosine.pig</script>
 			<param>inputPathProto=${inputPathProto}</param>
 			<param>inputPathDocSimMajor=${inputPathDocSimMajor}</param>
 			<param>inputPathDocSimMinor=${inputPathDocSimMinor}</param>
@@ -158,22 +158,22 @@
 			<param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>
 			<param>ds_scheduler=${ds_scheduler}</param>
 		</pig>
-		<ok to='sim1-prostprocess-s3-e1-d' />
+		<ok to='sim1_postprocess_s3_e1_d' />
 		<error to='kill' />
 	</action>
 
-	<decision name="sim1-prostprocess-s3-e1-d">
+	<decision name="sim1_postprocess_s3_e1_d">
 		<switch>
-			<case to="sim1-prostprocess-s3-e1-merge-results">${sim1-prostprocess-s3-e1 eq "true"}
+			<case to="sim1_postprocess_s3_e1_merge_results">${sim1_postprocess_s3_e1 eq "true"}
 			</case>
 
 			<default to="end" />
 		</switch>
 	</decision>
 
-	<action name='sim1-prostprocess-s3-e1-merge-results'>
+	<action name='sim1_postprocess_s3_e1_merge_results'>
 		<pig>
-			<script>sim1-prostprocess-s3-e1.pig</script>
+			<script>sim1-postprocess-s3-e1-union.pig</script>
 			<param>inputPathProto=${inputPathProto}</param>
 			<param>inputPathDocSimMajor=${inputPathDocSimMajor}</param>
 			<param>inputPathDocSimMinor=${inputPathDocSimMinor}</param>

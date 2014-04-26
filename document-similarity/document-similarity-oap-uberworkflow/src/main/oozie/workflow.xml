@@ -145,15 +145,15 @@
 					<value>true</value>
 				</property>
 				<property>
-					<name>sim1-prostprocess-s1-e1</name>
+					<name>sim1_prostprocess_s1_e1</name>
 					<value>true</value>
 				</property>
 				<property>
-					<name>sim1-prostprocess-s2-e1</name>
+					<name>sim1_prostprocess_s2_e1</name>
 					<value>false</value>
 				</property>
 				<property>
-					<name>sim1-prostprocess-s3-e1</name>
+					<name>sim1_prostprocess_s3_e1</name>
 					<value>false</value>
 				</property>
 			</configuration>
@@ -229,15 +229,15 @@
 					<value>true</value>
 				</property>
 				<property>
-					<name>sim1-prostprocess-s1-e1</name>
+					<name>sim1_prostprocess_s1_e1</name>
 					<value>false</value>
 				</property>
 				<property>
-					<name>sim1-prostprocess-s2-e1</name>
+					<name>sim1_prostprocess_s2_e1</name>
 					<value>true</value>
 				</property>
 				<property>
-					<name>sim1-prostprocess-s3-e1</name>
+					<name>sim1_prostprocess_s3_e1</name>
 					<value>true</value>
 				</property>
 				<property>
