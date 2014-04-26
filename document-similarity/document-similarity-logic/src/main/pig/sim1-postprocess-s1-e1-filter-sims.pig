@@ -74,7 +74,7 @@ B1 = foreach A2x generate k1 as kx;
 B2 = foreach A2xx generate k2 as kx;
 B3 = union B1,B2;
 B4 = distinct B3;
-store B4 into '$outputPathRecalc/document-keys-to-process';
+store B4 into '$outputPathRecalc/documents-keys-to-process';
 
 -- find appropriated metadata for the selected keys
 B4x = load '$outputPathRecalc/documents-keys-to-process' as (kx:chararray);
