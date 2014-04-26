@@ -292,10 +292,6 @@
 					<name>ds_similarityOutputPath</name>
 					<value>${outputPathDocSimMinor}</value>
 				</property>
-				<property>
-					<name>finalOutputPath</name>
-					<value>true</value>
-				</property>
 			</configuration>
 		</sub-workflow>
 		<ok to="get-top20-and-serialize-results" />
