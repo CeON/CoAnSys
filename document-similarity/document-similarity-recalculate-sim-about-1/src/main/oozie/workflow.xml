@@ -113,11 +113,6 @@
 
 	<action name='sim1_postprocess_s1_e1_filter_input'>
 		<pig>
-			<job-tracker>${jobTracker}</job-tracker>
-			<name-node>${nameNode}</name-node>
-			<prepare>
-				<delete path="${outputPathRecalc}" />
-			</prepare>
 			<script>sim1-postprocess-s1-e1-filter-sims.pig</script>
 			<param>inputPathProto=${inputPathProto}</param>
 			<param>inputPathDocSimMajor=${inputPathDocSimMajor}</param>
