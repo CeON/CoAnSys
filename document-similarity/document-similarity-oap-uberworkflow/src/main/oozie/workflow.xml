@@ -72,8 +72,8 @@
 
 	<decision name="pick_start_node">
 		<switch>
-			<case to="prepare-results-folder">${"false" eq "true"}</case>
-			<case to="recalculate-sim-about-1--filter">${"true" eq "true"}</case>
+			<case to="PREP_prepare-results-folder">${"false" eq "true"}</case>
+			<case to="PREP_recalculate-sim-about-1--filter">${"true" eq "true"}</case>
 			<case to="calculate-minor-docsim">${"false" eq "true"}</case>
 			<case to="recalculate-sim-about-1--docsim-and-merge">${"false" eq "true"}</case>
 			<case to="get-top20-and-serialize-results">${"false" eq "true"}</case>
@@ -81,11 +81,9 @@
 		</switch>
 	</decision>
 
-
-
-	<action name="prepare-results-folder">
+	<action name="PREP_calculate-major-docsim">
 		<fs>
-			<delete path="${workflowPath}/results/" />
+			<delete path="${outputPathDocSimMajor}" />
 		</fs>
 		<ok to="calculate-major-docsim" />
 		<error to="finalize-error" />
@@ -143,6 +141,17 @@
 				</property>
 			</configuration>
 		</sub-workflow>
+		<ok to="PREP_recalculate-sim-about-1--filter" />
+		<error to="finalize-error" />
+	</action>
+
+	<action name="PREP_recalculate-sim-about-1--filter">
+		<fs>
+			<delete path="${outputPathRecalc}/pairs-with-sim-lower-then-threshold" />
+			<delete path="${outputPathRecalc}/pairs-to-process" />
+			<delete path="${outputPathRecalc}/document-keys-to-process" />
+			<delete path="${outputPathRecalc}/documents-to-process" />
+		</fs>
 		<ok to="recalculate-sim-about-1--filter" />
 		<error to="finalize-error" />
 	</action>

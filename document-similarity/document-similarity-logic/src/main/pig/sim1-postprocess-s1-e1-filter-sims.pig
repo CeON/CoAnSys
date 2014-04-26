@@ -62,15 +62,15 @@ A2x = load '$outputPathRecalc/pairs-to-process' as (k1:chararray,k2:chararray);
 B1 = foreach A2x generate k1 as kx;
 B2 = foreach A2x generate k2 as kx;
 B3 = union B1,B2;
-distinct B3;
-store B3 into '$outputPathRecalc/document-keys-to-process';
+B4 = distinct B3;
+store B4 into '$outputPathRecalc/document-keys-to-process';
 
 -- find appropriated metadata for the selected keys
-B3x = load '$outputPathRecalc/documents-keys-to-process' as (kx:chararray);
+B4x = load '$outputPathRecalc/documents-keys-to-process' as (kx:chararray);
 C = LOAD '$inputPathProto' USING pl.edu.icm.coansys.commons.pig.udf.
 	RichSequenceFileLoader('org.apache.hadoop.io.Text','org.apache.hadoop.io.BytesWritable') 
 	as (k:chararray, v:bytearray); 
-D = join B3x by kx left inner, C by k;
+D = join C by k,B4x by kx using 'replicated' ;
 D1 = foreach D generate kx as k, v; 
 store D into '$outputPathRecalc/documents-to-process' USING pl.edu.icm.coansys.commons.pig.udf.
 	RichSequenceFileLoader('org.apache.hadoop.io.Text','org.apache.hadoop.io.BytesWritable');

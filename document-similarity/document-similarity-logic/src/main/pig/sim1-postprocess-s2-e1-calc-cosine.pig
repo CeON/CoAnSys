@@ -44,17 +44,18 @@ IMPORT 'macros.pig';
 %default finalOutputPath 'outputF'
 
 -- load docsim_minor
-E1 = LOAD '$inputPathDocSimMinor'  as (docId: chararray, term: chararray, tfidf: double);
+E = LOAD '$inputPathDocSimMinor'  as (docId: chararray, term: chararray, tfidf: double);
 E1 = group E by docId;
 E2 = foreach E1 generate group as k, E.(term,tfidf) as vector;
 store E2 into '$outputPathRecalc/vectors';
 
-E2x = load '$output/vectors' as (k:chararray,vector:{(term:chararray,tfidf:float)});
 A2x = load '$outputPathRecalc/pairs-to-process' as (k1:chararray,k2:chararray);
-F = join A2x by k1, E2x by k;
-F1 = generate k1,vector as v1, k2;
-F2 = join F1 by k2, E2x by k;
-F3 = generate k1,v1,k2,vector as v2;
+E2x = load '$outputPathRecalc/vectors' as (k:chararray,vector:{vectorcell:(term:chararray,tfidf:float)});
 
-G = foreach F3 generate pl.edu.icm.coansys.similarity.documents.pig.udf.CosineSimilarity(*);
+F = join A2x by k1, E2x by k;
+F1 = foreach F generate k1,vector as v1, k2;
+F2 = join F1 by k2, E2x by k;
+F3 = foreach F2 generate k1,v1,k2,vector as v2;
+
+G = foreach F3 generate pl.edu.icm.coansys.similarity.pig.udf.CosineSimilarity(*);
 store G into '$outputPathRecalc/recalcSims1';
