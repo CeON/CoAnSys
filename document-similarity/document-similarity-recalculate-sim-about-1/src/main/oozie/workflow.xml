@@ -94,6 +94,10 @@
 				<name>mapred.reducer.new-api</name>
 				<value>true</value>
 			</property>
+			<property>
+				<name>oozie.use.system.libpath</name>
+				<value>true</value>
+			</property>
 		</configuration>
 	</global>
 

@@ -41,6 +41,10 @@
 		<name-node>${nameNode}</name-node>
 		<configuration>
 			<property>
+				<name>oozie.use.system.libpath</name>
+				<value>true</value>
+			</property>
+			<property>
 				<name>mapred.fairscheduler.pool</name>
 				<value>${ds_pool}</value>
 			</property>
@@ -71,6 +75,10 @@
 			</app-path>
 			<propagate-configuration />
 			<configuration>
+				<property>
+					<name>oozie.use.system.libpath</name>
+					<value>true</value>
+				</property>
 				<property>
 					<name>ds_similarityInputPath</name>
 					<value>${inputPathProto}</value>
@@ -124,6 +132,10 @@
 			<propagate-configuration />
 			<configuration>
 				<property>
+					<name>oozie.use.system.libpath</name>
+					<value>true</value>
+				</property>
+				<property>
 					<name>sim1-prostprocess-s1-e1</name>
 					<value>true</value>
 				</property>
@@ -147,6 +159,10 @@
 			</app-path>
 			<propagate-configuration />
 			<configuration>
+				<property>
+					<name>oozie.use.system.libpath</name>
+					<value>true</value>
+				</property>
 				<property>
 					<name>ds_similarityInputPath</name>
 					<value>${outputPathRecalc}/documents-to-process</value>
@@ -200,6 +216,10 @@
 			<propagate-configuration />
 			<configuration>
 				<property>
+					<name>oozie.use.system.libpath</name>
+					<value>true</value>
+				</property>
+				<property>
 					<name>sim1-prostprocess-s1-e1</name>
 					<value>false</value>
 				</property>
@@ -231,8 +251,10 @@
 			</app-path>
 			<propagate-configuration />
 			<configuration>
-				<!-- <property> <name>ds_similarityInputPath</name> <value>${outputPathRecalc}/documents-to-process</value> 
-					</property> -->
+				<property>
+					<name>oozie.use.system.libpath</name>
+					<value>true</value>
+				</property>
 				<property>
 					<name>ds_similarityOutputPath</name>
 					<value>${finalOutputPathGlobal}</value>
@@ -274,11 +296,6 @@
 		<ok to="finalize" />
 		<error to="finalize-error" />
 	</action>
-
-	<!-- <action name="finalize"> <fs> -->			<!-- <delete path="${workingDir}" /> -->
-	<!-- </fs> <ok to="end" /> <error to="fail" /> </action> <action name="finalize-error"> 
-		<fs> -->			<!-- <delete path="${workingDir}" /> -->
-	<!-- </fs> <ok to="fail" /> <error to="fail" /> </action> -->
 
 	<kill name="finalize-error">
 		<message>Workflow failed</message>

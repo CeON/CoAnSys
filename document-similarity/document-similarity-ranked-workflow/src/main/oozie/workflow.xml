@@ -101,6 +101,10 @@
 				<name>mapred.reducer.new-api</name>
 				<value>true</value>
 			</property>
+			<property>
+				<name>oozie.use.system.libpath</name>
+				<value>true</value>
+			</property>
 		</configuration>
 	</global>
 
@@ -109,11 +113,14 @@
 
 	<decision name="load_filterTerms_calcTfidf-d">
 		<switch>
-			<case to="load_filterTerms_calcTfidf_filter_ranked">${load_filterTerms_calcTfidf_filter_ranked eq "true"}</case>
-			<case to="load_filterTerms_calcTfidf_filter_tfidf">${load_filterTerms_calcTfidf_filter_tfidf eq "true"}</case>
-			<case to="load_filterTerms_calcTfidf_filter_no">${load_filterTerms_calcTfidf_filter_no eq "true"}</case>
-			
-			
+			<case to="load_filterTerms_calcTfidf_filter_ranked">${load_filterTerms_calcTfidf_filter_ranked eq "true"}
+			</case>
+			<case to="load_filterTerms_calcTfidf_filter_tfidf">${load_filterTerms_calcTfidf_filter_tfidf eq "true"}
+			</case>
+			<case to="load_filterTerms_calcTfidf_filter_no">${load_filterTerms_calcTfidf_filter_no eq "true"}
+			</case>
+
+
 			<default to="prepare_pairwise_sim-d" />
 		</switch>
 	</decision>
