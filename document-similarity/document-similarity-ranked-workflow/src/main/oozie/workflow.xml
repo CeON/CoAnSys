@@ -42,32 +42,39 @@
 			<name>sample</name>
 			<value>1.0</value>
 		</property>
-
+		<!-- Path control variables -->
 		<property>
-			<name>load_filterTerms_calcTfidf_filterTopN</name>
-			<value>use</value>
+			<name>load_filterTerms_calcTfidf_filter_ranked</name>
+			<value>true</value>
+		</property>
+		<property>
+			<name>load_filterTerms_calcTfidf_filter_tfidf</name>
+			<value>false</value>
+		</property>
+		<property>
+			<name>load_filterTerms_calcTfidf_filter_no</name>
+			<value>false</value>
 		</property>
 		<property>
 			<name>prepare_pairwise_sim</name>
-			<value>use</value>
+			<value>true</value>
 		</property>
 		<property>
 			<name>pairwise_sim</name>
-			<value>use</value>
+			<value>true</value>
 		</property>
 		<property>
 			<name>normalize_sim_first_step</name>
-			<value>use</value>
+			<value>true</value>
 		</property>
 		<property>
 			<name>normalize_sim_second_step</name>
-			<value>use</value>
+			<value>true</value>
 		</property>
 		<property>
 			<name>store-to-protobuf</name>
-			<value>use</value>
+			<value>true</value>
 		</property>
-
 	</parameters>
 
 	<global>
@@ -102,18 +109,22 @@
 	</global>
 
 
-	<start to='load_filterTerms_calcTfidf_filterTopN-d' />
+	<start to='load_filterTerms_calcTfidf-d' />
 
-
-	<decision name="load_filterTerms_calcTfidf_filterTopN-d">
+	<decision name="load_filterTerms_calcTfidf-d">
 		<switch>
-			<case to="load_filterTerms_calcTfidf_filterTopN">${load_filterTerms_calcTfidf_filterTopN eq "use"}
+			<case to="load_filterTerms_calcTfidf_filter_ranked">${load_filterTerms_calcTfidf_filter_ranked eq "use"}
 			</case>
+			<case to="load_filterTerms_calcTfidf_filter_tfidf">${load_filterTerms_calcTfidf_filter_tfidf eq "use"}
+			</case>
+			<case to="load_filterTerms_calcTfidf_filter_no">${load_filterTerms_calcTfidf_filter_no eq "use"}
+			</case>
+			
 			<default to="prepare_pairwise_sim-d" />
 		</switch>
 	</decision>
 
-	<action name='load_filterTerms_calcTfidf_filterTopN'>
+	<action name='load_filterTerms_calcTfidf_filter_ranked'>
 		<pig>
 			<prepare>
 				<delete path="${ds_similarityOutputPath}" />
@@ -134,7 +145,57 @@
 			<param>removal_least_used=${ds_removal_least_used}</param>
 			<param>removal_rate=${ds_removal_rate}</param>
 		</pig>
-		<ok to='prepare_pairwise_sim' />
+		<ok to='prepare_pairwise_sim-d' />
+		<error to='kill' />
+	</action>
+
+	<action name='load_filterTerms_calcTfidf_filter_tfidf'>
+		<pig>
+			<prepare>
+				<delete path="${ds_similarityOutputPath}" />
+			</prepare>
+			<script>document-similarity-s1-tfidf_filter.pig</script>
+			<param>inputPath=${ds_bwndataMetadataInputPath}</param>
+			<param>outputPath=${ds_similarityOutputPath}</param>
+			<param>commonJarsPath=${commonJarsPath}</param>
+			<param>parallel=${ds_parallel}</param>
+			<param>tmpCompressionCodec=${ds_tmpCompressionCodec}</param>
+			<param>sample=${ds_sample}</param>
+			<param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>
+			<param>ds_scheduler=${ds_scheduler}</param>
+			<param>tfidfTopnTermPerDocument=${ds_tfidfTopnTermPerDocument}
+			</param>
+			<param>similarityTopnDocumentPerDocument=${ds_similarityTopnDocumentPerDocument}
+			</param>
+			<param>removal_least_used=${ds_removal_least_used}</param>
+			<param>removal_rate=${ds_removal_rate}</param>
+		</pig>
+		<ok to='prepare_pairwise_sim-d' />
+		<error to='kill' />
+	</action>
+
+	<action name='load_filterTerms_calcTfidf_filter_no'>
+		<pig>
+			<prepare>
+				<delete path="${ds_similarityOutputPath}" />
+			</prepare>
+			<script>document-similarity-s1-no_filter.pig</script>
+			<param>inputPath=${ds_bwndataMetadataInputPath}</param>
+			<param>outputPath=${ds_similarityOutputPath}</param>
+			<param>commonJarsPath=${commonJarsPath}</param>
+			<param>parallel=${ds_parallel}</param>
+			<param>tmpCompressionCodec=${ds_tmpCompressionCodec}</param>
+			<param>sample=${ds_sample}</param>
+			<param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>
+			<param>ds_scheduler=${ds_scheduler}</param>
+			<param>tfidfTopnTermPerDocument=${ds_tfidfTopnTermPerDocument}
+			</param>
+			<param>similarityTopnDocumentPerDocument=${ds_similarityTopnDocumentPerDocument}
+			</param>
+			<param>removal_least_used=${ds_removal_least_used}</param>
+			<param>removal_rate=${ds_removal_rate}</param>
+		</pig>
+		<ok to='prepare_pairwise_sim-d' />
 		<error to='kill' />
 	</action>
 
@@ -164,7 +225,7 @@
 			<param>removal_least_used=${ds_removal_least_used}</param>
 			<param>removal_rate=${ds_removal_rate}</param>
 		</pig>
-		<ok to='pairwise_sim' />
+		<ok to='pairwise_sim-d' />
 		<error to='kill' />
 	</action>
 
@@ -195,7 +256,7 @@
 			<param>removal_least_used=${ds_removal_least_used}</param>
 			<param>removal_rate=${ds_removal_rate}</param>
 		</pig>
-		<ok to='normalize_sim_first_step' />
+		<ok to='normalize_sim_first_step-d' />
 		<error to='kill' />
 	</action>
 
