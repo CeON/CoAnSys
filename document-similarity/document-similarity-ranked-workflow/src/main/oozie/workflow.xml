@@ -72,7 +72,7 @@
 			<value>true</value>
 		</property>
 		<property>
-			<name>store-to-protobuf</name>
+			<name>store_to_protobuf</name>
 			<value>true</value>
 		</property>
 	</parameters>
@@ -109,11 +109,11 @@
 
 	<decision name="load_filterTerms_calcTfidf-d">
 		<switch>
-			<case to="load_filterTerms_calcTfidf_filter_ranked">${load_filterTerms_calcTfidf_filter_ranked eq "use"}
+			<case to="load_filterTerms_calcTfidf_filter_ranked">${load_filterTerms_calcTfidf_filter_ranked eq "true"}
 			</case>
-			<case to="load_filterTerms_calcTfidf_filter_tfidf">${load_filterTerms_calcTfidf_filter_tfidf eq "use"}
+			<case to="load_filterTerms_calcTfidf_filter_tfidf">${load_filterTerms_calcTfidf_filter_tfidf eq "true"}
 			</case>
-			<case to="load_filterTerms_calcTfidf_filter_no">${load_filterTerms_calcTfidf_filter_no eq "use"}
+			<case to="load_filterTerms_calcTfidf_filter_no">${load_filterTerms_calcTfidf_filter_no eq "true"}
 			</case>
 			
 			<default to="prepare_pairwise_sim-d" />
@@ -197,7 +197,7 @@
 
 	<decision name="prepare_pairwise_sim-d">
 		<switch>
-			<case to="prepare_pairwise_sim">${prepare_pairwise_sim eq "use"}
+			<case to="prepare_pairwise_sim">${prepare_pairwise_sim eq "true"}
 			</case>
 			<default to="pairwise_sim-d" />
 		</switch>
@@ -227,7 +227,7 @@
 
 	<decision name="pairwise_sim-d">
 		<switch>
-			<case to="pairwise_sim">${pairwise_sim eq "use"}
+			<case to="pairwise_sim">${pairwise_sim eq "true"}
 			</case>
 			<default to="normalize_sim_first_step-d" />
 		</switch>
@@ -258,7 +258,7 @@
 
 	<decision name="normalize_sim_first_step-d">
 		<switch>
-			<case to="normalize_sim_first_step">${normalize_sim_first_step eq "use"}
+			<case to="normalize_sim_first_step">${normalize_sim_first_step eq "true"}
 			</case>
 			<default to="normalize_sim_second_step-d" />
 		</switch>
@@ -289,7 +289,7 @@
 
 	<decision name="normalize_sim_second_step-d">
 		<switch>
-			<case to="normalize_sim_second_step">${normalize_sim_second_step eq "use"}
+			<case to="normalize_sim_second_step">${normalize_sim_second_step eq "true"}
 			</case>
 			<default to="store-to-protobuf-d" />
 		</switch>
@@ -320,7 +320,7 @@
 
 	<decision name="store-to-protobuf-d">
 		<switch>
-			<case to="store-to-protobuf">${store-to-protobuf eq "use"}
+			<case to="store_to_protobuf">${store_to_protobuf eq "true"}
 			</case>
 			<default to="end" />
 		</switch>

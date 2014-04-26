@@ -108,7 +108,7 @@
 					<value>false</value>
 				</property>
 				<property>
-					<name>store-to-protobuf</name>
+					<name>store_to_protobuf</name>
 					<value>false</value>
 				</property>
 			</configuration>
@@ -184,7 +184,7 @@
 					<value>false</value>
 				</property>
 				<property>
-					<name>store-to-protobuf</name>
+					<name>store_to_protobuf</name>
 					<value>false</value>
 				</property>
 			</configuration>
@@ -267,7 +267,7 @@
 					<value>true</value>
 				</property>
 				<property>
-					<name>store-to-protobuf</name>
+					<name>store_to_protobuf</name>
 					<value>${ds_serialize_to_proto}</value>
 				</property>
 			</configuration>
