@@ -19,8 +19,11 @@
 		</property>
 		<property>
 			<name>inputPathDocSimMinor</name>
-			<value>${workflowPath}/../integrated_results/minor/tfidf/all-topn-tmp/
-			</value>
+			<value>${workflowPath}/../integrated_results/minor/tfidf/all-topn-tmp/</value>
+		</property>
+		<property>
+			<name>outputPathDocSimMinor</name>
+			<value>${workflowPath}/../integrated_results/minor/</value>
 		</property>
 		<property>
 			<name>outputPathRecalc</name>
@@ -73,8 +76,8 @@
 	<decision name="pick_start_node">
 		<switch>
 			<case to="calculate-major-docsim">${"false" eq "true"}</case>
-			<case to="recalculate-sim-about-1__filter">${"true" eq "true"}</case>
-			<case to="calculate-minor-docsim">${"false" eq "true"}</case>
+			<case to="recalculate-sim-about-1__filter">${"false" eq "true"}</case>
+			<case to="calculate-minor-docsim">${"true" eq "true"}</case>
 			<case to="recalculate-sim-about-1__docsim-and-merge">${"false" eq "true"}</case>
 			<case to="get-top20-and-serialize-results">${"false" eq "true"}</case>
 			<default to="finalize" />
