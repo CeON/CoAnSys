@@ -19,20 +19,22 @@ j=length(vals)
 typ='l'
 B <- read.csv(paste(sourcePath,"/0_",vals[j],".csv",sep=""), header=F)
 B <- B[order(B$V1),]
+B <- B[B$V1>0.95,]
 B$V2 <- log10(B$V2)
 plot(B,type=typ,col=colrs[j],pch=mpch,
-     main="Num of docs represented with vector of given lenght",
-     xlab="Length of vector representation (max=80)",
-     ylab="Number of documents")
+     main="Num of doc pairs with given similarity level",
+     xlab="Similarity level (sim=[0;1])",
+     ylab="Number of pairs of documents (log10)")
 for(j in 1:(length(vals)-1)){
   #j=5
   B <- read.csv(paste(sourcePath,"/0_",vals[j],".csv",sep=""), header=F)
   B <- B[order(B$V1),]
+  B <- B[B$V1>0.95,]
   B$V2 <- log10(B$V2)
   points(B,type=typ,col=colrs[j],pch=mpch)
 }
-
-legend(0.83,9, legend=vals ,lty=1, col=colrs, bty='n',cex=.825)
+legend(0.97,5.0, legend=vals ,lty=1, col=colrs, bty='n',cex=1.0)
+#legend(0.7,8.5, legend=vals ,lty=1, col=colrs, bty='n',cex=1.0)
 ###################
 ###################
 ###################
