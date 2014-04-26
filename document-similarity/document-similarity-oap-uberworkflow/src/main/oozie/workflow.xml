@@ -11,29 +11,29 @@
 		</property>
 		<property>
 			<name>outputPathDocSimMajor</name>
-			<value>${workflowPath}/results/major/</value>
+			<value>${workflowPath}/../integrated_results/major/</value>
 		</property>
 		<property>
 			<name>inputPathDocSimMajor</name>
-			<value>${workflowPath}/results/major/similarity/normalizedleftdocs/
+			<value>${workflowPath}/../integrated_results/major/similarity/normalizedleftdocs/
 			</value>
 		</property>
 		<property>
 			<name>inputPathDocSimMinor</name>
-			<value>${workflowPath}/results/minor/tfidf/all-topn-tmp/</value>
+			<value>${workflowPath}/../integrated_results/minor/tfidf/all-topn-tmp/</value>
 		</property>
 		<property>
 			<name>outputPathRecalc</name>
-			<value>${workflowPath}/results/recalc/</value>
+			<value>${workflowPath}/../integrated_results/recalc/</value>
 		</property>
 		<property>
 			<name>finalOutputPath</name>
-			<value>${workflowPath}/results/final/similarity/normalizedleftdocs/
+			<value>${workflowPath}/../integrated_results/final/similarity/normalizedleftdocs/
 			</value>
 		</property>
 		<property>
 			<name>finalOutputPathGlobal</name>
-			<value>${workflowPath}/results/final/</value>
+			<value>${workflowPath}/../integrated_results/final/</value>
 		</property>
 	</parameters>
 
@@ -68,7 +68,20 @@
 		</configuration>
 	</global>
 
-	<start to="prepare-results-folder" />
+	<start to="pick_start_node" />
+
+	<decision name="pick_start_node">
+		<switch>
+			<case to="prepare-results-folder">${"false" eq "true"}</case>
+			<case to="recalculate-sim-about-1--filter">${"true" eq "true"}</case>
+			<case to="calculate-minor-docsim">${"false" eq "true"}</case>
+			<case to="recalculate-sim-about-1--docsim-and-merge">${"false" eq "true"}</case>
+			<case to="get-top20-and-serialize-results">${"false" eq "true"}</case>
+			<default to="finalize" />
+		</switch>
+	</decision>
+
+
 
 	<action name="prepare-results-folder">
 		<fs>
@@ -145,15 +158,15 @@
 					<value>true</value>
 				</property>
 				<property>
-					<name>sim1_prostprocess_s1_e1</name>
+					<name>sim1_postprocess_s1_e1</name>
 					<value>true</value>
 				</property>
 				<property>
-					<name>sim1_prostprocess_s2_e1</name>
+					<name>sim1_postprocess_s2_e1</name>
 					<value>false</value>
 				</property>
 				<property>
-					<name>sim1_prostprocess_s3_e1</name>
+					<name>sim1_postprocess_s3_e1</name>
 					<value>false</value>
 				</property>
 			</configuration>
@@ -214,11 +227,11 @@
 				</property>
 			</configuration>
 		</sub-workflow>
-		<ok to="recalculate-sim-about-1--docsin-and-merge" />
+		<ok to="recalculate-sim-about-1--docsim-and-merge" />
 		<error to="finalize-error" />
 	</action>
 
-	<action name="recalculate-sim-about-1--docsin-and-merge">
+	<action name="recalculate-sim-about-1--docsim-and-merge">
 		<sub-workflow>
 			<app-path>${wf:appPath()}/pl.edu.icm.coansys-document-similarity-recalculate-sim-about-1
 			</app-path>
@@ -229,15 +242,15 @@
 					<value>true</value>
 				</property>
 				<property>
-					<name>sim1_prostprocess_s1_e1</name>
+					<name>sim1_postprocess_s1_e1</name>
 					<value>false</value>
 				</property>
 				<property>
-					<name>sim1_prostprocess_s2_e1</name>
+					<name>sim1_postprocess_s2_e1</name>
 					<value>true</value>
 				</property>
 				<property>
-					<name>sim1_prostprocess_s3_e1</name>
+					<name>sim1_postprocess_s3_e1</name>
 					<value>true</value>
 				</property>
 				<property>
