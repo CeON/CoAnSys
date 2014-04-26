@@ -1,5 +1,4 @@
-<workflow-app name="${project}_${subproject_main}" 
-    xmlns="uri:oozie:workflow:0.4">
+<workflow-app name="${project}_${subproject_main}" xmlns="uri:oozie:workflow:0.4">
 	<parameters>
 		<property>
 			<name>ds_pool</name>
@@ -20,7 +19,8 @@
 		</property>
 		<property>
 			<name>inputPathDocSimMinor</name>
-			<value>${workflowPath}/../integrated_results/minor/tfidf/all-topn-tmp/</value>
+			<value>${workflowPath}/../integrated_results/minor/tfidf/all-topn-tmp/
+			</value>
 		</property>
 		<property>
 			<name>outputPathRecalc</name>
@@ -184,6 +184,18 @@
 				<property>
 					<name>oozie.use.system.libpath</name>
 					<value>true</value>
+				</property>
+				<property>
+					<name>ds_removal_least_used</name>
+					<value>0</value>
+				</property>
+				<property>
+					<name>ds_removal_rate</name>
+					<value>1.0</value>
+				</property>
+				<property>
+					<name>sample</name>
+					<value>1.0</value>
 				</property>
 				<property>
 					<name>ds_similarityInputPath</name>
