@@ -72,7 +72,7 @@
 
 	<decision name="pick_start_node">
 		<switch>
-			<case to="PREP_prepare-results-folder">${"false" eq "true"}</case>
+			<case to="PREP_calculate-major-docsim">${"false" eq "true"}</case>
 			<case to="PREP_recalculate-sim-about-1--filter">${"true" eq "true"}</case>
 			<case to="calculate-minor-docsim">${"false" eq "true"}</case>
 			<case to="recalculate-sim-about-1--docsim-and-merge">${"false" eq "true"}</case>
