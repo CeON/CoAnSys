@@ -46,11 +46,10 @@ IMPORT 'macros.pig';
 -- load docsim_minor
 E = LOAD '$inputPathDocSimMinor'  as (docId: chararray, term: chararray, tfidf: double);
 E1 = group E by docId;
-E2 = foreach E1 generate group as k, E.(term,tfidf) as vector;
-store E2 into '$outputPathRecalc/vectors';
+store E1 into '$outputPathRecalc/vectors';
 
 A2x = load '$outputPathRecalc/pairs-to-process' as (k1:chararray,k2:chararray);
-E2x = load '$outputPathRecalc/vectors' as (k:chararray,vector:{vectorcell:(term:chararray,tfidf:float)});
+E2x = load '$outputPathRecalc/vectors' as (k:chararray,vector:{vectorcell:(docId:chararray,term:chararray,tfidf:float)});
 
 F = join A2x by k1, E2x by k;
 F1 = foreach F generate k1,vector as v1, k2;

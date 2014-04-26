@@ -31,6 +31,8 @@ import org.apache.pig.data.TupleFactory;
 import org.apache.pig.impl.logicalLayer.FrontendException;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
 
+import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
+
 public class CosineSimilarity extends EvalFunc<Tuple> {
 
     @Override
@@ -90,7 +92,7 @@ public class CosineSimilarity extends EvalFunc<Tuple> {
                 return null;
             }
         } catch (Exception e) {
-            throw new IOException("Caught exception processing input row ", e);
+            throw new IOException("Caught exception processing input row "+StackTraceExtractor.getStackTrace(e),e);
         }
     }
 

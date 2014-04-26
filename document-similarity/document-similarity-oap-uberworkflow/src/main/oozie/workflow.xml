@@ -82,8 +82,8 @@
 		<switch>
 			<case to="calculate-major-docsim">${"false" eq "true"}</case>
 			<case to="recalculate-sim-about-1__filter">${"false" eq "true"}</case>
-			<case to="calculate-minor-docsim">${"true" eq "true"}</case>
-			<case to="recalculate-sim-about-1__docsim-and-merge">${"false" eq "true"}</case>
+			<case to="calculate-minor-docsim">${"false" eq "true"}</case>
+			<case to="recalculate-sim-about-1__docsim-and-merge">${"true" eq "true"}</case>
 			<case to="get-top20-and-serialize-results">${"false" eq "true"}</case>
 			<default to="finalize" />
 		</switch>
