@@ -1,0 +1,204 @@
+<workflow-app name='${project}_${subproject}_ver4_ranked_one_source'
+	xmlns="uri:oozie:workflow:0.4">
+
+	<parameters>
+		<property>
+			<name>POOL_NAME</name>
+			<value>default</value>
+		</property>
+		<property>
+			<name>oozie.wf.validate.ForkJoin</name>
+			<value>false</value>
+		</property>
+		<property>
+			<name>ds_removal_least_used</name>
+			<value>0</value>
+		</property>
+		<property>
+			<name>ds_removal_rate</name>
+			<value>1.0</value>
+		</property>
+		<property>
+			<name>ds_tfidfTopnTermPerDocument</name>
+			<value>20</value>
+		</property>
+		<property>
+			<name>ds_similarityTopnDocumentPerDocument</name>
+			<value>20</value>
+		</property>
+		<property>
+			<name>mapredChildJavaOpts</name>
+			<value>-Xmx2g</value>
+		</property>
+		<property>
+			<name>ds_scheduler</name>
+			<value>${POOL_NAME}</value>
+		</property>
+		<property>
+			<name>ds_parallel</name>
+			<value>2</value>
+		</property>
+		<property>
+			<name>tmpCompressionCodec</name>
+			<value>gz</value>
+		</property>
+		<property>
+			<name>sample</name>
+			<value>1.0</value>
+		</property>
+	</parameters>
+
+
+	<global>
+		<job-tracker>${jobTracker}</job-tracker>
+		<name-node>${nameNode}</name-node>
+		<configuration>
+			<property>
+				<name>mapred.fairscheduler.pool</name>
+				<value>${POOL_NAME}</value>
+			</property>
+
+			<property>
+				<name>inputPathProto</name>
+				<value>${ds_bwndataMetadataInputPath}</value>
+			</property>
+			<property>
+				<name>inputPathDocSimMajor</name>
+				<value>${ds_bwndataMetadataOutputPath}/major/similarity/normalizedleftdocs
+				</value>
+			</property>
+			<property>
+				<name>inputPathDocSimMinor</name>
+				<value>${ds_bwndataMetadataOutputPath}/minor/similarity/normalizedleftdocs
+				</value>
+			</property>
+			<property>
+				<name>outputPathRecalc</name>
+				<value>${ds_bwndataMetadataOutputPath}/recalc/</value>
+			</property>
+			<property>
+				<name>finalOutputPath</name>
+				<value>${ds_bwndataMetadataOutputPath}/final/</value>
+			</property>
+
+			<property>
+				<name>oozie.launcher.mapred.fairscheduler.pool</name>
+				<value>${POOL_NAME}</value>
+			</property>
+			<property>
+				<name>mapred.job.queue.name</name>
+				<value>${queueName}</value>
+			</property>
+			<property>
+				<name>mapred.mapper.new-api</name>
+				<value>true</value>
+			</property>
+			<property>
+				<name>mapred.reducer.new-api</name>
+				<value>true</value>
+			</property>
+			<property>
+				<name>oozie.use.system.libpath</name>
+				<value>true</value>
+			</property>
+		</configuration>
+
+	</global>
+
+	<start to='sim1-prostprocess-s1-e1-d' />
+
+	<decision name="sim1-prostprocess-s1-e1-d">
+		<switch>
+			<case to="sim1-prostprocess-s1-e1-filter-input">${sim1-prostprocess-s1-e1 eq "true"}
+			</case>
+			<default to="sim1-prostprocess-s2-e1-d" />
+		</switch>
+	</decision>
+
+	<action name='sim1-prostprocess-s1-e1-filter-input'>
+		<pig>
+			<job-tracker>${jobTracker}</job-tracker>
+			<name-node>${nameNode}</name-node>
+			<prepare>
+				<delete path="${outputPathRecalc}" />
+			</prepare>
+			<script>sim1-prostprocess-s1-e1.pig</script>
+			<param>inputPathProto=${inputPathProto}</param>
+			<param>inputPathDocSimMajor=${inputPathDocSimMajor}</param>
+			<param>inputPathDocSimMinor=${inputPathDocSimMinor}</param>
+			<param>outputPathRecalc=${outputPathRecalc}</param>
+			<param>finalOutputPath=${finalOutputPath}</param>
+			<param>commonJarsPath=${commonJarsPath}</param>
+			<param>parallel=${ds_parallel}</param>
+			<param>tmpCompressionCodec=${ds_tmpCompressionCodec}</param>
+			<param>sample=${ds_sample}</param>
+			<param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>
+			<param>ds_scheduler=${ds_scheduler}</param>
+		</pig>
+		<ok to='sim1-prostprocess-s2-e1-d' />
+		<error to='kill' />
+	</action>
+
+	<decision name="sim1-prostprocess-s2-e1-d">
+		<switch>
+			<case to="sim1-prostprocess-s2-e1-calculate-sims">${sim1-prostprocess-s2-e1 eq "true"}
+			</case>
+			<default to="sim1-prostprocess-s3-e1-d" />
+		</switch>
+	</decision>
+
+	<action name='sim1-prostprocess-s2-e1-calculate-sims'>
+		<pig>
+			<script>sim1-prostprocess-s1-e1.pig</script>
+			<param>inputPathProto=${inputPathProto}</param>
+			<param>inputPathDocSimMajor=${inputPathDocSimMajor}</param>
+			<param>inputPathDocSimMinor=${inputPathDocSimMinor}</param>
+			<param>outputPathRecalc=${outputPathRecalc}</param>
+			<param>finalOutputPath=${finalOutputPath}</param>
+			<param>commonJarsPath=${commonJarsPath}</param>
+			<param>parallel=${ds_parallel}</param>
+			<param>tmpCompressionCodec=${ds_tmpCompressionCodec}</param>
+			<param>sample=${ds_sample}</param>
+			<param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>
+			<param>ds_scheduler=${ds_scheduler}</param>
+		</pig>
+		<ok to='sim1-prostprocess-s3-e1-d' />
+		<error to='kill' />
+	</action>
+
+	<decision name="sim1-prostprocess-s3-e1-d">
+		<switch>
+			<case to="sim1-prostprocess-s3-e1-merge-results">${sim1-prostprocess-s3-e1 eq "true"}
+			</case>
+
+			<default to="end" />
+		</switch>
+	</decision>
+
+	<action name='sim1-prostprocess-s3-e1-merge-results'>
+		<pig>
+			<script>sim1-prostprocess-s1-e1.pig</script>
+			<param>inputPathProto=${inputPathProto}</param>
+			<param>inputPathDocSimMajor=${inputPathDocSimMajor}</param>
+			<param>inputPathDocSimMinor=${inputPathDocSimMinor}</param>
+			<param>outputPathRecalc=${outputPathRecalc}</param>
+			<param>finalOutputPath=${finalOutputPath}</param>
+			<param>commonJarsPath=${commonJarsPath}</param>
+			<param>parallel=${ds_parallel}</param>
+			<param>tmpCompressionCodec=${ds_tmpCompressionCodec}</param>
+			<param>sample=${ds_sample}</param>
+			<param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>
+			<param>ds_scheduler=${ds_scheduler}</param>
+		</pig>
+		<ok to='end' />
+		<error to='kill' />
+	</action>
+
+
+	<kill name='kill'>
+		<message>Workflow failed, error
+			message[${wf:errorMessage(wf:lastErrorNode())}]
+		</message>
+	</kill>
+	<end name='end' />
+</workflow-app>
