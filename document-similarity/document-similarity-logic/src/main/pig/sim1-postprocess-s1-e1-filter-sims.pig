@@ -48,7 +48,7 @@ A = load '$inputPathDocSimMajor' as (k1:chararray,k2:chararray,sim:double);
 -- separate pairs into two groups
 -- (a) a group to be enhanced [sim >= 0.999]
 -- (a) a group which will remain untouched [sim < 0.999]
-SPLIT 
+SPLIT A INTO
 	A1 if sim >= 0.999,
 	A11 if sim < 0.999;
 store A11 into '$outputPathRecalc/pairs-with-sim-lower-then-threshold';
