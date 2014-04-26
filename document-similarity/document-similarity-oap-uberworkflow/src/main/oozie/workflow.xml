@@ -224,11 +224,9 @@
 		<error to="finalize-error" />
 	</action>
 
+
 	<action name="get-top20-and-serialize-results">
 		<sub-workflow>
-			<prepare>
-				<move source="${ds_similarityOutputPath}" target="" />
-			</prepare>
 			<app-path>${wf:appPath()}/pl.edu.icm.coansys-document-similarity-ranked-workflow
 			</app-path>
 			<propagate-configuration />
