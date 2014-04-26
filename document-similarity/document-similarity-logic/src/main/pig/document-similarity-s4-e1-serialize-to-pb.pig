@@ -29,6 +29,7 @@
 %default SIMILARITY_NORMALIZED_LEFT_DOCS_SUBDIR '/similarity/normalizedalldocs'
 %default SIMILARITY_NORMALIZED_ALL_DOCS_SUBDIR '/similarity/normalizedleftdocs'
 %default SIMILARITY_TOPN_DOCS_SUBDIR '/similarity/topn'
+%default SIMILARITY_TOPN_DOCS_PB_SUBDIR '/similarity/topn_protobuf'
 %default DENOMINATOR '/similarity/denominator'
 %default NOMINATOR '/similarity/nominator'
 
