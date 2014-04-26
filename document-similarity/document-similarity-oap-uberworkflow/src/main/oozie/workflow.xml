@@ -277,26 +277,34 @@
 		<error to="finalize-error" />
 	</action>
 
-
+	<!-- 
 	<action name="finalize">
 		<fs>
-			<!-- <delete path="${workingDir}" /> -->
-		</fs>
+-->			<!-- <delete path="${workingDir}" /> -->
+<!--		</fs>
 		<ok to="end" />
 		<error to="fail" />
 	</action>
 
 	<action name="finalize-error">
 		<fs>
-			<!-- <delete path="${workingDir}" /> -->
-		</fs>
+-->			<!-- <delete path="${workingDir}" /> -->
+<!--		</fs>
 		<ok to="fail" />
 		<error to="fail" />
 	</action>
+-->
+	<kill name="finalize-error">
+		<message>Workflow failed</message>
+	</kill>
 
+	<end name="finalize" />
+	
+	<!-- 
 	<kill name="fail">
 		<message>Workflow failed</message>
 	</kill>
 
 	<end name="end" />
+	 -->
 </workflow-app>
