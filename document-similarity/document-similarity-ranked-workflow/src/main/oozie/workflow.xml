@@ -39,7 +39,7 @@
 			<value>gz</value>
 		</property>
 		<property>
-			<name>sample</name>
+			<name>ds_sample</name>
 			<value>1.0</value>
 		</property>
 		<!-- Path control variables -->

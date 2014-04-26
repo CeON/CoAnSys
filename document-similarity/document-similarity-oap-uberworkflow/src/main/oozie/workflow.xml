@@ -19,7 +19,7 @@
 		</property>
 		<property>
 			<name>inputPathDocSimMinor</name>
-			<value>${workflowPath}/../integrated_results/minor/tfidf/all-topn-tmp/</value>
+			<value>${workflowPath}/../integrated_results/minor/tfidf/nonweighted/</value>
 		</property>
 		<property>
 			<name>outputPathDocSimMinor</name>
@@ -206,7 +206,7 @@
 					<value>1.0</value>
 				</property>
 				<property>
-					<name>sample</name>
+					<name>ds_sample</name>
 					<value>1.0</value>
 				</property>
 				<property>
