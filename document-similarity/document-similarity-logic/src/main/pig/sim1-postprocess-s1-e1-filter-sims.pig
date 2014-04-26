@@ -42,25 +42,36 @@ IMPORT 'macros.pig';
 %default inputPathDocSimMinor 'docsim-minor'
 %default outputPathRecalc 'output'
 %default finalOutputPath 'outputF'
+%default splitThreshold 0.7
 
 -- read data from docsim
 A = load '$inputPathDocSimMajor' as (k1:chararray,k2:chararray,sim:double);
+
+/**
 -- separate pairs into two groups
 -- (a) a group to be enhanced [sim >= 0.999]
 -- (a) a group which will remain untouched [sim < 0.999]
 SPLIT A INTO
-	A1 if sim >= 0.999,
-	A11 if sim < 0.999;
+	A1 if sim >= $splitThreshold,
+	A11 if sim < $splitThreshold;
+**/
+
+A11 = filter A by sim < $splitThreshold;
 store A11 into '$outputPathRecalc/pairs-with-sim-lower-then-threshold';
 
+
 -- save pairs which docsim should be recalculated
+A1 = filter A by sim >= $splitThreshold;
 A2 = foreach A1 generate k1,k2;
 store A2 into '$outputPathRecalc/pairs-to-process';
 
 -- get keys of documents which will be recalculated
 A2x = load '$outputPathRecalc/pairs-to-process' as (k1:chararray,k2:chararray);
+A2xx = load '$outputPathRecalc/pairs-to-process' as (k1:chararray,k2:chararray);
+
+
 B1 = foreach A2x generate k1 as kx;
-B2 = foreach A2x generate k2 as kx;
+B2 = foreach A2xx generate k2 as kx;
 B3 = union B1,B2;
 B4 = distinct B3;
 store B4 into '$outputPathRecalc/document-keys-to-process';
@@ -74,3 +85,5 @@ D = join C by k,B4x by kx using 'replicated' ;
 D1 = foreach D generate kx as k, v; 
 store D into '$outputPathRecalc/documents-to-process' USING pl.edu.icm.coansys.commons.pig.udf.
 	RichSequenceFileLoader('org.apache.hadoop.io.Text','org.apache.hadoop.io.BytesWritable');
+/****************
+****************/
