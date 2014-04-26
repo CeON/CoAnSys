@@ -1,19 +1,39 @@
 <workflow-app xmlns="uri:oozie:workflow:0.4" name="${project}__${subproject}">
 	<parameters>
 		<property>
-			<name>POOL_NAME</name>
-			<value>default</value>
+			<name>ds_pool</name>
+			<value>bigjobs</value>
 		</property>
 	</parameters>
 
 	<global>
 		<job-tracker>${jobTracker}</job-tracker>
 		<name-node>${nameNode}</name-node>
+		
+		
 		<configuration>
 			<property>
-				<name>mapred.fairscheduler.pool</name>
-				<value>${POOL_NAME}</value>
+				<name>mapred.job.queue.name</name>
+				<value>${queueName}</value>
 			</property>
+			<property>
+				<name>mapred.mapper.new-api</name>
+				<value>true</value>
+			</property>
+			<property>
+				<name>mapred.reducer.new-api</name>
+				<value>true</value>
+			</property>
+			<property>
+				<name>mapred.fairscheduler.pool</name>
+				<value>${ds_pool}</value>
+			</property>
+			<property>
+				<name>oozie.launcher.mapred.fairscheduler.pool</name>
+				<value>${ds_pool}</value>
+			</property>
+			
+			
 			<property>
 				<name>inputPathProto</name>
 				<value>${ds_bwndataMetadataInputPath}</value>
@@ -37,27 +57,12 @@
 			</property>
 			<property>
 				<name>finalOutputPath</name>
-				<value>${wf:appPath()}/results/final/similarity/normalizedleftdocs/</value>
+				<value>${wf:appPath()}/results/final/similarity/normalizedleftdocs/
+				</value>
 			</property>
 			<property>
 				<name>finalOutputPathGlobal</name>
 				<value>${wf:appPath()}/results/final/</value>
-			</property>
-			<property>
-				<name>oozie.launcher.mapred.fairscheduler.pool</name>
-				<value>${POOL_NAME}</value>
-			</property>
-			<property>
-				<name>mapred.job.queue.name</name>
-				<value>${queueName}</value>
-			</property>
-			<property>
-				<name>mapred.mapper.new-api</name>
-				<value>true</value>
-			</property>
-			<property>
-				<name>mapred.reducer.new-api</name>
-				<value>true</value>
 			</property>
 		</configuration>
 	</global>
@@ -196,6 +201,7 @@
 		<sub-workflow>
 			<app-path>${wf:appPath()}/pl.edu.icm.coansys-document-similarity-recalculate-sim-about-1
 			</app-path>
+
 			<propagate-configuration />
 			<configuration>
 				<property>
@@ -224,17 +230,14 @@
 		<error to="finalize-error" />
 	</action>
 
-
-	<action name="get-top20-and-serialize-results">
+		<action name="get-top20-and-serialize-results">
 		<sub-workflow>
 			<app-path>${wf:appPath()}/pl.edu.icm.coansys-document-similarity-ranked-workflow
 			</app-path>
 			<propagate-configuration />
 			<configuration>
-<!-- 			<property>
-					<name>ds_similarityInputPath</name>
-					<value>${outputPathRecalc}/documents-to-process</value>
-				</property> -->
+				<!-- <property> <name>ds_similarityInputPath</name> <value>${outputPathRecalc}/documents-to-process</value> 
+					</property> -->
 				<property>
 					<name>ds_similarityOutputPath</name>
 					<value>${finalOutputPathGlobal}</value>
@@ -269,7 +272,7 @@
 				</property>
 				<property>
 					<name>store-to-protobuf</name>
-					<value>true</value>
+					<value>${ds_serialize_to_proto}</value>
 				</property>
 			</configuration>
 		</sub-workflow>
@@ -277,34 +280,17 @@
 		<error to="finalize-error" />
 	</action>
 
-	<!-- 
-	<action name="finalize">
-		<fs>
--->			<!-- <delete path="${workingDir}" /> -->
-<!--		</fs>
-		<ok to="end" />
-		<error to="fail" />
-	</action>
-
-	<action name="finalize-error">
-		<fs>
--->			<!-- <delete path="${workingDir}" /> -->
-<!--		</fs>
-		<ok to="fail" />
-		<error to="fail" />
-	</action>
--->
+	<!-- <action name="finalize"> <fs> -->			<!-- <delete path="${workingDir}" /> -->
+	<!-- </fs> <ok to="end" /> <error to="fail" /> </action> <action name="finalize-error"> 
+		<fs> -->			<!-- <delete path="${workingDir}" /> -->
+	<!-- </fs> <ok to="fail" /> <error to="fail" /> </action> -->
+	
 	<kill name="finalize-error">
 		<message>Workflow failed</message>
 	</kill>
 
 	<end name="finalize" />
-	
-	<!-- 
-	<kill name="fail">
-		<message>Workflow failed</message>
-	</kill>
 
-	<end name="end" />
-	 -->
+	<!-- <kill name="fail"> <message>Workflow failed</message> </kill> <end 
+		name="end" /> -->
 </workflow-app>
