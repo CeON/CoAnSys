@@ -95,5 +95,3 @@ STORE doc_all INTO '$outputPath$DOC_TERM_ALL';
 tfidf_all = calculate_tfidf(doc_all, docId, term, $tfidfMinValue);
 -- store tfidf values into separate direcotires
 STORE tfidf_all INTO '$outputPath$TFIDF_NON_WEIGHTED_SUBDIR';
--- do not use any filter against tfidf or term frequency in a collection
-STORE tfidf_all  INTO '$outputPath$TFIDF_TOPN_ALL_TEMP';

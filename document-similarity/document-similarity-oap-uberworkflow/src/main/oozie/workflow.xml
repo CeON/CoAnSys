@@ -1,12 +1,8 @@
-<workflow-app xmlns="uri:oozie:workflow:0.4" name="comac-wf">
+<workflow-app xmlns="uri:oozie:workflow:0.4" name="${project}__${subproject}">
 	<parameters>
 		<property>
 			<name>POOL_NAME</name>
 			<value>default</value>
-		</property>
-		<property>
-			<name>oozie.wf.validate.ForkJoin</name>
-			<value>false</value>
 		</property>
 	</parameters>
 
@@ -33,8 +29,7 @@
 			</property>
 			<property>
 				<name>inputPathDocSimMinor</name>
-				<value>${wf:appPath()}/results/minor/similarity/normalizedleftdocs/
-				</value>
+				<value>${wf:appPath()}/results/minor/tfidf/all-topn-tmp/</value>
 			</property>
 			<property>
 				<name>outputPathRecalc</name>
@@ -43,6 +38,10 @@
 			<property>
 				<name>finalOutputPath</name>
 				<value>${wf:appPath()}/results/final/similarity/normalizedleftdocs/</value>
+			</property>
+			<property>
+				<name>finalOutputPathGlobal</name>
+				<value>${wf:appPath()}/results/final/</value>
 			</property>
 			<property>
 				<name>oozie.launcher.mapred.fairscheduler.pool</name>
@@ -71,6 +70,10 @@
 			</app-path>
 			<propagate-configuration />
 			<configuration>
+				<property>
+					<name>ds_similarityInputPath</name>
+					<value>${inputPathProto}</value>
+				</property>
 				<property>
 					<name>ds_similarityOutputPath</name>
 					<value>${outputPathDocSimMajor}</value>
@@ -153,7 +156,7 @@
 				</property>
 				<property>
 					<name>load_filterTerms_calcTfidf_filter_ranked</name>
-					<value>true</value>
+					<value>false</value>
 				</property>
 				<property>
 					<name>load_filterTerms_calcTfidf_filter_tfidf</name>
@@ -161,7 +164,7 @@
 				</property>
 				<property>
 					<name>load_filterTerms_calcTfidf_filter_no</name>
-					<value>false</value>
+					<value>true</value>
 				</property>
 				<property>
 					<name>prepare_pairwise_sim</name>
@@ -207,25 +210,36 @@
 					<name>sim1-prostprocess-s3-e1</name>
 					<value>true</value>
 				</property>
+				<property>
+					<name>ds_similarityOutputPath</name>
+					<value>${outputPathDocSimMinor}</value>
+				</property>
+				<property>
+					<name>finalOutputPath</name>
+					<value>true</value>
+				</property>
 			</configuration>
 		</sub-workflow>
-		<ok to="finalize" />
+		<ok to="get-top20-and-serialize-results" />
 		<error to="finalize-error" />
 	</action>
 
-	<action name="calculate-minor-docsim">
+	<action name="get-top20-and-serialize-results">
 		<sub-workflow>
+			<prepare>
+				<move source="${ds_similarityOutputPath}" target="" />
+			</prepare>
 			<app-path>${wf:appPath()}/pl.edu.icm.coansys-document-similarity-ranked-workflow
 			</app-path>
 			<propagate-configuration />
 			<configuration>
-				<property>
+<!-- 			<property>
 					<name>ds_similarityInputPath</name>
 					<value>${outputPathRecalc}/documents-to-process</value>
-				</property>
+				</property> -->
 				<property>
 					<name>ds_similarityOutputPath</name>
-					<value>${outputPathDocSimMinor}</value>
+					<value>${finalOutputPathGlobal}</value>
 				</property>
 				<property>
 					<name>load_filterTerms_calcTfidf_filter_ranked</name>
