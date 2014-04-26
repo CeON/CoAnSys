@@ -72,8 +72,8 @@
 
 	<decision name="pick_start_node">
 		<switch>
-			<case to="PREP_calculate-major-docsim">${"false" eq "true"}</case>
-			<case to="PREP_recalculate-sim-about-1--filter">${"true" eq "true"}</case>
+			<case to="calculate-major-docsim">${"false" eq "true"}</case>
+			<case to="recalculate-sim-about-1--filter">${"true" eq "true"}</case>
 			<case to="calculate-minor-docsim">${"false" eq "true"}</case>
 			<case to="recalculate-sim-about-1--docsim-and-merge">${"false" eq "true"}</case>
 			<case to="get-top20-and-serialize-results">${"false" eq "true"}</case>
@@ -86,7 +86,7 @@
 			<delete path="${outputPathDocSimMajor}" />
 		</fs>
 		<ok to="calculate-major-docsim" />
-		<error to="finalize-error" />
+		<error to="calculate-major-docsim" />
 	</action>
 
 	<action name="calculate-major-docsim">
