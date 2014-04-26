@@ -100,6 +100,10 @@
 			<propagate-configuration />
 			<configuration>
 				<property>
+					<name>subproject</name>
+					<value>calculate-major-docsim</value>
+				</property>
+				<property>
 					<name>oozie.use.system.libpath</name>
 					<value>true</value>
 				</property>
@@ -161,6 +165,10 @@
 			<propagate-configuration />
 			<configuration>
 				<property>
+					<name>subproject</name>
+					<value>recalculate-sim-about-1__filter</value>
+				</property>
+				<property>
 					<name>oozie.use.system.libpath</name>
 					<value>true</value>
 				</property>
@@ -188,6 +196,10 @@
 			</app-path>
 			<propagate-configuration />
 			<configuration>
+				<property>
+					<name>subproject</name>
+					<value>calculate-minor-docsim</value>
+				</property>
 				<property>
 					<name>oozie.use.system.libpath</name>
 					<value>true</value>
@@ -257,6 +269,10 @@
 			<propagate-configuration />
 			<configuration>
 				<property>
+					<name>subproject</name>
+					<value>recalculate-sim-about-1__docsim-and-merge</value>
+				</property>
+				<property>
 					<name>oozie.use.system.libpath</name>
 					<value>true</value>
 				</property>
@@ -292,6 +308,10 @@
 			</app-path>
 			<propagate-configuration />
 			<configuration>
+				<property>
+					<name>subproject</name>
+					<value>get-top20-and-serialize-results</value>
+				</property>
 				<property>
 					<name>oozie.use.system.libpath</name>
 					<value>true</value>

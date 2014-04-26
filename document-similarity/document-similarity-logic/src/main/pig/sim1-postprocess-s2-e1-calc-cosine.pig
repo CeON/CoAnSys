@@ -49,7 +49,7 @@ E1 = group E by docId;
 store E1 into '$outputPathRecalc/vectors';
 
 A2x = load '$outputPathRecalc/pairs-to-process' as (k1:chararray,k2:chararray);
-E2x = load '$outputPathRecalc/vectors' as (k:chararray,vector:{vectorcell:(docId:chararray,term:chararray,tfidf:float)});
+E2x = load '$outputPathRecalc/vectors' as (k:chararray,vector:{vectorcell:(docId:chararray,term:chararray,tfidf:double)});
 
 F = join A2x by k1, E2x by k;
 F1 = foreach F generate k1,vector as v1, k2;

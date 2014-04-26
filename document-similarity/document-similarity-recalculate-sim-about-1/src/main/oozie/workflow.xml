@@ -1,4 +1,4 @@
-<workflow-app name='${project}_${subproject_subenhance}'
+<workflow-app name='${project}_${subproject}'
 	xmlns="uri:oozie:workflow:0.4">
 
 	<parameters>
