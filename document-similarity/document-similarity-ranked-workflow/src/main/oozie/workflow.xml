@@ -109,12 +109,10 @@
 
 	<decision name="load_filterTerms_calcTfidf-d">
 		<switch>
-			<case to="load_filterTerms_calcTfidf_filter_ranked">${load_filterTerms_calcTfidf_filter_ranked eq "true"}
-			</case>
-			<case to="load_filterTerms_calcTfidf_filter_tfidf">${load_filterTerms_calcTfidf_filter_tfidf eq "true"}
-			</case>
-			<case to="load_filterTerms_calcTfidf_filter_no">${load_filterTerms_calcTfidf_filter_no eq "true"}
-			</case>
+			<case to="load_filterTerms_calcTfidf_filter_ranked">${load_filterTerms_calcTfidf_filter_ranked eq "true"}</case>
+			<case to="load_filterTerms_calcTfidf_filter_tfidf">${load_filterTerms_calcTfidf_filter_tfidf eq "true"}</case>
+			<case to="load_filterTerms_calcTfidf_filter_no">${load_filterTerms_calcTfidf_filter_no eq "true"}</case>
+			
 			
 			<default to="prepare_pairwise_sim-d" />
 		</switch>
@@ -326,7 +324,7 @@
 		</switch>
 	</decision>
 
-	<action name='store-to-protobuf'>
+	<action name='store_to_protobuf'>
 		<pig>
 			<script>document-similarity-s4-e1-serialize-to-pb.pig
 			</script>
