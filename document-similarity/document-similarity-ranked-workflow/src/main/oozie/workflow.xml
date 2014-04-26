@@ -1,4 +1,4 @@
-<workflow-app name='${project}_${subproject}_ver4_ranked_one_source'
+<workflow-app name='${project}_${subproject_subdocsim}'
 	xmlns="uri:oozie:workflow:0.4">
 
 	<parameters>

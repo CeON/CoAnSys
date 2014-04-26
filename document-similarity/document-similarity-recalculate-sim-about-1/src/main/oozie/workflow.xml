@@ -1,4 +1,4 @@
-<workflow-app name='${project}_${subproject}_ver4_ranked_one_source'
+<workflow-app name='${project}_${subproject_subenhance}'
 	xmlns="uri:oozie:workflow:0.4">
 
 	<parameters>
@@ -145,7 +145,7 @@
 
 	<action name='sim1-prostprocess-s2-e1-calculate-sims'>
 		<pig>
-			<script>sim1-prostprocess-s1-e1.pig</script>
+			<script>sim1-prostprocess-s2-e1.pig</script>
 			<param>inputPathProto=${inputPathProto}</param>
 			<param>inputPathDocSimMajor=${inputPathDocSimMajor}</param>
 			<param>inputPathDocSimMinor=${inputPathDocSimMinor}</param>
@@ -173,7 +173,7 @@
 
 	<action name='sim1-prostprocess-s3-e1-merge-results'>
 		<pig>
-			<script>sim1-prostprocess-s1-e1.pig</script>
+			<script>sim1-prostprocess-s3-e1.pig</script>
 			<param>inputPathProto=${inputPathProto}</param>
 			<param>inputPathDocSimMajor=${inputPathDocSimMajor}</param>
 			<param>inputPathDocSimMinor=${inputPathDocSimMinor}</param>

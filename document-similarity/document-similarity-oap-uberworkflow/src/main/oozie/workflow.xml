@@ -1,4 +1,5 @@
-<workflow-app xmlns="uri:oozie:workflow:0.4" name="${project}__${subproject}">
+<workflow-app name="${project}_${subproject_main}" 
+    xmlns="uri:oozie:workflow:0.4">
 	<parameters>
 		<property>
 			<name>ds_pool</name>
@@ -67,7 +68,15 @@
 		</configuration>
 	</global>
 
-	<start to="calculate-major-docsim" />
+	<start to="prepare-results-folder" />
+
+	<action name="prepare-results-folder">
+		<fs>
+			<delete path="${workflowPath}/results/" />
+		</fs>
+		<ok to="calculate-major-docsim" />
+		<error to="finalize-error" />
+	</action>
 
 	<action name="calculate-major-docsim">
 		<sub-workflow>
