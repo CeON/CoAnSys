@@ -273,7 +273,7 @@
 				</property>
 			</configuration>
 		</sub-workflow>
-		<ok to="recalculate-sim-about-1--docsin-and-merge" />
+		<ok to="finalize" />
 		<error to="finalize-error" />
 	</action>
 
