@@ -5,6 +5,10 @@
 			<value>bigjobs</value>
 		</property>
 		<property>
+			<name>ds_scheduler</name>
+			<value>${ds_pool}</value>
+		</property>
+		<property>
 			<name>inputPathProto</name>
 			<value>${ds_bwndataMetadataInputPath}</value>
 		</property>
@@ -19,7 +23,8 @@
 		</property>
 		<property>
 			<name>inputPathDocSimMinor</name>
-			<value>${workflowPath}/../integrated_results/minor/tfidf/nonweighted/</value>
+			<value>${workflowPath}/../integrated_results/minor/tfidf/nonweighted/
+			</value>
 		</property>
 		<property>
 			<name>outputPathDocSimMinor</name>
@@ -84,13 +89,9 @@
 		</switch>
 	</decision>
 
-	<!-- <action name="PREP_calculate-major-docsim">
-		<fs>
-			<delete path="${outputPathDocSimMajor}" />
-		</fs>
-		<ok to="calculate-major-docsim" />
-		<error to="calculate-major-docsim" />
-	</action> -->
+	<!-- <action name="PREP_calculate-major-docsim"> <fs> <delete path="${outputPathDocSimMajor}" 
+		/> </fs> <ok to="calculate-major-docsim" /> <error to="calculate-major-docsim" 
+		/> </action> -->
 
 	<action name="calculate-major-docsim">
 		<sub-workflow>
@@ -103,7 +104,7 @@
 					<value>true</value>
 				</property>
 				<property>
-					<name>ds_similarityInputPath</name>
+					<name>ds_bwndataMetadataInputPath</name>
 					<value>${inputPathProto}</value>
 				</property>
 				<property>
@@ -148,16 +149,10 @@
 		<error to="finalize-error" />
 	</action>
 
-	<!--  <action name="PREP_recalculate-sim-about-1__filter">
-		<fs>
-			<delete path="${outputPathRecalc}/pairs-with-sim-lower-then-threshold" />
-			<delete path="${outputPathRecalc}/pairs-to-process" />
-			<delete path="${outputPathRecalc}/document-keys-to-process" />
-			<delete path="${outputPathRecalc}/documents-to-process" />
-		</fs>
-		<ok to="recalculate-sim-about-1__filter" />
-		<error to="finalize-error" />
-	</action> -->
+	<!-- <action name="PREP_recalculate-sim-about-1__filter"> <fs> <delete path="${outputPathRecalc}/pairs-with-sim-lower-then-threshold" 
+		/> <delete path="${outputPathRecalc}/pairs-to-process" /> <delete path="${outputPathRecalc}/document-keys-to-process" 
+		/> <delete path="${outputPathRecalc}/documents-to-process" /> </fs> <ok to="recalculate-sim-about-1__filter" 
+		/> <error to="finalize-error" /> </action> -->
 
 	<action name="recalculate-sim-about-1__filter">
 		<sub-workflow>
@@ -210,7 +205,7 @@
 					<value>1.0</value>
 				</property>
 				<property>
-					<name>ds_similarityInputPath</name>
+					<name>ds_bwndataMetadataInputPath</name>
 					<value>${outputPathRecalc}/documents-to-process</value>
 				</property>
 				<property>

@@ -16,6 +16,7 @@
 -- along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
 --
 
+%default RAW_DATA '/raw'
 %default DOC_TERM_ALL '/term/all'
 %default DOC_TERM_KEYWORDS '/term/keywords'
 %default DOC_TERM_TITLE '/term/title'
@@ -26,6 +27,8 @@
 %default TFIDF_TF_ALL_SUBDIR '/tfidf/tf-all-topn'
 %default SIMILARITY_ALL_DOCS_SUBDIR '/similarity/alldocs'
 %default SIMILARITY_TOPN_DOCS_SUBDIR '/similarity/topn'
+%default TERM_COUNT '/term-count'
+%default WORD_COUNT '/filtered-by-ranked-word-count';
 
 %default tfidfTopnTermPerDocument 20
 %default similarityTopnDocumentPerDocument 20
@@ -45,9 +48,10 @@
 REGISTER '$commonJarsPath'
 
 DEFINE WeightedTFIDF pl.edu.icm.coansys.similarity.pig.udf.TFIDF('weighted');
-DEFINE StemmedPairs pl.edu.icm.coansys.similarity.pig.udf.StemmedPairs();
+DEFINE StemmedPairs pl.edu.icm.coansys.similarity.pig.udf.ExtendedStemmedPairs();
 DEFINE KeywordSimilarity pl.edu.icm.coansys.similarity.pig.udf.AvgSimilarity('dks');
 DEFINE DocsCombinedSimilarity pl.edu.icm.coansys.similarity.pig.udf.AvgSimilarity('dkcs');
+DEFINE DocToTupleMap pl.edu.icm.coansys.similarity.pig.udf.DocumentProtobufToTupleMap();
 
 SET default_parallel $parallel
 SET mapred.child.java.opts $mapredChildJavaOpts
@@ -61,37 +65,35 @@ IMPORT 'macros.pig';
 -------------------------------------------------------
 -- business code section
 -------------------------------------------------------
-fs -rm -r -f $outputPath
-
 docIn = LOAD '$inputPath' USING pl.edu.icm.coansys.commons.pig.udf.
 	RichSequenceFileLoader('org.apache.hadoop.io.Text','org.apache.hadoop.io.BytesWritable') 
 	as (key:chararray, value:bytearray);
-A = SAMPLE docIn $sample;
-A1 = foreach A generate 
-	flatten(pl.edu.icm.coansys.similarity.pig.udf.DocSimDemo_Documents(value)) as (doi:chararray, year:chararray, title:chararray), key, value;
-A2 = filter A1 by (doi is not null or doi!='') and (year is not null or year!='') and (title is not null or title != '');
-B = foreach A2 generate doi,value;
-
+B = SAMPLE docIn $sample;
 --B = limit docIn 100;
-doc = FOREACH B GENERATE $0 as docId, pl.edu.icm.coansys.similarity.pig.udf.DocumentProtobufToTupleMap($1) as document ;
---doc = load_from_hdfs('$inputPath', $sample);
---doc = foreach doc generate $0 as docId, $1 as document;
+doc = FOREACH B GENERATE $0 as docId, DocToTupleMap($1) as document;
 
-doc_raw = foreach doc generate docId, document.title as title, document.abstract as abstract;
--- speparated line as FLATTEN w a hidden CROSS
-doc_keyword_raw = foreach doc generate docId, FLATTEN(document.keywords) AS keywords;
+doc_raportX = foreach doc generate docId, document.title as title, document.abstract as abstract, document.keywords as keywords;
+STORE doc_raportX INTO '$outputPath$RAW_DATA';
+doc_raport = LOAD '$outputPath$RAW_DATA' as (docId:chararray, title:chararray, abstract:chararray, keywords:{keyword:(value:chararray)});
+
+doc_raw = foreach doc_raport generate docId, title, abstract;
+doc_keyword_raw = foreach doc_raport generate docId, FLATTEN(keywords) as keywords;
+
 -- stem, clean, filter out
 doc_keyword_all = stem_words(doc_keyword_raw, docId, keywords);
 doc_title_all = stem_words(doc_raw, docId, title);
 doc_abstract_all = stem_words(doc_raw, docId, abstract);
 
 -- get all words (with duplicates for tfidf)
-doc_all = UNION doc_keyword_all, doc_title_all, doc_abstract_all;
+doc_allX = UNION doc_keyword_all, doc_title_all, doc_abstract_all;
+
 -- store document and terms
---STORE doc_title_all INTO '$outputPath$DOC_TERM_TITLE';
---STORE doc_keyword_all INTO '$outputPath$DOC_TERM_KEYWORDS';
-STORE doc_all INTO '$outputPath$DOC_TERM_ALL';
+STORE doc_title_all INTO '$outputPath$DOC_TERM_TITLE';
+STORE doc_keyword_all INTO '$outputPath$DOC_TERM_KEYWORDS';
+STORE doc_allX INTO '$outputPath$DOC_TERM_ALL';
+
+doc_all = LOAD '$outputPath$DOC_TERM_ALL' as (docId:chararray, term:chararray);
 -- calculate tf-idf for each group of terms
-tfidf_all = calculate_tfidf(doc_all, docId, term, $tfidfMinValue);
+tfidf_all = calculate_tfidf_nofiltering(doc_all, docId, term);
 -- store tfidf values into separate direcotires
 STORE tfidf_all INTO '$outputPath$TFIDF_NON_WEIGHTED_SUBDIR';
