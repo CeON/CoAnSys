@@ -53,14 +53,17 @@ public class ExtendedStemmedPairs extends EvalFunc<DataBag> {
     public ExtendedStemmedPairs() throws IOException{
     	stowordsFilter = new AllLangStopWordFilter(); 
     }
+
+//    public static void main(String[] args){
+//    	System.out.println(DiacriticsRemover.removeDiacritics("Μεταφορά τεχνολογίας : παράγων αναπτύξεως ή μέσον αποδιαρθρώσεως των οικονομικών του τρίτου κόσμου	ó	Techn,ology"));
+//    }
     
     public List<String> getStemmedPairs(final String text) throws IOException {
         String tmp  = text.toLowerCase();
-        tmp = DiacriticsRemover.removeDiacritics(tmp);
         tmp = tmp.replaceAll("[_]+", SPACE);
         tmp = tmp.replaceAll("[-]+", "-");
         tmp = tmp.replaceAll("\\s+", SPACE);
-        tmp = tmp.replaceAll("[^a-z\\d-_/ ]+", "");
+        tmp = tmp.replaceAll("[^a-z\\d-_/ \\x00-\\x7F]+", "");
         tmp = tmp.trim();
         List<String> strings = new ArrayList<String>();
         
@@ -70,13 +73,14 @@ public class ExtendedStemmedPairs extends EvalFunc<DataBag> {
         
         PorterStemmer ps = new PorterStemmer();
         for (String s : StringUtils.split(tmp, SPACE)) {
-        	s = s.replaceAll("^[/-]+", "");
-        	s = s.replaceAll("[-/]+$", "");
-        	s = s.replaceAll("^[/-_0-9]+$", "");
-        	if(s.length()<=3){
+        	s = s.replaceAll("^[/\\-]+", "");
+        	s = s.replaceAll("[\\-/]+$", "");
+        	s = s.replaceAll("^[/\\-_0-9]+$", "");
+        	if(s.length()<=2){
         		continue;
         	}
-            if (!stowordsFilter.isInAllStopwords(s)) {;
+            if (!stowordsFilter.isInAllStopwords(s)) {
+            	s = DiacriticsRemover.removeDiacritics(s);
                 ps.add(s.toCharArray(), s.length());
                 ps.stem();
                 strings.add(ps.toString());
