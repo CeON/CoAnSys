@@ -56,5 +56,5 @@ F1 = foreach F generate k1,vector as v1, k2;
 F2 = join F1 by k2, E2x by k;
 F3 = foreach F2 generate k1,v1,k2,vector as v2;
 
-G = foreach F3 generate pl.edu.icm.coansys.similarity.pig.udf.CosineSimilarity(*);
+G = foreach F3 generate FLATTEN(pl.edu.icm.coansys.similarity.pig.udf.CosineSimilarity(*));
 store G into '$outputPathRecalc/recalcSims1';
