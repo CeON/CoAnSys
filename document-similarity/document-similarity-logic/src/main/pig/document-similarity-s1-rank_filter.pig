@@ -117,8 +117,9 @@ store tcX into '$outputPath$TERM_COUNT';
 tc = load '$outputPath$TERM_COUNT' as (val:double);
 group_by_terms = group doc_all by term;
 wc = foreach group_by_terms generate COUNT(doc_all) as count, group as term, doc_all.docId as docs;
-wc_ranked = rank wc by count asc;
+wc_rankedX = rank wc by count asc;
 store wc_ranked into '$outputPath$WORD_RANK';
+wc_ranked = load '$outputPath$WORD_RANK' as (rank,count,term,docs);
 
 SPLIT wc_ranked INTO
   term_condition_accepted_tmp IF ($0 <= (double)tc.val*$removal_rate and $0 >= $removal_least_used),
@@ -126,7 +127,7 @@ SPLIT wc_ranked INTO
 		
 doc_selected_termsX = foreach term_condition_accepted_tmp generate FLATTEN(docs) as docId, term;
 store doc_selected_termsX into '$outputPath$WORD_COUNT';
-doc_selected_termsX2 = foreach term_condition_not_accepted_tmp generate FLATTEN(docs) as docId, term;
+doc_selected_termsX2 = foreach term_condition_not_accepted_tmp generate term;
 store doc_selected_termsX2 into '$outputPath$WORD_COUNT_NEG';
 --**************** word count rank *****************
 

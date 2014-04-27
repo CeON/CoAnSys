@@ -89,7 +89,7 @@ public class ExtendedStemmedPairs extends EvalFunc<DataBag> {
 		String tmp = text.toLowerCase();
 		tmp = tmp.replaceAll("[_]+", "_");
 		tmp = tmp.replaceAll("[-]+", "-");
-		tmp = tmp.replaceAll("([^\\u0080-\\uFFFF a-zA-Z_\\-\\d\\s])+", SPACE);
+		tmp = tmp.replaceAll("([^\\u0080-\\uFFFF a-zA-Z_\\-\\d\\s'])+", SPACE);
 		tmp = tmp.replaceAll("\\s+", SPACE);
 		tmp = tmp.trim();
 		List<String> strings = new ArrayList<String>();
@@ -103,7 +103,7 @@ public class ExtendedStemmedPairs extends EvalFunc<DataBag> {
 			s = s.replaceAll("^[/\\-]+", "");
 			s = s.replaceAll("[\\-/]+$", "");
 			s = s.replaceAll("^[/\\-_0-9]+$", "");
-			if (s.length() <= 2) {
+			if (s.length() <= 3) {
 				continue;
 			}
 			if (!stowordsFilter.isInAllStopwords(s)) {
