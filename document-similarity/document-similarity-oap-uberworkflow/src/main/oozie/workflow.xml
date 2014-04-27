@@ -342,7 +342,7 @@
 				</property>
 				<property>
 					<name>normalize_sim_second_step</name>
-					<value>false</value>
+					<value>true</value>
 				</property>
 				<property>
 					<name>store_to_protobuf</name>
