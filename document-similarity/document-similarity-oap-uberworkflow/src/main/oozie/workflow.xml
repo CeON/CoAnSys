@@ -8,40 +8,46 @@
 			<name>ds_scheduler</name>
 			<value>${ds_pool}</value>
 		</property>
+		
+		<property>
+			<name>ds_similarityOutputPath</name>
+			<value>${workflowPath}/../integrated_results/</value>
+		</property>
+		
 		<property>
 			<name>inputPathProto</name>
 			<value>${ds_bwndataMetadataInputPath}</value>
 		</property>
 		<property>
 			<name>outputPathDocSimMajor</name>
-			<value>${workflowPath}/../integrated_results/major/</value>
+			<value>${ds_similarityOutputPath}/major/</value>
 		</property>
 		<property>
 			<name>inputPathDocSimMajor</name>
-			<value>${workflowPath}/../integrated_results/major/similarity/normalizedleftdocs/
+			<value>${ds_similarityOutputPath}/major/similarity/normalizedleftdocs/
 			</value>
 		</property>
 		<property>
 			<name>inputPathDocSimMinor</name>
-			<value>${workflowPath}/../integrated_results/minor/tfidf/nonweighted/
+			<value>${ds_similarityOutputPath}/minor/tfidf/nonweighted/
 			</value>
 		</property>
 		<property>
 			<name>outputPathDocSimMinor</name>
-			<value>${workflowPath}/../integrated_results/minor/</value>
+			<value>${ds_similarityOutputPath}/minor/</value>
 		</property>
 		<property>
 			<name>outputPathRecalc</name>
-			<value>${workflowPath}/../integrated_results/recalc/</value>
+			<value>${ds_similarityOutputPath}/recalc/</value>
 		</property>
 		<property>
 			<name>finalOutputPath</name>
-			<value>${workflowPath}/../integrated_results/final/similarity/normalizedleftdocs/
+			<value>${ds_similarityOutputPath}/final/similarity/normalizedleftdocs/
 			</value>
 		</property>
 		<property>
 			<name>finalOutputPathGlobal</name>
-			<value>${workflowPath}/../integrated_results/final/</value>
+			<value>${ds_similarityOutputPath}/final/</value>
 		</property>
 	</parameters>
 
@@ -89,9 +95,13 @@
 		</switch>
 	</decision>
 
-	<!-- <action name="PREP_calculate-major-docsim"> <fs> <delete path="${outputPathDocSimMajor}" 
-		/> </fs> <ok to="calculate-major-docsim" /> <error to="calculate-major-docsim" 
-		/> </action> -->
+	<action name="PREP_calculate-major-docsim">
+		<fs>
+			<delete path="${outputPathDocSimMajor}" />
+		</fs>
+		<ok to="calculate-major-docsim" />
+		<error to="calculate-major-docsim" />
+	</action>
 
 	<action name="calculate-major-docsim">
 		<sub-workflow>
