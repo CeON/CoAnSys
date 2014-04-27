@@ -98,8 +98,8 @@ doc_abstract_all = stem_words(doc_raw, docId, abstract);
 doc_allX = UNION doc_keyword_all, doc_title_all, doc_abstract_all;
 
 -- store document and terms
-STORE doc_title_all INTO '$outputPath$DOC_TERM_TITLE';
-STORE doc_keyword_all INTO '$outputPath$DOC_TERM_KEYWORDS';
+--STORE doc_title_all INTO '$outputPath$DOC_TERM_TITLE';
+--STORE doc_keyword_all INTO '$outputPath$DOC_TERM_KEYWORDS';
 STORE doc_allX INTO '$outputPath$DOC_TERM_ALL';
 
 doc_all = LOAD '$outputPath$DOC_TERM_ALL' as (docId:chararray, term:chararray);
