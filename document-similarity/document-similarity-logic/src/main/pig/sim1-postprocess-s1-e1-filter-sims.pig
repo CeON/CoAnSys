@@ -66,11 +66,11 @@ A2 = foreach A1 generate k1,k2;
 store A2 into '$outputPathRecalc/pairs-to-process';
 
 -- get keys of documents which will be recalculated
-A2x = load '$outputPathRecalc/pairs-to-process' as (k1:chararray,k2:chararray);
+A2x  = load '$outputPathRecalc/pairs-to-process' as (k1:chararray,k2:chararray);
 A2xx = load '$outputPathRecalc/pairs-to-process' as (k1:chararray,k2:chararray);
 
 
-B1 = foreach A2x generate k1 as kx;
+B1 = foreach A2x  generate k1 as kx;
 B2 = foreach A2xx generate k2 as kx;
 B3 = union B1,B2;
 B4 = distinct B3;
