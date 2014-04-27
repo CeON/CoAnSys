@@ -118,7 +118,7 @@ tc = load '$outputPath$TERM_COUNT' as (val:double);
 group_by_terms = group doc_all by term;
 wc = foreach group_by_terms generate COUNT(doc_all) as count, group as term, doc_all.docId as docs;
 wc_rankedX = rank wc by count asc;
-store wc_ranked into '$outputPath$WORD_RANK';
+store wc_rankedX into '$outputPath$WORD_RANK';
 wc_ranked = load '$outputPath$WORD_RANK' as (rank,count,term,docs);
 
 SPLIT wc_ranked INTO
