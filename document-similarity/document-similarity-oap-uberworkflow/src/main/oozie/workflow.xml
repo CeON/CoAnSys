@@ -80,11 +80,11 @@
 
 	<decision name="pick_start_node">
 		<switch>
-			<case to="calculate-major-docsim">${"false" eq "true"}</case>
+			<case to="calculate-major-docsim">${"true" eq "true"}</case>
 			<case to="recalculate-sim-about-1__filter">${"false" eq "true"}</case>
 			<case to="calculate-minor-docsim">${"false" eq "true"}</case>
 			<case to="recalculate-sim-about-1__docsim-and-merge">${"false" eq "true"}</case>
-			<case to="get-top20-and-serialize-results">${"true" eq "true"}</case>
+			<case to="merge-results-and-serialize">${"false" eq "true"}</case>
 			<default to="finalize" />
 		</switch>
 	</decision>
@@ -206,11 +206,11 @@
 				</property>
 				<property>
 					<name>ds_removal_least_used</name>
-					<value>0</value>
+					<value>-1</value>
 				</property>
 				<property>
 					<name>ds_removal_rate</name>
-					<value>1.0</value>
+					<value>1.1</value>
 				</property>
 				<property>
 					<name>ds_sample</name>
@@ -294,11 +294,11 @@
 				</property>
 			</configuration>
 		</sub-workflow>
-		<ok to="get-top20-and-serialize-results" />
+		<ok to="merge-results-and-serialize" />
 		<error to="finalize-error" />
 	</action>
 
-	<action name="get-top20-and-serialize-results">
+	<action name="merge-results-and-serialize">
 		<sub-workflow>
 			<app-path>${wf:appPath()}/pl.edu.icm.coansys-document-similarity-ranked-workflow
 			</app-path>
@@ -306,7 +306,7 @@
 			<configuration>
 				<property>
 					<name>subproject</name>
-					<value>get-top20-and-serialize-results</value>
+					<value>merge-results-and-serialize</value>
 				</property>
 				<property>
 					<name>oozie.use.system.libpath</name>
