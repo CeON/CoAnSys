@@ -54,16 +54,23 @@ public class ExtendedStemmedPairs extends EvalFunc<DataBag> {
     	stowordsFilter = new AllLangStopWordFilter(); 
     }
 
-//    public static void main(String[] args){
-//    	System.out.println(DiacriticsRemover.removeDiacritics("Μεταφορά τεχνολογίας : παράγων αναπτύξεως ή μέσον αποδιαρθρώσεως των οικονομικών του τρίτου κόσμου	ó	Techn,ology"));
-//    }
+    public static void main(String[] args){
+    	System.out.println(DiacriticsRemover.removeDiacritics("Μεταφορά τεχνολογίας : παράγων αναπτύξεως ή μέσον αποδιαρθρώσεως των οικονομικών του τρίτου κόσμου	ó	Techn,ology"));
+    	
+    	
+    	System.out.println("Μεταφορά τεχνολογίας : "
+    			+ "παράγων αναπτύξεως ή μέσον αποδιαρθρώσεως "
+    			+ "των οικονομικών του τρίτου κόσμου	"
+    			+ "ó	Techn,ology".replaceAll("([^\\u0080-\\uFFFF a-zA-Z_\\-\\d\\s])+", ""));
+    	
+    }
     
     public List<String> getStemmedPairs(final String text) throws IOException {
         String tmp  = text.toLowerCase();
         tmp = tmp.replaceAll("[_]+", SPACE);
         tmp = tmp.replaceAll("[-]+", "-");
+        tmp = tmp.replaceAll("([^\\u0080-\\uFFFF a-zA-Z_\\-\\d\\s])+", SPACE);
         tmp = tmp.replaceAll("\\s+", SPACE);
-        tmp = tmp.replaceAll("[^a-z\\d-_/ \\x00-\\x7F]+", "");
         tmp = tmp.trim();
         List<String> strings = new ArrayList<String>();
         
