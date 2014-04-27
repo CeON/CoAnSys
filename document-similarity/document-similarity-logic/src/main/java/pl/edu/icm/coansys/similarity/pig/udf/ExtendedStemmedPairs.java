@@ -87,7 +87,7 @@ public class ExtendedStemmedPairs extends EvalFunc<DataBag> {
 
 	public List<String> getStemmedPairs(final String text) throws IOException {
 		String tmp = text.toLowerCase();
-		tmp = tmp.replaceAll("[_]+", SPACE);
+		tmp = tmp.replaceAll("[_]+", "_");
 		tmp = tmp.replaceAll("[-]+", "-");
 		tmp = tmp.replaceAll("([^\\u0080-\\uFFFF a-zA-Z_\\-\\d\\s])+", SPACE);
 		tmp = tmp.replaceAll("\\s+", SPACE);
