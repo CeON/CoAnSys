@@ -86,7 +86,7 @@
 
 	<decision name="pick_start_node">
 		<switch>
-			<case to="calculate-major-docsim">${"true" eq "true"}</case>
+			<case to="PREP_calculate-major-docsim">${"true" eq "true"}</case>
 			<case to="recalculate-sim-about-1__filter">${"false" eq "true"}</case>
 			<case to="calculate-minor-docsim">${"false" eq "true"}</case>
 			<case to="recalculate-sim-about-1__docsim-and-merge">${"false" eq "true"}</case>
@@ -97,7 +97,7 @@
 
 	<action name="PREP_calculate-major-docsim">
 		<fs>
-			<delete path="${outputPathDocSimMajor}" />
+			<delete path="${ds_similarityOutputPath}" />
 		</fs>
 		<ok to="calculate-major-docsim" />
 		<error to="calculate-major-docsim" />
