@@ -76,5 +76,5 @@ mix_f = distinct mix_xf;
 describe mix_f;
 -- calculate and store topn similar documents for each document
 document_similarity_topnX = get_topn_per_group(mix_f, docA, sim, 'desc', $similarityTopnDocumentPerDocument);
-document_similarity_topnX2 = filter document_similarity_topnX by ($0 is not null, $1 is not null, $2 is not null);
+document_similarity_topnX2 = filter document_similarity_topnX by ($0 is not null and $1 is not null and $2 is not null);
 STORE document_similarity_topnX2 INTO '$outputPath$SIMILARITY_TOPN_DOCS_SUBDIR';
