@@ -32,88 +32,108 @@ import pl.edu.icm.coansys.commons.java.DiacriticsRemover;
 
 public class ExtendedStemmedPairs extends EvalFunc<DataBag> {
 
-    @Override
-    public Schema outputSchema(Schema input) {
-        try {
-            Schema termSchema = new Schema(new Schema.FieldSchema("term",
-                    new Schema(new Schema.FieldSchema("value", DataType.CHARARRAY)),
-                    DataType.TUPLE));
+	@Override
+	public Schema outputSchema(Schema input) {
+		try {
+			Schema termSchema = new Schema(new Schema.FieldSchema("term",
+					new Schema(new Schema.FieldSchema("value",
+							DataType.CHARARRAY)), DataType.TUPLE));
 
-            return new Schema(new Schema.FieldSchema(getSchemaName(this.getClass().getName().toLowerCase(), input),
-                    termSchema, DataType.BAG));
-        } catch (Exception e) {
-        	log.error("Error in the output Schema creation",e);
-        	log.error(StackTraceExtractor.getStackTrace(e));
-            return null;
-        }
-    }
-    private static final String SPACE = " ";
-    private AllLangStopWordFilter stowordsFilter = null;
-    
-    public ExtendedStemmedPairs() throws IOException{
-    	stowordsFilter = new AllLangStopWordFilter(); 
-    }
+			return new Schema(new Schema.FieldSchema(getSchemaName(this
+					.getClass().getName().toLowerCase(), input), termSchema,
+					DataType.BAG));
+		} catch (Exception e) {
+			log.error("Error in the output Schema creation", e);
+			log.error(StackTraceExtractor.getStackTrace(e));
+			return null;
+		}
+	}
 
-    public static void main(String[] args){
-    	System.out.println(DiacriticsRemover.removeDiacritics("Μεταφορά τεχνολογίας : παράγων αναπτύξεως ή μέσον αποδιαρθρώσεως των οικονομικών του τρίτου κόσμου	ó	Techn,ology"));
-    	
-    	
-    	System.out.println("Μεταφορά τεχνολογίας : "
-    			+ "παράγων αναπτύξεως ή μέσον αποδιαρθρώσεως "
-    			+ "των οικονομικών του τρίτου κόσμου	"
-    			+ "ó	Techn,ology".replaceAll("([^\\u0080-\\uFFFF a-zA-Z_\\-\\d\\s])+", ""));
-    	
-    }
-    
-    public List<String> getStemmedPairs(final String text) throws IOException {
-        String tmp  = text.toLowerCase();
-        tmp = tmp.replaceAll("[_]+", SPACE);
-        tmp = tmp.replaceAll("[-]+", "-");
-        tmp = tmp.replaceAll("([^\\u0080-\\uFFFF a-zA-Z_\\-\\d\\s])+", SPACE);
-        tmp = tmp.replaceAll("\\s+", SPACE);
-        tmp = tmp.trim();
-        List<String> strings = new ArrayList<String>();
-        
-        if(tmp.length()==0){
-        	return strings;
-        }
-        
-        PorterStemmer ps = new PorterStemmer();
-        for (String s : StringUtils.split(tmp, SPACE)) {
-        	s = s.replaceAll("^[/\\-]+", "");
-        	s = s.replaceAll("[\\-/]+$", "");
-        	s = s.replaceAll("^[/\\-_0-9]+$", "");
-        	if(s.length()<=2){
-        		continue;
-        	}
-            if (!stowordsFilter.isInAllStopwords(s)) {
-            	s = DiacriticsRemover.removeDiacritics(s);
-                ps.add(s.toCharArray(), s.length());
-                ps.stem();
-                strings.add(ps.toString());
-            }
-        }
+	private static final String SPACE = " ";
+	private AllLangStopWordFilter stowordsFilter = null;
 
-        return strings;
-    }
+	public ExtendedStemmedPairs() throws IOException {
+		stowordsFilter = new AllLangStopWordFilter();
+	}
 
-    @Override
-    public DataBag exec(Tuple input) throws IOException {
-        if (input == null || input.size() == 0 || input.get(0) == null) {
-            return null;
-        }
+	public static void main(String[] args) {
 
-        try {
-            List<Tuple> tuples = new ArrayList<Tuple>();
+		String text = "Μεταφορά τεχνολογίας : " + "παράγων αναπτύξεως ή μέσον "
+				+ "αποδιαρθρώσεως των οικονομικών " + "του τρίτου κόσμου	"
+				+ "ó	Techn,ology Techn, ology";
+		System.out.println("--------------");
+		System.out.println(DiacriticsRemover.removeDiacritics(text));
+		System.out.println("--------------");
+		System.out.println(text.replaceAll(
+				"([^\\u0080-\\uFFFF a-zA-Z_\\-\\d\\s])+", ""));
+		System.out.println("--------------");
+		text = text.replaceAll("([^\\u0080-\\uFFFF a-zA-Z_\\-\\d\\s])+", "");
+		text = text.replaceAll("\\s+", " ");
 
-            String terms = (String) input.get(0);
-            for (String s : getStemmedPairs(terms)) {
-                tuples.add(TupleFactory.getInstance().newTuple(s));
-            }
+		PorterStemmer ps = new PorterStemmer();
+		for (String s : text.split(SPACE)) {
+			s = s.replaceAll("^[/\\-]+", "");
+			s = s.replaceAll("[\\-/]+$", "");
+			s = s.replaceAll("^[/\\-_0-9]+$", "");
+			if (s.length() <= 2) {
+				continue;
+			}
+			s = DiacriticsRemover.removeDiacritics(s);
+			ps.add(s.toCharArray(), s.length());
+			ps.stem();
+			System.out.println(ps.toString());
+		}
+	}
 
-            return new DefaultDataBag(tuples);
-        } catch (Exception e) {
-            throw new IOException("Caught exception processing input row ", e);
-        }
-    }
+	public List<String> getStemmedPairs(final String text) throws IOException {
+		String tmp = text.toLowerCase();
+		tmp = tmp.replaceAll("[_]+", SPACE);
+		tmp = tmp.replaceAll("[-]+", "-");
+		tmp = tmp.replaceAll("([^\\u0080-\\uFFFF a-zA-Z_\\-\\d\\s])+", SPACE);
+		tmp = tmp.replaceAll("\\s+", SPACE);
+		tmp = tmp.trim();
+		List<String> strings = new ArrayList<String>();
+
+		if (tmp.length() == 0) {
+			return strings;
+		}
+
+		PorterStemmer ps = new PorterStemmer();
+		for (String s : StringUtils.split(tmp, SPACE)) {
+			s = s.replaceAll("^[/\\-]+", "");
+			s = s.replaceAll("[\\-/]+$", "");
+			s = s.replaceAll("^[/\\-_0-9]+$", "");
+			if (s.length() <= 2) {
+				continue;
+			}
+			if (!stowordsFilter.isInAllStopwords(s)) {
+				s = DiacriticsRemover.removeDiacritics(s);
+				ps.add(s.toCharArray(), s.length());
+				ps.stem();
+				strings.add(ps.toString());
+			}
+		}
+
+		return strings;
+	}
+
+	@Override
+	public DataBag exec(Tuple input) throws IOException {
+		if (input == null || input.size() == 0 || input.get(0) == null) {
+			return null;
+		}
+
+		try {
+			List<Tuple> tuples = new ArrayList<Tuple>();
+
+			String terms = (String) input.get(0);
+			for (String s : getStemmedPairs(terms)) {
+				tuples.add(TupleFactory.getInstance().newTuple(s));
+			}
+
+			return new DefaultDataBag(tuples);
+		} catch (Exception e) {
+			throw new IOException("Caught exception processing input row ", e);
+		}
+	}
 }
