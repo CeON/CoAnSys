@@ -42,7 +42,7 @@ IMPORT 'macros.pig';
 %default inputPathDocSimMinor 'docsim-minor'
 %default outputPathRecalc 'output'
 %default finalOutputPath 'outputF'
-%default splitThreshold 0.7
+%default splitThreshold 0.999
 
 -- read data from docsim
 A = load '$inputPathDocSimMajor' as (k1:chararray,k2:chararray,sim:double);
