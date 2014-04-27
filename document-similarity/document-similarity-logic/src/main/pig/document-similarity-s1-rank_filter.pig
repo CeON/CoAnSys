@@ -127,7 +127,7 @@ SPLIT wc_ranked INTO
 doc_selected_termsX = foreach term_condition_accepted_tmp generate FLATTEN(docs) as docId, term;
 store doc_selected_termsX into '$outputPath$WORD_COUNT';
 doc_selected_termsX2 = foreach term_condition_not_accepted_tmp generate FLATTEN(docs) as docId, term;
-store doc_selected_termsX into '$outputPath$WORD_COUNT_NEG';
+store doc_selected_termsX2 into '$outputPath$WORD_COUNT_NEG';
 --**************** word count rank *****************
 
 --****************** tfidf calc ********************

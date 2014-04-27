@@ -3,6 +3,10 @@
 
 	<parameters>
 		<property>
+			<name>ds_tfidfMinValue</name>
+			<value>0</value>
+		</property>
+		<property>
 			<name>ds_removal_least_used</name>
 			<value>0</value>
 		</property>
@@ -168,8 +172,7 @@
 			</param>
 			<param>similarityTopnDocumentPerDocument=${ds_similarityTopnDocumentPerDocument}
 			</param>
-			<param>removal_least_used=${ds_removal_least_used}</param>
-			<param>removal_rate=${ds_removal_rate}</param>
+			<param>tfidfMinValue=${ds_tfidfMinValue}</param>
 		</pig>
 		<ok to='prepare_pairwise_sim-d' />
 		<error to='kill' />
