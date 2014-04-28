@@ -1,20 +1,23 @@
 
 
-REGISTER ./analyse_oap_duplicates.py USING jython AS judf1;
+--REGISTER ./analyse_oap_duplicates.py USING jython AS judf1;
 
 %DEFAULT pre '0-0_'
 %DEFAULT val '955'
 %DEFAULT post '-80-1_0-12-40' 
 %DEFAULT input '$pre$val$post'
 
-E = load 'hdfs://hadoop-master.vls.icm.edu.pl:8020/user/pdendek/docsim-on-oap/results_oap_eval/$input/similarity/normalizedleftdocs' as (k1:chararray,k2:chararray,sim:double);
-E1 = foreach E generate sim;
+E = load '$input/similarity/normalizedleftdocs' as (k1:chararray,k2:chararray,sim:double);
+Ex = filter E by (k1 is not null and k2 is not null and sim is not null);
+E1 = foreach Ex generate sim;
 E2 = foreach E1 generate (double)ROUND(sim*100)/100 as simval;
 E3 = group E2 by simval;
 E4 = foreach E3 generate group as simval, COUNT(E2) as simcount;
-store E4 into 'hdfs://hadoop-master.vls.icm.edu.pl:8020/user/pdendek/docsim-on-oap/results_oap_eval/$input/number_of_docs_with_given_sim' using PigStorage(',');
+--store E4 into 'hdfs://hadoop-master.vls.icm.edu.pl:8020/user/pdendek/docsim-on-oap/results_oap_eval/$input/number_of_docs_with_given_sim' using PigStorage(',');
+store E4 into '$input/number_of_docs_with_given_sim' using PigStorage(',');
 
-X = load 'hdfs://hadoop-master.vls.icm.edu.pl:8020/user/pdendek/docsim-on-oap/results_oap_eval/$input/number_of_docs_with_given_sim' using PigStorage(',');
+
+X = load '$input/number_of_docs_with_given_sim' using PigStorage(',');
 dump X;
 
 
