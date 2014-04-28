@@ -55,10 +55,11 @@ public class CosineSimilarity extends EvalFunc<Tuple> {
 
 		String keyA = null;
 		String keyB = null;
+		boolean reporterIsNotNull = false;
 		
 		try {
 			myreporter = PigStatusReporter.getInstance();
-			boolean reporterIsNotNull = myreporter != null;
+			reporterIsNotNull = myreporter != null;
 
 			keyA = (String) input.get(0);
 			HashMap<String, Double> hmA = new HashMap<String, Double>();
@@ -118,12 +119,15 @@ public class CosineSimilarity extends EvalFunc<Tuple> {
 				return null;
 			}
 		} catch (Exception e) {
+			if (reporterIsNotNull) {
 			myreporter.getCounter("data error",
 					"general exception (in UDF CosineSimilarity)").increment(1);
+			}
 			log.error("for pair <"+keyA+","+keyB+"> general exception (in UDF CosineSimilarity) occurred: "+StackTraceExtractor.getStackTrace(e));
 			log.error("similarity equals 0 will be generated");
 			Object[] to = new Object[] { keyA, keyB, 0.0 };
 			return TupleFactory.getInstance().newTuple(Arrays.asList(to));
+			
 		}
 	}
 
