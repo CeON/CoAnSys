@@ -11,7 +11,7 @@
 
 	<artifactId>document-similarity-oap-uberworkflow</artifactId>
 	<packaging>oozie</packaging>
-	<name>Document Similarity Tool: Integreted Ranked DocSim WF and Anomaly Reduction</name>
+	<name>Document Similarity Tool: Integreted Ranked DocSim WF and Postprocessing</name>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
