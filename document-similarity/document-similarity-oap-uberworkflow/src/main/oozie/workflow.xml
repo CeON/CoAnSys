@@ -1,6 +1,10 @@
 <workflow-app name="${project}_${subproject_main}" xmlns="uri:oozie:workflow:0.4">
 	<parameters>
 		<property>
+			<name>ds_remove_sideproducts</name>
+			<value>true</value>
+		</property>
+		<property>
 			<name>ds_pool</name>
 			<value>bigjobs</value>
 		</property>
@@ -8,12 +12,12 @@
 			<name>ds_scheduler</name>
 			<value>${ds_pool}</value>
 		</property>
-		
+
 		<property>
 			<name>ds_similarityOutputPath</name>
 			<value>${workflowPath}/../integrated_results/</value>
 		</property>
-		
+
 		<property>
 			<name>inputPathProto</name>
 			<value>${ds_bwndataMetadataInputPath}</value>
@@ -109,6 +113,10 @@
 			</app-path>
 			<propagate-configuration />
 			<configuration>
+				<property>
+					<name>ds_remove_sideproducts</name>
+					<value>false</value>
+				</property>
 				<property>
 					<name>subproject</name>
 					<value>calculate-major-docsim</value>
@@ -206,6 +214,10 @@
 			</app-path>
 			<propagate-configuration />
 			<configuration>
+				<property>
+					<name>ds_remove_sideproducts</name>
+					<value>false</value>
+				</property>
 				<property>
 					<name>subproject</name>
 					<value>calculate-minor-docsim</value>
@@ -315,6 +327,10 @@
 			<propagate-configuration />
 			<configuration>
 				<property>
+					<name>ds_remove_sideproducts</name>
+					<value>false</value>
+				</property>
+				<property>
 					<name>subproject</name>
 					<value>merge-results-and-serialize</value>
 				</property>
@@ -367,6 +383,26 @@
 	<kill name="finalize-error">
 		<message>Workflow failed</message>
 	</kill>
+
+	<decision name="finalize">
+		<switch>
+			<case to="remove_sideproducts-corr">${ds_remove_sideproducts eq "true"}</case>
+			<default to="end" />
+		</switch>
+	</decision>
+
+	<action name="remove_sideproducts-corr">
+		<fs>
+			<delete path="${ds_similarityOutputPath}/major" />
+			<delete path="${ds_similarityOutputPath}/minor" />
+			<delete path="${ds_similarityOutputPath}/recalc" />
+			<delete
+				path="${ds_similarityOutputPath}/final/similarity/normalizedleftdocs" />
+		</fs>
+		<ok to="end" />
+		<error to="end" />
+	</action>
+
 
 	<end name="finalize" />
 

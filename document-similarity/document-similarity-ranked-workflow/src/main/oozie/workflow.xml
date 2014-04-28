@@ -1,7 +1,10 @@
-<workflow-app name='${project}_${subproject}'
-	xmlns="uri:oozie:workflow:0.4">
+<workflow-app name='${project}_${subproject}' xmlns="uri:oozie:workflow:0.4">
 
 	<parameters>
+		<property>
+			<name>ds_remove_sideproducts</name>
+			<value>true</value>
+		</property>
 		<property>
 			<name>ds_tfidfMinValue</name>
 			<value>0</value>
@@ -123,8 +126,6 @@
 			</case>
 			<case to="load_filterTerms_calcTfidf_filter_no">${load_filterTerms_calcTfidf_filter_no eq "true"}
 			</case>
-
-
 			<default to="prepare_pairwise_sim-d" />
 		</switch>
 	</decision>
@@ -330,7 +331,7 @@
 		<switch>
 			<case to="store_to_protobuf">${store_to_protobuf eq "true"}
 			</case>
-			<default to="end" />
+			<default to="remove_sideproducts-corr-d" />
 		</switch>
 	</decision>
 
@@ -353,8 +354,32 @@
 			<param>removal_least_used=${ds_removal_least_used}</param>
 			<param>removal_rate=${ds_removal_rate}</param>
 		</pig>
-		<ok to='end' />
+		<ok to='remove_sideproducts-corr-d' />
 		<error to='kill' />
+	</action>
+
+	<decision name="remove_sideproducts-corr-d">
+		<switch>
+			<case to="remove_sideproducts-corr">${ds_remove_sideproducts eq "true"}</case>
+			<default to="end" />
+		</switch>
+	</decision>
+	
+	<action name="remove_sideproducts-corr">
+		<fs>
+			<delete path="${ds_similarityOutputPath}/filtered-by-ranked-word-count" />
+			<delete path="${ds_similarityOutputPath}/filtered-by-ranked-word-count_rejected" />
+			<delete path="${ds_similarityOutputPath}/ranked-word-count" />
+			<delete path="${ds_similarityOutputPath}/raw" />
+			<delete path="${ds_similarityOutputPath}/term" />
+			<delete path="${ds_similarityOutputPath}/term-count" />
+			<delete path="${ds_similarityOutputPath}/tfidf" />
+			<delete path="${ds_similarityOutputPath}/similarity/nominator" />
+			<delete path="${ds_similarityOutputPath}/similarity/denominator" />
+			<delete path="${ds_similarityOutputPath}/similarity/denominator/normalizedleftdocs" />
+		</fs>
+		<ok to="end" />
+		<error to="end" />
 	</action>
 
 	<kill name='kill'>
