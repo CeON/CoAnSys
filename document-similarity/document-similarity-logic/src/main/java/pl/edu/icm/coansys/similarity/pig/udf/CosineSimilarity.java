@@ -75,7 +75,7 @@ public class CosineSimilarity extends EvalFunc<Tuple> {
 				} catch (NullPointerException e) {
 					if (reporterIsNotNull) {
 						myreporter.getCounter("data error",
-								"term or tfidf is a null value! (in UDF CosineSimilarity)").increment(1);
+								"[docA] term or tfidf is a null value! (in UDF CosineSimilarity)").increment(1);
 						log.error("for document "+keyA+" term or tfidf is a null value!");
 					}
 				}
@@ -95,7 +95,7 @@ public class CosineSimilarity extends EvalFunc<Tuple> {
 				} catch (NullPointerException e) {
 					if (reporterIsNotNull) {
 						myreporter.getCounter("data error",
-								"term or tfidf are null values! (in UDF CosineSimilarity)").increment(1);
+								"[docB] term or tfidf is null values! (in UDF CosineSimilarity)").increment(1);
 						log.error("for document "+keyB+" term or tfidf is a null value!");
 					}
 				}
@@ -112,11 +112,11 @@ public class CosineSimilarity extends EvalFunc<Tuple> {
 					* Math.sqrt(denominatorB);
 			double retVal = numerator / denominator;
 
-			if (retVal > 0) {
+			if (retVal >= 0 && !Double.isNaN(retVal) && !Double.isInfinite(retVal)) {
 				Object[] to = new Object[] { keyA, keyB, retVal };
 				return TupleFactory.getInstance().newTuple(Arrays.asList(to));
 			} else {
-				return null;
+				throw new ArithmeticException("one of vectors is empty!");
 			}
 		} catch (Exception e) {
 			if (reporterIsNotNull) {
@@ -131,6 +131,10 @@ public class CosineSimilarity extends EvalFunc<Tuple> {
 		}
 	}
 
+	public static void main(String[] args){
+		System.out.println(0.0/0.0);
+	}
+	
 	/*
 	 * private Map<String, Double> extractToMap(Tuple input, int bagIndex, int
 	 * keyIndex, int valIndex) throws ExecException { HashMap<String, Double> hm
