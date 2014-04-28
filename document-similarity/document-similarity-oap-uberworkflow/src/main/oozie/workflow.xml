@@ -380,10 +380,6 @@
 		<error to="finalize-error" />
 	</action>
 
-	<kill name="finalize-error">
-		<message>Workflow failed</message>
-	</kill>
-
 	<decision name="finalize">
 		<switch>
 			<case to="remove_sideproducts-corr">${ds_remove_sideproducts eq "true"}</case>
@@ -403,8 +399,11 @@
 		<error to="end" />
 	</action>
 
+	<kill name="finalize-error">
+		<message>Workflow failed</message>
+	</kill>
 
-	<end name="finalize" />
+	<end name="end" />
 
 	<!-- <kill name="fail"> <message>Workflow failed</message> </kill> <end 
 		name="end" /> -->
