@@ -5,3 +5,5 @@ with intersection size for each feature.
 Takes only contributors with orcID (needed to decide are 2 contirbutors the same or not).
 Pair of contrubutors is pair of the same contributors when EX_PERSON_ID has got intersection value 1.0, otherwise 0.0
 
+pig -param collection=cc svmInputExtraction_unnormalized.pig
+
