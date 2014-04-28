@@ -19,10 +19,13 @@
 package pl.edu.icm.coansys.citations.mappers
 
 /**
- * Created by matfed on 27.02.14.
+ * Takes citation entity as a value and generates (hash, entity id) pairs.
+ *
+ * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
-class DocumentHashGenerator extends HashGenerator {
-  override protected val hasherProperty: String = "coansys.citations.document.hasher"
-  override protected val markDefault: Boolean = false
-  override protected val markProperty: String = "coansys.citations.mark.documents"
+class CitationHashGenerator extends HashGenerator{
+  override protected val markProperty = "coansys.citations.mark.citations"
+  override protected val markDefault = true
+  override protected val hasherProperty = "coansys.citations.citation.hasher"
 }
+

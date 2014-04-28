@@ -18,11 +18,22 @@
 
 package pl.edu.icm.coansys.citations.mappers
 
+import org.apache.hadoop.io.{Text, BytesWritable}
+import org.apache.hadoop.mapreduce.Mapper
+import pl.edu.icm.coansys.citations.data.{MarkedBytesWritable, MarkedText}
+
 /**
- * Created by matfed on 27.02.14.
+ * Created by matfed on 28.02.14.
  */
-class DocumentHashGenerator extends HashGenerator {
-  override protected val hasherProperty: String = "coansys.citations.document.hasher"
-  override protected val markDefault: Boolean = false
-  override protected val markProperty: String = "coansys.citations.mark.documents"
+class CitationsMarker extends Mapper[Text, BytesWritable, MarkedText, MarkedBytesWritable] {
+  type Context = Mapper[Text, BytesWritable, MarkedText, MarkedBytesWritable]#Context
+  val outKey = new MarkedText(false)
+  val outValue = new MarkedBytesWritable(false)
+
+
+  override def map(key: Text, value: BytesWritable, context: Context) {
+   outKey.text.set(key)
+   outValue.bytes.set(value)
+   context.write(outKey, outValue)
+  }
 }

@@ -16,13 +16,13 @@
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.edu.icm.coansys.citations.mappers
+package pl.edu.icm.coansys.citations.hashers
+
+import pl.edu.icm.coansys.citations.data.MatchableEntity
 
 /**
- * Created by matfed on 27.02.14.
+ * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
-class DocumentHashGenerator extends HashGenerator {
-  override protected val hasherProperty: String = "coansys.citations.document.hasher"
-  override protected val markDefault: Boolean = false
-  override protected val markProperty: String = "coansys.citations.mark.documents"
+trait HashGenerator {
+  def generate(entity: MatchableEntity): Iterable[String]
 }
