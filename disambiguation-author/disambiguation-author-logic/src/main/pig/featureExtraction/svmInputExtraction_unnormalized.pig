@@ -21,20 +21,22 @@
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 %DEFAULT JARS '*.jar'
-%DEFAULT commonJarsPath 'lib/$JARS'
+%DEFAULT commonJarsPath '../disambiguation/lib/$JARS'
 
-%DEFAULT dc_m_hdfs_inputDocsData /srv/bwndata/seqfile/springer-metadata/springer-20120419-springer0*.sq
+%DEFAULT collection cc
+%DEFAULT dc_m_hdfs_inputDocsData /user/mwos/orcid/orcid_enreached_bw/$collection
 %DEFAULT time 2
-%DEFAULT dc_m_hdfs_output svmInput/outputTime$time
+%DEFAULT dc_m_hdfs_output /user/mwos/orcid/svmPairs/$collection
 %DEFAULT dc_m_meth_extraction_inner pl.edu.icm.coansys.commons.pig.udf.RichSequenceFileLoader
---%DEFAULT dc_m_str_feature_info 'ClassificationCodeDisambiguator#EX_CLASSIFICATION_CODES#1#1,EmailDisambiguator#EX_EMAIL#1#1,EmailPrefixDisambiguator#EX_EAMIL_PREFIX#1#1,TitleSplitDisambiguator#EX_TITLE_SPLIT#1#1,KeyWordsDisambiguator#EX_KEYWORDS#1#1,KeyPhrasesDisambiguator#EX_KEYPHRASES#1#1,YearDisambiguator#EX_YEAR#1#1,CoAuthorsSnameDisambiguator#EX_COAUTH_SNAME#1#1,#EX_PERSON_ID#1#1'
-%DEFAULT dc_m_str_feature_info 'CoAuthorsSnameDisambiguatorFullList#EX_AUTH_INITIALS#-0.0000166#8,ClassifCodeDisambiguator#EX_CLASSIFICATION_CODES#0.99#12,KeyphraseDisambiguator#EX_KEYWORDS_SPLIT#0.99#22,KeywordDisambiguator#EX_KEYWORDS#0.0000369#40'
+%DEFAULT dc_m_str_feature_info '#EX_CLASSIFICATION_CODES#1#1,#EX_KEYWORDS_SPLIT#1#1,#EX_KEYWORDS#1#1,#EX_TITLE_SPLIT#1#1,YearDisambiguator#EX_YEAR#1#1,#EX_TITLE#1#1,CoAuthorsSnameDisambiguatorFullList#EX_DOC_AUTHS_SNAMES#1#1,#EX_DOC_AUTHS_FNAME_FST_LETTER#1#1,#EX_AUTH_FNAMES_FST_LETTER#1#1,#EX_AUTH_FNAME_FST_LETTER#1#1,#EX_PERSON_ID#1#1,#EX_EMAIL#1#1'
+--%DEFAULT dc_m_str_feature_info '#EX_AUTH_INITIALS#-0.0000166#8,#EX_CLASSIFICATION_CODES#0.99#12,#EX_KEYWORDS_SPLIT#0.99#22,#EX_KEYWORDS#0.0000369#40'
 %DEFAULT threshold '-0.8'
 %DEFAULT lang 'all'
 
 -- DEFINE keyTiKwAbsCatExtractor pl.edu.icm.coansys.classification.documents.pig.extractors.EXTRACT_MAP_WHEN_CATEG_LIM('en','removeall');
-DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_CONTRIBDATA_GIVENDATA('-featureinfo $dc_m_str_feature_info -lang $lang');
-DEFINE pairsCreation pl.edu.icm.coansys.disambiguation.author.pig.SvmPairsCreator('$dc_m_str_feature_info');
+-- skipEmptyFeatures set to true is important for filtering snames without orcID
+DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_CONTRIBDATA_GIVENDATA('-featureinfo $dc_m_str_feature_info -lang $lang -skipEmptyFeatures true');
+DEFINE pairsCreation pl.edu.icm.coansys.disambiguation.author.pig.SvmUnnormalizedPairsCreator('featureInfo=$dc_m_str_feature_info');
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- register section
@@ -68,6 +70,7 @@ set mapred.child.java.opts $mapredChildJavaOpts
 -- ulimit must be more than two times the heap size value !
 -- set mapred.child.ulimit unlimited
 set dfs.client.socket-timeout 60000
+set job.name 'svm_unnormalized_pairs_creator-$collection'
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- code section
@@ -76,15 +79,20 @@ set dfs.client.socket-timeout 60000
 A1 = LOAD '$dc_m_hdfs_inputDocsData' USING $dc_m_meth_extraction_inner('org.apache.hadoop.io.BytesWritable', 'org.apache.hadoop.io.BytesWritable') as (key:chararray, value:bytearray);
 --A2 = limit A1 1;
 --A2 = sample A1 $dc_m_double_sample;
-A3 = foreach A1 generate flatten(snameDocumentMetaExtractor($1)) as (cId:chararray, sname:chararray, metadata:map[{(chararray)}]);
-A4 = FILTER A3 BY cId is not null;
+A3 = foreach A1 generate flatten(snameDocumentMetaExtractor($1)) as (dockey:chararray, cId:chararray, sname:int, metadata:map[{()}]);
+A4 = FILTER A3 BY cId is not null and metadata#'EX_PERSON_ID' is not null and not IsEmpty(metadata#'EX_PERSON_ID');
 A = group A4 by sname;
-B = foreach A generate *;
-C = join A by sname, B by sname;
-D = foreach C generate flatten($1),flatten($2);
---DX = filter D by $1<$4;
-%DEFAULT twocontribs 'twocontribs'
-store D into '$dc_m_hdfs_output$twocontribs';
-E = foreach D generate  pairsCreation(*);
+
+/*
+-- statistics:
+CNT1 = foreach A generate group as sname, COUNT(A4) as contrib_no;
+CNT2 = group CNT1 by contrib_no;
+CNT3 = foreach CNT2 generate group as contrib_no, COUNT(CNT1) as blocks_no;
+CNT4 = ORDER CNT3 BY contrib_no DESC;
+-- (contrib_no, blocks_no with contrib_no)
+store CNT4 into '$dc_m_hdfs_output/contribBlocksStat';
+*/
+
+D = foreach A generate flatten(pairsCreation(*));
 %DEFAULT unnormalizedValPairs 'unnormalizedValPairs'
-store E into '$dc_m_hdfs_output$unnormalizedValPairs';
+store D into '$dc_m_hdfs_output/$unnormalizedValPairs';

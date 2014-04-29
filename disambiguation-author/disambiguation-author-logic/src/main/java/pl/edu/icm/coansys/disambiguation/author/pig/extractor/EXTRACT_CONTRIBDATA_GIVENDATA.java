@@ -71,7 +71,7 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 	private String language = null; // null means all
 	@Parameter(names = "-skipEmptyFeatures", arity = 1, description = "Skip contributor's features, when feature bag is empty (no data for feature).")
 	private boolean skipEmptyFeatures = false;
-	@Parameter(names = "-snameToString", arity = 1, description = "Does not normalize surname using to blocking when true. Use only for debuging.")
+	@Parameter(names = "-snameToString", arity = 1, description = "Does not normalize surname used to blocking when true. Use only for debuging.")
 	private boolean snameToString = false;
 	@Parameter(names = "-useIdsForExtractors", arity = 1, description = "Use short ids for extractors (features) names in temporary sequance files.")
 	private boolean useIdsForExtractors = false;

@@ -48,9 +48,11 @@ public class SvmUnnormalizedPairsCreator extends EvalFunc<DataBag> {
 	private PigStatusReporter myreporter = null;
 
 	private String[] featureNames = null;
-	private String sameFeatureName = "";
+	private String sameFeatureName = "EX_PERSON_ID";
 	private boolean reduceNotSame = false;
-
+	
+	private double missingFeatureValue = 0;
+	
 	public SvmUnnormalizedPairsCreator(String inputParams) {
 		String[] in = inputParams.split(" ");
 		for (String i : in) {
@@ -99,7 +101,8 @@ public class SvmUnnormalizedPairsCreator extends EvalFunc<DataBag> {
 			contribsT[counter] = contrib;
 			counter++;
 		}
-
+		contribs = null;
+		
 		TupleFactory tf = TupleFactory.getInstance();
 
 		Disambiguator intersectionDisambiguator = new Intersection();
@@ -112,14 +115,19 @@ public class SvmUnnormalizedPairsCreator extends EvalFunc<DataBag> {
 				Tuple cA = contribsT[i];
 				Tuple cB = contribsT[j];
 
-				String cidA = (String) cA.get(0);
-				Map<String, DataBag> mapA = (Map<String, DataBag>) cA.get(2);
+				String cidA = (String) cA.get(1);
+				Map<String, DataBag> mapA = (Map<String, DataBag>) cA.get(3);
 				Map<String, ArrayList<Object>> extractedMapA = extractFeatureNameFeatureValueList(mapA);
 
-				String cidB = (String) cB.get(0);
-				Map<String, DataBag> mapB = (Map<String, DataBag>) cB.get(2);
+				String cidB = (String) cB.get(1);
+				Map<String, DataBag> mapB = (Map<String, DataBag>) cB.get(3);
 				Map<String, ArrayList<Object>> extractedMapB = extractFeatureNameFeatureValueList(mapB);
-
+				
+				// probably map is empty for some contrib
+				if (extractedMapA == null || extractedMapB == null) {
+					continue;
+				}
+				
 				Tuple t = tf.newTuple();
 				t.append(UUID
 						.nameUUIDFromBytes((cidA + cidB).getBytes("UTF-8"))
@@ -128,8 +136,23 @@ public class SvmUnnormalizedPairsCreator extends EvalFunc<DataBag> {
 				for (int k = 0; k < featureNames.length; k++) {
 					List<Object> listA = extractedMapA.get(featureNames[k]);
 					List<Object> listB = extractedMapB.get(featureNames[k]);
+					
+					if(listA == null || listB == null || listA.isEmpty() || listB.isEmpty()) {
+						t.append(featureNames[k]);
+						t.append( missingFeatureValue );
+						t.append( missingFeatureValue );
 
-					t.append(featureNames[k]);
+						if (sameFeatureName != null
+								&& sameFeatureName.equals(featureNames[k])) {
+							myreporter.getCounter("data error",
+									sameFeatureName + " missing!").increment(1);
+							
+							throw new IllegalStateException(sameFeatureName + " missing!");
+						}
+						
+						continue;
+					}
+					
 					double intersection = intersectionDisambiguator
 							.calculateAffinity(listA, listB);
 					if (sameFeatureName != null
@@ -156,6 +179,7 @@ public class SvmUnnormalizedPairsCreator extends EvalFunc<DataBag> {
 						}
 					}
 					logger.debug("Have I add next tuple? true");
+					t.append(featureNames[k]);
 					t.append(intersection);
 					t.append(cosineSimDisambiguator.calculateAffinity(listA,
 							listB));
@@ -172,21 +196,20 @@ public class SvmUnnormalizedPairsCreator extends EvalFunc<DataBag> {
 		for (int k = 0; k < featureNames.length; k++) {
 			DataBag db = mapA.get(featureNames[k]);
 			ArrayList<Object> al = new ArrayList<Object>();
-			if (db == null) {
-				return translated;
-			}
-			for (Tuple t : db) {
-				Object tmp = t.get(0);
-
-				if (tmp != null) {
-					if (tmp.hashCode() != 0) {
-						al.add(tmp);
+			if (db != null) {
+				for (Tuple t : db) {
+					Object tmp = t.get(0);
+	
+					if (tmp != null) {
+						if (tmp.hashCode() != 0) {
+							al.add(tmp);
+						}
+					} else {
+						myreporter.getCounter(
+								"Bizarre error",
+								"Empty tuple in bag with feature "
+										+ featureNames[k]).increment(1);
 					}
-				} else {
-					myreporter.getCounter(
-							"Bizarre error",
-							"Empty tuple in bag with feature "
-									+ featureNames[k]).increment(1);
 				}
 			}
 			translated.put(featureNames[k], al);
