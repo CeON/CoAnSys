@@ -27,6 +27,7 @@ import pl.edu.icm.coansys.statisticsgenerator.operationcomponents.FilterEq;
 import pl.edu.icm.coansys.statisticsgenerator.operationcomponents.FirstCharsPartitioner;
 import pl.edu.icm.coansys.statisticsgenerator.operationcomponents.LastCharsPartitioner;
 import pl.edu.icm.coansys.statisticsgenerator.operationcomponents.OperationComponent;
+import pl.edu.icm.coansys.statisticsgenerator.operationcomponents.RegexPartitioner;
 
 /**
  *
@@ -36,7 +37,7 @@ public final class ComponentsMapping {
     
     private ComponentsMapping() {}
     
-    public static final Map<String, Class<? extends OperationComponent>> mapping = new HashMap<String, Class<? extends OperationComponent>>();
+    private static final Map<String, Class<? extends OperationComponent>> mapping = new HashMap<String, Class<? extends OperationComponent>>();
 
     static {
         mapping.put("EQFILTER", FilterEq.class);
@@ -44,6 +45,15 @@ public final class ComponentsMapping {
         mapping.put("FIRSTCHARS", FirstCharsPartitioner.class);
         mapping.put("LASTCHARS", LastCharsPartitioner.class);
         mapping.put("DATERANGES", DateRangesPartitioner.class);
+        mapping.put("REGEX", RegexPartitioner.class);
         mapping.put("COUNT", CountSummary.class);
+    }
+    
+    public static Class<? extends OperationComponent> getOperationComponent(String label) {
+        return mapping.get(label);
+    }
+    
+    public static void registerOperationComponent(String label, Class<? extends OperationComponent> componentClass) {
+        mapping.put(label, componentClass);
     }
 }

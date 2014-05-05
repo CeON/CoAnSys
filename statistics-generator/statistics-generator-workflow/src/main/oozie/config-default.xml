@@ -1,5 +1,13 @@
 <configuration>
   <property>
+    <name>user_operations</name>
+    <value> </value>
+  </property>
+  <property>
+    <name>user_operations_classes</name>
+    <value> </value>
+  </property>
+  <property>
     <name>input_filter_names</name>
     <value> </value>
   </property>
