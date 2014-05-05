@@ -19,17 +19,12 @@ package pl.edu.icm.coansys.statisticsgenerator.jobs;
 
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
-import java.util.Date;
-import java.util.Map;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.Text;
-import org.apache.hadoop.io.Writable;
-import org.apache.hadoop.io.WritableComparable;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
-import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
 import org.apache.hadoop.util.Tool;
@@ -37,21 +32,19 @@ import org.apache.hadoop.util.ToolRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.edu.icm.coansys.models.StatisticsProtos;
-import pl.edu.icm.coansys.statisticsgenerator.mrtypes.SortedMapWritableComparable;
-import pl.edu.icm.coansys.statisticsgenerator.operationcomponents.Partitioner;
 import pl.edu.icm.coansys.statisticsgenerator.conf.StatGeneratorConfiguration;
-import pl.edu.icm.coansys.statisticsgenerator.operationcomponents.StatisticCalculator;
+import pl.edu.icm.coansys.statisticsgenerator.filters.Filter;
 
 /**
  *
  * @author Artur Czeczko <a.czeczko@icm.edu.pl>
  */
-public class StatisticsGenerator implements Tool {
+public class FilterInput implements Tool {
 
-    private static Logger logger = LoggerFactory.getLogger(StatisticsGenerator.class);
+    private static Logger logger = LoggerFactory.getLogger(FilterInput.class);
     private Configuration conf;
 
-    public static class StatisticsMap extends Mapper<Text, BytesWritable, SortedMapWritableComparable, BytesWritable> {
+    public static class FilterInputMap extends Mapper<Text, BytesWritable, Text, BytesWritable> {
 
         private StatGeneratorConfiguration statGenConfiguration;
 
@@ -65,72 +58,28 @@ public class StatisticsGenerator implements Tool {
         protected void map(Text key, BytesWritable value, Context context) throws IOException, InterruptedException {
 
             StatisticsProtos.InputEntry inputEntry = StatisticsProtos.InputEntry.parseFrom(value.copyBytes());
+            Filter inputFilter = statGenConfiguration.getInputFilter();
 
-            SortedMapWritableComparable outputKeyMap = new SortedMapWritableComparable();
-            Map<String, Partitioner> partitioners = statGenConfiguration.getPartitioners();
-
-            for (StatisticsProtos.KeyValue field : inputEntry.getFieldList()) {
-                String fieldKey = field.getKey();
-                if (partitioners.containsKey(fieldKey)) {
-                    String[] partitions = partitioners.get(fieldKey).partition(field.getValue());
-                    for (String partition : partitions) {
-                        outputKeyMap.put(new Text(fieldKey), new Text(partition));
-                    }
-                }
+            if (inputFilter.filter(inputEntry)) {
+                
+                context.write(key, value);
             }
-
-            context.write(outputKeyMap, value);
         }
     }
 
-    public static class StatisticsReduce extends Reducer<SortedMapWritableComparable, BytesWritable, Text, BytesWritable> {
-
-        private StatGeneratorConfiguration statGenConfiguration;
-
-        @Override
-        protected void setup(Context context) throws IOException, InterruptedException {
-            Configuration conf = context.getConfiguration();
-            statGenConfiguration = new StatGeneratorConfiguration(conf);
-        }
-
-        @Override
-        protected void reduce(SortedMapWritableComparable key, Iterable<BytesWritable> values, Context context) throws IOException, InterruptedException {
-            StatisticsProtos.Statistics.Builder statisticsBuilder = StatisticsProtos.Statistics.newBuilder();
-            StatisticsProtos.KeyValue.Builder kvBuilder = StatisticsProtos.KeyValue.newBuilder();
-
-            for (SortedMapWritableComparable.Entry<WritableComparable, Writable> partEntry : key.entrySet()) {
-                kvBuilder.clear();
-                Text kText = (Text) partEntry.getKey();
-                Text vText = (Text) partEntry.getValue();
-                kvBuilder.setKey(kText.toString());
-                kvBuilder.setValue(vText.toString());
-                statisticsBuilder.addPartitions(kvBuilder);
-            }
-            for (Map.Entry<String, StatisticCalculator> statisticEntry : this.statGenConfiguration.getStatisticCalculators().entrySet()) {
-                kvBuilder.clear();
-                double result = statisticEntry.getValue().calculate(values);
-                kvBuilder.setKey(statisticEntry.getKey());
-                kvBuilder.setValue(String.valueOf(result));
-                statisticsBuilder.addStatistics(kvBuilder);
-            }
-            statisticsBuilder.setTimestamp(new Date().getTime());
-            context.write(new Text("abc"), new BytesWritable(statisticsBuilder.build().toByteArray()));
-        }
-    }
 
     @Override
     public int run(String[] args) throws Exception {
         Job job = new Job(conf);
-        job.setJarByClass(StatisticsGenerator.class);
+        job.setJarByClass(FilterInput.class);
         job.setInputFormatClass(SequenceFileInputFormat.class);
         job.setOutputFormatClass(SequenceFileOutputFormat.class);
         SequenceFileInputFormat.addInputPath(job, new Path(args[0]));
         SequenceFileOutputFormat.setOutputPath(job, new Path(args[1]));
-        job.setMapperClass(StatisticsMap.class);
-        job.setReducerClass(StatisticsReduce.class);
-        job.setMapOutputKeyClass(SortedMapWritableComparable.class);
+        job.setMapperClass(FilterInputMap.class);
+        job.setMapOutputKeyClass(Text.class);
         job.setMapOutputValueClass(BytesWritable.class);
-        job.setNumReduceTasks(16);
+        job.setNumReduceTasks(0);
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(BytesWritable.class);
 
@@ -156,6 +105,6 @@ public class StatisticsGenerator implements Tool {
         if (args.length < 2) {
             throw new IllegalArgumentException("syntax: StatisticsGenerator <input_path> <output_path>");
         }
-        ToolRunner.run(new StatisticsGenerator(), args);
+        ToolRunner.run(new FilterInput(), args);
     }
 }
