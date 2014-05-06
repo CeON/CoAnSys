@@ -58,6 +58,10 @@
                     <value>org.apache.hadoop.io.BytesWritable</value>
                 </property>
                 <property>
+                    <name>mapred.reduce.tasks</name>
+                    <value>0</value>
+                </property>
+                <property>
                     <name>user_operations</name>
                     <value>${user_operations}</value>
                 </property>
