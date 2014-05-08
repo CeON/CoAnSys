@@ -44,6 +44,7 @@ public class StatGeneratorConfiguration {
     private int limit = 0;
 
     public StatGeneratorConfiguration(Configuration conf) {
+        registerUserComponents(conf);
         inputFilterComponents = readConfPartStat(conf, ConfigurationConstants.INPUT_FILTER_PREFIX);
         inputFilter = new InputFilter(conf.get(ConfigurationConstants.INPUT_FILTER_FORMULA), inputFilterComponents);
         partitioners = readConfPartStat(conf, ConfigurationConstants.PARTITIONS_PREFIX);
@@ -89,6 +90,40 @@ public class StatGeneratorConfiguration {
     /**
      * ** private methods responsible for reading parts of configuration **
      */
+    
+    private static void registerUserComponents(Configuration conf) {
+        String userComponentsLabelsStr = conf.get(ConfigurationConstants.USER_OPERATIONS_LABELS);
+        String userComponentsClassesStr = conf.get(ConfigurationConstants.USER_OPERATIONS_CLASSES);
+        
+        if (userComponentsLabelsStr == null && userComponentsClassesStr == null) {
+            return;
+        }
+        
+        if (userComponentsLabelsStr == null || userComponentsClassesStr == null) {
+            throw new IllegalArgumentException("Both " + ConfigurationConstants.USER_OPERATIONS_LABELS + " and " +
+                    ConfigurationConstants.USER_OPERATIONS_CLASSES + " must be set or unset");
+        }
+        
+        String[] userComponentsLabels = userComponentsLabelsStr.split(ConfigurationConstants.CONF_FIELDS_SEPARATOR);
+        String[] userComponentsClasses = userComponentsClassesStr.split(ConfigurationConstants.CONF_FIELDS_SEPARATOR);
+        
+        if (userComponentsLabels.length != userComponentsClasses.length) {
+            throw new IllegalArgumentException("Unequal fields count in " + 
+                    ConfigurationConstants.USER_OPERATIONS_LABELS + " and " +
+                    ConfigurationConstants.USER_OPERATIONS_CLASSES);
+        }
+        
+        for (int i = 0; i < userComponentsLabels.length; i++) {
+            Class<? extends OperationComponent> cls;
+            try {
+                cls = (Class<? extends OperationComponent>) Class.forName(userComponentsClasses[i]);
+            } catch (ClassNotFoundException ex) {
+                throw new IllegalArgumentException("Bad configuration: " + ex);
+            }
+            ComponentsMapping.registerOperationComponent(userComponentsLabels[i], cls);
+        }
+    }
+    
     // partitions and statistics
     private static <T extends OperationComponent> SortedMap<String, T> readConfPartStat(Configuration conf, String confPrefix) {
         SortedMap<String, T> result = new TreeMap<String, T>();
@@ -143,7 +178,7 @@ public class StatGeneratorConfiguration {
         for (int i = 0; i < operationsNb; i++) {
             String classLabel = operationsClasses[i];
             try {
-                Class<? extends OperationComponent> pClass = ComponentsMapping.mapping.get(classLabel);
+                Class<? extends OperationComponent> pClass = ComponentsMapping.getOperationComponent(classLabel);
                 T component = (T) pClass.newInstance();
                 component.setup(operationsClassesArgs[i]);
                 result.put(operationsNames[i], component);
