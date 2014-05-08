@@ -222,7 +222,7 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 				}
 
 				// pig status reporter
-				reportSname(normalizedSname);
+				reportSname(a.getSurname(), normalizedSname);
 
 				String cId = a.getKey();
 				// taking from document metadata data specific for each contrib
@@ -290,8 +290,8 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 
 	// Pig Status Reporter staff:
 	private PigStatusReporter myreporter = null;
-	private Counter counters4Doc[][], counters4Author[][], counterSname[],
-			countersExist;
+	private Counter counters4Doc[][], counters4Author[][], counterNormalizedSname[],
+	counterOriginalSname[], countersExist;
 
 	static class REPORTER_CONST {
 		public static final String CONTRIB_EX = "Contrib_Existing";
@@ -309,7 +309,8 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 		myreporter = PigStatusReporter.getInstance();
 		counters4Doc = new Counter[des4Doc.size()][2];
 		counters4Author = new Counter[des4Author.size()][2];
-		counterSname = new Counter[2];
+		counterNormalizedSname = new Counter[2];
+		counterOriginalSname = new Counter[2];
 		countersExist = myreporter.getCounter("unused", "unused");
 
 		if (countersExist == null) {
@@ -339,14 +340,22 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 			counters4Author[i][REPORTER_CONST.EXIST].increment(0);
 		}
 
-		counterSname[REPORTER_CONST.MISS] = myreporter.getCounter(
+		counterNormalizedSname[REPORTER_CONST.MISS] = myreporter.getCounter(
 				REPORTER_CONST.CONTRIB_MS,
-				"Not null normalized sname to main blocking");
-		counterSname[REPORTER_CONST.EXIST] = myreporter.getCounter(
+				"Normalized sname");
+		counterNormalizedSname[REPORTER_CONST.EXIST] = myreporter.getCounter(
 				REPORTER_CONST.CONTRIB_EX,
-				"Not null normalized sname to main blocking");
-		counterSname[REPORTER_CONST.MISS].increment(0);
-		counterSname[REPORTER_CONST.EXIST].increment(0);
+				"Normalized sname");
+		counterOriginalSname[REPORTER_CONST.MISS] = myreporter.getCounter(
+				REPORTER_CONST.CONTRIB_MS,
+				"Original sname");
+		counterOriginalSname[REPORTER_CONST.EXIST] = myreporter.getCounter(
+				REPORTER_CONST.CONTRIB_EX,
+				"Original sname");
+		counterNormalizedSname[REPORTER_CONST.MISS].increment(0);
+		counterNormalizedSname[REPORTER_CONST.EXIST].increment(0);
+		counterOriginalSname[REPORTER_CONST.MISS].increment(0);
+		counterOriginalSname[REPORTER_CONST.EXIST].increment(0);
 	}
 
 	private void reportAuthorDataExistance(DataBag extractedAuthorObj, int j) {
@@ -371,14 +380,19 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 		}
 	}
 
-	private void reportSname(Object sname) {
+	private void reportSname(Object orgSname, Object normSname) {
 		if (countersExist == null) {
 			return;
 		}
-		if (sname == null) {
-			counterSname[REPORTER_CONST.MISS].increment(1);
+		if (normSname == null || normSname.toString().isEmpty() ) {
+			counterNormalizedSname[REPORTER_CONST.MISS].increment(1);
 		} else {
-			counterSname[REPORTER_CONST.EXIST].increment(1);
+			counterNormalizedSname[REPORTER_CONST.EXIST].increment(1);
+		}
+		if (orgSname == null || orgSname.toString().isEmpty() ) {
+			counterOriginalSname[REPORTER_CONST.MISS].increment(1);
+		} else {
+			counterOriginalSname[REPORTER_CONST.EXIST].increment(1);
 		}
 	}
 
@@ -394,3 +408,4 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 				authors.isEmpty() ? 0 : 1);
 	}
 }
+

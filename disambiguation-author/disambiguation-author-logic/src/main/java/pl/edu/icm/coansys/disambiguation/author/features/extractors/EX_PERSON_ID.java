@@ -38,7 +38,7 @@ public class EX_PERSON_ID extends DisambiguationExtractorAuthor {
 		super(new_normalizers);
 	}
 
-	public static final String PERSON_ID_KEY_NAME = "orcid";
+	public static final String PERSON_ID_KEY_NAME = "pbnPersonId";
 
 	@Override
 	public DataBag extract(Object o, int fakeIndex, String lang) {
