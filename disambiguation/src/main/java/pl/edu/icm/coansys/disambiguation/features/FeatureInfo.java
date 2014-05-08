@@ -87,8 +87,15 @@ public class FeatureInfo {
     			logger.error("This feature info will be ignored");
     			continue;
     		}else{
+    			double weight;
+    			if ( details[2].equalsIgnoreCase("inf") || details[2].equalsIgnoreCase("max") ) {
+    				weight = Double.POSITIVE_INFINITY;
+    			} else {
+    				weight = Double.parseDouble(details[2]);
+    			}
+    			 
     			ret.add(new FeatureInfo(details[0],details[1],
-    					Double.parseDouble(details[2]),
+    					weight,
     					Integer.parseInt(details[3])));
     		}
     	}
