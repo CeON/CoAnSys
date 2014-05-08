@@ -1,37 +1,69 @@
 <workflow-app xmlns="uri:oozie:workflow:0.4" name="statistics-generator-wf">
-    <start to="filterinput" />
+
+    <global>
+
+        <job-tracker>${jobTracker}</job-tracker>
+        <name-node>${nameNode}</name-node>
+        <configuration>
+            <!-- This is required for new api usage -->
+            <property>
+                <name>mapred.mapper.new-api</name>
+                <value>true</value>
+            </property>
+            <property>
+                <name>mapred.reducer.new-api</name>
+                <value>true</value>
+            </property>
+            <property>
+                <name>mapred.fairscheduler.pool</name>
+                <value>${POOL_NAME}</value>
+            </property>
+            <property>
+                <name>oozie.launcher.mapred.fairscheduler.pool</name>
+                <value>${POOL_NAME}</value>
+            </property>
+            <property>
+                <name>mapred.job.queue.name</name>
+                <value>${queueName}</value>
+            </property>
+            <property>
+                <name>user_operations</name>
+                <value>${user_operations}</value>
+            </property>
+            <property>
+                <name>user_operations_classes</name>
+                <value>${user_operations_classes}</value>
+            </property>
+        </configuration>
+
+    </global>
+
+    <start to="filterinput-decision" />
+
+    <decision name="filterinput-decision">
+        <switch>
+            <case to="generatestatistics">${filter_input_data} eq "false"</case>
+            <default to="filterinput" />
+        </switch>
+    </decision>
+
     <action name="filterinput">
         <map-reduce>
-            <job-tracker>${jobTracker}</job-tracker>
-            <name-node>${nameNode}</name-node>
             <prepare>
-                <delete path="${hdfsWorkingDirURI}/filtered-input" />
+                <delete path="${filteredInput}" />
             </prepare>
             <configuration>
-                <!-- This is required for new api usage -->
-                <property>
-                    <name>mapred.mapper.new-api</name>
-                    <value>true</value>
-                </property>
-                <property>
-                    <name>mapred.reducer.new-api</name>
-                    <value>true</value>
-                </property>
                 <property>
                     <name>mapreduce.map.class</name>
                     <value>pl.edu.icm.coansys.statisticsgenerator.jobs.FilterInput$FilterInputMap</value>
                 </property>
                 <property>
                     <name>mapred.input.dir</name>
-                    <value>${hdfsDirInputData}</value>
+                    <value>${unfilteredInput}</value>
                 </property>
                 <property>
                     <name>mapred.output.dir</name>
-                    <value>${hdfsWorkingDirURI}/filtered-input</value>
-                </property>
-                <property>
-                    <name>mapred.job.queue.name</name>
-                    <value>${queueName}</value>
+                    <value>${filteredInput}</value>
                 </property>
                 <property>
                     <name>mapreduce.inputformat.class</name>
@@ -62,14 +94,6 @@
                     <value>0</value>
                 </property>
                 <property>
-                    <name>user_operations</name>
-                    <value>${user_operations}</value>
-                </property>
-                <property>
-                    <name>user_operations_classes</name>
-                    <value>${user_operations_classes}</value>
-                </property>
-                <property>
                     <name>input_filter_names</name>
                     <value>${input_filter_names}</value>
                 </property>
@@ -90,23 +114,13 @@
         <ok to="generatestatistics" />
         <error to="fail" />
     </action>
+
     <action name="generatestatistics">
         <map-reduce>
-            <job-tracker>${jobTracker}</job-tracker>
-            <name-node>${nameNode}</name-node>
             <prepare>
-                <delete path="${hdfsWorkingDirURI}/all-statistics" />
+                <delete path="${allStatistics}" />
             </prepare>
             <configuration>
-                <!-- This is required for new api usage -->
-                <property>
-                    <name>mapred.mapper.new-api</name>
-                    <value>true</value>
-                </property>
-                <property>
-                    <name>mapred.reducer.new-api</name>
-                    <value>true</value>
-                </property>
                 <property>
                     <name>mapreduce.map.class</name>
                     <value>pl.edu.icm.coansys.statisticsgenerator.jobs.StatisticsGenerator$StatisticsMap</value>
@@ -117,15 +131,11 @@
                 </property>
                 <property>
                     <name>mapred.input.dir</name>
-                    <value>${hdfsWorkingDirURI}/filtered-input</value>
+                    <value>${filteredInput}</value>
                 </property>
                 <property>
                     <name>mapred.output.dir</name>
-                    <value>${hdfsWorkingDirURI}/all-statistics</value>
-                </property>
-                <property>
-                    <name>mapred.job.queue.name</name>
-                    <value>${queueName}</value>
+                    <value>${allStatistics}</value>
                 </property>
                 <property>
                     <name>mapreduce.inputformat.class</name>
@@ -150,14 +160,6 @@
                 <property>
                     <name>mapred.output.value.class</name>
                     <value>org.apache.hadoop.io.BytesWritable</value>
-                </property>
-                <property>
-                    <name>user_operations</name>
-                    <value>${user_operations}</value>
-                </property>
-                <property>
-                    <name>user_operations_classes</name>
-                    <value>${user_operations_classes}</value>
                 </property>
                 <property>
                     <name>partitions_names</name>
@@ -188,20 +190,17 @@
         <ok to="groupsortlimit" />
         <error to="fail" />
     </action>
+
+    <decision name="groupsortlimit-decision">
+        <switch>
+            <case to="end">${aggregate_statistics} eq "false"</case>
+            <default to="groupsortlimit" />
+        </switch>
+    </decision>
+
     <action name="groupsortlimit">
         <map-reduce>
-            <job-tracker>${jobTracker}</job-tracker>
-            <name-node>${nameNode}</name-node>
             <configuration>
-                <!-- This is required for new api usage -->
-                <property>
-                    <name>mapred.mapper.new-api</name>
-                    <value>true</value>
-                </property>
-                <property>
-                    <name>mapred.reducer.new-api</name>
-                    <value>true</value>
-                </property>
                 <property>
                     <name>mapreduce.map.class</name>
                     <value>pl.edu.icm.coansys.statisticsgenerator.jobs.GroupSortLimit$GroupSortLimitMap</value>
@@ -220,15 +219,11 @@
                 </property>
                 <property>
                     <name>mapred.input.dir</name>
-                    <value>${hdfsWorkingDirURI}/all-statistics</value>
+                    <value>${allStatistics}</value>
                 </property>
                 <property>
                     <name>mapred.output.dir</name>
-                    <value>${hdfsDirOutputData}</value>
-                </property>
-                <property>
-                    <name>mapred.job.queue.name</name>
-                    <value>${queueName}</value>
+                    <value>${aggregatedStatistics}</value>
                 </property>
                 <property>
                     <name>mapreduce.inputformat.class</name>
@@ -255,14 +250,6 @@
                     <value>org.apache.hadoop.io.BytesWritable</value>
                 </property>
                 <property>
-                    <name>user_operations</name>
-                    <value>${user_operations}</value>
-                </property>
-                <property>
-                    <name>user_operations_classes</name>
-                    <value>${user_operations_classes}</value>
-                </property>
-                <property>
                     <name>group_keys</name>
                     <value>${group_keys}</value>
                 </property>
@@ -283,8 +270,10 @@
         <ok to="end" />
         <error to="fail" />
     </action>
+
     <kill name="fail">
         <message>Workflow failed</message>
     </kill>
     <end name="end" />
+
 </workflow-app>
