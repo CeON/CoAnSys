@@ -1,5 +1,19 @@
 <configuration>
   <property>
+    <name>POOL_NAME</name>
+    <value>default</value>
+  </property>
+  
+  <property>
+    <name>filter_input_data</name>
+    <value>true</value>
+  </property>
+  <property>
+    <name>aggregate_statistics</name>
+    <value>true</value>
+  </property>
+  
+  <property>
     <name>user_operations</name>
     <value> </value>
   </property>
