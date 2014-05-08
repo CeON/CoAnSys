@@ -21,14 +21,19 @@ package pl.edu.icm.coansys.similarity.pig.udf;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.pig.EvalFunc;
-import org.apache.pig.data.*;
+import org.apache.pig.data.DataBag;
+import org.apache.pig.data.DataType;
+import org.apache.pig.data.DefaultDataBag;
+import org.apache.pig.data.Tuple;
+import org.apache.pig.data.TupleFactory;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
+
+import pl.edu.icm.coansys.commons.java.DiacriticsRemover;
 import pl.edu.icm.coansys.commons.java.PorterStemmer;
 import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
-import pl.edu.icm.coansys.commons.java.StopWordsRemover;
-import pl.edu.icm.coansys.commons.java.DiacriticsRemover;
 
 public class ExtendedStemmedPairs extends EvalFunc<DataBag> {
 
@@ -49,47 +54,26 @@ public class ExtendedStemmedPairs extends EvalFunc<DataBag> {
 		}
 	}
 
+	private String TYPE_OF_REMOVAL = "latin";
 	private static final String SPACE = " ";
 	private AllLangStopWordFilter stowordsFilter = null;
 
 	public ExtendedStemmedPairs() throws IOException {
 		stowordsFilter = new AllLangStopWordFilter();
 	}
-
-	public static void main(String[] args) {
-
-		String text = "Μεταφορά τεχνολογίας : " + "παράγων αναπτύξεως ή μέσον "
-				+ "αποδιαρθρώσεως των οικονομικών " + "του τρίτου κόσμου	"
-				+ "ó	Techn,ology Techn, ology";
-		System.out.println("--------------");
-		System.out.println(DiacriticsRemover.removeDiacritics(text));
-		System.out.println("--------------");
-		System.out.println(text.replaceAll(
-				"([^\\u0080-\\uFFFF a-zA-Z_\\-\\d\\s])+", ""));
-		System.out.println("--------------");
-		text = text.replaceAll("([^\\u0080-\\uFFFF a-zA-Z_\\-\\d\\s])+", "");
-		text = text.replaceAll("\\s+", " ");
-
-		PorterStemmer ps = new PorterStemmer();
-		for (String s : text.split(SPACE)) {
-			s = s.replaceAll("^[/\\-]+", "");
-			s = s.replaceAll("[\\-/]+$", "");
-			s = s.replaceAll("^[/\\-_0-9]+$", "");
-			if (s.length() <= 2) {
-				continue;
-			}
-			s = DiacriticsRemover.removeDiacritics(s);
-			ps.add(s.toCharArray(), s.length());
-			ps.stem();
-			System.out.println(ps.toString());
-		}
+	
+	public ExtendedStemmedPairs(String params) throws IOException {
+		TYPE_OF_REMOVAL = params;
+		stowordsFilter = new AllLangStopWordFilter();
 	}
 
 	public List<String> getStemmedPairs(final String text) throws IOException {
 		String tmp = text.toLowerCase();
 		tmp = tmp.replaceAll("[_]+", "_");
 		tmp = tmp.replaceAll("[-]+", "-");
-		tmp = tmp.replaceAll("([^\\u0080-\\uFFFF a-zA-Z_\\-\\d\\s'])+", SPACE);
+		if(!"latin".equals(TYPE_OF_REMOVAL)){
+			tmp = tmp.replaceAll("([^\\u0080-\\uFFFF a-zA-Z_\\-\\d\\s'])+", SPACE);
+		}
 		tmp = tmp.replaceAll("\\s+", SPACE);
 		tmp = tmp.trim();
 		List<String> strings = new ArrayList<String>();
@@ -102,7 +86,9 @@ public class ExtendedStemmedPairs extends EvalFunc<DataBag> {
 		for (String s : StringUtils.split(tmp, SPACE)) {
 			s = s.replaceAll("^[/\\-]+", "");
 			s = s.replaceAll("[\\-/]+$", "");
-			s = s.replaceAll("^[/\\-_0-9]+$", "");
+			if("latin".equals(TYPE_OF_REMOVAL)){
+				s = s.replaceAll("[^a-z\\d\\-_/ ]+", SPACE);
+			}
 			if (s.length() <= 3) {
 				continue;
 			}
@@ -135,5 +121,55 @@ public class ExtendedStemmedPairs extends EvalFunc<DataBag> {
 		} catch (Exception e) {
 			throw new IOException("Caught exception processing input row ", e);
 		}
+	}
+	
+	public static void main(String[] args) {
+		
+		String text = "100688";
+		System.out.println("PartA: "+DiacriticsRemover.removeDiacritics(text));
+		
+//		PorterStemmer ps = new PorterStemmer();
+//		for (String s : text.split(SPACE)) {
+//			System.out.println("PartB1: "+s);
+//			s = s.replaceAll("^[/\\-]+", "");
+//			System.out.println("PartB2: "+s);
+//			s = s.replaceAll("[\\-/]+$", "");
+//			System.out.println("PartB3: "+s);
+//			s = s.replaceAll("^[/\\-_0-9]+$", "");
+//			System.out.println("PartB4: "+s);
+//			if (s.length() <= 3) {
+//				continue;
+//			}
+//			s = DiacriticsRemover.removeDiacritics(s);
+//			System.out.println("PartC: "+s);
+//			ps.add(s.toCharArray(), s.length());
+//			ps.stem();
+//			System.out.println("PartD: "+ps.toString());
+//		}
+//		String text = "Μεταφορά τεχνολογίας : " + "παράγων αναπτύξεως ή μέσον "
+//				+ "αποδιαρθρώσεως των οικονομικών " + "του τρίτου κόσμου	"
+//				+ "ó	Techn,ology Techn, ology";
+//		System.out.println("--------------");
+//		System.out.println(DiacriticsRemover.removeDiacritics(text));
+//		System.out.println("--------------");
+//		System.out.println(text.replaceAll(
+//				"([^\\u0080-\\uFFFF a-zA-Z_\\-\\d\\s])+", ""));
+//		System.out.println("--------------");
+//		text = text.replaceAll("([^\\u0080-\\uFFFF a-zA-Z_\\-\\d\\s])+", "");
+//		text = text.replaceAll("\\s+", " ");
+//
+//		PorterStemmer ps = new PorterStemmer();
+//		for (String s : text.split(SPACE)) {
+//			s = s.replaceAll("^[/\\-]+", "");
+//			s = s.replaceAll("[\\-/]+$", "");
+//			s = s.replaceAll("^[/\\-_0-9]+$", "");
+//			if (s.length() <= 2) {
+//				continue;
+//			}
+//			s = DiacriticsRemover.removeDiacritics(s);
+//			ps.add(s.toCharArray(), s.length());
+//			ps.stem();
+//			System.out.println(ps.toString());
+//		}
 	}
 }
