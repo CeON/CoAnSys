@@ -65,7 +65,7 @@ set mapred.child.java.opts $mapredChildJavaOpts
 -- ulimit must be more than two times the heap size value !
 -- set mapred.child.ulimit unlimited
 set dfs.client.socket-timeout 60000
-%default and_scheduler benchmark80
+%default and_scheduler default
 set mapred.fairscheduler.pool $and_scheduler 
 
 -- -----------------------------------------------------
@@ -85,26 +85,42 @@ B1 = foreach A2 generate flatten(snameDocumentMetaExtractor($1)) as (dockey:char
 
 B = FILTER B1 BY (dockey is not null);
 
--- removing docId column 
--- add bool - true when contributor is similar to himself
-FC = foreach B generate cId as cId, sname as sname, metadata as metadata, featuresCheck(cId, sname, metadata) as gooddata;
+-- check if sname exists
+split B into
+        CORRECT if (sname is not null),
+        NOSNAME if (sname is null);
 
-split FC into
-		BAD if gooddata == false,
-		GOOD if gooddata == true;
 
 -- -----------------------------------------------------
--- PROCESSING CONTRIBUDORS DISIMILAR TO THEMSELVES
+-- PROCESSING CONTRIBUTORS WITHOUT SNAME
 -- -----------------------------------------------------
 
 -- simulating grouping ( 'by sname' ) and counting ( = 1 )
--- in fact we will get different groups with the same sname - and that is what we need in that case
--- becouse each contributor with bad data need to be in separate cluster size 1
-D1A = foreach BAD generate sname as sname, {(cId,sname,metadata)} as datagroup, 1 as count;
+-- after all we have to assign UUID to every contributor, even with no sname
+-- put them into separate clusters size 1
+D1A = foreach NOSNAME generate null as sname, {(cId,null,metadata)} as datagroup, 1 as count;
 
 
 -- -----------------------------------------------------
--- PROCESSING CONTRIBUDORS SIMILAR TO THEMSELVES
+-- PROCESSING CONTRIBUTORS DISIMILAR TO THEMSELVES
+-- -----------------------------------------------------
+
+-- removing docId column 
+-- add bool - true when contributor is similar to himself
+FC = foreach CORRECT generate cId as cId, sname as sname, metadata as metadata, featuresCheck(cId, sname, metadata) as gooddata;
+
+split FC into
+	BAD if gooddata == false,
+	GOOD if gooddata == true;
+
+-- simulating grouping ( 'by sname' ) and counting ( = 1 )
+-- in fact we will get different groups with the same sname - and that is what we need in that case
+-- because each contributor with bad data need to be in separate cluster size 1
+D1B = foreach BAD generate sname as sname, {(cId,sname,metadata)} as datagroup, 1 as count;
+
+
+-- -----------------------------------------------------
+-- PROCESSING CONTRIBUTORS SIMILAR TO THEMSELVES
 -- -----------------------------------------------------
 
 C = group GOOD by sname;
@@ -113,7 +129,7 @@ C = group GOOD by sname;
 D = foreach C generate group as sname, GOOD as datagroup, COUNT(GOOD) as count;
 
 split D into
-        D1B if count == 1,
+        D1C if count == 1,
         D100 if (count > 1 and count <= $and_exhaustive_limit),
         DX if (count > $and_exhaustive_limit and count <= $and_aproximate_sim_limit),
         D1000 if count > $and_aproximate_sim_limit;
@@ -124,7 +140,7 @@ split D into
 -- -----------------------------------------------------
 
 -- add contributors with bad data to table D (single contributors)
-D1 = union D1A, D1B;
+D1 = union D1A, D1B, D1C;
 
 store D1 into '$and_splitted_output_one';
 store D100 into '$and_splitted_output_exh';
@@ -134,3 +150,4 @@ store DX into '$and_splitted_output_apr_no_sim';
 -- storing relation contributor id - document id, which we need in future during serialization
 Q = foreach B generate cId, dockey;
 store Q into '$and_cid_dockey';
+
