@@ -82,7 +82,6 @@ A1 = LOAD '$dc_m_hdfs_inputDocsData' USING $dc_m_meth_extraction_inner('org.apac
 A3 = foreach A1 generate flatten(snameDocumentMetaExtractor($1)) as (dockey:chararray, cId:chararray, sname:int, metadata:map[{()}]);
 A4 = FILTER A3 BY cId is not null and metadata#'EX_PERSON_ID' is not null and not IsEmpty(metadata#'EX_PERSON_ID');
 A = group A4 by sname;
-
 /*
 -- statistics:
 CNT1 = foreach A generate group as sname, COUNT(A4) as contrib_no;

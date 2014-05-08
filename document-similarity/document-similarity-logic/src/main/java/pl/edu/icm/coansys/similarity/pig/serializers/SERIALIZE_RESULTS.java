@@ -86,7 +86,7 @@ public class SERIALIZE_RESULTS extends EvalFunc<Tuple> {
             return result;
 
 		} catch (Exception e) {
-			logger.error("Error in processing input row:", e);
+			logger.error("Error in processing input row:"+ StackTraceExtractor.getStackTrace(e), e);
 			throw new IOException("Caught exception processing input row:\n"
 					+ StackTraceExtractor.getStackTrace(e));
 		}
