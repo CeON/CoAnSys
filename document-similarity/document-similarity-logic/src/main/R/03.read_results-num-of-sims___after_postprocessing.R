@@ -8,7 +8,10 @@ plot(vector_len)
 
 
 data_type = "sim"
-sourcePath <- paste("/home/pdendek/Pulpit/docsim-check/postprocessing_correction","/",sep="")
+
+
+
+sourcePath <- paste("/home/pdendek/CoAnSys/document-similarity/document-similarity-logic/src/main/resources/rd/postprocessing_correction_big","/",sep="")
 
 # vals = c(965,97,975,98,985,99,995,996,998)
 vals = c('pre','post')
@@ -20,16 +23,23 @@ mpch=18
 j=1
 typ='l'
 
-inplot=rbind(c(0.9,1.7),c(1.0,4.6))
-#inplot=B
 
-plot(inplot,type="n",
+j=1
+B <- read.csv(paste(sourcePath,vals[j],".csv",sep=""), header=F)
+B$V2 <- log10(B$V2)
+B <- B[B$V1>=0.9,]
+inplot=B
+#inplot=rbind(c(0.0,1.7),c(1.0,9.6))
+
+plot(inplot,type="l",
      main="Num of doc pairs with given similarity level",
      xlab="Similarity level (sim=[0;1])",
-     ylab="Number of pairs of documents (log10)")
+     ylab="Number of pairs of documents (log10)"
+     ,col=colrs[j]
+     )
 #legend('bottomleft', legend=vals ,lty=1, col=colrs, bty='n',cex=.675)
 
-for(j in 1:2){
+for(j in 2:2){
 
   B <- read.csv(paste(sourcePath,vals[j],".csv",sep=""), header=F)
   B <- B[order(B$V1),]

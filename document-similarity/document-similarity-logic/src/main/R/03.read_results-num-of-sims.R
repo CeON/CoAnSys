@@ -19,6 +19,23 @@ j=length(vals)
 typ='l'
 B <- read.csv(paste(sourcePath,"/0_",vals[j],".csv",sep=""), header=F)
 B <- B[order(B$V1),]
+
+C  <- B
+Cl <- c(sum(C$V2)/10^6)
+Cl2 <- seq(0.0,0.9,0.1)
+for(i in seq(0.1,0.9,0.1)){
+  Cl <- c(Cl, sum(B[B$V1>i,]$V2)/10^6)
+}
+
+
+cbind(Cl2,Cl)
+
+Cl
+
+Cl/(sum(C$V2)/10^6)*100
+
+
+
 B <- B[B$V1>0.95,]
 B$V2 <- log10(B$V2)
 plot(B,type=typ,col=colrs[j],pch=mpch,
