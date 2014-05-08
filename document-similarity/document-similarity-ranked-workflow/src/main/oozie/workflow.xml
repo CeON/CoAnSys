@@ -1,27 +1,140 @@
-<workflow-app name='${project}_${subproject}_ver4_ranked_one_source'
-	xmlns="uri:oozie:workflow:0.4">
-	<start to='load_filterTerms_calcTfidf_filterTopN' />
-	<action name='load_filterTerms_calcTfidf_filterTopN'>
+<workflow-app name='${project}_${subproject}' xmlns="uri:oozie:workflow:0.4">
+
+	<parameters>
+		<property>
+			<name>ds_remove_sideproducts</name>
+			<value>true</value>
+		</property>
+		<property>
+			<name>ds_tfidfMinValue</name>
+			<value>0</value>
+		</property>
+		<property>
+			<name>ds_removal_least_used</name>
+			<value>0</value>
+		</property>
+		<property>
+			<name>ds_removal_rate</name>
+			<value>1.0</value>
+		</property>
+		<property>
+			<name>ds_tfidfTopnTermPerDocument</name>
+			<value>20</value>
+		</property>
+		<property>
+			<name>ds_similarityTopnDocumentPerDocument</name>
+			<value>20</value>
+		</property>
+		<property>
+			<name>mapredChildJavaOpts</name>
+			<value>-Xmx2g</value>
+		</property>
+		<property>
+			<name>ds_scheduler</name>
+			<value>default</value>
+		</property>
+		<property>
+			<name>ds_pool</name>
+			<value>default</value>
+		</property>
+		<property>
+			<name>ds_parallel</name>
+			<value>2</value>
+		</property>
+		<property>
+			<name>tmpCompressionCodec</name>
+			<value>gz</value>
+		</property>
+		<property>
+			<name>ds_sample</name>
+			<value>1.0</value>
+		</property>
+		<!-- Path control variables -->
+		<property>
+			<name>load_filterTerms_calcTfidf_filter_ranked</name>
+			<value>true</value>
+		</property>
+		<property>
+			<name>load_filterTerms_calcTfidf_filter_tfidf</name>
+			<value>false</value>
+		</property>
+		<property>
+			<name>load_filterTerms_calcTfidf_filter_no</name>
+			<value>false</value>
+		</property>
+		<property>
+			<name>prepare_pairwise_sim</name>
+			<value>true</value>
+		</property>
+		<property>
+			<name>pairwise_sim</name>
+			<value>true</value>
+		</property>
+		<property>
+			<name>normalize_sim_first_step</name>
+			<value>true</value>
+		</property>
+		<property>
+			<name>normalize_sim_second_step</name>
+			<value>true</value>
+		</property>
+		<property>
+			<name>store_to_protobuf</name>
+			<value>true</value>
+		</property>
+	</parameters>
+
+	<global>
+		<job-tracker>${jobTracker}</job-tracker>
+		<name-node>${nameNode}</name-node>
+		<configuration>
+			<property>
+				<name>mapred.fairscheduler.pool</name>
+				<value>${ds_pool}</value>
+			</property>
+			<property>
+				<name>oozie.launcher.mapred.fairscheduler.pool</name>
+				<value>${ds_pool}</value>
+			</property>
+			<property>
+				<name>mapred.job.queue.name</name>
+				<value>${queueName}</value>
+			</property>
+			<property>
+				<name>mapred.mapper.new-api</name>
+				<value>true</value>
+			</property>
+			<property>
+				<name>mapred.reducer.new-api</name>
+				<value>true</value>
+			</property>
+			<property>
+				<name>oozie.use.system.libpath</name>
+				<value>true</value>
+			</property>
+		</configuration>
+	</global>
+
+
+	<start to='load_filterTerms_calcTfidf-d' />
+
+	<decision name="load_filterTerms_calcTfidf-d">
+		<switch>
+			<case to="load_filterTerms_calcTfidf_filter_ranked">${load_filterTerms_calcTfidf_filter_ranked eq "true"}
+			</case>
+			<case to="load_filterTerms_calcTfidf_filter_tfidf">${load_filterTerms_calcTfidf_filter_tfidf eq "true"}
+			</case>
+			<case to="load_filterTerms_calcTfidf_filter_no">${load_filterTerms_calcTfidf_filter_no eq "true"}
+			</case>
+			<default to="prepare_pairwise_sim-d" />
+		</switch>
+	</decision>
+
+	<action name='load_filterTerms_calcTfidf_filter_ranked'>
 		<pig>
-			<job-tracker>${jobTracker}</job-tracker>
-			<name-node>${nameNode}</name-node>
 			<prepare>
 				<delete path="${ds_similarityOutputPath}" />
 			</prepare>
-			<configuration>
-				<property>
-					<name>mapred.job.queue.name</name>
-					<value>${queueName}</value>
-				</property>
-				<property>
-					<name>oozie.launcher.mapred.fairscheduler.pool</name>
-					<value>${pool}</value>
-				</property>
-				<property>
-					<name>oozie.use.system.libpath</name>
-					<value>true</value>
-				</property>
-			</configuration>
 			<script>document-similarity-s1-rank_filter.pig</script>
 			<param>inputPath=${ds_bwndataMetadataInputPath}</param>
 			<param>outputPath=${ds_similarityOutputPath}</param>
@@ -38,28 +151,69 @@
 			<param>removal_least_used=${ds_removal_least_used}</param>
 			<param>removal_rate=${ds_removal_rate}</param>
 		</pig>
-		<ok to='prepare_pairwise_sim' />
+		<ok to='prepare_pairwise_sim-d' />
 		<error to='kill' />
 	</action>
 
+	<action name='load_filterTerms_calcTfidf_filter_tfidf'>
+		<pig>
+			<prepare>
+				<delete path="${ds_similarityOutputPath}" />
+			</prepare>
+			<script>document-similarity-s1-tfidf_filter.pig</script>
+			<param>inputPath=${ds_bwndataMetadataInputPath}</param>
+			<param>outputPath=${ds_similarityOutputPath}</param>
+			<param>commonJarsPath=${commonJarsPath}</param>
+			<param>parallel=${ds_parallel}</param>
+			<param>tmpCompressionCodec=${ds_tmpCompressionCodec}</param>
+			<param>sample=${ds_sample}</param>
+			<param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>
+			<param>ds_scheduler=${ds_scheduler}</param>
+			<param>tfidfTopnTermPerDocument=${ds_tfidfTopnTermPerDocument}
+			</param>
+			<param>similarityTopnDocumentPerDocument=${ds_similarityTopnDocumentPerDocument}
+			</param>
+			<param>tfidfMinValue=${ds_tfidfMinValue}</param>
+		</pig>
+		<ok to='prepare_pairwise_sim-d' />
+		<error to='kill' />
+	</action>
+
+	<action name='load_filterTerms_calcTfidf_filter_no'>
+		<pig>
+			<prepare>
+				<delete path="${ds_similarityOutputPath}" />
+			</prepare>
+			<script>document-similarity-s1-no_filter.pig</script>
+			<param>inputPath=${ds_bwndataMetadataInputPath}</param>
+			<param>outputPath=${ds_similarityOutputPath}</param>
+			<param>commonJarsPath=${commonJarsPath}</param>
+			<param>parallel=${ds_parallel}</param>
+			<param>tmpCompressionCodec=${ds_tmpCompressionCodec}</param>
+			<param>sample=${ds_sample}</param>
+			<param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>
+			<param>ds_scheduler=${ds_scheduler}</param>
+			<param>tfidfTopnTermPerDocument=${ds_tfidfTopnTermPerDocument}
+			</param>
+			<param>similarityTopnDocumentPerDocument=${ds_similarityTopnDocumentPerDocument}
+			</param>
+			<param>removal_least_used=${ds_removal_least_used}</param>
+			<param>removal_rate=${ds_removal_rate}</param>
+		</pig>
+		<ok to='prepare_pairwise_sim-d' />
+		<error to='kill' />
+	</action>
+
+	<decision name="prepare_pairwise_sim-d">
+		<switch>
+			<case to="prepare_pairwise_sim">${prepare_pairwise_sim eq "true"}
+			</case>
+			<default to="pairwise_sim-d" />
+		</switch>
+	</decision>
+
 	<action name='prepare_pairwise_sim'>
 		<pig>
-			<job-tracker>${jobTracker}</job-tracker>
-			<name-node>${nameNode}</name-node>
-			<configuration>
-				<property>
-					<name>mapred.job.queue.name</name>
-					<value>${queueName}</value>
-				</property>
-				<property>
-					<name>oozie.launcher.mapred.fairscheduler.pool</name>
-					<value>${pool}</value>
-				</property>
-				<property>
-					<name>oozie.use.system.libpath</name>
-					<value>true</value>
-				</property>
-			</configuration>
 			<script>document-similarity-s2-e0-one-source.pig</script>
 			<param>inputPath=${ds_bwndataMetadataInputPath}</param>
 			<param>outputPath=${ds_similarityOutputPath}</param>
@@ -76,28 +230,20 @@
 			<param>removal_least_used=${ds_removal_least_used}</param>
 			<param>removal_rate=${ds_removal_rate}</param>
 		</pig>
-		<ok to='pairwise_sim' />
+		<ok to='pairwise_sim-d' />
 		<error to='kill' />
 	</action>
 
+	<decision name="pairwise_sim-d">
+		<switch>
+			<case to="pairwise_sim">${pairwise_sim eq "true"}
+			</case>
+			<default to="normalize_sim_first_step-d" />
+		</switch>
+	</decision>
+
 	<action name='pairwise_sim'>
 		<pig>
-			<job-tracker>${jobTracker}</job-tracker>
-			<name-node>${nameNode}</name-node>
-			<configuration>
-				<property>
-					<name>mapred.job.queue.name</name>
-					<value>${queueName}</value>
-				</property>
-				<property>
-					<name>oozie.launcher.mapred.fairscheduler.pool</name>
-					<value>${pool}</value>
-				</property>
-				<property>
-					<name>oozie.use.system.libpath</name>
-					<value>true</value>
-				</property>
-			</configuration>
 			<script>document-similarity-s2-leftsim_advanced_inverted_cosine.pig
 			</script>
 			<param>inputPath=${ds_bwndataMetadataInputPath}</param>
@@ -115,28 +261,20 @@
 			<param>removal_least_used=${ds_removal_least_used}</param>
 			<param>removal_rate=${ds_removal_rate}</param>
 		</pig>
-		<ok to='normalize_sim_first_step' />
+		<ok to='normalize_sim_first_step-d' />
 		<error to='kill' />
 	</action>
 
+	<decision name="normalize_sim_first_step-d">
+		<switch>
+			<case to="normalize_sim_first_step">${normalize_sim_first_step eq "true"}
+			</case>
+			<default to="normalize_sim_second_step-d" />
+		</switch>
+	</decision>
+
 	<action name='normalize_sim_first_step'>
 		<pig>
-			<job-tracker>${jobTracker}</job-tracker>
-			<name-node>${nameNode}</name-node>
-			<configuration>
-				<property>
-					<name>mapred.job.queue.name</name>
-					<value>${queueName}</value>
-				</property>
-				<property>
-					<name>oozie.launcher.mapred.fairscheduler.pool</name>
-					<value>${pool}</value>
-				</property>
-				<property>
-					<name>oozie.use.system.libpath</name>
-					<value>true</value>
-				</property>
-			</configuration>
 			<script>document-similarity-s3-e1-topn_advanced_cosine_normalized.pig
 			</script>
 			<param>inputPath=${ds_bwndataMetadataInputPath}</param>
@@ -154,28 +292,20 @@
 			<param>removal_least_used=${ds_removal_least_used}</param>
 			<param>removal_rate=${ds_removal_rate}</param>
 		</pig>
-		<ok to='normalize_sim_second_step' />
+		<ok to='normalize_sim_second_step-d' />
 		<error to='kill' />
 	</action>
 
+	<decision name="normalize_sim_second_step-d">
+		<switch>
+			<case to="normalize_sim_second_step">${normalize_sim_second_step eq "true"}
+			</case>
+			<default to="store-to-protobuf-d" />
+		</switch>
+	</decision>
+
 	<action name='normalize_sim_second_step'>
 		<pig>
-			<job-tracker>${jobTracker}</job-tracker>
-			<name-node>${nameNode}</name-node>
-			<configuration>
-				<property>
-					<name>mapred.job.queue.name</name>
-					<value>${queueName}</value>
-				</property>
-				<property>
-					<name>oozie.launcher.mapred.fairscheduler.pool</name>
-					<value>${pool}</value>
-				</property>
-				<property>
-					<name>oozie.use.system.libpath</name>
-					<value>true</value>
-				</property>
-			</configuration>
 			<script>document-similarity-s3-e2-topn_advanced_cosine_normalized.pig
 			</script>
 			<param>inputPath=${ds_bwndataMetadataInputPath}</param>
@@ -193,10 +323,64 @@
 			<param>removal_least_used=${ds_removal_least_used}</param>
 			<param>removal_rate=${ds_removal_rate}</param>
 		</pig>
-		<ok to='end' />
+		<ok to='store-to-protobuf-d' />
 		<error to='kill' />
 	</action>
 
+	<decision name="store-to-protobuf-d">
+		<switch>
+			<case to="store_to_protobuf">${store_to_protobuf eq "true"}
+			</case>
+			<default to="remove_sideproducts-corr-d" />
+		</switch>
+	</decision>
+
+	<action name='store_to_protobuf'>
+		<pig>
+			<script>document-similarity-s4-e1-serialize-to-pb.pig
+			</script>
+			<param>inputPath=${ds_bwndataMetadataInputPath}</param>
+			<param>outputPath=${ds_similarityOutputPath}</param>
+			<param>commonJarsPath=${commonJarsPath}</param>
+			<param>parallel=${ds_parallel}</param>
+			<param>tmpCompressionCodec=${ds_tmpCompressionCodec}</param>
+			<param>sample=${ds_sample}</param>
+			<param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>
+			<param>ds_scheduler=${ds_scheduler}</param>
+			<param>tfidfTopnTermPerDocument=${ds_tfidfTopnTermPerDocument}
+			</param>
+			<param>similarityTopnDocumentPerDocument=${ds_similarityTopnDocumentPerDocument}
+			</param>
+			<param>removal_least_used=${ds_removal_least_used}</param>
+			<param>removal_rate=${ds_removal_rate}</param>
+		</pig>
+		<ok to='remove_sideproducts-corr-d' />
+		<error to='kill' />
+	</action>
+
+	<decision name="remove_sideproducts-corr-d">
+		<switch>
+			<case to="remove_sideproducts-corr">${ds_remove_sideproducts eq "true"}</case>
+			<default to="end" />
+		</switch>
+	</decision>
+	
+	<action name="remove_sideproducts-corr">
+		<fs>
+			<delete path="${ds_similarityOutputPath}/filtered-by-ranked-word-count" />
+			<delete path="${ds_similarityOutputPath}/filtered-by-ranked-word-count_rejected" />
+			<delete path="${ds_similarityOutputPath}/ranked-word-count" />
+			<delete path="${ds_similarityOutputPath}/raw" />
+			<delete path="${ds_similarityOutputPath}/term" />
+			<delete path="${ds_similarityOutputPath}/term-count" />
+			<delete path="${ds_similarityOutputPath}/tfidf" />
+			<delete path="${ds_similarityOutputPath}/similarity/nominator" />
+			<delete path="${ds_similarityOutputPath}/similarity/denominator" />
+			<delete path="${ds_similarityOutputPath}/similarity/denominator/normalizedleftdocs" />
+		</fs>
+		<ok to="end" />
+		<error to="end" />
+	</action>
 
 	<kill name='kill'>
 		<message>Workflow failed, error

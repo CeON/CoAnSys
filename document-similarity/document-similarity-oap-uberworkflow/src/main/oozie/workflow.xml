@@ -1,0 +1,410 @@
+<workflow-app name="${project}_${subproject_main}" xmlns="uri:oozie:workflow:0.4">
+	<parameters>
+		<property>
+			<name>ds_remove_sideproducts</name>
+			<value>true</value>
+		</property>
+		<property>
+			<name>ds_pool</name>
+			<value>bigjobs</value>
+		</property>
+		<property>
+			<name>ds_scheduler</name>
+			<value>${ds_pool}</value>
+		</property>
+
+		<property>
+			<name>ds_similarityOutputPath</name>
+			<value>${workflowPath}/../integrated_results/</value>
+		</property>
+
+		<property>
+			<name>inputPathProto</name>
+			<value>${ds_bwndataMetadataInputPath}</value>
+		</property>
+		<property>
+			<name>outputPathDocSimMajor</name>
+			<value>${ds_similarityOutputPath}/major/</value>
+		</property>
+		<property>
+			<name>inputPathDocSimMajor</name>
+			<value>${ds_similarityOutputPath}/major/similarity/normalizedleftdocs/
+			</value>
+		</property>
+		<property>
+			<name>inputPathDocSimMinor</name>
+			<value>${ds_similarityOutputPath}/minor/tfidf/nonweighted/
+			</value>
+		</property>
+		<property>
+			<name>outputPathDocSimMinor</name>
+			<value>${ds_similarityOutputPath}/minor/</value>
+		</property>
+		<property>
+			<name>outputPathRecalc</name>
+			<value>${ds_similarityOutputPath}/recalc/</value>
+		</property>
+		<property>
+			<name>finalOutputPath</name>
+			<value>${ds_similarityOutputPath}/final/similarity/normalizedleftdocs/
+			</value>
+		</property>
+		<property>
+			<name>finalOutputPathGlobal</name>
+			<value>${ds_similarityOutputPath}/final/</value>
+		</property>
+	</parameters>
+
+	<global>
+		<job-tracker>${jobTracker}</job-tracker>
+		<name-node>${nameNode}</name-node>
+		<configuration>
+			<property>
+				<name>oozie.use.system.libpath</name>
+				<value>true</value>
+			</property>
+			<property>
+				<name>mapred.fairscheduler.pool</name>
+				<value>${ds_pool}</value>
+			</property>
+			<property>
+				<name>oozie.launcher.mapred.fairscheduler.pool</name>
+				<value>${ds_pool}</value>
+			</property>
+			<property>
+				<name>mapred.job.queue.name</name>
+				<value>${queueName}</value>
+			</property>
+			<property>
+				<name>mapred.mapper.new-api</name>
+				<value>true</value>
+			</property>
+			<property>
+				<name>mapred.reducer.new-api</name>
+				<value>true</value>
+			</property>
+		</configuration>
+	</global>
+
+	<start to="pick_start_node" />
+
+	<decision name="pick_start_node">
+		<switch>
+			<case to="PREP_calculate-major-docsim">${"true" eq "true"}</case>
+			<case to="recalculate-sim-about-1__filter">${"false" eq "true"}</case>
+			<case to="calculate-minor-docsim">${"false" eq "true"}</case>
+			<case to="recalculate-sim-about-1__docsim-and-merge">${"false" eq "true"}</case>
+			<case to="merge-results-and-serialize">${"false" eq "true"}</case>
+			<default to="finalize" />
+		</switch>
+	</decision>
+
+	<action name="PREP_calculate-major-docsim">
+		<fs>
+			<delete path="${ds_similarityOutputPath}" />
+		</fs>
+		<ok to="calculate-major-docsim" />
+		<error to="calculate-major-docsim" />
+	</action>
+
+	<action name="calculate-major-docsim">
+		<sub-workflow>
+			<app-path>${wf:appPath()}/pl.edu.icm.coansys-document-similarity-ranked-workflow
+			</app-path>
+			<propagate-configuration />
+			<configuration>
+				<property>
+					<name>ds_remove_sideproducts</name>
+					<value>false</value>
+				</property>
+				<property>
+					<name>subproject</name>
+					<value>calculate-major-docsim</value>
+				</property>
+				<property>
+					<name>oozie.use.system.libpath</name>
+					<value>true</value>
+				</property>
+				<property>
+					<name>ds_bwndataMetadataInputPath</name>
+					<value>${inputPathProto}</value>
+				</property>
+				<property>
+					<name>ds_similarityOutputPath</name>
+					<value>${outputPathDocSimMajor}</value>
+				</property>
+				<property>
+					<name>load_filterTerms_calcTfidf_filter_ranked</name>
+					<value>true</value>
+				</property>
+				<property>
+					<name>load_filterTerms_calcTfidf_filter_tfidf</name>
+					<value>false</value>
+				</property>
+				<property>
+					<name>load_filterTerms_calcTfidf_filter_no</name>
+					<value>false</value>
+				</property>
+				<property>
+					<name>prepare_pairwise_sim</name>
+					<value>true</value>
+				</property>
+				<property>
+					<name>pairwise_sim</name>
+					<value>true</value>
+				</property>
+				<property>
+					<name>normalize_sim_first_step</name>
+					<value>true</value>
+				</property>
+				<property>
+					<name>normalize_sim_second_step</name>
+					<value>false</value>
+				</property>
+				<property>
+					<name>store_to_protobuf</name>
+					<value>false</value>
+				</property>
+			</configuration>
+		</sub-workflow>
+		<ok to="recalculate-sim-about-1__filter" />
+		<error to="finalize-error" />
+	</action>
+
+	<!-- <action name="PREP_recalculate-sim-about-1__filter"> <fs> <delete path="${outputPathRecalc}/pairs-with-sim-lower-then-threshold" 
+		/> <delete path="${outputPathRecalc}/pairs-to-process" /> <delete path="${outputPathRecalc}/document-keys-to-process" 
+		/> <delete path="${outputPathRecalc}/documents-to-process" /> </fs> <ok to="recalculate-sim-about-1__filter" 
+		/> <error to="finalize-error" /> </action> -->
+
+	<action name="recalculate-sim-about-1__filter">
+		<sub-workflow>
+			<app-path>${wf:appPath()}/pl.edu.icm.coansys-document-similarity-recalculate-sim-about-1
+			</app-path>
+			<propagate-configuration />
+			<configuration>
+				<property>
+					<name>subproject</name>
+					<value>recalculate-sim-about-1__filter</value>
+				</property>
+				<property>
+					<name>oozie.use.system.libpath</name>
+					<value>true</value>
+				</property>
+				<property>
+					<name>sim1_postprocess_s1_e1</name>
+					<value>true</value>
+				</property>
+				<property>
+					<name>sim1_postprocess_s2_e1</name>
+					<value>false</value>
+				</property>
+				<property>
+					<name>sim1_postprocess_s3_e1</name>
+					<value>false</value>
+				</property>
+			</configuration>
+		</sub-workflow>
+		<ok to="calculate-minor-docsim" />
+		<error to="finalize-error" />
+	</action>
+
+	<action name="calculate-minor-docsim">
+		<sub-workflow>
+			<app-path>${wf:appPath()}/pl.edu.icm.coansys-document-similarity-ranked-workflow
+			</app-path>
+			<propagate-configuration />
+			<configuration>
+				<property>
+					<name>ds_remove_sideproducts</name>
+					<value>false</value>
+				</property>
+				<property>
+					<name>subproject</name>
+					<value>calculate-minor-docsim</value>
+				</property>
+				<property>
+					<name>oozie.use.system.libpath</name>
+					<value>true</value>
+				</property>
+				<property>
+					<name>ds_removal_least_used</name>
+					<value>-1</value>
+				</property>
+				<property>
+					<name>ds_removal_rate</name>
+					<value>1.1</value>
+				</property>
+				<property>
+					<name>ds_sample</name>
+					<value>1.0</value>
+				</property>
+				<property>
+					<name>ds_bwndataMetadataInputPath</name>
+					<value>${outputPathRecalc}/documents-to-process</value>
+				</property>
+				<property>
+					<name>ds_similarityOutputPath</name>
+					<value>${outputPathDocSimMinor}</value>
+				</property>
+				<property>
+					<name>load_filterTerms_calcTfidf_filter_ranked</name>
+					<value>false</value>
+				</property>
+				<property>
+					<name>load_filterTerms_calcTfidf_filter_tfidf</name>
+					<value>false</value>
+				</property>
+				<property>
+					<name>load_filterTerms_calcTfidf_filter_no</name>
+					<value>true</value>
+				</property>
+				<property>
+					<name>prepare_pairwise_sim</name>
+					<value>false</value>
+				</property>
+				<property>
+					<name>pairwise_sim</name>
+					<value>false</value>
+				</property>
+				<property>
+					<name>normalize_sim_first_step</name>
+					<value>false</value>
+				</property>
+				<property>
+					<name>normalize_sim_second_step</name>
+					<value>false</value>
+				</property>
+				<property>
+					<name>store_to_protobuf</name>
+					<value>false</value>
+				</property>
+			</configuration>
+		</sub-workflow>
+		<ok to="recalculate-sim-about-1__docsim-and-merge" />
+		<error to="finalize-error" />
+	</action>
+
+	<action name="recalculate-sim-about-1__docsim-and-merge">
+		<sub-workflow>
+			<app-path>${wf:appPath()}/pl.edu.icm.coansys-document-similarity-recalculate-sim-about-1
+			</app-path>
+			<propagate-configuration />
+			<configuration>
+				<property>
+					<name>subproject</name>
+					<value>recalculate-sim-about-1__docsim-and-merge</value>
+				</property>
+				<property>
+					<name>oozie.use.system.libpath</name>
+					<value>true</value>
+				</property>
+				<property>
+					<name>sim1_postprocess_s1_e1</name>
+					<value>false</value>
+				</property>
+				<property>
+					<name>sim1_postprocess_s2_e1</name>
+					<value>true</value>
+				</property>
+				<property>
+					<name>sim1_postprocess_s3_e1</name>
+					<value>true</value>
+				</property>
+				<property>
+					<name>ds_similarityOutputPath</name>
+					<value>${outputPathDocSimMinor}</value>
+				</property>
+			</configuration>
+		</sub-workflow>
+		<ok to="merge-results-and-serialize" />
+		<error to="finalize-error" />
+	</action>
+
+	<action name="merge-results-and-serialize">
+		<sub-workflow>
+			<app-path>${wf:appPath()}/pl.edu.icm.coansys-document-similarity-ranked-workflow
+			</app-path>
+			<propagate-configuration />
+			<configuration>
+				<property>
+					<name>ds_remove_sideproducts</name>
+					<value>false</value>
+				</property>
+				<property>
+					<name>subproject</name>
+					<value>merge-results-and-serialize</value>
+				</property>
+				<property>
+					<name>oozie.use.system.libpath</name>
+					<value>true</value>
+				</property>
+				<property>
+					<name>ds_similarityOutputPath</name>
+					<value>${finalOutputPathGlobal}</value>
+				</property>
+				<property>
+					<name>load_filterTerms_calcTfidf_filter_ranked</name>
+					<value>false</value>
+				</property>
+				<property>
+					<name>load_filterTerms_calcTfidf_filter_tfidf</name>
+					<value>false</value>
+				</property>
+				<property>
+					<name>load_filterTerms_calcTfidf_filter_no</name>
+					<value>false</value>
+				</property>
+				<property>
+					<name>prepare_pairwise_sim</name>
+					<value>false</value>
+				</property>
+				<property>
+					<name>pairwise_sim</name>
+					<value>false</value>
+				</property>
+				<property>
+					<name>normalize_sim_first_step</name>
+					<value>false</value>
+				</property>
+				<property>
+					<name>normalize_sim_second_step</name>
+					<value>true</value>
+				</property>
+				<property>
+					<name>store_to_protobuf</name>
+					<value>${ds_serialize_to_proto}</value>
+				</property>
+			</configuration>
+		</sub-workflow>
+		<ok to="finalize" />
+		<error to="finalize-error" />
+	</action>
+
+	<decision name="finalize">
+		<switch>
+			<case to="remove_sideproducts-corr">${ds_remove_sideproducts eq "true"}</case>
+			<default to="end" />
+		</switch>
+	</decision>
+
+	<action name="remove_sideproducts-corr">
+		<fs>
+			<delete path="${ds_similarityOutputPath}/major" />
+			<delete path="${ds_similarityOutputPath}/minor" />
+			<delete path="${ds_similarityOutputPath}/recalc" />
+			<delete
+				path="${ds_similarityOutputPath}/final/similarity/normalizedleftdocs" />
+		</fs>
+		<ok to="end" />
+		<error to="end" />
+	</action>
+
+	<kill name="finalize-error">
+		<message>Workflow failed</message>
+	</kill>
+
+	<end name="end" />
+
+	<!-- <kill name="fail"> <message>Workflow failed</message> </kill> <end 
+		name="end" /> -->
+</workflow-app>

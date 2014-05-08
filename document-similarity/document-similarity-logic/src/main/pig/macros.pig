@@ -131,9 +131,10 @@ DEFINE calculate_tfidf(in_relation, id_field, token_field, in_tfidfMinValue) RET
                     generate $id_field as $id_field,
                               token as $token_field,
                               tf_idf as tfidf,
+                        term_freq,
                         idf,
-                        ndocs.total_docs,
-                        num_docs_with_token;
+                        num_docs_with_token,
+                        ndocs.total_docs;
           };
         -- get only important terms
         $tfidf_values = FILTER tfidf_all BY tfidf >= $in_tfidfMinValue;
@@ -144,7 +145,8 @@ DEFINE calculate_tfidf_nofiltering(in_relation, id_field, token_field) RETURNS t
         doc_word_group = group $in_relation by ($id_field, $token_field);
           doc_word_totals = foreach doc_word_group generate 
                     FLATTEN(group) as ($id_field, token), 
-                COUNT($in_relation) as doc_total;
+                COUNT($in_relation) as doc_total; 
+        --doc_word_totals:{docId,term,term_wc}
 
           -- Calculate the document size
         pre_term_group = group doc_word_totals by $id_field;
@@ -152,11 +154,13 @@ DEFINE calculate_tfidf_nofiltering(in_relation, id_field, token_field) RETURNS t
                     group AS $id_field,
                     FLATTEN(doc_word_totals.(token, doc_total)) as (token, doc_total), 
                     SUM(doc_word_totals.doc_total) as doc_size;
- 
+ 		--pre_term_counts:{docId,term,term_wc,doc_size}
+ 		
           -- Calculate the TF
           term_freqs = foreach pre_term_counts generate $id_field as $id_field,
                     token as token,
                     ((double)doc_total / (double)doc_size) AS term_freq;
+         -- term_freqs:{docId,term,term_wc/doc_size as tf}
  
           -- Get count of documents using each token, for idf
         token_usages_group = group term_freqs by token;
@@ -179,9 +183,10 @@ DEFINE calculate_tfidf_nofiltering(in_relation, id_field, token_field) RETURNS t
                     generate $id_field as $id_field,
                               token as $token_field,
                               tf_idf as tfidf,
-                        idf,
-                        ndocs.total_docs,
-                        num_docs_with_token;
+                              term_freq,
+                              idf,
+                              num_docs_with_token,
+                              ndocs.total_docs;
           };
 };
 -------------------------------------------------------
