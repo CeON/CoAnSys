@@ -150,6 +150,7 @@
 			</param>
 			<param>removal_least_used=${ds_removal_least_used}</param>
 			<param>removal_rate=${ds_removal_rate}</param>
+			<file>macros.pig#macros.pig</file>
 		</pig>
 		<ok to='prepare_pairwise_sim-d' />
 		<error to='kill' />
@@ -174,6 +175,7 @@
 			<param>similarityTopnDocumentPerDocument=${ds_similarityTopnDocumentPerDocument}
 			</param>
 			<param>tfidfMinValue=${ds_tfidfMinValue}</param>
+			<file>macros.pig#macros.pig</file>
 		</pig>
 		<ok to='prepare_pairwise_sim-d' />
 		<error to='kill' />
@@ -199,6 +201,7 @@
 			</param>
 			<param>removal_least_used=${ds_removal_least_used}</param>
 			<param>removal_rate=${ds_removal_rate}</param>
+			<file>macros.pig#macros.pig</file>
 		</pig>
 		<ok to='prepare_pairwise_sim-d' />
 		<error to='kill' />
@@ -229,6 +232,7 @@
 			</param>
 			<param>removal_least_used=${ds_removal_least_used}</param>
 			<param>removal_rate=${ds_removal_rate}</param>
+			<file>macros.pig#macros.pig</file>
 		</pig>
 		<ok to='pairwise_sim-d' />
 		<error to='kill' />
@@ -260,6 +264,7 @@
 			</param>
 			<param>removal_least_used=${ds_removal_least_used}</param>
 			<param>removal_rate=${ds_removal_rate}</param>
+			<file>macros.pig#macros.pig</file>
 		</pig>
 		<ok to='normalize_sim_first_step-d' />
 		<error to='kill' />
@@ -291,6 +296,7 @@
 			</param>
 			<param>removal_least_used=${ds_removal_least_used}</param>
 			<param>removal_rate=${ds_removal_rate}</param>
+			<file>macros.pig#macros.pig</file>
 		</pig>
 		<ok to='normalize_sim_second_step-d' />
 		<error to='kill' />
@@ -322,6 +328,7 @@
 			</param>
 			<param>removal_least_used=${ds_removal_least_used}</param>
 			<param>removal_rate=${ds_removal_rate}</param>
+			<file>macros.pig#macros.pig</file>
 		</pig>
 		<ok to='store-to-protobuf-d' />
 		<error to='kill' />
@@ -353,6 +360,7 @@
 			</param>
 			<param>removal_least_used=${ds_removal_least_used}</param>
 			<param>removal_rate=${ds_removal_rate}</param>
+			<file>macros.pig#macros.pig</file>
 		</pig>
 		<ok to='remove_sideproducts-corr-d' />
 		<error to='kill' />
