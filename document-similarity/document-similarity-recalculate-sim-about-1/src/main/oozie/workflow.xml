@@ -125,6 +125,7 @@
 			<param>sample=${ds_sample}</param>
 			<param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>
 			<param>ds_scheduler=${ds_scheduler}</param>
+			<file>macros.pig#macros.pig</file>
 		</pig>
 		<ok to='sim1_postprocess_s2_e1_d' />
 		<error to='kill' />
@@ -152,6 +153,7 @@
 			<param>sample=${ds_sample}</param>
 			<param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>
 			<param>ds_scheduler=${ds_scheduler}</param>
+			<file>macros.pig#macros.pig</file>
 		</pig>
 		<ok to='sim1_postprocess_s3_e1_d' />
 		<error to='kill' />
@@ -180,6 +182,7 @@
 			<param>sample=${ds_sample}</param>
 			<param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>
 			<param>ds_scheduler=${ds_scheduler}</param>
+			<file>macros.pig#macros.pig</file>
 		</pig>
 		<ok to='end' />
 		<error to='kill' />

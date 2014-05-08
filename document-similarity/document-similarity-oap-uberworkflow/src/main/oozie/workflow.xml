@@ -6,7 +6,7 @@
 		</property>
 		<property>
 			<name>ds_pool</name>
-			<value>bigjobs</value>
+			<value>default</value>
 		</property>
 		<property>
 			<name>ds_scheduler</name>

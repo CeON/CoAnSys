@@ -12,7 +12,7 @@
 		<scripts>
 			<root>pig-macros/</root>
 			<preserve>false</preserve>
-			<target>lib/</target>
+			<target>/</target>
 			<includes>
 				<include>.*\.pig</include>
 			</includes>
