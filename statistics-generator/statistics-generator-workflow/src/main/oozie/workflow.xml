@@ -42,7 +42,7 @@
 
     <decision name="filterinput-decision">
         <switch>
-            <case to="generatestatistics">${filter_input_data} eq "false"</case>
+            <case to="generatestatistics">${filter_input_data eq "false"}</case>
             <default to="filterinput" />
         </switch>
     </decision>
@@ -181,13 +181,13 @@
                 </property>
             </configuration>
         </map-reduce>
-        <ok to="groupsortlimit" />
+        <ok to="groupsortlimit-decision" />
         <error to="fail" />
     </action>
 
     <decision name="groupsortlimit-decision">
         <switch>
-            <case to="end">${aggregate_statistics} eq "false"</case>
+            <case to="end">${aggregate_statistics eq "false"}</case>
             <default to="groupsortlimit" />
         </switch>
     </decision>
