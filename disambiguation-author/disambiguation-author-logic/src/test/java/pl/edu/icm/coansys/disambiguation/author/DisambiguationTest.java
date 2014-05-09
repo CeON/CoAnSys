@@ -41,7 +41,7 @@ import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.Intersec
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.DisambiguationExtractorFactory;
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DisambiguationExtractor;
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DisambiguationExtractorDocument;
-import pl.edu.icm.coansys.disambiguation.author.normalizers.ToEnglish;
+import pl.edu.icm.coansys.disambiguation.author.normalizers.ToEnglishLowerCase;
 import pl.edu.icm.coansys.disambiguation.author.normalizers.ToHashCode;
 import pl.edu.icm.coansys.disambiguation.author.pig.AND;
 import pl.edu.icm.coansys.disambiguation.author.pig.AproximateAND_BFS;
@@ -72,7 +72,7 @@ public class DisambiguationTest {
 		String diacRmExpected = "e{(Zaaaazolc 'gesla', \"jaz(n)\"}]# ae 1234567890 !@#$%^&*() _+=?/>.<,-";
 		String toELCExpected = "ezaaaazolc gesla jazn ae 1234567890";
 		Integer toHashExpected = -1486600746;
-		Integer DisExtrExpected = diacRmExpected.hashCode();
+		Integer DisExtrExpected = diacRmExpected.toLowerCase().hashCode();
 		Object a, b, c, d, e, f;
 		String tmp;
 		
@@ -81,9 +81,9 @@ public class DisambiguationTest {
 		assert( tmp.equals(diacRmExpected) );
 		
 		// testing normalizers
-		a = (new ToEnglish()).normalize( text );
+		a = (new ToEnglishLowerCase()).normalize( text );
 		assert( a.equals( toELCExpected ) );
-		b = (new ToEnglish()).normalize( a );
+		b = (new ToEnglishLowerCase()).normalize( a );
 		assert( a.equals( b ) );
 		a = (new ToHashCode()).normalize( text );
 		assert( a.equals( toHashExpected ) );
@@ -94,14 +94,14 @@ public class DisambiguationTest {
 		
 		// checking null argument / multi spaces:
 		String doublespace = "  ";
-		c = (new ToEnglish()).normalize( doublespace );
+		c = (new ToEnglishLowerCase()).normalize( doublespace );
 		assert( c == null );
 		
 		String manyspaces = "  a  b  ";
-		d = (new ToEnglish()).normalize( manyspaces );
+		d = (new ToEnglishLowerCase()).normalize( manyspaces );
 		assert( d.equals("a b") );			
 		
-		e = (new ToEnglish()).normalize( null );
+		e = (new ToEnglishLowerCase()).normalize( null );
 		assert( e == null );		
 		e = (new ToHashCode()).normalize( null );
 		assert( e == null );		
