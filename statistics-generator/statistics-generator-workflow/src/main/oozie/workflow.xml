@@ -49,9 +49,6 @@
 
     <action name="filterinput">
         <map-reduce>
-            <prepare>
-                <delete path="${filteredInput}" />
-            </prepare>
             <configuration>
                 <property>
                     <name>mapreduce.map.class</name>
@@ -117,9 +114,6 @@
 
     <action name="generatestatistics">
         <map-reduce>
-            <prepare>
-                <delete path="${allStatistics}" />
-            </prepare>
             <configuration>
                 <property>
                     <name>mapreduce.map.class</name>
