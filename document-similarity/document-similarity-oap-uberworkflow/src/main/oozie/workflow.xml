@@ -113,10 +113,10 @@
 			</app-path>
 			<propagate-configuration />
 			<configuration>
-				<propert>
+				<property>
 					<name>oozie.wf.subworkflow.classpath.inheritance</name>
 					<value>true</value>
-				</propert>
+				</property>
 				<property>
 					<name>ds_remove_sideproducts</name>
 					<value>false</value>
@@ -186,10 +186,10 @@
 			</app-path>
 			<propagate-configuration />
 			<configuration>
-				<propert>
+				<property>
 					<name>oozie.wf.subworkflow.classpath.inheritance</name>
 					<value>true</value>
-				</propert>
+				</property>
 				<property>
 					<name>subproject</name>
 					<value>recalculate-sim-about-1__filter</value>
@@ -222,10 +222,10 @@
 			</app-path>
 			<propagate-configuration />
 			<configuration>
-				<propert>
+				<property>
 					<name>oozie.wf.subworkflow.classpath.inheritance</name>
 					<value>true</value>
-				</propert>
+				</property>
 				<property>
 					<name>ds_remove_sideproducts</name>
 					<value>false</value>
@@ -302,10 +302,10 @@
 			</app-path>
 			<propagate-configuration />
 			<configuration>
-				<propert>
+				<property>
 					<name>oozie.wf.subworkflow.classpath.inheritance</name>
 					<value>true</value>
-				</propert>
+				</property>
 				<property>
 					<name>subproject</name>
 					<value>recalculate-sim-about-1__docsim-and-merge</value>
@@ -342,10 +342,10 @@
 			</app-path>
 			<propagate-configuration />
 			<configuration>
-				<propert>
+				<property>
 					<name>oozie.wf.subworkflow.classpath.inheritance</name>
 					<value>true</value>
-				</propert>
+				</property>
 				<property>
 					<name>ds_remove_sideproducts</name>
 					<value>false</value>
