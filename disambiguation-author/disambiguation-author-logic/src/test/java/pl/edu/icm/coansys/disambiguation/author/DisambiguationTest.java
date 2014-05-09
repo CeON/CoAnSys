@@ -137,7 +137,8 @@ public class DisambiguationTest {
    			   	"EX_AUTH_FNAMES_FST_LETTER",
    			   	"EX_EMAIL_PREFIX" ,
    			   	"EX_DOC_AUTHS_FNAME_FST_LETTER",
-   			   	"EX_AUTH_FNAME_FST_LETTER"
+   			   	"EX_AUTH_FNAME_FST_LETTER",
+   			   	"EX_PERSON_IDS"
    		};
    		String[] ids = {
    				"0",
@@ -153,7 +154,8 @@ public class DisambiguationTest {
    				"5",
    				"3",
    				"C",
-   				"D"
+   				"D",
+   				"E"
    		};
    		
    		assert ( ids.length == extractors.length );

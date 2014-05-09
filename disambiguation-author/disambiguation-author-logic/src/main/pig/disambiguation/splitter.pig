@@ -96,7 +96,7 @@ split B into
 -- -----------------------------------------------------
 
 -- simulating grouping ( 'by sname' ) and counting ( = 1 )
--- after all we have to assign UUID to every contributor, even with no sname
+-- after all we have to assign UUID to every contributor, even for those who do not have sname
 -- put them into separate clusters size 1
 D1A = foreach NOSNAME generate null as sname, {(cId,null,metadata)} as datagroup, 1 as count;
 
@@ -106,7 +106,7 @@ D1A = foreach NOSNAME generate null as sname, {(cId,null,metadata)} as datagroup
 -- -----------------------------------------------------
 
 -- removing docId column 
--- add bool - true when contributor is similar to himself
+-- add bool - true when contributor is similar to himself (has got enough data)
 FC = foreach CORRECT generate cId as cId, sname as sname, metadata as metadata, featuresCheck(cId, sname, metadata) as gooddata;
 
 split FC into
