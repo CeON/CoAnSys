@@ -18,8 +18,8 @@
 		<scripts>
 			<root>pig-macros</root>
 			<preserve>false</preserve>
-			<target>lib/</target>
-			<mainDirAsDst>true</mainDirAsDst>
+			<target>/</target>
+			<!-- <mainDirAsDst>true</mainDirAsDst>  -->
 			<includes>
 				<include>.*\.pig</include>
 			</includes>
@@ -43,8 +43,8 @@
 		<scripts>
 			<root>pig-macros</root>
 			<preserve>false</preserve>
-			<target>lib/</target>
-			<mainDirAsDst>true</mainDirAsDst>
+			<target>/</target>
+			<!--  <mainDirAsDst>true</mainDirAsDst>  -->
 			<includes>
 				<include>.*\.pig</include>
 			</includes>
