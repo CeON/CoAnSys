@@ -55,7 +55,7 @@ SET mapred.fairscheduler.pool $and_scheduler
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 
-D1 = LOAD '$and_inputDocsData' as (sname: int, datagroup: {(cId: chararray,sname: int,data: map[{(int)}])}, count: long);
+D1 = LOAD '$and_inputDocsData' as (sname: int, datagroup: {(cId:chararray, sname:int, data:map[{(int)}])}, count: long);
 
 -- -----------------------------------------------------
 -- SINGLE CONTRIBUTORS ---------------------------------
