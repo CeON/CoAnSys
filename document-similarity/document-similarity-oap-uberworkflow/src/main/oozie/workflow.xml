@@ -53,6 +53,10 @@
 			<name>finalOutputPathGlobal</name>
 			<value>${ds_similarityOutputPath}/final/</value>
 		</property>
+		<property>
+			<name>ds_serialize_to_proto</name>
+			<value>false</value>
+		</property>
 	</parameters>
 
 	<global>
