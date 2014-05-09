@@ -47,7 +47,7 @@ import pl.edu.icm.coansys.disambiguation.author.features.extractors.Disambiguati
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DisambiguationExtractor;
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DisambiguationExtractorAuthor;
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DisambiguationExtractorDocument;
-import pl.edu.icm.coansys.disambiguation.author.normalizers.ToEnglishLowerCase;
+import pl.edu.icm.coansys.disambiguation.author.normalizers.ToEnglish;
 import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
 import pl.edu.icm.coansys.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
@@ -214,7 +214,7 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 				// here we have sure that Object = Integer
 				Object normalizedSname = null;
 				if (snameToString) {
-					normalizedSname = new ToEnglishLowerCase().normalize(a
+					normalizedSname = new ToEnglish().normalize(a
 							.getSurname());
 				} else {
 					normalizedSname = extractor.normalizeExtracted(a

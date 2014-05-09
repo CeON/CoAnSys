@@ -18,9 +18,7 @@
 
 package pl.edu.icm.coansys.disambiguation.author.normalizers;
 
-import pl.edu.icm.coansys.commons.java.DiacriticsRemover;
-
-public class ToEnglishLowerCase implements PigNormalizer {
+public class ToLowerCase implements PigNormalizer {
 
 	@Override
 	public Object normalize(Object text) {
@@ -41,8 +39,6 @@ public class ToEnglishLowerCase implements PigNormalizer {
 		}
 
 		tmp = tmp.toLowerCase();
-		tmp = DiacriticsRemover.removeDiacritics(tmp);
-		tmp = tmp.replaceAll("[^a-z0-9 ]", "").replaceAll("\\s++", " ").trim();
 
 		if (tmp.isEmpty()) {
 			return null;

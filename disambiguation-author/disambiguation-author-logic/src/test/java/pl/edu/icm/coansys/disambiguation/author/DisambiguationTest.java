@@ -41,7 +41,7 @@ import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.Intersec
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.DisambiguationExtractorFactory;
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DisambiguationExtractor;
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DisambiguationExtractorDocument;
-import pl.edu.icm.coansys.disambiguation.author.normalizers.ToEnglishLowerCase;
+import pl.edu.icm.coansys.disambiguation.author.normalizers.ToEnglish;
 import pl.edu.icm.coansys.disambiguation.author.normalizers.ToHashCode;
 import pl.edu.icm.coansys.disambiguation.author.pig.AND;
 import pl.edu.icm.coansys.disambiguation.author.pig.AproximateAND_BFS;
@@ -81,9 +81,9 @@ public class DisambiguationTest {
 		assert( tmp.equals(diacRmExpected) );
 		
 		// testing normalizers
-		a = (new ToEnglishLowerCase()).normalize( text );
+		a = (new ToEnglish()).normalize( text );
 		assert( a.equals( toELCExpected ) );
-		b = (new ToEnglishLowerCase()).normalize( a );
+		b = (new ToEnglish()).normalize( a );
 		assert( a.equals( b ) );
 		a = (new ToHashCode()).normalize( text );
 		assert( a.equals( toHashExpected ) );
@@ -94,14 +94,14 @@ public class DisambiguationTest {
 		
 		// checking null argument / multi spaces:
 		String doublespace = "  ";
-		c = (new ToEnglishLowerCase()).normalize( doublespace );
+		c = (new ToEnglish()).normalize( doublespace );
 		assert( c == null );
 		
 		String manyspaces = "  a  b  ";
-		d = (new ToEnglishLowerCase()).normalize( manyspaces );
+		d = (new ToEnglish()).normalize( manyspaces );
 		assert( d.equals("a b") );			
 		
-		e = (new ToEnglishLowerCase()).normalize( null );
+		e = (new ToEnglish()).normalize( null );
 		assert( e == null );		
 		e = (new ToHashCode()).normalize( null );
 		assert( e == null );		
