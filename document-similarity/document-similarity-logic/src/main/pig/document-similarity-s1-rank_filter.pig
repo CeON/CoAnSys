@@ -125,9 +125,12 @@ wc_ranked_hr = foreach wc_ranked generate rank_num,count,term;
 store wc_ranked_hr into '$outputPath$WORD_RANK_HR'; 
 
 
-SPLIT wc_ranked INTO
-  term_condition_accepted_tmp IF ($0 <= (double)tc.val*$removal_rate and $1 >= $removal_least_used),
-  term_condition_not_accepted_tmp IF ($0 > (double)tc.val*$removal_rate or $1 < $removal_least_used); 
+--SPLIT wc_ranked INTO
+--  term_condition_accepted_tmp IF ($0 <= (double)tc.val*$removal_rate and $1 >= $removal_least_used),
+--  term_condition_not_accepted_tmp IF ($0 > (double)tc.val*$removal_rate or $1 < $removal_least_used); 
+
+term_condition_accepted_tmp = filter wc_ranked by ($0 <= (double)tc.val*$removal_rate and $1 >= $removal_least_used);
+term_condition_not_accepted_tmp = filter wc_ranked by ($0 > (double)tc.val*$removal_rate or $1 < $removal_least_used);
 		
 doc_selected_termsX = foreach term_condition_accepted_tmp generate FLATTEN(docs) as docId, term;
 store doc_selected_termsX into '$outputPath$WORD_COUNT';
