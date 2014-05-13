@@ -17,6 +17,9 @@
  */
 package pl.edu.icm.coansys.disambiguation.author.features.extractors;
 
+import java.util.Arrays;
+import java.util.HashSet;
+
 import org.apache.pig.data.DataBag;
 import org.apache.pig.data.DefaultDataBag;
 import org.apache.pig.data.Tuple;
@@ -28,17 +31,23 @@ import pl.edu.icm.coansys.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.models.DocumentProtos.KeyValue;
 
-public class EX_PERSON_ID extends DisambiguationExtractorAuthor {
+public class EX_PERSON_IDS extends DisambiguationExtractorAuthor {
 
-	public EX_PERSON_ID() {
+	// put here id names which should not be extracted to disambiguation
+	// e.g. "pbnPersonId"
+	public static final String SKIPPED_PERSON_ID_KIND[] = {
+
+	};
+	private HashSet<String> skip_id_set = new HashSet<String>(
+			Arrays.asList(SKIPPED_PERSON_ID_KIND));
+
+	public EX_PERSON_IDS() {
 		super();
 	}
 
-	public EX_PERSON_ID(PigNormalizer[] new_normalizers) {
+	public EX_PERSON_IDS(PigNormalizer[] new_normalizers) {
 		super(new_normalizers);
 	}
-
-	public static final String PERSON_ID_KEY_NAME = "pbnPersonId";
 
 	@Override
 	public DataBag extract(Object o, int fakeIndex, String lang) {
@@ -49,10 +58,12 @@ public class EX_PERSON_ID extends DisambiguationExtractorAuthor {
 
 		Author a = dm.getBasicMetadata().getAuthor(fakeIndex);
 		for (KeyValue kv : a.getExtIdList()) {
-			if (kv.getKey().equals(PERSON_ID_KEY_NAME)) {
-				t.append(kv.getValue());
+			String id_name = kv.getKey();
+			if (!skip_id_set.contains(id_name)) {
+				String id_value = kv.getValue();
+				Object normalized = normalizeExtracted(id_name + "|" + id_value);
+				t.append(normalized);
 				db.add(t);
-				break;
 			}
 		}
 		return db;
@@ -60,6 +71,6 @@ public class EX_PERSON_ID extends DisambiguationExtractorAuthor {
 
 	@Override
 	public String getId() {
-		return "8";
+		return "E";
 	}
 }
