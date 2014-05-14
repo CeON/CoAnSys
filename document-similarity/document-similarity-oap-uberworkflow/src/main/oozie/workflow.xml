@@ -17,10 +17,6 @@
 			<value>20</value>
 		</property>
 
-		<property>
-			<name>pool</name>
-			<value>${pool}</value>
-		</property>
 		
 		<property>
 			<name>serialize_to_proto</name>
