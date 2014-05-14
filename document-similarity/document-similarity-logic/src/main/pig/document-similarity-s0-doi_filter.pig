@@ -28,8 +28,8 @@ SET default_parallel $parallel
 SET mapred.child.java.opts $mapredChildJavaOpts
 SET pig.tmpfilecompression true
 SET pig.tmpfilecompression.codec $tmpCompressionCodec
-%DEFAULT ds_scheduler default
-SET mapred.fairscheduler.pool $ds_scheduler
+%DEFAULT scheduler default
+SET mapred.fairscheduler.pool $scheduler
 
 %default inputPath 'hdfs://hadoop-master.vls.icm.edu.pl:8020/srv/bwndata/seqfile/springer-metadata/springer-20120419-springer0*.sq'
 %default DOI '/doi'

@@ -40,7 +40,7 @@ public class AllLangStopWordFilter extends EvalFunc<Boolean> {
 	 * @throws IOException
 	 */
 	public AllLangStopWordFilter() throws IOException{
-		String root = "stopwords/stopwords_";
+		String root = "stopwords/stopwor";
 		String[] langs = new String[]{"de","dk","en","es","fi","fr","hu","it","nl","no","pl","pt","ru","se","tr"};
 		for(String ln : langs){
 			InputStream stopwordsStream;

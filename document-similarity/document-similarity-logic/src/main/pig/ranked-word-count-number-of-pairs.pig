@@ -2,7 +2,7 @@
 %default commonJarsPath 'lib/$jars'
 REGISTER '$commonJarsPath'
 
-%default ds_removal_rate 0.99
+%default removal_rate 0.99
 %default outputPath 'hdfs://hadoop-master.vls.icm.edu.pl:8020/user/mhorst/documentssimilarity/chain/working_dir/results'
 %default DOC_TERM_ALL '/term/all'
 %default time '1'
@@ -19,7 +19,7 @@ wc = order wc1 by rankval;
 dump wc1;
 
 /***************
-term_lower_tmp = filter wc_ranked by rankval < (double)7600099*$ds_removal_rate;
+term_lower_tmp = filter wc_ranked by rankval < (double)7600099*$removal_rate;
 tmp = foreach term_lower_tmp generate rankval, count*count as powed;
 tmp2 = order tmp by powed;
 dump tmp2;
