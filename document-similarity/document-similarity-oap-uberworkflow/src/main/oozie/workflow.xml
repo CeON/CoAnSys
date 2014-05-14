@@ -18,9 +18,10 @@
 		</property>
 
 		<property>
-			<name></name>
+			<name>pool</name>
 			<value>${pool}</value>
 		</property>
+		
 		<property>
 			<name>serialize_to_proto</name>
 			<value>false</value>
@@ -450,6 +451,4 @@
 
 	<end name="end" />
 
-	<!-- <kill name="fail"> <message>Workflow failed</message> </kill> <end 
-		name="end" /> -->
 </workflow-app>
