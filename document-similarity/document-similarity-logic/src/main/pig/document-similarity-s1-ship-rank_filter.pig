@@ -27,6 +27,7 @@
 %default SIMILARITY_ALL_DOCS_SUBDIR '/similarity/alldocs'
 %default SIMILARITY_TOPN_DOCS_SUBDIR '/similarity/topn'
 %default TERM_COUNT '/term-count'
+%default WORD_RANK_PRE '/ranked-word-count-part';
 %default WORD_RANK '/ranked-word-count';
 %default WORD_RANK_HR '/ranked-word-count-human-readable';
 %default WORD_COUNT '/filtered-by-ranked-word-count';
@@ -122,36 +123,46 @@ group_by_terms = group doc_all by term;
 wcX = foreach group_by_terms generate COUNT(doc_all) as count, group as term, doc_all.docId as docs;
 
 STORE wcX INTO '$outputPath/tc_term_docs';
-
 wcX1 = LOAD '$outputPath/tc_term_docs' as (count:long, term:chararray,docs:{t:(docId:chararray)});
-wc = foreach wcX1 generate count, term;
-wcZ1 = foreach wcX1 generate term,docs;
 
 -- The RANK operator on OAP cluster rise "Java heap-space error".
 -- Due to this issue the "quick replacement" (using Hadoop Streaming)
 -- has been proposed. As soon as the issue with the RANK operation will be resolved,
 -- the line below should be used:
--- wc_rankedX = rank wc by count asc;
+-- wc_rankedX = rank wcX1 by count asc;
 -- instead of "the quick replacement":
+/******************************************
+wc = foreach wcX1 generate count, term;
+wcZ1 = foreach wcX1 generate term,docs;
+
 define QuickReplacementRank `rank.py` ship('rank.py');
 
 wcRank_In1 = GROUP wc all;
+
 wcRank_In2 = FOREACH wcRank_In1 {
       D = ORDER wc BY $0;
       GENERATE D;
 }
+
 wc_rankedX1 = stream wcRank_In2 
 	through QuickReplacementRank 
 	as (rank_num:long, count:long,term:chararray);
-
-wc_rankedX2 = join wc_rankedX1 by term, wcZ1 by term;  
+	
+wc_rankedX2 = join wc_rankedX1 by term, wcZ1 by term;
+  
 wc_rankedX = foreach wc_rankedX2 generate 
 	rank_num as rank_num, 
 	count as count, 
 	wc_rankedX1::term as term,
 	docs as docs;
-
+	
 store wc_rankedX into '$outputPath$WORD_RANK';
+******************************************/
+-- third approach to RANK opp
+wcX12 = order wcX1 by count asc parallel 1; 
+STORE wcX12 INTO '$outputPath$WORD_RANK' using pl.edu.icm.coansys.similarity.pig.serializers.RankStorage();
+wc_rankedX1 = LOAD '$outputPath$WORD_RANK' as (rank_num:long, count:long, term:chararray,docs:{t:(docId:chararray)});
+
 wc_ranked = load '$outputPath$WORD_RANK' as (rank_num:long,count:long,term:chararray,docs:{t:(docId:chararray)});
 wc_ranked_hr = foreach wc_ranked generate rank_num,count,term;
 store wc_ranked_hr into '$outputPath$WORD_RANK_HR'; 
