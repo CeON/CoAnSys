@@ -157,6 +157,7 @@
 			<param>removal_least_used=${removal_least_used}</param>
 			<param>removal_rate=${removal_rate}</param>
 			<file>macros.pig#macros.pig</file>
+			<file>rank.py#rank.py</file>
 		</pig>
 		<ok to='prepare_pairwise_sim-d' />
 		<error to='kill' />
