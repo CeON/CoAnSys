@@ -16,15 +16,17 @@ for line in sys.stdin:
     continue
   lineX = lineX[2:(len(lineX)-2)]
   for t in lineX.split('),('):
-    tupleParts = t.split(',')
-    curr_val = int(tupleParts[rank_crit].strip())
-    if last_val != curr_val:
-      rank = rank + interval
-      interval = 1
-      last_val = curr_val
-      print '\t'.join([str(rank)]+tupleParts)
-    else:
-      print '\t'.join([str(rank)]+tupleParts)
-      interval = interval + 1
-
+    try:
+      tupleParts = t.split(',')
+      curr_val = int(tupleParts[rank_crit].strip())
+      if last_val != curr_val:
+        rank = rank + interval
+        interval = 1
+        last_val = curr_val
+        print '\t'.join([str(rank)]+tupleParts)
+      else:
+        print '\t'.join([str(rank)]+tupleParts)
+        interval = interval + 1
+    except:
+      print '\t'.join([str(0)]+tupleParts)
 
