@@ -17,7 +17,7 @@ for line in sys.stdin:
   lineX = lineX[2:(len(lineX)-2)]
   for t in lineX.split('),('):
     tupleParts = t.split(',')
-    curr_val = int(tupleParts[rank_crit])
+    curr_val = int(tupleParts[rank_crit].strip())
     if last_val != curr_val:
       rank = rank + interval
       interval = 1
