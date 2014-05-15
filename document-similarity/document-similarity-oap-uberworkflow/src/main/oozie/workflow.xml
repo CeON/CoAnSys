@@ -17,7 +17,15 @@
 			<value>20</value>
 		</property>
 
-		
+		<property>
+			<name>load_filterTerms_calcTfidf_filter_ship_ranked</name>
+			<value>false</value>
+		</property>
+		<property>
+			<name>load_filterTerms_calcTfidf_filter_ranked</name>
+			<value>true</value>
+		</property>
+
 		<property>
 			<name>serialize_to_proto</name>
 			<value>false</value>
@@ -135,6 +143,14 @@
 			</app-path>
 			<propagate-configuration />
 			<configuration>
+				<property>
+					<name>load_filterTerms_calcTfidf_filter_ship_ranked</name>
+					<value>${load_filterTerms_calcTfidf_filter_ship_ranked}</value>
+				</property>
+				<property>
+					<name>load_filterTerms_calcTfidf_filter_ranked</name>
+					<value>${load_filterTerms_calcTfidf_filter_ranked}</value>
+				</property>
 				<property>
 					<name>oozie.wf.subworkflow.classpath.inheritance</name>
 					<value>true</value>
@@ -434,8 +450,7 @@
 			<delete path="${similarityOutputPath}/major" />
 			<delete path="${similarityOutputPath}/minor" />
 			<delete path="${similarityOutputPath}/recalc" />
-			<delete
-				path="${similarityOutputPath}/final/similarity/normalizedleftdocs" />
+			<delete path="${similarityOutputPath}/final/similarity/normalizedleftdocs" />
 		</fs>
 		<ok to="end" />
 		<error to="end" />

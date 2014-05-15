@@ -51,6 +51,10 @@
 		</property>
 		<!-- Path control variables -->
 		<property>
+			<name>load_filterTerms_calcTfidf_filter_ship_ranked</name>
+			<value>true</value>
+		</property>
+		<property>
 			<name>load_filterTerms_calcTfidf_filter_ranked</name>
 			<value>true</value>
 		</property>
@@ -120,6 +124,8 @@
 
 	<decision name="load_filterTerms_calcTfidf-d">
 		<switch>
+			<case to="load_filterTerms_calcTfidf_filter_ship_ranked">${load_filterTerms_calcTfidf_filter_ship_ranked eq "true"}
+			</case>
 			<case to="load_filterTerms_calcTfidf_filter_ranked">${load_filterTerms_calcTfidf_filter_ranked eq "true"}
 			</case>
 			<case to="load_filterTerms_calcTfidf_filter_tfidf">${load_filterTerms_calcTfidf_filter_tfidf eq "true"}
@@ -129,6 +135,33 @@
 			<default to="prepare_pairwise_sim-d" />
 		</switch>
 	</decision>
+
+	<action name='load_filterTerms_calcTfidf_filter_ship_ranked'>
+		<pig>
+			<prepare>
+				<delete path="${similarityOutputPath}" />
+			</prepare>
+			<script>document-similarity-s1-ship-rank_filter.pig</script>
+			<param>inputPath=${bwndataMetadataInputPath}</param>
+			<param>outputPath=${similarityOutputPath}</param>
+			<param>commonJarsPath=${commonJarsPath}</param>
+			<param>parallel=${parallel}</param>
+			<param>tmpCompressionCodec=${tmpCompressionCodec}</param>
+			
+			<param>mapredChildJavaOpts=${mapredChildJavaOpts}</param>
+			<param>sample=${sample}</param>
+			<param>tfidfTopnTermPerDocument=${tfidfTopnTermPerDocument}
+			</param>
+			<param>similarityTopnDocumentPerDocument=${similarityTopnDocumentPerDocument}
+			</param>
+			<param>removal_least_used=${removal_least_used}</param>
+			<param>removal_rate=${removal_rate}</param>
+			<file>macros.pig#macros.pig</file>
+		</pig>
+		<ok to='prepare_pairwise_sim-d' />
+		<error to='kill' />
+	</action>
+
 
 	<action name='load_filterTerms_calcTfidf_filter_ranked'>
 		<pig>
