@@ -1,0 +1,2 @@
+1. Merge AND workflow results with original collection using merge_only_and.pig (in coansys-io-output)
+2. Run stats_pair.pig

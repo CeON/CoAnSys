@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
+
 package pl.edu.icm.coansys.disambiguation.author.features.extractors;
 
 import org.apache.pig.data.DataBag;
@@ -26,45 +27,44 @@ import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.D
 import pl.edu.icm.coansys.disambiguation.author.normalizers.PigNormalizer;
 import pl.edu.icm.coansys.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
-import pl.edu.icm.coansys.models.DocumentProtos.KeyValue;
 
-public class EX_PERSON_ID extends DisambiguationExtractorAuthor {
+public class EX_AUTH_FNAME extends DisambiguationExtractorAuthor {
 
-	private String PERSON_ID_KEY_NAME = "pbnPersonId";
-	
-	public EX_PERSON_ID() {
+	public EX_AUTH_FNAME() {
 		super();
 	}
 
-	public EX_PERSON_ID(PigNormalizer[] new_normalizers) {
+	public EX_AUTH_FNAME(PigNormalizer[] new_normalizers) {
 		super(new_normalizers);
 	}
-	
-	protected EX_PERSON_ID(PigNormalizer[] new_normalizers, String person_id_key_name) {
-		super(new_normalizers);
-		PERSON_ID_KEY_NAME = person_id_key_name;
-	}
-	
+
 	@Override
 	public DataBag extract(Object o, int fakeIndex, String lang) {
 		TupleFactory tf = TupleFactory.getInstance();
 		DocumentMetadata dm = (DocumentMetadata) o;
 		DataBag db = new DefaultDataBag();
-		Tuple t = tf.newTuple();
 
 		Author a = dm.getBasicMetadata().getAuthor(fakeIndex);
-		for (KeyValue kv : a.getExtIdList()) {
-			if (kv.getKey().equals(PERSON_ID_KEY_NAME)) {
-				t.append(kv.getValue());
-				db.add(t);
-				break;
-			}
+		String[] fnames = a.getForenames().trim().split("\\s+");
+		
+		if (fnames.length == 0) {
+			return db;
 		}
+		String ffname = fnames[0];
+		
+		Tuple t = tf.newTuple();
+		Object normalized = normalizeExtracted(ffname);
+		if (normalized == null) {
+			return db;
+		}
+		t.append(normalized);
+		db.add(t);
+
 		return db;
 	}
 
 	@Override
 	public String getId() {
-		return "8";
+		return "F";
 	}
 }

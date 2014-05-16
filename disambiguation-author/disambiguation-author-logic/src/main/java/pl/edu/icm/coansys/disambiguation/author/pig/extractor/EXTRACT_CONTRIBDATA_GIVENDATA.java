@@ -214,8 +214,7 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 				// here we have sure that Object = Integer
 				Object normalizedSname = null;
 				if (snameToString) {
-					normalizedSname = new ToEnglishLowerCase().normalize(a
-							.getSurname());
+					normalizedSname = a.getSurname().toLowerCase();
 				} else {
 					normalizedSname = extractor.normalizeExtracted(a
 							.getSurname());
