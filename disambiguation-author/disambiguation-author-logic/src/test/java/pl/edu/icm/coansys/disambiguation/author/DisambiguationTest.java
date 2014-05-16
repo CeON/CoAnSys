@@ -138,7 +138,8 @@ public class DisambiguationTest {
    			   	"EX_EMAIL_PREFIX" ,
    			   	"EX_DOC_AUTHS_FNAME_FST_LETTER",
    			   	"EX_AUTH_FNAME_FST_LETTER",
-   			   	"EX_PERSON_IDS"
+   			   	"EX_PERSON_IDS",
+   			   	"EX_PERSON_PBN_ID"
    		};
    		String[] ids = {
    				"0",
@@ -155,7 +156,8 @@ public class DisambiguationTest {
    				"3",
    				"C",
    				"D",
-   				"E"
+   				"E",
+   				"8.2"
    		};
    		
    		assert ( ids.length == extractors.length );
@@ -178,7 +180,6 @@ public class DisambiguationTest {
    			assert( c != null );
    		}
    	}
-   	
    	
    	@org.testng.annotations.Test(groups = {"fast"})
    	public void features_disambiguator_calculateAffinity() {
@@ -235,6 +236,14 @@ public class DisambiguationTest {
 		
 		EXTRACT_CONTRIBDATA_GIVENDATA ex2 = new EXTRACT_CONTRIBDATA_GIVENDATA( arg );
 		assert( full.equals( ex2.debugComponents() ) );
+   	}
+   	
+   	@org.testng.annotations.Test(groups = {"fast"})
+   	public void pig_extractor_EXTRACT_CONTRIBDATA_GIVENDATA_getting_indicators() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+   		// test common contruction
+   		new EXTRACT_CONTRIBDATA_GIVENDATA("-featureinfo Intersection#EX_PERSON_ID#1.0#1");	
+   		// test "climbing up" through inherited tree of extractor, note that EX_PERSON_COANSYS_ID extends EX_PERSON_ID
+   		new EXTRACT_CONTRIBDATA_GIVENDATA("-featureinfo Intersection#EX_PERSON_COANSYS_ID#1.0#1");
    	}
    	    
     // Tools:

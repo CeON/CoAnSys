@@ -103,6 +103,8 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 		List<FeatureInfo> features = FeatureInfo
 				.parseFeatureInfoString(featureinfo);
 
+		// Get indicators names. Indicators (super classes of extractors) says about
+		// extractor kind: document or author data dependent
 		String ExtractorDocClassName = new DisambiguationExtractorDocument()
 				.getClass().getSimpleName();
 		String ExtractorAuthorClassName = new DisambiguationExtractorAuthor()
@@ -110,10 +112,20 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 		DisambiguationExtractor extractor;
 		String currentClassNameOrId;
 
+		// iterate through all given extractors, create them
 		for (int i = 0; i < features.size(); i++) {
 			extractor = extrFactory.create(features.get(i));
-			String currentSuperClassName = extractor.getClass().getSuperclass()
-					.getSimpleName();
+			// Get indicator of this extractor. Note that super class of the
+			// extractor may be other extractor, not directly indicator. So we
+			// need to "climb up" the inheritance tree.
+			Class<DisambiguationExtractor> superClass = (Class<DisambiguationExtractor>) extractor
+					.getClass();
+			while (superClass.getSimpleName().startsWith("EX_")) {
+				superClass = (Class<DisambiguationExtractor>) superClass
+						.getSuperclass();
+			}
+			String currentIndicatorName = superClass.getSimpleName();
+
 			if (useIdsForExtractors) {
 				currentClassNameOrId = extrFactory.toExId(extractor.getClass()
 						.getSimpleName());
@@ -121,16 +133,16 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 				currentClassNameOrId = extractor.getClass().getSimpleName();
 			}
 
-			if (currentSuperClassName.equals(ExtractorDocClassName)) {
+			if (currentIndicatorName.equals(ExtractorDocClassName)) {
 				des4Doc.add((DisambiguationExtractorDocument) extractor);
 				des4DocNameOrId.add(currentClassNameOrId);
-			} else if (currentSuperClassName.equals(ExtractorAuthorClassName)) {
+			} else if (currentIndicatorName.equals(ExtractorAuthorClassName)) {
 				des4Author.add((DisambiguationExtractorAuthor) extractor);
 				des4AuthorNameOrId.add(currentClassNameOrId);
 			} else {
 				String m = "Cannot create extractor: "
 						+ extractor.getClass().getSimpleName()
-						+ ". Its superclass: " + currentSuperClassName
+						+ ". Its superclass: " + currentIndicatorName
 						+ " does not match to any superclass.";
 				logger.error(m);
 				throw new ClassNotFoundException(m);
@@ -289,8 +301,8 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 
 	// Pig Status Reporter staff:
 	private PigStatusReporter myreporter = null;
-	private Counter counters4Doc[][], counters4Author[][], counterNormalizedSname[],
-	counterOriginalSname[], countersExist;
+	private Counter counters4Doc[][], counters4Author[][],
+			counterNormalizedSname[], counterOriginalSname[], countersExist;
 
 	static class REPORTER_CONST {
 		public static final String CONTRIB_EX = "Contrib_Existing";
@@ -340,17 +352,13 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 		}
 
 		counterNormalizedSname[REPORTER_CONST.MISS] = myreporter.getCounter(
-				REPORTER_CONST.CONTRIB_MS,
-				"Normalized sname");
+				REPORTER_CONST.CONTRIB_MS, "Normalized sname");
 		counterNormalizedSname[REPORTER_CONST.EXIST] = myreporter.getCounter(
-				REPORTER_CONST.CONTRIB_EX,
-				"Normalized sname");
+				REPORTER_CONST.CONTRIB_EX, "Normalized sname");
 		counterOriginalSname[REPORTER_CONST.MISS] = myreporter.getCounter(
-				REPORTER_CONST.CONTRIB_MS,
-				"Original sname");
+				REPORTER_CONST.CONTRIB_MS, "Original sname");
 		counterOriginalSname[REPORTER_CONST.EXIST] = myreporter.getCounter(
-				REPORTER_CONST.CONTRIB_EX,
-				"Original sname");
+				REPORTER_CONST.CONTRIB_EX, "Original sname");
 		counterNormalizedSname[REPORTER_CONST.MISS].increment(0);
 		counterNormalizedSname[REPORTER_CONST.EXIST].increment(0);
 		counterOriginalSname[REPORTER_CONST.MISS].increment(0);
@@ -383,12 +391,12 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 		if (countersExist == null) {
 			return;
 		}
-		if (normSname == null || normSname.toString().isEmpty() ) {
+		if (normSname == null || normSname.toString().isEmpty()) {
 			counterNormalizedSname[REPORTER_CONST.MISS].increment(1);
 		} else {
 			counterNormalizedSname[REPORTER_CONST.EXIST].increment(1);
 		}
-		if (orgSname == null || orgSname.toString().isEmpty() ) {
+		if (orgSname == null || orgSname.toString().isEmpty()) {
 			counterOriginalSname[REPORTER_CONST.MISS].increment(1);
 		} else {
 			counterOriginalSname[REPORTER_CONST.EXIST].increment(1);
@@ -407,4 +415,3 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 				authors.isEmpty() ? 0 : 1);
 	}
 }
-
