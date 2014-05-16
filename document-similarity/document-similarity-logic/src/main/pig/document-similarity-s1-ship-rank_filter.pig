@@ -159,9 +159,20 @@ wc_rankedX = foreach wc_rankedX2 generate
 store wc_rankedX into '$outputPath$WORD_RANK';
 ******************************************/
 -- third approach to RANK opp
+wcX11 = foreach wcX1 generate count, term;
 wcX12 = order wcX1 by count asc parallel 1; 
-STORE wcX12 INTO '$outputPath$WORD_RANK' using pl.edu.icm.coansys.similarity.pig.serializers.RankStorage();
-wc_rankedX1 = LOAD '$outputPath$WORD_RANK' as (rank_num:long, count:long, term:chararray,docs:{t:(docId:chararray)});
+STORE wcX12 INTO '$outputPath$WORD_RANK_PRE' using pl.edu.icm.coansys.similarity.pig.serializers.RankStorage();
+wc_rankedX1 = LOAD '$outputPath$WORD_RANK_PRE' as (rank_num:long, count:long, term:chararray);
+
+wc_rankedX2 = join wc_rankedX1 by term, wcZ1 by term;
+  
+wc_rankedX = foreach wc_rankedX2 generate 
+	rank_num as rank_num, 
+	count as count, 
+	wc_rankedX1::term as term,
+	docs as docs;
+	
+store wc_rankedX into '$outputPath$WORD_RANK';
 
 wc_ranked = load '$outputPath$WORD_RANK' as (rank_num:long,count:long,term:chararray,docs:{t:(docId:chararray)});
 wc_ranked_hr = foreach wc_ranked generate rank_num,count,term;
