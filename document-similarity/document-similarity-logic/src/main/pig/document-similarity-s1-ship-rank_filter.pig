@@ -160,9 +160,11 @@ store wc_rankedX into '$outputPath$WORD_RANK';
 ******************************************/
 -- third approach to RANK opp
 wcX11 = foreach wcX1 generate count, term;
-wcX12 = order wcX1 by count asc parallel 1; 
+wcX12 = order wcX11 by count asc parallel 1; 
 STORE wcX12 INTO '$outputPath$WORD_RANK_PRE' using pl.edu.icm.coansys.similarity.pig.serializers.RankStorage();
 wc_rankedX1 = LOAD '$outputPath$WORD_RANK_PRE' as (rank_num:long, count:long, term:chararray);
+
+wcZ1 = foreach wcX1 generate term,FLATTEN(docs) as docs;
 
 wc_rankedX2 = join wc_rankedX1 by term, wcZ1 by term;
   
@@ -174,10 +176,13 @@ wc_rankedX = foreach wc_rankedX2 generate
 	
 store wc_rankedX into '$outputPath$WORD_RANK';
 
+/********
 wc_ranked = load '$outputPath$WORD_RANK' as (rank_num:long,count:long,term:chararray,docs:{t:(docId:chararray)});
 wc_ranked_hr = foreach wc_ranked generate rank_num,count,term;
 store wc_ranked_hr into '$outputPath$WORD_RANK_HR'; 
+********/
 
+wc_ranked = load '$outputPath$WORD_RANK' as (rank_num:long,count:long,term:chararray,docId:chararray);
 
 --SPLIT wc_ranked INTO
 --  term_condition_accepted_tmp IF ($0 <= (double)tc.val*$removal_rate and $1 >= $removal_least_used),
@@ -186,8 +191,10 @@ store wc_ranked_hr into '$outputPath$WORD_RANK_HR';
 term_condition_accepted_tmp = filter wc_ranked by ($0 <= (double)tc.val*$removal_rate and $1 >= $removal_least_used);
 term_condition_not_accepted_tmp = filter wc_ranked by ($0 > (double)tc.val*$removal_rate or $1 < $removal_least_used);
 		
-doc_selected_termsX = foreach term_condition_accepted_tmp generate FLATTEN(docs) as docId, term;
-store doc_selected_termsX into '$outputPath$WORD_COUNT';
+-- doc_selected_termsX = foreach term_condition_accepted_tmp generate FLATTEN(docs) as docId, term;
+-- store doc_selected_termsX into '$outputPath$WORD_COUNT';
+
+store term_condition_accepted_tmp into '$outputPath$WORD_COUNT';
 doc_selected_termsX2 = foreach term_condition_not_accepted_tmp generate term;
 store doc_selected_termsX2 into '$outputPath$WORD_COUNT_NEG';
 --**************** word count rank *****************
