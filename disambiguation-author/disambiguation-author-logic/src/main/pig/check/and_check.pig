@@ -24,7 +24,7 @@
 REGISTER ../disambiguation/lib/*.jar
 REGISTER /usr/lib/pig/piggybank.jar
 
-%DEFAULT and_inputDocsData merged/pbn_mbojan
+%DEFAULT and_inputDocsData merged/pbn_mbojan_no_person_id_in_model
 %DEFAULT and_sample 1.0
 %DEFAULT and_feature_info 'Intersection#EX_AUTH_FNAME#1.0#1,Intersection#EX_PERSON_PBN_ID#1.0#1,Intersection#EX_PERSON_COANSYS_ID#1.0#1'
 %DEFAULT and_lang 'all'
@@ -84,6 +84,17 @@ B1 = foreach A2 generate flatten(snameDocumentMetaExtractor($1)) as (dockey:char
 -- preparing PAIRS for getting info about AND feature model effectiveness:
 C1 = FILTER B1 BY (metadata#'EX_PERSON_COANSYS_ID' is not null) and (metadata#'EX_PERSON_PBN_ID' is not null);
 C2 = group C1 by sname;
+-- generate contributor pairs for each sname, among others with pbn id and coansys id intersection
 D = foreach C2 generate flatten(pairsCreation(*));
-DUMP D;
-
+-- in D we've got:
+-- (8872a69e-2069-35b7-95d1-7f35dab3c41e,EX_AUTH_FNAME,1.0,1.0,EX_PERSON_PBN_ID,1.0,1.0,EX_PERSON_COANSYS_ID,0.0,0.0)
+-- for us interesing is only intersection of id, to determine if 2 contributr is same or not same by pbn and by coansys separately:
+E = foreach D generate $5 as pbn, $8 as coansys;
+-- prepare effectiveness stats:
+F = foreach E generate ((pbn == 1.0 and pbn == coansys) ? 1 : 0) as correct_same, ((pbn == 0.0 and pbn == coansys) ? 1 : 0) as correct_not_same, ((pbn == 1.0 and coansys == 0.0) ? 1 : 0) as pbn_same_coanys_not_same, ((pbn == 0.0 and coansys == 1.0) ? 1 : 0) as pbn_not_same_coanys_same;
+-- sum results:
+G = GROUP F ALL;
+--H = FOREACH G GENERATE SUM(F.correct_same) AS correct_same;
+H = FOREACH G GENERATE SUM(F.correct_same) AS correct_same, SUM(F.correct_not_same) AS correct_not_same, SUM(F.pbn_same_coanys_not_same) as pbn_same_coanys_not_same, SUM(F.pbn_not_same_coanys_same) as pbn_not_same_coanys_same;
+DESCRIBE H;
+DUMP H;
