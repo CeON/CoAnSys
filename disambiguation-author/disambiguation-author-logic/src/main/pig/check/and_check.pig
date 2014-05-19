@@ -30,15 +30,16 @@ REGISTER /usr/lib/pig/piggybank.jar
 %DEFAULT and_lang 'all'
 %DEFAULT and_skip_empty_features 'true'
 %DEFAULT and_use_extractor_id_instead_name 'false'
-%DEFAULT and_snameToString 'true'
+%DEFAULT and_snameToString 'false'
 DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_CONTRIBDATA_GIVENDATA('-featureinfo $and_feature_info -lang $and_lang -skipEmptyFeatures $and_skip_empty_features -useIdsForExtractors $and_use_extractor_id_instead_name -snameToString $and_snameToString');
+DEFINE pairsCreation pl.edu.icm.coansys.disambiguation.author.pig.SvmUnnormalizedPairsCreator('featureInfo=$and_feature_info');
 
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- set section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
-%DEFAULT and_parallel_param 1
+%DEFAULT and_parallel_param 8
 %DEFAULT pig_tmpfilecompression_param true
 %DEFAULT pig_tmpfilecompression_codec_param gz
 %DEFAULT job_priority normal
@@ -72,9 +73,17 @@ set mapred.fairscheduler.pool $and_scheduler
 
 A1 = LOAD '$and_inputDocsData' USING pl.edu.icm.coansys.commons.pig.udf.RichSequenceFileLoader('org.apache.hadoop.io.Text', 'org.apache.hadoop.io.BytesWritable') as (key:chararray, value:bytearray);
 A2 = sample A1 $and_sample;
-B1 = foreach A2 generate flatten(snameDocumentMetaExtractor($1)) as (dockey:chararray, cId:chararray, sname:chararray, metadata:map[{(chararray)}]);
-B2 = foreach B1 generate dockey as dockey, cId as cId, sname as sname, metadata#'EX_PERSON_COANSYS_ID' as coansys_id, metadata#'EX_PERSON_PBN_ID' as pbn_id;
+B1 = foreach A2 generate flatten(snameDocumentMetaExtractor($1)) as (dockey:chararray, cId:chararray, sname, metadata:map[{(chararray)}]);
 
---STORE B2 into 'mbojan_out.csv' USING org.apache.pig.piggybank.storage.CSVExcelStorage(',','NO_MULTILINE');
-STORE B2 INTO 'mbojan_out_csv' USING PigStorage(',', '-schema');
+
+-- FOR MBOJAN csv data, (1) change and_snameToString to true, (2) uncomment following block line:
+-- B2 = foreach B1 generate dockey as dockey, cId as cId, sname as sname, metadata#'EX_PERSON_COANSYS_ID' as coansys_id, metadata#'EX_PERSON_PBN_ID' as pbn_id;
+-- STORE B2 INTO 'mbojan_out_csv' USING PigStorage(',', '-schema');
+
+
+-- preparing PAIRS for getting info about AND feature model effectiveness:
+C1 = FILTER B1 BY (metadata#'EX_PERSON_COANSYS_ID' is not null) and (metadata#'EX_PERSON_PBN_ID' is not null);
+C2 = group C1 by sname;
+D = foreach C2 generate flatten(pairsCreation(*));
+DUMP D;
 
