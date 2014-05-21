@@ -29,6 +29,13 @@ import org.apache.hadoop.io.WritableComparable;
  */
 public class SortedMapWritableComparable extends SortedMapWritable implements WritableComparable<SortedMapWritableComparable> {
 
+    public SortedMapWritableComparable() {
+    }
+    
+    public SortedMapWritableComparable(SortedMapWritable other) {
+        super(other);
+    }
+
     @Override
     public int compareTo(SortedMapWritableComparable otherMap) {
         
