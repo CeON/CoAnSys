@@ -20,7 +20,9 @@ package pl.edu.icm.coansys.statisticsgenerator.jobs;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.BytesWritable;
@@ -66,20 +68,41 @@ public class StatisticsGenerator implements Tool {
 
             StatisticsProtos.InputEntry inputEntry = StatisticsProtos.InputEntry.parseFrom(value.copyBytes());
 
-            SortedMapWritableComparable outputKeyMap = new SortedMapWritableComparable();
+            Set<SortedMapWritableComparable> outputKeyMaps = new HashSet<SortedMapWritableComparable>();
+            outputKeyMaps.add(new SortedMapWritableComparable());
+
             Map<String, Partitioner> partitioners = statGenConfiguration.getPartitioners();
 
             for (StatisticsProtos.KeyValue field : inputEntry.getFieldList()) {
                 String fieldKey = field.getKey();
                 if (partitioners.containsKey(fieldKey)) {
                     String[] partitions = partitioners.get(fieldKey).partition(field.getValue());
-                    for (String partition : partitions) {
-                        outputKeyMap.put(new Text(fieldKey), new Text(partition));
+                    // the number of output values should be multiplied by number of partitions (partitions.lenght).
+                    // if 0, then return nothing...
+                    if (partitions.length == 0) {
+                        return;
+                    }
+                    for (SortedMapWritableComparable outputKeyMap : outputKeyMaps) {
+                        outputKeyMap.put(new Text(fieldKey), new Text(partitions[0]));
+                    }
+                    // if more than 1, then copy output values
+                    for (int i = 1; i < partitions.length; i++) {
+                        Text mapKey = new Text(fieldKey);
+                        Text mapValue = new Text(partitions[i]);
+                        Set<SortedMapWritableComparable> newMaps = new HashSet<SortedMapWritableComparable>();
+                        for (SortedMapWritableComparable outputKeyMap : outputKeyMaps) {
+                            SortedMapWritableComparable newMap = new SortedMapWritableComparable(outputKeyMap);
+                            newMap.put(mapKey, mapValue);
+                            newMaps.add(newMap);
+                        }
+                        outputKeyMaps.addAll(newMaps);
                     }
                 }
             }
 
-            context.write(outputKeyMap, value);
+            for (SortedMapWritableComparable outputKeyMap : outputKeyMaps) {
+                context.write(outputKeyMap, value);
+            }
         }
     }
 
