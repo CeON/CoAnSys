@@ -27,7 +27,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public abstract class AbstractLogicalEvaluator extends AbstractEvaluator<String> {
-
+    
     final static Operator AND = new Operator("and", 2, Operator.Associativity.LEFT, 2);
     final static Operator OR = new Operator("or", 2, Operator.Associativity.LEFT, 1);
     final static Operator NOT = new Operator("not", 1, Operator.Associativity.LEFT, 3);
@@ -47,7 +47,11 @@ public abstract class AbstractLogicalEvaluator extends AbstractEvaluator<String>
 
     @Override
     protected String toValue(String literal, Object evaluationContext) {
-        return literal;
+        if (evaluateLiteral(literal)) {
+            return(literal + "=true");
+        } else {
+            return(literal + "=false");
+        }
     }
 
     private boolean getValue(String literal) {
@@ -57,7 +61,7 @@ public abstract class AbstractLogicalEvaluator extends AbstractEvaluator<String>
         if (literal.endsWith("=false")) {
             return false;
         }
-        return evaluateLiteral(literal);
+        throw new IllegalArgumentException("It should never happen...");
     }
 
     public abstract boolean evaluateLiteral(String literal);
