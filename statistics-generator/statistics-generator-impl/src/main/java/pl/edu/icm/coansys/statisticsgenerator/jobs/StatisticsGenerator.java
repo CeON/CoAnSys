@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.BytesWritable;
@@ -137,8 +138,22 @@ public class StatisticsGenerator implements Tool {
                 statisticsBuilder.addStatistics(kvBuilder);
             }
             statisticsBuilder.setTimestamp(new Date().getTime());
-            context.write(new Text("abc"), new BytesWritable(statisticsBuilder.build().toByteArray()));
+            context.write(new Text(genKeyFromMap(key)), new BytesWritable(statisticsBuilder.build().toByteArray()));
         }
+    }
+    
+    private static String genKeyFromMap(Map map) {
+        StringBuilder mapToString = new StringBuilder();
+        
+        Set<Map.Entry<Writable, WritableComparable>> entrySet = map.entrySet();
+        for (Map.Entry<Writable, WritableComparable> entry : entrySet) {
+            mapToString.append(entry.getKey().toString()).append(":");
+            mapToString.append(entry.getValue().toString()).append(";");
+        }
+        
+        logger.info("Map as string: " + mapToString.toString());
+        
+        return UUID.nameUUIDFromBytes(mapToString.toString().getBytes()).toString();
     }
 
     @Override
