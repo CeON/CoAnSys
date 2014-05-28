@@ -15,7 +15,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package pl.edu.icm.coansys.statisticsgenerator.filters;
 
 import java.util.HashMap;
@@ -24,8 +23,10 @@ import org.testng.annotations.Test;
 import static org.testng.Assert.*;
 import pl.edu.icm.coansys.models.StatisticsProtos;
 import pl.edu.icm.coansys.statisticsgenerator.operationcomponents.FilterComponent;
+import pl.edu.icm.coansys.statisticsgenerator.operationcomponents.FilterContains;
 import pl.edu.icm.coansys.statisticsgenerator.operationcomponents.FilterEq;
 import pl.edu.icm.coansys.statisticsgenerator.operationcomponents.FilterNotEmpty;
+import pl.edu.icm.coansys.statisticsgenerator.operationcomponents.FilterTwoFieldsEqual;
 
 /**
  *
@@ -34,39 +35,51 @@ import pl.edu.icm.coansys.statisticsgenerator.operationcomponents.FilterNotEmpty
 public class LogicalEvaluatorTest {
 
     @Test
-    public void testEvaluator() {
-        Map<String, FilterComponent> components = new HashMap<String, FilterComponent>();
-        FilterComponent fc1 = new FilterNotEmpty();
-        fc1.setup("bookId");
-        components.put("book", fc1);
-        FilterComponent fc2 = new FilterEq();
-        fc2.setup("bookId", "book-03426");
-        components.put("book26", fc2);
-        FilterComponent fc3 = new FilterEq();
-        fc3.setup("bookId", "book-03427");
-        components.put("book27", fc3);
+    public void testEvaluator() throws InstantiationException, IllegalAccessException {
 
-        
-        InputFilter ifilter1 = new InputFilter("book", components);
-        InputFilter ifilter2 = new InputFilter("book and book26", components);
-        InputFilter ifilter3 = new InputFilter("book and book27", components);
-        InputFilter ifilter4 = new InputFilter("not book or not book27", components);
-        InputFilter ifilter5 = new InputFilter("(book27 and book26) or book", components);
-        
         StatisticsProtos.InputEntry.Builder ieb = StatisticsProtos.InputEntry.newBuilder();
         ieb.setLabel("testInputEntry");
-        StatisticsProtos.KeyValue.Builder kvb = StatisticsProtos.KeyValue.newBuilder();
-        kvb.setKey("bookId");
-        kvb.setValue("book-03426");
-        ieb.addField(kvb);
+        addKV(ieb, "bookId", "book-03426");
+        addKV(ieb, "elId", "book-03426");
+        addKV(ieb, "authorId", "author-571411");
         StatisticsProtos.InputEntry ie = ieb.build();
 
-        
-        assertTrue(ifilter1.filter(ie));
-        assertTrue(ifilter2.filter(ie));
-        assertFalse(ifilter3.filter(ie));
-        assertTrue(ifilter4.filter(ie));
-        assertTrue(ifilter5.filter(ie));
+        Map<String, FilterComponent> components = new HashMap<String, FilterComponent>();
+        addFilterComponent(components, FilterNotEmpty.class, "book", "bookId");
+        addFilterComponent(components, FilterEq.class, "book26", "bookId", "book-03426");
+        addFilterComponent(components, FilterEq.class, "book27", "bookId", "book-03427");
+        addFilterComponent(components, FilterContains.class, "auth1411", "authorId", "1411");
+        addFilterComponent(components, FilterTwoFieldsEqual.class, "elbook", "elId", "bookId");
+
+        checkFilter("book", components, ie, true);
+        checkFilter("book and book26", components, ie, true);
+        checkFilter("book and book27", components, ie, false);
+        checkFilter("not book or not book27", components, ie, true);
+        checkFilter("(book27 and book26) or book", components, ie, true);
+        checkFilter("not book or (auth1411 and elbook)", components, ie, true);
     }
 
+    private static void addKV(StatisticsProtos.InputEntry.Builder ieb, String key, String value) {
+        StatisticsProtos.KeyValue.Builder kvb = StatisticsProtos.KeyValue.newBuilder();
+        kvb.setKey(key);
+        kvb.setValue(value);
+        ieb.addField(kvb);
+    }
+
+    private static void addFilterComponent(Map<String, FilterComponent> components, Class<? extends FilterComponent> componentCls,
+            String label, String... parameters) throws InstantiationException, IllegalAccessException {
+        FilterComponent fc = componentCls.newInstance();
+        fc.setup(parameters);
+        components.put(label, fc);
+    }
+
+    private static void checkFilter(String formula, Map<String, FilterComponent> components, 
+            StatisticsProtos.InputEntry ie, boolean expectedResult) {
+        InputFilter ifilter = new InputFilter(formula, components);
+        if (expectedResult) {
+            assertTrue(ifilter.filter(ie));
+        } else {
+            assertFalse(ifilter.filter(ie));
+        }
+    }
 }
