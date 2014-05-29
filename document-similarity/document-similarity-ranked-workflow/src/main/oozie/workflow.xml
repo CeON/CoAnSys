@@ -52,7 +52,7 @@
 		<!-- Path control variables -->
 		<property>
 			<name>load_filterTerms_calcTfidf_filter_ship_ranked</name>
-			<value>true</value>
+			<value>false</value>
 		</property>
 		<property>
 			<name>load_filterTerms_calcTfidf_filter_ranked</name>
