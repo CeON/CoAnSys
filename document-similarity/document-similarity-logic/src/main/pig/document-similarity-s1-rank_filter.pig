@@ -97,11 +97,17 @@ doc_abstract_all = stem_words(doc_raw, docId, abstract);
 
 -- get all words (with duplicates for tfidf)
 doc_allX = UNION doc_keyword_all, doc_title_all, doc_abstract_all;
+doc_allX1 = foreach doc_allX generate TRIM($0) as docId:chararray, TRIM($1) as term:chararray;
+doc_allX2 = filter doc_allX1 by 
+ (docId is not null 
+  and docId != ''
+  and term is not null
+  and term != ''); 
 
 -- store document and terms
 --STORE doc_title_all INTO '$outputPath$DOC_TERM_TITLE';
 --STORE doc_keyword_all INTO '$outputPath$DOC_TERM_KEYWORDS';
-STORE doc_allX INTO '$outputPath$DOC_TERM_ALL';
+STORE doc_allX2 INTO '$outputPath$DOC_TERM_ALL';
 
 doc_all = LOAD '$outputPath$DOC_TERM_ALL' as (docId:chararray, term:chararray);
 --**************** term count **********************
