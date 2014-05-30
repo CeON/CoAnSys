@@ -346,7 +346,7 @@ public class RakeExtractor {
     public List<String> getKeywords(int n) {
         return choiceKeywords(n);
     }
-
+    
     private void setLang(String langCode) {
         this.lang = null;
         for (Lang curr : Lang.values()) {

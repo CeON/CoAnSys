@@ -20,7 +20,10 @@ package pl.edu.icm.coansys.statisticsgenerator.jobs;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.BytesWritable;
@@ -40,7 +43,6 @@ import pl.edu.icm.coansys.models.StatisticsProtos;
 import pl.edu.icm.coansys.statisticsgenerator.mrtypes.SortedMapWritableComparable;
 import pl.edu.icm.coansys.statisticsgenerator.operationcomponents.Partitioner;
 import pl.edu.icm.coansys.statisticsgenerator.conf.StatGeneratorConfiguration;
-import pl.edu.icm.coansys.statisticsgenerator.filters.Filter;
 import pl.edu.icm.coansys.statisticsgenerator.operationcomponents.StatisticCalculator;
 
 /**
@@ -66,22 +68,40 @@ public class StatisticsGenerator implements Tool {
         protected void map(Text key, BytesWritable value, Context context) throws IOException, InterruptedException {
 
             StatisticsProtos.InputEntry inputEntry = StatisticsProtos.InputEntry.parseFrom(value.copyBytes());
-            Filter inputFilter = statGenConfiguration.getInputFilter();
 
-            if (inputFilter.filter(inputEntry)) {
-                SortedMapWritableComparable outputKeyMap = new SortedMapWritableComparable();
-                Map<String, Partitioner> partitioners = statGenConfiguration.getPartitioners();
+            Set<SortedMapWritableComparable> outputKeyMaps = new HashSet<SortedMapWritableComparable>();
+            outputKeyMaps.add(new SortedMapWritableComparable());
 
-                for (StatisticsProtos.KeyValue field : inputEntry.getFieldList()) {
-                    String fieldKey = field.getKey();
-                    if (partitioners.containsKey(fieldKey)) {
-                        String[] partitions = partitioners.get(fieldKey).partition(field.getValue());
-                        for (String partition : partitions) {
-                            outputKeyMap.put(new Text(fieldKey), new Text(partition));
+            Map<String, Partitioner> partitioners = statGenConfiguration.getPartitioners();
+
+            for (StatisticsProtos.KeyValue field : inputEntry.getFieldList()) {
+                String fieldKey = field.getKey();
+                if (partitioners.containsKey(fieldKey)) {
+                    String[] partitions = partitioners.get(fieldKey).partition(field.getValue());
+                    // the number of output values should be multiplied by number of partitions (partitions.lenght).
+                    // if 0, then return nothing...
+                    if (partitions.length == 0) {
+                        return;
+                    }
+                    for (SortedMapWritableComparable outputKeyMap : outputKeyMaps) {
+                        outputKeyMap.put(new Text(fieldKey), new Text(partitions[0]));
+                    }
+                    // if more than 1, then copy output values
+                    for (int i = 1; i < partitions.length; i++) {
+                        Text mapKey = new Text(fieldKey);
+                        Text mapValue = new Text(partitions[i]);
+                        Set<SortedMapWritableComparable> newMaps = new HashSet<SortedMapWritableComparable>();
+                        for (SortedMapWritableComparable outputKeyMap : outputKeyMaps) {
+                            SortedMapWritableComparable newMap = new SortedMapWritableComparable(outputKeyMap);
+                            newMap.put(mapKey, mapValue);
+                            newMaps.add(newMap);
                         }
+                        outputKeyMaps.addAll(newMaps);
                     }
                 }
+            }
 
+            for (SortedMapWritableComparable outputKeyMap : outputKeyMaps) {
                 context.write(outputKeyMap, value);
             }
         }
@@ -118,8 +138,22 @@ public class StatisticsGenerator implements Tool {
                 statisticsBuilder.addStatistics(kvBuilder);
             }
             statisticsBuilder.setTimestamp(new Date().getTime());
-            context.write(new Text("abc"), new BytesWritable(statisticsBuilder.build().toByteArray()));
+            context.write(new Text(genKeyFromMap(key)), new BytesWritable(statisticsBuilder.build().toByteArray()));
         }
+    }
+    
+    private static String genKeyFromMap(Map map) {
+        StringBuilder mapToString = new StringBuilder();
+        
+        Set<Map.Entry<Writable, WritableComparable>> entrySet = map.entrySet();
+        for (Map.Entry<Writable, WritableComparable> entry : entrySet) {
+            mapToString.append(entry.getKey().toString()).append(":");
+            mapToString.append(entry.getValue().toString()).append(";");
+        }
+        
+        logger.info("Map as string: " + mapToString.toString());
+        
+        return UUID.nameUUIDFromBytes(mapToString.toString().getBytes()).toString();
     }
 
     @Override

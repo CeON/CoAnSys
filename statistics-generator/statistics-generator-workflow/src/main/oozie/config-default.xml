@@ -1,5 +1,27 @@
 <configuration>
   <property>
+    <name>POOL_NAME</name>
+    <value>default</value>
+  </property>
+  
+  <property>
+    <name>filter_input_data</name>
+    <value>true</value>
+  </property>
+  <property>
+    <name>aggregate_statistics</name>
+    <value>true</value>
+  </property>
+  
+  <property>
+    <name>user_operations</name>
+    <value> </value>
+  </property>
+  <property>
+    <name>user_operations_classes</name>
+    <value> </value>
+  </property>
+  <property>
     <name>input_filter_names</name>
     <value> </value>
   </property>
@@ -55,6 +77,24 @@
   <property>
     <name>limit</name>
     <value>3</value>
+  </property>
+
+
+  <property>
+    <name>unfilteredInput</name>
+    <value> </value>
+  </property>
+  <property>
+    <name>filteredInput</name>
+    <value> </value>
+  </property>
+  <property>
+    <name>allStatistics</name>
+    <value> </value>
+  </property>
+  <property>
+    <name>aggregatedStatistics</name>
+    <value> </value>
   </property>
 </configuration>
 
