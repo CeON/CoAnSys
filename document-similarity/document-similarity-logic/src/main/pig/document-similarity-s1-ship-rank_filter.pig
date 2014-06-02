@@ -27,6 +27,7 @@
 %default SIMILARITY_ALL_DOCS_SUBDIR '/similarity/alldocs'
 %default SIMILARITY_TOPN_DOCS_SUBDIR '/similarity/topn'
 %default TERM_COUNT '/term-count'
+%default WORD_RANK_PRE '/ranked-word-count-part';
 %default WORD_RANK '/ranked-word-count';
 %default WORD_RANK_HR '/ranked-word-count-human-readable';
 %default WORD_COUNT '/filtered-by-ranked-word-count';
@@ -59,6 +60,7 @@ SET default_parallel $parallel
 SET mapred.child.java.opts $mapredChildJavaOpts
 SET pig.tmpfilecompression true
 SET pig.tmpfilecompression.codec $tmpCompressionCodec
+set mapred.task.timeout 0
 %DEFAULT scheduler default
 SET mapred.fairscheduler.pool $scheduler
 IMPORT 'macros.pig';
@@ -97,17 +99,11 @@ doc_abstract_all = stem_words(doc_raw, docId, abstract);
 
 -- get all words (with duplicates for tfidf)
 doc_allX = UNION doc_keyword_all, doc_title_all, doc_abstract_all;
-doc_allX1 = foreach doc_allX generate TRIM($0) as docId:chararray, TRIM($1) as term:chararray;
-doc_allX2 = filter doc_allX1 by 
- (docId is not null 
-  and docId != ''
-  and term is not null
-  and term != ''); 
 
 -- store document and terms
 --STORE doc_title_all INTO '$outputPath$DOC_TERM_TITLE';
 --STORE doc_keyword_all INTO '$outputPath$DOC_TERM_KEYWORDS';
-STORE doc_allX2 INTO '$outputPath$DOC_TERM_ALL';
+STORE doc_allX INTO '$outputPath$DOC_TERM_ALL';
 
 doc_all = LOAD '$outputPath$DOC_TERM_ALL' as (docId:chararray, term:chararray);
 --**************** term count **********************
@@ -122,23 +118,83 @@ store tcX into '$outputPath$TERM_COUNT';
 
 --**************** word count rank *****************
 tc = load '$outputPath$TERM_COUNT' as (val:double);
+
 group_by_terms = group doc_all by term;
-wc = foreach group_by_terms generate COUNT(doc_all) as count, group as term, doc_all.docId as docs;
-wc_rankedX = rank wc by count asc;
+wcX = foreach group_by_terms generate COUNT(doc_all) as count, group as term, doc_all.docId as docs;
+
+STORE wcX INTO '$outputPath/tc_term_docs';
+wcX1 = LOAD '$outputPath/tc_term_docs' as (count:long, term:chararray,docs:{t:(docId:chararray)});
+
+-- The RANK operator on OAP cluster rise "Java heap-space error".
+-- Due to this issue the "quick replacement" (using Hadoop Streaming)
+-- has been proposed. As soon as the issue with the RANK operation will be resolved,
+-- the line below should be used:
+-- wc_rankedX = rank wcX1 by count asc;
+-- instead of "the quick replacement":
+/******************************************
+wc = foreach wcX1 generate count, term;
+wcZ1 = foreach wcX1 generate term,docs;
+
+define QuickReplacementRank `rank.py` ship('rank.py');
+
+wcRank_In1 = GROUP wc all;
+
+wcRank_In2 = FOREACH wcRank_In1 {
+      D = ORDER wc BY $0;
+      GENERATE D;
+}
+
+wc_rankedX1 = stream wcRank_In2 
+	through QuickReplacementRank 
+	as (rank_num:long, count:long,term:chararray);
+	
+wc_rankedX2 = join wc_rankedX1 by term, wcZ1 by term;
+  
+wc_rankedX = foreach wc_rankedX2 generate 
+	rank_num as rank_num, 
+	count as count, 
+	wc_rankedX1::term as term,
+	docs as docs;
+	
 store wc_rankedX into '$outputPath$WORD_RANK';
+******************************************/
+-- third approach to RANK opp
+wcX11 = foreach wcX1 generate count, term;
+wcX12 = order wcX11 by count asc parallel 1; 
+STORE wcX12 INTO '$outputPath$WORD_RANK_PRE' using pl.edu.icm.coansys.similarity.pig.serializers.RankStorage();
+wc_rankedX1 = LOAD '$outputPath$WORD_RANK_PRE' as (rank_num:long, count:long, term:chararray);
+
+wcZ1 = foreach wcX1 generate term,FLATTEN(docs) as docs;
+
+wc_rankedX2 = join wc_rankedX1 by term, wcZ1 by term;
+  
+wc_rankedX = foreach wc_rankedX2 generate 
+	rank_num as rank_num, 
+	count as count, 
+	wc_rankedX1::term as term,
+	docs as docs;
+	
+store wc_rankedX into '$outputPath$WORD_RANK';
+
+/********
 wc_ranked = load '$outputPath$WORD_RANK' as (rank_num:long,count:long,term:chararray,docs:{t:(docId:chararray)});
 wc_ranked_hr = foreach wc_ranked generate rank_num,count,term;
 store wc_ranked_hr into '$outputPath$WORD_RANK_HR'; 
+********/
+
+wc_ranked = load '$outputPath$WORD_RANK' as (rank_num:long,count:long,term:chararray,docId:chararray);
 
 --SPLIT wc_ranked INTO
---  term_condition_accepted_tmp IF ($0 <= (double)tc.val*$removal_rate and $0 >= $removal_least_used),
---  term_condition_not_accepted_tmp IF ($0 > (double)tc.val*$removal_rate or $0 < $removal_least_used); 
+--  term_condition_accepted_tmp IF ($0 <= (double)tc.val*$removal_rate and $1 >= $removal_least_used),
+--  term_condition_not_accepted_tmp IF ($0 > (double)tc.val*$removal_rate or $1 < $removal_least_used); 
 
-term_condition_accepted_tmp = filter wc_ranked by ($0 <= (double)tc.val*$removal_rate and $0 >= $removal_least_used);
-term_condition_not_accepted_tmp = filter wc_ranked by ($0 > (double)tc.val*$removal_rate or $0 < $removal_least_used);
+term_condition_accepted_tmp = filter wc_ranked by ($0 <= (double)tc.val*$removal_rate and $1 >= $removal_least_used);
+term_condition_not_accepted_tmp = filter wc_ranked by ($0 > (double)tc.val*$removal_rate or $1 < $removal_least_used);
 		
-doc_selected_termsX = foreach term_condition_accepted_tmp generate FLATTEN(docs) as docId, term;
-store doc_selected_termsX into '$outputPath$WORD_COUNT';
+-- doc_selected_termsX = foreach term_condition_accepted_tmp generate FLATTEN(docs) as docId, term;
+-- store doc_selected_termsX into '$outputPath$WORD_COUNT';
+
+store term_condition_accepted_tmp into '$outputPath$WORD_COUNT';
 doc_selected_termsX2 = foreach term_condition_not_accepted_tmp generate term;
 store doc_selected_termsX2 into '$outputPath$WORD_COUNT_NEG';
 --**************** word count rank *****************

@@ -4,28 +4,28 @@
 	<parameters>
 		<property>
 			<name>inputPathProto</name>
-			<value>${ds_bwndataMetadataInputPath}</value>
+			<value>${bwndataMetadataInputPath}</value>
 		</property>
 		<property>
 			<name>inputPathDocSimMajor</name>
-			<value>${ds_bwndataMetadataOutputPath}/major/similarity/normalizedleftdocs
+			<value>${bwndataMetadataOutputPath}/major/similarity/normalizedleftdocs
 			</value>
 		</property>
 		<property>
 			<name>inputPathDocSimMinor</name>
-			<value>${ds_bwndataMetadataOutputPath}/minor/similarity/normalizedleftdocs
+			<value>${bwndataMetadataOutputPath}/minor/similarity/normalizedleftdocs
 			</value>
 		</property>
 		<property>
 			<name>outputPathRecalc</name>
-			<value>${ds_bwndataMetadataOutputPath}/recalc/</value>
+			<value>${bwndataMetadataOutputPath}/recalc/</value>
 		</property>
 		<property>
 			<name>finalOutputPath</name>
-			<value>${ds_bwndataMetadataOutputPath}/final/</value>
+			<value>${bwndataMetadataOutputPath}/final/</value>
 		</property>
 		<property>
-			<name>ds_pool</name>
+			<name>pool</name>
 			<value>bigjobs</value>
 		</property>
 		<property>
@@ -33,19 +33,19 @@
 			<value>false</value>
 		</property>
 		<property>
-			<name>ds_removal_least_used</name>
+			<name>removal_least_used</name>
 			<value>0</value>
 		</property>
 		<property>
-			<name>ds_removal_rate</name>
+			<name>removal_rate</name>
 			<value>1.0</value>
 		</property>
 		<property>
-			<name>ds_tfidfTopnTermPerDocument</name>
+			<name>tfidfTopnTermPerDocument</name>
 			<value>20</value>
 		</property>
 		<property>
-			<name>ds_similarityTopnDocumentPerDocument</name>
+			<name>similarityTopnDocumentPerDocument</name>
 			<value>20</value>
 		</property>
 		<property>
@@ -53,11 +53,11 @@
 			<value>-Xmx2g</value>
 		</property>
 		<property>
-			<name>ds_scheduler</name>
-			<value>${ds_pool}</value>
+			<name>scheduler</name>
+			<value>${pool}</value>
 		</property>
 		<property>
-			<name>ds_parallel</name>
+			<name>parallel</name>
 			<value>2</value>
 		</property>
 		<property>
@@ -76,11 +76,11 @@
 		<configuration>
 			<property>
 				<name>mapred.fairscheduler.pool</name>
-				<value>${ds_pool}</value>
+				<value>${pool}</value>
 			</property>
 			<property>
 				<name>oozie.launcher.mapred.fairscheduler.pool</name>
-				<value>${ds_pool}</value>
+				<value>${pool}</value>
 			</property>
 			<property>
 				<name>mapred.job.queue.name</name>
@@ -120,11 +120,11 @@
 			<param>outputPathRecalc=${outputPathRecalc}</param>
 			<param>finalOutputPath=${finalOutputPath}</param>
 			<param>commonJarsPath=${commonJarsPath}</param>
-			<param>parallel=${ds_parallel}</param>
-			<param>tmpCompressionCodec=${ds_tmpCompressionCodec}</param>
-			<param>sample=${ds_sample}</param>
-			<param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>
-			<param>ds_scheduler=${ds_scheduler}</param>
+			<param>parallel=${parallel}</param>
+			<param>tmpCompressionCodec=${tmpCompressionCodec}</param>
+			<param>sample=${sample}</param>
+			<param>mapredChildJavaOpts=${mapredChildJavaOpts}</param>
+			<param>scheduler=${scheduler}</param>
 			<file>macros.pig#macros.pig</file>
 		</pig>
 		<ok to='sim1_postprocess_s2_e1_d' />
@@ -148,11 +148,11 @@
 			<param>outputPathRecalc=${outputPathRecalc}</param>
 			<param>finalOutputPath=${finalOutputPath}</param>
 			<param>commonJarsPath=${commonJarsPath}</param>
-			<param>parallel=${ds_parallel}</param>
-			<param>tmpCompressionCodec=${ds_tmpCompressionCodec}</param>
-			<param>sample=${ds_sample}</param>
-			<param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>
-			<param>ds_scheduler=${ds_scheduler}</param>
+			<param>parallel=${parallel}</param>
+			<param>tmpCompressionCodec=${tmpCompressionCodec}</param>
+			<param>sample=${sample}</param>
+			<param>mapredChildJavaOpts=${mapredChildJavaOpts}</param>
+			<param>scheduler=${scheduler}</param>
 			<file>macros.pig#macros.pig</file>
 		</pig>
 		<ok to='sim1_postprocess_s3_e1_d' />
@@ -177,11 +177,11 @@
 			<param>outputPathRecalc=${outputPathRecalc}</param>
 			<param>finalOutputPath=${finalOutputPath}</param>
 			<param>commonJarsPath=${commonJarsPath}</param>
-			<param>parallel=${ds_parallel}</param>
-			<param>tmpCompressionCodec=${ds_tmpCompressionCodec}</param>
-			<param>sample=${ds_sample}</param>
-			<param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>
-			<param>ds_scheduler=${ds_scheduler}</param>
+			<param>parallel=${parallel}</param>
+			<param>tmpCompressionCodec=${tmpCompressionCodec}</param>
+			<param>sample=${sample}</param>
+			<param>mapredChildJavaOpts=${mapredChildJavaOpts}</param>
+			<param>scheduler=${scheduler}</param>
 			<file>macros.pig#macros.pig</file>
 		</pig>
 		<ok to='end' />

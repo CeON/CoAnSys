@@ -2,27 +2,27 @@
 
 	<parameters>
 		<property>
-			<name>ds_remove_sideproducts</name>
+			<name>remove_sideproducts</name>
 			<value>true</value>
 		</property>
 		<property>
-			<name>ds_tfidfMinValue</name>
+			<name>tfidfMinValue</name>
 			<value>0</value>
 		</property>
 		<property>
-			<name>ds_removal_least_used</name>
+			<name>removal_least_used</name>
 			<value>0</value>
 		</property>
 		<property>
-			<name>ds_removal_rate</name>
+			<name>removal_rate</name>
 			<value>1.0</value>
 		</property>
 		<property>
-			<name>ds_tfidfTopnTermPerDocument</name>
+			<name>tfidfTopnTermPerDocument</name>
 			<value>20</value>
 		</property>
 		<property>
-			<name>ds_similarityTopnDocumentPerDocument</name>
+			<name>similarityTopnDocumentPerDocument</name>
 			<value>20</value>
 		</property>
 		<property>
@@ -30,15 +30,15 @@
 			<value>-Xmx2g</value>
 		</property>
 		<property>
-			<name>ds_scheduler</name>
+			<name>sample</name>
 			<value>default</value>
 		</property>
 		<property>
-			<name>ds_pool</name>
+			<name>pool</name>
 			<value>default</value>
 		</property>
 		<property>
-			<name>ds_parallel</name>
+			<name>parallel</name>
 			<value>2</value>
 		</property>
 		<property>
@@ -46,10 +46,14 @@
 			<value>gz</value>
 		</property>
 		<property>
-			<name>ds_sample</name>
+			<name>sample</name>
 			<value>1.0</value>
 		</property>
 		<!-- Path control variables -->
+		<property>
+			<name>load_filterTerms_calcTfidf_filter_ship_ranked</name>
+			<value>false</value>
+		</property>
 		<property>
 			<name>load_filterTerms_calcTfidf_filter_ranked</name>
 			<value>true</value>
@@ -90,11 +94,11 @@
 		<configuration>
 			<property>
 				<name>mapred.fairscheduler.pool</name>
-				<value>${ds_pool}</value>
+				<value>${pool}</value>
 			</property>
 			<property>
 				<name>oozie.launcher.mapred.fairscheduler.pool</name>
-				<value>${ds_pool}</value>
+				<value>${pool}</value>
 			</property>
 			<property>
 				<name>mapred.job.queue.name</name>
@@ -120,6 +124,8 @@
 
 	<decision name="load_filterTerms_calcTfidf-d">
 		<switch>
+			<case to="load_filterTerms_calcTfidf_filter_ship_ranked">${load_filterTerms_calcTfidf_filter_ship_ranked eq "true"}
+			</case>
 			<case to="load_filterTerms_calcTfidf_filter_ranked">${load_filterTerms_calcTfidf_filter_ranked eq "true"}
 			</case>
 			<case to="load_filterTerms_calcTfidf_filter_tfidf">${load_filterTerms_calcTfidf_filter_tfidf eq "true"}
@@ -130,26 +136,54 @@
 		</switch>
 	</decision>
 
+	<action name='load_filterTerms_calcTfidf_filter_ship_ranked'>
+		<pig>
+			<prepare>
+				<delete path="${similarityOutputPath}" />
+			</prepare>
+			<script>document-similarity-s1-ship-rank_filter.pig</script>
+			<param>inputPath=${bwndataMetadataInputPath}</param>
+			<param>outputPath=${similarityOutputPath}</param>
+			<param>commonJarsPath=${commonJarsPath}</param>
+			<param>parallel=${parallel}</param>
+			<param>tmpCompressionCodec=${tmpCompressionCodec}</param>
+			
+			<param>mapredChildJavaOpts=${mapredChildJavaOpts}</param>
+			<param>sample=${sample}</param>
+			<param>tfidfTopnTermPerDocument=${tfidfTopnTermPerDocument}
+			</param>
+			<param>similarityTopnDocumentPerDocument=${similarityTopnDocumentPerDocument}
+			</param>
+			<param>removal_least_used=${removal_least_used}</param>
+			<param>removal_rate=${removal_rate}</param>
+			<file>macros.pig#macros.pig</file>
+			<file>rank.py#rank.py</file>
+		</pig>
+		<ok to='prepare_pairwise_sim-d' />
+		<error to='kill' />
+	</action>
+
+
 	<action name='load_filterTerms_calcTfidf_filter_ranked'>
 		<pig>
 			<prepare>
-				<delete path="${ds_similarityOutputPath}" />
+				<delete path="${similarityOutputPath}" />
 			</prepare>
 			<script>document-similarity-s1-rank_filter.pig</script>
-			<param>inputPath=${ds_bwndataMetadataInputPath}</param>
-			<param>outputPath=${ds_similarityOutputPath}</param>
+			<param>inputPath=${bwndataMetadataInputPath}</param>
+			<param>outputPath=${similarityOutputPath}</param>
 			<param>commonJarsPath=${commonJarsPath}</param>
-			<param>parallel=${ds_parallel}</param>
-			<param>tmpCompressionCodec=${ds_tmpCompressionCodec}</param>
-			<param>sample=${ds_sample}</param>
-			<param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>
-			<param>ds_scheduler=${ds_scheduler}</param>
-			<param>tfidfTopnTermPerDocument=${ds_tfidfTopnTermPerDocument}
+			<param>parallel=${parallel}</param>
+			<param>tmpCompressionCodec=${tmpCompressionCodec}</param>
+			
+			<param>mapredChildJavaOpts=${mapredChildJavaOpts}</param>
+			<param>sample=${sample}</param>
+			<param>tfidfTopnTermPerDocument=${tfidfTopnTermPerDocument}
 			</param>
-			<param>similarityTopnDocumentPerDocument=${ds_similarityTopnDocumentPerDocument}
+			<param>similarityTopnDocumentPerDocument=${similarityTopnDocumentPerDocument}
 			</param>
-			<param>removal_least_used=${ds_removal_least_used}</param>
-			<param>removal_rate=${ds_removal_rate}</param>
+			<param>removal_least_used=${removal_least_used}</param>
+			<param>removal_rate=${removal_rate}</param>
 			<file>macros.pig#macros.pig</file>
 		</pig>
 		<ok to='prepare_pairwise_sim-d' />
@@ -159,22 +193,22 @@
 	<action name='load_filterTerms_calcTfidf_filter_tfidf'>
 		<pig>
 			<prepare>
-				<delete path="${ds_similarityOutputPath}" />
+				<delete path="${similarityOutputPath}" />
 			</prepare>
 			<script>document-similarity-s1-tfidf_filter.pig</script>
-			<param>inputPath=${ds_bwndataMetadataInputPath}</param>
-			<param>outputPath=${ds_similarityOutputPath}</param>
+			<param>inputPath=${bwndataMetadataInputPath}</param>
+			<param>outputPath=${similarityOutputPath}</param>
 			<param>commonJarsPath=${commonJarsPath}</param>
-			<param>parallel=${ds_parallel}</param>
-			<param>tmpCompressionCodec=${ds_tmpCompressionCodec}</param>
-			<param>sample=${ds_sample}</param>
-			<param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>
-			<param>ds_scheduler=${ds_scheduler}</param>
-			<param>tfidfTopnTermPerDocument=${ds_tfidfTopnTermPerDocument}
+			<param>parallel=${parallel}</param>
+			<param>tmpCompressionCodec=${tmpCompressionCodec}</param>
+			
+			<param>mapredChildJavaOpts=${mapredChildJavaOpts}</param>
+			<param>sample=${sample}</param>
+			<param>tfidfTopnTermPerDocument=${tfidfTopnTermPerDocument}
 			</param>
-			<param>similarityTopnDocumentPerDocument=${ds_similarityTopnDocumentPerDocument}
+			<param>similarityTopnDocumentPerDocument=${similarityTopnDocumentPerDocument}
 			</param>
-			<param>tfidfMinValue=${ds_tfidfMinValue}</param>
+			<param>tfidfMinValue=${tfidfMinValue}</param>
 			<file>macros.pig#macros.pig</file>
 		</pig>
 		<ok to='prepare_pairwise_sim-d' />
@@ -184,23 +218,23 @@
 	<action name='load_filterTerms_calcTfidf_filter_no'>
 		<pig>
 			<prepare>
-				<delete path="${ds_similarityOutputPath}" />
+				<delete path="${similarityOutputPath}" />
 			</prepare>
 			<script>document-similarity-s1-no_filter.pig</script>
-			<param>inputPath=${ds_bwndataMetadataInputPath}</param>
-			<param>outputPath=${ds_similarityOutputPath}</param>
+			<param>inputPath=${bwndataMetadataInputPath}</param>
+			<param>outputPath=${similarityOutputPath}</param>
 			<param>commonJarsPath=${commonJarsPath}</param>
-			<param>parallel=${ds_parallel}</param>
-			<param>tmpCompressionCodec=${ds_tmpCompressionCodec}</param>
-			<param>sample=${ds_sample}</param>
-			<param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>
-			<param>ds_scheduler=${ds_scheduler}</param>
-			<param>tfidfTopnTermPerDocument=${ds_tfidfTopnTermPerDocument}
+			<param>parallel=${parallel}</param>
+			<param>tmpCompressionCodec=${tmpCompressionCodec}</param>
+			
+			<param>mapredChildJavaOpts=${mapredChildJavaOpts}</param>
+			<param>sample=${sample}</param>
+			<param>tfidfTopnTermPerDocument=${tfidfTopnTermPerDocument}
 			</param>
-			<param>similarityTopnDocumentPerDocument=${ds_similarityTopnDocumentPerDocument}
+			<param>similarityTopnDocumentPerDocument=${similarityTopnDocumentPerDocument}
 			</param>
-			<param>removal_least_used=${ds_removal_least_used}</param>
-			<param>removal_rate=${ds_removal_rate}</param>
+			<param>removal_least_used=${removal_least_used}</param>
+			<param>removal_rate=${removal_rate}</param>
 			<file>macros.pig#macros.pig</file>
 		</pig>
 		<ok to='prepare_pairwise_sim-d' />
@@ -218,20 +252,20 @@
 	<action name='prepare_pairwise_sim'>
 		<pig>
 			<script>document-similarity-s2-e0-one-source.pig</script>
-			<param>inputPath=${ds_bwndataMetadataInputPath}</param>
-			<param>outputPath=${ds_similarityOutputPath}</param>
+			<param>inputPath=${bwndataMetadataInputPath}</param>
+			<param>outputPath=${similarityOutputPath}</param>
 			<param>commonJarsPath=${commonJarsPath}</param>
-			<param>parallel=${ds_parallel}</param>
-			<param>tmpCompressionCodec=${ds_tmpCompressionCodec}</param>
-			<param>sample=${ds_sample}</param>
-			<param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>
-			<param>ds_scheduler=${ds_scheduler}</param>
-			<param>tfidfTopnTermPerDocument=${ds_tfidfTopnTermPerDocument}
+			<param>parallel=${parallel}</param>
+			<param>tmpCompressionCodec=${tmpCompressionCodec}</param>
+			
+			<param>mapredChildJavaOpts=${mapredChildJavaOpts}</param>
+			<param>sample=${sample}</param>
+			<param>tfidfTopnTermPerDocument=${tfidfTopnTermPerDocument}
 			</param>
-			<param>similarityTopnDocumentPerDocument=${ds_similarityTopnDocumentPerDocument}
+			<param>similarityTopnDocumentPerDocument=${similarityTopnDocumentPerDocument}
 			</param>
-			<param>removal_least_used=${ds_removal_least_used}</param>
-			<param>removal_rate=${ds_removal_rate}</param>
+			<param>removal_least_used=${removal_least_used}</param>
+			<param>removal_rate=${removal_rate}</param>
 			<file>macros.pig#macros.pig</file>
 		</pig>
 		<ok to='pairwise_sim-d' />
@@ -250,20 +284,20 @@
 		<pig>
 			<script>document-similarity-s2-leftsim_advanced_inverted_cosine.pig
 			</script>
-			<param>inputPath=${ds_bwndataMetadataInputPath}</param>
-			<param>outputPath=${ds_similarityOutputPath}</param>
+			<param>inputPath=${bwndataMetadataInputPath}</param>
+			<param>outputPath=${similarityOutputPath}</param>
 			<param>commonJarsPath=${commonJarsPath}</param>
-			<param>parallel=${ds_parallel}</param>
-			<param>tmpCompressionCodec=${ds_tmpCompressionCodec}</param>
-			<param>sample=${ds_sample}</param>
-			<param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>
-			<param>ds_scheduler=${ds_scheduler}</param>
-			<param>tfidfTopnTermPerDocument=${ds_tfidfTopnTermPerDocument}
+			<param>parallel=${parallel}</param>
+			<param>tmpCompressionCodec=${tmpCompressionCodec}</param>
+			
+			<param>mapredChildJavaOpts=${mapredChildJavaOpts}</param>
+			<param>sample=${sample}</param>
+			<param>tfidfTopnTermPerDocument=${tfidfTopnTermPerDocument}
 			</param>
-			<param>similarityTopnDocumentPerDocument=${ds_similarityTopnDocumentPerDocument}
+			<param>similarityTopnDocumentPerDocument=${similarityTopnDocumentPerDocument}
 			</param>
-			<param>removal_least_used=${ds_removal_least_used}</param>
-			<param>removal_rate=${ds_removal_rate}</param>
+			<param>removal_least_used=${removal_least_used}</param>
+			<param>removal_rate=${removal_rate}</param>
 			<file>macros.pig#macros.pig</file>
 		</pig>
 		<ok to='normalize_sim_first_step-d' />
@@ -282,20 +316,20 @@
 		<pig>
 			<script>document-similarity-s3-e1-topn_advanced_cosine_normalized.pig
 			</script>
-			<param>inputPath=${ds_bwndataMetadataInputPath}</param>
-			<param>outputPath=${ds_similarityOutputPath}</param>
+			<param>inputPath=${bwndataMetadataInputPath}</param>
+			<param>outputPath=${similarityOutputPath}</param>
 			<param>commonJarsPath=${commonJarsPath}</param>
-			<param>parallel=${ds_parallel}</param>
-			<param>tmpCompressionCodec=${ds_tmpCompressionCodec}</param>
-			<param>sample=${ds_sample}</param>
-			<param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>
-			<param>ds_scheduler=${ds_scheduler}</param>
-			<param>tfidfTopnTermPerDocument=${ds_tfidfTopnTermPerDocument}
+			<param>parallel=${parallel}</param>
+			<param>tmpCompressionCodec=${tmpCompressionCodec}</param>
+			
+			<param>mapredChildJavaOpts=${mapredChildJavaOpts}</param>
+			<param>sample=${sample}</param>
+			<param>tfidfTopnTermPerDocument=${tfidfTopnTermPerDocument}
 			</param>
-			<param>similarityTopnDocumentPerDocument=${ds_similarityTopnDocumentPerDocument}
+			<param>similarityTopnDocumentPerDocument=${similarityTopnDocumentPerDocument}
 			</param>
-			<param>removal_least_used=${ds_removal_least_used}</param>
-			<param>removal_rate=${ds_removal_rate}</param>
+			<param>removal_least_used=${removal_least_used}</param>
+			<param>removal_rate=${removal_rate}</param>
 			<file>macros.pig#macros.pig</file>
 		</pig>
 		<ok to='normalize_sim_second_step-d' />
@@ -314,20 +348,20 @@
 		<pig>
 			<script>document-similarity-s3-e2-topn_advanced_cosine_normalized.pig
 			</script>
-			<param>inputPath=${ds_bwndataMetadataInputPath}</param>
-			<param>outputPath=${ds_similarityOutputPath}</param>
+			<param>inputPath=${bwndataMetadataInputPath}</param>
+			<param>outputPath=${similarityOutputPath}</param>
 			<param>commonJarsPath=${commonJarsPath}</param>
-			<param>parallel=${ds_parallel}</param>
-			<param>tmpCompressionCodec=${ds_tmpCompressionCodec}</param>
-			<param>sample=${ds_sample}</param>
-			<param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>
-			<param>ds_scheduler=${ds_scheduler}</param>
-			<param>tfidfTopnTermPerDocument=${ds_tfidfTopnTermPerDocument}
+			<param>parallel=${parallel}</param>
+			<param>tmpCompressionCodec=${tmpCompressionCodec}</param>
+			
+			<param>mapredChildJavaOpts=${mapredChildJavaOpts}</param>
+			<param>sample=${sample}</param>
+			<param>tfidfTopnTermPerDocument=${tfidfTopnTermPerDocument}
 			</param>
-			<param>similarityTopnDocumentPerDocument=${ds_similarityTopnDocumentPerDocument}
+			<param>similarityTopnDocumentPerDocument=${similarityTopnDocumentPerDocument}
 			</param>
-			<param>removal_least_used=${ds_removal_least_used}</param>
-			<param>removal_rate=${ds_removal_rate}</param>
+			<param>removal_least_used=${removal_least_used}</param>
+			<param>removal_rate=${removal_rate}</param>
 			<file>macros.pig#macros.pig</file>
 		</pig>
 		<ok to='store-to-protobuf-d' />
@@ -346,20 +380,20 @@
 		<pig>
 			<script>document-similarity-s4-e1-serialize-to-pb.pig
 			</script>
-			<param>inputPath=${ds_bwndataMetadataInputPath}</param>
-			<param>outputPath=${ds_similarityOutputPath}</param>
+			<param>inputPath=${bwndataMetadataInputPath}</param>
+			<param>outputPath=${similarityOutputPath}</param>
 			<param>commonJarsPath=${commonJarsPath}</param>
-			<param>parallel=${ds_parallel}</param>
-			<param>tmpCompressionCodec=${ds_tmpCompressionCodec}</param>
-			<param>sample=${ds_sample}</param>
-			<param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>
-			<param>ds_scheduler=${ds_scheduler}</param>
-			<param>tfidfTopnTermPerDocument=${ds_tfidfTopnTermPerDocument}
+			<param>parallel=${parallel}</param>
+			<param>tmpCompressionCodec=${tmpCompressionCodec}</param>
+			
+			<param>mapredChildJavaOpts=${mapredChildJavaOpts}</param>
+			<param>sample=${sample}</param>
+			<param>tfidfTopnTermPerDocument=${tfidfTopnTermPerDocument}
 			</param>
-			<param>similarityTopnDocumentPerDocument=${ds_similarityTopnDocumentPerDocument}
+			<param>similarityTopnDocumentPerDocument=${similarityTopnDocumentPerDocument}
 			</param>
-			<param>removal_least_used=${ds_removal_least_used}</param>
-			<param>removal_rate=${ds_removal_rate}</param>
+			<param>removal_least_used=${removal_least_used}</param>
+			<param>removal_rate=${removal_rate}</param>
 			<file>macros.pig#macros.pig</file>
 		</pig>
 		<ok to='remove_sideproducts-corr-d' />
@@ -368,23 +402,23 @@
 
 	<decision name="remove_sideproducts-corr-d">
 		<switch>
-			<case to="remove_sideproducts-corr">${ds_remove_sideproducts eq "true"}</case>
+			<case to="remove_sideproducts-corr">${remove_sideproducts eq "true"}</case>
 			<default to="end" />
 		</switch>
 	</decision>
 	
 	<action name="remove_sideproducts-corr">
 		<fs>
-			<delete path="${ds_similarityOutputPath}/filtered-by-ranked-word-count" />
-			<delete path="${ds_similarityOutputPath}/filtered-by-ranked-word-count_rejected" />
-			<delete path="${ds_similarityOutputPath}/ranked-word-count" />
-			<delete path="${ds_similarityOutputPath}/raw" />
-			<delete path="${ds_similarityOutputPath}/term" />
-			<delete path="${ds_similarityOutputPath}/term-count" />
-			<delete path="${ds_similarityOutputPath}/tfidf" />
-			<delete path="${ds_similarityOutputPath}/similarity/nominator" />
-			<delete path="${ds_similarityOutputPath}/similarity/denominator" />
-			<delete path="${ds_similarityOutputPath}/similarity/denominator/normalizedleftdocs" />
+			<delete path="${similarityOutputPath}/filtered-by-ranked-word-count" />
+			<delete path="${similarityOutputPath}/filtered-by-ranked-word-count_rejected" />
+			<delete path="${similarityOutputPath}/ranked-word-count" />
+			<delete path="${similarityOutputPath}/raw" />
+			<delete path="${similarityOutputPath}/term" />
+			<delete path="${similarityOutputPath}/term-count" />
+			<delete path="${similarityOutputPath}/tfidf" />
+			<delete path="${similarityOutputPath}/similarity/nominator" />
+			<delete path="${similarityOutputPath}/similarity/denominator" />
+			<delete path="${similarityOutputPath}/similarity/denominator/normalizedleftdocs" />
 		</fs>
 		<ok to="end" />
 		<error to="end" />
