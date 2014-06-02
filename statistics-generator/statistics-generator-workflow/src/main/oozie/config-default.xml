@@ -78,5 +78,23 @@
     <name>limit</name>
     <value>3</value>
   </property>
+
+
+  <property>
+    <name>unfilteredInput</name>
+    <value> </value>
+  </property>
+  <property>
+    <name>filteredInput</name>
+    <value> </value>
+  </property>
+  <property>
+    <name>allStatistics</name>
+    <value> </value>
+  </property>
+  <property>
+    <name>aggregatedStatistics</name>
+    <value> </value>
+  </property>
 </configuration>
 

@@ -78,7 +78,7 @@
 		</property>
 		<property>
 			<name>and_threshold</name>
-			<value>-0.8</value>
+			<value>-1.00011666173005</value>
 			<description>Initial value for calculating affinity between contributors: [-1.0; 0].</description>
 		</property>
 		<property>
@@ -96,13 +96,11 @@
 			<value>1000000000</value>
 			<description>Upper limit on the size of the contributors group for aproximate disambiguation algorithm with storing calculated similarities.</description>
 		</property>
-		<property>
-			<name>and_feature_info</name>
-			<!--<value>"CoAuthorsSnameDisambiguatorFullList#EX_AUTH_SNAMES#-0.0000166#8,ClassifCodeDisambiguator#EX_CLASSIFICATION_CODES#0.99#12,KeyphraseDisambiguator#EX_KEYWORDS_SPLIT#0.99#22,KeywordDisambiguator#EX_KEYWORDS#0.0000369#40".</value>-->
-			<!--<value>"IntersectionPerMaxval#EX_DOC_AUTHS_SNAMES#1.0#1"</value>-->
-			<value>"IntersectionPerSum#EX_CLASSIFICATION_CODES#0.3#1,IntersectionPerSum#EX_KEYWORDS_SPLIT#0.3#1,IntersectionPerSum#EX_TITLE_SPLIT#0.2#1,IntersectionPerSum#EX_DOC_AUTHS_SNAMES#0.4#1,IntersectionPerSum#EX_EMAIL#1.0#1,IntersectionPerSum#EX_AUTH_FNAMES_FST_LETTER#0.4#1"</value>
-			<description>Features description - model for calculating affinity and contributors clustering. Value in format: "Disambiguator_name#Feature_extractor_name#weight#coefficient_of_the_maximum_number_of_occurrences,...".</description>
-		</property>
+                <property>
+                        <name>and_feature_info</name>
+                        <value>"Intersection#EX_PERSON_IDS#inf#1,CosineSimilarity#EX_CLASSIFICATION_CODES#772.692964079035#1,CosineSimilarity#EX_KEYWORDS_SPLIT#38.8749661175105#1,CosineSimilarity#EX_KEYWORDS#24.2728641349849#1,CosineSimilarity#EX_TITLE_SPLIT#355.529468017407#1,CosineSimilarity#EX_YEAR#0#1,CosineSimilarity#EX_TITLE#6#1,CosineSimilarity#EX_DOC_AUTHS_SNAMES#3438.44777889656#1,CosineSimilarity#EX_DOC_AUTHS_FNAME_FST_LETTER#3687.11964707998#1,CosineSimilarity#EX_AUTH_FNAMES_FST_LETTER#4738.63437905496#1,CosineSimilarity#EX_AUTH_FNAME_FST_LETTER#4748.59274849462#1,CosineSimilarity#EX_EMAIL#0#1"</value>
+                        <description>Features description - model for calculating affinity and contributors clustering. Value in format: "Disambiguator_name#Feature_extractor_name#weight#coefficient_of_the_maximum_number_of_occurrences,...".</description>
+                </property>
 		<property>
 			<name>and_statistics</name>
 			<value>false</value>

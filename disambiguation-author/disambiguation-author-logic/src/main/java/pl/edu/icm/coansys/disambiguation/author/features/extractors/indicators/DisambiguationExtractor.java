@@ -20,6 +20,7 @@ package pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators;
 import pl.edu.icm.coansys.disambiguation.author.normalizers.DiacriticsRemover;
 import pl.edu.icm.coansys.disambiguation.author.normalizers.PigNormalizer;
 import pl.edu.icm.coansys.disambiguation.author.normalizers.ToHashCode;
+import pl.edu.icm.coansys.disambiguation.author.normalizers.ToLowerCase;
 
 public class DisambiguationExtractor {
 
@@ -28,6 +29,7 @@ public class DisambiguationExtractor {
 	public DisambiguationExtractor(){
 		normalizers = new PigNormalizer[] {
 				new DiacriticsRemover(), 
+				new ToLowerCase(),
 				new ToHashCode()
 			};
 	}
