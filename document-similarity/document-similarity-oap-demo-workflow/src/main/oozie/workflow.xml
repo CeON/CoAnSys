@@ -5,7 +5,7 @@
 			<job-tracker>${jobTracker}</job-tracker>
 			<name-node>${nameNode}</name-node>
 			<prepare>
-				<delete path="${ds_similarityOutputPath}" />
+				<delete path="${similarityOutputPath}" />
 			</prepare>
 			<configuration>
 				<property>
@@ -18,15 +18,15 @@
                                 </property>
 			</configuration>
 			<script>docsimdemo-s1.pig</script>
-			<param>inputPath=${ds_bwndataMetadataInputPath}</param>
-			<param>outputPath=${ds_similarityOutputPath}</param>
+			<param>inputPath=${bwndataMetadataInputPath}</param>
+			<param>outputPath=${similarityOutputPath}</param>
 			<param>commonJarsPath=${commonJarsPath}</param>
-			<param>parallel=${ds_parallel}</param>
-			<param>tmpCompressionCodec=${ds_tmpCompressionCodec}</param>
-			<param>sample=${ds_sample}</param>
-			<param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>
-			<param>ds_scheduler=${ds_scheduler}</param>
-			<param>tfidfMinValue=${ds_tfidfMinValue}</param>
+			<param>parallel=${parallel}</param>
+			<param>tmpCompressionCodec=${tmpCompressionCodec}</param>
+			<param>sample=${sample}</param>
+			<param>mapredChildJavaOpts=${mapredChildJavaOpts}</param>
+			<param>scheduler=${scheduler}</param>
+			<param>tfidfMinValue=${tfidfMinValue}</param>
 		</pig>
 		<ok to='pairwise-sim' />
 		<error to='kill' />
@@ -47,15 +47,15 @@
                                 </property>
 			</configuration>
 			<script>docsimdemo-s2.pig</script>
-			<param>inputPath=${ds_bwndataMetadataInputPath}</param>
-			<param>outputPath=${ds_similarityOutputPath}</param>
+			<param>inputPath=${bwndataMetadataInputPath}</param>
+			<param>outputPath=${similarityOutputPath}</param>
 			<param>commonJarsPath=${commonJarsPath}</param>
-			<param>parallel=${ds_parallel}</param>
-			<param>tmpCompressionCodec=${ds_tmpCompressionCodec}</param>
-			<param>sample=${ds_sample}</param>
-			<param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>
-			<param>ds_scheduler=${ds_scheduler}</param>
-			<param>tfidfMinValue=${ds_tfidfMinValue}</param>
+			<param>parallel=${parallel}</param>
+			<param>tmpCompressionCodec=${tmpCompressionCodec}</param>
+			<param>sample=${sample}</param>
+			<param>mapredChildJavaOpts=${mapredChildJavaOpts}</param>
+			<param>scheduler=${scheduler}</param>
+			<param>tfidfMinValue=${tfidfMinValue}</param>
 		</pig>
 		<ok to='calculate_final_results' />
 		<error to='kill' />
@@ -76,15 +76,15 @@
                                 </property>
 			</configuration>
 			<script>docsimdemo-s3.pig</script>
-			<param>inputPath=${ds_bwndataMetadataInputPath}</param>
-			<param>outputPath=${ds_similarityOutputPath}</param>
+			<param>inputPath=${bwndataMetadataInputPath}</param>
+			<param>outputPath=${similarityOutputPath}</param>
 			<param>commonJarsPath=${commonJarsPath}</param>
-			<param>parallel=${ds_parallel}</param>
-			<param>tmpCompressionCodec=${ds_tmpCompressionCodec}</param>
-			<param>sample=${ds_sample}</param>
-			<param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>
-			<param>ds_scheduler=${ds_scheduler}</param>
-			<param>tfidfMinValue=${ds_tfidfMinValue}</param>
+			<param>parallel=${parallel}</param>
+			<param>tmpCompressionCodec=${tmpCompressionCodec}</param>
+			<param>sample=${sample}</param>
+			<param>mapredChildJavaOpts=${mapredChildJavaOpts}</param>
+			<param>scheduler=${scheduler}</param>
+			<param>tfidfMinValue=${tfidfMinValue}</param>
 		</pig>
 		<ok to='end' />
 		<error to='kill' />

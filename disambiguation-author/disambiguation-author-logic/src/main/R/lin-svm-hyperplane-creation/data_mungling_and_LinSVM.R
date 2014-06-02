@@ -1,5 +1,5 @@
-pathToInputFile <- "/home/pdendek/icm_dane/pbn_bojan_X.csv"
-pathToInputFile2 = "/home/pdendek/icm_dane/pbn_bojan_corrected.csv"
+pathToInputFile <- "/home/pdendek/icm_dane/pbn_bojan_1k.csv"
+pathToInputFile2 = "/home/pdendek/icm_dane/pbn_bojan_1k_corrected.csv"
 mungle_data <- function(pathToInputFile,pathToInputFile2){
   print("FUN:mungle_data()")
   pbn_bojan <- read.delim(pathToInputFile, header=F)
@@ -8,9 +8,11 @@ mungle_data <- function(pathToInputFile,pathToInputFile2){
   #V26: EX_AUTH_FNAMES_FST_LETTER#V29: EX_AUTH_FNAME_FST_LETTER#V32: EX_PERSON_ID#V35: EX_EMAIL
   class(pbn_bojan)
   features.name.alllist <- unlist(pbn_bojan[1,seq(2,35,3)])
-  features.name.1 <- as.vector( features.name.alllist[-(length(features)-1)] )
-  features.name.2 <- as.vector( features.name.alllist[length(features)-1] )
+  
+  features.name.1 <- as.vector( features.name.alllist[-(length(features.name.alllist)-1)] )
+  features.name.2 <- as.vector( features.name.alllist[length(features.name.alllist)-1] )
   features.name <- c(features.name.1,features.name.2)
+  head(features.name)
   features.value.max <- pbn_bojan[,seq(2,35,3)+1]
   features.value.contr <- pbn_bojan[,seq(2,35,3)+2]
   
@@ -128,8 +130,8 @@ main <- function(pI){
 run <- function(){
   print("FUN:run()")
   sta <- date()
-  inData <- "/home/pdendek/icm_dane/pbn_bojan_X.csv"
-  midData <- "/home/pdendek/icm_dane/pbn_bojan_corrected.csv"
+  inData <- "/home/pdendek/icm_dane/pbn_bojan_1k.csv"
+  midData <- "/home/pdendek/icm_dane/pbn_bojan_1k_corrected.csv"
   mungle_data(inData,midData)
   retVals <- main(midData)
   print(paste("START",sta))
