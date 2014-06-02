@@ -57,6 +57,7 @@
 				<filtering>false</filtering>
 				<includes>
 					<include>**/*.pig</include>
+					<include>**/*.py</include>
 				</includes>
 				<excludes>
 					<exclude>**/macros.pig</exclude>

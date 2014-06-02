@@ -1,60 +1,78 @@
 <workflow-app name="${project}_${subproject_main}" xmlns="uri:oozie:workflow:0.4">
 	<parameters>
 		<property>
-			<name>ds_remove_sideproducts</name>
+			<name>remove_sideproducts</name>
 			<value>true</value>
 		</property>
 		<property>
-			<name>ds_pool</name>
+			<name>pool</name>
 			<value>default</value>
 		</property>
 		<property>
-			<name>ds_scheduler</name>
-			<value>${ds_pool}</value>
+			<name>mapredChildJavaOpts</name>
+			<value>-Xmx8g</value>
+		</property>
+		<property>
+			<name>parallel</name>
+			<value>20</value>
 		</property>
 
 		<property>
-			<name>ds_similarityOutputPath</name>
+			<name>load_filterTerms_calcTfidf_filter_ship_ranked</name>
+			<value>false</value>
+		</property>
+		<property>
+			<name>load_filterTerms_calcTfidf_filter_ranked</name>
+			<value>true</value>
+		</property>
+
+		<property>
+			<name>serialize_to_proto</name>
+			<value>false</value>
+		</property>
+
+		<property>
+			<name>similarityOutputPath</name>
 			<value>${workflowPath}/../integrated_results/</value>
 		</property>
 
 		<property>
 			<name>inputPathProto</name>
-			<value>${ds_bwndataMetadataInputPath}</value>
+			<value>${bwndataMetadataInputPath}</value>
 		</property>
 		<property>
 			<name>outputPathDocSimMajor</name>
-			<value>${ds_similarityOutputPath}/major/</value>
+			<value>${similarityOutputPath}/major/</value>
 		</property>
 		<property>
 			<name>inputPathDocSimMajor</name>
-			<value>${ds_similarityOutputPath}/major/similarity/normalizedleftdocs/
+			<value>${similarityOutputPath}/major/similarity/normalizedleftdocs/
 			</value>
 		</property>
 		<property>
 			<name>inputPathDocSimMinor</name>
-			<value>${ds_similarityOutputPath}/minor/tfidf/nonweighted/
+			<value>${similarityOutputPath}/minor/tfidf/nonweighted/
 			</value>
 		</property>
 		<property>
 			<name>outputPathDocSimMinor</name>
-			<value>${ds_similarityOutputPath}/minor/</value>
+			<value>${similarityOutputPath}/minor/</value>
 		</property>
 		<property>
 			<name>outputPathRecalc</name>
-			<value>${ds_similarityOutputPath}/recalc/</value>
+			<value>${similarityOutputPath}/recalc/</value>
 		</property>
 		<property>
 			<name>finalOutputPath</name>
-			<value>${ds_similarityOutputPath}/final/similarity/normalizedleftdocs/
+			<value>${similarityOutputPath}/final/similarity/normalizedleftdocs/
 			</value>
 		</property>
 		<property>
 			<name>finalOutputPathGlobal</name>
-			<value>${ds_similarityOutputPath}/final/</value>
+			<value>${similarityOutputPath}/final/</value>
 		</property>
 		<property>
-			<name>ds_serialize_to_proto</name>
+			<name>serialize_to_proto</name>
 			<value>false</value>
 		</property>
 	</parameters>
@@ -68,12 +86,12 @@
 				<value>true</value>
 			</property>
 			<property>
-				<name>mapred.fairscheduler.pool</name>
-				<value>${ds_pool}</value>
+				<name>mapred.fair.pool</name>
+				<value>${pool}</value>
 			</property>
 			<property>
-				<name>oozie.launcher.mapred.fairscheduler.pool</name>
-				<value>${ds_pool}</value>
+				<name>oozie.launcher.mapred.fair.pool</name>
+				<value>${pool}</value>
 			</property>
 			<property>
 				<name>mapred.job.queue.name</name>
@@ -86,6 +104,14 @@
 			<property>
 				<name>mapred.reducer.new-api</name>
 				<value>true</value>
+			</property>
+			<property>
+				<name>mapredChildJavaOpts</name>
+				<value>${mapredChildJavaOpts}</value>
+			</property>
+			<property>
+				<name>parallel</name>
+				<value>${parallel}</value>
 			</property>
 		</configuration>
 	</global>
@@ -105,7 +131,7 @@
 
 	<action name="PREP_calculate-major-docsim">
 		<fs>
-			<delete path="${ds_similarityOutputPath}" />
+			<delete path="${similarityOutputPath}" />
 		</fs>
 		<ok to="calculate-major-docsim" />
 		<error to="calculate-major-docsim" />
@@ -118,11 +144,19 @@
 			<propagate-configuration />
 			<configuration>
 				<property>
+					<name>load_filterTerms_calcTfidf_filter_ship_ranked</name>
+					<value>${load_filterTerms_calcTfidf_filter_ship_ranked}</value>
+				</property>
+				<property>
+					<name>load_filterTerms_calcTfidf_filter_ranked</name>
+					<value>${load_filterTerms_calcTfidf_filter_ranked}</value>
+				</property>
+				<property>
 					<name>oozie.wf.subworkflow.classpath.inheritance</name>
 					<value>true</value>
 				</property>
 				<property>
-					<name>ds_remove_sideproducts</name>
+					<name>remove_sideproducts</name>
 					<value>false</value>
 				</property>
 				<property>
@@ -134,11 +168,11 @@
 					<value>true</value>
 				</property>
 				<property>
-					<name>ds_bwndataMetadataInputPath</name>
+					<name>bwndataMetadataInputPath</name>
 					<value>${inputPathProto}</value>
 				</property>
 				<property>
-					<name>ds_similarityOutputPath</name>
+					<name>similarityOutputPath</name>
 					<value>${outputPathDocSimMajor}</value>
 				</property>
 				<property>
@@ -231,7 +265,7 @@
 					<value>true</value>
 				</property>
 				<property>
-					<name>ds_remove_sideproducts</name>
+					<name>remove_sideproducts</name>
 					<value>false</value>
 				</property>
 				<property>
@@ -243,24 +277,28 @@
 					<value>true</value>
 				</property>
 				<property>
-					<name>ds_removal_least_used</name>
+					<name>removal_least_used</name>
 					<value>-1</value>
 				</property>
 				<property>
-					<name>ds_removal_rate</name>
+					<name>removal_rate</name>
 					<value>1.1</value>
 				</property>
 				<property>
-					<name>ds_sample</name>
+					<name>sample</name>
 					<value>1.0</value>
 				</property>
 				<property>
-					<name>ds_bwndataMetadataInputPath</name>
+					<name>bwndataMetadataInputPath</name>
 					<value>${outputPathRecalc}/documents-to-process</value>
 				</property>
 				<property>
-					<name>ds_similarityOutputPath</name>
+					<name>similarityOutputPath</name>
 					<value>${outputPathDocSimMinor}</value>
+				</property>
+				<property>
+					<name>load_filterTerms_calcTfidf_filter_ship_ranked</name>
+					<value>false</value>
 				</property>
 				<property>
 					<name>load_filterTerms_calcTfidf_filter_ranked</name>
@@ -331,7 +369,7 @@
 					<value>true</value>
 				</property>
 				<property>
-					<name>ds_similarityOutputPath</name>
+					<name>similarityOutputPath</name>
 					<value>${outputPathDocSimMinor}</value>
 				</property>
 			</configuration>
@@ -351,7 +389,7 @@
 					<value>true</value>
 				</property>
 				<property>
-					<name>ds_remove_sideproducts</name>
+					<name>remove_sideproducts</name>
 					<value>false</value>
 				</property>
 				<property>
@@ -363,7 +401,7 @@
 					<value>true</value>
 				</property>
 				<property>
-					<name>ds_similarityOutputPath</name>
+					<name>similarityOutputPath</name>
 					<value>${finalOutputPathGlobal}</value>
 				</property>
 				<property>
@@ -396,7 +434,7 @@
 				</property>
 				<property>
 					<name>store_to_protobuf</name>
-					<value>${ds_serialize_to_proto}</value>
+					<value>${serialize_to_proto}</value>
 				</property>
 			</configuration>
 		</sub-workflow>
@@ -406,18 +444,17 @@
 
 	<decision name="finalize">
 		<switch>
-			<case to="remove_sideproducts-corr">${ds_remove_sideproducts eq "true"}</case>
+			<case to="remove_sideproducts-corr">${remove_sideproducts eq "true"}</case>
 			<default to="end" />
 		</switch>
 	</decision>
 
 	<action name="remove_sideproducts-corr">
 		<fs>
-			<delete path="${ds_similarityOutputPath}/major" />
-			<delete path="${ds_similarityOutputPath}/minor" />
-			<delete path="${ds_similarityOutputPath}/recalc" />
-			<delete
-				path="${ds_similarityOutputPath}/final/similarity/normalizedleftdocs" />
+			<delete path="${similarityOutputPath}/major" />
+			<delete path="${similarityOutputPath}/minor" />
+			<delete path="${similarityOutputPath}/recalc" />
+			<delete path="${similarityOutputPath}/final/similarity/normalizedleftdocs" />
 		</fs>
 		<ok to="end" />
 		<error to="end" />
@@ -429,6 +466,4 @@
 
 	<end name="end" />
 
-	<!-- <kill name="fail"> <message>Workflow failed</message> </kill> <end 
-		name="end" /> -->
 </workflow-app>
