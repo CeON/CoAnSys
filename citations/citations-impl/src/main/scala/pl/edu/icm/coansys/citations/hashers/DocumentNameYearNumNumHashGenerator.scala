@@ -20,24 +20,22 @@ package pl.edu.icm.coansys.citations.hashers
 
 import pl.edu.icm.ceon.scala_commons.collections
 import pl.edu.icm.coansys.citations.data.MatchableEntity
-import pl.edu.icm.coansys.citations.util.misc._
 import pl.edu.icm.coansys.citations.hashers.util._
+import pl.edu.icm.coansys.citations.util.misc
+import pl.edu.icm.coansys.citations.util.misc._
 import scala.util.Try
+
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
-class CitationNameYearPagesHashGenerator extends HashGenerator {
-  def generate(entity: MatchableEntity): List[String] = {
-    val text = entity.rawText.getOrElse(genText(entity))
-    val numbers = digitsNormaliseTokenise(text)
-    // too many citations to handle
-    if (numbers.length > 10) return Nil
-
-    for {
-      author <- lettersNormaliseTokenise(text).filterNot(stopWords).distinct.take(4)
-      year <- numbers.filter(_.length == 4).flatMap(x => Try(x.toInt).toOption).filter(x => x < 2050 && x > 1900)
-      (bpage, epage) <- collections.sortedPairs(collections.excludeOne(numbers.flatMap(x => Try(x.toInt).toOption), (x:Int) => x == year))
-    } yield List(author, year, bpage, epage).mkString("#")
-  }
+class DocumentNameYearNumNumHashGenerator extends HashGenerator {
+  override def generate(entity: MatchableEntity): Iterable[String] = for {
+    author <- misc.lettersNormaliseTokenise(entity.author).filterNot(stopWords).distinct.take(4)
+    year <- digitsNormaliseTokenise(entity.year).filter(_.length == 4).flatMap(x => Try(x.toInt).toOption).filter(x => x < 2050 && x > 1900)
+    (num1, num2) <- collections.sortedPairs(digitsNormaliseTokenise(List(entity.pages, entity.issue, entity.volume).mkString(" ")).flatMap(x => Try(x.toInt).toOption))
+    bluredYear <- blur(year)
+    bluredNum1 <- blur(num1)
+    bluredNum2 <- blur(num2)
+  } yield List(author, bluredYear, bluredNum1, bluredNum2).mkString("#")
 }
