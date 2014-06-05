@@ -37,6 +37,10 @@
             <value>36</value>
         </property>
         <property>
+            <name>jobShuffleInputBufferPercent</name>
+            <value>0.70</value>
+        </property>
+        <property>
             <name>workingDirectory</name>
         </property>
         <property>
@@ -84,6 +88,10 @@
             <property>
                 <name>mapred.reduce.tasks</name>
                 <value>${reduceTasks}</value>
+            </property>
+            <property>
+                <name>mapred.job.shuffle.input.buffer.percent</name>
+                <value>${jobShuffleInputBufferPercent}</value>
             </property>
         </configuration>
     </global>
