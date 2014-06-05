@@ -21,10 +21,11 @@
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 
-REGISTER ../disambiguation/lib/*.jar
-REGISTER /usr/lib/pig/piggybank.jar
+--REGISTER ../disambiguation/lib/*.jar
+--REGISTER /usr/lib/pig/piggybank.jar
 
-%DEFAULT and_inputDocsData merged/pbn_mbojan_no_person_id_in_model
+%DEFAULT and_inputDocsData merged/pbn_mbojan
+%DEFAULT and_accuracy_check_output acc_stat/pbn_mbojan
 %DEFAULT and_sample 1.0
 %DEFAULT and_feature_info 'Intersection#EX_AUTH_FNAME#1.0#1,Intersection#EX_PERSON_PBN_ID#1.0#1,Intersection#EX_PERSON_COANSYS_ID#1.0#1'
 %DEFAULT and_lang 'all'
@@ -96,5 +97,6 @@ F = foreach E generate ((pbn == 1.0 and pbn == coansys) ? 1 : 0) as correct_same
 G = GROUP F ALL;
 --H = FOREACH G GENERATE SUM(F.correct_same) AS correct_same;
 H = FOREACH G GENERATE SUM(F.correct_same) AS correct_same, SUM(F.correct_not_same) AS correct_not_same, SUM(F.pbn_same_coanys_not_same) as pbn_same_coanys_not_same, SUM(F.pbn_not_same_coanys_same) as pbn_not_same_coanys_same;
-DESCRIBE H;
-DUMP H;
+--DESCRIBE H;
+--DUMP H;
+store H into '$and_accuracy_check_output' using PigStorage('-schema');

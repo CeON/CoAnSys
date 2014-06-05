@@ -148,6 +148,7 @@ store D1000 into '$and_splitted_output_apr_sim';
 store DX into '$and_splitted_output_apr_no_sim';
 
 -- storing relation contributor id - document id, which we need in future during serialization
-Q = foreach B generate cId, dockey;
+-- storing also external person ID for optional accuracy statistics after basic AND workflow
+-- note, that for optimization, external person ID might be under shorter name of EX_PERSON_ID feature, which is "8"
+Q = foreach B generate cId, dockey, ((metadata#"EX_PERSON_ID" != null) ? metadata#"EX_PERSON_ID" : metadata#"8") as ex_person_id, sname;
 store Q into '$and_cid_dockey';
-
