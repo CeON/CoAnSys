@@ -24,6 +24,7 @@
 -- outputContribs as input for this script
 %DEFAULT and_outputContribs 'workflows/pl.edu.icm.coansys-disambiguation-author-workflow/results/outputContribs'
 %DEFAULT and_cid_dockey 'workflows/pl.edu.icm.coansys-disambiguation-author-workflow/results/cid_dockey'
+%DEFAULT and_output_unserialized ''
 %DEFAULT and_outputPB 'finall_out'
 
 DEFINE serialize pl.edu.icm.coansys.disambiguation.author.pig.serialization.SERIALIZE_RESULTS();
@@ -59,14 +60,19 @@ set mapred.fairscheduler.pool $and_scheduler
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 
-CidDkey = LOAD '$and_cid_dockey' as (cId:chararray, docKey:chararray);
+CidDkey = LOAD '$and_cid_dockey' as (cId:chararray, docKey:chararray, ex_person_id_unused, sname_unused);
 CidAuuid = LOAD '$and_outputContribs/*' as (cId:chararray, uuid:chararray);
 
 A = JOIN CidDkey BY cId, CidAuuid BY cId;
-B = FOREACH A generate CidDkey::cId as cId, uuid as uuid, docKey as docKey;
+B = FOREACH A generate CidDkey::cId as cId, uuid as uuid, docKey as docKey, ex_person_id_unused, sname_unused;
+
+-- store unserialized results for optional accuracy checking
+-- (cId, coansysId, dockKey, externalId, sname)
+-- MAY BE COMMENTED IN PRODUCTION WHEN CHECKING NODE IN WORKFLOW IS TURNED OFF
+STORE B into '$and_output_unserialized'; 
+
+-- prepare and store serialized, final AND output
 C = group B by docKey;
-
 -- D = FOREACH C generate group as docKey, B as trio;
-
 E = FOREACH C generate FLATTEN(serialize(*));
 STORE E into '$and_outputPB' USING pl.edu.icm.coansys.commons.pig.udf.RichSequenceFileLoader('org.apache.hadoop.io.Text', 'org.apache.hadoop.io.BytesWritable');
