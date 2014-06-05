@@ -2,7 +2,7 @@
 %default commonJarsPath 'lib/$jars'
 REGISTER '$commonJarsPath'
 
-%default ds_removal_rate 0.99
+%default removal_rate 0.99
 %default outputPath 'hdfs://hadoop-master.vls.icm.edu.pl:8020/user/mhorst/documentssimilarity/chain/working_dir/results'
 %default DOC_TERM_ALL '/term/all'
 %default time '1'

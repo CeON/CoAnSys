@@ -2,17 +2,16 @@
 <oozie-maven-plugin> 
 	<main-project-pig>
 		<scripts>
-			<root>pig-main/</root>
-			<preserve>false</preserve>
-			<target>/</target>		
+			<root>pig-main</root>
+			<preserve>false</preserve>		
 			<includes>
-				<include>.*\.pig</include>
+				<include>.*document-similarity-s.*\.pig</include>
+				<include>.*rank\.py</include>
 			</includes>
 		</scripts>
 		<scripts>
-			<root>pig-macros/</root>
+			<root>pig-macros</root>
 			<preserve>false</preserve>
-			<target>lib/</target>
 			<includes>
 				<include>.*\.pig</include>
 			</includes>

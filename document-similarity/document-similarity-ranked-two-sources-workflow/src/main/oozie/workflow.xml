@@ -5,7 +5,7 @@
 			<job-tracker>${jobTracker}</job-tracker>
 			<name-node>${nameNode}</name-node>
 			<prepare>
-				<delete path="${ds_similarityOutputPath}" />
+				<delete path="${similarityOutputPath}" />
 			</prepare>
 			<configuration>
 				<property>
@@ -18,18 +18,18 @@
 				</property>
 			</configuration>
 			<script>document-similarity-s1-rank_filter.pig</script>
-			<param>inputPath=${ds_bwndataMetadataInputPath_sourceA}</param>
-			<param>outputPath=${ds_similarityOutputPath_sourceA}</param>
+			<param>inputPath=${bwndataMetadataInputPath_sourceA}</param>
+			<param>outputPath=${similarityOutputPath_sourceA}</param>
 			<param>commonJarsPath=${commonJarsPath}</param>
-			<param>parallel=${ds_parallel}</param>
-			<param>tmpCompressionCodec=${ds_tmpCompressionCodec}</param>
-			<param>sample=${ds_sample}</param>
-			<param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>
-			<param>ds_scheduler=${ds_scheduler}</param>
-			<param>tfidfTopnTermPerDocument=${ds_tfidfTopnTermPerDocument}</param>
-			<param>similarityTopnDocumentPerDocument=${ds_similarityTopnDocumentPerDocument}</param>
-			<param>removal_least_used=${ds_removal_least_used}</param>
-			<param>removal_rate=${ds_removal_rate}</param>
+			<param>parallel=${parallel}</param>
+			<param>tmpCompressionCodec=${tmpCompressionCodec}</param>
+			<param>sample=${sample}</param>
+			<param>mapredChildJavaOpts=${mapredChildJavaOpts}</param>
+			<param>scheduler=${scheduler}</param>
+			<param>tfidfTopnTermPerDocument=${tfidfTopnTermPerDocument}</param>
+			<param>similarityTopnDocumentPerDocument=${similarityTopnDocumentPerDocument}</param>
+			<param>removal_least_used=${removal_least_used}</param>
+			<param>removal_rate=${removal_rate}</param>
 		</pig>
 		<ok to='load_filterTerms_calcTfidf_filterTopN__sourceB' />
 		<error to='kill' />
@@ -40,7 +40,7 @@
 			<job-tracker>${jobTracker}</job-tracker>
 			<name-node>${nameNode}</name-node>
 			<prepare>
-				<delete path="${ds_similarityOutputPath}" />
+				<delete path="${similarityOutputPath}" />
 			</prepare>
 			<configuration>
 				<property>
@@ -53,18 +53,18 @@
 				</property>
 			</configuration>
 			<script>document-similarity-s1-rank_filter.pig</script>
-			<param>inputPath=${ds_bwndataMetadataInputPath_sourceB}</param>
-			<param>outputPath=${ds_similarityOutputPath_sourceB}</param>
+			<param>inputPath=${bwndataMetadataInputPath_sourceB}</param>
+			<param>outputPath=${similarityOutputPath_sourceB}</param>
 			<param>commonJarsPath=${commonJarsPath}</param>
-			<param>parallel=${ds_parallel}</param>
-			<param>tmpCompressionCodec=${ds_tmpCompressionCodec}</param>
-			<param>sample=${ds_sample}</param>
-			<param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>
-			<param>ds_scheduler=${ds_scheduler}</param>
-			<param>tfidfTopnTermPerDocument=${ds_tfidfTopnTermPerDocument}</param>
-			<param>similarityTopnDocumentPerDocument=${ds_similarityTopnDocumentPerDocument}</param>
-			<param>removal_least_used=${ds_removal_least_used}</param>
-			<param>removal_rate=${ds_removal_rate}</param>
+			<param>parallel=${parallel}</param>
+			<param>tmpCompressionCodec=${tmpCompressionCodec}</param>
+			<param>sample=${sample}</param>
+			<param>mapredChildJavaOpts=${mapredChildJavaOpts}</param>
+			<param>scheduler=${scheduler}</param>
+			<param>tfidfTopnTermPerDocument=${tfidfTopnTermPerDocument}</param>
+			<param>similarityTopnDocumentPerDocument=${similarityTopnDocumentPerDocument}</param>
+			<param>removal_least_used=${removal_least_used}</param>
+			<param>removal_rate=${removal_rate}</param>
 		</pig>
 		<ok to='prepare_pairwise_sim' />
 		<error to='kill' />
@@ -88,20 +88,20 @@
 				</property>
 			</configuration>
 			<script>document-similarity-s2-e0-two-sources.pig</script>
-			<param>inputPath=${ds_bwndataMetadataInputPath}</param>
-			<param>outputPath=${ds_similarityOutputPath}</param>
-			<param>outputPathOne=${ds_similarityOutputPath_sourceA}</param>
-			<param>outputPathTwo=${ds_similarityOutputPath_sourceB}</param>
+			<param>inputPath=${bwndataMetadataInputPath}</param>
+			<param>outputPath=${similarityOutputPath}</param>
+			<param>outputPathOne=${similarityOutputPath_sourceA}</param>
+			<param>outputPathTwo=${similarityOutputPath_sourceB}</param>
 			<param>commonJarsPath=${commonJarsPath}</param>
-			<param>parallel=${ds_parallel}</param>
-			<param>tmpCompressionCodec=${ds_tmpCompressionCodec}</param>
-			<param>sample=${ds_sample}</param>
-			<param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>
-			<param>ds_scheduler=${ds_scheduler}</param>
-			<param>tfidfTopnTermPerDocument=${ds_tfidfTopnTermPerDocument}</param>
-			<param>similarityTopnDocumentPerDocument=${ds_similarityTopnDocumentPerDocument}</param>
-			<param>removal_least_used=${ds_removal_least_used}</param>
-			<param>removal_rate=${ds_removal_rate}</param>
+			<param>parallel=${parallel}</param>
+			<param>tmpCompressionCodec=${tmpCompressionCodec}</param>
+			<param>sample=${sample}</param>
+			<param>mapredChildJavaOpts=${mapredChildJavaOpts}</param>
+			<param>scheduler=${scheduler}</param>
+			<param>tfidfTopnTermPerDocument=${tfidfTopnTermPerDocument}</param>
+			<param>similarityTopnDocumentPerDocument=${similarityTopnDocumentPerDocument}</param>
+			<param>removal_least_used=${removal_least_used}</param>
+			<param>removal_rate=${removal_rate}</param>
 		</pig>
 		<ok to='pairwise_sim' />
 		<error to='kill' />
@@ -122,18 +122,18 @@
 				</property>
 			</configuration>
 			<script>document-similarity-s2-leftsim_advanced_inverted_cosine_two_sources.pig</script>
-			<param>inputPath=${ds_bwndataMetadataInputPath}</param>
-			<param>outputPath=${ds_similarityOutputPath}</param>
+			<param>inputPath=${bwndataMetadataInputPath}</param>
+			<param>outputPath=${similarityOutputPath}</param>
 			<param>commonJarsPath=${commonJarsPath}</param>
-			<param>parallel=${ds_parallel}</param>
-			<param>tmpCompressionCodec=${ds_tmpCompressionCodec}</param>
-			<param>sample=${ds_sample}</param>
-			<param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>
-			<param>ds_scheduler=${ds_scheduler}</param>
-			<param>tfidfTopnTermPerDocument=${ds_tfidfTopnTermPerDocument}</param>
-			<param>similarityTopnDocumentPerDocument=${ds_similarityTopnDocumentPerDocument}</param>
-			<param>removal_least_used=${ds_removal_least_used}</param>
-			<param>removal_rate=${ds_removal_rate}</param>
+			<param>parallel=${parallel}</param>
+			<param>tmpCompressionCodec=${tmpCompressionCodec}</param>
+			<param>sample=${sample}</param>
+			<param>mapredChildJavaOpts=${mapredChildJavaOpts}</param>
+			<param>scheduler=${scheduler}</param>
+			<param>tfidfTopnTermPerDocument=${tfidfTopnTermPerDocument}</param>
+			<param>similarityTopnDocumentPerDocument=${similarityTopnDocumentPerDocument}</param>
+			<param>removal_least_used=${removal_least_used}</param>
+			<param>removal_rate=${removal_rate}</param>
 		</pig>
 		<ok to='normalize_sim_first_step' />
 		<error to='kill' />
@@ -154,20 +154,20 @@
 				</property>
 			</configuration>
 			<script>document-similarity-s3-e1-topn_advanced_cosine_normalized_two_sources.pig</script>
-			<param>inputPath=${ds_bwndataMetadataInputPath}</param>
-			<param>outputPath=${ds_similarityOutputPath}</param>
-			<param>outputPathOne=${ds_similarityOutputPath_sourceA}</param>
-			<param>outputPathTwo=${ds_similarityOutputPath_sourceB}</param>
+			<param>inputPath=${bwndataMetadataInputPath}</param>
+			<param>outputPath=${similarityOutputPath}</param>
+			<param>outputPathOne=${similarityOutputPath_sourceA}</param>
+			<param>outputPathTwo=${similarityOutputPath_sourceB}</param>
 			<param>commonJarsPath=${commonJarsPath}</param>
-			<param>parallel=${ds_parallel}</param>
-			<param>tmpCompressionCodec=${ds_tmpCompressionCodec}</param>
-			<param>sample=${ds_sample}</param>
-			<param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>
-			<param>ds_scheduler=${ds_scheduler}</param>
-			<param>tfidfTopnTermPerDocument=${ds_tfidfTopnTermPerDocument}</param>
-			<param>similarityTopnDocumentPerDocument=${ds_similarityTopnDocumentPerDocument}</param>
-			<param>removal_least_used=${ds_removal_least_used}</param>
-			<param>removal_rate=${ds_removal_rate}</param>
+			<param>parallel=${parallel}</param>
+			<param>tmpCompressionCodec=${tmpCompressionCodec}</param>
+			<param>sample=${sample}</param>
+			<param>mapredChildJavaOpts=${mapredChildJavaOpts}</param>
+			<param>scheduler=${scheduler}</param>
+			<param>tfidfTopnTermPerDocument=${tfidfTopnTermPerDocument}</param>
+			<param>similarityTopnDocumentPerDocument=${similarityTopnDocumentPerDocument}</param>
+			<param>removal_least_used=${removal_least_used}</param>
+			<param>removal_rate=${removal_rate}</param>
 		</pig>
 		<ok to='normalize_sim_second_step' />
 		<error to='kill' />
@@ -188,18 +188,18 @@
 				</property>
 			</configuration>
 			<script>document-similarity-s3-e2-topn_advanced_cosine_normalized_two_sources.pig</script>
-			<param>inputPath=${ds_bwndataMetadataInputPath}</param>
-			<param>outputPath=${ds_similarityOutputPath}</param>
+			<param>inputPath=${bwndataMetadataInputPath}</param>
+			<param>outputPath=${similarityOutputPath}</param>
 			<param>commonJarsPath=${commonJarsPath}</param>
-			<param>parallel=${ds_parallel}</param>
-			<param>tmpCompressionCodec=${ds_tmpCompressionCodec}</param>
-			<param>sample=${ds_sample}</param>
-			<param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>
-			<param>ds_scheduler=${ds_scheduler}</param>
-			<param>tfidfTopnTermPerDocument=${ds_tfidfTopnTermPerDocument}</param>
-			<param>similarityTopnDocumentPerDocument=${ds_similarityTopnDocumentPerDocument}</param>
-			<param>removal_least_used=${ds_removal_least_used}</param>
-			<param>removal_rate=${ds_removal_rate}</param>
+			<param>parallel=${parallel}</param>
+			<param>tmpCompressionCodec=${tmpCompressionCodec}</param>
+			<param>sample=${sample}</param>
+			<param>mapredChildJavaOpts=${mapredChildJavaOpts}</param>
+			<param>scheduler=${scheduler}</param>
+			<param>tfidfTopnTermPerDocument=${tfidfTopnTermPerDocument}</param>
+			<param>similarityTopnDocumentPerDocument=${similarityTopnDocumentPerDocument}</param>
+			<param>removal_least_used=${removal_least_used}</param>
+			<param>removal_rate=${removal_rate}</param>
 		</pig>
 		<ok to='end' />
 		<error to='kill' />

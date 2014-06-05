@@ -20,88 +20,102 @@ public class EvaluateWorkflows {
 			+ "/user/pdendek/docsim-on-oap/docsim-ranked-wf/";
 	static final String workflowPath = ooziewfapplicationpath;;
 	static final String commonJarsPath = "/usr/lib/hbase/lib/zookeeper.jar";
-	static final String ds_bwndataMetadataInputPath = "" + nameNode
-			+ "/user/mhorst/documentssimilarity/input_protobuf/2014-01-30";
-	static final String ds_similarityOutputPath = workflowPath
+	static final String bwndataMetadataInputPath = "" + nameNode
+			+ "/user/pdendek/oap-500k";
+	static final String similarityOutputPath = workflowPath
 			+ "/../results_oap_eval";
-	static final String ds_scheduler = "bigjobs";
-	static final String ds_tmpCompressionCodec = "gz";
+	static final String scheduler = "bigjobs";
+	static final String tmpCompressionCodec = "gz";
 
 	public static void main(String[] args) throws Exception {
 
-		String[] ds_removal_least_used_arr = new String[] { "10", "0", "1",
-				"2", "3", "5", "20", "40", "60" };
-		String[] ds_removal_rate_arr = new String[] { "0.99", "0.97", "0.95",
-				"0.9", "0.8", "0.6", "0.4", };
-		String[] ds_tfidfTopnTermPerDocument_arr = new String[] { "20", "10",
-				"5", "60", "80", "100", };
-		String[] ds_sample_arr = new String[] { "0.122", "0.7", "0.4", "1.0",
-				"0.05", "0.01", };
-		String[] ds_mapredChildJavaOpts_arr = new String[] { "10", "8", "6",
-				"4", "2", };
-		String[] ds_parallel_arr = new String[] { "40", "20", "10", "5", "2", };
+		String[] removal_least_used_arr = new String[] { "0" };
 
-		for (String ds_removal_least_used : ds_removal_least_used_arr) {
-			executeWorkflow(ds_removal_least_used,
-					ds_removal_rate_arr[0], ds_tfidfTopnTermPerDocument_arr[0],
-					ds_sample_arr[0], ds_mapredChildJavaOpts_arr[0],
-					ds_parallel_arr[0]);
-		}
+String[] removal_rate_arr = new String[] { 
+"0.955",
+"0.96",
+"0.965",
+"0.97",
+"0.975",
+"0.98",
+"0.985",
+"0.99",
+"0.995",
+"0.996",
+"0.997",
+"0.998",
+"0.999"
+};
+		
+String[] tfidfTopnTermPerDocument_arr = new String[] {
+				"80"};
+		String[] sample_arr = new String[] { "1.0" };
+		String[] mapredChildJavaOpts_arr = new String[] { "12"};
+		String[] parallel_arr = new String[] { "40" };
 
-		for (String ds_removal_rate : ds_removal_rate_arr) {
-			executeWorkflow(ds_removal_least_used_arr[0],
-					ds_removal_rate, ds_tfidfTopnTermPerDocument_arr[0],
-					ds_sample_arr[0], ds_mapredChildJavaOpts_arr[0],
-					ds_parallel_arr[0]);
+//		for (String removal_least_used : removal_least_used_arr) {
+//			executeWorkflow(removal_least_used,
+//					removal_rate_arr[0], tfidfTopnTermPerDocument_arr[0],
+//					sample_arr[0], mapredChildJavaOpts_arr[0],
+//					parallel_arr[0]);
+//		}
+//
+		for (String removal_rate : removal_rate_arr) {
+			executeWorkflow(removal_least_used_arr[0],
+					removal_rate, tfidfTopnTermPerDocument_arr[0],
+					sample_arr[0], mapredChildJavaOpts_arr[0],
+					parallel_arr[0]);
 		}
-		for (String ds_tfidfTopnTermPerDocument : ds_tfidfTopnTermPerDocument_arr) {
-			executeWorkflow(ds_removal_least_used_arr[0],
-					ds_removal_rate_arr[0], ds_tfidfTopnTermPerDocument,
-					ds_sample_arr[0], ds_mapredChildJavaOpts_arr[0],
-					ds_parallel_arr[0]);
-		}
-		for (String ds_sample : ds_sample_arr) {
-			executeWorkflow(ds_removal_least_used_arr[0],
-					ds_removal_rate_arr[0], ds_tfidfTopnTermPerDocument_arr[0],
-					ds_sample, ds_mapredChildJavaOpts_arr[0],
-					ds_parallel_arr[0]);
-		}
-		for (String ds_mapredChildJavaOpts : ds_mapredChildJavaOpts_arr) {
-			executeWorkflow(ds_removal_least_used_arr[0],
-					ds_removal_rate_arr[0], ds_tfidfTopnTermPerDocument_arr[0],
-					ds_sample_arr[0], ds_mapredChildJavaOpts,
-					ds_parallel_arr[0]);
-		}
-		for (String ds_parallel : ds_parallel_arr) {
-			executeWorkflow(ds_removal_least_used_arr[0],
-					ds_removal_rate_arr[0], ds_tfidfTopnTermPerDocument_arr[0],
-					ds_sample_arr[0], ds_mapredChildJavaOpts_arr[0],
-					ds_parallel);
-		}
+/*		for (String tfidfTopnTermPerDocument : tfidfTopnTermPerDocument_arr) {
+			executeWorkflow(removal_least_used_arr[0],
+					removal_rate_arr[0], tfidfTopnTermPerDocument,
+					sample_arr[0], mapredChildJavaOpts_arr[0],
+					parallel_arr[0]);
+		}*/
+//		for (String sample : sample_arr) {
+//			executeWorkflow(removal_least_used_arr[0],
+//					removal_rate_arr[0], tfidfTopnTermPerDocument_arr[0],
+//					sample, mapredChildJavaOpts_arr[0],
+//					parallel_arr[0]);
+//		}
+//		for (String mapredChildJavaOpts : mapredChildJavaOpts_arr) {
+//			executeWorkflow(removal_least_used_arr[0],
+//					removal_rate_arr[0], tfidfTopnTermPerDocument_arr[0],
+//					sample_arr[0], mapredChildJavaOpts,
+//					parallel_arr[0]);
+//		}
+//		for (String parallel : parallel_arr) {
+//			executeWorkflow(removal_least_used_arr[0],
+//					removal_rate_arr[0], tfidfTopnTermPerDocument_arr[0],
+//					sample_arr[0], mapredChildJavaOpts_arr[0],
+//					parallel);
+//		}
 
 	}
 
-	private static void executeWorkflow(String ds_removal_least_used,
-			String ds_removal_rate, String ds_tfidfTopnTermPerDocument,
-			String ds_sample, String ds_mapredChildJavaOpts, String ds_parallel) throws Exception {
+	private static void executeWorkflow(String removal_least_used,
+			String removal_rate, String tfidfTopnTermPerDocument,
+			String sample, String mapredChildJavaOpts, String parallel) throws Exception {
 
-		String params = StringUtils.join(new String[] { ds_removal_least_used,
-				ds_removal_rate, ds_tfidfTopnTermPerDocument, ds_sample,
-				ds_mapredChildJavaOpts, ds_parallel },"*");
+		String params = StringUtils.join(new String[] { removal_least_used,
+				removal_rate, tfidfTopnTermPerDocument, sample,
+				mapredChildJavaOpts, parallel },"-");
 		params = params.replaceAll("\\.", "_");
 
 		OozieClient wc = new OozieClient(
 				"http://hadoop-master.vls.icm.edu.pl:11000/oozie");
 		Properties conf = wc.createConfiguration();
+conf.setProperty("oozie.use.system.libpath","true");
+conf.setProperty("oozie.action.sharelib.for.pig","/user/oozie/share/lib/pig");
 
 		conf.setProperty("masterNode", masterNode);
-		conf.setProperty("ds_sample", ds_sample); 
-		conf.setProperty("ds_removal_least_used", ds_removal_least_used);
-		conf.setProperty("ds_removal_rate", ds_removal_rate);
-		conf.setProperty("ds_similarityTopnDocumentPerDocument", "20");
-		conf.setProperty("ds_mapredChildJavaOpts", "-Xmx"+ds_mapredChildJavaOpts+"g"); 
-		conf.setProperty("ds_parallel", ds_parallel);
-		conf.setProperty("ds_tfidfTopnTermPerDocument", ds_tfidfTopnTermPerDocument);
+		conf.setProperty("sample", sample); 
+		conf.setProperty("removal_least_used", removal_least_used);
+		conf.setProperty("removal_rate", removal_rate);
+		conf.setProperty("similarityTopnDocumentPerDocument", "20");
+		conf.setProperty("mapredChildJavaOpts", "-Xmx"+mapredChildJavaOpts+"g"); 
+		conf.setProperty("parallel", parallel);
+		conf.setProperty("tfidfTopnTermPerDocument", tfidfTopnTermPerDocument);
 		conf.setProperty("commonJarsPath", commonJarsPath);
 		conf.setProperty("nameNode", nameNode);
 		conf.setProperty("jobTracker", jobTracker);
@@ -119,11 +133,11 @@ public class EvaluateWorkflows {
 		conf.setProperty(OozieClient.APP_PATH, ooziewfapplicationpath);
 		conf.setProperty("workflowPath", workflowPath);
 		conf.setProperty("commonJarPath", commonJarsPath);
-		conf.setProperty("ds_bwndataMetadataInputPath",
-				ds_bwndataMetadataInputPath);
-		conf.setProperty("ds_similarityOutputPath", ds_similarityOutputPath+"/"+params);
-		conf.setProperty("ds_scheduler", ds_scheduler);
-		conf.setProperty("ds_tmpCompressionCodec", ds_tmpCompressionCodec);
+		conf.setProperty("bwndataMetadataInputPath",
+				bwndataMetadataInputPath);
+		conf.setProperty("similarityOutputPath", similarityOutputPath+"/"+params);
+		conf.setProperty("scheduler", scheduler);
+		conf.setProperty("tmpCompressionCodec", tmpCompressionCodec);
 
 		try {
 			String jobId = wc.run(conf);
