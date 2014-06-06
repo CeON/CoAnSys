@@ -148,7 +148,7 @@
 			</property>
 			<property>
 				<name>mapred.job.queue.name</name>
-				<value>${queueName}</value>f
+				<value>${queueName}</value>
 			</property>
 			<property>
 				<name>mapred.mapper.new-api</name>
@@ -293,10 +293,28 @@
 		<ok to="check_accuracy_decision"/>
 		<error to="kill"/>
 	</action>
+	<decision name="check_accuracy_decision">
+		<switch>
+			<case to="check_accuracy">${and_check_accuracy}</case>
+			<default to="finall_cleaning"/>
+		</switch>
+	</decision>
+	<action name="check_accuracy">
+		<pig>
+			<script>accuracy_check.pig</script>
+			<param>and_output_unserialized=${and_output_unserialized}</param>
+			<param>and_accuracy_check_output=${and_accuracy_check_output}</param>
+			<!--commons-->
+			<param>and_scheduler=${and_pool}</param>
+		</pig>
+		<ok to="finall_cleaning"/>
+		<error to="kill"/>
+	</action>
 	<action name="finall_cleaning">
 		<fs>
 			<delete path='${and_cid_dockey}'/>
 			<delete path='${and_outputContribs}'/>
+			<delete path='${and_output_unserialized}'/>
 		</fs>
 		<ok to="end"/>
 		<error to="kill"/>
@@ -315,26 +333,5 @@
 		<message>Workflow failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
 	</kill>
 	<end name="end"/>
-	<decision name="check_accuracy_decision">
-		<switch>
-			<case to="check_accuracy">${and_check_accuracy}</case>
-			<default to="finall_cleaning" />
-		</switch>
-	</decision>
-	<!--action name="merge">
-	<script>merge_only_and.pig</script>
-	<param>origdocs=${and_inputDocsData}</param>
-	<param>disambigAuth=${and_outputPB}</param>
-	<param>outputPath=${and_merged_output}</param>
-	<param>and_scheduler=${and_pool}</param>
-	</action-->
-	<action name="check_accuracy">
-		<script>accuracy_check.pig</script>
-		<param>and_output_unserialized=${and_output_unserialized}</param>
-		<param>and_accuracy_check_output=${and_accuracy_check_output}</param>
-		<!--commons-->
-		<param>and_scheduler=${and_pool}</param>
-		<ok to="finall_cleaning"/>
-		<error to="kill"/>
-	</action>
 </workflow-app>
+
