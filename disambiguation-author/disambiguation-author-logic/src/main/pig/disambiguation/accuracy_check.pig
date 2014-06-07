@@ -21,8 +21,8 @@
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 
-REGISTER ../disambiguation/lib/*.jar
-REGISTER /usr/lib/pig/piggybank.jar
+--REGISTER ../disambiguation/lib/*.jar
+--REGISTER /usr/lib/pig/piggybank.jar
 
 %DEFAULT and_output_unserialized 'workflows/pl.edu.icm.coansys-disambiguation-author-workflow/results/output_unserialized'
 %DEFAULT and_accuracy_check_output acc_check
