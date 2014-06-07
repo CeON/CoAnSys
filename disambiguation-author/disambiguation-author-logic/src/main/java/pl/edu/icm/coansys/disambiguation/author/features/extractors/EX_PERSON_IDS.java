@@ -19,6 +19,7 @@ package pl.edu.icm.coansys.disambiguation.author.features.extractors;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.pig.data.DataBag;
 import org.apache.pig.data.DefaultDataBag;
@@ -38,7 +39,7 @@ public class EX_PERSON_IDS extends DisambiguationExtractorAuthor {
 	public static final String SKIPPED_PERSON_ID_KIND[] = {
 
 	};
-	private HashSet<String> skip_id_set = new HashSet<String>(
+	private Set<String> skip_id_set = new HashSet<String>(
 			Arrays.asList(SKIPPED_PERSON_ID_KIND));
 
 	public EX_PERSON_IDS() {
