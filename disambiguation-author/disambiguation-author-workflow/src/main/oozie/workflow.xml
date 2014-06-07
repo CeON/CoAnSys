@@ -38,7 +38,7 @@
 		<property>
 			<name>and_check_accuracy</name>
 			<value>true</value>
-			<description>If there was external ids for some contributors in original data and in feature_info there is not EX_PERSON_ID feature, then we can check accuracy of our model. When 'true' additional workflow node run.</description>
+			<description>If there was external ids for some contributors in original data and in feature_info there is EX_PERSON_ID feature with weigh 0, then we can check accuracy of our model. When 'true' additional workflow node run.</description>
 		</property>
 		
 		<!-- Additional out data paths -->
@@ -125,8 +125,9 @@
 		</property>
 		<property>
 			<name>and_feature_info</name>
+			<!-- Note that EX_PERSON_ID with weight 0 is needed for accuracy checking! -->
 			<!-- TODO: change 0 to inf for EX_PERSON_IDS in production! -->
-			<value>"Intersection#EX_PERSON_IDS#0#1,CosineSimilarity#EX_CLASSIFICATION_CODES#772.692964079035#1,CosineSimilarity#EX_KEYWORDS_SPLIT#38.8749661175105#1,CosineSimilarity#EX_KEYWORDS#24.2728641349849#1,CosineSimilarity#EX_TITLE_SPLIT#355.529468017407#1,CosineSimilarity#EX_YEAR#0#1,CosineSimilarity#EX_TITLE#6#1,CosineSimilarity#EX_DOC_AUTHS_SNAMES#3438.44777889656#1,CosineSimilarity#EX_DOC_AUTHS_FNAME_FST_LETTER#3687.11964707998#1,CosineSimilarity#EX_AUTH_FNAMES_FST_LETTER#4738.63437905496#1,CosineSimilarity#EX_AUTH_FNAME_FST_LETTER#4748.59274849462#1,CosineSimilarity#EX_EMAIL#0#1"</value>
+			<value>"Intersection#EX_PERSON_ID#0#1,Intersection#EX_PERSON_IDS#0#1,CosineSimilarity#EX_CLASSIFICATION_CODES#772.692964079035#1,CosineSimilarity#EX_KEYWORDS_SPLIT#38.8749661175105#1,CosineSimilarity#EX_KEYWORDS#24.2728641349849#1,CosineSimilarity#EX_TITLE_SPLIT#355.529468017407#1,CosineSimilarity#EX_YEAR#0#1,CosineSimilarity#EX_TITLE#6#1,CosineSimilarity#EX_DOC_AUTHS_SNAMES#3438.44777889656#1,CosineSimilarity#EX_DOC_AUTHS_FNAME_FST_LETTER#3687.11964707998#1,CosineSimilarity#EX_AUTH_FNAMES_FST_LETTER#4738.63437905496#1,CosineSimilarity#EX_AUTH_FNAME_FST_LETTER#4748.59274849462#1,CosineSimilarity#EX_EMAIL#0#1"</value>
 			<description>Features description - model for calculating affinity and contributors clustering. Value in format: "Disambiguator_name#Feature_extractor_name#weight#coefficient_of_the_maximum_number_of_occurrences,...".</description>
 		</property>
 		<property>
