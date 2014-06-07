@@ -77,7 +77,7 @@ set mapred.fairscheduler.pool $and_scheduler
 -- coansysIdId is UUID given during AND
 unserialized = LOAD '$and_output_unserialized' as (cId:chararray, coansysId:chararray, docKey_unused:chararray, externalId, sname);
 
-A = FILTER unserialized BY coansysId is not null and externalId is not null;
+A = FILTER unserialized BY coansysId is not null and externalId is not null and sname is not null;
 
 -- simulate schema as after EXTRACT_CONTRIDATA_GIVENDATA - needed by pairsCreator()
 B = foreach A generate dockey_unused, cId, sname, [EX_PERSON_ID#externalId, EX_PERSON_COANSYS_ID#coansysId] as metadata;

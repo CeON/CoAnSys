@@ -20,7 +20,7 @@
 -- default section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
-%DEFAULT and_inputDocsData /srv/bwndata/seqfile/bazekon-20130314.sf
+%DEFAULT and_inputDocsData /user/mwos/wrapped/pbn_mbojan/
 %DEFAULT and_cid_dockey 'cid_dockey'
 %DEFAULT and_splitted_output_one 'splitted/one'
 %DEFAULT and_splitted_output_exh 'splitted/exh'
@@ -32,7 +32,7 @@
 %DEFAULT and_exhaustive_limit 6627
 %DEFAULT and_aproximate_sim_limit 1000000
 
-%DEFAULT and_feature_info 'IntersectionPerMaxval#EX_DOC_AUTHS_FNAME_FST_LETTER#1.0#1'
+%DEFAULT and_feature_info 'IntersectionPerMaxval#EX_DOC_AUTHS_FNAME_FST_LETTER#1.0#1,Intersection#EX_PERSON_ID#1.0#1'
 %DEFAULT and_lang 'all'
 %DEFAULT and_skip_empty_features 'true'
 %DEFAULT and_use_extractor_id_instead_name 'true'
@@ -148,7 +148,7 @@ store D1000 into '$and_splitted_output_apr_sim';
 store DX into '$and_splitted_output_apr_no_sim';
 
 -- storing relation contributor id - document id, which we need in future during serialization
--- storing also external person ID for optional accuracy statistics after basic AND workflow
+-- storing also external person ID for optional accuracy checking after basic AND workfloaw
 -- note, that for optimization, external person ID might be under shorter name of EX_PERSON_ID feature, which is "8"
-Q = foreach B generate cId, dockey, ((metadata#"EX_PERSON_ID" != null) ? metadata#"EX_PERSON_ID" : metadata#"8") as ex_person_id, sname;
+Q = foreach B generate cId, dockey, FLATTEN(((metadata#'EX_PERSON_ID' is not null) ? metadata#'EX_PERSON_ID' : metadata#'8')) as ex_person_id, sname;
 store Q into '$and_cid_dockey';
