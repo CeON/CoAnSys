@@ -277,13 +277,22 @@
 		<ok to="do_and_join"/>
 		<error to="kill"/>
 	</action>
-	<join name="do_and_join" to="do_and_cleaning"/>
-	
-	<action name="do_and_cleaning">
+	<join name="do_and_join" to="serialize_fork"/>
+	<fork name="serialize_fork">
+		<path start="serialize"/>
+		<path start="splitted_cleaning_decission"/>
+	</fork>
+	<decision name="splitted_cleaning_decission">
+		<switch>
+			<case to="splitted_cleaning">${and_cleaning}</case>
+			<default to="serialize_join"/>
+		</switch>
+	</decision>	
+	<action name="splitted_cleaning">
 		<fs>
 			<delete path='${and_splitted_output}'/>
 		</fs>
-		<ok to="serialize"/>
+		<ok to="serialize_join"/>
 		<error to="kill"/>
 	</action>
 	<action name="serialize">
@@ -298,13 +307,13 @@
 			<!--commons-->
 			<param>and_scheduler=${and_pool}</param>
 		</pig>
-		<ok to="check_accuracy_fork"/>
+		<ok to="serialize_join"/>
 		<error to="kill"/>
 	</action>
-	
+	<join name="serialize_join" to="check_accuracy_fork"/>
 	<fork name="check_accuracy_fork">
 		<path start="check_accuracy_decision"/>
-		<path start="finall_cleaning"/>
+		<path start="and_residues_cleaning_decission"/>
 	</fork>
 	<decision name="check_accuracy_decision">
 		<switch>
@@ -323,16 +332,35 @@
 		<ok to="check_accuracy_join"/>
 		<error to="kill"/>
 	</action>
-	<action name="finall_cleaning">
+	<decision name="and_residues_cleaning_decission">
+		<switch>
+			<case to="and_residues_cleaning">${and_cleaning}</case>
+			<default to="check_accuracy_join"/>
+		</switch>
+	</decision>	
+	<action name="and_residues_cleaning">
 		<fs>
 			<delete path='${and_cid_dockey}'/>
 			<delete path='${and_outputContribs}'/>
-			<!--delete path='${and_output_unserialized}'/-->
 		</fs>
 		<ok to="check_accuracy_join"/>
 		<error to="kill"/>
 	</action>
-	<join name="check_accuracy_join" to="end"/>
+	<join name="check_accuracy_join" to="unserialized_output_clean_decision"/>
+	<decision name="unserialized_output_clean_decision">
+		<switch>
+			<case to="unserialized_output_clean">${and_cleaning}</case>
+			<default to="end"/>
+		</switch>
+	</decision>	
+	<action name="unserialized_output_clean">
+		<fs>
+			<delete path='${and_output_unserialized}'/>
+		</fs>
+		<ok to="end"/>
+		<error to="kill"/>
+	</action>
+	
 	<action name="send-email">
 		<email xmlns="uri:oozie:email-action:0.1">
 			<to>mwos@icm.edu.pl</to>
@@ -348,4 +376,5 @@
 	</kill>
 	<end name="end"/>
 </workflow-app>
+
 
