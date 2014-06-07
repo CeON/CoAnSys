@@ -27,13 +27,13 @@
 %DEFAULT and_output_unserialized 'workflows/pl.edu.icm.coansys-disambiguation-author-workflow/results/output_unserialized'
 %DEFAULT and_accuracy_check_output acc_check
 %DEFAULT and_sample 1.0
-%DEFAULT and_feature_info 'Intersection#EX_AUTH_FNAME#1.0#1,Intersection#EX_PERSON_ID#1.0#1,Intersection#EX_PERSON_COANSYS_ID#1.0#1'
+%DEFAULT and_feature_info 'Intersection#EX_PERSON_ID#1.0#1,Intersection#EX_PERSON_COANSYS_ID#1.0#1'
 %DEFAULT and_lang 'all'
 %DEFAULT and_skip_empty_features 'true'
 %DEFAULT and_use_extractor_id_instead_name 'false'
 %DEFAULT and_snameToString 'false'
-DEFINE snameDocumentMetaExtractor pl.edu.icm.coansysId.disambiguation.author.pig.extractor.EXTRACT_CONTRIBDATA_GIVENDATA('-featureinfo $and_feature_info -lang $and_lang -skipEmptyFeatures $and_skip_empty_features -useIdsForExtractors $and_use_extractor_id_instead_name -snameToString $and_snameToString');
 DEFINE pairsCreation pl.edu.icm.coansysId.disambiguation.author.pig.SvmUnnormalizedPairsCreator('featureInfo=$and_feature_info');
+DEFINE toMap pl.edu.icm.coansysId.disambiguation.author.pig.ToMapPigConverter();
 
 -- -----------------------------------------------------
 -- -----------------------------------------------------
@@ -80,8 +80,7 @@ unserialized = LOAD '$and_output_unserialized' as (cId:chararray, coansysId:char
 A = FILTER unserialized BY coansysId is not null and externalId is not null and sname is not null;
 
 -- simulate schema as after EXTRACT_CONTRIDATA_GIVENDATA - needed by pairsCreator()
-B = foreach A generate dockey_unused, cId, sname, [EX_PERSON_ID#externalId, EX_PERSON_COANSYS_ID#coansysId] as metadata;
--- TODO !!!!!!!!! check if externalId is not used as string 'externalId'
+B = foreach A generate dockey_unused, cId, sname, toMap('EX_PERSON_ID', {(externalId)}, 'EX_PERSON_COANSYS_ID', {(coansysId)}) as metadata;
 
 C = group B by sname;
 
@@ -89,7 +88,7 @@ C = group B by sname;
 D = foreach C generate flatten(pairsCreation(*));
 
 -- in D we've got:
--- (8872a69e-2069-35b7-95d1-7f35dab3c41e,EX_AUTH_FNAME,1.0,1.0,EX_PERSON_PBN_ID,1.0,1.0,EX_PERSON_coansysId_ID,0.0,0.0)
+-- (8872a69e-2069-35b7-95d1-7f35dab3c41e,EX_AUTH_FNAME,1.0,1.0,EX_PERSON_ID,1.0,1.0,EX_PERSON_COANSYS_ID,0.0,0.0)
 -- for us interesing is only intersection of id, to determine if 2 contributr is same or not same by pbn and by coansysId separately:
 E = foreach D generate $5 as externalId, $8 as coansysId;
 

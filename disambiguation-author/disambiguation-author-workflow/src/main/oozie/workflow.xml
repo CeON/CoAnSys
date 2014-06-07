@@ -31,10 +31,16 @@
 		</property>
 		<!-- Workflow decissions -->
 		<property>
+			<name>and_cleaning</name>
+			<value>true</value>
+			<description>Remove auxiliares sequence files produced during the execution of workflow.</description>
+		</property>
+		<property>
 			<name>and_check_accuracy</name>
 			<value>true</value>
 			<description>If there was external ids for some contributors in original data and in feature_info there is not EX_PERSON_ID feature, then we can check accuracy of our model. When 'true' additional workflow node run.</description>
 		</property>
+		
 		<!-- Additional out data paths -->
 		<property>
 			<name>and_splitted_output</name>
@@ -64,7 +70,7 @@
 		<property>
 			<name>and_cid_dockey</name>
 			<value>${results}/cid_dockey</value>
-			<description>Path for additional data - pairs ( document id, contributor id ). Used in 'serialize' action to associate generated ( author uuid, contributor id ) pairs with documents.</description>
+			<description>Path for additional data - pairs ( document id, contributor id, original external id, sname ). Used in 'serialize' action to associate generated ( author uuid, contributor id ) pairs with documents. External id and sname needed in optional accuracy check after serialize.</description>
 		</property>
 		<property>
 			<name>and_outputContribs</name>
