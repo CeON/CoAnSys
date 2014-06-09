@@ -99,4 +99,4 @@ G = GROUP F ALL;
 H = FOREACH G GENERATE SUM(F.correct_same) AS correct_same, SUM(F.correct_not_same) AS correct_not_same, SUM(F.pbn_same_coanys_not_same) as pbn_same_coanys_not_same, SUM(F.pbn_not_same_coanys_same) as pbn_not_same_coanys_same;
 --DESCRIBE H;
 --DUMP H;
-store H into '$and_accuracy_check_output' using PigStorage('-schema');
+store H into '$and_accuracy_check_output' using PigStorage('\t', '-schema');
