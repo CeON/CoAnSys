@@ -34,6 +34,7 @@ public class EX_YEAR extends DisambiguationExtractorDocument {
 	}
 
 	public EX_YEAR(PigNormalizer[] new_normalizers) {
+		// Normalizers unused
 		super(new_normalizers);
 	}
 

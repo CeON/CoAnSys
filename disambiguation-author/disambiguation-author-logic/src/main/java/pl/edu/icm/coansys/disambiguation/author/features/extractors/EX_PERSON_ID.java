@@ -28,6 +28,7 @@ import pl.edu.icm.coansys.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.models.DocumentProtos.KeyValue;
 
+//Note that we do not use normalization for that one.
 public class EX_PERSON_ID extends DisambiguationExtractorAuthor {
 
 	private String PERSON_ID_KEY_NAME = "pbnPersonId";
@@ -55,6 +56,9 @@ public class EX_PERSON_ID extends DisambiguationExtractorAuthor {
 		Author a = dm.getBasicMetadata().getAuthor(fakeIndex);
 		for (KeyValue kv : a.getExtIdList()) {
 			if (kv.getKey().equals(PERSON_ID_KEY_NAME)) {
+				if ( kv.getValue() == null || kv.getValue().isEmpty() ) {
+					continue;
+				}
 				t.append(kv.getValue());
 				db.add(t);
 				break;

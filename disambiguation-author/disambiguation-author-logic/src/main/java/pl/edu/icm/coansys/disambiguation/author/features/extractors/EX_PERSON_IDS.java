@@ -23,7 +23,6 @@ import java.util.Set;
 
 import org.apache.pig.data.DataBag;
 import org.apache.pig.data.DefaultDataBag;
-import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
 
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DisambiguationExtractorAuthor;
@@ -52,10 +51,8 @@ public class EX_PERSON_IDS extends DisambiguationExtractorAuthor {
 
 	@Override
 	public DataBag extract(Object o, int fakeIndex, String lang) {
-		TupleFactory tf = TupleFactory.getInstance();
 		DocumentMetadata dm = (DocumentMetadata) o;
 		DataBag db = new DefaultDataBag();
-		Tuple t = tf.newTuple();
 
 		Author a = dm.getBasicMetadata().getAuthor(fakeIndex);
 		for (KeyValue kv : a.getExtIdList()) {
@@ -63,8 +60,9 @@ public class EX_PERSON_IDS extends DisambiguationExtractorAuthor {
 			if (!skip_id_set.contains(id_name)) {
 				String id_value = kv.getValue();
 				Object normalized = normalizeExtracted(id_name + "|" + id_value);
-				t.append(normalized);
-				db.add(t);
+				if ( normalized != null ) {
+					db.add(TupleFactory.getInstance().newTuple(normalized));
+				}
 			}
 		}
 		return db;
