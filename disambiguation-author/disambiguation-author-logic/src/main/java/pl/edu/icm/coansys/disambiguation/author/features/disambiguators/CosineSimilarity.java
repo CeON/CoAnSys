@@ -27,7 +27,12 @@ public class CosineSimilarity extends Disambiguator {
         if(v1.size()==0 && v2.size()==0){
         	return 0;
         }
-        return dotProduct(v1, v2) / (vectorLength(v1) * vectorLength(v2));
+        double cossim = dotProduct(v1, v2) / (vectorLength(v1) * vectorLength(v2));
+        // Note that inf * 0 is indeterminate form (what gives NaN)
+        if ( cossim == 0 ) {
+        	return 0;
+        }
+        return cossim * weight;
     }
 
     private Map<Object, Integer> calculateVector(List<Object> tokens) {
