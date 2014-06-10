@@ -34,6 +34,7 @@ import org.apache.pig.data.TupleFactory;
 
 import pl.edu.icm.coansys.commons.java.DiacriticsRemover;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.CoAuthorsSnameDisambiguatorFullList;
+import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.CosineSimilarity;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.Disambiguator;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.Intersection;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.IntersectionPerMaxval;
@@ -200,6 +201,25 @@ public class DisambiguationTest {
   		assert( IPM2.calculateAffinity(a, b) == 5.0 / 10.0 * 3.0  );
   		assert( I.calculateAffinity(a, b) == 5.0 );
   		assert( COAUTH.calculateAffinity(a, b) == 4.0 );
+   	}
+   	
+   	@org.testng.annotations.Test(groups = {"fast"})
+   	public void features_disambiguator_calculateAffinity_indeterminate_forms() {
+   		Disambiguator COAUTH = new CoAuthorsSnameDisambiguatorFullList(Double.POSITIVE_INFINITY,1);
+   		Disambiguator IPS = new IntersectionPerSum(Double.POSITIVE_INFINITY,1);
+   		Disambiguator IPM = new IntersectionPerMaxval(Double.POSITIVE_INFINITY,1);
+   		Disambiguator I = new Intersection(Double.POSITIVE_INFINITY, 1);
+   		Disambiguator C = new CosineSimilarity(Double.POSITIVE_INFINITY, 1);
+   		
+   		Object atab[] = {1};
+   		Object btab[] = {2};		
+   		List<Object> a = Arrays.asList(atab);
+   		List<Object> b = Arrays.asList(btab);
+   		
+  		assert( IPS.calculateAffinity(a, b) == 0 );
+  		assert( IPM.calculateAffinity(a, b) == 0 );
+  		assert( I.calculateAffinity(a, b) == 0 );
+  		assert( COAUTH.calculateAffinity(a, b) == 0 );
    	}
    	
    	@org.testng.annotations.Test(groups = {"fast"})
@@ -372,5 +392,88 @@ public class DisambiguationTest {
    		String exh_out = "{(996dc30f-a92a-388d-9392-9ed16588ec72,{(0),(1),(2)}),(04b6c550-264c-39e8-b533-d7f7b977415e,{(3),(4),(5)})}";
    		exhaustive.exec(input).toString().equals(exh_out);
    	}
+
+	@org.testng.annotations.Test(groups = {"fast"})
+   	public void pig_aproximateAND_exec_1() throws Exception {
+   		AND<DataBag> aproximate = new AproximateAND_BFS(
+   				"-0.98025095811271", 
+  				"Intersection#EX_PERSON_IDS#inf#1",
+   				"false",
+   				"false",
+   				"false"
+   			);
+		
+  		// Creating example input
+   		List<Tuple> contribs = new ArrayList<Tuple>();
+   		
+   		// contrib#0
+   		Map<String,DataBag>map0 = new HashMap<String,DataBag>();
+   		addFeatureToMap(map0, "EX_PERSON_IDS", 1, 2);
+   		contribs.add( contribCreator("cid-0", "sname-0", map0) );
+
+   		// contrib#1
+   		Map<String,DataBag>map1 = new HashMap<String,DataBag>();
+   		addFeatureToMap(map1, "EX_PERSON_IDS", 1);
+   		contribs.add( contribCreator("cid-1", "sname-0", map1) );
+
+   		// contrib#2
+   		Map<String,DataBag>map2 = new HashMap<String,DataBag>();
+   		addFeatureToMap(map2, "EX_PERSON_IDS", 3);
+   		contribs.add( contribCreator("cid-2", "sname-0", map2) );
+   		
+   		// contrib#3
+   		Map<String,DataBag>map3 = new HashMap<String,DataBag>();
+   		addFeatureToMap(map3, "EX_PERSON_IDS", 2, 3);
+   		contribs.add( contribCreator("cid-3", "sname-0", map3) );
+   		
+   		// contrib#4
+   		Map<String,DataBag>map4 = new HashMap<String,DataBag>();
+   		addFeatureToMap(map4, "EX_PERSON_IDS", 4);
+   		contribs.add( contribCreator("cid-4", "sname-0", map4) );
+   		
+   		Tuple input = new DefaultTuple();
+   		DataBag contribsBag = tupleListToDataBag(contribs);
+		input.append( contribsBag );
+		
+		String apr_out = "{({(cid-0,sname-0,[EX_PERSON_IDS#{(1),(2)}]),(cid-1,sname-0,[EX_PERSON_IDS#{(1)}]),(cid-3,sname-0,[EX_PERSON_IDS#{(2),(3)}]),(cid-2,sname-0,[EX_PERSON_IDS#{(3)}])},{}),({(cid-4,sname-0,[EX_PERSON_IDS#{(4)}])},{})}";
+   		
+		assert( aproximate.exec(input).toString().equals( apr_out ) );
+	}
+   	
+	
+	@org.testng.annotations.Test(groups = {"fast"})
+   	public void pig_exhaustiveAND_exec_0() throws Exception {
+		AND<DataBag> exhaustive = new ExhaustiveAND(
+   				"-0.98025095811271", 
+  				"Intersection#EX_PERSON_IDS#inf#1",
+   				"false",
+   				"false"
+   			);
+		
+  		// Creating example input
+   		List<Tuple> contribs = new ArrayList<Tuple>();
+   		
+   		// contrib#0
+   		Map<String,DataBag>map0 = new HashMap<String,DataBag>();
+   		addFeatureToMap(map0, "EX_PERSON_IDS", 1, 2);
+   		contribs.add( contribCreator("cid-0", "sname-0", map0) );
+
+   		// contrib#1
+   		Map<String,DataBag>map1 = new HashMap<String,DataBag>();
+   		addFeatureToMap(map1, "EX_PERSON_IDS", 1);
+   		contribs.add( contribCreator("cid-1", "sname-0", map1) );
+
+   		// contrib#2
+   		Map<String,DataBag>map2 = new HashMap<String,DataBag>();
+   		addFeatureToMap(map2, "EX_PERSON_IDS", 3);
+   		contribs.add( contribCreator("cid-2", "sname-0", map2) );
+   		
+   		Tuple input = new DefaultTuple();
+   		DataBag contribsBag = tupleListToDataBag(contribs);
+		input.append( contribsBag );
+		
+		String exh_out = "{(5db152fb-46d2-3e34-a8e6-bdcc17b4d1bd,{(cid-0),(cid-1)}),(c0e1fcc8-9047-3749-a5fb-de397a278870,{(cid-2)})}";
+		System.out.println( exhaustive.exec(input).toString().equals(exh_out) );
+	}
 }
 
