@@ -1,2 +1,4 @@
+If collection has some external id before disambiguation, you can check accuracy. 
+There are two ways: turn on checking parametr in workflow (prefered one, because faster). Or stand-alone - on merged data:
 1. Merge AND workflow results with original collection using merge_only_and.pig (in coansys-io-output)
-2. Run stats_pair.pig
+2. Run and_check_merged.pig

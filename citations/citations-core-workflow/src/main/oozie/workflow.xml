@@ -37,6 +37,10 @@
             <value>36</value>
         </property>
         <property>
+            <name>jobShuffleInputBufferPercent</name>
+            <value>0.70</value>
+        </property>
+        <property>
             <name>workingDirectory</name>
         </property>
         <property>
@@ -84,6 +88,10 @@
             <property>
                 <name>mapred.reduce.tasks</name>
                 <value>${reduceTasks}</value>
+            </property>
+            <property>
+                <name>mapred.job.shuffle.input.buffer.percent</name>
+                <value>${jobShuffleInputBufferPercent}</value>
             </property>
         </configuration>
     </global>
@@ -156,11 +164,11 @@
                 </property>
                 <property>
                     <name>citationHasher</name>
-                    <value>pl.edu.icm.coansys.citations.hashers.CitationNameYearHashGenerator</value>
+                    <value>pl.edu.icm.coansys.citations.hashers.CitationNameYearPagesHashGenerator</value>
                 </property>
                 <property>
                     <name>documentHasher</name>
-                    <value>pl.edu.icm.coansys.citations.hashers.DocumentNameYearStrictHashGenerator</value>
+                    <value>pl.edu.icm.coansys.citations.hashers.DocumentNameYearNumNumHashGenerator</value>
                 </property>
                 <property>
                     <name>unmatched</name>
@@ -202,8 +210,47 @@
                     <value>pl.edu.icm.coansys.citations.hashers.DocumentNameYearPagesHashGenerator</value>
                 </property>
                 <property>
+                    <name>unmatched</name>
+                    <value>${workingDirectory}/unmatched-3</value>
+                </property>
+                <property>
                     <name>output</name>
                     <value>${workingDirectory}/heuristic-out-3</value>
+                </property>
+            </configuration>
+        </sub-workflow>
+        <ok to="heuristic-4"/>
+        <error to="fail"/>
+    </action>
+
+    <action name="heuristic-4">
+        <sub-workflow>
+            <app-path>${wf:appPath()}/heuristic-workflow</app-path>
+            <propagate-configuration/>
+            <configuration>
+                <property>
+                    <name>workingDirectory</name>
+                    <value>${workingDirectory}/heuristic-4_workflow</value>
+                </property>
+                <property>
+                    <name>sourceEntities</name>
+                    <value>${workingDirectory}/unmatched-3</value>
+                </property>
+                <property>
+                    <name>destinationEntities</name>
+                    <value>${destinationEntities}</value>
+                </property>
+                <property>
+                    <name>citationHasher</name>
+                    <value>pl.edu.icm.coansys.citations.hashers.CitationNameYearPagesOptimisticHashGenerator</value>
+                </property>
+                <property>
+                    <name>documentHasher</name>
+                    <value>pl.edu.icm.coansys.citations.hashers.DocumentNameYearPagesHashGenerator</value>
+                </property>
+                <property>
+                    <name>output</name>
+                    <value>${workingDirectory}/heuristic-out-4</value>
                 </property>
             </configuration>
         </sub-workflow>
