@@ -44,7 +44,7 @@ public class EX_YEAR extends DisambiguationExtractorDocument {
 		
 		DataBag db = new DefaultDataBag();
 		String year = dm.getBasicMetadata().getYear();
-		if ( year.isEmpty() ) {
+		if ( year == null || year.isEmpty() ) {
 			return db;
 		}
 		

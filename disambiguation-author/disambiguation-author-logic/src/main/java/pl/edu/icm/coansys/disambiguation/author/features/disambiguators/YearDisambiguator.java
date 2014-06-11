@@ -56,6 +56,10 @@ public class YearDisambiguator extends Disambiguator {
 		Object first = f1.get(0);
 		Object second = f2.get(0);
 		
+		if ( first == null || second == null ) {
+			return 0;
+		}
+		
 		int a = Integer.parseInt( first.toString() );
 		int b = Integer.parseInt( second.toString() );
 
