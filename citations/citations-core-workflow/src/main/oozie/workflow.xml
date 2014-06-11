@@ -203,11 +203,11 @@
                 </property>
                 <property>
                     <name>citationHasher</name>
-                    <value>pl.edu.icm.coansys.citations.hashers.CitationNameYearPagesOptimisticHashGenerator</value>
+                    <value>pl.edu.icm.coansys.citations.hashers.CitationNameYearHashGenerator</value>
                 </property>
                 <property>
                     <name>documentHasher</name>
-                    <value>pl.edu.icm.coansys.citations.hashers.DocumentNameYearPagesHashGenerator</value>
+                    <value>pl.edu.icm.coansys.citations.hashers.DocumentNameYearStrictHashGenerator</value>
                 </property>
                 <property>
                     <name>unmatched</name>
@@ -242,11 +242,11 @@
                 </property>
                 <property>
                     <name>citationHasher</name>
-                    <value>pl.edu.icm.coansys.citations.hashers.CitationNameYearPagesOptimisticHashGenerator</value>
+                    <value>pl.edu.icm.coansys.citations.hashers.CitationNameYearHashGenerator</value>
                 </property>
                 <property>
                     <name>documentHasher</name>
-                    <value>pl.edu.icm.coansys.citations.hashers.DocumentNameYearPagesHashGenerator</value>
+                    <value>pl.edu.icm.coansys.citations.hashers.DocumentNameYearHashGenerator</value>
                 </property>
                 <property>
                     <name>output</name>
