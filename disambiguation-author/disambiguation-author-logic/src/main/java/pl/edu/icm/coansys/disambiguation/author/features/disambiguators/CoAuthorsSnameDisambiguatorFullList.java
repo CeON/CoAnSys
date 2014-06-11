@@ -57,11 +57,12 @@ public class CoAuthorsSnameDisambiguatorFullList extends Disambiguator {
 		// Because this cotributor is in sum and intersection for sure, but we
 		// do not want to take himself as his co-author.
 		// Also note that inf * 0 is indeterminate form (what gives NaN).
-		int intersection = p.getKey() - 1;
-		if (intersection <= 0) {
+		double intersection = p.getKey() - 1.0;
+		double sum = p.getValue();
+		if (intersection <= 0.0) {
 			return 0;
 		}
 		
-		return (double) intersection / maxVal * weight;
+		return intersection / sum * weight;
 	}
 }
