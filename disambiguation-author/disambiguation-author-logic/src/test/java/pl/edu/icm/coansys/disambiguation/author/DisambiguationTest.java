@@ -18,6 +18,7 @@
 
 package pl.edu.icm.coansys.disambiguation.author;
 
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ import pl.edu.icm.coansys.commons.java.DiacriticsRemover;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.CoAuthorsSnameDisambiguatorFullList;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.CosineSimilarity;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.Disambiguator;
+import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.DisambiguatorFactory;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.Intersection;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.IntersectionPerMaxval;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.IntersectionPerSum;
@@ -183,6 +185,19 @@ public class DisambiguationTest {
    		}
    	}
    	
+   	
+   	@org.testng.annotations.Test(groups = {"fast"})
+   	public void features_disambiguator_factory() {
+   		String featureDescription = "Intersection#whatever#0.0#0";
+		List<FeatureInfo> filist = FeatureInfo.parseFeatureInfoString(featureDescription);
+		FeatureInfo fi = filist.get(0);
+		
+   		DisambiguatorFactory ff = new DisambiguatorFactory();
+   		Disambiguator d = ff.create(fi);
+   		assert(d != null);
+   	}
+   	
+   	
    	@org.testng.annotations.Test(groups = {"fast"})
    	public void features_disambiguator_calculateAffinity() {
    		Disambiguator COAUTH = new CoAuthorsSnameDisambiguatorFullList(1,1);
@@ -290,7 +305,7 @@ public class DisambiguationTest {
    		// test "climbing up" through inherited tree of extractor, note that EX_PERSON_COANSYS_ID extends EX_PERSON_ID
    		new EXTRACT_CONTRIBDATA_GIVENDATA("-featureinfo Intersection#EX_PERSON_COANSYS_ID#1.0#1");
    	}
-   	    
+   	
     // Tools:
    	private Tuple contribCreator(Object id, Object sname, 
    			Map<String,DataBag>features){

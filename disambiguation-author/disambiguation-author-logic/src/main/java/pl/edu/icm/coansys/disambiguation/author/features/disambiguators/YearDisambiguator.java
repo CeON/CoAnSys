@@ -26,8 +26,12 @@ import java.util.List;
  * @version 1.0
  * @since 2012-08-07
  */
-public class YearDisambiguator extends Disambiguator{
+public class YearDisambiguator extends Disambiguator {
 
+	public YearDisambiguator() {
+		super();
+	}
+		
 	public YearDisambiguator(double weight, double maxVal) {
 		super(weight, maxVal);
 		if (maxVal == 0) {
