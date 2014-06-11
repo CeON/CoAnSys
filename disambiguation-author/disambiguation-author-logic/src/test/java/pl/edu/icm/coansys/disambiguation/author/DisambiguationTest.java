@@ -39,6 +39,7 @@ import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.Disambig
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.Intersection;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.IntersectionPerMaxval;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.IntersectionPerSum;
+import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.YearDisambiguator;
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.DisambiguationExtractorFactory;
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DisambiguationExtractor;
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DisambiguationExtractorDocument;
@@ -190,7 +191,6 @@ public class DisambiguationTest {
    		Disambiguator IPM2 = new IntersectionPerMaxval(3.0,10.0);
    		Disambiguator I = new Intersection();
    		
-   		
    		Object atab[] = {-1,"one", "two", "three", "four", 5, 6, 7, 8, 9.0, 10.0};
    		Object btab[] = {-2,-1,"one", "two", 5, 9.0, "eleven", 12, 13.0};		
    		List<Object> a = Arrays.asList(atab);
@@ -204,22 +204,47 @@ public class DisambiguationTest {
    	}
    	
    	@org.testng.annotations.Test(groups = {"fast"})
+   	public void features_disambiguator_cosineSimilarity() {
+   		Disambiguator C = new CosineSimilarity(1000, 1);
+   		Object atab[] = {2, 3};
+   		Object btab[] = {3};
+   		List<Object> a = Arrays.asList(atab);
+   		List<Object> b = Arrays.asList(btab);
+   		assert( C.calculateAffinity(a, b) == 1/Math.sqrt(2) * 1000 );
+   	}
+   	
+   	
+   	@org.testng.annotations.Test(groups = {"fast"})
+   	public void features_disambiguator_Year() {
+   		Disambiguator Y = new YearDisambiguator(2, 30);
+   		Object atab[] = {1930};
+   		Object btab[] = {"1930"};
+   		List<Object> a = Arrays.asList(atab);
+   		List<Object> b = Arrays.asList(btab);
+   		assert( Y.calculateAffinity(a, b) == 2 );
+   	}
+   	
+   	@org.testng.annotations.Test(groups = {"fast"})
    	public void features_disambiguator_calculateAffinity_indeterminate_forms() {
    		Disambiguator COAUTH = new CoAuthorsSnameDisambiguatorFullList(Double.POSITIVE_INFINITY,1);
    		Disambiguator IPS = new IntersectionPerSum(Double.POSITIVE_INFINITY,1);
    		Disambiguator IPM = new IntersectionPerMaxval(Double.POSITIVE_INFINITY,1);
    		Disambiguator I = new Intersection(Double.POSITIVE_INFINITY, 1);
    		Disambiguator C = new CosineSimilarity(Double.POSITIVE_INFINITY, 1);
+   		Disambiguator Y = new YearDisambiguator(Double.POSITIVE_INFINITY, 1);
    		
    		Object atab[] = {1};
    		Object btab[] = {2};		
    		List<Object> a = Arrays.asList(atab);
    		List<Object> b = Arrays.asList(btab);
    		
-  		assert( IPS.calculateAffinity(a, b) == 0 );
-  		assert( IPM.calculateAffinity(a, b) == 0 );
-  		assert( I.calculateAffinity(a, b) == 0 );
-  		assert( COAUTH.calculateAffinity(a, b) == 0 );
+		assert (IPS.calculateAffinity(a, b) == 0);
+		assert (IPM.calculateAffinity(a, b) == 0);
+		assert (I.calculateAffinity(a, b) == 0);
+		assert (COAUTH.calculateAffinity(a, b) == 0);
+		assert (C.calculateAffinity(a, b) == 0);
+		assert (Y.calculateAffinity(a, b) == 0);
+
    	}
    	
    	@org.testng.annotations.Test(groups = {"fast"})

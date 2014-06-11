@@ -41,6 +41,10 @@ public class CosineSimilarity extends Disambiguator {
         	return vector;
         }
         for (Object token : tokens) {
+        	//TODO that could be done faster (without one of the already three cost operation on map)
+        	// Moreover we are iterating through this later, array of pairs would be better (one sort only at the beginning)
+        	// Yeees.. Hash map map has const operation, but first of const with (only) high probability, and second - with pretty big 
+        	// const as for such small amount of data we have here.
             if (vector.containsKey(token)) {
                 vector.put(token, vector.get(token) + 1);
             } else {
@@ -61,7 +65,8 @@ public class CosineSimilarity extends Disambiguator {
 	private double dotProduct(Map<Object, Integer> vector1, Map<Object, Integer> vector2) {
         double ret = 0.0;
         for (Entry<Object, Integer> entry : vector1.entrySet()) {
-            if (vector2.containsKey(entry.getKey())) {
+            // same story - could be done with smaller number of cost operation on map
+        	if (vector2.containsKey(entry.getKey())) {
                 ret += entry.getValue() * vector2.get(entry.getKey());
             }
         }

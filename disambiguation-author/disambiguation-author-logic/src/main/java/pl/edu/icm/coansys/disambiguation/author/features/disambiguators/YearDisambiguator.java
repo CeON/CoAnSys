@@ -20,8 +20,6 @@ package pl.edu.icm.coansys.disambiguation.author.features.disambiguators;
 
 import java.util.List;
 
-import pl.edu.icm.coansys.disambiguation.features.Disambiguator;
-
 /**
  * 
  * @author pdendek
@@ -30,9 +28,19 @@ import pl.edu.icm.coansys.disambiguation.features.Disambiguator;
  */
 public class YearDisambiguator extends Disambiguator{
 
+	public YearDisambiguator(double weight, double maxVal) {
+		super(weight, maxVal);
+		if (maxVal == 0) {
+			throw new IllegalArgumentException("Max value cannot equal 0.");
+		}
+	}
+
 	@Override
-	public String getName() {
-		return YearDisambiguator.class.getSimpleName();
+	public void setMaxVal(double maxVal) {
+		if (maxVal == 0) {
+			throw new IllegalArgumentException("Max value cannot equal 0.");
+		}
+		this.maxVal = maxVal;
 	}
 	
 	@Override
@@ -47,10 +55,16 @@ public class YearDisambiguator extends Disambiguator{
 		int a = Integer.parseInt( first.toString() );
 		int b = Integer.parseInt( second.toString() );
 
-		//something like dif = Math.abs( b - a );
-		//TODO funcion(int x) = something like 1 / dif;
+		int dif = Math.abs( b - a );
 		
-		return ( a == b ) ? 1 : 0; //for now
+		double sq = (double) dif / maxVal;
+		double func = (-sq * sq + 1.0);
+
+		if ( func <= 0 ) {
+			return 0;
+		}
+		
+		return func * weight;
 	}
 
 }
