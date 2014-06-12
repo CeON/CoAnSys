@@ -260,6 +260,9 @@
 
     <action name="doc-attacher">
         <map-reduce>
+            <prepare>
+                <delete path="${workingDirectory}/heuristic_with_docs"/>
+            </prepare>
             <configuration>
                 <property>
                     <name>mapreduce.inputformat.class</name>
@@ -333,6 +336,9 @@
 
     <action name="cit-attacher-and-preassessor">
         <map-reduce>
+            <prepare>
+                <delete path="${workingDirectory}/to_assess"/>
+            </prepare>
             <configuration>
                 <property>
                     <name>mapreduce.inputformat.class</name>

@@ -118,6 +118,9 @@
 
     <action name="heuristic">
         <map-reduce>
+            <prepare>
+                <delete path="${workingDirectory}/heuristic_with_dups"/>
+            </prepare>
             <configuration>
                 <property>
                     <name>mapreduce.inputformat.class</name>
@@ -199,6 +202,9 @@
 
     <action name="distinctor">
         <map-reduce>
+            <prepare>
+                <delete path="${output}"/>
+            </prepare>
             <configuration>
                 <property>
                     <name>mapreduce.map.class</name>
@@ -247,6 +253,9 @@
 
     <action name="unmatched">
         <map-reduce>
+            <prepare>
+                <delete path="${unmatched}"/>
+            </prepare>
             <configuration>
                 <property>
                     <name>mapreduce.inputformat.class</name>
