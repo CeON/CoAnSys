@@ -100,6 +100,9 @@
     </action>
     <action name="document-converter">
         <map-reduce>
+            <prepare>
+                <delete path="${workingDirectory}/destination_entities"/>
+            </prepare>
             <configuration>
                 <property>
                     <name>mapreduce.map.class</name>
@@ -140,6 +143,9 @@
     </action>
     <action name="reference-parser">
         <map-reduce>
+            <prepare>
+                <delete path="${workingDirectory}/source_entities"/>
+            </prepare>
             <configuration>
                 <property>
                     <name>mapreduce.map.class</name>
