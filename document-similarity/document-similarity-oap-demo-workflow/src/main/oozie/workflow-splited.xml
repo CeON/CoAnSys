@@ -28,6 +28,7 @@
     </action>
 
     <action name='pairwise-sim'>
+        <pig>
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
             <configuration>
