@@ -41,6 +41,11 @@
             <value>0.70</value>
         </property>
         <property>
+            <name>maxDocumentsPerBucket</name>
+            <value>100</value>
+            <description>This setting is used in heuristic, in hash matching; buckets exceeding this limit will be omitted.</description>
+        </property>
+        <property>
             <name>workingDirectory</name>
         </property>
         <property>
