@@ -18,12 +18,13 @@
 
 package pl.edu.icm.coansys.citations.reducers
 
-import collection.JavaConversions._
-import org.testng.annotations.Test
-import pl.edu.icm.coansys.citations.data.{MarkedBytesWritable, MarkedText}
-import org.apache.hadoop.mrunit.types.Pair
-import org.apache.hadoop.io.{Text, BytesWritable}
+import org.apache.hadoop.io.Text
 import org.apache.hadoop.mrunit.mapreduce.ReduceDriver
+import org.apache.hadoop.mrunit.types.Pair
+import org.testng.annotations.Test
+import pl.edu.icm.coansys.citations.data.MarkedText
+
+import scala.collection.JavaConversions._
 
 /**
  * Created by matfed on 28.02.14.
@@ -59,6 +60,48 @@ class HashJoinerTest {
     new ReduceDriver[MarkedText, MarkedText, Text, Text]()
       .withReducer(new HashJoiner())
       .withInput(key, bytesList)
+      .withAllOutput(output)
+      .runTest(false)
+  }
+
+  @Test(groups = Array("fast"))
+  def thresholdTest() {
+    val key = new MarkedText("key", marked = true)
+    val bytesList1 = List(
+      new MarkedText("1*", marked = true),
+      new MarkedText("2*", marked = true),
+      new MarkedText("3*", marked = true),
+      new MarkedText("1"),
+      new MarkedText("2"),
+      new MarkedText("3"),
+      new MarkedText("4")
+    )
+
+    val bytesList2 = List(
+      new MarkedText("1*", marked = true),
+      new MarkedText("2*", marked = true),
+      new MarkedText("1"),
+      new MarkedText("2"),
+      new MarkedText("3"),
+      new MarkedText("4")
+    )
+
+    val output = List(
+      new Pair(new Text("1"), new Text("1*")),
+      new Pair(new Text("2"), new Text("1*")),
+      new Pair(new Text("3"), new Text("1*")),
+      new Pair(new Text("4"), new Text("1*")),
+      new Pair(new Text("1"), new Text("2*")),
+      new Pair(new Text("2"), new Text("2*")),
+      new Pair(new Text("3"), new Text("2*")),
+      new Pair(new Text("4"), new Text("2*"))
+    )
+    val driver = new ReduceDriver[MarkedText, MarkedText, Text, Text]()
+    driver.getConfiguration.setInt("max.documents.per.bucket", 2)
+    driver
+      .withReducer(new HashJoiner())
+      .withInput(key, bytesList1)
+      .withInput(key, bytesList2)
       .withAllOutput(output)
       .runTest(false)
   }

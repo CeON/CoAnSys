@@ -33,12 +33,20 @@ class HashJoiner extends Reducer[MarkedText, MarkedText, Text, Text] {
 
   val outValue = new Text()
 
+  var maxDocuments = 0
+
+  override def setup(context: Context) {
+    maxDocuments = context.getConfiguration.getInt("max.documents.per.bucket", 0)
+  }
+  
   override def reduce(key: MarkedText, values: java.lang.Iterable[MarkedText], context: Context) {
     val docs = new ListBuffer[String]
     for (value <- values) {
       if (value.isMarked.get()) {
         docs.append(value.text.toString)
       } else {
+        if (maxDocuments > 0 && docs.size > maxDocuments)
+          return
         for (doc <- docs) {
           outValue.set(doc)
           context.write(value.text, outValue)

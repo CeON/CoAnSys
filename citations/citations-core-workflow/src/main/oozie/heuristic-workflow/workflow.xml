@@ -41,6 +41,11 @@
             <value>0.70</value>
         </property>
         <property>
+            <name>maxDocumentsPerBucket</name>
+            <value>100</value>
+            <description>Buckets exceeding this limit will be omitted</description>
+        </property>
+        <property>
             <name>workingDirectory</name>
         </property>
         <property>
@@ -181,6 +186,10 @@
                 <property>
                     <name>mapreduce.reduce.class</name>
                     <value>pl.edu.icm.coansys.citations.reducers.HashJoiner</value>
+                </property>
+                <property>
+                    <name>max.documents.per.bucket</name>
+                    <value>${maxDocumentsPerBucket}</value>
                 </property>
                 <property>
                     <name>mapred.output.dir</name>
