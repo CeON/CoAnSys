@@ -37,6 +37,15 @@
             <value>36</value>
         </property>
         <property>
+            <name>jobShuffleInputBufferPercent</name>
+            <value>0.70</value>
+        </property>
+        <property>
+            <name>maxDocumentsPerBucket</name>
+            <value>100</value>
+            <description>Buckets exceeding this limit will be omitted</description>
+        </property>
+        <property>
             <name>workingDirectory</name>
         </property>
         <property>
@@ -95,6 +104,10 @@
                 <name>mapred.reduce.tasks</name>
                 <value>${reduceTasks}</value>
             </property>
+            <property>
+                <name>mapred.job.shuffle.input.buffer.percent</name>
+                <value>${jobShuffleInputBufferPercent}</value>
+            </property>
         </configuration>
     </global>
     <start to="prepare"/>
@@ -110,6 +123,9 @@
 
     <action name="heuristic">
         <map-reduce>
+            <prepare>
+                <delete path="${workingDirectory}/heuristic_with_dups"/>
+            </prepare>
             <configuration>
                 <property>
                     <name>mapreduce.inputformat.class</name>
@@ -172,6 +188,10 @@
                     <value>pl.edu.icm.coansys.citations.reducers.HashJoiner</value>
                 </property>
                 <property>
+                    <name>max.documents.per.bucket</name>
+                    <value>${maxDocumentsPerBucket}</value>
+                </property>
+                <property>
                     <name>mapred.output.dir</name>
                     <value>${workingDirectory}/heuristic_with_dups</value>
                 </property>
@@ -191,6 +211,9 @@
 
     <action name="distinctor">
         <map-reduce>
+            <prepare>
+                <delete path="${output}"/>
+            </prepare>
             <configuration>
                 <property>
                     <name>mapreduce.map.class</name>
@@ -239,6 +262,9 @@
 
     <action name="unmatched">
         <map-reduce>
+            <prepare>
+                <delete path="${unmatched}"/>
+            </prepare>
             <configuration>
                 <property>
                     <name>mapreduce.inputformat.class</name>

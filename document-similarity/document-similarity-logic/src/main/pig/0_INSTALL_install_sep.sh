@@ -12,6 +12,6 @@ fi
 
 CURR=`pwd`
 cd ../../..
-mvn3 clean install -P sep
+mvn3 clean install -P sep -DskipTests
 mkdir src/main/pig/lib
 cp target/*-SNAPSHOT*.jar src/main/pig/lib
