@@ -1,5 +1,5 @@
-pathToInputFile <- "/home/pdendek/icm_dane/pbn_bojan_1k.csv"
-pathToInputFile2 = "/home/pdendek/icm_dane/pbn_bojan_1k_corrected.csv"
+pathToInputFile <- "/home/pdendek/icm_dane/pbn_bojan_1mln.csv"
+pathToInputFile2 = "/home/pdendek/icm_dane/pbn_bojan_1mln_corrected.csv"
 mungle_data <- function(pathToInputFile,pathToInputFile2){
   print("FUN:mungle_data()")
   pbn_bojan <- read.delim(pathToInputFile, header=F)
@@ -16,8 +16,8 @@ mungle_data <- function(pathToInputFile,pathToInputFile2){
   features.value.max <- pbn_bojan[,seq(2,35,3)+1]
   features.value.contr <- pbn_bojan[,seq(2,35,3)+2]
   
-  features.value.contr.sorted1 <- features.value.contr[,-(length(features)-1)]
-  features.value.contr.sorted2 <- features.value.contr[,(length(features)-1)]
+  features.value.contr.sorted1 <- features.value.contr[,-(length(features.name.alllist)-1)]
+  features.value.contr.sorted2 <- features.value.contr[,(length(features.name.alllist)-1)]
   features.value.contr.sorted <- cbind(features.value.contr.sorted1,features.value.contr.sorted2)
   names(features.value.contr.sorted) <- features.name
   head(features.value.contr.sorted)
@@ -130,9 +130,9 @@ main <- function(pI){
 run <- function(){
   print("FUN:run()")
   sta <- date()
-  inData <- "/home/pdendek/icm_dane/pbn_bojan_1k.csv"
-  midData <- "/home/pdendek/icm_dane/pbn_bojan_1k_corrected.csv"
-  mungle_data(inData,midData)
+  inData <- "/home/pdendek/icm_dane/pbn_bojan_1mln.csv"
+  midData <- "/home/pdendek/icm_dane/pbn_bojan_1mln_corrected.csv"
+  #mungle_data(inData,midData)
   retVals <- main(midData)
   print(paste("START",sta))
   print(paste("STOP",date()))
@@ -142,4 +142,7 @@ run <- function(){
 ret <- run()
 
 #cat(paste(ret,collapse='\n\n'))
+date()
 cat(paste(run(),collapse='\n\n'))
+date()
+
