@@ -62,16 +62,8 @@ public abstract class AND<T> extends EvalFunc<T> {
 						+ fi.getDisambiguatorName() + ")";
 				logger.error(errMsg);
 				throw new ClassNotFoundException(errMsg);
-				// if you do not want to throw an exception, paste the
-				// following creating default disambiguator: d = defaultDisambiguator
-			}
-			// wrong max value (would cause dividing by zero)
-			if (fi.getMaxValue() == 0) {
-				String errMsg = "Incorrect max value for feature: "
-						+ fi.getFeatureExtractorName()
-						+ ". Max value cannot equal 0.";
-				logger.warn(errMsg);
-				throw new IllegalArgumentException(errMsg);
+				// if you do not want to throw an exception, uncomment the
+				// following creating default disambiguator: d = defaultDisambiguator;
 			}
 
 			if (useIdsForExtractors) {
@@ -93,7 +85,7 @@ public abstract class AND<T> extends EvalFunc<T> {
 			boolean breakWhenPositive) {
 		Map<String, Object> mA, mB;
 		double affinity = threshold;
-
+		
 		// Taking features from each keys (name of extractor = feature name)
 		// In contribsT.get(i) there is map we need.
 		// From this map (collection of i'th contributor's features)
@@ -114,8 +106,12 @@ public abstract class AND<T> extends EvalFunc<T> {
 			if (oA == null || oB == null) {
 				continue;
 			}
-
-			affinity += calculateAffinity(oA, oB, d);
+			
+			double ca = calculateAffinity(oA, oB, d);
+			if ( Double.isNaN(ca) ) {
+				throw new NumberFormatException("NaN result of calculated affinity. Check disambiguator (meybe 0 * inf?).");
+			}
+			affinity += ca;
 
 			if (affinity >= 0 && breakWhenPositive) {
 				// because we do not remember sim values this time
@@ -123,7 +119,6 @@ public abstract class AND<T> extends EvalFunc<T> {
 				break;
 			}
 		}
-
 		return (float) affinity;
 	}
 

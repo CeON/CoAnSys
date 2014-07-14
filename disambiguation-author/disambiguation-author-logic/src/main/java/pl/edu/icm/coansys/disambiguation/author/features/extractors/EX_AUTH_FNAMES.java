@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
+
 package pl.edu.icm.coansys.disambiguation.author.features.extractors;
 
 import org.apache.pig.data.DataBag;
@@ -26,49 +27,49 @@ import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.D
 import pl.edu.icm.coansys.disambiguation.author.normalizers.PigNormalizer;
 import pl.edu.icm.coansys.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
-import pl.edu.icm.coansys.models.DocumentProtos.KeyValue;
 
-//Note that we do not use normalization for that one.
-public class EX_PERSON_ID extends DisambiguationExtractorAuthor {
+public class EX_AUTH_FNAMES extends DisambiguationExtractorAuthor {
 
-	private String PERSON_ID_KEY_NAME = "pbnPersonId";
-	
-	public EX_PERSON_ID() {
+	public EX_AUTH_FNAMES() {
 		super();
 	}
 
-	public EX_PERSON_ID(PigNormalizer[] new_normalizers) {
+	public EX_AUTH_FNAMES(PigNormalizer[] new_normalizers) {
 		super(new_normalizers);
 	}
-	
-	protected EX_PERSON_ID(PigNormalizer[] new_normalizers, String person_id_key_name) {
-		super(new_normalizers);
-		PERSON_ID_KEY_NAME = person_id_key_name;
-	}
-	
+
 	@Override
 	public DataBag extract(Object o, int fakeIndex, String lang) {
 		TupleFactory tf = TupleFactory.getInstance();
 		DocumentMetadata dm = (DocumentMetadata) o;
 		DataBag db = new DefaultDataBag();
-		Tuple t = tf.newTuple();
 
 		Author a = dm.getBasicMetadata().getAuthor(fakeIndex);
-		for (KeyValue kv : a.getExtIdList()) {
-			if (kv.getKey().equals(PERSON_ID_KEY_NAME)) {
-				if ( kv.getValue() == null || kv.getValue().isEmpty() ) {
-					continue;
-				}
-				t.append(kv.getValue());
-				db.add(t);
-				break;
-			}
+		String fnames = a.getForenames();
+		if (fnames.isEmpty()) {
+			return db;
 		}
+
+		String[] names = fnames.trim().split("[\\W]+");
+		
+		for( String name : names ) {
+			if ( name.isEmpty() ) {
+				continue;
+			}
+			Tuple t = tf.newTuple();
+			Object normalized = normalizeExtracted( name );
+			if ( normalized == null ) {
+				continue;
+			}
+			t.append( normalized );
+			db.add(t);
+		}
+
 		return db;
 	}
 
 	@Override
 	public String getId() {
-		return "8";
+		return "5.0";
 	}
 }

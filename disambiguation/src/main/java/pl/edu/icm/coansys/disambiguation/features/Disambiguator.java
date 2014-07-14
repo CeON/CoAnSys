@@ -83,12 +83,4 @@ public class Disambiguator {
 		}
 		return new SimpleEntry<Integer, Integer>(intersection, sum);
 	}
-
-	/**
-	 * 
-	 * @return {@link Disambiguator} id.
-	 */
-	public String getName() {
-		return this.getClass().getSimpleName();
-	}
 }

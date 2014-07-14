@@ -18,7 +18,12 @@ public class Intersection extends Disambiguator {
 	public double calculateAffinity(List<Object> f1, List<Object> f2) {
 		SimpleEntry<Integer, Integer> p = intersectionAndSum(f1, f2);
 		int intersection = p.getKey();
-
+		
+		// Note that inf * 0 is indeterminate form (what gives NaN)
+		if ( intersection == 0 ) {
+			return 0;
+		}
+		
 		return (double) intersection * weight;
 	}
 

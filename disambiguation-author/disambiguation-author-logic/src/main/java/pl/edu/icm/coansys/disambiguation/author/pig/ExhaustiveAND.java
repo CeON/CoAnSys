@@ -167,7 +167,7 @@ public class ExhaustiveAND extends AND<DataBag> {
 
 			// fill sim matrix
 			calculateAffinity(contribsT);
-
+			
 			// clusterAssociations[ index_kontrybutora ] = associated cluster id
 			ClusteringStrategy strategy = new CompleteLinkageHACStrategy_StateOfTheArt();
 			int[] clusterAssociations = strategy.clusterize(sim);
@@ -177,8 +177,7 @@ public class ExhaustiveAND extends AND<DataBag> {
 			// creating records for each contrib: contrib key, author UUID
 			DataBag ret = createResultingTuples(clusters, contribsId);
 
-			// this action will A D D S O M E I N F O R M A T I O N T O T I M E
-			// R M O N I T
+			// this action will add some information to the monit
 			if (isStatistics) {
 				Collections.sort(clustersSizes, Collections.reverseOrder());
 				int biggestCluster = clustersSizes.isEmpty() ? 1

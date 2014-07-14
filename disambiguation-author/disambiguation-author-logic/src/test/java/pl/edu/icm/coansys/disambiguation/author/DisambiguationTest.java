@@ -18,6 +18,7 @@
 
 package pl.edu.icm.coansys.disambiguation.author;
 
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
@@ -34,10 +35,13 @@ import org.apache.pig.data.TupleFactory;
 
 import pl.edu.icm.coansys.commons.java.DiacriticsRemover;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.CoAuthorsSnameDisambiguatorFullList;
+import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.CosineSimilarity;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.Disambiguator;
+import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.DisambiguatorFactory;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.Intersection;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.IntersectionPerMaxval;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.IntersectionPerSum;
+import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.YearDisambiguator;
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.DisambiguationExtractorFactory;
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DisambiguationExtractor;
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DisambiguationExtractorDocument;
@@ -138,7 +142,8 @@ public class DisambiguationTest {
    			   	"EX_EMAIL_PREFIX" ,
    			   	"EX_DOC_AUTHS_FNAME_FST_LETTER",
    			   	"EX_AUTH_FNAME_FST_LETTER",
-   			   	"EX_PERSON_IDS"
+   			   	"EX_PERSON_IDS",
+   			   	"EX_PERSON_PBN_ID"
    		};
    		String[] ids = {
    				"0",
@@ -155,7 +160,8 @@ public class DisambiguationTest {
    				"3",
    				"C",
    				"D",
-   				"E"
+   				"E",
+   				"8.2"
    		};
    		
    		assert ( ids.length == extractors.length );
@@ -181,13 +187,24 @@ public class DisambiguationTest {
    	
    	
    	@org.testng.annotations.Test(groups = {"fast"})
+   	public void features_disambiguator_factory() {
+   		String featureDescription = "Intersection#whatever#0.0#0";
+		List<FeatureInfo> filist = FeatureInfo.parseFeatureInfoString(featureDescription);
+		FeatureInfo fi = filist.get(0);
+		
+   		DisambiguatorFactory ff = new DisambiguatorFactory();
+   		Disambiguator d = ff.create(fi);
+   		assert(d != null);
+   	}
+   	
+   	
+   	@org.testng.annotations.Test(groups = {"fast"})
    	public void features_disambiguator_calculateAffinity() {
    		Disambiguator COAUTH = new CoAuthorsSnameDisambiguatorFullList(1,1);
    		Disambiguator IPS = new IntersectionPerSum(1,1);
    		Disambiguator IPM = new IntersectionPerMaxval(1,1);
    		Disambiguator IPM2 = new IntersectionPerMaxval(3.0,10.0);
    		Disambiguator I = new Intersection();
-   		
    		
    		Object atab[] = {-1,"one", "two", "three", "four", 5, 6, 7, 8, 9.0, 10.0};
    		Object btab[] = {-2,-1,"one", "two", 5, 9.0, "eleven", 12, 13.0};		
@@ -199,6 +216,50 @@ public class DisambiguationTest {
   		assert( IPM2.calculateAffinity(a, b) == 5.0 / 10.0 * 3.0  );
   		assert( I.calculateAffinity(a, b) == 5.0 );
   		assert( COAUTH.calculateAffinity(a, b) == 4.0 );
+   	}
+   	
+   	@org.testng.annotations.Test(groups = {"fast"})
+   	public void features_disambiguator_cosineSimilarity() {
+   		Disambiguator C = new CosineSimilarity(1000, 1);
+   		Object atab[] = {2, 3};
+   		Object btab[] = {3};
+   		List<Object> a = Arrays.asList(atab);
+   		List<Object> b = Arrays.asList(btab);
+   		assert( C.calculateAffinity(a, b) == 1/Math.sqrt(2) * 1000 );
+   	}
+   	
+   	
+   	@org.testng.annotations.Test(groups = {"fast"})
+   	public void features_disambiguator_Year() {
+   		Disambiguator Y = new YearDisambiguator(2, 30);
+   		Object atab[] = {1930};
+   		Object btab[] = {"1930"};
+   		List<Object> a = Arrays.asList(atab);
+   		List<Object> b = Arrays.asList(btab);
+   		assert( Y.calculateAffinity(a, b) == 2 );
+   	}
+   	
+   	@org.testng.annotations.Test(groups = {"fast"})
+   	public void features_disambiguator_calculateAffinity_indeterminate_forms() {
+   		Disambiguator COAUTH = new CoAuthorsSnameDisambiguatorFullList(Double.POSITIVE_INFINITY,1);
+   		Disambiguator IPS = new IntersectionPerSum(Double.POSITIVE_INFINITY,1);
+   		Disambiguator IPM = new IntersectionPerMaxval(Double.POSITIVE_INFINITY,1);
+   		Disambiguator I = new Intersection(Double.POSITIVE_INFINITY, 1);
+   		Disambiguator C = new CosineSimilarity(Double.POSITIVE_INFINITY, 1);
+   		Disambiguator Y = new YearDisambiguator(Double.POSITIVE_INFINITY, 1);
+   		
+   		Object atab[] = {1};
+   		Object btab[] = {2};		
+   		List<Object> a = Arrays.asList(atab);
+   		List<Object> b = Arrays.asList(btab);
+   		
+		assert (IPS.calculateAffinity(a, b) == 0);
+		assert (IPM.calculateAffinity(a, b) == 0);
+		assert (I.calculateAffinity(a, b) == 0);
+		assert (COAUTH.calculateAffinity(a, b) == 0);
+		assert (C.calculateAffinity(a, b) == 0);
+		assert (Y.calculateAffinity(a, b) == 0);
+
    	}
    	
    	@org.testng.annotations.Test(groups = {"fast"})
@@ -236,7 +297,15 @@ public class DisambiguationTest {
 		EXTRACT_CONTRIBDATA_GIVENDATA ex2 = new EXTRACT_CONTRIBDATA_GIVENDATA( arg );
 		assert( full.equals( ex2.debugComponents() ) );
    	}
-   	    
+   	
+   	@org.testng.annotations.Test(groups = {"fast"})
+   	public void pig_extractor_EXTRACT_CONTRIBDATA_GIVENDATA_getting_indicators() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+   		// test common contruction
+   		new EXTRACT_CONTRIBDATA_GIVENDATA("-featureinfo Intersection#EX_PERSON_ID#1.0#1");	
+   		// test "climbing up" through inherited tree of extractor, note that EX_PERSON_COANSYS_ID extends EX_PERSON_ID
+   		new EXTRACT_CONTRIBDATA_GIVENDATA("-featureinfo Intersection#EX_PERSON_COANSYS_ID#1.0#1");
+   	}
+   	
     // Tools:
    	private Tuple contribCreator(Object id, Object sname, 
    			Map<String,DataBag>features){
@@ -363,5 +432,88 @@ public class DisambiguationTest {
    		String exh_out = "{(996dc30f-a92a-388d-9392-9ed16588ec72,{(0),(1),(2)}),(04b6c550-264c-39e8-b533-d7f7b977415e,{(3),(4),(5)})}";
    		exhaustive.exec(input).toString().equals(exh_out);
    	}
+
+	@org.testng.annotations.Test(groups = {"fast"})
+   	public void pig_aproximateAND_exec_1() throws Exception {
+   		AND<DataBag> aproximate = new AproximateAND_BFS(
+   				"-0.98025095811271", 
+  				"Intersection#EX_PERSON_IDS#inf#1",
+   				"false",
+   				"false",
+   				"false"
+   			);
+		
+  		// Creating example input
+   		List<Tuple> contribs = new ArrayList<Tuple>();
+   		
+   		// contrib#0
+   		Map<String,DataBag>map0 = new HashMap<String,DataBag>();
+   		addFeatureToMap(map0, "EX_PERSON_IDS", 1, 2);
+   		contribs.add( contribCreator("cid-0", "sname-0", map0) );
+
+   		// contrib#1
+   		Map<String,DataBag>map1 = new HashMap<String,DataBag>();
+   		addFeatureToMap(map1, "EX_PERSON_IDS", 1);
+   		contribs.add( contribCreator("cid-1", "sname-0", map1) );
+
+   		// contrib#2
+   		Map<String,DataBag>map2 = new HashMap<String,DataBag>();
+   		addFeatureToMap(map2, "EX_PERSON_IDS", 3);
+   		contribs.add( contribCreator("cid-2", "sname-0", map2) );
+   		
+   		// contrib#3
+   		Map<String,DataBag>map3 = new HashMap<String,DataBag>();
+   		addFeatureToMap(map3, "EX_PERSON_IDS", 2, 3);
+   		contribs.add( contribCreator("cid-3", "sname-0", map3) );
+   		
+   		// contrib#4
+   		Map<String,DataBag>map4 = new HashMap<String,DataBag>();
+   		addFeatureToMap(map4, "EX_PERSON_IDS", 4);
+   		contribs.add( contribCreator("cid-4", "sname-0", map4) );
+   		
+   		Tuple input = new DefaultTuple();
+   		DataBag contribsBag = tupleListToDataBag(contribs);
+		input.append( contribsBag );
+		
+		String apr_out = "{({(cid-0,sname-0,[EX_PERSON_IDS#{(1),(2)}]),(cid-1,sname-0,[EX_PERSON_IDS#{(1)}]),(cid-3,sname-0,[EX_PERSON_IDS#{(2),(3)}]),(cid-2,sname-0,[EX_PERSON_IDS#{(3)}])},{}),({(cid-4,sname-0,[EX_PERSON_IDS#{(4)}])},{})}";
+   		
+		assert( aproximate.exec(input).toString().equals( apr_out ) );
+	}
+   	
+	
+	@org.testng.annotations.Test(groups = {"fast"})
+   	public void pig_exhaustiveAND_exec_0() throws Exception {
+		AND<DataBag> exhaustive = new ExhaustiveAND(
+   				"-0.98025095811271", 
+  				"Intersection#EX_PERSON_IDS#inf#1",
+   				"false",
+   				"false"
+   			);
+		
+  		// Creating example input
+   		List<Tuple> contribs = new ArrayList<Tuple>();
+   		
+   		// contrib#0
+   		Map<String,DataBag>map0 = new HashMap<String,DataBag>();
+   		addFeatureToMap(map0, "EX_PERSON_IDS", 1, 2);
+   		contribs.add( contribCreator("cid-0", "sname-0", map0) );
+
+   		// contrib#1
+   		Map<String,DataBag>map1 = new HashMap<String,DataBag>();
+   		addFeatureToMap(map1, "EX_PERSON_IDS", 1);
+   		contribs.add( contribCreator("cid-1", "sname-0", map1) );
+
+   		// contrib#2
+   		Map<String,DataBag>map2 = new HashMap<String,DataBag>();
+   		addFeatureToMap(map2, "EX_PERSON_IDS", 3);
+   		contribs.add( contribCreator("cid-2", "sname-0", map2) );
+   		
+   		Tuple input = new DefaultTuple();
+   		DataBag contribsBag = tupleListToDataBag(contribs);
+		input.append( contribsBag );
+		
+		String exh_out = "{(5db152fb-46d2-3e34-a8e6-bdcc17b4d1bd,{(cid-0),(cid-1)}),(c0e1fcc8-9047-3749-a5fb-de397a278870,{(cid-2)})}";
+		System.out.println( exhaustive.exec(input).toString().equals(exh_out) );
+	}
 }
 
