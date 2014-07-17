@@ -56,7 +56,7 @@ if (! "reshape2" %in% row.names(installed.packages()))
 require(reshape2)
 
 if (! "kernlab" %in% row.names(installed.packages()))
-  install.packages('kernlab')
+   install.packages('kernlab', repos="http://cran.rstudio.com/")
 require(kernlab)
 
 getPolarW <- function(model,df){
@@ -132,7 +132,6 @@ run <- function(){
   sta <- date()
   inData <- "/home/pdendek/icm_dane/pbn_bojan_1mln.csv"
   midData <- "/home/pdendek/icm_dane/pbn_bojan_1mln_corrected.csv"
-  #mungle_data(inData,midData)
   retVals <- main(midData)
   print(paste("START",sta))
   print(paste("STOP",date()))

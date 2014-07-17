@@ -36,24 +36,33 @@ public class CoAuthorsSnameDisambiguatorFullList extends Disambiguator {
 
 	public CoAuthorsSnameDisambiguatorFullList(double weight, double maxVal) {
 		super(weight, maxVal);
+		if (maxVal == 0) {
+			throw new IllegalArgumentException("Max value cannot equal 0.");
+		}
 	}
 
+	@Override
+	public void setMaxVal(double maxVal) {
+		if (maxVal == 0) {
+			throw new IllegalArgumentException("Max value cannot equal 0.");
+		}
+		this.maxVal = maxVal;
+	}
+	
 	@Override
 	public double calculateAffinity(List<Object> f1, List<Object> f2) {
 
 		SimpleEntry<Integer, Integer> p = intersectionAndSum(f1, f2);
 
-		// because this cotributor is in sum and intersection for sure, but we
+		// Because this cotributor is in sum and intersection for sure, but we
 		// do not want to take himself as his co-author.
-		int intersection = p.getKey() - 1;
-		if (intersection < 0) {
+		// Also note that inf * 0 is indeterminate form (what gives NaN).
+		double intersection = p.getKey() - 1.0;
+		double sum = p.getValue();
+		if (intersection <= 0.0) {
 			return 0;
 		}
-		// int sum = p.getValue() - 1;
-		// if (sum <= 0) {
-		// return 0;
-		// }
-		// return (double) intersection / sum 8 weight;
-		return intersection / maxVal * weight;
+		
+		return intersection / sum * weight;
 	}
 }
