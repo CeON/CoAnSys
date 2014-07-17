@@ -54,7 +54,7 @@ import pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_CONTRIBDAT
 import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
 
 // TODO:
-/* EXTRACTORS test build example author for it like this:
+/* EXTRACTORS tests. Building metadata (author) example:
 // 
 		import pl.edu.icm.coansys.models.DocumentProtos.Author;
 		Author.Builder ab =  Author.newBuilder();
@@ -69,7 +69,8 @@ import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
 public class DisambiguationTest {
 	 
     // Follow name scheme of tests: package_class[_method]
-    
+	// TODO: split tests into correct packages, rename
+	
    	@org.testng.annotations.Test(groups = {"fast"})
    	public void pig_normalizers_ALL() {
 		String text = "é{(Zaaaażółć 'gęślą', \"jaź(ń)\"}]# æ 1234567890 !@#$%^&*() _+=?/>.<,-";
@@ -215,7 +216,7 @@ public class DisambiguationTest {
   		assert( IPM.calculateAffinity(a, b) == 5.0 );
   		assert( IPM2.calculateAffinity(a, b) == 5.0 / 10.0 * 3.0  );
   		assert( I.calculateAffinity(a, b) == 5.0 );
-  		assert( COAUTH.calculateAffinity(a, b) == 4.0 );
+  		assert( COAUTH.calculateAffinity(a, b) == 4.0 / 15.0 );
    	}
    	
    	@org.testng.annotations.Test(groups = {"fast"})
@@ -417,8 +418,7 @@ public class DisambiguationTest {
    				"true",
    				"false");
    		
-		String apr_out = "{({(0,0,[1#{(1),(2),(3)},0#{(1),(2),(3)},7#{(1),(2),(3)},6#{(1),(2),(3)}]),(1,1,[1#{(1),(2),(3)},0#{(1),(2),(3)},7#{(1),(2),(3)},6#{(1),(2),(3)}]),(2,2,[1#{(4),(5),(6)},0#{(1),(2),(3)},7#{(1),(2),(3)},6#{(1),(2),(3)}]),(5,5,[1#{(4),(5),(6)},0#{(1),(2),(3)},7#{(7),(8),(9)},6#{(7),(8),(9)}]),(3,3,[1#{(7),(8),(9)},0#{(7),(8),(9)},7#{(7),(8),(9)},6#{(7),(8),(9)}]),(4,4,[1#{(7),(8),(9)},0#{(7),(8),(9)},7#{(7),(8),(9)},6#{(7),(8),(9)}])},{(1,0,2.0),(2,0,1.0),(3,2,0.0),(4,3,0.0),(5,3,0.0),(4,0,-2.0),(5,0,-2.0),(3,0,-1.0),(4,1,-2.0),(5,1,-2.0),(3,1,-1.0),(4,2,-2.0),(5,2,-2.0)})}";
-   		
+		String apr_out = "{({(0,0,[1#{(1),(2),(3)},0#{(1),(2),(3)},7#{(1),(2),(3)},6#{(1),(2),(3)}]),(1,1,[1#{(1),(2),(3)},0#{(1),(2),(3)},7#{(1),(2),(3)},6#{(1),(2),(3)}]),(2,2,[1#{(4),(5),(6)},0#{(1),(2),(3)},7#{(1),(2),(3)},6#{(1),(2),(3)}])},{(1,0,1.6666666),(2,0,0.6666667)}),({(3,3,[1#{(7),(8),(9)},0#{(7),(8),(9)},7#{(7),(8),(9)},6#{(7),(8),(9)}]),(4,4,[1#{(7),(8),(9)},0#{(7),(8),(9)},7#{(7),(8),(9)},6#{(7),(8),(9)}]),(5,5,[1#{(4),(5),(6)},0#{(1),(2),(3)},7#{(7),(8),(9)},6#{(7),(8),(9)}])},{(1,0,1.6666666),(2,0,0.0)})}";
 		assert( aproximate.exec(input).toString().equals( apr_out ) );
    	
    		// EXHAUSTIVE
