@@ -20,10 +20,11 @@ public class IntersectionPerSum extends Disambiguator {
 		int intersection = p.getKey();
 		int sum = p.getValue();
 
-		if (sum == 0) {
+		// Note that inf * 0 is indeterminate form (what gives NaN)
+		if ( intersection == 0 ) {
 			return 0;
 		}
-
+		
 		return (double) intersection / sum * weight;
 	}
 

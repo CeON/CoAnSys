@@ -58,6 +58,7 @@
 					<include>**/disambiguation*.pig</include>
 					<include>**/splitter*.pig</include>
 					<include>**/serialize*.pig</include>
+					<include>**/accuracy_check*.pig</include>
 				</includes>
 				<targetPath>${project.build.directory}/classes/pig-main</targetPath>
 			</resource>

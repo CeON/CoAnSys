@@ -15,30 +15,21 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
-
 package pl.edu.icm.coansys.disambiguation.author.features.extractors;
 
-import pl.edu.icm.coansys.disambiguation.author.normalizers.DiacriticsRemover;
-import pl.edu.icm.coansys.disambiguation.author.normalizers.FirstLetter;
 import pl.edu.icm.coansys.disambiguation.author.normalizers.PigNormalizer;
-import pl.edu.icm.coansys.disambiguation.author.normalizers.ToHashCode;
-import pl.edu.icm.coansys.disambiguation.author.normalizers.ToLowerCase;
 
-public class EX_AUTH_FNAME_FST_LETTER extends EX_AUTH_FNAME {
+
+public class EX_PERSON_PBN_ID extends EX_PERSON_ID {
+
+	private static PigNormalizer[] new_normalizers = {};
 	
-	private static PigNormalizer[] new_normalizers = new PigNormalizer[] {
-			new FirstLetter(),
-			new DiacriticsRemover(), 
-			new ToLowerCase(),
-			new ToHashCode()
-		};
-	
-	public EX_AUTH_FNAME_FST_LETTER() {
-		super(new_normalizers);
+	public EX_PERSON_PBN_ID() {
+		super(new_normalizers, "pbnPersonId");
 	}
 
 	@Override
 	public String getId() {
-		return "D";
+		return "8.2";
 	}
 }

@@ -29,18 +29,6 @@
 			<value>-Xmx8000m</value>
 			<description>Java options for mappers in disambiguation-aproximate without storing similarities Pig scripts.</description>
 		</property>
-		<!-- Workflow decissions -->
-		<property>
-			<name>and_cleaning</name>
-			<value>true</value>
-			<description>Remove auxiliares sequence files produced during the execution of workflow.</description>
-		</property>
-		<property>
-			<name>and_check_accuracy</name>
-			<value>true</value>
-			<description>If there was external ids for some contributors in original data and in feature_info there is EX_PERSON_ID feature with weigh 0, then we can check accuracy of our model. When 'true' additional workflow node run.</description>
-		</property>
-		
 		<!-- Additional out data paths -->
 		<property>
 			<name>and_splitted_output</name>
@@ -70,7 +58,7 @@
 		<property>
 			<name>and_cid_dockey</name>
 			<value>${results}/cid_dockey</value>
-			<description>Path for additional data - pairs ( document id, contributor id, original external id, sname ). Used in 'serialize' action to associate generated ( author uuid, contributor id ) pairs with documents. External id and sname needed in optional accuracy check after serialize.</description>
+			<description>Path for additional data - pairs ( document id, contributor id ). Used in 'serialize' action to associate generated ( author uuid, contributor id ) pairs with documents.</description>
 		</property>
 		<property>
 			<name>and_outputContribs</name>
@@ -81,21 +69,6 @@
 			<name>and_failedContribs</name>
 			<value>${results}/failedContribs</value>
 			<description>Path for not analyzed data - too big groups of contributors.</description>
-		</property>
-		<property>
-			<name>and_output_unserialized</name>
-			<value>${results}/output_unserialized</value>
-			<description>Path for unserialized, ungrouped AND results. Used only during optional accuracy check (and_check_accuracy = true).</description>
-		</property>
-		<!--property>
-		<name>and_merged_output</name>
-		<value>${results}/merged_output</value>
-		<description>Path for input data merged with AND output.</description>
-		</property-->
-		<property>
-			<name>and_accuracy_check_output</name>
-			<value>${results}/accuracy_check</value>
-			<description>Path for short final accuracy statistics (so far only for PBN with pbn ids).</description>
 		</property>
 		<!-- Properties for Pig scripts -->
 		<property>
@@ -123,13 +96,11 @@
 			<value>1000000000</value>
 			<description>Upper limit on the size of the contributors group for aproximate disambiguation algorithm with storing calculated similarities.</description>
 		</property>
-		<property>
-			<name>and_feature_info</name>
-			<!-- Note that EX_PERSON_ID with weight 0 is needed for accuracy checking! -->
-			<!-- TODO: change 0 to inf for EX_PERSON_IDS in production! -->
-			<value>"Intersection#EX_PERSON_ID#0#1,Intersection#EX_PERSON_IDS#0#1,CosineSimilarity#EX_CLASSIFICATION_CODES#772.692964079035#1,CosineSimilarity#EX_KEYWORDS_SPLIT#38.8749661175105#1,CosineSimilarity#EX_KEYWORDS#24.2728641349849#1,CosineSimilarity#EX_TITLE_SPLIT#355.529468017407#1,CosineSimilarity#EX_YEAR#0#1,CosineSimilarity#EX_TITLE#6#1,CosineSimilarity#EX_DOC_AUTHS_SNAMES#3438.44777889656#1,CosineSimilarity#EX_DOC_AUTHS_FNAME_FST_LETTER#3687.11964707998#1,CosineSimilarity#EX_AUTH_FNAMES_FST_LETTER#4738.63437905496#1,CosineSimilarity#EX_AUTH_FNAME_FST_LETTER#4748.59274849462#1,CosineSimilarity#EX_EMAIL#0#1"</value>
-			<description>Features description - model for calculating affinity and contributors clustering. Value in format: "Disambiguator_name#Feature_extractor_name#weight#coefficient_of_the_maximum_number_of_occurrences,...".</description>
-		</property>
+                <property>
+                        <name>and_feature_info</name>
+                        <value>"Intersection#EX_PERSON_IDS#inf#1,CosineSimilarity#EX_CLASSIFICATION_CODES#772.692964079035#1,CosineSimilarity#EX_KEYWORDS_SPLIT#38.8749661175105#1,CosineSimilarity#EX_KEYWORDS#24.2728641349849#1,CosineSimilarity#EX_TITLE_SPLIT#355.529468017407#1,CosineSimilarity#EX_YEAR#0#1,CosineSimilarity#EX_TITLE#6#1,CosineSimilarity#EX_DOC_AUTHS_SNAMES#3438.44777889656#1,CosineSimilarity#EX_DOC_AUTHS_FNAME_FST_LETTER#3687.11964707998#1,CosineSimilarity#EX_AUTH_FNAMES_FST_LETTER#4738.63437905496#1,CosineSimilarity#EX_AUTH_FNAME_FST_LETTER#4748.59274849462#1,CosineSimilarity#EX_EMAIL#0#1"</value>
+                        <description>Features description - model for calculating affinity and contributors clustering. Value in format: "Disambiguator_name#Feature_extractor_name#weight#coefficient_of_the_maximum_number_of_occurrences,...".</description>
+                </property>
 		<property>
 			<name>and_statistics</name>
 			<value>false</value>
@@ -277,22 +248,12 @@
 		<ok to="do_and_join"/>
 		<error to="kill"/>
 	</action>
-	<join name="do_and_join" to="serialize_fork"/>
-	<fork name="serialize_fork">
-		<path start="serialize"/>
-		<path start="splitted_cleaning_decission"/>
-	</fork>
-	<decision name="splitted_cleaning_decission">
-		<switch>
-			<case to="splitted_cleaning">${and_cleaning}</case>
-			<default to="serialize_join"/>
-		</switch>
-	</decision>	
-	<action name="splitted_cleaning">
+	<join name="do_and_join" to="do_and_cleaning"/>
+	<action name="do_and_cleaning">
 		<fs>
 			<delete path='${and_splitted_output}'/>
 		</fs>
-		<ok to="serialize_join"/>
+		<ok to="serialize"/>
 		<error to="kill"/>
 	</action>
 	<action name="serialize">
@@ -303,68 +264,23 @@
 			<param>and_scheduler=${and_pool}</param>
 			<param>and_cid_dockey=${and_cid_dockey}</param>
 			<param>and_outputPB=${and_outputPB}</param>
-			<param>and_output_unserialized=${and_output_unserialized}</param>
 			<!--commons-->
 			<param>and_scheduler=${and_pool}</param>
 		</pig>
-		<ok to="serialize_join"/>
+		<ok to="finall_cleaning"/>
 		<error to="kill"/>
 	</action>
-	<join name="serialize_join" to="check_accuracy_fork"/>
-	<fork name="check_accuracy_fork">
-		<path start="check_accuracy_decision"/>
-		<path start="and_residues_cleaning_decission"/>
-	</fork>
-	<decision name="check_accuracy_decision">
-		<switch>
-			<case to="check_accuracy">${and_check_accuracy}</case>
-			<default to="check_accuracy_join"/>
-		</switch>
-	</decision>
-	<action name="check_accuracy">
-		<pig>
-			<script>accuracy_check.pig</script>
-			<param>and_output_unserialized=${and_output_unserialized}</param>
-			<param>and_accuracy_check_output=${and_accuracy_check_output}</param>
-			<!--commons-->
-			<param>and_scheduler=${and_pool}</param>
-		</pig>
-		<ok to="check_accuracy_join"/>
-		<error to="kill"/>
-	</action>
-	<decision name="and_residues_cleaning_decission">
-		<switch>
-			<case to="and_residues_cleaning">${and_cleaning}</case>
-			<default to="check_accuracy_join"/>
-		</switch>
-	</decision>	
-	<action name="and_residues_cleaning">
+	<action name="finall_cleaning">
 		<fs>
 			<delete path='${and_cid_dockey}'/>
 			<delete path='${and_outputContribs}'/>
 		</fs>
-		<ok to="check_accuracy_join"/>
-		<error to="kill"/>
-	</action>
-	<join name="check_accuracy_join" to="unserialized_output_clean_decision"/>
-	<decision name="unserialized_output_clean_decision">
-		<switch>
-			<case to="unserialized_output_clean">${and_cleaning}</case>
-			<default to="end"/>
-		</switch>
-	</decision>	
-	<action name="unserialized_output_clean">
-		<fs>
-			<delete path='${and_output_unserialized}'/>
-		</fs>
 		<ok to="end"/>
 		<error to="kill"/>
 	</action>
-	
 	<action name="send-email">
 		<email xmlns="uri:oozie:email-action:0.1">
-			<to>mwos@icm.edu.pl</to>
-			<cc>mwos@icm.edu.pl</cc>
+			<to>pdendek@icm.edu.pl</to>
 			<subject>Email notifications for ${wf:id()}</subject>
 			<body>The wf ${wf:id()} successfully completed.</body>
 		</email>
@@ -375,6 +291,5 @@
 		<message>Workflow failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
 	</kill>
 	<end name="end"/>
+
 </workflow-app>
-
-

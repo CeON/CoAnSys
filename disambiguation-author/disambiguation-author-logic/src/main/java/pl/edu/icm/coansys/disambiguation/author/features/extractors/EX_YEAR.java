@@ -27,6 +27,7 @@ import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.D
 import pl.edu.icm.coansys.disambiguation.author.normalizers.PigNormalizer;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 
+// Do not use normalizers for this one! Look at the YearDisambiguator.
 public class EX_YEAR extends DisambiguationExtractorDocument {
 	
 	public EX_YEAR() {
@@ -34,6 +35,7 @@ public class EX_YEAR extends DisambiguationExtractorDocument {
 	}
 
 	public EX_YEAR(PigNormalizer[] new_normalizers) {
+		// Normalizers unused
 		super(new_normalizers);
 	}
 
@@ -43,7 +45,7 @@ public class EX_YEAR extends DisambiguationExtractorDocument {
 		
 		DataBag db = new DefaultDataBag();
 		String year = dm.getBasicMetadata().getYear();
-		if ( year.isEmpty() ) {
+		if ( year == null || year.isEmpty() ) {
 			return db;
 		}
 		
