@@ -192,7 +192,24 @@
 		<fs>
 			<delete path='${finalResultsDirectory}'/>
 		</fs>
-		<ok to="moveImportantResults" />
+		<ok to="whatToDoWithImportantData" />
+		<error to="finalize-error" />
+	</action>
+
+	<decision name="whatToDoWithImportantData">
+		<switch>
+			<case to="copyImportantResults">${"true" eq "true"}</case>
+			<case to="moveImportantResults">${"false" eq "true"}</case>
+			<default to="end" />
+		</switch>
+	</decision>
+
+	<action name="copyImportantResults">
+		<distcp xmlns="uri:oozie:distcp-action:0.2">
+			<arg>${workingDirectory}/final/similarity/topn_protobuf</arg>
+			<arg>${finalResultsDirectory}</arg>
+		</distcp>
+		<ok to="remove-sideproducts-decision" />
 		<error to="finalize-error" />
 	</action>
 
