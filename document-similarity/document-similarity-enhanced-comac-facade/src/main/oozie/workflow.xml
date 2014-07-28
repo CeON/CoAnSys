@@ -34,7 +34,7 @@
 		</property>
 		<property>
 			<name>ds_remove_sideproducts</name>
-			<value>false</value>
+			<value>true</value>
 		</property>
 		<property>
 			<name>ds_tfidfMinValue</name>
@@ -89,7 +89,6 @@
 		</configuration>
 	</global>
 
-<!--	<start to="prepare-final-results-directory" />  -->
 	<start to="doc-sim" />
 
 	<action name="doc-sim">
