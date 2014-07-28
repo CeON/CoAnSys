@@ -41,22 +41,6 @@
 			<value>0</value>
 		</property>
 		<property>
-			<name>project</name>
-			<value>${project}-wf-${subproject}-docsim</value>
-		</property>
-		<property>
-			<name>subproject_main</name>
-			<value>main_wf</value>
-		</property>
-		<property>
-			<name>subproject_subdocsim</name>
-			<value>sub_docsim_wf</value>
-		</property>
-		<property>
-			<name>subproject_subenhance</name>
-			<value>sub_enhance_wf</value>
-		</property>
-		<property>
 			<name>workflowPath</name>
 			<value>${wf:appPath()}/pl.edu.icm.coansys-document-similarity-oap-uberworkflow</value>
 		</property>
@@ -98,18 +82,11 @@
 				<name>mapred.reducer.new-api</name>
 				<value>true</value>
 			</property>
-			<property>
-				<name>mapredChildJavaOpts</name>
-				<value>${mapredChildJavaOpts}</value>
-			</property>
-			<property>
-				<name>parallel</name>
-				<value>${parallel}</value>
-			</property>
 		</configuration>
 	</global>
 
-	<start to="doc-sim-facade" />
+	<start to="moveImportantResults" />
+<!--	<start to="doc-sim-facade" /> -->
 
 	<action name="doc-sim-facade">
 		<sub-workflow>
@@ -173,7 +150,6 @@
 					<name>pool</name>
 					<value>${POOL_NAME}</value>
 				</property>
-				<!-- newly introduced properties -->
 				<property>
 					<name>remove_sideproducts</name>
 					<value>false</value>
@@ -181,6 +157,30 @@
 				<property>
 					<name>tfidfMinValue</name>
 					<value>${ds_tfidfMinValue}</value>
+				</property>
+				<property>
+					<name>project</name>
+					<value>${project}-wf-${subproject}-docsim-facade</value>
+				</property>
+				<property>
+					<name>subproject_main</name>
+					<value>main_wf</value>
+				</property>
+				<property>
+					<name>subproject_subdocsim</name>
+					<value>sub_docsim_wf</value>
+				</property>
+				<property>
+					<name>subproject_subenhance</name>
+					<value>sub_enhance_wf</value>
+				</property>
+				<property>
+					<name>mapredChildJavaOpts</name>
+					<value>${mapredChildJavaOpts}</value>
+				</property>
+				<property>
+					<name>parallel</name>
+					<value>${parallel}</value>
 				</property>
 			</configuration>
 		</sub-workflow>
