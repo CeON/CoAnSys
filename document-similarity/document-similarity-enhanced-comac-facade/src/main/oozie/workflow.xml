@@ -198,7 +198,7 @@
 
 	<action name="moveImportantResults">
 		<fs>
-			<move source='${workingDirectory}/final/similarity/topn_protobuf/pa*' target='${finalResultsDirectory}'/>
+			<move source='${workingDirectory}/final/similarity/topn_protobuf' target='${finalResultsDirectory}'/>
 		</fs>
 		<ok to="remove-sideproducts-decision" />
 		<error to="finalize-error" />
