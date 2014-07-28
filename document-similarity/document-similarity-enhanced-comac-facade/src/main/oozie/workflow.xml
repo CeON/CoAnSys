@@ -123,10 +123,6 @@
 					<value>${workingDirectory}</value>
 				</property>
 				<property>
-					<name>parallel</name>
-					<value>${ds_parallel}</value>
-				</property>
-				<property>
 					<name>sample</name>
 					<value>${ds_sample}</value>
 				</property>
@@ -179,12 +175,8 @@
 					<value>sub_enhance_wf</value>
 				</property>
 				<property>
-					<name>mapredChildJavaOpts</name>
-					<value>${mapredChildJavaOpts}</value>
-				</property>
-				<property>
 					<name>parallel</name>
-					<value>${parallel}</value>
+					<value>${ds_parallel}</value>
 				</property>
 			</configuration>
 		</sub-workflow>
