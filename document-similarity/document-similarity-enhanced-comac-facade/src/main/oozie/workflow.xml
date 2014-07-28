@@ -1,7 +1,7 @@
 <workflow-app name="${project}-wf-${subproject}-docsim-facade" xmlns="uri:oozie:workflow:0.4">
 	<parameters>
 		<property>
-			<name>pool</name>
+			<name>POOL_NAME</name>
 			<value>default</value>
 		</property>
 		<property>
@@ -53,7 +53,7 @@
 			<value>${workingDir}/doc-sim-out</value>
 		</property>
 		<property>
-			<name>trueIfCopyFalseIfMove</name>
+			<name>ds_trueIfCopyFalseIfMove</name>
 			<value>true</value>
 		</property>
 	</parameters>
@@ -107,7 +107,7 @@
 				</property>
 				<property>
 					<name>serialize_to_proto</name>
-					<value>${ds_serialize_to_proto}</value>
+					<value>true</value>
 				</property>
 				<property>
 					<name>commonJarsPath</name>
@@ -115,7 +115,7 @@
 				</property>
 				<property>
 					<name>bwndataMetadataInputPath</name>
-					<value>${workingDir}/deduplicated-docs-out</value>
+					<value>${docsimInput}</value>
 				</property>
 				<property>
 					<name>similarityOutputPath</name>
@@ -193,7 +193,7 @@
 
 	<decision name="whatToDoWithImportantData">
 		<switch>
-			<case to="copyImportantResults">${trueIfCopyFalseIfMove eq "true"}</case>
+			<case to="copyImportantResults">${ds_trueIfCopyFalseIfMove eq "true"}</case>
 			<default to="moveImportantResults" />
 		</switch>
 	</decision>
