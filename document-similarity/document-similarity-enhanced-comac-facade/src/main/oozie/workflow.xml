@@ -1,0 +1,242 @@
+<workflow-app name="${project}-wf-${subproject}-docsim-facade" xmlns="uri:oozie:workflow:0.4">
+	<parameters>
+		<property>
+			<name>pool</name>
+			<value>default</value>
+		</property>
+		<property>
+			<name>ds_parallel</name>
+			<value>40</value>
+		</property>
+		<property>
+			<name>ds_sample</name>
+			<value>1.0</value>
+		</property>
+		<property>
+			<name>ds_mapredChildJavaOpts</name>
+			<value>-Xmx10g</value>
+		</property>
+		<property>
+			<name>ds_tfidfTopnTermPerDocument</name>
+			<value>20</value>
+		</property>
+		<property>
+			<name>ds_similarityTopnDocumentPerDocument</name>
+			<value>100</value>
+		</property>
+		<property>
+			<name>ds_removal_rate</name>
+			<value>0.95</value>
+		</property>
+		<property>
+			<name>ds_removal_least_used</name>
+			<value>10</value>
+		</property>
+		<property>
+			<name>ds_remove_sideproducts</name>
+			<value>false</value>
+		</property>
+		<property>
+			<name>ds_tfidfMinValue</name>
+			<value>0</value>
+		</property>
+		<property>
+			<name>workflowPath</name>
+			<value>${wf:appPath()}/pl.edu.icm.coansys-document-similarity-oap-uberworkflow</value>
+		</property>
+		<property>
+			<name>workingDirectory</name>
+			<value>${workingDir}/doc-sim-working</value>
+		</property>
+		<property>
+			<name>finalResultsDirectory</name>
+			<value>${workingDir}/doc-sim-out</value>
+		</property>
+		<property>
+			<name>trueIfCopyFalseIfMove</name>
+			<value>true</value>
+		</property>
+	</parameters>
+
+	<global>
+		<job-tracker>${jobTracker}</job-tracker>
+		<name-node>${nameNode}</name-node>
+		<configuration>
+			<property>
+				<name>oozie.use.system.libpath</name>
+				<value>true</value>
+			</property>
+			<property>
+				<name>mapred.fair.pool</name>
+				<value>${pool}</value>
+			</property>
+			<property>
+				<name>oozie.launcher.mapred.fair.pool</name>
+				<value>${pool}</value>
+			</property>
+			<property>
+				<name>mapred.job.queue.name</name>
+				<value>${queueName}</value>
+			</property>
+			<property>
+				<name>mapred.mapper.new-api</name>
+				<value>true</value>
+			</property>
+			<property>
+				<name>mapred.reducer.new-api</name>
+				<value>true</value>
+			</property>
+		</configuration>
+	</global>
+
+<!--	<start to="prepare-final-results-directory" />  -->
+	<start to="doc-sim" />
+
+	<action name="doc-sim">
+		<sub-workflow>
+			<app-path>${wf:appPath()}/pl.edu.icm.coansys-document-similarity-oap-uberworkflow
+			</app-path>
+			<propagate-configuration />
+			<configuration>
+				<property>
+					<name>oozie.wf.subworkflow.classpath.inheritance</name>
+					<value>true</value>
+				</property>
+				<property>
+					<name>workflowPath</name>
+					<value>${wf:appPath()}/pl.edu.icm.coansys-document-similarity-oap-uberworkflow</value>
+				</property>
+				<property>
+					<name>serialize_to_proto</name>
+					<value>${ds_serialize_to_proto}</value>
+				</property>
+				<property>
+					<name>commonJarsPath</name>
+					<value>/usr/lib/hbase/lib/zookeeper.jar</value>
+				</property>
+				<property>
+					<name>bwndataMetadataInputPath</name>
+					<value>${workingDir}/deduplicated-docs-out</value>
+				</property>
+				<property>
+					<name>similarityOutputPath</name>
+					<value>${workingDirectory}</value>
+				</property>
+				<property>
+					<name>sample</name>
+					<value>${ds_sample}</value>
+				</property>
+				<property>
+					<name>mapredChildJavaOpts</name>
+					<value>${ds_mapredChildJavaOpts}</value>
+				</property>
+				<property>
+					<name>tfidfTopnTermPerDocument</name>
+					<value>${ds_tfidfTopnTermPerDocument}</value>
+				</property>
+				<property>
+					<name>similarityTopnDocumentPerDocument</name>
+					<value>${ds_similarityTopnDocumentPerDocument}</value>
+				</property>
+				<property>
+					<name>removal_rate</name>
+					<value>${ds_removal_rate}</value>
+				</property>
+				<property>
+					<name>removal_least_used</name>
+					<value>${ds_removal_least_used}</value>
+				</property>
+				<property>
+					<name>pool</name>
+					<value>${POOL_NAME}</value>
+				</property>
+				<property>
+					<name>remove_sideproducts</name>
+					<value>false</value>
+				</property>
+				<property>
+					<name>tfidfMinValue</name>
+					<value>${ds_tfidfMinValue}</value>
+				</property>
+				<property>
+					<name>project</name>
+					<value>${project}-wf-${subproject}-docsim-facade</value>
+				</property>
+				<property>
+					<name>subproject_main</name>
+					<value>main_wf</value>
+				</property>
+				<property>
+					<name>subproject_subdocsim</name>
+					<value>sub_docsim_wf</value>
+				</property>
+				<property>
+					<name>subproject_subenhance</name>
+					<value>sub_enhance_wf</value>
+				</property>
+				<property>
+					<name>parallel</name>
+					<value>${ds_parallel}</value>
+				</property>
+			</configuration>
+		</sub-workflow>
+		<ok to="prepare-final-results-directory" />
+		<error to="finalize-error" />
+	</action>
+
+	<action name="prepare-final-results-directory">
+		<fs>
+			<delete path='${finalResultsDirectory}'/>
+		</fs>
+		<ok to="whatToDoWithImportantData" />
+		<error to="finalize-error" />
+	</action>
+
+	<decision name="whatToDoWithImportantData">
+		<switch>
+			<case to="copyImportantResults">${trueIfCopyFalseIfMove eq "true"}</case>
+			<default to="moveImportantResults" />
+		</switch>
+	</decision>
+
+	<action name="copyImportantResults">
+		<distcp xmlns="uri:oozie:distcp-action:0.2">
+			<arg>${workingDirectory}/final/similarity/topn_protobuf</arg>
+			<arg>${finalResultsDirectory}</arg>
+		</distcp>
+		<ok to="remove-sideproducts-decision" />
+		<error to="finalize-error" />
+	</action>
+
+	<action name="moveImportantResults">
+		<fs>
+			<move source='${workingDirectory}/final/similarity/topn_protobuf' target='${finalResultsDirectory}'/>
+		</fs>
+		<ok to="remove-sideproducts-decision" />
+		<error to="finalize-error" />
+	</action>
+
+	<decision name="remove-sideproducts-decision">
+		<switch>
+			<case to="remove-sideproducts">${ds_remove_sideproducts
+				eq "true"}
+			</case>
+			<default to="end" />
+		</switch>
+	</decision>
+
+	<action name="remove-sideproducts">
+		<fs>
+			<delete path='${workingDirectory}'/>
+		</fs>
+		<ok to="end" />
+		<error to="finalize-error" />
+	</action>
+
+	<kill name="finalize-error">
+		<message>Workflow failed</message>
+	</kill>
+
+	<end name="end" />
+
+</workflow-app>

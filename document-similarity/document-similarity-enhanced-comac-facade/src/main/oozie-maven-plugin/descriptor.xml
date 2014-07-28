@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<oozie-maven-plugin>
+	<main-project-pig>
+		<scripts>
+			<root>pig-main</root>
+			<preserve>false</preserve>
+			<includes>
+				<include>.*sim1.*\.pig</include>			
+				<include>.*document-similarity-s.*\.pig</include>
+				<include>.*rank\.py</include>
+			</includes>
+		</scripts>
+		<scripts>
+			<root>pig-macros</root>
+			<preserve>false</preserve>
+			<includes>
+				<include>.*\.pig</include>
+			</includes>
+		</scripts>
+	</main-project-pig>
+	<deps-project-pig>
+		<scripts>
+			<root>pig-main</root>
+			<preserve>false</preserve>
+			<includes>
+				<include>.*sim1.*\.pig</include>			
+				<include>.*document-similarity-s.*\.pig</include>
+				<include>.*rank\.py</include>
+			</includes>
+		</scripts>
+		<scripts>
+			<root>pig-macros</root>
+			<preserve>false</preserve>
+			<includes>
+				<include>.*\.pig</include>
+			</includes>
+		</scripts>
+	</deps-project-pig>
+</oozie-maven-plugin>

@@ -130,8 +130,15 @@ main <- function(pI){
 run <- function(){
   print("FUN:run()")
   sta <- date()
+<<<<<<< HEAD
   inData <- "/home/pdendek/icm_dane/pbn_bojan_1mln.csv"
   midData <- "/home/pdendek/icm_dane/pbn_bojan_1mln_corrected.csv"
+  #mungle_data(inData,midData)
+=======
+  inData <- "/home/m/icm_dane/pbn_bojan_1k.csv"
+  midData <- "/home/m/icm_dane/pbn_bojan_1k_corrected.csv"
+  mungle_data(inData,midData)
+>>>>>>> eebccddf3d3100345020f3f00f781cb7025997f9
   retVals <- main(midData)
   print(paste("START",sta))
   print(paste("STOP",date()))
