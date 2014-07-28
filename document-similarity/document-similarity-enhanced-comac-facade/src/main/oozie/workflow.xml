@@ -58,7 +58,7 @@
 		</property>
 		<property>
 			<name>workflowPath</name>
-			<value>${wf:appPath()</value>
+			<value>${wf:appPath()}/pl.edu.icm.coansys-document-similarity-oap-uberworkflow</value>
 		</property>
 		<property>
 			<name>workingDirectory</name>
@@ -207,7 +207,7 @@
 
 	<action name="remove-sideproducts">
 		<fs>
-			<delete source='${workingDirectory}'/>
+			<delete path='${workingDirectory}'/>
 		</fs>
 		<ok to="end" />
 		<error to="finalize-error" />
