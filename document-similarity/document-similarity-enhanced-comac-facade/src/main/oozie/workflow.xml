@@ -52,6 +52,10 @@
 			<name>finalResultsDirectory</name>
 			<value>${workingDir}/doc-sim-out</value>
 		</property>
+		<property>
+			<name>trueIfCopyFalseIfMove</name>
+			<value>true</value>
+		</property>
 	</parameters>
 
 	<global>
@@ -198,9 +202,8 @@
 
 	<decision name="whatToDoWithImportantData">
 		<switch>
-			<case to="copyImportantResults">${"true" eq "true"}</case>
-			<case to="moveImportantResults">${"false" eq "true"}</case>
-			<default to="end" />
+			<case to="copyImportantResults">${trueIfCopyFalseIfMove eq "true"}</case>
+			<default to="moveImportantResults" />
 		</switch>
 	</decision>
 
