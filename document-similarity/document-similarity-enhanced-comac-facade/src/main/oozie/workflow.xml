@@ -184,13 +184,21 @@
 				</property>
 			</configuration>
 		</sub-workflow>
+		<ok to="prepare-final-results-directory" />
+		<error to="finalize-error" />
+	</action>
+
+	<action name="prepare-final-results-directory">
+		<fs>
+			<delete path='${finalResultsDirectory}'/>
+		</fs>
 		<ok to="moveImportantResults" />
 		<error to="finalize-error" />
 	</action>
 
 	<action name="moveImportantResults">
 		<fs>
-			<move source='${workingDirectory}/final/similarity/topn_protobuf' target='${finalResultsDirectory}'/>
+			<move source='${workingDirectory}/final/similarity/topn_protobuf/pa*' target='${finalResultsDirectory}'/>
 		</fs>
 		<ok to="remove-sideproducts-decision" />
 		<error to="finalize-error" />
