@@ -89,10 +89,10 @@
 		</configuration>
 	</global>
 
-	<start to="prepare-final-results-directory" />
-<!--	<start to="doc-sim-facade" /> -->
+<!--	<start to="prepare-final-results-directory" />  -->
+	<start to="doc-sim" />
 
-	<action name="doc-sim-facade">
+	<action name="doc-sim">
 		<sub-workflow>
 			<app-path>${wf:appPath()}/pl.edu.icm.coansys-document-similarity-oap-uberworkflow
 			</app-path>
