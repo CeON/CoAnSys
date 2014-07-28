@@ -85,7 +85,7 @@
 		</configuration>
 	</global>
 
-	<start to="moveImportantResults" />
+	<start to="prepare-final-results-directory" />
 <!--	<start to="doc-sim-facade" /> -->
 
 	<action name="doc-sim-facade">
