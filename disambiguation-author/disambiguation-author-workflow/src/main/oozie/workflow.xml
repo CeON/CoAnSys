@@ -240,7 +240,7 @@
 			<delete path="${and_splitted}" />
 			<delete path="${and_cid_dockey}" />
 		</fs>
-		<ok to="startFrom"/>
+		<ok to="startFrom" />
 		<error to="kill" />
 	</action>
 
@@ -367,7 +367,7 @@
 
 	<!-- *************************************************** -->
 	<!-- ****************** CLEAN ME! ********************** -->
-	<!-- *************************************************** -->	
+	<!-- *************************************************** -->
 
 	<action name="serialize_do">
 		<pig>
@@ -416,7 +416,7 @@
 			<delete path='${and_splitted_output}' />
 			<delete path='${and_cid_dockey}' />
 			<delete path='${and_outputContribs}' />
-			<delete path='${and_output_unserialized}' />			
+			<delete path='${and_output_unserialized}' />
 		</fs>
 		<ok to="end" />
 		<error to="kill" />

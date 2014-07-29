@@ -9,7 +9,7 @@
 		<property>
 			<name>inputDirectory</name>
 			<value>${mainDirectory}/final_results</value>
-		</property>		
+		</property>
 		<property>
 			<name>bwndataMetadataInputPath</name>
 			<value>${inputDirectory}</value>
@@ -41,8 +41,8 @@
 		<property>
 			<name>and_remove_sideproducts</name>
 			<value>true</value>
-		</property>		
-		<!-- Properties associated with cluster parameters -->		
+		</property>
+		<!-- Properties associated with cluster parameters -->
 		<property>
 			<name>and_mapredChildJavaOpts_one</name>
 			<value>-Xmx512m</value>
@@ -247,14 +247,14 @@
 
 	<start to="remove-obsolete-data" />
 
-    <action name="remove-obsolete-data">
-        <fs>
-            <delete path="${workingDirectory}" />
-            <delete path="${outputDirectory}" />
-        </fs>
-        <ok to="and-main-action" />
-        <error to="finalize-error" />
-    </action>
+	<action name="remove-obsolete-data">
+		<fs>
+			<delete path="${workingDirectory}" />
+			<delete path="${outputDirectory}" />
+		</fs>
+		<ok to="and-main-action" />
+		<error to="finalize-error" />
+	</action>
 
 	<action name="and-main-action">
 		<sub-workflow>
