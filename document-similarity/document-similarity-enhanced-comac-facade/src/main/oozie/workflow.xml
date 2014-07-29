@@ -1,8 +1,8 @@
 <workflow-app name="${project}-wf-${subproject}-docsim-facade" xmlns="uri:oozie:workflow:0.4">
 	<parameters>
 		<property>
-			<name>POOL_NAME</name>
-			<value>default</value>
+			<name>pool</name>
+			<value>${default}</value>
 		</property>
 		<property>
 			<name>ds_parallel</name>
@@ -147,7 +147,7 @@
 				</property>
 				<property>
 					<name>pool</name>
-					<value>${POOL_NAME}</value>
+					<value>${pool}</value>
 				</property>
 				<property>
 					<name>remove_sideproducts</name>
