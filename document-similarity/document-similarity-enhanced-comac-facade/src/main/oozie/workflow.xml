@@ -1,7 +1,7 @@
 <workflow-app name="${project}-wf-${subproject}-docsim-facade" xmlns="uri:oozie:workflow:0.4">
 	<parameters>
 		<property>
-			<name>POOL_NAME</name>
+			<name>pool</name>
 			<value>default</value>
 		</property>
 		<property>
@@ -75,6 +75,14 @@
 				<value>${pool}</value>
 			</property>
 			<property>
+				<name>pool</name>
+				<value>${pool}</value>
+			</property>
+			<property>
+				<name>scheduler</name>
+				<value>${pool}</value>
+			</property>
+			<property>
 				<name>mapred.job.queue.name</name>
 				<value>${queueName}</value>
 			</property>
@@ -144,10 +152,6 @@
 				<property>
 					<name>removal_least_used</name>
 					<value>${ds_removal_least_used}</value>
-				</property>
-				<property>
-					<name>pool</name>
-					<value>${POOL_NAME}</value>
 				</property>
 				<property>
 					<name>remove_sideproducts</name>

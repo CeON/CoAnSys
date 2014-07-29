@@ -109,6 +109,10 @@
 				<value>${pool}</value>
 			</property>
 			<property>
+				<name>pool</name>
+				<value>${pool}</value>
+			</property>
+			<property>
 				<name>mapred.job.queue.name</name>
 				<value>${queueName}</value>
 			</property>
@@ -164,6 +168,7 @@
 			</param>
 			<param>removal_least_used=${removal_least_used}</param>
 			<param>removal_rate=${removal_rate}</param>
+			<param>scheduler=${scheduler}</param>
 			<file>macros.pig#macros.pig</file>
 			<file>rank.py#rank.py</file>
 		</pig>
@@ -192,6 +197,7 @@
 			</param>
 			<param>removal_least_used=${removal_least_used}</param>
 			<param>removal_rate=${removal_rate}</param>
+			<param>scheduler=${scheduler}</param>
 			<file>macros.pig#macros.pig</file>
 		</pig>
 		<ok to='prepare_pairwise_sim-d' />
@@ -217,6 +223,7 @@
 			<param>similarityTopnDocumentPerDocument=${similarityTopnDocumentPerDocument}
 			</param>
 			<param>tfidfMinValue=${tfidfMinValue}</param>
+			<param>scheduler=${scheduler}</param>
 			<file>macros.pig#macros.pig</file>
 		</pig>
 		<ok to='prepare_pairwise_sim-d' />
@@ -243,6 +250,7 @@
 			</param>
 			<param>removal_least_used=${removal_least_used}</param>
 			<param>removal_rate=${removal_rate}</param>
+			<param>scheduler=${scheduler}</param>
 			<file>macros.pig#macros.pig</file>
 		</pig>
 		<ok to='prepare_pairwise_sim-d' />
@@ -274,6 +282,7 @@
 			</param>
 			<param>removal_least_used=${removal_least_used}</param>
 			<param>removal_rate=${removal_rate}</param>
+			<param>scheduler=${scheduler}</param>
 			<file>macros.pig#macros.pig</file>
 		</pig>
 		<ok to='pairwise_sim-d' />
@@ -306,6 +315,7 @@
 			</param>
 			<param>removal_least_used=${removal_least_used}</param>
 			<param>removal_rate=${removal_rate}</param>
+			<param>scheduler=${scheduler}</param>
 			<file>macros.pig#macros.pig</file>
 		</pig>
 		<ok to='normalize_sim_first_step-d' />
@@ -338,6 +348,7 @@
 			</param>
 			<param>removal_least_used=${removal_least_used}</param>
 			<param>removal_rate=${removal_rate}</param>
+			<param>scheduler=${scheduler}</param>
 			<file>macros.pig#macros.pig</file>
 		</pig>
 		<ok to='normalize_sim_second_step-d' />
@@ -370,6 +381,7 @@
 			</param>
 			<param>removal_least_used=${removal_least_used}</param>
 			<param>removal_rate=${removal_rate}</param>
+			<param>scheduler=${scheduler}</param>
 			<file>macros.pig#macros.pig</file>
 		</pig>
 		<ok to='store-to-protobuf-d' />
@@ -402,6 +414,7 @@
 			</param>
 			<param>removal_least_used=${removal_least_used}</param>
 			<param>removal_rate=${removal_rate}</param>
+			<param>scheduler=${scheduler}</param>
 			<file>macros.pig#macros.pig</file>
 		</pig>
 		<ok to='remove_sideproducts-corr-d' />
