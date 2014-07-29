@@ -41,6 +41,14 @@
 			<value>0</value>
 		</property>
 		<property>
+			<name>inputDirectory</name>
+			<value>${wf:appPath()}/input_data</value>
+		</property>		
+		<property>
+			<name>bwndataMetadataInputPath</name>
+			<value>${inputDirectory}</value>
+		</property>		
+		<property>
 			<name>workflowPath</name>
 			<value>${wf:appPath()}/pl.edu.icm.coansys-document-similarity-oap-uberworkflow</value>
 		</property>
@@ -49,9 +57,17 @@
 			<value>${workingDir}/doc-sim-working</value>
 		</property>
 		<property>
-			<name>finalResultsDirectory</name>
+			<name>workingDirectory</name>
+			<value>${workingDirectory}</value>
+		</property>
+		<property>
+			<name>outputDirectory</name>
 			<value>${workingDir}/doc-sim-out</value>
 		</property>
+		<property>
+			<name>outputDirectory</name>
+			<value>${outputDirectory}</value>
+		</property>		
 		<property>
 			<name>ds_trueIfCopyFalseIfMove</name>
 			<value>true</value>
@@ -97,7 +113,17 @@
 		</configuration>
 	</global>
 
-	<start to="doc-sim" />
+	<start to="remove-obsolete-data" />
+
+    <action name="remove-obsolete-data">
+        <fs>
+            <delete path="${workingDirectory}" />
+            <delete path="${outputDirectory}" />
+        </fs>
+        <ok to="doc-sim" />
+        <error to="finalize-error" />
+    </action>
+
 
 	<action name="doc-sim">
 		<sub-workflow>
@@ -123,7 +149,7 @@
 				</property>
 				<property>
 					<name>bwndataMetadataInputPath</name>
-					<value>${docsimInput}</value>
+					<value>${bwndataMetadataInputPath}</value>
 				</property>
 				<property>
 					<name>similarityOutputPath</name>
@@ -183,14 +209,6 @@
 				</property>
 			</configuration>
 		</sub-workflow>
-		<ok to="prepare-final-results-directory" />
-		<error to="finalize-error" />
-	</action>
-
-	<action name="prepare-final-results-directory">
-		<fs>
-			<delete path='${finalResultsDirectory}'/>
-		</fs>
 		<ok to="whatToDoWithImportantData" />
 		<error to="finalize-error" />
 	</action>

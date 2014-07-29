@@ -1,7 +1,15 @@
-<workflow-app name="${project}-wf-${subproject}-and-facade"
+<workflow-app name="${project}-${subproject}-and-facade"
 	xmlns="uri:oozie:workflow:0.4">
 	<parameters>
 		<!-- Facade Properties -->
+		<property>
+			<name>inputDirectory</name>
+			<value>${wf:appPath()}/final_results</value>
+		</property>		
+		<property>
+			<name>bwndataMetadataInputPath</name>
+			<value>${inputDirectory}</value>
+		</property>
 		<property>
 			<name>workingDirectory</name>
 			<value>${wf:appPath()}/partial_results</value>
@@ -233,7 +241,18 @@
 		</configuration>
 	</global>
 
-	<start to="and-main-action" />
+	<start to="remove-obsolete-data" />
+
+    <action name="remove-obsolete-data">
+        <fs>
+            <delete path="${workingDirectory}" />
+            <delete path="${outputDirectory}" />
+        </fs>
+        <ok to="and-main-action" />
+        <error to="finalize-error" />
+    </action>
+
+
 
 	<action name="and-main-action">
 		<sub-workflow>
@@ -249,6 +268,10 @@
 					<name>workflowPath</name>
 					<value>${wf:appPath()}/pl.edu.icm.coansys-disambiguation-author-comac-facade
 					</value>
+				</property>
+				<property>
+					<name>bwndataMetadataInputPath</name>
+					<value>${bwndataMetadataInputPath}</value>
 				</property>
 				<property>
 					<name>and_pool</name>
@@ -356,43 +379,10 @@
 				</property>
 			</configuration>
 		</sub-workflow>
-		<ok to="prepare-final-results-directory" />
-		<error to="finalize-error" />
-	</action>
-
-	<action name="prepare-final-results-directory">
-		<fs>
-			<delete path='${finalResultsDirectory}' />
-		</fs>
 		<ok to="remove-sideproducts-decision" />
 		<error to="finalize-error" />
 	</action>
 
-<!-- 	<decision name="whatToDoWithImportantData">
-		<switch>
-			<case to="copyImportantResults">${and_trueIfCopyFalseIfMove eq "true"}</case>
-			<default to="moveImportantResults" />
-		</switch>
-	</decision>
-
-	<action name="copyImportantResults">
-		<distcp xmlns="uri:oozie:distcp-action:0.2">
-			<arg>${workingDirectory}/final/similarity/topn_protobuf</arg>
-			<arg>${finalResultsDirectory}</arg>
-		</distcp>
-		<ok to="remove-sideproducts-decision" />
-		<error to="finalize-error" />
-	</action>
-
-	<action name="moveImportantResults">
-		<fs>
-			<move source='${workingDirectory}/final/similarity/topn_protobuf'
-				target='${finalResultsDirectory}' />
-		</fs>
-		<ok to="remove-sideproducts-decision" />
-		<error to="finalize-error" />
-	</action>
- -->
 	<decision name="remove-sideproducts-decision">
 		<switch>
 			<case to="remove-sideproducts">${and_remove_sideproducts
