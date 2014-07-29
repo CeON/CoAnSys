@@ -3,8 +3,12 @@
 	<parameters>
 		<!-- Facade Properties -->
 		<property>
+			<name>mainDirectory</name>
+			<value>${wf:appPath()}</value>
+		</property>
+		<property>
 			<name>inputDirectory</name>
-			<value>${wf:appPath()}/final_results</value>
+			<value>${mainDirectory}/final_results</value>
 		</property>		
 		<property>
 			<name>bwndataMetadataInputPath</name>
@@ -12,7 +16,7 @@
 		</property>
 		<property>
 			<name>workingDirectory</name>
-			<value>${wf:appPath()}/partial_results</value>
+			<value>${mainDirectory}/partial_results</value>
 		</property>
 		<property>
 			<name>and_working_directory</name>
@@ -20,7 +24,7 @@
 		</property>
 		<property>
 			<name>outputDirectory</name>
-			<value>${wf:appPath()}/final_results</value>
+			<value>${mainDirectory}/final_results</value>
 		</property>
 		<property>
 			<name>and_outputPB</name>
@@ -256,7 +260,7 @@
 
 	<action name="and-main-action">
 		<sub-workflow>
-			<app-path>${wf:appPath()}/pl.edu.icm.coansys-disambiguation-author-comac-facade
+			<app-path>${mainDirectory}/pl.edu.icm.coansys-disambiguation-author-workflow
 			</app-path>
 			<propagate-configuration />
 			<configuration>
@@ -266,7 +270,7 @@
 				</property>
 				<property>
 					<name>workflowPath</name>
-					<value>${wf:appPath()}/pl.edu.icm.coansys-disambiguation-author-comac-facade
+					<value>${mainDirectory}/pl.edu.icm.coansys-disambiguation-author-workflow
 					</value>
 				</property>
 				<property>

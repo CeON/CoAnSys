@@ -47,10 +47,14 @@
 		<property>
 			<name>bwndataMetadataInputPath</name>
 			<value>${inputDirectory}</value>
-		</property>		
+		</property>	
+		<property>
+			<name>mainDirectory</name>
+			<value>${wf:appPath()}</value>
+		</property>	
 		<property>
 			<name>workflowPath</name>
-			<value>${wf:appPath()}/pl.edu.icm.coansys-document-similarity-oap-uberworkflow</value>
+			<value>${mainDirectory}</value>
 		</property>
 		<property>
 			<name>workingDirectory</name>
@@ -127,7 +131,7 @@
 
 	<action name="doc-sim">
 		<sub-workflow>
-			<app-path>${wf:appPath()}/pl.edu.icm.coansys-document-similarity-oap-uberworkflow
+			<app-path>${mainDirectory}/pl.edu.icm.coansys-document-similarity-oap-uberworkflow
 			</app-path>
 			<propagate-configuration />
 			<configuration>
@@ -137,7 +141,7 @@
 				</property>
 				<property>
 					<name>workflowPath</name>
-					<value>${wf:appPath()}/pl.edu.icm.coansys-document-similarity-oap-uberworkflow</value>
+					<value>${mainDirectory}/pl.edu.icm.coansys-document-similarity-oap-uberworkflow</value>
 				</property>
 				<property>
 					<name>serialize_to_proto</name>
