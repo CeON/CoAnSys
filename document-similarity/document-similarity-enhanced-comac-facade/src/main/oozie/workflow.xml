@@ -2,7 +2,7 @@
 	<parameters>
 		<property>
 			<name>pool</name>
-			<value>${default}</value>
+			<value>default</value>
 		</property>
 		<property>
 			<name>ds_parallel</name>
@@ -75,6 +75,14 @@
 				<value>${pool}</value>
 			</property>
 			<property>
+				<name>pool</name>
+				<value>${pool}</value>
+			</property>
+			<property>
+				<name>scheduler</name>
+				<value>${pool}</value>
+			</property>
+			<property>
 				<name>mapred.job.queue.name</name>
 				<value>${queueName}</value>
 			</property>
@@ -144,10 +152,6 @@
 				<property>
 					<name>removal_least_used</name>
 					<value>${ds_removal_least_used}</value>
-				</property>
-				<property>
-					<name>pool</name>
-					<value>${pool}</value>
 				</property>
 				<property>
 					<name>remove_sideproducts</name>
