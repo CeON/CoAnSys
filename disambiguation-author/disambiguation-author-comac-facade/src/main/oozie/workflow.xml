@@ -256,8 +256,6 @@
         <error to="finalize-error" />
     </action>
 
-
-
 	<action name="and-main-action">
 		<sub-workflow>
 			<app-path>${mainDirectory}/pl.edu.icm.coansys-disambiguation-author-workflow
