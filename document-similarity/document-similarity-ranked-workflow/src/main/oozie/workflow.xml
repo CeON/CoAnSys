@@ -2,6 +2,10 @@
 
 	<parameters>
 		<property>
+			<name>scheduler</name>
+			<value>default</value>
+		</property>
+		<property>
 			<name>remove_sideproducts</name>
 			<value>true</value>
 		</property>
@@ -98,6 +102,10 @@
 			</property>
 			<property>
 				<name>oozie.launcher.mapred.fairscheduler.pool</name>
+				<value>${pool}</value>
+			</property>
+			<property>
+				<name>scheduler</name>
 				<value>${pool}</value>
 			</property>
 			<property>

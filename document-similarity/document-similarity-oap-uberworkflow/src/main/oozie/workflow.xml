@@ -90,6 +90,14 @@
 				<value>${pool}</value>
 			</property>
 			<property>
+				<name>scheduler</name>
+				<value>${pool}</value>
+			</property>
+			<property>
+				<name>pool</name>
+				<value>${pool}</value>
+			</property>
+			<property>
 				<name>oozie.launcher.mapred.fair.pool</name>
 				<value>${pool}</value>
 			</property>
