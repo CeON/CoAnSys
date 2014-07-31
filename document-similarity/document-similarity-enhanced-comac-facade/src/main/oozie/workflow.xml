@@ -231,7 +231,7 @@
 	<action name="copyImportantResults">
 		<distcp xmlns="uri:oozie:distcp-action:0.2">
 			<arg>${workingDirectory}/final/similarity/topn_protobuf</arg>
-			<arg>${finalResultsDirectory}</arg>
+			<arg>${outputDirectory}</arg>
 		</distcp>
 		<ok to="remove-sideproducts-decision" />
 		<error to="finalize-error" />
@@ -239,7 +239,7 @@
 
 	<action name="moveImportantResults">
 		<fs>
-			<move source='${workingDirectory}/final/similarity/topn_protobuf' target='${finalResultsDirectory}'/>
+			<move source='${workingDirectory}/final/similarity/topn_protobuf' target='${outputDirectory}'/>
 		</fs>
 		<ok to="remove-sideproducts-decision" />
 		<error to="finalize-error" />
