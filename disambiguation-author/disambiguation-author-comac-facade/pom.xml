@@ -33,7 +33,7 @@
     <dependencies>
         <dependency>
             <groupId>pl.edu.icm.coansys</groupId>
-            <artifactId>disambiguation-author-comac-facade</artifactId>
+            <artifactId>disambiguation-author-workflow</artifactId>
             <version>${project.version}</version>
 	    <classifier>oozie-wf</classifier>
 	    <type>tar.gz</type>
