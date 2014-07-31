@@ -1,4 +1,4 @@
-<workflow-app name="${project}-wf-${subproject}-docsim-facade" xmlns="uri:oozie:workflow:0.4">
+<workflow-app name="${project}-${subproject}" xmlns="uri:oozie:workflow:0.4">
 	<parameters>
 		<property>
 			<name>pool</name>
@@ -201,15 +201,15 @@
 				</property>
 				<property>
 					<name>subproject_main</name>
-					<value>main_wf</value>
+					<value>docsim-main-wf</value>
 				</property>
 				<property>
 					<name>subproject_subdocsim</name>
-					<value>sub_docsim_wf</value>
+					<value>docsim-sub-main-wf</value>
 				</property>
 				<property>
 					<name>subproject_subenhance</name>
-					<value>sub_enhance_wf</value>
+					<value>docsim-sub-enhance-wf</value>
 				</property>
 				<property>
 					<name>parallel</name>
