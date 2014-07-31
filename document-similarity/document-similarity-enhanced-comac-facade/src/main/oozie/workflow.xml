@@ -144,6 +144,10 @@
 					<value>${mainDirectory}/pl.edu.icm.coansys-document-similarity-oap-uberworkflow</value>
 				</property>
 				<property>
+					<name>mainDirectory</name>
+					<value>${mainDirectory}/pl.edu.icm.coansys-document-similarity-oap-uberworkflow</value>
+				</property>				
+				<property>
 					<name>serialize_to_proto</name>
 					<value>true</value>
 				</property>

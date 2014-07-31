@@ -1,6 +1,10 @@
 <workflow-app name="${project}_${subproject_main}" xmlns="uri:oozie:workflow:0.4">
 	<parameters>
 		<property>
+			<name>mainDirectory</name>
+			<value>${wf:appPath()}</value>
+		</property>
+		<property>
 			<name>remove_sideproducts</name>
 			<value>true</value>
 		</property>
@@ -147,7 +151,7 @@
 
 	<action name="calculate-major-docsim">
 		<sub-workflow>
-			<app-path>${wf:appPath()}/pl.edu.icm.coansys-document-similarity-ranked-workflow
+			<app-path>${mainDirectory}/pl.edu.icm.coansys-document-similarity-ranked-workflow
 			</app-path>
 			<propagate-configuration />
 			<configuration>
@@ -228,7 +232,7 @@
 
 	<action name="recalculate-sim-about-1__filter">
 		<sub-workflow>
-			<app-path>${wf:appPath()}/pl.edu.icm.coansys-document-similarity-recalculate-sim-about-1
+			<app-path>${mainDirectory}/pl.edu.icm.coansys-document-similarity-recalculate-sim-about-1
 			</app-path>
 			<propagate-configuration />
 			<configuration>
@@ -264,7 +268,7 @@
 
 	<action name="calculate-minor-docsim">
 		<sub-workflow>
-			<app-path>${wf:appPath()}/pl.edu.icm.coansys-document-similarity-ranked-workflow
+			<app-path>${mainDirectory}/pl.edu.icm.coansys-document-similarity-ranked-workflow
 			</app-path>
 			<propagate-configuration />
 			<configuration>
@@ -348,7 +352,7 @@
 
 	<action name="recalculate-sim-about-1__docsim-and-merge">
 		<sub-workflow>
-			<app-path>${wf:appPath()}/pl.edu.icm.coansys-document-similarity-recalculate-sim-about-1
+			<app-path>${mainDirectory}/pl.edu.icm.coansys-document-similarity-recalculate-sim-about-1
 			</app-path>
 			<propagate-configuration />
 			<configuration>
@@ -388,7 +392,7 @@
 
 	<action name="merge-results-and-serialize">
 		<sub-workflow>
-			<app-path>${wf:appPath()}/pl.edu.icm.coansys-document-similarity-ranked-workflow
+			<app-path>${mainDirectory}/pl.edu.icm.coansys-document-similarity-ranked-workflow
 			</app-path>
 			<propagate-configuration />
 			<configuration>
