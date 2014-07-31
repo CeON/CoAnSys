@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<oozie-maven-plugin> 
+	<main-project-pig>
+		<scripts>
+			<root>pig-main/</root>
+			<includes>
+				<include>.*disambiguation.*\.pig</include>
+				<include>.*splitter.*\.pig</include>
+				<include>.*serialize.*\.pig</include>
+				<include>.*accuracy_check.*\.pig</include>
+			</includes>
+		</scripts>
+	</main-project-pig>	
+</oozie-maven-plugin>

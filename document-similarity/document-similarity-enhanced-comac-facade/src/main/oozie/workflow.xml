@@ -1,4 +1,4 @@
-<workflow-app name="${project}-wf-${subproject}-docsim-facade" xmlns="uri:oozie:workflow:0.4">
+<workflow-app name="${project}-${subproject}" xmlns="uri:oozie:workflow:0.4">
 	<parameters>
 		<property>
 			<name>pool</name>
@@ -34,26 +34,46 @@
 		</property>
 		<property>
 			<name>ds_remove_sideproducts</name>
-			<value>false</value>
+			<value>true</value>
 		</property>
 		<property>
 			<name>ds_tfidfMinValue</name>
 			<value>0</value>
 		</property>
 		<property>
+			<name>inputDirectory</name>
+			<value>${wf:appPath()}/input_data</value>
+		</property>		
+		<property>
+			<name>bwndataMetadataInputPath</name>
+			<value>${inputDirectory}</value>
+		</property>	
+		<property>
+			<name>mainDirectory</name>
+			<value>${wf:appPath()}</value>
+		</property>	
+		<property>
 			<name>workflowPath</name>
-			<value>${wf:appPath()}/pl.edu.icm.coansys-document-similarity-oap-uberworkflow</value>
+			<value>${mainDirectory}</value>
 		</property>
 		<property>
 			<name>workingDirectory</name>
 			<value>${workingDir}/doc-sim-working</value>
 		</property>
 		<property>
-			<name>finalResultsDirectory</name>
+			<name>workingDirectory</name>
+			<value>${workingDirectory}</value>
+		</property>
+		<property>
+			<name>outputDirectory</name>
 			<value>${workingDir}/doc-sim-out</value>
 		</property>
 		<property>
-			<name>trueIfCopyFalseIfMove</name>
+			<name>outputDirectory</name>
+			<value>${outputDirectory}</value>
+		</property>		
+		<property>
+			<name>ds_trueIfCopyFalseIfMove</name>
 			<value>true</value>
 		</property>
 	</parameters>
@@ -75,6 +95,14 @@
 				<value>${pool}</value>
 			</property>
 			<property>
+				<name>pool</name>
+				<value>${pool}</value>
+			</property>
+			<property>
+				<name>scheduler</name>
+				<value>${pool}</value>
+			</property>
+			<property>
 				<name>mapred.job.queue.name</name>
 				<value>${queueName}</value>
 			</property>
@@ -89,12 +117,21 @@
 		</configuration>
 	</global>
 
-<!--	<start to="prepare-final-results-directory" />  -->
-	<start to="doc-sim" />
+	<start to="remove-obsolete-data" />
+
+    <action name="remove-obsolete-data">
+        <fs>
+            <delete path="${workingDirectory}" />
+            <delete path="${outputDirectory}" />
+        </fs>
+        <ok to="doc-sim" />
+        <error to="finalize-error" />
+    </action>
+
 
 	<action name="doc-sim">
 		<sub-workflow>
-			<app-path>${wf:appPath()}/pl.edu.icm.coansys-document-similarity-oap-uberworkflow
+			<app-path>${mainDirectory}/pl.edu.icm.coansys-document-similarity-oap-uberworkflow
 			</app-path>
 			<propagate-configuration />
 			<configuration>
@@ -104,11 +141,15 @@
 				</property>
 				<property>
 					<name>workflowPath</name>
-					<value>${wf:appPath()}/pl.edu.icm.coansys-document-similarity-oap-uberworkflow</value>
+					<value>${mainDirectory}/pl.edu.icm.coansys-document-similarity-oap-uberworkflow</value>
 				</property>
 				<property>
+					<name>mainDirectory</name>
+					<value>${mainDirectory}/pl.edu.icm.coansys-document-similarity-oap-uberworkflow</value>
+				</property>				
+				<property>
 					<name>serialize_to_proto</name>
-					<value>${ds_serialize_to_proto}</value>
+					<value>true</value>
 				</property>
 				<property>
 					<name>commonJarsPath</name>
@@ -116,7 +157,7 @@
 				</property>
 				<property>
 					<name>bwndataMetadataInputPath</name>
-					<value>${workingDir}/deduplicated-docs-out</value>
+					<value>${bwndataMetadataInputPath}</value>
 				</property>
 				<property>
 					<name>similarityOutputPath</name>
@@ -147,10 +188,6 @@
 					<value>${ds_removal_least_used}</value>
 				</property>
 				<property>
-					<name>pool</name>
-					<value>${POOL_NAME}</value>
-				</property>
-				<property>
 					<name>remove_sideproducts</name>
 					<value>false</value>
 				</property>
@@ -160,19 +197,19 @@
 				</property>
 				<property>
 					<name>project</name>
-					<value>${project}-wf-${subproject}-docsim-facade</value>
+					<value>${project}</value>
 				</property>
 				<property>
 					<name>subproject_main</name>
-					<value>main_wf</value>
+					<value>docsim-main-wf</value>
 				</property>
 				<property>
 					<name>subproject_subdocsim</name>
-					<value>sub_docsim_wf</value>
+					<value>docsim-sub-main-wf</value>
 				</property>
 				<property>
 					<name>subproject_subenhance</name>
-					<value>sub_enhance_wf</value>
+					<value>docsim-sub-enhance-wf</value>
 				</property>
 				<property>
 					<name>parallel</name>
@@ -180,21 +217,13 @@
 				</property>
 			</configuration>
 		</sub-workflow>
-		<ok to="prepare-final-results-directory" />
-		<error to="finalize-error" />
-	</action>
-
-	<action name="prepare-final-results-directory">
-		<fs>
-			<delete path='${finalResultsDirectory}'/>
-		</fs>
 		<ok to="whatToDoWithImportantData" />
 		<error to="finalize-error" />
 	</action>
 
 	<decision name="whatToDoWithImportantData">
 		<switch>
-			<case to="copyImportantResults">${trueIfCopyFalseIfMove eq "true"}</case>
+			<case to="copyImportantResults">${ds_trueIfCopyFalseIfMove eq "true"}</case>
 			<default to="moveImportantResults" />
 		</switch>
 	</decision>
@@ -202,7 +231,7 @@
 	<action name="copyImportantResults">
 		<distcp xmlns="uri:oozie:distcp-action:0.2">
 			<arg>${workingDirectory}/final/similarity/topn_protobuf</arg>
-			<arg>${finalResultsDirectory}</arg>
+			<arg>${outputDirectory}</arg>
 		</distcp>
 		<ok to="remove-sideproducts-decision" />
 		<error to="finalize-error" />
@@ -210,7 +239,7 @@
 
 	<action name="moveImportantResults">
 		<fs>
-			<move source='${workingDirectory}/final/similarity/topn_protobuf' target='${finalResultsDirectory}'/>
+			<move source='${workingDirectory}/final/similarity/topn_protobuf' target='${outputDirectory}'/>
 		</fs>
 		<ok to="remove-sideproducts-decision" />
 		<error to="finalize-error" />
