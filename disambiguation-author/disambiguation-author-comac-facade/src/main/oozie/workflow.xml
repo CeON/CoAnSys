@@ -1,4 +1,4 @@
-<workflow-app name="${project}-${subproject}-and-facade"
+<workflow-app name="${project}-${subproject}-facade"
 	xmlns="uri:oozie:workflow:0.4">
 	<parameters>
 		<!-- Facade Properties -->
@@ -9,10 +9,6 @@
 		<property>
 			<name>inputDirectory</name>
 			<value>${mainDirectory}/inputData</value>
-		</property>
-		<property>
-			<name>bwndataMetadataInputPath</name>
-			<value>${inputDirectory}</value>
 		</property>
 		<property>
 			<name>and_inputDocsData</name>
@@ -280,10 +276,6 @@
 					</value>
 				</property>
 				<property>
-					<name>bwndataMetadataInputPath</name>
-					<value>${bwndataMetadataInputPath}</value>
-				</property>
-				<property>
 					<name>and_inputDocsData</name>
 					<value>${inputDirectory}</value>
 				</property>
@@ -390,6 +382,14 @@
 				<property>
 					<name>skipSplitting</name>
 					<value>${skipSplitting}</value>
+				</property>
+				<property>
+					<name>project</name>
+					<value>${project}</value>
+				</property>
+				<property>
+					<name>subproject</name>
+					<value>main-workflow</value>
 				</property>
 			</configuration>
 		</sub-workflow>
