@@ -1,4 +1,4 @@
-<workflow-app name="${project}_${subproject_main}" xmlns="uri:oozie:workflow:0.4">
+<workflow-app name="${project}-${subproject_main}" xmlns="uri:oozie:workflow:0.4">
 	<parameters>
 		<property>
 			<name>mainDirectory</name>
