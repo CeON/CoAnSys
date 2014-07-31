@@ -8,10 +8,14 @@
 		</property>
 		<property>
 			<name>inputDirectory</name>
-			<value>${mainDirectory}/final_results</value>
+			<value>${mainDirectory}/inputData</value>
 		</property>
 		<property>
 			<name>bwndataMetadataInputPath</name>
+			<value>${inputDirectory}</value>
+		</property>
+		<property>
+			<name>and_inputDocsData</name>
 			<value>${inputDirectory}</value>
 		</property>
 		<property>
@@ -25,7 +29,7 @@
 		<property>
 			<name>results</name>
 			<value>${workingDirectory}</value>
-		</property>		
+		</property>
 		<property>
 			<name>outputDirectory</name>
 			<value>${mainDirectory}/final_results</value>
@@ -278,6 +282,10 @@
 				<property>
 					<name>bwndataMetadataInputPath</name>
 					<value>${bwndataMetadataInputPath}</value>
+				</property>
+				<property>
+					<name>and_inputDocsData</name>
+					<value>${inputDirectory}</value>
 				</property>
 				<property>
 					<name>and_pool</name>
