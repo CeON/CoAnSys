@@ -4,6 +4,11 @@
 	<parameters>
 		<!-- Properties associated with cluster parameters -->
 		<property>
+			<name>and_parallel</name>
+			<value>16</value>
+			<description>Default number of reducers in AND</description>
+		</property>
+		<property>
 			<name>and_pool</name>
 			<value>default</value>
 			<description>Fairscheduler pool property.</description>
@@ -259,6 +264,7 @@
 			<param>and_threshold=${and_threshold}</param>
 			<!--commons -->
 			<param>and_scheduler=${and_pool}</param>
+			<param>and_parallel_param=${and_parallel}</param>
 		</pig>
 		<ok to="do_and_0" />
 		<error to="kill" />
@@ -278,6 +284,7 @@
 			<param>mapredChildJavaOpts=${and_mapredChildJavaOpts_one}</param>
 			<!--commons -->
 			<param>and_scheduler=${and_pool}</param>
+			<param>and_parallel_param=${and_parallel}</param>
 		</pig>
 		<ok to="do_and_1" />
 		<error to="kill" />
@@ -297,6 +304,7 @@
 			<param>and_threshold=${and_threshold}</param>
 			<!--commons -->
 			<param>and_scheduler=${and_pool}</param>
+			<param>and_parallel_param=${and_parallel}</param>
 		</pig>
 		<ok to="do_and_2" />
 		<error to="kill" />
@@ -319,6 +327,7 @@
 			<param>and_threshold=${and_threshold}</param>
 			<!--commons -->
 			<param>and_scheduler=${and_pool}</param>
+			<param>and_parallel_param=${and_parallel}</param>
 		</pig>
 		<ok to="do_and_3" />
 		<error to="kill" />
@@ -342,6 +351,7 @@
 			<param>and_threshold=${and_threshold}</param>
 			<!--commons -->
 			<param>and_scheduler=${and_pool}</param>
+			<param>and_parallel_param=${and_parallel}</param>
 		</pig>
 		<ok to="serialize_do" />
 		<error to="kill" />
@@ -365,6 +375,7 @@
 			<param>and_output_unserialized=${and_output_unserialized}</param>
 			<!--commons -->
 			<param>and_scheduler=${and_pool}</param>
+			<param>and_parallel_param=${and_parallel}</param>
 		</pig>
 		<ok to="check_accuracy_decision" />
 		<error to="kill" />
@@ -384,6 +395,7 @@
 			<param>and_accuracy_check_output=${and_accuracy_check_output}</param>
 			<!--commons -->
 			<param>and_scheduler=${and_pool}</param>
+			<param>and_parallel_param=${and_parallel}</param>
 		</pig>
 		<ok to="end" />
 		<error to="kill" />

@@ -1,7 +1,10 @@
-<workflow-app name="${project}-${subproject}-facade"
-	xmlns="uri:oozie:workflow:0.4">
+<workflow-app name="${project}-${subproject}-facade" xmlns="uri:oozie:workflow:0.4">
 	<parameters>
 		<!-- Facade Properties -->
+		<property>
+			<name>and_parallel</name>
+			<value>16</value>
+		</property>
 		<property>
 			<name>mainDirectory</name>
 			<value>${wf:appPath()}</value>
@@ -350,6 +353,10 @@
 				<property>
 					<name>and_accuracy_check_output</name>
 					<value>${and_accuracy_check_output}</value>
+				</property>
+				<property>
+					<name>and_parallel</name>
+					<value>16</value>
 				</property>
 				<property>
 					<name>and_sample</name>
