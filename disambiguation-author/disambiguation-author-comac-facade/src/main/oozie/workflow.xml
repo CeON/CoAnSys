@@ -23,6 +23,10 @@
 			<value>${workingDirectory}</value>
 		</property>
 		<property>
+			<name>results</name>
+			<value>${workingDirectory}</value>
+		</property>		
+		<property>
 			<name>outputDirectory</name>
 			<value>${mainDirectory}/final_results</value>
 		</property>
