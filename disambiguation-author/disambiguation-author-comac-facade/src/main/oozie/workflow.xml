@@ -1,4 +1,4 @@
-<workflow-app name="${project}-${subproject}-facade" xmlns="uri:oozie:workflow:0.4">
+<workflow-app name="${project}-${subproject}" xmlns="uri:oozie:workflow:0.4">
 	<parameters>
 		<!-- Facade Properties -->
 		<property>
@@ -396,7 +396,7 @@
 				</property>
 				<property>
 					<name>subproject</name>
-					<value>main-workflow</value>
+					<value>and-main-workflow</value>
 				</property>
 			</configuration>
 		</sub-workflow>
