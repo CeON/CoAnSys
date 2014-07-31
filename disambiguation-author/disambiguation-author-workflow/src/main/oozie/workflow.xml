@@ -227,22 +227,7 @@
 		</configuration>
 	</global>
 
-	<start to="cleanResultsDirectory" />
-
-	<action name="cleanResultsDirectory">
-		<fs>
-			<delete path="${results}" />
-			<delete path="${and_accuracy_check_output}" />
-			<delete path='${and_outputContribs}' />
-			<delete path='${and_outputPB}' />
-			<delete path='${and_output_unserialized}' />
-			<delete path='${and_splitted_output}' />
-			<delete path="${and_splitted}" />
-			<delete path="${and_cid_dockey}" />
-		</fs>
-		<ok to="startFrom" />
-		<error to="kill" />
-	</action>
+	<start to="startFrom" />
 
 	<decision name="startFrom">
 		<switch>
@@ -388,7 +373,7 @@
 	<decision name="check_accuracy_decision">
 		<switch>
 			<case to="check_accuracy">${and_check_accuracy}</case>
-			<default to="and_cleaning_decission" />
+			<default to="end" />
 		</switch>
 	</decision>
 
@@ -400,24 +385,6 @@
 			<!--commons -->
 			<param>and_scheduler=${and_pool}</param>
 		</pig>
-		<ok to="and_cleaning_decission" />
-		<error to="kill" />
-	</action>
-
-	<decision name="and_cleaning_decission">
-		<switch>
-			<case to="and_cleaning">${and_cleaning}</case>
-			<default to="end" />
-		</switch>
-	</decision>
-
-	<action name="and_cleaning">
-		<fs>
-			<delete path='${and_splitted_output}' />
-			<delete path='${and_cid_dockey}' />
-			<delete path='${and_outputContribs}' />
-			<delete path='${and_output_unserialized}' />
-		</fs>
 		<ok to="end" />
 		<error to="kill" />
 	</action>
