@@ -18,15 +18,15 @@
 
 package pl.edu.icm.coansys.deduplication.document.tool;
 
+import com.beust.jcommander.internal.Lists;
 import java.util.List;
 import java.util.UUID;
-
+import org.apache.hadoop.io.BytesWritable;
+import pl.edu.icm.coansys.models.DocumentProtos;
 import pl.edu.icm.coansys.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.models.DocumentProtos.BasicMetadata;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.models.DocumentProtos.TextWithLanguage;
-
-import com.beust.jcommander.internal.Lists;
 
 public abstract class MockDocumentMetadataFactory {
 
@@ -72,6 +72,13 @@ public abstract class MockDocumentMetadataFactory {
         return documentMetadata;        
     }
     
+    public static BytesWritable createDocumentWrapperBytesWritable(DocumentMetadata dm) {
+        DocumentProtos.DocumentWrapper.Builder dwBuilder = DocumentProtos.DocumentWrapper.newBuilder();
+        dwBuilder.setRowId(dm.getKey());
+        dwBuilder.setDocumentMetadata(dm);
+        return new BytesWritable(dwBuilder.build().toByteArray());
+    }
+
     public static Author createAuthor(String firstName, String lastName, int authorPosition) {
         Author author = Author.newBuilder().setKey(""+UUID.randomUUID()).setForenames(firstName).setSurname(lastName).setPositionNumber(authorPosition).build();
         return author;
