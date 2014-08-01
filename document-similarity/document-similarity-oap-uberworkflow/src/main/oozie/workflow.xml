@@ -1,5 +1,9 @@
-<workflow-app name="${project}_${subproject_main}" xmlns="uri:oozie:workflow:0.4">
+<workflow-app name="${project}-${subproject_main}" xmlns="uri:oozie:workflow:0.4">
 	<parameters>
+		<property>
+			<name>mainDirectory</name>
+			<value>${wf:appPath()}</value>
+		</property>
 		<property>
 			<name>remove_sideproducts</name>
 			<value>true</value>
@@ -90,6 +94,14 @@
 				<value>${pool}</value>
 			</property>
 			<property>
+				<name>scheduler</name>
+				<value>${pool}</value>
+			</property>
+			<property>
+				<name>pool</name>
+				<value>${pool}</value>
+			</property>
+			<property>
 				<name>oozie.launcher.mapred.fair.pool</name>
 				<value>${pool}</value>
 			</property>
@@ -121,9 +133,9 @@
 	<decision name="pick_start_node">
 		<switch>
 			<case to="PREP_calculate-major-docsim">${"true" eq "true"}</case>
-			<case to="recalculate-sim-about-1__filter">${"false" eq "true"}</case>
+			<case to="recalculate-sim-about-1-filter">${"false" eq "true"}</case>
 			<case to="calculate-minor-docsim">${"false" eq "true"}</case>
-			<case to="recalculate-sim-about-1__docsim-and-merge">${"false" eq "true"}</case>
+			<case to="recalculate-sim-about-1-docsim-and-merge">${"false" eq "true"}</case>
 			<case to="merge-results-and-serialize">${"false" eq "true"}</case>
 			<default to="finalize" />
 		</switch>
@@ -139,7 +151,7 @@
 
 	<action name="calculate-major-docsim">
 		<sub-workflow>
-			<app-path>${wf:appPath()}/pl.edu.icm.coansys-document-similarity-ranked-workflow
+			<app-path>${mainDirectory}/pl.edu.icm.coansys-document-similarity-ranked-workflow
 			</app-path>
 			<propagate-configuration />
 			<configuration>
@@ -161,7 +173,7 @@
 				</property>
 				<property>
 					<name>subproject</name>
-					<value>calculate-major-docsim</value>
+					<value>docsim-calculate-major-docsim</value>
 				</property>
 				<property>
 					<name>oozie.use.system.libpath</name>
@@ -209,18 +221,18 @@
 				</property>
 			</configuration>
 		</sub-workflow>
-		<ok to="recalculate-sim-about-1__filter" />
+		<ok to="recalculate-sim-about-1-filter" />
 		<error to="finalize-error" />
 	</action>
 
-	<!-- <action name="PREP_recalculate-sim-about-1__filter"> <fs> <delete path="${outputPathRecalc}/pairs-with-sim-lower-then-threshold" 
+	<!-- <action name="PREP_recalculate-sim-about-1-filter"> <fs> <delete path="${outputPathRecalc}/pairs-with-sim-lower-then-threshold" 
 		/> <delete path="${outputPathRecalc}/pairs-to-process" /> <delete path="${outputPathRecalc}/document-keys-to-process" 
-		/> <delete path="${outputPathRecalc}/documents-to-process" /> </fs> <ok to="recalculate-sim-about-1__filter" 
+		/> <delete path="${outputPathRecalc}/documents-to-process" /> </fs> <ok to="recalculate-sim-about-1-filter" 
 		/> <error to="finalize-error" /> </action> -->
 
-	<action name="recalculate-sim-about-1__filter">
+	<action name="recalculate-sim-about-1-filter">
 		<sub-workflow>
-			<app-path>${wf:appPath()}/pl.edu.icm.coansys-document-similarity-recalculate-sim-about-1
+			<app-path>${mainDirectory}/pl.edu.icm.coansys-document-similarity-recalculate-sim-about-1
 			</app-path>
 			<propagate-configuration />
 			<configuration>
@@ -230,7 +242,7 @@
 				</property>
 				<property>
 					<name>subproject</name>
-					<value>recalculate-sim-about-1__filter</value>
+					<value>docsim-recalculate-sim-about-1-filter</value>
 				</property>
 				<property>
 					<name>oozie.use.system.libpath</name>
@@ -256,7 +268,7 @@
 
 	<action name="calculate-minor-docsim">
 		<sub-workflow>
-			<app-path>${wf:appPath()}/pl.edu.icm.coansys-document-similarity-ranked-workflow
+			<app-path>${mainDirectory}/pl.edu.icm.coansys-document-similarity-ranked-workflow
 			</app-path>
 			<propagate-configuration />
 			<configuration>
@@ -270,7 +282,7 @@
 				</property>
 				<property>
 					<name>subproject</name>
-					<value>calculate-minor-docsim</value>
+					<value>docsim-calculate-minor-docsim</value>
 				</property>
 				<property>
 					<name>oozie.use.system.libpath</name>
@@ -334,13 +346,13 @@
 				</property>
 			</configuration>
 		</sub-workflow>
-		<ok to="recalculate-sim-about-1__docsim-and-merge" />
+		<ok to="recalculate-sim-about-1-docsim-and-merge" />
 		<error to="finalize-error" />
 	</action>
 
-	<action name="recalculate-sim-about-1__docsim-and-merge">
+	<action name="recalculate-sim-about-1-docsim-and-merge">
 		<sub-workflow>
-			<app-path>${wf:appPath()}/pl.edu.icm.coansys-document-similarity-recalculate-sim-about-1
+			<app-path>${mainDirectory}/pl.edu.icm.coansys-document-similarity-recalculate-sim-about-1
 			</app-path>
 			<propagate-configuration />
 			<configuration>
@@ -350,7 +362,7 @@
 				</property>
 				<property>
 					<name>subproject</name>
-					<value>recalculate-sim-about-1__docsim-and-merge</value>
+					<value>docsim-recalculate-sim-about-1-docsim-and-merge</value>
 				</property>
 				<property>
 					<name>oozie.use.system.libpath</name>
@@ -380,7 +392,7 @@
 
 	<action name="merge-results-and-serialize">
 		<sub-workflow>
-			<app-path>${wf:appPath()}/pl.edu.icm.coansys-document-similarity-ranked-workflow
+			<app-path>${mainDirectory}/pl.edu.icm.coansys-document-similarity-ranked-workflow
 			</app-path>
 			<propagate-configuration />
 			<configuration>
@@ -394,7 +406,7 @@
 				</property>
 				<property>
 					<name>subproject</name>
-					<value>merge-results-and-serialize</value>
+					<value>docsim-merge-results-and-serialize</value>
 				</property>
 				<property>
 					<name>oozie.use.system.libpath</name>

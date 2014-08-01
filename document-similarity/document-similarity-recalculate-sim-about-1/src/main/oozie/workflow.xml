@@ -26,7 +26,7 @@
 		</property>
 		<property>
 			<name>pool</name>
-			<value>bigjobs</value>
+			<value>default</value>
 		</property>
 		<property>
 			<name>oozie.wf.validate.ForkJoin</name>
