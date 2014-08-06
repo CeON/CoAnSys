@@ -93,7 +93,6 @@
 			<param>dsdemo_authors=${workingDir}/dataPreparation/AUTH</param>
 			<param>dsdemo_doc_basic=${workingDir}/dataPreparation/DOC_BASIC</param>
 			<param>dsdemo_doc_complete=${workingDir}/dataPreparation/DOC_COMPLETE</param>
-			
 		</pig>
 		<ok to="doc-sim" />
 		<error to="fail" />
@@ -150,9 +149,6 @@
 			<default to="moveImportantResults_1" />
 		</switch>
 	</decision>
-
-			<param>dsdemo_authors=${workingDir}/dataPreparation/AUTH</param>
-			<param>dsdemo_doc_basic=${workingDir}/dataPreparation/DOC_BASIC</param>
 
 	<action name="copyImportantResults_1">
 		<distcp xmlns="uri:oozie:distcp-action:0.2">
