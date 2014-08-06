@@ -9,6 +9,10 @@ SET mapred.fairscheduler.pool $dsdemo_pool
 %default dsdemo_doc_basic '$dsdemo_output/DOC_BASIC'
 %default dsdemo_doc_complete '$dsdemo_output/DOC_COMPLETE'
 
+%default jars '*.jar'
+%default commonJarsPath 'lib/$jars'
+REGISTER '$commonJarsPath'
+
 A = LOAD '$dsdemo_input' USING pl.edu.icm.coansys.commons.pig.udf.
 	RichSequenceFileLoader('org.apache.hadoop.io.Text','org.apache.hadoop.io.BytesWritable') 
 	as (key:chararray, value:bytearray);
@@ -26,4 +30,4 @@ DocumentsComplete = foreach A
 STORE DocumentsComplete INTO '$dsdemo_doc_complete' USING pl.edu.icm.coansys.commons.pig.udf.
 	RichSequenceFileLoader('org.apache.hadoop.io.Text','org.apache.hadoop.io.BytesWritable');
 STORE Authors INTO '$dsdemo_authors';
-STORE DocumentsBasic INTO '$dsdemo_docs_basic';
+STORE DocumentsBasic INTO '$dsdemo_doc_basic';
