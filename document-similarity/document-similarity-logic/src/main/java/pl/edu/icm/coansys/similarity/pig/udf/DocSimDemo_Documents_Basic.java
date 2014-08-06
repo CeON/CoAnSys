@@ -39,9 +39,9 @@ import pl.edu.icm.coansys.models.DocumentProtos.TextWithLanguage;
  * @author pdendek
  *
  */
-public class DocSimDemo_Documents extends EvalFunc<Tuple> {
+public class DocSimDemo_Documents_Basic extends EvalFunc<Tuple> {
 
-	private static final Logger logger = LoggerFactory.getLogger(DocSimDemo_Documents.class);
+	private static final Logger logger = LoggerFactory.getLogger(DocSimDemo_Documents_Basic.class);
 	PigStatusReporter myreporter;
 		
     @Override
@@ -63,14 +63,14 @@ public class DocSimDemo_Documents extends EvalFunc<Tuple> {
 			try{
 				dba = (DataByteArray) input.get(0);
 			}catch(Exception e){
-				myreporter.getCounter("extraction problems","DataByteArray from tuple");
+				myreporter.getCounter("extraction problems [DocBasic]","DataByteArray from tuple");
 				return null;
 			}
 			
 			try{
 				dm = DocumentWrapper.parseFrom(dba.get()).getDocumentMetadata();
 			}catch(Exception e){
-				myreporter.getCounter("extraction problems","document metadata");
+				myreporter.getCounter("extraction problems [DocBasic]","document metadata");
 				return null;
 			}
 			
@@ -87,12 +87,12 @@ public class DocSimDemo_Documents extends EvalFunc<Tuple> {
 				}
 				if(title != null && !title.trim().isEmpty()){
 					title = DiacriticsRemover.removeDiacritics(title);
-					title = title.replaceAll("[^A-Za-z0-9\\-_]", " ").replaceAll("\\s++", " ").trim();
+					title = title.replaceAll("[^\\w\\-]", " ").replaceAll("\\s++", " ").trim();
 				}
 			}catch(Exception e){
 			}finally{
 				if(title == null || title.trim().isEmpty()){
-					myreporter.getCounter("extraction problems","title extraction");
+					myreporter.getCounter("extraction problems [DocBasic]","title extraction");
 					return null;
 				}
 			}
@@ -102,7 +102,7 @@ public class DocSimDemo_Documents extends EvalFunc<Tuple> {
 			}catch(Exception e){
 			}finally{
 				if(doi == null || doi.trim().isEmpty()){
-					myreporter.getCounter("extraction problems","doi extraction");
+					myreporter.getCounter("extraction problems [DocBasic]","doi extraction");
 					return null;
 				}
 			}
@@ -112,7 +112,7 @@ public class DocSimDemo_Documents extends EvalFunc<Tuple> {
 			}catch(Exception e){
 			}finally{
 				if(year == null || year.trim().isEmpty()){
-					myreporter.getCounter("extraction problems","year extraction");
+					myreporter.getCounter("extraction problems [DocBasic]","year extraction");
 					return null;
 				}
 			}

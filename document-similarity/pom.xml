@@ -24,7 +24,7 @@
 		<module>document-similarity-workflow</module>
 		<module>document-similarity-ranked-workflow</module>
 		<module>document-similarity-ranked-two-sources-workflow</module>
-		<module>document-similarity-oap-demo-workflow</module>
+		<module>document-similarity-demonstrator-workflow</module>
 		<module>document-similarity-oap-uberworkflow</module>
 		<module>document-similarity-recalculate-sim-about-1</module>
 		<module>document-similarity-enhanced-comac-facade</module>

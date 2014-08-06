@@ -1,0 +1,217 @@
+<workflow-app xmlns="uri:oozie:workflow:0.4" name="docsim-demo-wf-${WF_CLASSIFIER}">
+    <parameters>
+        <property>
+            <name>POOL_NAME</name>
+            <value>default</value>
+        </property>
+        <property>
+            <name>WF_CLASSIFIER</name>
+            <value>default</value>
+        </property>
+        <property>
+            <name>dsdemo_trueIfCopyFalseIfMove</name>
+            <value>true</value>
+        </property>
+        <property>
+            <name>dsdemo_parallel</name>
+            <value>40</value>
+        </property>
+        <property>
+            <name>ds_parallel</name>
+            <value>40</value>
+        </property>
+        <property>
+            <name>dsdemo_remove_sideproducts</name>
+            <value>false</value>
+        </property>
+        <property>
+            <name>inputDir</name>
+            <value>${wf:appPath()}/docsim_demo_in/</value>
+        </property>
+        <property>
+            <name>workingDir</name>
+            <value>${wf:appPath()}/docsim_demo_working/</value>
+        </property>
+        <property>
+            <name>outputDir</name>
+            <value>${wf:appPath()}/docsim_demo_out/</value>
+        </property>
+        <property>
+            <name>project</name>
+            <value>docsim-demo</value>
+        </property>
+        <property>
+            <name>subproject</name>
+            <value>${WF_CLASSIFIER}</value>
+        </property>
+    </parameters>
+
+    <global>
+        <job-tracker>${jobTracker}</job-tracker>
+        <name-node>${nameNode}</name-node>
+        <configuration>
+            <property>
+                <name>mapred.fairscheduler.pool</name>
+                <value>${POOL_NAME}</value>
+            </property>
+            <property>
+                <name>oozie.launcher.mapred.fairscheduler.pool</name>
+                <value>${POOL_NAME}</value>
+            </property>
+            <property>
+                <name>mapred.job.queue.name</name>
+                <value>${queueName}</value>
+            </property>
+            <property>
+                <name>mapred.mapper.new-api</name>
+                <value>true</value>
+            </property>
+            <property>
+                <name>mapred.reducer.new-api</name>
+                <value>true</value>
+            </property>
+        </configuration>
+    </global>
+
+    <start to="generate-bw2proto-sf" /> 
+
+    <action name="remove-obsolute-data">
+        <fs>
+            <delete path="${workingDir}" />
+        </fs>
+        <ok to="prepare-data" />
+        <error to="fail" />
+    </action>
+
+	<action name="prepare-data">
+		<pig>
+			<script>transform_input.pig</script>
+			<param>dsdemo_parallel=${dsdemo_parallel}</param>
+			<param>dsdemo_pool=${POOL_NAME}</param>
+			<param>dsdemo_input=${inputDir}/</param>
+			<param>dsdemo_output=${workingDir}/dataPreparation/</param>
+			<param>dsdemo_authors=${workingDir}/dataPreparation/AUTH</param>
+			<param>dsdemo_doc_basic=${workingDir}/dataPreparation/DOC_BASIC</param>
+			<param>dsdemo_doc_complete=${workingDir}/dataPreparation/DOC_COMPLETE</param>
+			
+		</pig>
+		<ok to="doc-sim" />
+		<error to="fail" />
+	</action>
+
+	<action name="doc-sim">
+		<sub-workflow>
+			<app-path>${wf:appPath()}/pl.edu.icm.coansys-document-similarity-enhanced-comac-facade
+			</app-path>
+			<propagate-configuration />
+			<configuration>
+				<property>
+					<name>oozie.wf.subworkflow.classpath.inheritance</name>
+					<value>true</value>
+				</property>
+				<property>
+					<name>mainDirectory</name>
+					<value>${wf:appPath()}/pl.edu.icm.coansys-document-similarity-enhanced-comac-facade
+					</value>
+				</property>
+				<property>
+					<name>inputDirectory</name>
+					<value>${workingDir}/dataPreparation/DOC_COMPLETE</value>
+				</property>
+				<property>
+					<name>workingDirectory</name>
+					<value>${workingDir}/doc-sim-working</value>
+				</property>
+				<property>
+					<name>outputDirectory</name>
+					<value>${workingDir}/doc-sim-out</value>
+				</property>
+				<property>
+					<name>pool</name>
+					<value>${POOL_NAME}</value>
+				</property>
+				<property>
+					<name>project</name>
+					<value>${project}-wf-${subproject}</value>
+				</property>
+				<property>
+					<name>subproject</name>
+					<value>docsim-facade</value>
+				</property>				
+			</configuration>
+		</sub-workflow>
+		<ok to="whatToDoWithImportantData" />
+		<error to="fail" />
+	</action>
+
+	<decision name="whatToDoWithImportantData">
+		<switch>
+			<case to="copyImportantResults_1">${dsdemo_trueIfCopyFalseIfMove eq "true"}</case>
+			<default to="moveImportantResults_1" />
+		</switch>
+	</decision>
+
+			<param>dsdemo_authors=${workingDir}/dataPreparation/AUTH</param>
+			<param>dsdemo_doc_basic=${workingDir}/dataPreparation/DOC_BASIC</param>
+
+	<action name="copyImportantResults_1">
+		<distcp xmlns="uri:oozie:distcp-action:0.2">
+			<arg>${workingDir}/doc-sim-out/</arg>
+			<arg>${outputDir}/sim/</arg>
+		</distcp>
+		<ok to="copyImportantResults_2" />
+		<error to="fail" />
+	</action>
+
+	<action name="copyImportantResults_2">
+		<distcp xmlns="uri:oozie:distcp-action:0.2">
+			<arg>${workingDir}/dataPreparation/AUTH</arg>
+			<arg>${outputDir}/auth/</arg>
+		</distcp>
+		<ok to="copyImportantResults_3" />
+		<error to="fail" />
+	</action>
+
+	<action name="copyImportantResults_3">
+		<distcp xmlns="uri:oozie:distcp-action:0.2">
+			<arg>${workingDir}/dataPreparation/DOC_BASIC</arg>
+			<arg>${outputDir}/docs/</arg>
+		</distcp>
+		<ok to="remove-sideproducts-decision" />
+		<error to="fail" />
+	</action>
+
+
+	<action name="moveImportantResults">
+		<fs>
+			<move source='${workingDir}/doc-sim-out/' target='${outputDir}/sim/'/>
+			<move source='${workingDir}/dataPreparation/AUTH' target='${outputDir}/auth/'/>
+			<move source='${workingDir}/dataPreparation/DOC_BASIC' target='${outputDir}/docs/'/>
+		</fs>
+		<ok to="remove-sideproducts-decision" />
+		<error to="fail" />
+	</action>
+
+	<decision name="remove-sideproducts-decision">
+		<switch>
+			<case to="remove-sideproducts">${dsdemo_remove_sideproducts
+				eq "true"}
+			</case>
+			<default to="end" />
+		</switch>
+	</decision>
+
+	<action name="remove-sideproducts">
+		<fs>
+			<delete path='${workingDir}'/>
+		</fs>
+		<ok to="end" />
+		<error to="fail" />
+	</action>
+
+    <kill name="fail">
+        <message>Workflow failed</message>
+    </kill>
+
+    <end name="end" />
+</workflow-app>
