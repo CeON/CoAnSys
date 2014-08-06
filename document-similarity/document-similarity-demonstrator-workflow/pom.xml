@@ -16,7 +16,30 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
+	
 	<build>
+		<resources>
+			<resource>
+				<directory>src/main/pig</directory>
+				<filtering>false</filtering>
+				<includes>
+					<include>**/*.pig</include>
+					<include>**/*.py</include>
+				</includes>
+				<excludes>
+					<exclude>**/macros.pig</exclude>
+				</excludes>
+				<targetPath>${project.build.directory}/classes/pig-main</targetPath>
+			</resource>
+			<resource>
+				<directory>src/main/pig</directory>
+				<filtering>false</filtering>
+				<includes>
+					<include>**/macros.pig</include>
+				</includes>
+				<targetPath>${project.build.directory}/classes/pig-macros</targetPath>
+			</resource>
+		</resources>	
 		<plugins>
 			<plugin>
 				<groupId>pl.edu.icm.maven</groupId>
