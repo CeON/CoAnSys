@@ -20,6 +20,7 @@ package pl.edu.icm.coansys.commons.pig.udf;
 import java.io.IOException;
 
 import org.apache.pig.EvalFunc;
+import org.apache.pig.data.DataByteArray;
 import org.apache.pig.data.Tuple;
 
 /**
@@ -30,6 +31,6 @@ public class ByteArrayToText extends EvalFunc<String> {
     
     @Override
     public String exec(Tuple input) throws IOException {
-        return ((byte[]) input.get(0)).toString();
+        return ((DataByteArray) input.get(0)).toString();
     }
 }
