@@ -21,16 +21,39 @@ import java.io.IOException;
 
 import org.apache.pig.EvalFunc;
 import org.apache.pig.data.DataByteArray;
+import org.apache.pig.data.DataType;
 import org.apache.pig.data.Tuple;
+import org.apache.pig.data.TupleFactory;
+import org.apache.pig.impl.logicalLayer.FrontendException;
+import org.apache.pig.impl.logicalLayer.schema.Schema;
 
 /**
  *
  * @author pdendek
  */
-public class ByteArrayToText extends EvalFunc<String> {
+public class ByteArrayToText extends EvalFunc<Tuple> {
     
+	@Override
+	public Schema outputSchema(Schema p_input) {
+		try {
+			return Schema.generateNestedSchema(DataType.TUPLE,
+					DataType.CHARARRAY);
+		} catch (FrontendException e) {
+			throw new IllegalStateException(e);
+		}
+	}
+	
     @Override
-    public String exec(Tuple input) throws IOException {
-        return ((DataByteArray) input.get(0)).toString();
+    public Tuple exec(Tuple input) throws IOException {
+    	Tuple t = TupleFactory.getInstance().newTuple();
+    	t.append(((DataByteArray) input.get(0)).toString());
+        return t;
+    }
+    
+    public static void main(String[] args){
+    	String s = "bla";
+    	DataByteArray dba = new DataByteArray();
+    	dba.set(s.getBytes());
+    	System.out.println(dba.toString());
     }
 }
