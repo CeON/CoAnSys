@@ -68,7 +68,7 @@ public class DocSimDemo_Authors extends EvalFunc<DataBag> {
 				dba = (DataByteArray) input.get(0);
 			} catch (Exception e) {
 				myreporter.getCounter("extraction problems [Auth]",
-						"DataByteArray from tuple");
+						"DataByteArray from tuple").increment(1);
 				return null;
 			}
 
@@ -80,7 +80,7 @@ public class DocSimDemo_Authors extends EvalFunc<DataBag> {
 				}
 			} catch (Exception e) {
 				myreporter.getCounter("extraction problems [Auth]",
-						"document metadata | lack of doi");
+						"document metadata | lack of doi").increment(1);
 				return null;
 			}
 
