@@ -28,11 +28,9 @@ import org.apache.pig.tools.pigstats.PigStatusReporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.edu.icm.coansys.commons.java.DiacriticsRemover;
 import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
-import pl.edu.icm.coansys.models.DocumentProtos.TextWithLanguage;
 
 /**
  * 
@@ -63,14 +61,14 @@ public class DocSimDemo_Documents_Complete extends EvalFunc<Tuple> {
 			try{
 				dba = (DataByteArray) input.get(0);
 			}catch(Exception e){
-				myreporter.getCounter("extraction problems [DocComplete]","DataByteArray from tuple");
+				myreporter.getCounter("extraction problems [DocComplete]","DataByteArray from tuple").increment(1);
 				return null;
 			}
 			
 			try{
 				dm = DocumentWrapper.parseFrom(dba.get()).getDocumentMetadata();
 			}catch(Exception e){
-				myreporter.getCounter("extraction problems [DocComplete]","document metadata");
+				myreporter.getCounter("extraction problems [DocComplete]","document metadata").increment(1);
 				return null;
 			}
 			
@@ -79,7 +77,7 @@ public class DocSimDemo_Documents_Complete extends EvalFunc<Tuple> {
 			}catch(Exception e){
 			}finally{
 				if(doi == null || doi.trim().isEmpty()){
-					myreporter.getCounter("extraction problems [DocComplete]","doi extraction");
+					myreporter.getCounter("extraction problems [DocComplete]","doi extraction").increment(1);
 					return null;
 				}
 			}

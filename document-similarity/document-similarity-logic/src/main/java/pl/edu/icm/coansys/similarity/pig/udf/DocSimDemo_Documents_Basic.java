@@ -63,14 +63,14 @@ public class DocSimDemo_Documents_Basic extends EvalFunc<Tuple> {
 			try{
 				dba = (DataByteArray) input.get(0);
 			}catch(Exception e){
-				myreporter.getCounter("extraction problems [DocBasic]","DataByteArray from tuple");
+				myreporter.getCounter("extraction problems [DocBasic]","DataByteArray from tuple").increment(1);
 				return null;
 			}
 			
 			try{
 				dm = DocumentWrapper.parseFrom(dba.get()).getDocumentMetadata();
 			}catch(Exception e){
-				myreporter.getCounter("extraction problems [DocBasic]","document metadata");
+				myreporter.getCounter("extraction problems [DocBasic]","document metadata").increment(1);
 				return null;
 			}
 			
@@ -92,7 +92,7 @@ public class DocSimDemo_Documents_Basic extends EvalFunc<Tuple> {
 			}catch(Exception e){
 			}finally{
 				if(title == null || title.trim().isEmpty()){
-					myreporter.getCounter("extraction problems [DocBasic]","title extraction");
+					myreporter.getCounter("extraction problems [DocBasic]","title extraction").increment(1);
 					return null;
 				}
 			}
@@ -102,7 +102,7 @@ public class DocSimDemo_Documents_Basic extends EvalFunc<Tuple> {
 			}catch(Exception e){
 			}finally{
 				if(doi == null || doi.trim().isEmpty()){
-					myreporter.getCounter("extraction problems [DocBasic]","doi extraction");
+					myreporter.getCounter("extraction problems [DocBasic]","doi extraction").increment(1);
 					return null;
 				}
 			}
@@ -112,7 +112,7 @@ public class DocSimDemo_Documents_Basic extends EvalFunc<Tuple> {
 			}catch(Exception e){
 			}finally{
 				if(year == null || year.trim().isEmpty()){
-					myreporter.getCounter("extraction problems [DocBasic]","year extraction");
+					myreporter.getCounter("extraction problems [DocBasic]","year extraction").increment(1);
 					return null;
 				}
 			}
