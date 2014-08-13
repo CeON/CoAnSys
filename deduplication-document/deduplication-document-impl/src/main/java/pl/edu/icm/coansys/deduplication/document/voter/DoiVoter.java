@@ -31,7 +31,7 @@ public class DoiVoter extends AbstractSimilarityVoter {
         String doi2 = extractDOI(doc2);
         if (doi1 == null || doi2 == null) {
             return new Vote(Vote.VoteStatus.ABSTAIN);
-        } else if (doi1.equals(doi2)) {
+        } else if (doi1.equalsIgnoreCase(doi2)) {
             return new Vote(Vote.VoteStatus.EQUALS);
         } else {
             return new Vote(Vote.VoteStatus.NOT_EQUALS);
