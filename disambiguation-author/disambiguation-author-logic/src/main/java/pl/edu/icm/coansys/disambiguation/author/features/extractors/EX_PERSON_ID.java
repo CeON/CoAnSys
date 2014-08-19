@@ -17,6 +17,7 @@
  */
 package pl.edu.icm.coansys.disambiguation.author.features.extractors;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.pig.data.DataBag;
@@ -35,6 +36,7 @@ public class EX_PERSON_ID extends DisambiguationExtractorAuthor {
 
 	static protected List<String> PERSON_ID_KEY_NAME;// = "pbnPersonId";
 	static{
+		PERSON_ID_KEY_NAME = new ArrayList<String>();
 		PERSON_ID_KEY_NAME.add("pbnPersonId");
 		PERSON_ID_KEY_NAME.add("orcid");
 	}
