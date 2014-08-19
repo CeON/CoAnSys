@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<oozie-maven-plugin> 
+<oozie-maven-plugin>
+<!--
+	Main deps to document-similarity-ranked-workflow
+-->
 	<main-project-pig>
 		<scripts>
 			<root>pig-main</root>
-			<preserve>false</preserve>		
+			<preserve>false</preserve>
 			<includes>
 				<include>.*sim1.*\.pig</include>
 			</includes>
@@ -15,5 +18,5 @@
 				<include>.*\.pig</include>
 			</includes>
 		</scripts>
-	</main-project-pig>	
+	</main-project-pig>
 </oozie-maven-plugin>

@@ -1,61 +1,77 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <oozie-maven-plugin>
-    <main-project-pig>
-        <scripts>
-            <root>pig</root>
-            <preserve>false</preserve>
-            <includes>
-                <include>.*\.pig</include>
-            </includes>
-        </scripts>
-        <scripts>
-            <root>pig-main</root>
-            <preserve>false</preserve>
-            <includes>
-                <include>.*\.pig</include>
-            </includes>
-        </scripts>
-        <scripts>
-            <root>pig-macros</root>
-            <preserve>false</preserve>
-            <target>lib/</target>
-            <mainDirAsDst>true</mainDirAsDst>
-            <includes>
-                <include>.*\.pig</include>
-            </includes>
-        </scripts>
-    </main-project-pig>
-    <deps-project-pig>
-        <scripts>
-            <srcProject>.*document-similarity.*</srcProject>
-            <root>pig-macros</root>
-            <preserve>false</preserve>
-            <includes>
-                <include>.*macros\.pig</include>
-            </includes>
-        </scripts>
-        <scripts>
-            <root>pig</root>
-            <preserve>false</preserve>
-            <includes>
-                <include>[^/]*\.pig</include>
-            </includes>
-        </scripts>
-        <scripts>
-            <root>pig-main</root>
-            <preserve>false</preserve>
-            <includes>
-                <include>.*\.pig</include>
-            </includes>
-        </scripts>
-        <scripts>
-            <root>pig-macros</root>
-            <preserve>false</preserve>
-            <target>lib/</target>
-            <mainDirAsDst>true</mainDirAsDst>
-            <includes>
-                <include>.*\.pig</include>
-            </includes>
-        </scripts>
-    </deps-project-pig>
+<!--
+Main deps:
+
+1.From
+self::*
+1.To
+document-similarity-logic
+
+-->
+	<main-project-pig>
+		<scripts>
+			<root>pig-main</root>
+			<preserve>false</preserve>
+			<includes>
+				<include>.*trans.*\.pig</include>
+			</includes>
+		</scripts>
+		<scripts>
+			<root>pig-macros</root>
+			<preserve>false</preserve>
+			<includes>
+				<include>.*\.pig</include>
+			</includes>
+		</scripts>
+	</main-project-pig>
+<!--
+Deeper deps:
+
+1.From
+document-similarity-ranked-workflow
+document-similarity-recalculate-sim-about-1
+1.To
+document-similarity-logic
+-->
+	<deps-project-pig>
+		<scripts>
+			<srcProject>.*document-similarity-ranked-workflow.*</srcProject>
+			<root>pig-main</root>
+			<preserve>false</preserve>
+			<includes>
+				<include>.*document-similarity-s.*\.pig</include>
+				<include>.*rank.*\.py</include>
+			</includes>
+<!--
+			<excludes>
+				<exclude>.*sim1.*\.pig</exclude>
+			</excludes>
+-->
+		</scripts>
+
+		<scripts>
+			<srcProject>.*document-similarity-recalculate-sim-about-1.*</srcProject>
+			<root>pig-main</root>
+			<preserve>false</preserve>
+			<includes>
+				<include>.*sim1.*\.pig</include>
+				<include>.*macro.*pig</include>
+			</includes>
+			<excludes>
+				<exclude>.*document-similarity.*\.pig</exclude>
+			</excludes>
+		</scripts>
+<!-- -->
+		<scripts>
+			<root>pig-macros</root>
+			<preserve>false</preserve>
+			<includes>
+				<include>.*\.pig</include>
+<!--
+				<include>.*macro.*\.pig</include>
+-->
+			</includes>
+		</scripts>
+	</deps-project-pig>
 </oozie-maven-plugin>

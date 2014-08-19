@@ -21,6 +21,10 @@
             <value>40</value>
         </property>
         <property>
+            <name>ds_remove_sideproducts</name>
+            <value>false</value>
+        </property>
+        <property>
             <name>dsdemo_remove_sideproducts</name>
             <value>false</value>
         </property>
@@ -136,7 +140,11 @@
 				<property>
 					<name>subproject</name>
 					<value>docsim-facade</value>
-				</property>				
+				</property>
+        <property>
+            <name>ds_remove_sideproducts</name>
+            <value>${ds_remove_sideproducts}</value>
+        </property>
 			</configuration>
 		</sub-workflow>
 		<ok to="whatToDoWithImportantData" />
@@ -152,7 +160,7 @@
 
 	<action name="copyImportantResults_1">
 		<distcp xmlns="uri:oozie:distcp-action:0.2">
-			<arg>${workingDir}/doc-sim-out/</arg>
+			<arg>${workingDir}/doc-sim-working/final/similarity/topn/</arg>
 			<arg>${outputDir}/sim/</arg>
 		</distcp>
 		<ok to="copyImportantResults_2" />

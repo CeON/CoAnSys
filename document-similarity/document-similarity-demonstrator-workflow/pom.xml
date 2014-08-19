@@ -34,15 +34,15 @@
 	<dependencies>
 		<dependency>
 			<groupId>pl.edu.icm.coansys</groupId>
+			<artifactId>document-similarity-logic</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>pl.edu.icm.coansys</groupId>
 			<artifactId>document-similarity-enhanced-comac-facade</artifactId>
 			<version>${project.version}</version>
 			<type>tar.gz</type>
 			<classifier>oozie-wf</classifier>
-		</dependency>
-		<dependency>
-			<groupId>pl.edu.icm.coansys</groupId>
-			<artifactId>document-similarity-logic</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
 </project>
