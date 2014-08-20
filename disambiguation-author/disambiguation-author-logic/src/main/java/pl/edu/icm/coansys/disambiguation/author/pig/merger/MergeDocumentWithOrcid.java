@@ -19,6 +19,7 @@ package pl.edu.icm.coansys.disambiguation.author.pig.merger;
 
 
 import org.apache.hadoop.mapreduce.Counter;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -88,7 +89,7 @@ public class MergeDocumentWithOrcid extends EvalFunc<Tuple> {
 			List<Author> aOL = dwO.getDocumentMetadata().getBasicMetadata().getAuthorList();
 			
 			//calculate merged author list
-			List<Author> aRL = matchAuthors(aDL,aOL);
+			List<Author> aRL = matchAuthors(docId,aDL,aOL);
 			
 			//construct resulting document
 			BasicMetadata.Builder bmR = BasicMetadata.newBuilder(DocumentWrapper.newBuilder(dwD).getDocumentMetadata().getBasicMetadata());
@@ -113,7 +114,7 @@ public class MergeDocumentWithOrcid extends EvalFunc<Tuple> {
 		}
 	}
 
-    protected List<Author> matchAuthors(List<Author> base,
+    protected List<Author> matchAuthors(String docId, List<Author> base,
             List<Author> second) {
         List<Author> result = new ArrayList<Author>(base.size());
         List<Author> secondCopy = new ArrayList<Author>(second);
@@ -147,6 +148,8 @@ public class MergeDocumentWithOrcid extends EvalFunc<Tuple> {
         }
 
         if(changed){
+        	logger.info("Changed docId:"+docId);
+        	logger.info("------------------------------------------");
         	if(myPigStatusReporter != null){
         		Counter c = myPigStatusReporter.getCounter("ORCID Enhancement", "Document Enhanced");
         		if(c!=null){
@@ -161,8 +164,9 @@ public class MergeDocumentWithOrcid extends EvalFunc<Tuple> {
     private Author merge(Author author, Author foundAuthor) {
 		Author.Builder builder = Author.newBuilder(author);
 		for(KeyValue kv : foundAuthor.getExtIdList()){
-			if("orcid".equals(kv.getKey())){
+			if("orcid-author-id".equals(kv.getKey())){
 				builder.addExtId(kv);
+				logger.info("<k:"+kv.getKey()+"; v:"+kv.getValue()+">");
 			}
 		}
 		return builder.build();
