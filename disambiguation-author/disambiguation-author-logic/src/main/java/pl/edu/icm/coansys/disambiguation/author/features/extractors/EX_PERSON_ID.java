@@ -38,7 +38,7 @@ public class EX_PERSON_ID extends DisambiguationExtractorAuthor {
 	static{
 		PERSON_ID_KEY_NAME = new ArrayList<String>();
 		PERSON_ID_KEY_NAME.add("pbnPersonId");
-		PERSON_ID_KEY_NAME.add("orcid");
+		PERSON_ID_KEY_NAME.add("orcid-author-id");
 	}
 	
 	
