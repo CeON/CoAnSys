@@ -165,7 +165,9 @@ public class MergeDocumentWithOrcid extends EvalFunc<Tuple> {
 		Author.Builder builder = Author.newBuilder(author);
 		for(KeyValue kv : foundAuthor.getExtIdList()){
 			if("orcid-author-id".equals(kv.getKey())){
-				KeyValue.Builder kvb = KeyValue.newBuilder(kv);
+				KeyValue.Builder kvb = KeyValue.newBuilder();
+				kvb.setKey(kv.getKey());
+				kvb.setValue(kv.getValue());
 				builder.addExtId(kvb);
 				logger.info("<k:"+kv.getKey()+"; v:"+kv.getValue()+">");
 			}
