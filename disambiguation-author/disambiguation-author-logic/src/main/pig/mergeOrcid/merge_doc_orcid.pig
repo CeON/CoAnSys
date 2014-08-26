@@ -12,19 +12,17 @@ SET mapred.fairscheduler.pool $orcid_pool
 %default nrml_input 'nrml_output'
 %default output 'nrml_output'
 
-docs = LOAD '$nrml_input' USING
+docsX = LOAD '$nrml_input' USING
         pl.edu.icm.coansys.commons.pig.udf.RichSequenceFileLoader
         ('org.apache.hadoop.io.Text', 'org.apache.hadoop.io.BytesWritable') AS (kD:chararray,vD:bytearray);
-
-orcid = LOAD '$orcid_input' USING
+docs = distinct docsX;
+orcidX = LOAD '$orcid_input' USING
         pl.edu.icm.coansys.commons.pig.udf.RichSequenceFileLoader
         ('org.apache.hadoop.io.Text', 'org.apache.hadoop.io.BytesWritable') AS (kO:chararray,vO:bytearray);
-        
+orcid = distinct orcidX;
 jnd = JOIN docs by kD, orcid by kO;
 mtchd = FOREACH jnd GENERATE kD as k, vD as vD, vO as vO;
-
-mrgd = FOREACH mtchd GENERATE FLATTEN(pl.edu.icm.coansys.disambiguation.author.pig.merger(k,vD,vO)) as (k:chararray, v:bytearray);
-
-STORE '$output' USING
+mrgd = FOREACH mtchd GENERATE FLATTEN(pl.edu.icm.coansys.disambiguation.author.pig.merger.MergeDocumentWithOrcid(k,vD,vO)) as (k:chararray, v:bytearray);
+STORE mrgd INTO '$output' USING
         pl.edu.icm.coansys.commons.pig.udf.RichSequenceFileLoader
         ('org.apache.hadoop.io.Text', 'org.apache.hadoop.io.BytesWritable');
