@@ -123,12 +123,12 @@ public class MergeDocumentWithOrcid extends EvalFunc<Tuple> {
         for (Author author : base) {
             Author foundAuthor = null;
             for (Author secondAuthor : secondCopy) {
-                if (equalsIgnoreCaseIgnoreDiacritics(
-                        author.getName(), secondAuthor.getName())
-                        || equalsIgnoreCaseIgnoreDiacritics(
-                                author.getForenames(), secondAuthor.getForenames())
-                        && equalsIgnoreCaseIgnoreDiacritics(
-                                author.getSurname(), secondAuthor.getSurname())) {
+                if (
+			equalsIgnoreCaseIgnoreDiacritics(author.getName(), secondAuthor.getName())
+                        || 
+			//equalsIgnoreCaseIgnoreDiacritics(author.getForenames(), secondAuthor.getForenames()) &&
+                        equalsIgnoreCaseIgnoreDiacritics(author.getSurname(), secondAuthor.getSurname())
+		){
                     foundAuthor = secondAuthor;
                     break;
                 }
@@ -143,7 +143,7 @@ public class MergeDocumentWithOrcid extends EvalFunc<Tuple> {
             		}
             	}
             } else {
-                result.add(author);
+                result.add(Author.newBuilder(author).build());
             }
         }
 
@@ -168,11 +168,14 @@ public class MergeDocumentWithOrcid extends EvalFunc<Tuple> {
 				KeyValue.Builder kvb = KeyValue.newBuilder();
 				kvb.setKey(kv.getKey());
 				kvb.setValue(kv.getValue());
-				builder.addExtId(kvb);
+				builder.addExtId(kvb.build());
 				logger.info("<k:"+kv.getKey()+"; v:"+kv.getValue()+">");
+				logger.info("<kc:"+kvb.getKey()+"; vc:"+kvb.getValue()+">");
 			}
 		}
-		return builder.build();
+		Author ret = builder.build();
+		logger.info("<auth:"+ret.toString()+">");
+		return ret;
 	}
 
 	private boolean equalsIgnoreCaseIgnoreDiacritics(String firstName,
