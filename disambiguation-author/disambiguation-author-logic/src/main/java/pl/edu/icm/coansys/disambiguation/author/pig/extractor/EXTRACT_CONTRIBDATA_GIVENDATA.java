@@ -236,7 +236,7 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 				// pig status reporter
 				reportSname(a.getSurname(), normalizedSname);
 
-				String cId = UUID.fromString(a.toString()).toString();
+				String cId = UUID.nameUUIDFromBytes(a.toByteArray()).toString();
 				// taking from document metadata data specific for each contrib
 				finalAuthorMap = extractAuthBasedFeatures(dm, DocumentMap, i);
 				Object[] to = new Object[] { docKey, cId, normalizedSname,
