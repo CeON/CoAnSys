@@ -32,3 +32,6 @@ _SUCCESS
 *_secret.*
 maven-eclipse.xml
 .externalToolBuilders
+
+#vim files
+*.swp
