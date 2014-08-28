@@ -118,7 +118,10 @@ public class MergeDocumentWithOrcid extends EvalFunc<Tuple> {
             List<Author> second) {
         List<Author> result = new ArrayList<Author>(base.size());
         List<Author> secondCopy = new ArrayList<Author>(second);
-        boolean changed = false;
+        boolean changedBln = false;
+        int changedInt = 0;
+        System.out.println("-------------------------------------------");
+        System.out.println("number of base authors: "+base.size()+"\tnumber of orcid authors");
 
         for (Author author : base) {
             Author foundAuthor = null;
@@ -135,7 +138,8 @@ public class MergeDocumentWithOrcid extends EvalFunc<Tuple> {
             }
             if (foundAuthor != null) {
             	result.add(merge(author,foundAuthor));
-            	changed = true;
+            	changedBln = true;
+            	changedInt++;
             	if(myPigStatusReporter != null){
             		Counter c = myPigStatusReporter.getCounter("ORCID Enhancement", "Author Enhanced");
             		if(c!=null){
@@ -147,9 +151,9 @@ public class MergeDocumentWithOrcid extends EvalFunc<Tuple> {
             }
         }
 
-        if(changed){
-        	logger.info("Changed docId:"+docId);
+        if(changedBln){
         	logger.info("------------------------------------------");
+        	logger.info("Changed docId:"+docId);
         	if(myPigStatusReporter != null){
         		Counter c = myPigStatusReporter.getCounter("ORCID Enhancement", "Document Enhanced");
         		if(c!=null){
@@ -157,7 +161,7 @@ public class MergeDocumentWithOrcid extends EvalFunc<Tuple> {
         		}
         	}
         }
-        
+        System.out.println("number of intersections: "+changedInt);
         return result;
     }
 
