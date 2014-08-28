@@ -23,6 +23,8 @@ import org.apache.hadoop.io.{Text, BytesWritable}
 import org.apache.hadoop.mapreduce.Reducer
 import pl.edu.icm.coansys.citations.data.{MarkedBytesWritable, MarkedText}
 import scala.collection.mutable.ListBuffer
+import scala.io.Source
+import resource._
 
 
 /**
@@ -33,20 +35,21 @@ class HashJoiner extends Reducer[MarkedText, MarkedText, Text, Text] {
 
   val outValue = new Text()
 
-  var maxDocuments = 0
+  var hashes: Set[String] = null
 
   override def setup(context: Context) {
-    maxDocuments = context.getConfiguration.getInt("max.documents.per.bucket", 0)
+    hashes = managed(Source.fromFile("small_buckets.txt")).acquireAndGet(source =>source.getLines().toSet)
   }
   
   override def reduce(key: MarkedText, values: java.lang.Iterable[MarkedText], context: Context) {
+    if (!hashes(key.text.toString))
+      return
+
     val docs = new ListBuffer[String]
     for (value <- values) {
       if (value.isMarked.get()) {
         docs.append(value.text.toString)
       } else {
-        if (maxDocuments > 0 && docs.size > maxDocuments)
-          return
         for (doc <- docs) {
           outValue.set(doc)
           context.write(value.text, outValue)

@@ -316,6 +316,7 @@
                     <value>org.apache.hadoop.io.Text</value>
                 </property>
             </configuration>
+            <file>${workingDirectory}/small_buckets.txt#small_buckets.txt</file>
         </map-reduce>
         <ok to="distinctor"/>
         <error to="fail"/>
