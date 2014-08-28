@@ -219,14 +219,16 @@
     </action>
     
     <action name="small-buckets-merger">
-        <shell xmlns="uri:oozie:shell-action:0.1">
+        <java>
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
-            <exec>merger.sh</exec>
-            <argument>${workingDirectory}/small_buckets/*</argument>
-            <argument>${workingDirectory}/small_buckets.txt</argument>
-            <file>merger.sh#merger.sh</file>
-        </shell>
+            <prepare>
+                <delete path="${workingDirectory}/small_buckets.txt"/>
+            </prepare>
+            <main-class>pl.edu.icm.coansys.citations.jobs.CopyMerge</main-class>
+            <arg>${workingDirectory}/small_buckets</arg>
+            <arg>${workingDirectory}/small_buckets.txt</arg>
+        </java>
         <ok to="heuristic"/>
         <error to="fail"/>
     </action>
