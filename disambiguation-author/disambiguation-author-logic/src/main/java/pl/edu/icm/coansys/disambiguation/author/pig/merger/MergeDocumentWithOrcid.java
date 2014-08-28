@@ -120,8 +120,8 @@ public class MergeDocumentWithOrcid extends EvalFunc<Tuple> {
         List<Author> secondCopy = new ArrayList<Author>(second);
         boolean changedBln = false;
         int changedInt = 0;
-        logger.info("-------------------------------------------");
-        logger.info("number of base authors: "+base.size()+"\tnumber of orcid authors");
+        logger.error("-------------------------------------------");
+        logger.error("number of base authors: "+base.size()+"\tnumber of orcid authors");
 
         for (Author author : base) {
             Author foundAuthor = null;
@@ -161,7 +161,7 @@ public class MergeDocumentWithOrcid extends EvalFunc<Tuple> {
         		}
         	}
         }
-        logger.info("number of intersections: "+changedInt);
+        logger.error("number of intersections: "+changedInt);
         return result;
     }
 
