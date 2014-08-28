@@ -50,8 +50,8 @@ class BucketMeasurer extends Reducer[MarkedText, MarkedText, Text, NullWritable]
         citCount += 1
       }
     }
-
-    if (docCount * citCount <= maxSize || maxSize <= 0) {
+    val bucketSize = docCount * citCount
+    if (bucketSize > 0 && (bucketSize <= maxSize || maxSize <= 0)) {
       context.write(key.text, NullWritable.get())
     }
   }
