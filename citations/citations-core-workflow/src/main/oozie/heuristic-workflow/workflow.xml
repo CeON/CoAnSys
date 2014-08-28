@@ -46,6 +46,11 @@
             <description>Buckets exceeding this limit will be omitted</description>
         </property>
         <property>
+            <name>maxBucketSize</name>
+            <value>10000</value>
+            <description>Buckets exceeding this limit will be omitted</description>
+        </property>
+        <property>
             <name>workingDirectory</name>
         </property>
         <property>
@@ -117,6 +122,111 @@
             <delete path="${workingDirectory}"/>
             <mkdir path="${workingDirectory}"/>
         </fs>
+        <ok to="small-buckets"/>
+        <error to="fail"/>
+    </action>
+
+    <action name="small-buckets">
+        <map-reduce>
+            <prepare>
+                <delete path="${workingDirectory}/small_buckets"/>
+            </prepare>
+            <configuration>
+                <property>
+                    <name>mapreduce.inputformat.class</name>
+                    <value>org.apache.hadoop.mapreduce.lib.input.DelegatingInputFormat</value>
+                </property>
+                <property>
+                    <name>mapreduce.map.class</name>
+                    <value>org.apache.hadoop.mapreduce.lib.input.DelegatingMapper</value>
+                </property>
+                <property>
+                    <name>mapred.input.dir.mappers</name>
+                    <value>
+                        ${sourceEntities};pl.edu.icm.coansys.citations.mappers.CitationHashGenerator,${destinationEntities};pl.edu.icm.coansys.citations.mappers.DocumentHashGenerator
+                    </value>
+                </property>
+                <property>
+                    <name>coansys.citations.citation.hasher</name>
+                    <value>${citationHasher}</value>
+                </property>
+                <property>
+                    <name>coansys.citations.mark.citations</name>
+                    <value>false</value>
+                </property>
+                <property>
+                    <name>coansys.citations.document.hasher</name>
+                    <value>${documentHasher}</value>
+                </property>
+                <property>
+                    <name>coansys.citations.mark.documents</name>
+                    <value>true</value>
+                </property>
+                <property>
+                    <name>mapred.input.dir.formats</name>
+                    <value>
+                        ${sourceEntities};org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat,${destinationEntities};org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat
+                    </value>
+                </property>
+                <property>
+                    <name>mapred.mapoutput.key.class</name>
+                    <value>pl.edu.icm.coansys.citations.data.MarkedText</value>
+                </property>
+                <property>
+                    <name>mapred.mapoutput.value.class</name>
+                    <value>pl.edu.icm.coansys.citations.data.MarkedText</value>
+                </property>
+                <property>
+                    <name>mapreduce.partitioner.class</name>
+                    <value>pl.edu.icm.coansys.citations.data.MarkedTextPartitioner</value>
+                </property>
+                <property>
+                    <name>mapred.output.value.groupfn.class</name>
+                    <value>pl.edu.icm.coansys.citations.data.MarkedTextGroupComparator</value>
+                </property>
+                <property>
+                    <name>mapred.output.key.comparator.class</name>
+                    <value>pl.edu.icm.coansys.citations.data.MarkedTextSortComparator</value>
+                </property>
+                <property>
+                    <name>mapreduce.reduce.class</name>
+                    <value>pl.edu.icm.coansys.citations.reducers.BucketMeasurer</value>
+                </property>
+                <property>
+                    <name>max.bucket.size</name>
+                    <value>${maxBucketSize}</value>
+                </property>
+                <property>
+                    <name>mapreduce.outputformat.class</name>
+                    <value>org.apache.hadoop.mapreduce.lib.output.TextOutputFormat</value>
+                </property>
+                <property>
+                    <name>mapred.output.dir</name>
+                    <value>${workingDirectory}/small_buckets</value>
+                </property>
+                <property>
+                    <name>mapred.output.key.class</name>
+                    <value>org.apache.hadoop.io.Text</value>
+                </property>
+                <property>
+                    <name>mapred.output.value.class</name>
+                    <value>org.apache.hadoop.io.NullWritable</value>
+                </property>
+            </configuration>
+        </map-reduce>
+        <ok to="small-buckets-merger"/>
+        <error to="fail"/>
+    </action>
+    
+    <action name="small-buckets-merger">
+        <shell xmlns="uri:oozie:shell-action:0.1">
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <exec>merger.sh</exec>
+            <argument>${workingDirectory}/small_buckets/*</argument>
+            <argument>${workingDirectory}/small_buckets.txt</argument>
+            <file>merger.sh#merger.sh</file>
+        </shell>
         <ok to="heuristic"/>
         <error to="fail"/>
     </action>
