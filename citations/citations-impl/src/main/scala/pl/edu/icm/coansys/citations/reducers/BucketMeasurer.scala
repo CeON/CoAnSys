@@ -18,43 +18,41 @@
 
 package pl.edu.icm.coansys.citations.reducers
 
-import collection.JavaConversions._
-import org.apache.hadoop.io.{Text, BytesWritable}
+import org.apache.hadoop.io.{NullWritable, Text}
 import org.apache.hadoop.mapreduce.Reducer
-import pl.edu.icm.coansys.citations.data.{MarkedBytesWritable, MarkedText}
+import pl.edu.icm.coansys.citations.data.MarkedText
+
+import scala.collection.JavaConversions._
 import scala.collection.mutable.ListBuffer
-import scala.io.Source
-import resource._
 
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
-class HashJoiner extends Reducer[MarkedText, MarkedText, Text, Text] {
-  type Context = Reducer[MarkedText, MarkedText, Text, Text]#Context
+class BucketMeasurer extends Reducer[MarkedText, MarkedText, Text, NullWritable] {
+  type Context = Reducer[MarkedText, MarkedText, Text, NullWritable]#Context
 
   val outValue = new Text()
 
-  var hashes: Set[String] = null
+  var maxSize: Long = 0
 
   override def setup(context: Context) {
-    hashes = managed(Source.fromFile("small_buckets.txt")).acquireAndGet(source =>source.getLines().toSet)
+    maxSize = context.getConfiguration.getLong("max.bucket.size", 0)
   }
   
   override def reduce(key: MarkedText, values: java.lang.Iterable[MarkedText], context: Context) {
-    if (!hashes(key.text.toString))
-      return
-
-    val docs = new ListBuffer[String]
+    var docCount: Long = 0
+    var citCount: Long = 0
     for (value <- values) {
       if (value.isMarked.get()) {
-        docs.append(value.text.toString)
+        docCount += 1
       } else {
-        for (doc <- docs) {
-          outValue.set(doc)
-          context.write(value.text, outValue)
-        }
+        citCount += 1
       }
+    }
+    val bucketSize = docCount * citCount
+    if (bucketSize > 0 && (bucketSize <= maxSize || maxSize <= 0)) {
+      context.write(key.text, NullWritable.get())
     }
   }
 }
