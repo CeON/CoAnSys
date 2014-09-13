@@ -29,4 +29,31 @@ public class SingleLinkageHACStrategy_OnlyMaxTest {
         }
         Assert.assertEquals("Elements are not correctly assigned","1 1 2 3 4 ",sb.toString());
 	}
+	
+	 @Test
+	public void mtcarsDistTest() throws Exception {
+		float[][] in = TestHelper.readResourceToFloatArray("mtcars.dist.csv");
+		// float[][] in = readResourceToFloatArray("eurodist.dist.csv");
+		// Instances data = readResourceToInstances("mtcars.base.csv");
+
+		 for(float[] line : in){
+		 for(float n : line){
+		 System.out.print(n+";");
+		 }
+		 System.out.println();
+		 }
+
+		int[] out = null;
+
+		// System.out.println("======== is now ==========");
+		out = TestHelper.clusterDataSLHAC_OM(in);
+		TestHelper.printClusters(out, in.length);
+		// System.out.println("======== weka -- should be ==========");
+		// out = wekaTest(data);
+		// printClusters(out, in.length);
+		// System.out.println("======== hclust@R -- should be ======");
+		// out = new int[]{ 1, 1, 1, 2, 3, 2, 3, 1, 1, 1, 1, 2, 2, 2, 4, 4, 4,
+		// 5, 5, 5, 1, 2, 2, 3, 3, 5, 1, 1, 3, 6, 7, 1 };
+		// printClusters(out, in.length);
+	}
 }
