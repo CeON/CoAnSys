@@ -42,6 +42,7 @@ public class CompleteLinkageHACStrategy_StateOfTheArtTest {
 		Assert.assertEquals("Elements are not correctly assigned", "0", outS);
 		System.out.println("One element in one group");
 		System.out.println(outS);
+		System.out.println("====================");
 	}
 
 	@Test
@@ -53,6 +54,7 @@ public class CompleteLinkageHACStrategy_StateOfTheArtTest {
 		Assert.assertEquals("Elements are not correctly assigned", "0 0", outS);
 		System.out.println("Two elements in the same group");
 		System.out.println(outS);
+		System.out.println("====================");
 	}
 
 	@Test
@@ -64,6 +66,7 @@ public class CompleteLinkageHACStrategy_StateOfTheArtTest {
 		Assert.assertEquals("Elements are not correctly assigned", "0 1", outS);
 		System.out.println("Two elements in the saparate groups");
 		System.out.println(outS);
+		System.out.println("====================");
 	}
 
 	@Test
@@ -77,6 +80,7 @@ public class CompleteLinkageHACStrategy_StateOfTheArtTest {
 				outS);
 		System.out.println("Five elements in different groups");
 		System.out.println(outS);
+		System.out.println("====================");
 	}
 
 	@Test
@@ -89,6 +93,7 @@ public class CompleteLinkageHACStrategy_StateOfTheArtTest {
 				outS);
 		System.out.println("Five objects in the same group");
 		System.out.println(outS);
+		System.out.println("====================");
 	}
 
 	@Test
@@ -102,6 +107,7 @@ public class CompleteLinkageHACStrategy_StateOfTheArtTest {
 				outS);
 		System.out.println("Four separate groups");
 		System.out.println(outS);
+		System.out.println("====================");
 	}
 
 	@Test
@@ -111,6 +117,7 @@ public class CompleteLinkageHACStrategy_StateOfTheArtTest {
 		String outS = Joiner.on(" ").join(Ints.asList(out));
 		System.out.println("Three elements in the same group");
 		System.out.println(outS);
+		System.out.println("====================");
 	}
 
 	@Test
@@ -120,9 +127,10 @@ public class CompleteLinkageHACStrategy_StateOfTheArtTest {
 		String outS = Joiner.on(" ").join(Ints.asList(out));
 		System.out.println("Three elements in different groups");
 		System.out.println(outS);
+		System.out.println("====================");
 	}
 
-	// @Test
+	@Test
 	public void mtcarsDistTest() throws Exception {
 		float[][] in = TestHelper.readResourceToFloatArray("mtcars.dist.csv");
 		// float[][] in = readResourceToFloatArray("eurodist.dist.csv");
