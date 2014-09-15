@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <oozie-maven-plugin>
 <!--
-	Main deps to document-similarity-recalculate-sim-about-1
+Main deps:
+
+1.From
+self::*
+1.To
+document-similarity-logic
+
 -->
 	<main-project-pig>
 		<scripts>
 			<root>pig-main</root>
 			<preserve>false</preserve>
 			<includes>
-				<include>.*sim1.*\.pig</include>
-				<include>.*macro.*pig</include>
+				<include>.*trans.*\.pig</include>
 			</includes>
 		</scripts>
 		<scripts>
@@ -21,7 +26,13 @@
 		</scripts>
 	</main-project-pig>
 <!--
-	Deeper deps to document-similarity-ranked-workflow (needed from: document-similarity-recalculate-sim-about-1)
+Deeper deps:
+
+1.From
+document-similarity-ranked-workflow
+document-similarity-recalculate-sim-about-1
+1.To
+document-similarity-logic
 -->
 	<deps-project-pig>
 		<scripts>
@@ -30,17 +41,36 @@
 			<preserve>false</preserve>
 			<includes>
 				<include>.*document-similarity-s.*\.pig</include>
-				<include>.*rank\.py</include>
+				<include>.*rank.*\.py</include>
 			</includes>
+<!--
 			<excludes>
 				<exclude>.*sim1.*\.pig</exclude>
 			</excludes>
+-->
 		</scripts>
+
+		<scripts>
+			<srcProject>.*document-similarity-recalculate-sim-about-1.*</srcProject>
+			<root>pig-main</root>
+			<preserve>false</preserve>
+			<includes>
+				<include>.*sim1.*\.pig</include>
+				<include>.*macro.*pig</include>
+			</includes>
+			<excludes>
+				<exclude>.*document-similarity.*\.pig</exclude>
+			</excludes>
+		</scripts>
+<!-- -->
 		<scripts>
 			<root>pig-macros</root>
 			<preserve>false</preserve>
 			<includes>
+				<include>.*\.pig</include>
+<!--
 				<include>.*macro.*\.pig</include>
+-->
 			</includes>
 		</scripts>
 	</deps-project-pig>

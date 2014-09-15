@@ -30,8 +30,6 @@
 			</plugin>
 		</plugins>
 	</build>
-
-
 	<dependencies>
 		<dependency>
 			<groupId>pl.edu.icm.coansys</groupId>
@@ -48,5 +46,4 @@
 			<type>tar.gz</type>
 		</dependency>
 	</dependencies>
-
 </project>

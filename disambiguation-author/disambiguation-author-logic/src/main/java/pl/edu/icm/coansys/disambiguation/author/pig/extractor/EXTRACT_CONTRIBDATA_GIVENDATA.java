@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.apache.hadoop.mapreduce.Counter;
 import org.apache.pig.EvalFunc;
@@ -235,7 +236,7 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 				// pig status reporter
 				reportSname(a.getSurname(), normalizedSname);
 
-				String cId = a.getKey();
+				String cId = UUID.nameUUIDFromBytes(a.toByteArray()).toString();
 				// taking from document metadata data specific for each contrib
 				finalAuthorMap = extractAuthBasedFeatures(dm, DocumentMap, i);
 				Object[] to = new Object[] { docKey, cId, normalizedSname,

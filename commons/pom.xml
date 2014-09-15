@@ -13,11 +13,11 @@
 	<url>http://maven.apache.org</url>
 
 	<dependencies>
- 		<dependency>
+<!-- 	<dependency>
 			<groupId>org.apache.pig</groupId>
 			<artifactId>piggybank</artifactId>
 			<version>0.12.0</version>
-		</dependency> 
+		</dependency> --> 
 		<dependency>
 			<groupId>pl.edu.icm.coansys</groupId>
 			<version>1.6-SNAPSHOT</version>

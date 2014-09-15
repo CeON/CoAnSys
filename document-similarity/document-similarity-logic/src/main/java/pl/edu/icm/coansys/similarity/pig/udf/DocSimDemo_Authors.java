@@ -67,17 +67,20 @@ public class DocSimDemo_Authors extends EvalFunc<DataBag> {
 			try {
 				dba = (DataByteArray) input.get(0);
 			} catch (Exception e) {
-				myreporter.getCounter("extraction problems",
-						"DataByteArray from tuple");
+				myreporter.getCounter("extraction problems [Auth]",
+						"DataByteArray from tuple").increment(1);
 				return null;
 			}
 
 			try {
 				dm = DocumentWrapper.parseFrom(dba.get()).getDocumentMetadata();
 				doi = dm.getBasicMetadata().getDoi().replaceAll("\\s++", " ").trim();
+				if(doi.length()==0){
+					throw new Exception("Lack of doi");
+				}
 			} catch (Exception e) {
-				myreporter.getCounter("extraction problems",
-						"document metadata");
+				myreporter.getCounter("extraction problems [Auth]",
+						"document metadata | lack of doi").increment(1);
 				return null;
 			}
 
@@ -101,11 +104,16 @@ public class DocSimDemo_Authors extends EvalFunc<DataBag> {
 						fname = DiacriticsRemover.removeDiacritics(fname);
 						fname = fname.replaceAll("[^A-Za-z]", " ").replaceAll("\\s++", " ").trim();
 						
-						name = sname + ", " + fname.trim().substring(0, 1)+".";
+						if(fname.length()>1){
+							name = sname + ", " + fname.trim().substring(0, 1)+".";
+						}else{
+							name = sname;
+						}
+						
 					}
 					if (name != null) {
 						if(hs.contains(name)){
-							return null;
+							continue;
 						}
 						Tuple t = tf.newTuple();
 						t.append(doi);
@@ -114,7 +122,7 @@ public class DocSimDemo_Authors extends EvalFunc<DataBag> {
 						ret.add(t);
 						authNum++;
 					} else {
-						throw new NullPointerException();
+						continue;
 					}
 				} catch (Exception e) {
 					log.debug(StackTraceExtractor.getStackTrace(e));

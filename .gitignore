@@ -27,8 +27,12 @@ target/
 *.crc
 *part-r-00000
 _SUCCESS
+dummy
 
 #secret test data
 *_secret.*
 maven-eclipse.xml
 .externalToolBuilders
+
+#vim files
+*.swp

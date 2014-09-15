@@ -28,20 +28,18 @@ import org.apache.pig.tools.pigstats.PigStatusReporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.edu.icm.coansys.commons.java.DiacriticsRemover;
 import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
-import pl.edu.icm.coansys.models.DocumentProtos.TextWithLanguage;
 
 /**
  * 
  * @author pdendek
  *
  */
-public class DocSimDemo_Documents extends EvalFunc<Tuple> {
+public class DocSimDemo_Documents_Complete extends EvalFunc<Tuple> {
 
-	private static final Logger logger = LoggerFactory.getLogger(DocSimDemo_Documents.class);
+	private static final Logger logger = LoggerFactory.getLogger(DocSimDemo_Documents_Complete.class);
 	PigStatusReporter myreporter;
 		
     @Override
@@ -63,38 +61,15 @@ public class DocSimDemo_Documents extends EvalFunc<Tuple> {
 			try{
 				dba = (DataByteArray) input.get(0);
 			}catch(Exception e){
-				myreporter.getCounter("extraction problems","DataByteArray from tuple");
+				myreporter.getCounter("extraction problems [DocComplete]","DataByteArray from tuple").increment(1);
 				return null;
 			}
 			
 			try{
 				dm = DocumentWrapper.parseFrom(dba.get()).getDocumentMetadata();
 			}catch(Exception e){
-				myreporter.getCounter("extraction problems","document metadata");
+				myreporter.getCounter("extraction problems [DocComplete]","document metadata").increment(1);
 				return null;
-			}
-			
-			try{
-				for(TextWithLanguage twl : dm.getBasicMetadata().getTitleList()){
-					if(twl.getLanguage().toLowerCase().startsWith("en")){
-						title=twl.getText();
-						
-						break;
-					}
-				}
-				if(title==null){
-					title = dm.getBasicMetadata().getTitle(0).getText();
-				}
-				if(title != null && !title.trim().isEmpty()){
-					title = DiacriticsRemover.removeDiacritics(title);
-					title = title.replaceAll("[^A-Za-z0-9\\-_]", " ").replaceAll("\\s++", " ").trim();
-				}
-			}catch(Exception e){
-			}finally{
-				if(title == null || title.trim().isEmpty()){
-					myreporter.getCounter("extraction problems","title extraction");
-					return null;
-				}
 			}
 			
 			try{
@@ -102,25 +77,14 @@ public class DocSimDemo_Documents extends EvalFunc<Tuple> {
 			}catch(Exception e){
 			}finally{
 				if(doi == null || doi.trim().isEmpty()){
-					myreporter.getCounter("extraction problems","doi extraction");
-					return null;
-				}
-			}
-			
-			try{
-				year = dm.getBasicMetadata().getYear().replaceAll("\\s++", " ").trim();
-			}catch(Exception e){
-			}finally{
-				if(year == null || year.trim().isEmpty()){
-					myreporter.getCounter("extraction problems","year extraction");
+					myreporter.getCounter("extraction problems [DocComplete]","doi extraction").increment(1);
 					return null;
 				}
 			}
 			
 			Tuple t = TupleFactory.getInstance().newTuple();
 			t.append(doi);
-			t.append(year);
-			t.append(title);
+			t.append(dba);
 			
 			return t;
 		}catch(Exception e){
