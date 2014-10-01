@@ -28,7 +28,7 @@ PicOut in /models/src/main/protobuf/pic_out.proto
 ## Running ##
 
     $ mvn clean install -DjobPackage
-    $ hadoop fs -put ./target/oozie-wf/ citations-full-workflow
+    $ hadoop fs -put ./citations-full-workflow/target/oozie-wf/ citations-full-workflow
     $ oozie job -oozie http://hadoop-master:11000/oozie -config job.properties -run
 
 
