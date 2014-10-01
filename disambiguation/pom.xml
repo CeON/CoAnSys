@@ -1,28 +1,29 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	
+	<modelVersion>4.0.0</modelVersion>
+	
+	<parent>
+		<groupId>pl.edu.icm.coansys</groupId>
+		<artifactId>coansys</artifactId>
+		<version>1.6-SNAPSHOT</version>
+	</parent>
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>pl.edu.icm.coansys</groupId>
-        <artifactId>coansys</artifactId>
-        <version>1.6-SNAPSHOT</version>
-    </parent>
-    
-    <artifactId>disambiguation</artifactId>
-    <packaging>jar</packaging>
-    <name>Disambiguation Tool</name>
-    <url>http://maven.apache.org</url>
+	<artifactId>disambiguation</artifactId>
+	<packaging>jar</packaging>
+	<name>Disambiguation Tool</name>
+	<url>http://maven.apache.org</url>
 
-    <properties>
-        <oozie-maven-plugin.version>1.2</oozie-maven-plugin.version>
-        <!-- <oozie-runner.version>1.1</oozie-runner.version> -->
-    </properties>
+	<properties>
+		<oozie-maven-plugin.version>1.2</oozie-maven-plugin.version>
+	</properties>
 
-    <dependencies>
+	<dependencies>
 		<dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>commons</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-    </dependencies>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>commons</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
 
 </project>

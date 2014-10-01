@@ -1,4 +1,4 @@
-hadoop fs -rm -r -f docsim-on-oap/docsim-integrated-wf2
-cd target
-hadoop fs -copyFromLocal oozie-wf docsim-on-oap/docsim-integrated-wf2
+hadoop fs -mkdir docsim-demonstrator
+hadoop fs -rm -r -f docsim-demonstrator/docsim-uber-wf
+hadoop fs -copyFromLocal target/oozie-wf docsim-demonstrator/docsim-uber-wf
 

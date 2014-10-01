@@ -7,9 +7,10 @@ import org.apache.hadoop.mapreduce.RecordReader;
 import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 import org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.PigSplit;
 import org.apache.pig.data.Tuple;
-import org.apache.pig.piggybank.storage.XMLLoader;
+//import org.apache.pig.piggybank.storage.XMLLoader;
 
-public class XmlStorageWithInputPath extends XMLLoader {
+public class XmlStorageWithInputPath { 
+	/*extends XMLLoader {
 	
     
 	private Path path;
@@ -37,4 +38,5 @@ public class XmlStorageWithInputPath extends XMLLoader {
            myTuple.append(path.toString());
         return myTuple;
     }
+} */
 }
