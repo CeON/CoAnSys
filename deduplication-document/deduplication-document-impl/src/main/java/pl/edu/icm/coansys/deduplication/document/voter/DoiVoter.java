@@ -24,6 +24,8 @@ import pl.edu.icm.coansys.models.DocumentProtos;
  * @author Artur Czeczko <a.czeczko@icm.edu.pl>
  */
 public class DoiVoter extends AbstractSimilarityVoter {
+    
+    private static final int MINDOILENGTH = 5;  // number dot number slash number
 
     @Override
     public Vote vote(DocumentProtos.DocumentMetadata doc1, DocumentProtos.DocumentMetadata doc2) {
@@ -42,8 +44,11 @@ public class DoiVoter extends AbstractSimilarityVoter {
         DocumentProtos.BasicMetadata basicMetadata = doc.getBasicMetadata();
         if (!basicMetadata.hasDoi()) {
             return null;
-        } else {
-            return basicMetadata.getDoi();
         }
+        String doi = basicMetadata.getDoi();
+        if (doi.length() < MINDOILENGTH) {
+            return null;
+        }
+        return doi;
     }
 }
