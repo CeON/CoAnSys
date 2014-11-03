@@ -75,4 +75,10 @@ CNT4 = ORDER CNT3 BY contrib_no DESC;
 store CNT4 into '$dc_m_hdfs_output/contribBlocksStat';
 */
 A4 = foreach A3 generate flatten(pairsCreation(*));
+/**
+A5 = rank A4;
+A6 = foreach A5 generate $0,$2..;
+store A6 into '$dc_m_hdfs_output';
+**/
 store A4 into '$dc_m_hdfs_output';
+
