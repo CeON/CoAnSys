@@ -34,6 +34,7 @@ class HashJoiner extends Reducer[MarkedText, MarkedText, Text, Text] {
   type Context = Reducer[MarkedText, MarkedText, Text, Text]#Context
 
   val outValue = new Text()
+  val docs = new ListBuffer[String]
 
   var hashes: Set[String] = null
 
@@ -45,7 +46,7 @@ class HashJoiner extends Reducer[MarkedText, MarkedText, Text, Text] {
     if (!hashes(key.text.toString))
       return
 
-    val docs = new ListBuffer[String]
+    docs.clear()
     for (value <- values) {
       if (value.isMarked.get()) {
         docs.append(value.text.toString)
