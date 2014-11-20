@@ -108,6 +108,10 @@
                 <name>mapred.job.shuffle.input.buffer.percent</name>
                 <value>${jobShuffleInputBufferPercent}</value>
             </property>
+            <property>
+                <name>mapred.child.java.opts</name>
+                <value>${mapredChildJavaOpts}</value>
+            </property>
         </configuration>
     </global>
     <start to="prepare"/>
