@@ -5,6 +5,10 @@
 			<value>${wf:appPath()}</value>
 		</property>
 		<property>
+			<name>threshold_num_of_vector_elems_length</name>
+			<value>0</value>
+		</property>
+		<property>
 			<name>remove_sideproducts</name>
 			<value>true</value>
 		</property>
@@ -155,6 +159,10 @@
 			</app-path>
 			<propagate-configuration />
 			<configuration>
+				<property>
+					<name>threshold_num_of_vector_elems_length</name>
+					<value>${threshold_num_of_vector_elems_length}</value>
+				</property>
 				<property>
 					<name>load_filterTerms_calcTfidf_filter_ship_ranked</name>
 					<value>${load_filterTerms_calcTfidf_filter_ship_ranked}</value>
