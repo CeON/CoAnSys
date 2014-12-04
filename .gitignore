@@ -8,6 +8,9 @@
 .project
 .settings
 
+# Netbeans files #
+nb-configuration.xml
+
 # IntelliJ IDEA files #
 .idea
 *.iml
@@ -24,8 +27,12 @@ target/
 *.crc
 *part-r-00000
 _SUCCESS
+dummy
 
 #secret test data
 *_secret.*
 maven-eclipse.xml
 .externalToolBuilders
+
+#vim files
+*.swp

@@ -29,6 +29,8 @@ import pl.edu.icm.cermine.bibref.CRFBibReferenceParser
 import pl.edu.icm.ceon.scala_commons.strings
 import pl.edu.icm.coansys.commons.java.DiacriticsRemover
 import scala.collection.mutable
+import scala.util.Try
+import java.util.Locale
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -52,7 +54,7 @@ object misc {
     normaliseTokenise(strings.lettersOnly(str))
 
   def digitsNormaliseTokenise(str: String) =
-    normaliseTokenise(strings.digitsOnly(str))
+    strings.digitsOnly(str).split(" ").toList
 
   def normaliseTokenise(str: String) =
     tokensFromCermine(DiacriticsRemover.removeDiacritics(str))
@@ -115,6 +117,9 @@ object misc {
   def tokensFromCermine(s: String): List[String] =
     CitationUtils.stringToCitation(s).getTokens.map(_.getText).toList
 
+  def niceTokens(s: String) =
+    tokensFromCermine(s.toLowerCase(Locale.ENGLISH)).filter(x => x.length > 2 || x.exists(_.isDigit)).take(50).toSet
+
   def nGreatest[A : Ordering](elems: TraversableOnce[A], n: Int): Seq[A] = {
     var q = mutable.SortedSet()
     for (elem <- elems) {
@@ -125,6 +130,11 @@ object misc {
 
     q.toSeq
   }
+
+  def approximateYear(year: String) = for {
+    diff <- -1 to 1
+    year <- Try(year.toInt).toOption
+  } yield (year + diff).toString
 
   val stopWords =
     """

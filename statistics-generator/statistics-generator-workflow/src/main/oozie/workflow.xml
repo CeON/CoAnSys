@@ -1,0 +1,273 @@
+<workflow-app xmlns="uri:oozie:workflow:0.4" name="statistics-generator-wf">
+
+    <global>
+
+        <job-tracker>${jobTracker}</job-tracker>
+        <name-node>${nameNode}</name-node>
+        <configuration>
+            <!-- This is required for new api usage -->
+            <property>
+                <name>mapred.mapper.new-api</name>
+                <value>true</value>
+            </property>
+            <property>
+                <name>mapred.reducer.new-api</name>
+                <value>true</value>
+            </property>
+            <property>
+                <name>mapred.fairscheduler.pool</name>
+                <value>${POOL_NAME}</value>
+            </property>
+            <property>
+                <name>oozie.launcher.mapred.fairscheduler.pool</name>
+                <value>${POOL_NAME}</value>
+            </property>
+            <property>
+                <name>mapred.job.queue.name</name>
+                <value>${queueName}</value>
+            </property>
+            <property>
+                <name>user_operations</name>
+                <value>${user_operations}</value>
+            </property>
+            <property>
+                <name>user_operations_classes</name>
+                <value>${user_operations_classes}</value>
+            </property>
+        </configuration>
+
+    </global>
+
+    <start to="filterinput-decision" />
+
+    <decision name="filterinput-decision">
+        <switch>
+            <case to="generatestatistics">${filter_input_data eq "false"}</case>
+            <default to="filterinput" />
+        </switch>
+    </decision>
+
+    <action name="filterinput">
+        <map-reduce>
+            <configuration>
+                <property>
+                    <name>mapreduce.map.class</name>
+                    <value>pl.edu.icm.coansys.statisticsgenerator.jobs.FilterInput$FilterInputMap</value>
+                </property>
+                <property>
+                    <name>mapred.input.dir</name>
+                    <value>${unfilteredInput}</value>
+                </property>
+                <property>
+                    <name>mapred.output.dir</name>
+                    <value>${filteredInput}</value>
+                </property>
+                <property>
+                    <name>mapreduce.inputformat.class</name>
+                    <value>org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat</value>
+                </property>
+                <property>
+                    <name>mapreduce.outputformat.class</name>
+                    <value>org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat</value>
+                </property>
+                <property>
+                    <name>mapred.mapoutput.key.class</name>
+                    <value>org.apache.hadoop.io.Text</value>
+                </property>                
+                <property>
+                    <name>mapred.mapoutput.value.class</name>
+                    <value>org.apache.hadoop.io.BytesWritable</value>
+                </property>                
+                <property>
+                    <name>mapred.output.key.class</name>
+                    <value>org.apache.hadoop.io.Text</value>
+                </property>                
+                <property>
+                    <name>mapred.output.value.class</name>
+                    <value>org.apache.hadoop.io.BytesWritable</value>
+                </property>
+                <property>
+                    <name>mapred.reduce.tasks</name>
+                    <value>0</value>
+                </property>
+                <property>
+                    <name>input_filter_names</name>
+                    <value>${input_filter_names}</value>
+                </property>
+                <property>
+                    <name>input_filter_classes</name>
+                    <value>${input_filter_classes}</value>
+                </property>
+                <property>
+                    <name>input_filter_classes_args</name>
+                    <value>${input_filter_classes_args}</value>
+                </property>
+                <property>
+                    <name>input_filter_formula</name>
+                    <value>${input_filter_formula}</value>
+                </property>
+            </configuration>
+        </map-reduce>
+        <ok to="generatestatistics" />
+        <error to="fail" />
+    </action>
+
+    <action name="generatestatistics">
+        <map-reduce>
+            <configuration>
+                <property>
+                    <name>mapreduce.map.class</name>
+                    <value>pl.edu.icm.coansys.statisticsgenerator.jobs.StatisticsGenerator$StatisticsMap</value>
+                </property>
+                <property>
+                    <name>mapreduce.reduce.class</name>
+                    <value>pl.edu.icm.coansys.statisticsgenerator.jobs.StatisticsGenerator$StatisticsReduce</value>
+                </property>
+                <property>
+                    <name>mapred.input.dir</name>
+                    <value>${filteredInput}</value>
+                </property>
+                <property>
+                    <name>mapred.output.dir</name>
+                    <value>${allStatistics}</value>
+                </property>
+                <property>
+                    <name>mapreduce.inputformat.class</name>
+                    <value>org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat</value>
+                </property>
+                <property>
+                    <name>mapreduce.outputformat.class</name>
+                    <value>org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat</value>
+                </property>
+                <property>
+                    <name>mapred.mapoutput.key.class</name>
+                    <value>pl.edu.icm.coansys.statisticsgenerator.mrtypes.SortedMapWritableComparable</value>
+                </property>                
+                <property>
+                    <name>mapred.mapoutput.value.class</name>
+                    <value>org.apache.hadoop.io.BytesWritable</value>
+                </property>                
+                <property>
+                    <name>mapred.output.key.class</name>
+                    <value>org.apache.hadoop.io.Text</value>
+                </property>                
+                <property>
+                    <name>mapred.output.value.class</name>
+                    <value>org.apache.hadoop.io.BytesWritable</value>
+                </property>
+                <property>
+                    <name>partitions_names</name>
+                    <value>${partitions_names}</value>
+                </property>
+                <property>
+                    <name>partitions_classes</name>
+                    <value>${partitions_classes}</value>
+                </property>
+                <property>
+                    <name>partitions_classes_args</name>
+                    <value>${partitions_classes_args}</value>
+                </property>
+                <property>
+                    <name>statistics_names</name>
+                    <value>${statistics_names}</value>
+                </property>
+                <property>
+                    <name>statistics_classes</name>
+                    <value>${statistics_classes}</value>
+                </property>
+                <property>
+                    <name>statistics_classes_args</name>
+                    <value>${statistics_classes_args}</value>
+                </property>
+            </configuration>
+        </map-reduce>
+        <ok to="groupsortlimit-decision" />
+        <error to="fail" />
+    </action>
+
+    <decision name="groupsortlimit-decision">
+        <switch>
+            <case to="end">${aggregate_statistics eq "false"}</case>
+            <default to="groupsortlimit" />
+        </switch>
+    </decision>
+
+    <action name="groupsortlimit">
+        <map-reduce>
+            <configuration>
+                <property>
+                    <name>mapreduce.map.class</name>
+                    <value>pl.edu.icm.coansys.statisticsgenerator.jobs.GroupSortLimit$GroupSortLimitMap</value>
+                </property>
+                <property>
+                    <name>mapreduce.combine.class</name>
+                    <value>pl.edu.icm.coansys.statisticsgenerator.jobs.GroupSortLimit$GroupSortLimitCombine</value>
+                </property>
+                <property>
+                    <name>mapreduce.reduce.class</name>
+                    <value>pl.edu.icm.coansys.statisticsgenerator.jobs.GroupSortLimit$GroupSortLimitReduce</value>
+                </property>
+                <property>
+                    <name>mapred.reduce.tasks</name>
+                    <value>1</value>
+                </property>
+                <property>
+                    <name>mapred.input.dir</name>
+                    <value>${allStatistics}</value>
+                </property>
+                <property>
+                    <name>mapred.output.dir</name>
+                    <value>${aggregatedStatistics}</value>
+                </property>
+                <property>
+                    <name>mapreduce.inputformat.class</name>
+                    <value>org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat</value>
+                </property>
+                <property>
+                    <name>mapreduce.outputformat.class</name>
+                    <value>org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat</value>
+                </property>
+                <property>
+                    <name>mapred.mapoutput.key.class</name>
+                    <value>pl.edu.icm.coansys.statisticsgenerator.mrtypes.SortedMapWritableComparable</value>
+                </property>                
+                <property>
+                    <name>mapred.mapoutput.value.class</name>
+                    <value>org.apache.hadoop.io.BytesWritable</value>
+                </property>                
+                <property>
+                    <name>mapred.output.key.class</name>
+                    <value>org.apache.hadoop.io.Text</value>
+                </property>                
+                <property>
+                    <name>mapred.output.value.class</name>
+                    <value>org.apache.hadoop.io.BytesWritable</value>
+                </property>
+                <property>
+                    <name>group_keys</name>
+                    <value>${group_keys}</value>
+                </property>
+                <property>
+                    <name>sort_stat</name>
+                    <value>${sort_stat}</value>
+                </property>
+                <property>
+                    <name>sort_order</name>
+                    <value>${sort_order}</value>
+                </property>
+                <property>
+                    <name>limit</name>
+                    <value>${limit}</value>
+                </property>
+            </configuration>
+        </map-reduce>
+        <ok to="end" />
+        <error to="fail" />
+    </action>
+
+    <kill name="fail">
+        <message>Workflow failed</message>
+    </kill>
+    <end name="end" />
+
+</workflow-app>

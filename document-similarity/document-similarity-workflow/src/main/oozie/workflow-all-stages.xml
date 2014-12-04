@@ -1,11 +1,11 @@
-<workflow-app name='${project}*${subproject}' xmlns="uri:oozie:workflow:0.4">
+<workflow-app name='${project}___${subproject}' xmlns="uri:oozie:workflow:0.4">
     <start to='tfidf'/>
     <action name='tfidf'>
         <pig>
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
             <prepare>
-                <delete path="${ds_similarityOutputPath}"/>
+                <delete path="${similarityOutputPath}"/>
             </prepare>
             <configuration>
                 <property>
@@ -14,14 +14,14 @@
                 </property> 
             </configuration>
             <script>document-similarity-tiny-all-stages.pig</script>
-            <param>inputPath=${ds_bwndataMetadataInputPath}</param>
-            <param>outputPath=${ds_similarityOutputPath}</param>
+            <param>inputPath=${bwndataMetadataInputPath}</param>
+            <param>outputPath=${similarityOutputPath}</param>
             <param>commonJarsPath=${commonJarsPath}</param>
-            <param>parallel=${ds_parallel}</param>
-            <param>tmpCompressionCodec=${ds_tmpCompressionCodec}</param>
-            <param>mapredChildJavaOpts=${ds_mapredChildJavaOpts}</param>
-            <param>sample=${ds_sample}</param>
-            <param>ds_scheduler=${ds_scheduler}</param> 
+            <param>parallel=${parallel}</param>
+            <param>tmpCompressionCodec=${tmpCompressionCodec}</param>
+            <param>mapredChildJavaOpts=${mapredChildJavaOpts}</param>
+            <param>sample=${sample}</param>
+            <param>scheduler=${scheduler}</param> 
         </pig>       
         <ok to='end'/>
         <error to='kill'/>

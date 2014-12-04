@@ -72,8 +72,8 @@ object MatcherLowLevel extends Configured with Tool {
     FileOutputFormat.setOutputPath(assessorJob, new Path(outUri))
 
     assessorJob.setMapperClass(classOf[ExactAssesor])
-    assessorJob.setReducerClass(classOf[BestSelector])
-    assessorJob.setCombinerClass(classOf[BestSelector])
+    assessorJob.setReducerClass(classOf[BestSelector[Text]])
+    assessorJob.setCombinerClass(classOf[BestSelector[Text]])
     assessorJob.setOutputKeyClass(classOf[Text])
     assessorJob.setOutputValueClass(classOf[Text])
     assessorJob.setInputFormatClass(classOf[SequenceFileInputFormat[BytesWritable, BytesWritable]])

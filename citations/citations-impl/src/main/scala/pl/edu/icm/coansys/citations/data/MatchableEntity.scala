@@ -20,9 +20,11 @@ package pl.edu.icm.coansys.citations.data
 
 import collection.JavaConversions._
 import com.nicta.scoobi.core.Grouping
+import org.apache.commons.lang.StringUtils
 import pl.edu.icm.cermine.bibref.BibReferenceParser
 import pl.edu.icm.cermine.bibref.model.BibEntry
-import pl.edu.icm.coansys.citations.data.CitationMatchingProtos.{KeyValue, MatchableEntityData}
+import pl.edu.icm.coansys.citations.data.CitationMatchingProtos.MatchableEntityData
+import pl.edu.icm.coansys.citations.data.entity_id.{DocEntityId, CitEntityId}
 import pl.edu.icm.coansys.citations.util.{misc, BytesConverter}
 import pl.edu.icm.coansys.commons.java.DiacriticsRemover.removeDiacritics
 import pl.edu.icm.coansys.models.DocumentProtos.{DocumentMetadata, BasicMetadata, ReferenceMetadata}
@@ -43,23 +45,33 @@ class MatchableEntity(val data: MatchableEntityData) {
 
   def year = data.getYear
 
-  def rawText = data.getAuxiliaryList.find(_.getKey == "rawText").map(x => removeDiacritics(x.getValue))
+  def issue = data.getIssue
+
+  def volume = data.getVolume
+
+  def rawText =
+    if (data.hasRawText)
+      Some(removeDiacritics(data.getRawText))
+    else
+      data.getAuxiliaryList.find(_.getKey == "rawText").map(x => removeDiacritics(x.getValue))
+
 
   def normalisedAuthorTokens: Iterable[String] =
     misc.lettersNormaliseTokenise(author).distinct
 
   def toReferenceString: String =
-    rawText.getOrElse(List(author, title, source, pages, year).mkString("; "))
+    rawText.getOrElse(List(author, title, source, issue, volume, pages, year).mkString("; "))
 
   def toDebugString: String =
-    "id: " + id + "\n" +
-      "author: " + author + "\n" +
-      "author tokens: " + normalisedAuthorTokens + "\n" +
-      "source: " + source + "\n" +
-      "title: " + title + "\n" +
-      "pages: " + pages + "\n" +
-      "year: " + year + "\n" +
-      "raw text: " + rawText + "\n"
+    s"id: $id\n" +
+      s"author: $author\n" +
+      s"author tokens: $normalisedAuthorTokens\n" +
+      s"source: $source\n" +
+      s"title: $title\n" +
+      s"pages: $pages\n" +
+      s"year: $year\n" +
+      s"issue: $issue\n" +
+      s"raw text: $rawText\n"
 
   override def hashCode = id.hashCode
 
@@ -83,31 +95,62 @@ object MatchableEntity {
     new MatchableEntity(MatchableEntityData.parseFrom(bytes))
   }
 
-  def fromParameters(id: String = "",
+  def fromParameters(id: String,
                      author: String = "",
                      source: String = "",
                      title: String = "",
                      pages: String = "",
                      year: String = "",
+                     rawText: String = ""): MatchableEntity =
+    fromParametersExt(id = id, author = author, source = source, title = title, pages = pages, year = year, rawText = rawText)
+
+
+  def fromParametersExt(id: String,
+                     author: String = "",
+                     source: String = "",
+                     title: String = "",
+                     pages: String = "",
+                     year: String = "",
+                     issue: String = "",
+                     volume: String = "",
                      rawText: String = ""): MatchableEntity = {
     val data = MatchableEntityData.newBuilder()
     data.setId(id)
-    data.setAuthor(author)
-    data.setSource(source)
-    data.setTitle(title)
-    data.setPages(pages)
-    data.setYear(year)
-    data.addAuxiliary(KeyValue.newBuilder().setKey("rawText").setValue(rawText))
+    if (StringUtils.isNotBlank(author))
+      data.setAuthor(author)
+    if (StringUtils.isNotBlank(source))
+      data.setSource(source)
+    if (StringUtils.isNotBlank(title))
+      data.setTitle(title)
+    if (StringUtils.isNotBlank(pages))
+      data.setPages(pages)
+    if (StringUtils.isNotBlank(year))
+      data.setYear(year)
+    if (StringUtils.isNotBlank(issue))
+      data.setIssue(issue)
+    if (StringUtils.isNotBlank(volume))
+      data.setVolume(volume)
+    if (StringUtils.isNotBlank(rawText))
+      data.setRawText(rawText)
 
     new MatchableEntity(data.build())
   }
 
   private def fillUsingBasicMetadata(data: MatchableEntityData.Builder, meta: BasicMetadata) {
-    data.setAuthor(meta.getAuthorList.map(a => if (a.hasName) a.getName else a.getForenames + " " + a.getSurname).mkString(" "))
-    data.setSource(meta.getJournal)
-    data.setTitle(meta.getTitleList.map(_.getText).mkString(" "))
-    data.setPages(meta.getPages)
-    data.setYear(meta.getYear)
+    if (meta.getAuthorCount > 0)
+      data.setAuthor(meta.getAuthorList.map(a => if (a.hasName) a.getName else a.getForenames + " " + a.getSurname).mkString(", "))
+    if (meta.hasJournal)
+      data.setSource(meta.getJournal)
+    if (meta.getTitleCount > 0)
+      data.setTitle(meta.getTitleList.map(_.getText).mkString(". "))
+    if (meta.hasPages)
+      data.setPages(meta.getPages)
+    if (meta.hasIssue)
+      data.setIssue(meta.getIssue)
+    if (meta.hasVolume)
+      data.setVolume(meta.getVolume)
+    if (meta.hasYear)
+      data.setYear(meta.getYear)
   }
 
   def fromBasicMetadata(id: String, meta: BasicMetadata): MatchableEntity = {
@@ -118,38 +161,32 @@ object MatchableEntity {
   }
 
   def fromDocumentMetadata(meta: DocumentMetadata): MatchableEntity =
-    fromDocumentMetadata("doc_" + meta.getKey, meta)
+    fromBasicMetadata(DocEntityId(meta.getKey).toString, meta.getBasicMetadata)
 
-  def fromDocumentMetadata(id: String, meta: DocumentMetadata): MatchableEntity = {
-    val data = MatchableEntityData.newBuilder()
-    data.setId(id)
-    fillUsingBasicMetadata(data, meta.getBasicMetadata)
-    new MatchableEntity(data.build())
-  }
+  def fromDocumentMetadata(id: String, meta: DocumentMetadata): MatchableEntity =
+    fromBasicMetadata(id, meta.getBasicMetadata)
 
   def fromReferenceMetadata(meta: ReferenceMetadata): MatchableEntity =
-    fromReferenceMetadata("cit_" + meta.getSourceDocKey + "_" + meta.getPosition, meta)
+    fromBasicMetadata(CitEntityId(meta.getSourceDocKey, meta.getPosition).toString, meta.getBasicMetadata)
 
-  def fromReferenceMetadata(id: String, meta: ReferenceMetadata): MatchableEntity = {
-    val data = MatchableEntityData.newBuilder()
-    data.setId(id)
-    fillUsingBasicMetadata(data, meta.getBasicMetadata)
-    new MatchableEntity(data.build())
-  }
+  def fromReferenceMetadata(id: String, meta: ReferenceMetadata): MatchableEntity =
+    fromBasicMetadata(id, meta.getBasicMetadata)
 
-  def fromUnparsedReference(bibReferenceParser: BibReferenceParser[BibEntry], id: String, rawText: String): MatchableEntity = {
-    def getField(bibEntry: BibEntry, key: String): String =
-      bibEntry.getAllFieldValues(key).mkString(" ")
+  def fromUnparsedReference(bibReferenceParser: BibReferenceParser[BibEntry], id: String,
+                            rawText: String): MatchableEntity = {
+    def getField(bibEntry: BibEntry, key: String, separator: String = " "): String =
+      bibEntry.getAllFieldValues(key).mkString(separator)
 
     val bibEntry = bibReferenceParser.parseBibReference(removeDiacritics(rawText))
     val data = MatchableEntityData.newBuilder()
     data.setId(id)
-    data.setAuthor(getField(bibEntry, BibEntry.FIELD_AUTHOR))
+    data.setAuthor(getField(bibEntry, BibEntry.FIELD_AUTHOR, ", "))
     data.setSource(getField(bibEntry, BibEntry.FIELD_JOURNAL))
     data.setTitle(getField(bibEntry, BibEntry.FIELD_TITLE))
     data.setPages(getField(bibEntry, BibEntry.FIELD_PAGES))
     data.setYear(getField(bibEntry, BibEntry.FIELD_YEAR))
-    data.addAuxiliary(KeyValue.newBuilder().setKey("rawText").setValue(rawText))
+    data.setVolume(getField(bibEntry, BibEntry.FIELD_VOLUME))
+    data.setRawText(rawText)
 
     new MatchableEntity(data.build())
   }
@@ -158,7 +195,7 @@ object MatchableEntity {
                                     meta: ReferenceMetadata): MatchableEntity =
     fromUnparsedReference(
       bibReferenceParser,
-      "cit_" + meta.getSourceDocKey + "_" + meta.getPosition,
+      CitEntityId(meta.getSourceDocKey, meta.getPosition).toString,
       meta.getRawCitationText)
 
 

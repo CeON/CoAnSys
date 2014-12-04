@@ -26,6 +26,7 @@ import org.apache.pig.EvalFunc;
 import org.apache.pig.data.*;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
 import pl.edu.icm.coansys.commons.java.PorterStemmer;
+import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
 import pl.edu.icm.coansys.commons.java.StopWordsRemover;
 import pl.edu.icm.coansys.commons.java.DiacriticsRemover;
 
@@ -34,7 +35,6 @@ public class StemmedPairs extends EvalFunc<DataBag> {
     @Override
     public Schema outputSchema(Schema input) {
         try {
-
             Schema termSchema = new Schema(new Schema.FieldSchema("term",
                     new Schema(new Schema.FieldSchema("value", DataType.CHARARRAY)),
                     DataType.TUPLE));
@@ -42,6 +42,8 @@ public class StemmedPairs extends EvalFunc<DataBag> {
             return new Schema(new Schema.FieldSchema(getSchemaName(this.getClass().getName().toLowerCase(), input),
                     termSchema, DataType.BAG));
         } catch (Exception e) {
+        	log.error("Error in the output Schema creation",e);
+        	log.error(StackTraceExtractor.getStackTrace(e));
             return null;
         }
     }

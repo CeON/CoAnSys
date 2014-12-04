@@ -3,7 +3,7 @@
     <parent>
         <artifactId>coansys</artifactId>
         <groupId>pl.edu.icm.coansys</groupId>
-        <version>1.4-SNAPSHOT</version>
+        <version>1.7-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -13,8 +13,8 @@
     <packaging>pom</packaging>
     <modules>
         <module>citations-impl</module>
-        <module>citations-main-workflow</module>
-        <module>citations-inner-workflow</module>
+        <module>citations-core-workflow</module>
+        <module>citations-full-workflow</module>
     </modules>
 
 

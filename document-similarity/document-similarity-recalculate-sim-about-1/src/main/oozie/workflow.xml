@@ -1,0 +1,198 @@
+<workflow-app name='${project}_${subproject}'
+	xmlns="uri:oozie:workflow:0.4">
+
+	<parameters>
+		<property>
+			<name>inputPathProto</name>
+			<value>${bwndataMetadataInputPath}</value>
+		</property>
+		<property>
+			<name>inputPathDocSimMajor</name>
+			<value>${bwndataMetadataOutputPath}/major/similarity/normalizedleftdocs
+			</value>
+		</property>
+		<property>
+			<name>inputPathDocSimMinor</name>
+			<value>${bwndataMetadataOutputPath}/minor/similarity/normalizedleftdocs
+			</value>
+		</property>
+		<property>
+			<name>outputPathRecalc</name>
+			<value>${bwndataMetadataOutputPath}/recalc/</value>
+		</property>
+		<property>
+			<name>finalOutputPath</name>
+			<value>${bwndataMetadataOutputPath}/final/</value>
+		</property>
+		<property>
+			<name>pool</name>
+			<value>default</value>
+		</property>
+		<property>
+			<name>oozie.wf.validate.ForkJoin</name>
+			<value>false</value>
+		</property>
+		<property>
+			<name>removal_least_used</name>
+			<value>0</value>
+		</property>
+		<property>
+			<name>removal_rate</name>
+			<value>1.0</value>
+		</property>
+		<property>
+			<name>tfidfTopnTermPerDocument</name>
+			<value>20</value>
+		</property>
+		<property>
+			<name>similarityTopnDocumentPerDocument</name>
+			<value>20</value>
+		</property>
+		<property>
+			<name>mapredChildJavaOpts</name>
+			<value>-Xmx2g</value>
+		</property>
+		<property>
+			<name>scheduler</name>
+			<value>${pool}</value>
+		</property>
+		<property>
+			<name>parallel</name>
+			<value>2</value>
+		</property>
+		<property>
+			<name>tmpCompressionCodec</name>
+			<value>gz</value>
+		</property>
+		<property>
+			<name>sample</name>
+			<value>1.0</value>
+		</property>
+	</parameters>
+
+	<global>
+		<job-tracker>${jobTracker}</job-tracker>
+		<name-node>${nameNode}</name-node>
+		<configuration>
+			<property>
+				<name>mapred.fairscheduler.pool</name>
+				<value>${pool}</value>
+			</property>
+			<property>
+				<name>oozie.launcher.mapred.fairscheduler.pool</name>
+				<value>${pool}</value>
+			</property>
+			<property>
+				<name>mapred.job.queue.name</name>
+				<value>${queueName}</value>
+			</property>
+			<property>
+				<name>mapred.mapper.new-api</name>
+				<value>true</value>
+			</property>
+			<property>
+				<name>mapred.reducer.new-api</name>
+				<value>true</value>
+			</property>
+			<property>
+				<name>oozie.use.system.libpath</name>
+				<value>true</value>
+			</property>
+		</configuration>
+	</global>
+
+	<start to='sim1_postprocess_s1_e1_d' />
+
+	<decision name="sim1_postprocess_s1_e1_d">
+		<switch>
+			<case to="sim1_postprocess_s1_e1_filter_input">${sim1_postprocess_s1_e1 eq "true"}
+			</case>
+			<default to="sim1_postprocess_s2_e1_d" />
+		</switch>
+	</decision>
+
+	<action name='sim1_postprocess_s1_e1_filter_input'>
+		<pig>
+			<script>sim1-postprocess-s1-e1-filter-sims.pig</script>
+			<param>inputPathProto=${inputPathProto}</param>
+			<param>inputPathDocSimMajor=${inputPathDocSimMajor}</param>
+			<param>inputPathDocSimMinor=${inputPathDocSimMinor}</param>
+			<param>outputPathRecalc=${outputPathRecalc}</param>
+			<param>finalOutputPath=${finalOutputPath}</param>
+			<param>commonJarsPath=${commonJarsPath}</param>
+			<param>parallel=${parallel}</param>
+			<param>tmpCompressionCodec=${tmpCompressionCodec}</param>
+			<param>sample=${sample}</param>
+			<param>mapredChildJavaOpts=${mapredChildJavaOpts}</param>
+			<param>scheduler=${scheduler}</param>
+			<file>macros.pig#macros.pig</file>
+		</pig>
+		<ok to='sim1_postprocess_s2_e1_d' />
+		<error to='kill' />
+	</action>
+
+	<decision name="sim1_postprocess_s2_e1_d">
+		<switch>
+			<case to="sim1_postprocess_s2_e1_calculate_sims">${sim1_postprocess_s2_e1 eq "true"}
+			</case>
+			<default to="sim1_postprocess_s3_e1_d" />
+		</switch>
+	</decision>
+
+	<action name='sim1_postprocess_s2_e1_calculate_sims'>
+		<pig>
+			<script>sim1-postprocess-s2-e1-calc-cosine.pig</script>
+			<param>inputPathProto=${inputPathProto}</param>
+			<param>inputPathDocSimMajor=${inputPathDocSimMajor}</param>
+			<param>inputPathDocSimMinor=${inputPathDocSimMinor}</param>
+			<param>outputPathRecalc=${outputPathRecalc}</param>
+			<param>finalOutputPath=${finalOutputPath}</param>
+			<param>commonJarsPath=${commonJarsPath}</param>
+			<param>parallel=${parallel}</param>
+			<param>tmpCompressionCodec=${tmpCompressionCodec}</param>
+			<param>sample=${sample}</param>
+			<param>mapredChildJavaOpts=${mapredChildJavaOpts}</param>
+			<param>scheduler=${scheduler}</param>
+			<file>macros.pig#macros.pig</file>
+		</pig>
+		<ok to='sim1_postprocess_s3_e1_d' />
+		<error to='kill' />
+	</action>
+
+	<decision name="sim1_postprocess_s3_e1_d">
+		<switch>
+			<case to="sim1_postprocess_s3_e1_merge_results">${sim1_postprocess_s3_e1 eq "true"}
+			</case>
+
+			<default to="end" />
+		</switch>
+	</decision>
+
+	<action name='sim1_postprocess_s3_e1_merge_results'>
+		<pig>
+			<script>sim1-postprocess-s3-e1-union.pig</script>
+			<param>inputPathProto=${inputPathProto}</param>
+			<param>inputPathDocSimMajor=${inputPathDocSimMajor}</param>
+			<param>inputPathDocSimMinor=${inputPathDocSimMinor}</param>
+			<param>outputPathRecalc=${outputPathRecalc}</param>
+			<param>finalOutputPath=${finalOutputPath}</param>
+			<param>commonJarsPath=${commonJarsPath}</param>
+			<param>parallel=${parallel}</param>
+			<param>tmpCompressionCodec=${tmpCompressionCodec}</param>
+			<param>sample=${sample}</param>
+			<param>mapredChildJavaOpts=${mapredChildJavaOpts}</param>
+			<param>scheduler=${scheduler}</param>
+			<file>macros.pig#macros.pig</file>
+		</pig>
+		<ok to='end' />
+		<error to='kill' />
+	</action>
+
+
+	<kill name='kill'>
+		<message>Workflow failed, error
+			message[${wf:errorMessage(wf:lastErrorNode())}]
+		</message>
+	</kill>
+	<end name='end' />
+</workflow-app>

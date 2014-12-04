@@ -25,15 +25,18 @@ import org.apache.hadoop.io.Text
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
-class BestSelector extends Reducer[Text, Text, Text, Text] {
-  type Context = Reducer[Text, Text, Text, Text]#Context
+class BestSelector[K] extends Reducer[K, Text, K, Text] {
+  type Context = Reducer[K, Text, K, Text]#Context
+  val bestWritable = new Text
 
-  override def reduce(key: Text, values: java.lang.Iterable[Text], context: Context) {
-    if (values.isEmpty)
+  override def reduce(key: K, values: java.lang.Iterable[Text], context: Context) {
+    val iter = values.iterator()
+    if (iter.isEmpty)
       return
 
-    val best = values.maxBy(_.toString.split(":", 2)(0).toDouble)
-    context.write(key, best)
+    val best = iter.map(_.toString).maxBy(_.split(":", 2)(0).toDouble)
+    bestWritable.set(best)
+    context.write(key, bestWritable)
   }
 
 }

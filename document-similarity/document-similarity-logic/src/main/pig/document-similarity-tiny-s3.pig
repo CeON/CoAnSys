@@ -39,7 +39,7 @@
 %default time '2013-09-28--10-37'
 %default outputPath 'document-similarity-output/$time/'
 %default jars '*.jar'
-%default commonJarsPath '../../../../document-similarity-workflow/target/oozie-wf/lib/$jars'
+%default commonJarsPath 'lib/$jars'
 
 REGISTER '$commonJarsPath'
 
@@ -52,8 +52,8 @@ SET default_parallel $parallel
 SET mapred.child.java.opts $mapredChildJavaOpts
 SET pig.tmpfilecompression true
 SET pig.tmpfilecompression.codec $tmpCompressionCodec
-%DEFAULT ds_scheduler default
-SET mapred.fairscheduler.pool $ds_scheduler
+%DEFAULT scheduler default
+SET mapred.fairscheduler.pool $scheduler
 --SET pig.noSplitCombination true;
 IMPORT 'macros.pig';
 

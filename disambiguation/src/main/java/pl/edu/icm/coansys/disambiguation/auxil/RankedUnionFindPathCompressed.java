@@ -9,8 +9,8 @@ import java.util.Arrays;
  */
 public class RankedUnionFindPathCompressed {
 	
-	int[] cluster = null;
-	int[] rank = null; 
+	private int[] cluster = null;
+	private int[] rank = null; 
 	
 	public RankedUnionFindPathCompressed(int elementNumber){
 		cluster = new int[elementNumber];
@@ -36,33 +36,34 @@ public class RankedUnionFindPathCompressed {
 	}
 	
 	protected int getRootWithoutChange(int p){
-		while(p!=cluster[p]){
-			p = cluster[p]; 
+	int _p = p;	
+            while(_p!=cluster[_p]){
+			_p = cluster[_p]; 
 		}
-		return p;
+		return _p;
 	}
 	
 	protected int getRoot(int p){
 		int r = getRootWithoutChange(p);
-		int next = -1;
-		while(p!=r){
-			next=cluster[p];
-			cluster[p]=r;
-			p=next;
+		int next, _p = p;
+		while(_p!=r){
+			next=cluster[_p];
+			cluster[_p]=r;
+			_p=next;
 		}
-		return p;
+		return _p;
 	}
 	
 	protected int getRoot(int p, boolean[] touched){
 		int r = getRootWithoutChange(p);
-		int next = -1;
-		while(p!=r){
-			next=cluster[p];
-			cluster[p]=r;
-			touched[p]=true;
-			p=next;
+		int next, _p = p;
+		while(_p!=r){
+			next=cluster[_p];
+			cluster[_p]=r;
+			touched[_p]=true;
+			_p=next;
 		}
-		return p;
+		return _p;
 	}
 	
 	public boolean find(int p, int q){

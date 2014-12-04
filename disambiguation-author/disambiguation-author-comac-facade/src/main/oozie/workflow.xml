@@ -1,0 +1,430 @@
+<workflow-app name="${project}-${subproject}" xmlns="uri:oozie:workflow:0.4">
+	<parameters>
+		<!-- Facade Properties -->
+		<property>
+			<name>and_parallel</name>
+			<value>16</value>
+		</property>
+		<property>
+			<name>mainDirectory</name>
+			<value>${wf:appPath()}</value>
+		</property>
+		<property>
+			<name>inputDirectory</name>
+			<value>${mainDirectory}/inputData</value>
+		</property>
+		<property>
+			<name>and_inputDocsData</name>
+			<value>${inputDirectory}</value>
+		</property>
+		<property>
+			<name>workingDirectory</name>
+			<value>${mainDirectory}/partial_results</value>
+		</property>
+		<property>
+			<name>and_working_directory</name>
+			<value>${workingDirectory}</value>
+		</property>
+		<property>
+			<name>results</name>
+			<value>${workingDirectory}</value>
+		</property>
+		<property>
+			<name>outputDirectory</name>
+			<value>${mainDirectory}/final_results</value>
+		</property>
+		<property>
+			<name>and_outputPB</name>
+			<value>${outputDirectory}</value>
+		</property>
+		<property>
+			<name>and_trueIfCopyFalseIfMove</name>
+			<value>true</value>
+		</property>
+		<property>
+			<name>and_pool</name>
+			<value>${pool}</value>
+		</property>
+		<property>
+			<name>and_remove_sideproducts</name>
+			<value>true</value>
+		</property>
+		<!-- Properties associated with cluster parameters -->
+		<property>
+			<name>and_mapredChildJavaOpts_one</name>
+			<value>-Xmx512m</value>
+		</property>
+		<property>
+			<name>and_mapredChildJavaOpts_exh</name>
+			<value>-Xmx4g</value>
+		</property>
+		<property>
+			<name>and_mapredChildJavaOpts_apr_sim</name>
+			<value>-Xmx10g</value>
+		</property>
+		<property>
+			<name>and_mapredChildJavaOpts_apr_no_sim</name>
+			<value>-Xmx10g</value>
+		</property>
+		<!-- Workflow decissions -->
+		<property>
+			<name>and_cleaning</name>
+			<value>true</value>
+		</property>
+		<property>
+			<name>and_check_accuracy</name>
+			<value>true</value>
+			<description>If there was external ids for some contributors in
+				original data and in feature_info there is EX_PERSON_ID feature with
+				weigh 0, then we can check accuracy of our model. When 'true'
+				additional workflow node run.
+			</description>
+		</property>
+
+		<!-- Additional out data paths -->
+		<property>
+			<name>and_splitted_output</name>
+			<value>${and_working_directory}/splitted</value>
+			<description>Path for data with splitted groups of contributors
+				(splited in terms of the number of contributors in each cluster).
+			</description>
+		</property>
+		<property>
+			<name>and_splitted_output_one</name>
+			<value>${and_splitted_output}/one</value>
+			<description>Check and_splitted_output property. Path for single
+				contributors.
+			</description>
+		</property>
+		<property>
+			<name>and_splitted_output_apr_sim</name>
+			<value>${and_splitted_output}/apr-sim</value>
+			<description>Check and_splitted_output property. Path for aproximate
+				disambiguation with saving similarity values.
+			</description>
+		</property>
+		<property>
+			<name>and_splitted_output_apr_no_sim</name>
+			<value>${and_splitted_output}/apr-no-sim</value>
+			<description>Check and_splitted_output property. Path for aproximate
+				disambiguation without saving similarity values.
+			</description>
+		</property>
+		<property>
+			<name>and_splitted_output_exh</name>
+			<value>${and_splitted_output}/exh</value>
+			<description>Check and_splitted_output property. Path for exhaustive
+				disambiguation.
+			</description>
+		</property>
+		<property>
+			<name>and_cid_dockey</name>
+			<value>${and_working_directory}/cid_dockey</value>
+			<description>Path for additional data - pairs ( document id,
+				contributor id, original external id, sname ). Used in 'serialize'
+				action to associate generated ( author uuid, contributor id ) pairs
+				with documents. External id and sname needed in optional accuracy
+				check after serialize.
+			</description>
+		</property>
+		<property>
+			<name>and_outputContribs</name>
+			<value>${and_working_directory}/outputContribs</value>
+			<description>Path for analyzed data - pairs ( contributor id, uuid ).
+			</description>
+		</property>
+		<property>
+			<name>and_failedContribs</name>
+			<value>${and_working_directory}/failedContribs</value>
+			<description>Path for not analyzed data - too big groups of
+				contributors.
+			</description>
+		</property>
+		<property>
+			<name>and_output_unserialized</name>
+			<value>${and_working_directory}/output_unserialized</value>
+			<description>Path for unserialized, ungrouped AND results. Used only
+				during optional accuracy check (and_check_accuracy = true).
+			</description>
+		</property>
+		<!--property> <name>and_merged_output</name> <value>${results}/merged_output</value> 
+			<description>Path for input data merged with AND output.</description> </property -->
+		<property>
+			<name>and_accuracy_check_output</name>
+			<value>${and_working_directory}/accuracy_check</value>
+			<description>Path for short final accuracy statistics (so far only
+				for PBN with pbn ids).
+			</description>
+		</property>
+		<!-- Properties for Pig scripts -->
+		<property>
+			<name>and_sample</name>
+			<value>1.0</value>
+			<description>Input Sample Size: [0; 1]. Default 1 (all data).
+			</description>
+		</property>
+		<property>
+			<name>and_threshold</name>
+			<value>-1.00011666173005</value>
+			<description>Initial value for calculating affinity between
+				contributors: [-1.0; 0].
+			</description>
+		</property>
+		<property>
+			<name>and_lang</name>
+			<value>all</value>
+			<description>Responsible for the selection of documents with given
+				language. Value format as in document metadata. Default: all.
+			</description>
+		</property>
+		<property>
+			<name>and_exhaustive_limit</name>
+			<value>5000</value>
+			<description>Upper limit on the size of the contributors group for
+				exhaustive disambiguation algorithm.
+			</description>
+		</property>
+		<property>
+			<name>and_aproximate_sim_limit</name>
+			<value>1000000000</value>
+			<description>Upper limit on the size of the contributors group for
+				aproximate disambiguation algorithm with storing calculated
+				similarities.
+			</description>
+		</property>
+		<property>
+			<name>and_feature_info</name>
+			<!-- Note that EX_PERSON_ID with weight 0 is needed for accuracy checking! -->
+			<!-- TODO: change 0 to inf for EX_PERSON_IDS in production! -->
+			<value>"Intersection#EX_PERSON_ID#0#1,Intersection#EX_PERSON_IDS#0#1,CosineSimilarity#EX_CLASSIFICATION_CODES#772.692964079035#1,CosineSimilarity#EX_KEYWORDS_SPLIT#38.8749661175105#1,CosineSimilarity#EX_KEYWORDS#24.2728641349849#1,CosineSimilarity#EX_TITLE_SPLIT#355.529468017407#1,CosineSimilarity#EX_YEAR#0#1,CosineSimilarity#EX_TITLE#6#1,CosineSimilarity#EX_DOC_AUTHS_SNAMES#3438.44777889656#1,CosineSimilarity#EX_DOC_AUTHS_FNAME_FST_LETTER#3687.11964707998#1,CosineSimilarity#EX_AUTH_FNAMES_FST_LETTER#4738.63437905496#1,CosineSimilarity#EX_AUTH_FNAME_FST_LETTER#4748.59274849462#1,CosineSimilarity#EX_EMAIL#0#1"
+			</value>
+			<description>Features description - model for calculating affinity
+				and contributors clustering. Value in format:
+				"Disambiguator_name#Feature_extractor_name#weight#coefficient_of_the_maximum_number_of_occurrences,...".
+			</description>
+		</property>
+		<property>
+			<name>and_statistics</name>
+			<value>false</value>
+			<description>Log ANDs algorithms statistics.</description>
+		</property>
+		<property>
+			<name>and_skip_empty_features</name>
+			<value>true</value>
+			<description>Data extractor skips contributor's features, when
+				feature bag is empty (no data for feature).
+			</description>
+		</property>
+		<property>
+			<name>skipSplitting</name>
+			<value>false</value>
+		</property>
+	</parameters>
+
+	<global>
+		<job-tracker>${jobTracker}</job-tracker>
+		<name-node>${nameNode}</name-node>
+		<configuration>
+			<property>
+				<name>mapred.fairscheduler.pool</name>
+				<value>${and_pool}</value>
+			</property>
+			<property>
+				<name>oozie.launcher.mapred.fairscheduler.pool</name>
+				<value>${and_pool}</value>
+			</property>
+			<property>
+				<name>mapred.job.queue.name</name>
+				<value>${queueName}</value>
+			</property>
+			<property>
+				<name>mapred.mapper.new-api</name>
+				<value>true</value>
+			</property>
+			<property>
+				<name>mapred.reducer.new-api</name>
+				<value>true</value>
+			</property>
+			<property>
+				<name>oozie.use.system.libpath</name>
+				<value>true</value>
+			</property>
+		</configuration>
+	</global>
+
+	<start to="remove-obsolete-data" />
+
+	<action name="remove-obsolete-data">
+		<fs>
+			<delete path="${workingDirectory}" />
+			<delete path="${outputDirectory}" />
+		</fs>
+		<ok to="and-main-action" />
+		<error to="finalize-error" />
+	</action>
+
+	<action name="and-main-action">
+		<sub-workflow>
+			<app-path>${mainDirectory}/pl.edu.icm.coansys-disambiguation-author-workflow
+			</app-path>
+			<propagate-configuration />
+			<configuration>
+				<property>
+					<name>oozie.wf.subworkflow.classpath.inheritance</name>
+					<value>true</value>
+				</property>
+				<property>
+					<name>workflowPath</name>
+					<value>${mainDirectory}/pl.edu.icm.coansys-disambiguation-author-workflow
+					</value>
+				</property>
+				<property>
+					<name>and_inputDocsData</name>
+					<value>${inputDirectory}</value>
+				</property>
+				<property>
+					<name>and_pool</name>
+					<value>${and_pool}</value>
+				</property>
+				<property>
+					<name>and_cleaning</name>
+					<value>false</value>
+				</property>
+				<property>
+					<name>and_mapredChildJavaOpts_one</name>
+					<value>${and_mapredChildJavaOpts_one}</value>
+				</property>
+				<property>
+					<name>and_mapredChildJavaOpts_exh</name>
+					<value>${and_mapredChildJavaOpts_exh}</value>
+				</property>
+				<property>
+					<name>and_mapredChildJavaOpts_apr_sim</name>
+					<value>${and_mapredChildJavaOpts_apr_sim}</value>
+				</property>
+				<property>
+					<name>and_mapredChildJavaOpts_apr_no_sim</name>
+					<value>${and_mapredChildJavaOpts_apr_no_sim}</value>
+				</property>
+				<property>
+					<name>and_check_accuracy</name>
+					<value>${and_check_accuracy}</value>
+				</property>
+				<property>
+					<name>and_working_directory</name>
+					<value>${and_working_directory}</value>
+				</property>
+				<property>
+					<name>and_splitted_output</name>
+					<value>${and_splitted_output}</value>
+				</property>
+				<property>
+					<name>and_splitted_output_one</name>
+					<value>${and_splitted_output_one}</value>
+				</property>
+				<property>
+					<name>and_splitted_output_apr_sim</name>
+					<value>${and_splitted_output_apr_sim}</value>
+				</property>
+				<property>
+					<name>and_splitted_output_apr_no_sim</name>
+					<value>${and_splitted_output_apr_no_sim}</value>
+				</property>
+				<property>
+					<name>and_splitted_output_exh</name>
+					<value>${and_splitted_output_exh}</value>
+				</property>
+				<property>
+					<name>and_cid_dockey</name>
+					<value>${and_cid_dockey}</value>
+				</property>
+				<property>
+					<name>and_outputContribs</name>
+					<value>${and_outputContribs}</value>
+				</property>
+				<property>
+					<name>and_failedContribs</name>
+					<value>${and_failedContribs}</value>
+				</property>
+				<property>
+					<name>and_output_unserialized</name>
+					<value>${and_output_unserialized}</value>
+				</property>
+				<property>
+					<name>and_accuracy_check_output</name>
+					<value>${and_accuracy_check_output}</value>
+				</property>
+				<property>
+					<name>and_parallel</name>
+					<value>16</value>
+				</property>
+				<property>
+					<name>and_sample</name>
+					<value>${and_sample}</value>
+				</property>
+				<property>
+					<name>and_threshold</name>
+					<value>${and_threshold}</value>
+				</property>
+				<property>
+					<name>and_lang</name>
+					<value>${and_lang}</value>
+				</property>
+				<property>
+					<name>and_exhaustive_limit</name>
+					<value>${and_exhaustive_limit}</value>
+				</property>
+				<property>
+					<name>and_aproximate_sim_limit</name>
+					<value>${and_aproximate_sim_limit}</value>
+				</property>
+				<property>
+					<name>and_feature_info</name>
+					<value>${and_feature_info}</value>
+				</property>
+				<property>
+					<name>and_statistics</name>
+					<value>${and_statistics}</value>
+				</property>
+				<property>
+					<name>skipSplitting</name>
+					<value>${skipSplitting}</value>
+				</property>
+				<property>
+					<name>project</name>
+					<value>${project}</value>
+				</property>
+				<property>
+					<name>subproject</name>
+					<value>and-main-workflow</value>
+				</property>
+			</configuration>
+		</sub-workflow>
+		<ok to="remove-sideproducts-decision" />
+		<error to="finalize-error" />
+	</action>
+
+	<decision name="remove-sideproducts-decision">
+		<switch>
+			<case to="remove-sideproducts">${and_remove_sideproducts
+				eq "true"}
+			</case>
+			<default to="end" />
+		</switch>
+	</decision>
+
+	<action name="remove-sideproducts">
+		<fs>
+			<delete path='${workingDirectory}' />
+		</fs>
+		<ok to="end" />
+		<error to="finalize-error" />
+	</action>
+
+	<kill name="finalize-error">
+		<message>Workflow failed</message>
+	</kill>
+
+	<end name="end" />
+
+</workflow-app>

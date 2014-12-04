@@ -1,31 +1,35 @@
-
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    
-    <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>pl.edu.icm.coansys</groupId>
-        <artifactId>coansys</artifactId>
-        <version>1.4-SNAPSHOT</version>
-    </parent>
-    
-    <artifactId>commons</artifactId>
-    <packaging>jar</packaging>
-    <name>Coansys Commons</name>
-    <url>http://maven.apache.org</url>
 
-    <dependencies>
-        <dependency>
-            <groupId>pl.edu.icm.coansys</groupId>
-            <version>1.4-SNAPSHOT</version>
-            <artifactId>models</artifactId>
-        </dependency>  
-        <dependency>
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>pl.edu.icm.coansys</groupId>
+		<artifactId>coansys</artifactId>
+		<version>1.7-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>commons</artifactId>
+	<packaging>jar</packaging>
+	<name>Coansys Commons</name>
+	<url>http://maven.apache.org</url>
+
+	<dependencies>
+<!-- 	<dependency>
+			<groupId>org.apache.pig</groupId>
+			<artifactId>piggybank</artifactId>
+			<version>0.12.0</version>
+		</dependency> --> 
+		<dependency>
+			<groupId>pl.edu.icm.coansys</groupId>
+			<version>1.7-SNAPSHOT</version>
+			<artifactId>models</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
 		</dependency>
-         <dependency>
+		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
-		</dependency>  
-    </dependencies>
+		</dependency>
+	</dependencies>
 </project>

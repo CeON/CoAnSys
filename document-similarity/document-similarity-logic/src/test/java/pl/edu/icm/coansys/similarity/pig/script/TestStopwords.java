@@ -50,7 +50,7 @@ public class TestStopwords extends AbstractPigUnitTest {
     public String[] getScriptToTest() throws FileNotFoundException, IOException {
         LinkedList<String> macro = MacroExtractor.extract(PIG_SCRIPT_DIR + "macros.pig", "find_stopwords");
         macro.addFirst("doc_word = LOAD 'ommited' AS (docId, term);");
-        macro.addLast("stopwords_ordered = ORDER stopwords BY term;");
+        macro.addLast("stopworordered = ORDER stopwords BY term;");
         return macro.toArray(new String[]{});
     }
 
@@ -63,7 +63,7 @@ public class TestStopwords extends AbstractPigUnitTest {
             "d2\tt1"
         };
         String[] output = {"(t1)"};
-        //test.assertOutput("doc_word", input, "stopwords_ordered", output);
+        //test.assertOutput("doc_word", input, "stopworordered", output);
     }
 
     @org.testng.annotations.Test(groups = {"fast"})
@@ -77,7 +77,7 @@ public class TestStopwords extends AbstractPigUnitTest {
             "d3\tt1"
         };
         String[] output = {"(t1)"};
-        //test.assertOutput("doc_word", input, "stopwords_ordered", output);
+        //test.assertOutput("doc_word", input, "stopworordered", output);
     }
 
     @org.testng.annotations.Test(groups = {"fast"})
@@ -91,6 +91,6 @@ public class TestStopwords extends AbstractPigUnitTest {
         }
         String[] input = list.toArray(new String[]{});
         String[] output = {"(0)", "(1)", "(2)", "(3)", "(4)", "(5)", "(6)", "(7)", "(8)", "(9)"};
-        //test.assertOutput("doc_word", input, "stopwords_ordered", output);
+        //test.assertOutput("doc_word", input, "stopworordered", output);
     }
 }

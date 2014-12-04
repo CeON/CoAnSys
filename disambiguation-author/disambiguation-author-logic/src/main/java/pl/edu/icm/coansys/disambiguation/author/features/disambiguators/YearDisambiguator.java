@@ -20,19 +20,31 @@ package pl.edu.icm.coansys.disambiguation.author.features.disambiguators;
 
 import java.util.List;
 
-import pl.edu.icm.coansys.disambiguation.features.Disambiguator;
-
 /**
  * 
  * @author pdendek
  * @version 1.0
  * @since 2012-08-07
  */
-public class YearDisambiguator extends Disambiguator{
+public class YearDisambiguator extends Disambiguator {
+
+	public YearDisambiguator() {
+		super();
+	}
+		
+	public YearDisambiguator(double weight, double maxVal) {
+		super(weight, maxVal);
+		if (maxVal == 0) {
+			throw new IllegalArgumentException("Max value cannot equal 0.");
+		}
+	}
 
 	@Override
-	public String getName() {
-		return YearDisambiguator.class.getSimpleName();
+	public void setMaxVal(double maxVal) {
+		if (maxVal == 0) {
+			throw new IllegalArgumentException("Max value cannot equal 0.");
+		}
+		this.maxVal = maxVal;
 	}
 	
 	@Override
@@ -44,13 +56,23 @@ public class YearDisambiguator extends Disambiguator{
 		Object first = f1.get(0);
 		Object second = f2.get(0);
 		
+		if ( first == null || second == null ) {
+			return 0;
+		}
+		
 		int a = Integer.parseInt( first.toString() );
 		int b = Integer.parseInt( second.toString() );
 
-		//int dif = Math.abs( b - a );
-		//TODO funcion(int x) = something like 1 / dif;
+		int dif = Math.abs( b - a );
 		
-		return ( a == b ) ? 1 : 0; //for now
+		double sq = (double) dif / maxVal;
+		double func = (-sq * sq + 1.0);
+
+		if ( func <= 0 ) {
+			return 0;
+		}
+		
+		return func * weight;
 	}
 
 }

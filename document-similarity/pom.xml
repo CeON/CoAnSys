@@ -1,20 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-    <modelVersion>4.0.0</modelVersion>
+	<modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <artifactId>coansys</artifactId>
-        <groupId>pl.edu.icm.coansys</groupId>
-        <version>1.4-SNAPSHOT</version>
-    </parent>
-    
-    <artifactId>document-similarity</artifactId>
+	<parent>
+		<artifactId>coansys</artifactId>
+		<groupId>pl.edu.icm.coansys</groupId>
+		<version>1.7-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>document-similarity</artifactId>
 	<packaging>pom</packaging>
-    <name>Document Similarity Tool</name>
+	<name>Document Similarity Tool</name>
 
-    <modules>
-        <module>document-similarity-workflow</module>
-        <module>document-similarity-logic</module>
-    </modules>    
+	<properties>
+		<oozie-maven-plugin.version>1.3-SNAPSHOT</oozie-maven-plugin.version>
+		<!-- <oozie-runner.version>1.1</oozie-runner.version> -->
+	</properties>
+
+	<modules>
+		<module>document-similarity-logic</module>
+		<module>document-similarity-workflow</module>
+		<module>document-similarity-ranked-workflow</module>
+		<module>document-similarity-ranked-two-sources-workflow</module>
+		<module>document-similarity-demonstrator-workflow</module>
+		<module>document-similarity-oap-uberworkflow</module>
+		<module>document-similarity-recalculate-sim-about-1</module>
+		<module>document-similarity-enhanced-comac-facade</module>
+	</modules>
 </project>

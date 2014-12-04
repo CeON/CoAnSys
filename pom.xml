@@ -9,7 +9,7 @@
     <groupId>pl.edu.icm.coansys</groupId>
     <artifactId>coansys</artifactId>
     <name>Content Analysis Systems</name>
-    <version>1.4-SNAPSHOT</version>
+    <version>1.7-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <properties>
@@ -23,7 +23,7 @@
         <testng.version>6.5.2</testng.version>
         <maven.surefire.plugin.version>2.12.3</maven.surefire.plugin.version>
         <spring.version>3.2.0.RELEASE</spring.version>
-        <oozie-maven-plugin.version>1.1</oozie-maven-plugin.version>
+        <oozie-maven-plugin.version>1.2</oozie-maven-plugin.version>
         <oozie-runner.version>1.1</oozie-runner.version>
         <jackson-mapper-asl.version>1.9.12</jackson-mapper-asl.version>
         <scala.version>2.10.2</scala.version>
@@ -67,7 +67,7 @@
 				<plugin>
                     <groupId>pl.edu.icm.maven</groupId>
                     <artifactId>oozie-maven-plugin</artifactId>
-                    <version>${oozie-maven-plugin.version}</version>
+                    <version>1.3</version>
 				</plugin>
 			</plugins>
 	    </pluginManagement>
@@ -129,43 +129,7 @@
             <properties>
                 <skipITs>true</skipITs>
             </properties>
-        </profile>
-        <profile>
-            <!-- used in project CoAnSys/document-classification -->
-            <!-- requires the file $PROJECT/src/main/resources/assemblies/only-deps.xml -->
-            <id>sep</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-compiler-plugin</artifactId>
-                        <version>2.3.2</version>
-                        <configuration>
-                            <source>1.6</source>
-                            <target>1.6</target>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-assembly-plugin</artifactId>
-                        <configuration>
-                            <descriptors>
-                                <descriptor>src/main/resources/assemblies/only-deps.xml</descriptor>
-                            </descriptors>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <phase>package</phase>
-                                <id>create-my-bundle</id>
-                                <goals>
-                                    <goal>single</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
+        </profile>     
         <profile>
             <id>full</id>
             <build>
@@ -205,16 +169,16 @@
     <modules>
         <module>citations</module>
         <module>commons</module>
+        <module>models</module>
         <module>disambiguation</module>
         <module>disambiguation-author</module>
-        <module>disambiguation-work</module>
+        <module>deduplication-document</module>
         <module>document-classification</module>
         <module>document-similarity</module>
         <module>integration</module>
-        <module>logs-analysis</module>
         <module>keywords-extraction</module>
-        <module>models</module>
         <module>nlm-extraction</module>
+        <module>statistics-generator</module>
     </modules>
 
     <dependencies>

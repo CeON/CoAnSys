@@ -4,8 +4,7 @@
 # (C) 2010-2012 ICM UW. All rights reserved.
 #
 
-CURR=`pwd`
-cd ../../../..
-mvn clean install -P sep
+cd ../../..
+mvn clean install -P sep -DskipTests
 mkdir src/main/pig/lib
-cp target/*-SNAPSHOT*.jar src/main/pig/lib
+cp target/*.jar src/main/pig/lib

@@ -1,0 +1,266 @@
+<!--
+  Copyright (c) 2010 Yahoo! Inc. All rights reserved.
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License. See accompanying LICENSE file.
+-->
+<workflow-app xmlns="uri:oozie:workflow:0.4" name="citations-full-workflow">
+    <parameters>
+        <property>
+            <name>jobTracker</name>
+        </property>
+        <property>
+            <name>nameNode</name>
+        </property>
+        <property>
+            <name>queueName</name>
+            <value>default</value>
+        </property>
+        <property>
+            <name>pool</name>
+            <value>default</value>
+        </property>
+        <property>
+            <name>reduceTasks</name>
+            <value>36</value>
+        </property>
+        <property>
+            <name>workingDirectory</name>
+            <value>${workingDir}</value>
+        </property>
+        <property>
+            <name>input</name>
+            <value>${inputSeqFile}</value>
+        </property>
+        <property>
+            <name>inputCitations</name>
+            <value>${input}</value>
+        </property>
+        <property>
+            <name>output</name>
+            <value>${outputSeqFile}</value>
+        </property>
+    </parameters>
+    <global>
+        <job-tracker>${jobTracker}</job-tracker>
+        <name-node>${nameNode}</name-node>
+        <configuration>
+            <property>
+                <name>mapred.mapper.new-api</name>
+                <value>true</value>
+            </property>
+            <property>
+                <name>mapred.reducer.new-api</name>
+                <value>true</value>
+            </property>
+            <!-- General job parameters -->
+            <property>
+                <name>mapred.job.queue.name</name>
+                <value>${queueName}</value>
+            </property>
+            <property>
+                <name>oozie.launcher.mapred.fairscheduler.pool</name>
+                <value>${pool}</value>
+            </property>
+            <property>
+                <name>mapred.fairscheduler.pool</name>
+                <value>${pool}</value>
+            </property>
+            <property>
+                <name>mapreduce.inputformat.class</name>
+                <value>org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat</value>
+            </property>
+            <property>
+                <name>mapreduce.outputformat.class</name>
+                <value>org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat</value>
+            </property>
+            <property>
+                <name>mapred.reduce.tasks</name>
+                <value>${reduceTasks}</value>
+            </property>
+        </configuration>
+    </global>
+    <start to="prepare"/>
+
+    <action name="prepare">
+        <fs>
+            <delete path="${workingDirectory}"/>
+            <mkdir path="${workingDirectory}"/>
+        </fs>
+        <ok to="document-converter"/>
+        <error to="fail"/>
+    </action>
+    <action name="document-converter">
+        <map-reduce>
+            <prepare>
+                <delete path="${workingDirectory}/destination_entities"/>
+            </prepare>
+            <configuration>
+                <property>
+                    <name>mapreduce.map.class</name>
+                    <value>pl.edu.icm.coansys.citations.mappers.DocumentToEntityConverter</value>
+                </property>
+                <property>
+                    <name>mapred.input.dir</name>
+                    <value>${input}</value>
+                </property>
+                <property>
+                    <name>mapred.output.dir</name>
+                    <value>${workingDirectory}/destination_entities</value>
+                </property>
+                <property>
+                    <name>mapred.mapoutput.key.class</name>
+                    <value>org.apache.hadoop.io.Text</value>
+                </property>
+                <property>
+                    <name>mapred.mapoutput.value.class</name>
+                    <value>org.apache.hadoop.io.BytesWritable</value>
+                </property>
+                <property>
+                    <name>mapred.reduce.tasks</name>
+                    <value>0</value>
+                </property>
+                <property>
+                    <name>mapred.output.key.class</name>
+                    <value>org.apache.hadoop.io.Text</value>
+                </property>
+                <property>
+                    <name>mapred.output.value.class</name>
+                    <value>org.apache.hadoop.io.BytesWritable</value>
+                </property>
+            </configuration>
+        </map-reduce>
+        <ok to="reference-parser"/>
+        <error to="fail"/>
+    </action>
+    <action name="reference-parser">
+        <map-reduce>
+            <prepare>
+                <delete path="${workingDirectory}/source_entities"/>
+            </prepare>
+            <configuration>
+                <property>
+                    <name>mapreduce.map.class</name>
+                    <value>pl.edu.icm.coansys.citations.mappers.ReferenceExtractorAndParser</value>
+                </property>
+                <property>
+                    <name>mapred.input.dir</name>
+                    <value>${inputCitations}</value>
+                </property>
+                <property>
+                    <name>mapred.output.dir</name>
+                    <value>${workingDirectory}/source_entities</value>
+                </property>
+                <property>
+                    <name>mapred.mapoutput.key.class</name>
+                    <value>org.apache.hadoop.io.Text</value>
+                </property>
+                <property>
+                    <name>mapred.mapoutput.value.class</name>
+                    <value>org.apache.hadoop.io.BytesWritable</value>
+                </property>
+                <property>
+                    <name>mapred.reduce.tasks</name>
+                    <value>0</value>
+                </property>
+                <property>
+                    <name>mapred.output.key.class</name>
+                    <value>org.apache.hadoop.io.Text</value>
+                </property>
+                <property>
+                    <name>mapred.output.value.class</name>
+                    <value>org.apache.hadoop.io.BytesWritable</value>
+                </property>
+		<property>
+		    <name>mapred.child.java.opts</name>
+		    <value>-XX:MaxPermSize=256m</value>
+		</property>
+            </configuration>
+        </map-reduce>
+        <ok to="core-workflow"/>
+        <error to="fail"/>
+    </action>
+    <action name="core-workflow">
+        <sub-workflow>
+            <app-path>${wf:appPath()}/pl.edu.icm.coansys-citations-core-workflow</app-path>
+            <propagate-configuration/>
+            <configuration>
+                <property>
+                    <name>workingDirectory</name>
+                    <value>${workingDirectory}/core_workflow</value>
+                </property>
+                <property>
+                    <name>sourceEntities</name>
+                    <value>${workingDirectory}/source_entities</value>
+                </property>
+                <property>
+                    <name>destinationEntities</name>
+                    <value>${workingDirectory}/destination_entities</value>
+                </property>
+                <property>
+                    <name>output</name>
+                    <value>${workingDirectory}/core_output</value>
+                </property>
+            </configuration>
+        </sub-workflow>
+        <ok to="output-converter"/>
+        <error to="fail"/>
+    </action>
+
+    <action name="output-converter">
+        <map-reduce>
+            <prepare>
+                <delete path="${output}"/>
+            </prepare>
+            <configuration>
+                <property>
+                    <name>mapreduce.map.class</name>
+                    <value>pl.edu.icm.coansys.citations.mappers.OutputConverter</value>
+                </property>
+                <property>
+                    <name>mapred.input.dir</name>
+                    <value>${workingDirectory}/core_output</value>
+                </property>
+                <property>
+                    <name>mapred.output.dir</name>
+                    <value>${output}</value>
+                </property>
+                <property>
+                    <name>mapred.mapoutput.key.class</name>
+                    <value>org.apache.hadoop.io.Text</value>
+                </property>
+                <property>
+                    <name>mapred.mapoutput.value.class</name>
+                    <value>org.apache.hadoop.io.BytesWritable</value>
+                </property>
+                <property>
+                    <name>mapreduce.reduce.class</name>
+                    <value>pl.edu.icm.coansys.citations.reducers.OutputConverter</value>
+                </property>
+                <property>
+                    <name>mapred.output.key.class</name>
+                    <value>org.apache.hadoop.io.Text</value>
+                </property>
+                <property>
+                    <name>mapred.output.value.class</name>
+                    <value>org.apache.hadoop.io.BytesWritable</value>
+                </property>
+            </configuration>
+        </map-reduce>
+        <ok to="end"/>
+        <error to="fail"/>
+    </action>
+
+    <kill name="fail">
+        <message>Workflow failed, error message [${wf:errorMessage(wf:lastErrorNode())}]</message>
+    </kill>
+    <end name="end"/>
+</workflow-app>

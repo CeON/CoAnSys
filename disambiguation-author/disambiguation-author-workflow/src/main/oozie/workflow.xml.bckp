@@ -1,0 +1,295 @@
+<?xml version="1.0" ?>
+<workflow-app name="${project}___${subproject}" xmlns="uri:oozie:workflow:0.4">
+
+	<parameters>
+		<!-- Properties associated with cluster parameters -->
+		<property>
+			<name>and_pool</name>
+			<value>default</value>
+			<description>Fairscheduler pool property.</description>
+		</property>
+		<property>
+			<name>and_mapredChildJavaOpts_one</name>
+			<value>-Xmx512m</value>
+			<description>Java options for mappers in disambiguation-one Pig scripts.</description>
+		</property>
+		<property>
+			<name>and_mapredChildJavaOpts_exh</name>
+			<!-- minimum RAM: exh_limit^2 / 2 * 64 / 8 / 1024 / 1024 MB * const1 + const2 -->
+			<value>-Xmx1024m</value>
+			<description>Java options for mappers in disambiguation-exhaustive Pig scripts.</description>
+		</property>
+		<property>
+			<name>and_mapredChildJavaOpts_apr_sim</name>
+			<value>-Xmx8000m</value>
+			<description>Java options for mappers in disambiguation-aproximate with storing similarities Pig scripts.</description>
+		</property>
+		<property>
+			<name>and_mapredChildJavaOpts_apr_no_sim</name>
+			<value>-Xmx8000m</value>
+			<description>Java options for mappers in disambiguation-aproximate without storing similarities Pig scripts.</description>
+		</property>
+		<!-- Additional out data paths -->
+		<property>
+			<name>and_splitted_output</name>
+			<value>${results}/splitted</value>
+			<description>Path for data with splitted groups of contributors (splited in terms of the number of contributors in each cluster).</description>
+		</property>
+		<property>
+			<name>and_splitted_output_one</name>
+			<value>${and_splitted_output}/one</value>
+			<description>Check and_splitted_output property. Path for single contributors.</description>
+		</property>
+		<property>
+			<name>and_splitted_output_apr_sim</name>
+			<value>${and_splitted_output}/apr-sim</value>
+			<description>Check and_splitted_output property. Path for aproximate disambiguation with saving similarity values.</description>
+		</property>
+		<property>
+			<name>and_splitted_output_apr_no_sim</name>
+			<value>${and_splitted_output}/apr-no-sim</value>
+			<description>Check and_splitted_output property. Path for aproximate disambiguation without saving similarity values.</description>
+		</property>
+		<property>
+			<name>and_splitted_output_exh</name>
+			<value>${and_splitted_output}/exh</value>
+			<description>Check and_splitted_output property. Path for exhaustive disambiguation.</description>
+		</property>
+		<property>
+			<name>and_cid_dockey</name>
+			<value>${results}/cid_dockey</value>
+			<description>Path for additional data - pairs ( document id, contributor id ). Used in 'serialize' action to associate generated ( author uuid, contributor id ) pairs with documents.</description>
+		</property>
+		<property>
+			<name>and_outputContribs</name>
+			<value>${results}/outputContribs</value>
+			<description>Path for analyzed data - pairs ( contributor id, uuid ).</description>
+		</property>
+		<property>
+			<name>and_failedContribs</name>
+			<value>${results}/failedContribs</value>
+			<description>Path for not analyzed data - too big groups of contributors.</description>
+		</property>
+		<!-- Properties for Pig scripts -->
+		<property>
+			<name>and_sample</name>
+			<value>1.0</value>
+			<description>Input Sample Size: [0; 1]. Default 1 (all data).</description>
+		</property>
+		<property>
+			<name>and_threshold</name>
+			<value>-1.00011666173005</value>
+			<description>Initial value for calculating affinity between contributors: [-1.0; 0].</description>
+		</property>
+		<property>
+			<name>and_lang</name>
+			<value>all</value>
+			<description>Responsible for the selection of documents with given language. Value format as in document metadata. Default: all.</description>
+		</property>
+		<property>
+			<name>and_exhaustive_limit</name>
+			<value>5000</value>
+			<description>Upper limit on the size of the contributors group for exhaustive disambiguation algorithm.</description>
+		</property>
+		<property>
+			<name>and_aproximate_sim_limit</name>
+			<value>1000000000</value>
+			<description>Upper limit on the size of the contributors group for aproximate disambiguation algorithm with storing calculated similarities.</description>
+		</property>
+                <property>
+                        <name>and_feature_info</name>
+                        <value>"Intersection#EX_PERSON_IDS#inf#1,CosineSimilarity#EX_CLASSIFICATION_CODES#772.692964079035#1,CosineSimilarity#EX_KEYWORDS_SPLIT#38.8749661175105#1,CosineSimilarity#EX_KEYWORDS#24.2728641349849#1,CosineSimilarity#EX_TITLE_SPLIT#355.529468017407#1,CosineSimilarity#EX_YEAR#0#1,CosineSimilarity#EX_TITLE#6#1,CosineSimilarity#EX_DOC_AUTHS_SNAMES#3438.44777889656#1,CosineSimilarity#EX_DOC_AUTHS_FNAME_FST_LETTER#3687.11964707998#1,CosineSimilarity#EX_AUTH_FNAMES_FST_LETTER#4738.63437905496#1,CosineSimilarity#EX_AUTH_FNAME_FST_LETTER#4748.59274849462#1,CosineSimilarity#EX_EMAIL#0#1"</value>
+                        <description>Features description - model for calculating affinity and contributors clustering. Value in format: "Disambiguator_name#Feature_extractor_name#weight#coefficient_of_the_maximum_number_of_occurrences,...".</description>
+                </property>
+		<property>
+			<name>and_statistics</name>
+			<value>false</value>
+			<description>Log ANDs algorithms statistics.</description>
+		</property>
+		<property>
+			<name>and_skip_empty_features</name>
+			<value>true</value>
+			<description>Data extractor skips contributor's features, when feature bag is empty (no data for feature).</description>
+		</property>
+	</parameters>
+	<global>
+		<job-tracker>${jobTracker}</job-tracker>
+		<name-node>${nameNode}</name-node>
+		<configuration>
+			<property>
+				<name>mapred.fairscheduler.pool</name>
+				<value>${and_pool}</value>
+			</property>
+			<property>
+				<name>oozie.launcher.mapred.fairscheduler.pool</name>
+				<value>${and_pool}</value>
+			</property>
+			<property>
+				<name>mapred.job.queue.name</name>
+				<value>${queueName}</value>
+			</property>
+			<property>
+				<name>mapred.mapper.new-api</name>
+				<value>true</value>
+			</property>
+			<property>
+				<name>mapred.reducer.new-api</name>
+				<value>true</value>
+			</property>
+			<property>
+				<name>oozie.use.system.libpath</name>
+				<value>true</value>
+			</property>
+		</configuration>
+	</global>
+	<start to="split"/>
+	<action name="split">
+		<pig>
+			<script>splitter.pig</script>
+			<!--pig parameters: data paths, cluster config, etc-->
+			<param>and_sample=${and_sample}</param>
+			<param>and_inputDocsData=${and_inputDocsData}</param>
+			<param>and_splitted_output_one=${and_splitted_output_one}</param>
+			<param>and_splitted_output_exh=${and_splitted_output_exh}</param>
+			<param>and_splitted_output_apr_sim=${and_splitted_output_apr_sim}</param>
+			<param>and_splitted_output_apr_no_sim=${and_splitted_output_apr_no_sim}</param>
+			<param>and_cid_dockey=${and_cid_dockey}</param>
+			<param>and_aproximate_sim_limit=${and_aproximate_sim_limit}</param>
+			<param>and_exhaustive_limit=${and_exhaustive_limit}</param>
+			<!-- UDF config -->
+			<param>and_skip_empty_features=${and_skip_empty_features}</param>
+			<param>and_feature_info=${and_feature_info}</param>
+			<param>and_lang=${and_lang}</param>
+			<param>and_statistics=${and_statistics}</param>
+			<param>and_threshold=${and_threshold}</param>
+			<!--commons-->
+			<param>and_scheduler=${and_pool}</param>
+		</pig>
+		<ok to="do_and"/>
+		<error to="kill"/>
+	</action>
+	<fork name="do_and">
+		<path start="do_and_forked_node_0"/>
+		<path start="do_and_forked_node_1"/>
+		<path start="do_and_forked_node_2"/>
+		<path start="do_and_forked_node_3"/>
+	</fork>
+	<action name="do_and_forked_node_0">
+		<pig>
+			<script>disambiguation_one.pig</script>
+			<!--pig parameters: data paths, cluster config, etc-->
+			<param>and_sample=1.0</param>
+			<param>and_inputDocsData=${and_splitted_output_one}/*</param>
+			<param>and_outputContribs=${and_outputContribs}/one</param>
+			<param>mapredChildJavaOpts=${and_mapredChildJavaOpts_one}</param>
+			<!--commons-->
+			<param>and_scheduler=${and_pool}</param>
+		</pig>
+		<ok to="do_and_join"/>
+		<error to="kill"/>
+	</action>
+	<action name="do_and_forked_node_1">
+		<pig>
+			<script>disambiguation_exh.pig</script>
+			<!--pig parameters: data paths, cluster config, etc-->
+			<param>and_sample=1.0</param>
+			<param>and_inputDocsData=${and_splitted_output_exh}/*</param>
+			<param>and_outputContribs=${and_outputContribs}/exh</param>
+			<param>mapredChildJavaOpts=${and_mapredChildJavaOpts_exh}</param>
+			<!--UDF config-->
+			<param>and_feature_info=${and_feature_info}</param>
+			<param>and_statistics=${and_statistics}</param>
+			<param>and_threshold=${and_threshold}</param>
+			<!--commons-->
+			<param>and_scheduler=${and_pool}</param>
+		</pig>
+		<ok to="do_and_join"/>
+		<error to="kill"/>
+	</action>
+	<action name="do_and_forked_node_2">
+		<pig>
+			<script>disambiguation_apr.pig</script>
+			<!--pig parameters: data paths, cluster config, etc-->
+			<param>and_aproximate_remember_sim=true</param>
+			<param>and_sample=1.0</param>
+			<param>and_inputDocsData=${and_splitted_output_apr_sim}/*</param>
+			<param>and_outputContribs=${and_outputContribs}/apr-sim</param>
+			<param>mapredChildJavaOpts=${and_mapredChildJavaOpts_apr_sim}</param>
+			<param>and_exhaustive_limit=${and_exhaustive_limit}</param>
+			<param>and_failedContribs=${and_failedContribs}</param>
+			<!--UDF config-->
+			<param>and_feature_info=${and_feature_info}</param>
+			<param>and_statistics=${and_statistics}</param>
+			<param>and_threshold=${and_threshold}</param>
+			<!--commons-->
+			<param>and_scheduler=${and_pool}</param>
+		</pig>
+		<ok to="do_and_join"/>
+		<error to="kill"/>
+	</action>
+	<action name="do_and_forked_node_3">
+		<pig>
+			<script>disambiguation_apr.pig</script>
+			<!--pig parameters: data paths, cluster config, etc-->
+			<param>and_aproximate_remember_sim=false</param>
+			<param>and_sample=1.0</param>
+			<param>and_inputDocsData=${and_splitted_output_apr_no_sim}/*</param>
+			<param>and_outputContribs=${and_outputContribs}/apr-no-sim</param>
+			<param>mapredChildJavaOpts=${and_mapredChildJavaOpts_apr_no_sim}</param>
+			<param>and_exhaustive_limit=${and_exhaustive_limit}</param>
+			<param>and_failedContribs=${and_failedContribs}</param>
+			<!--UDF config-->
+			<param>and_feature_info=${and_feature_info}</param>
+			<param>and_statistics=${and_statistics}</param>
+			<param>and_threshold=${and_threshold}</param>
+			<!--commons-->
+			<param>and_scheduler=${and_pool}</param>
+		</pig>
+		<ok to="do_and_join"/>
+		<error to="kill"/>
+	</action>
+	<join name="do_and_join" to="do_and_cleaning"/>
+	<action name="do_and_cleaning">
+		<fs>
+			<delete path='${and_splitted_output}'/>
+		</fs>
+		<ok to="serialize"/>
+		<error to="kill"/>
+	</action>
+	<action name="serialize">
+		<pig>
+			<script>serialize.pig</script>
+			<!--pig parameters: data paths, cluster config, etc-->
+			<param>and_outputContribs=${and_outputContribs}</param>
+			<param>and_scheduler=${and_pool}</param>
+			<param>and_cid_dockey=${and_cid_dockey}</param>
+			<param>and_outputPB=${and_outputPB}</param>
+			<!--commons-->
+			<param>and_scheduler=${and_pool}</param>
+		</pig>
+		<ok to="finall_cleaning"/>
+		<error to="kill"/>
+	</action>
+	<action name="finall_cleaning">
+		<fs>
+			<delete path='${and_cid_dockey}'/>
+			<delete path='${and_outputContribs}'/>
+		</fs>
+		<ok to="end"/>
+		<error to="kill"/>
+	</action>
+	<action name="send-email">
+		<email xmlns="uri:oozie:email-action:0.1">
+			<to>pdendek@icm.edu.pl</to>
+			<subject>Email notifications for ${wf:id()}</subject>
+			<body>The wf ${wf:id()} successfully completed.</body>
+		</email>
+		<ok to="end"/>
+		<error to="kill"/>
+	</action>
+	<kill name="kill">
+		<message>Workflow failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+	</kill>
+	<end name="end"/>
+
+</workflow-app>

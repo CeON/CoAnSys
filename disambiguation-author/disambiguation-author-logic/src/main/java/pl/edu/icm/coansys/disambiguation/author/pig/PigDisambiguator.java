@@ -19,13 +19,16 @@
 package pl.edu.icm.coansys.disambiguation.author.pig;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.pig.backend.executionengine.ExecException;
 import org.apache.pig.data.DataBag;
 import org.apache.pig.data.Tuple;
 
-import pl.edu.icm.coansys.disambiguation.features.Disambiguator;
+import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.Disambiguator;
+
 
 /**
  * A heuristic for assessing whether two objects, described by two lists of feature values,
@@ -35,7 +38,7 @@ import pl.edu.icm.coansys.disambiguation.features.Disambiguator;
  * @version 1.0
  * @since 2012-08-07
  */
-public class PigDisambiguator extends Disambiguator{
+public class PigDisambiguator{
 	private Disambiguator d = null;
 	
 	public PigDisambiguator(Disambiguator d) {
@@ -69,7 +72,7 @@ public class PigDisambiguator extends Disambiguator{
 	
 
 	public double calculateAffinity( DataBag f1, DataBag f2 ) {
-		return d.calculateAffinity( ToList.execute( f1 ), ToList.execute( f2 ) );
+		return d.calculateAffinity( toList( f1 ), toList( f2 ) );
 	}
 	
 	public double calculateAffinity( String f1, String f2 ) {
@@ -82,12 +85,21 @@ public class PigDisambiguator extends Disambiguator{
 		return d.calculateAffinity( fl1, fl2 );
 	}
 	
-	/**
-	 * 
-	 * @return {@link PigDisambiguator} id.
-	 */
-    @Override
-	public String getName(){
-		return d.getName();
-	}
+	private List<Object> toList( DataBag db ) {
+        Iterator<Tuple> it = db.iterator();
+        List<Object> ret = new LinkedList<Object>();
+
+        while ( it.hasNext() ) {
+        	Tuple el = it.next();
+        	if ( el.size() == 0 ) {
+        		continue;
+        	}
+			try {
+				ret.add( el.get(0) );
+			} catch (ExecException e) {
+				//cannot happen
+			}
+        }
+        return ret;
+    }
 }

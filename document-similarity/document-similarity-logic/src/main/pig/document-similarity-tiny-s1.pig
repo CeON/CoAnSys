@@ -45,7 +45,7 @@
 REGISTER '$commonJarsPath'
 
 DEFINE WeightedTFIDF pl.edu.icm.coansys.similarity.pig.udf.TFIDF('weighted');
-DEFINE StemmedPairs pl.edu.icm.coansys.similarity.pig.udf.StemmedPairs();
+DEFINE StemmedPairs pl.edu.icm.coansys.similarity.pig.udf.ExtendedStemmedPairs();
 DEFINE KeywordSimilarity pl.edu.icm.coansys.similarity.pig.udf.AvgSimilarity('dks');
 DEFINE DocsCombinedSimilarity pl.edu.icm.coansys.similarity.pig.udf.AvgSimilarity('dkcs');
 
@@ -53,8 +53,8 @@ SET default_parallel $parallel
 SET mapred.child.java.opts $mapredChildJavaOpts
 SET pig.tmpfilecompression true
 SET pig.tmpfilecompression.codec $tmpCompressionCodec
-%DEFAULT ds_scheduler default
-SET mapred.fairscheduler.pool $ds_scheduler
+%DEFAULT scheduler default
+SET mapred.fairscheduler.pool $scheduler
 --SET pig.noSplitCombination true;
 IMPORT 'macros.pig';
 

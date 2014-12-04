@@ -29,6 +29,8 @@ import pl.edu.icm.cermine.bibref.model.BibEntry
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
 object ReferencesToEntitiesConverter extends MyScoobiApp {
+  def maxSupportedCitationLength = 2000
+
   def run() {
     var parser: (()=> BibReferenceParser[BibEntry] with NoOpClose) = null
     var inUri: String = null
@@ -47,7 +49,7 @@ object ReferencesToEntitiesConverter extends MyScoobiApp {
 
     val entities = fromSequenceFile[String, String](inUri)
       .flatMapWithResource(parser()) {
-      case (the_parser, (id, text)) if !text.isEmpty =>
+      case (the_parser, (id, text)) if !text.isEmpty && text.length <= maxSupportedCitationLength =>
         try {
           Some(id, MatchableEntity.fromUnparsedReference(the_parser, id, text))
         } catch {

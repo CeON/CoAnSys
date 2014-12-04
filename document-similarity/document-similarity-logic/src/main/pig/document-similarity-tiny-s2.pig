@@ -53,8 +53,8 @@ SET default_parallel $parallel
 SET mapred.child.java.opts $mapredChildJavaOpts
 SET pig.tmpfilecompression true
 SET pig.tmpfilecompression.codec $tmpCompressionCodec
-%DEFAULT ds_scheduler default
-SET mapred.fairscheduler.pool $ds_scheduler
+%DEFAULT scheduler default
+SET mapred.fairscheduler.pool $scheduler
 --SET pig.noSplitCombination true;
 IMPORT 'macros.pig';
 
@@ -71,7 +71,7 @@ IMPORT 'macros.pig';
 /*** (a) load, order and assign to tfidf_all_topn_projected ************************/
 /*** (b) store results (c) close current tasks *************************************/
 tfidf_all_topn_projected = LOAD '$outputPath$TFIDF_TOPN_ALL_TEMP' 
-	AS (docId: chararray, term: chararray, tfidf: double);
+        AS (docId: chararray, term: chararray, tfidf: double);
 tfidf_all_topn_sorted = order tfidf_all_topn_projected by term asc;
 %default one '1'
 %default two '2'
@@ -80,14 +80,17 @@ STORE tfidf_all_topn_sorted  INTO '$outputPath$TFIDF_TOPN_ALL_SUBDIR$two';
 exec;
 /*** (d) load sorted data and duplicate *******************************************/
 /*** (f) perform doc-sim calculation [MERGE-SORT] (g) close current tasks *********/
-tfidf_all_topn_sorted_orig = LOAD '$outputPath$TFIDF_TOPN_ALL_SUBDIR$one' 
-	AS (docId: chararray, term: chararray, tfidf: double);
-tfidf_all_topn_sorted_dupl = LOAD '$outputPath$TFIDF_TOPN_ALL_SUBDIR$two' 
-	AS (docId: chararray, term: chararray, tfidf: double);
+tfidf_all_topn_orig = LOAD '$outputPath$TFIDF_TOPN_ALL_SUBDIR$one' 
+        AS (docId: chararray, term: chararray, tfidf: double);
+tfidf_all_topn_orig_sorted = order tfidf_all_topn_orig by term asc;
+
+tfidf_all_topn_dupl = LOAD '$outputPath$TFIDF_TOPN_ALL_SUBDIR$two' 
+        AS (docId: chararray, term: chararray, tfidf: double);
+tfidf_all_topn_dupl_sorted = order tfidf_all_topn_dupl by term asc;
+
 -- calculate and store document similarity for all documents
-document_similarity = calculate_pairwise_similarity(tfidf_all_topn_sorted_orig,
-		tfidf_all_topn_sorted_dupl, docId, term, tfidf, '::',$parallel);
+document_similarity = calculate_pairwise_similarity
+	(tfidf_all_topn_orig_sorted,
+                tfidf_all_topn_dupl_sorted, docId, term, tfidf, '::',$parallel);
 STORE document_similarity INTO '$outputPath$SIMILARITY_ALL_DOCS_SUBDIR';
-
 /********************* END:MERGE-SORT ZONE *****************************************/
-

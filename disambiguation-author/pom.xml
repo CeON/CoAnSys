@@ -1,18 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <parent>
-        <artifactId>coansys</artifactId>
-        <groupId>pl.edu.icm.coansys</groupId>
-        <version>1.4-SNAPSHOT</version>
-    </parent>
-    <modelVersion>4.0.0</modelVersion>
-    
+	<parent>
+		<artifactId>coansys</artifactId>
+		<groupId>pl.edu.icm.coansys</groupId>
+		<version>1.7-SNAPSHOT</version>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+
 	<artifactId>disambiguation-author</artifactId>
 	<name>Author Disambiguation Tool</name>
-    <description>The tool for Author Name Disambiguation (AND)</description>
+	<description>The tool for Author Name Disambiguation (AND)</description>
 	<packaging>pom</packaging>
-    <modules>
-        <module>disambiguation-author-workflow</module>
-        <module>disambiguation-author-logic</module>
-    </modules>    
+
+	<properties>
+		<oozie-maven-plugin.version>1.2</oozie-maven-plugin.version>
+		<!-- <oozie-runner.version>1.1</oozie-runner.version> -->
+	</properties>
+
+	<modules>
+		<module>disambiguation-author-workflow</module>
+		<module>disambiguation-author-logic</module>
+		<module>disambiguation-author-comac-facade</module>
+	</modules>
 </project>

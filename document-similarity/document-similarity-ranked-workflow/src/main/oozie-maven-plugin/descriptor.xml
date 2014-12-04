@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<oozie-maven-plugin>
+<!--
+	Main deps to document-similarity-ranked-workflow
+-->
+	<main-project-pig>
+		<scripts>
+			<root>pig-main</root>
+			<preserve>false</preserve>
+			<includes>
+				<include>.*document-similarity-s.*\.pig</include>
+				<include>.*rank\.py</include>
+			</includes>
+		</scripts>
+		<scripts>
+			<root>pig-macros</root>
+			<preserve>false</preserve>
+			<includes>
+				<include>.*\.pig</include>
+			</includes>
+		</scripts>
+	</main-project-pig>
+</oozie-maven-plugin>

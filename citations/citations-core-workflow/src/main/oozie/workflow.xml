@@ -1,0 +1,467 @@
+<!--
+  ~ This file is part of CoAnSys project.
+  ~ Copyright (c) 2012-2013 ICM-UW
+  ~
+  ~ CoAnSys is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ CoAnSys is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<workflow-app xmlns="uri:oozie:workflow:0.4" name="citations-core-workflow">
+    <parameters>
+        <property>
+            <name>jobTracker</name>
+        </property>
+        <property>
+            <name>nameNode</name>
+        </property>
+        <property>
+            <name>queueName</name>
+            <value>default</value>
+        </property>
+        <property>
+            <name>pool</name>
+            <value>default</value>
+        </property>
+        <property>
+            <name>reduceTasks</name>
+            <value>36</value>
+        </property>
+        <property>
+            <name>jobShuffleInputBufferPercent</name>
+            <value>0.70</value>
+        </property>
+        <property>
+            <name>mapredChildJavaOpts</name>
+            <!-- we need to put something other than an empty string here to get a proper default value -->
+            <value>-showversion</value>
+        </property>
+        <property>
+            <name>maxDocumentsPerBucket</name>
+            <value>100</value>
+            <description>This setting is used in heuristic, in hash matching; buckets exceeding this limit will be omitted.</description>
+        </property>
+        <property>
+            <name>workingDirectory</name>
+        </property>
+        <property>
+            <name>sourceEntities</name>
+        </property>
+        <property>
+            <name>destinationEntities</name>
+        </property>
+        <property>
+            <name>output</name>
+        </property>
+    </parameters>
+    <global>
+        <job-tracker>${jobTracker}</job-tracker>
+        <name-node>${nameNode}</name-node>
+        <configuration>
+            <property>
+                <name>mapred.mapper.new-api</name>
+                <value>true</value>
+            </property>
+            <property>
+                <name>mapred.reducer.new-api</name>
+                <value>true</value>
+            </property>
+            <property>
+                <name>mapred.job.queue.name</name>
+                <value>${queueName}</value>
+            </property>
+            <property>
+                <name>oozie.launcher.mapred.fairscheduler.pool</name>
+                <value>${pool}</value>
+            </property>
+            <property>
+                <name>mapred.fairscheduler.pool</name>
+                <value>${pool}</value>
+            </property>
+            <property>
+                <name>mapreduce.inputformat.class</name>
+                <value>org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat</value>
+            </property>
+            <property>
+                <name>mapreduce.outputformat.class</name>
+                <value>org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat</value>
+            </property>
+            <property>
+                <name>mapred.reduce.tasks</name>
+                <value>${reduceTasks}</value>
+            </property>
+            <property>
+                <name>mapred.job.shuffle.input.buffer.percent</name>
+                <value>${jobShuffleInputBufferPercent}</value>
+            </property>
+            <property>
+                <name>mapred.child.java.opts</name>
+                <value>${mapredChildJavaOpts}</value>
+            </property>
+        </configuration>
+    </global>
+    <start to="prepare"/>
+
+    <action name="prepare">
+        <fs>
+            <delete path="${workingDirectory}"/>
+            <mkdir path="${workingDirectory}"/>
+        </fs>
+        <ok to="heuristic-1"/>
+        <error to="fail"/>
+    </action>
+
+    <action name="heuristic-1">
+        <sub-workflow>
+            <app-path>${wf:appPath()}/heuristic-workflow</app-path>
+            <propagate-configuration/>
+            <configuration>
+                <property>
+                    <name>workingDirectory</name>
+                    <value>${workingDirectory}/heuristic-1_workflow</value>
+                </property>
+                <property>
+                    <name>sourceEntities</name>
+                    <value>${sourceEntities}</value>
+                </property>
+                <property>
+                    <name>destinationEntities</name>
+                    <value>${destinationEntities}</value>
+                </property>
+                <property>
+                    <name>citationHasher</name>
+                    <value>pl.edu.icm.coansys.citations.hashers.CitationNameYearPagesHashGenerator</value>
+                </property>
+                <property>
+                    <name>documentHasher</name>
+                    <value>pl.edu.icm.coansys.citations.hashers.DocumentNameYearPagesHashGenerator</value>
+                </property>
+                <property>
+                    <name>unmatched</name>
+                    <value>${workingDirectory}/unmatched-1</value>
+                </property>
+                <property>
+                    <name>output</name>
+                    <value>${workingDirectory}/heuristic-out-1</value>
+                </property>
+            </configuration>
+        </sub-workflow>
+        <ok to="heuristic-2"/>
+        <error to="fail"/>
+    </action>
+
+    <action name="heuristic-2">
+        <sub-workflow>
+            <app-path>${wf:appPath()}/heuristic-workflow</app-path>
+            <propagate-configuration/>
+            <configuration>
+                <property>
+                    <name>workingDirectory</name>
+                    <value>${workingDirectory}/heuristic-2_workflow</value>
+                </property>
+                <property>
+                    <name>sourceEntities</name>
+                    <value>${workingDirectory}/unmatched-1</value>
+                </property>
+                <property>
+                    <name>destinationEntities</name>
+                    <value>${destinationEntities}</value>
+                </property>
+                <property>
+                    <name>citationHasher</name>
+                    <value>pl.edu.icm.coansys.citations.hashers.CitationNameYearPagesHashGenerator</value>
+                </property>
+                <property>
+                    <name>documentHasher</name>
+                    <value>pl.edu.icm.coansys.citations.hashers.DocumentNameYearNumNumHashGenerator</value>
+                </property>
+                <property>
+                    <name>unmatched</name>
+                    <value>${workingDirectory}/unmatched-2</value>
+                </property>
+                <property>
+                    <name>output</name>
+                    <value>${workingDirectory}/heuristic-out-2</value>
+                </property>
+            </configuration>
+        </sub-workflow>
+        <ok to="heuristic-3"/>
+        <error to="fail"/>
+    </action>
+
+    <action name="heuristic-3">
+        <sub-workflow>
+            <app-path>${wf:appPath()}/heuristic-workflow</app-path>
+            <propagate-configuration/>
+            <configuration>
+                <property>
+                    <name>workingDirectory</name>
+                    <value>${workingDirectory}/heuristic-3_workflow</value>
+                </property>
+                <property>
+                    <name>sourceEntities</name>
+                    <value>${workingDirectory}/unmatched-2</value>
+                </property>
+                <property>
+                    <name>destinationEntities</name>
+                    <value>${destinationEntities}</value>
+                </property>
+                <property>
+                    <name>citationHasher</name>
+                    <value>pl.edu.icm.coansys.citations.hashers.CitationNameYearHashGenerator</value>
+                </property>
+                <property>
+                    <name>documentHasher</name>
+                    <value>pl.edu.icm.coansys.citations.hashers.DocumentNameYearStrictHashGenerator</value>
+                </property>
+                <property>
+                    <name>unmatched</name>
+                    <value>${workingDirectory}/unmatched-3</value>
+                </property>
+                <property>
+                    <name>output</name>
+                    <value>${workingDirectory}/heuristic-out-3</value>
+                </property>
+            </configuration>
+        </sub-workflow>
+        <ok to="heuristic-4"/>
+        <error to="fail"/>
+    </action>
+
+    <action name="heuristic-4">
+        <sub-workflow>
+            <app-path>${wf:appPath()}/heuristic-workflow</app-path>
+            <propagate-configuration/>
+            <configuration>
+                <property>
+                    <name>workingDirectory</name>
+                    <value>${workingDirectory}/heuristic-4_workflow</value>
+                </property>
+                <property>
+                    <name>sourceEntities</name>
+                    <value>${workingDirectory}/unmatched-3</value>
+                </property>
+                <property>
+                    <name>destinationEntities</name>
+                    <value>${destinationEntities}</value>
+                </property>
+                <property>
+                    <name>citationHasher</name>
+                    <value>pl.edu.icm.coansys.citations.hashers.CitationNameYearHashGenerator</value>
+                </property>
+                <property>
+                    <name>documentHasher</name>
+                    <value>pl.edu.icm.coansys.citations.hashers.DocumentNameYearHashGenerator</value>
+                </property>
+                <property>
+                    <name>output</name>
+                    <value>${workingDirectory}/heuristic-out-4</value>
+                </property>
+            </configuration>
+        </sub-workflow>
+        <ok to="doc-attacher"/>
+        <error to="fail"/>
+    </action>
+
+    <action name="doc-attacher">
+        <map-reduce>
+            <prepare>
+                <delete path="${workingDirectory}/heuristic_with_docs"/>
+            </prepare>
+            <configuration>
+                <property>
+                    <name>mapreduce.inputformat.class</name>
+                    <value>org.apache.hadoop.mapreduce.lib.input.DelegatingInputFormat</value>
+                </property>
+                <property>
+                    <name>mapreduce.map.class</name>
+                    <value>org.apache.hadoop.mapreduce.lib.input.DelegatingMapper</value>
+                </property>
+                <property>
+                    <name>mapred.input.dir.mappers</name>
+                    <value>
+                        ${workingDirectory}/heuristic-out-*;pl.edu.icm.coansys.citations.mappers.SwapperMarker,${destinationEntities};pl.edu.icm.coansys.citations.mappers.EntityMarker
+                    </value>
+                </property>
+                <property>
+                    <name>mapred.input.dir.formats</name>
+                    <value>
+                        ${workingDirectory}/heuristic-out-*;org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat,${destinationEntities};org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat
+                    </value>
+                </property>
+                <property>
+                    <name>coansys.citations.mark.entities</name>
+                    <value>true</value>
+                </property>
+                <property>
+                    <name>coansys.citations.mark.ids</name>
+                    <value>false</value>
+                </property>
+                <property>
+                    <name>mapred.mapoutput.key.class</name>
+                    <value>pl.edu.icm.coansys.citations.data.MarkedText</value>
+                </property>
+                <property>
+                    <name>mapred.mapoutput.value.class</name>
+                    <value>pl.edu.icm.coansys.citations.data.TextWithBytesWritable</value>
+                </property>
+                <property>
+                    <name>mapreduce.partitioner.class</name>
+                    <value>pl.edu.icm.coansys.citations.data.MarkedTextPartitioner</value>
+                </property>
+                <property>
+                    <name>mapred.output.value.groupfn.class</name>
+                    <value>pl.edu.icm.coansys.citations.data.MarkedTextGroupComparator</value>
+                </property>
+                <property>
+                    <name>mapred.output.key.comparator.class</name>
+                    <value>pl.edu.icm.coansys.citations.data.MarkedTextSortComparator</value>
+                </property>
+                <property>
+                    <name>mapreduce.reduce.class</name>
+                    <value>pl.edu.icm.coansys.citations.reducers.DocumentAttacher</value>
+                </property>
+                <property>
+                    <name>mapred.output.dir</name>
+                    <value>${workingDirectory}/heuristic_with_docs</value>
+                </property>
+                <property>
+                    <name>mapred.output.key.class</name>
+                    <value>pl.edu.icm.coansys.citations.data.MarkedText</value>
+                </property>
+                <property>
+                    <name>mapred.output.value.class</name>
+                    <value>pl.edu.icm.coansys.citations.data.TextWithBytesWritable</value>
+                </property>
+            </configuration>
+        </map-reduce>
+        <ok to="cit-attacher-and-preassessor"/>
+        <error to="fail"/>
+    </action>
+
+    <action name="cit-attacher-and-preassessor">
+        <map-reduce>
+            <prepare>
+                <delete path="${workingDirectory}/to_assess"/>
+            </prepare>
+            <configuration>
+                <property>
+                    <name>mapreduce.inputformat.class</name>
+                    <value>org.apache.hadoop.mapreduce.lib.input.DelegatingInputFormat</value>
+                </property>
+                <property>
+                    <name>mapreduce.map.class</name>
+                    <value>org.apache.hadoop.mapreduce.lib.input.DelegatingMapper</value>
+                </property>
+                <property>
+                    <name>mapred.input.dir.mappers</name>
+                    <value>
+                        ${workingDirectory}/heuristic_with_docs;org.apache.hadoop.mapreduce.Mapper,${sourceEntities};pl.edu.icm.coansys.citations.mappers.EntityMarker
+                    </value>
+                </property>
+                <property>
+                    <name>mapred.input.dir.formats</name>
+                    <value>
+                        ${workingDirectory}/heuristic_with_docs;org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat,${sourceEntities};org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat
+                    </value>
+                </property>
+                <property>
+                    <name>coansys.citations.mark.entities</name>
+                    <value>true</value>
+                </property>
+                <property>
+                    <name>mapred.mapoutput.key.class</name>
+                    <value>pl.edu.icm.coansys.citations.data.MarkedText</value>
+                </property>
+                <property>
+                    <name>mapred.mapoutput.value.class</name>
+                    <value>pl.edu.icm.coansys.citations.data.TextWithBytesWritable</value>
+                </property>
+                <property>
+                    <name>mapreduce.partitioner.class</name>
+                    <value>pl.edu.icm.coansys.citations.data.MarkedTextPartitioner</value>
+                </property>
+                <property>
+                    <name>mapred.output.value.groupfn.class</name>
+                    <value>pl.edu.icm.coansys.citations.data.MarkedTextGroupComparator</value>
+                </property>
+                <property>
+                    <name>mapred.output.key.comparator.class</name>
+                    <value>pl.edu.icm.coansys.citations.data.MarkedTextSortComparator</value>
+                </property>
+                <property>
+                    <name>mapreduce.reduce.class</name>
+                    <value>pl.edu.icm.coansys.citations.reducers.CitationAttacherPreassessor</value>
+                </property>
+                <property>
+                    <name>mapred.output.dir</name>
+                    <value>${workingDirectory}/to_assess</value>
+                </property>
+                <property>
+                    <name>mapred.output.key.class</name>
+                    <value>org.apache.hadoop.io.BytesWritable</value>
+                </property>
+                <property>
+                    <name>mapred.output.value.class</name>
+                    <value>org.apache.hadoop.io.BytesWritable</value>
+                </property>
+            </configuration>
+        </map-reduce>
+        <ok to="assessor"/>
+        <error to="fail"/>
+    </action>
+    
+    <action name="assessor">
+        <map-reduce>
+            <prepare>
+                <delete path="${output}"/>
+            </prepare>
+            <configuration>
+                <property>
+                    <name>mapreduce.map.class</name>
+                    <value>pl.edu.icm.coansys.citations.mappers.EntityAssesor</value>
+                </property>
+                <property>
+                    <name>mapreduce.reduce.class</name>
+                    <value>pl.edu.icm.coansys.citations.reducers.BestSelector</value>
+                </property>
+                <property>
+                    <name>mapreduce.combine.class</name>
+                    <value>pl.edu.icm.coansys.citations.reducers.BestSelector</value>
+                </property>
+                <property>
+                    <name>mapred.input.dir</name>
+                    <value>${workingDirectory}/to_assess</value>
+                </property>
+                <property>
+                    <name>mapred.output.dir</name>
+                    <value>${output}</value>
+                </property>
+                <property>
+                    <name>mapred.output.key.class</name>
+                    <value>pl.edu.icm.coansys.citations.data.TextWithBytesWritable</value>
+                </property>
+                <property>
+                    <name>mapred.output.value.class</name>
+                    <value>org.apache.hadoop.io.Text</value>
+                </property>
+            </configuration>
+        </map-reduce>
+        <ok to="end"/>
+        <error to="fail"/>
+    </action>
+
+    <kill name="fail">
+        <message>Workflow failed, error message [${wf:errorMessage(wf:lastErrorNode())}]</message>
+    </kill>
+    <end name="end"/>
+</workflow-app>

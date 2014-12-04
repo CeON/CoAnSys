@@ -5,6 +5,6 @@
 #
 
 cd ../../..
-mvn clean install 
+mvn clean install -D skipTests
 mkdir src/main/pig/lib
-cp target/*-SNAPSHOT*.jar src/main/pig/lib
+cp target/*SNAPSHOT.jar src/main/pig/lib
