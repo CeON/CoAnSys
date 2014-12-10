@@ -59,7 +59,7 @@ public class DuplicateWorkDetector extends Configured implements Tool {
     public int run(String[] args) throws Exception {
         checkArguments(args);
         
-        String inputFile = args[0];
+        String inputFiles = args[0];
         
         String jobOutputDir = args[1];
         
@@ -88,7 +88,7 @@ public class DuplicateWorkDetector extends Configured implements Tool {
         job.setOutputValueClass(Text.class);
         
         job.setInputFormatClass(SequenceFileInputFormat.class);
-        SequenceFileInputFormat.addInputPath(job, new Path(inputFile));
+        SequenceFileInputFormat.addInputPaths(job, inputFiles);
         
         job.setOutputFormatClass(SequenceFileOutputFormat.class);
         SequenceFileOutputFormat.setOutputPath(job, new Path(jobOutputDir));
