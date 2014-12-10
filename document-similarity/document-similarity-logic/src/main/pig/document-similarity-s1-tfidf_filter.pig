@@ -30,7 +30,7 @@
 %default tfidfTopnTermPerDocument 20
 %default similarityTopnDocumentPerDocument 20
 %default tfidfMinValue 0.4
-
+%default threshold_num_of_vector_elems_length 0
 %default sample 0.1
 %default parallel 10
 %default tmpCompressionCodec gz
@@ -98,4 +98,9 @@ STORE tfidf_all INTO '$outputPath$TFIDF_NON_WEIGHTED_SUBDIR';
 -- calculate and store topn terms per document in all results
 tfidf_all_topn = get_topn_per_group(tfidf_all, docId, tfidf, 'desc', $tfidfTopnTermPerDocument);
 tfidf_all_topn_projected = FOREACH tfidf_all_topn GENERATE top::docId AS docId, top::term AS term, top::tfidf AS tfidf;
-STORE tfidf_all_topn_projected  INTO '$outputPath$TFIDF_TOPN_ALL_TEMP';
+
+X = GROUP tfidf_all_topn_projected BY docId;
+X1 = FOREACH X GENERATE tfidf_all_topn_projected, COUNT(tfidf_all_topn_projected) as cnt;
+X2 = FILTER X1 BY cnt >= $threshold_num_of_vector_elems_length;
+X3 = FOREACH X2 GENERATE FLATTEN(tfidf_all_topn_projected) as (docId, term, tfidf);
+STORE X3  INTO '$outputPath$TFIDF_TOPN_ALL_TEMP';

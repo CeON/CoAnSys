@@ -41,6 +41,11 @@
             <value>0.70</value>
         </property>
         <property>
+            <name>mapredChildJavaOpts</name>
+            <!-- we need to put something other than an empty string here to get a proper default value -->
+            <value>-showversion</value>
+        </property>
+        <property>
             <name>maxDocumentsPerBucket</name>
             <value>100</value>
             <description>This setting is used in heuristic, in hash matching; buckets exceeding this limit will be omitted.</description>
@@ -97,6 +102,10 @@
             <property>
                 <name>mapred.job.shuffle.input.buffer.percent</name>
                 <value>${jobShuffleInputBufferPercent}</value>
+            </property>
+            <property>
+                <name>mapred.child.java.opts</name>
+                <value>${mapredChildJavaOpts}</value>
             </property>
         </configuration>
     </global>

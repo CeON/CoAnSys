@@ -1,5 +1,4 @@
 <workflow-app name='${project}_${subproject}' xmlns="uri:oozie:workflow:0.4">
-
 	<parameters>
 		<property>
 			<name>scheduler</name>
@@ -8,6 +7,10 @@
 		<property>
 			<name>remove_sideproducts</name>
 			<value>true</value>
+		</property>
+		<property>
+			<name>threshold_num_of_vector_elems_length</name>
+			<value>0</value>
 		</property>
 		<property>
 			<name>tfidfMinValue</name>
@@ -159,7 +162,7 @@
 			<param>commonJarsPath=${commonJarsPath}</param>
 			<param>parallel=${parallel}</param>
 			<param>tmpCompressionCodec=${tmpCompressionCodec}</param>
-			
+			<param>threshold_num_of_vector_elems_length=${threshold_num_of_vector_elems_length}</param>
 			<param>mapredChildJavaOpts=${mapredChildJavaOpts}</param>
 			<param>sample=${sample}</param>
 			<param>tfidfTopnTermPerDocument=${tfidfTopnTermPerDocument}
@@ -185,16 +188,14 @@
 			<script>document-similarity-s1-rank_filter.pig</script>
 			<param>inputPath=${bwndataMetadataInputPath}</param>
 			<param>outputPath=${similarityOutputPath}</param>
+			<param>threshold_num_of_vector_elems_length=${threshold_num_of_vector_elems_length}</param>
 			<param>commonJarsPath=${commonJarsPath}</param>
 			<param>parallel=${parallel}</param>
 			<param>tmpCompressionCodec=${tmpCompressionCodec}</param>
-			
 			<param>mapredChildJavaOpts=${mapredChildJavaOpts}</param>
 			<param>sample=${sample}</param>
-			<param>tfidfTopnTermPerDocument=${tfidfTopnTermPerDocument}
-			</param>
-			<param>similarityTopnDocumentPerDocument=${similarityTopnDocumentPerDocument}
-			</param>
+			<param>tfidfTopnTermPerDocument=${tfidfTopnTermPerDocument}</param>
+			<param>similarityTopnDocumentPerDocument=${similarityTopnDocumentPerDocument}</param>
 			<param>removal_least_used=${removal_least_used}</param>
 			<param>removal_rate=${removal_rate}</param>
 			<param>scheduler=${scheduler}</param>
@@ -215,13 +216,11 @@
 			<param>commonJarsPath=${commonJarsPath}</param>
 			<param>parallel=${parallel}</param>
 			<param>tmpCompressionCodec=${tmpCompressionCodec}</param>
-			
+			<param>threshold_num_of_vector_elems_length=${threshold_num_of_vector_elems_length}</param>
 			<param>mapredChildJavaOpts=${mapredChildJavaOpts}</param>
 			<param>sample=${sample}</param>
-			<param>tfidfTopnTermPerDocument=${tfidfTopnTermPerDocument}
-			</param>
-			<param>similarityTopnDocumentPerDocument=${similarityTopnDocumentPerDocument}
-			</param>
+			<param>tfidfTopnTermPerDocument=${tfidfTopnTermPerDocument}</param>
+			<param>similarityTopnDocumentPerDocument=${similarityTopnDocumentPerDocument}</param>
 			<param>tfidfMinValue=${tfidfMinValue}</param>
 			<param>scheduler=${scheduler}</param>
 			<file>macros.pig#macros.pig</file>
@@ -244,10 +243,8 @@
 			
 			<param>mapredChildJavaOpts=${mapredChildJavaOpts}</param>
 			<param>sample=${sample}</param>
-			<param>tfidfTopnTermPerDocument=${tfidfTopnTermPerDocument}
-			</param>
-			<param>similarityTopnDocumentPerDocument=${similarityTopnDocumentPerDocument}
-			</param>
+			<param>tfidfTopnTermPerDocument=${tfidfTopnTermPerDocument}</param>
+			<param>similarityTopnDocumentPerDocument=${similarityTopnDocumentPerDocument}</param>
 			<param>removal_least_used=${removal_least_used}</param>
 			<param>removal_rate=${removal_rate}</param>
 			<param>scheduler=${scheduler}</param>
