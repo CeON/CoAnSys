@@ -7,7 +7,7 @@
 
     <groupId>pl.edu.icm.coansys</groupId>
     <artifactId>models</artifactId>
-    <version>1.7-SNAPSHOT</version> 
+    <version>1.7</version> 
 
     <properties>
         <protobuf.java.version>2.4.1</protobuf.java.version>
@@ -25,7 +25,7 @@
         <connection>scm:git:ssh://git@github.com/CeON/CoAnSys.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/CeON/CoAnSys.git</developerConnection>
         <url>https://github.com/CeON/CoAnSys</url>
-      <tag>HEAD</tag>
+      <tag>coansys-1.7</tag>
   </scm>
 
     <distributionManagement>
