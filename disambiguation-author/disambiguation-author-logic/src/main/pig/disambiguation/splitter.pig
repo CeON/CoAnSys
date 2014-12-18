@@ -81,7 +81,7 @@ set mapred.fairscheduler.pool $and_scheduler
 A1 = LOAD '$and_inputDocsData' USING pl.edu.icm.coansys.commons.pig.udf.RichSequenceFileLoader('org.apache.hadoop.io.Text', 'org.apache.hadoop.io.BytesWritable') as (key:chararray, value:bytearray);
 A2 = sample A1 $and_sample;
 
-B1 = foreach A2 generate flatten(snameDocumentMetaExtractor($1)) as (dockey:chararray, cId:chararray, sname:int, metadata:map[{(int)}]);
+B1 = foreach A2 generate flatten(snameDocumentMetaExtractor($1)) as (dockey:chararray, cId:chararray, sname, metadata:map[{(int)}]);
 
 B = FILTER B1 BY (dockey is not null);
 
