@@ -36,7 +36,7 @@
 %DEFAULT and_lang 'all'
 %DEFAULT and_skip_empty_features 'true'
 %DEFAULT and_use_extractor_id_instead_name 'true'
-DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_CONTRIBDATA_GIVENDATA('-featureinfo $and_feature_info -lang $and_lang -skipEmptyFeatures $and_skip_empty_features -useIdsForExtractors $and_use_extractor_id_instead_name');
+DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_CONTRIBDATA_GIVENDATA('-snameToString true -featureinfo $and_feature_info -lang $and_lang -skipEmptyFeatures $and_skip_empty_features -useIdsForExtractors $and_use_extractor_id_instead_name');
 
 %DEFAULT and_threshold '-0.8'
 %DEFAULT and_statistics 'false'
