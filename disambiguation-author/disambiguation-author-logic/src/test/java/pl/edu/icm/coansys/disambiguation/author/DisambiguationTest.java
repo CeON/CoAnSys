@@ -71,54 +71,54 @@ public class DisambiguationTest {
     // Follow name scheme of tests: package_class[_method]
 	// TODO: split tests into correct packages, rename
 	
-   	@org.testng.annotations.Test(groups = {"fast"})
-   	public void pig_normalizers_ALL() {
-		String text = "é{(Zaaaażółć 'gęślą', \"jaź(ń)\"}]# æ 1234567890 !@#$%^&*() _+=?/>.<,-";
-		String diacRmExpected = "e{(Zaaaazolc 'gesla', \"jaz(n)\"}]# ae 1234567890 !@#$%^&*() _+=?/>.<,-";
-		String toELCExpected = "ezaaaazolc gesla jazn ae 1234567890";
-		Integer toHashExpected = -1486600746;
-		Integer DisExtrExpected = diacRmExpected.toLowerCase().hashCode();
-		Object a, b, c, d, e, f;
-		String tmp;
-		
-		// testing critical changes in DiacriticsRemover
-		tmp = DiacriticsRemover.removeDiacritics( text );
-		assert( tmp.equals(diacRmExpected) );
-		
-		// testing normalizers
-		a = (new ToEnglishLowerCase()).normalize( text );
-		assert( a.equals( toELCExpected ) );
-		b = (new ToEnglishLowerCase()).normalize( a );
-		assert( a.equals( b ) );
-		a = (new ToHashCode()).normalize( text );
-		assert( a.equals( toHashExpected ) );
-		a = (new ToHashCode()).normalize( (Object) text );
-		assert( a.equals( toHashExpected ) );
-		f = (new pl.edu.icm.coansys.disambiguation.author.normalizers.DiacriticsRemover()).normalize((Object) text);
-		assert( f.equals( diacRmExpected ) );
-		
-		// checking null argument / multi spaces:
-		String doublespace = "  ";
-		c = (new ToEnglishLowerCase()).normalize( doublespace );
-		assert( c == null );
-		
-		String manyspaces = "  a  b  ";
-		d = (new ToEnglishLowerCase()).normalize( manyspaces );
-		assert( d.equals("a b") );			
-		
-		e = (new ToEnglishLowerCase()).normalize( null );
-		assert( e == null );		
-		e = (new ToHashCode()).normalize( null );
-		assert( e == null );		
-
-		
-		// DisambiguationExtractor - normalizeExtracted tests:
-		// testing normalize tool, which is using after data extraction
-		DisambiguationExtractorDocument DED = 
-				new DisambiguationExtractorDocument();
-		a = DED.normalizeExtracted( text );
-		assert( a.equals( DisExtrExpected ) );
-   	}
+//   	@org.testng.annotations.Test(groups = {"fast"})
+//   	public void pig_normalizers_ALL() {
+//		String text = "é{(Zaaaażółć 'gęślą', \"jaź(ń)\"}]# æ 1234567890 !@#$%^&*() _+=?/>.<,-";
+//		String diacRmExpected = "e{(Zaaaazolc 'gesla', \"jaz(n)\"}]# ae 1234567890 !@#$%^&*() _+=?/>.<,-";
+//		String toELCExpected = "ezaaaazolc gesla jazn ae 1234567890";
+//		Integer toHashExpected = -1486600746;
+//		Integer DisExtrExpected = diacRmExpected.toLowerCase().hashCode();
+//		Object a, b, c, d, e, f;
+//		String tmp;
+//		
+//		// testing critical changes in DiacriticsRemover
+//		tmp = DiacriticsRemover.removeDiacritics( text );
+//		assert( tmp.equals(diacRmExpected) );
+//		
+//		// testing normalizers
+//		a = (new ToEnglishLowerCase()).normalize( text );
+//		assert( a.equals( toELCExpected ) );
+//		b = (new ToEnglishLowerCase()).normalize( a );
+//		assert( a.equals( b ) );
+//		a = (new ToHashCode()).normalize( text );
+//		assert( a.equals( toHashExpected ) );
+//		a = (new ToHashCode()).normalize( (Object) text );
+//		assert( a.equals( toHashExpected ) );
+//		f = (new pl.edu.icm.coansys.disambiguation.author.normalizers.DiacriticsRemover()).normalize((Object) text);
+//		assert( f.equals( diacRmExpected ) );
+//		
+//		// checking null argument / multi spaces:
+//		String doublespace = "  ";
+//		c = (new ToEnglishLowerCase()).normalize( doublespace );
+//		assert( c == null );
+//		
+//		String manyspaces = "  a  b  ";
+//		d = (new ToEnglishLowerCase()).normalize( manyspaces );
+//		assert( d.equals("a b") );			
+//		
+//		e = (new ToEnglishLowerCase()).normalize( null );
+//		assert( e == null );		
+//		e = (new ToHashCode()).normalize( null );
+//		assert( e == null );		
+//
+//		
+//		// DisambiguationExtractor - normalizeExtracted tests:
+//		// testing normalize tool, which is using after data extraction
+//		DisambiguationExtractorDocument DED = 
+//				new DisambiguationExtractorDocument();
+//		a = DED.normalizeExtracted( text );
+//		assert( a.equals( DisExtrExpected ) );
+//   	}
    	
    	
    	@org.testng.annotations.Test(groups = {"fast"})
