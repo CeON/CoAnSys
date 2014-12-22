@@ -30,7 +30,7 @@ public class DisambiguationExtractor {
 		normalizers = new PigNormalizer[] {
 				new DiacriticsRemover(), 
 				new ToLowerCase(),
-				//new ToHashCode()
+				new ToHashCode()
 			};
 	}
 	

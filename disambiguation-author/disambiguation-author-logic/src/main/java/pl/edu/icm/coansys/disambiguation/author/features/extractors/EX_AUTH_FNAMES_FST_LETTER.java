@@ -30,7 +30,7 @@ public class EX_AUTH_FNAMES_FST_LETTER extends EX_AUTH_FNAMES {
 		new FirstLetter(),
 		new DiacriticsRemover(), 
 		new ToLowerCase(),
-		//new ToHashCode()
+		new ToHashCode()
 	};
 
 	public EX_AUTH_FNAMES_FST_LETTER() {

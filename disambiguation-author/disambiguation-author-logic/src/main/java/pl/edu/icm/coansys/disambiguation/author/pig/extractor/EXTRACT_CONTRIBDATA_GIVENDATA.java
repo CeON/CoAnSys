@@ -225,14 +225,9 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 			for (Author a : authors) {
 				i++;
 				// here we have sure that Object = Integer
-				Object normalizedSname = null;
-				if (snameToString) {
-					normalizedSname = a.getSurname().toLowerCase();
-				} else {
-					normalizedSname = extractor.normalizeExtracted(a
-							.getSurname());
-				}
-
+				Object normalizedSname = normalizedSname = extractor.normalizeExtracted(a.getSurname());
+				String rawNormalizedSname = a.getSurname().toLowerCase();
+				
 				// pig status reporter
 				reportSname(a.getSurname(), normalizedSname);
 
@@ -240,10 +235,9 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 				// taking from document metadata data specific for each contrib
 				finalAuthorMap = extractAuthBasedFeatures(dm, DocumentMap, i);
 				Object[] to = new Object[] { docKey, cId, normalizedSname,
-						finalAuthorMap };
+						finalAuthorMap, rawNormalizedSname };
 				Tuple t = TupleFactory.getInstance()
 						.newTuple(Arrays.asList(to));
-
 				ret.add(t);
 			}
 
