@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <artifactId>coansys</artifactId>
+        <groupId>pl.edu.icm.coansys</groupId>
+        <version>1.8-SNAPSHOT</version>
+    </parent>
+
+    <properties>
+        <oozie-maven-plugin.version>1.2</oozie-maven-plugin.version>
+        <!-- <oozie-runner.version>1.1</oozie-runner.version> -->
+    </properties>
+    <groupId>pl.edu.icm.coansys</groupId>
+    <artifactId>source-disambiguation</artifactId>
+    <packaging>pom</packaging>
+    <name>Source (Journal/Book) disambiguation Tool</name>
+
+    <modules>
+        <module>source-disambiguation-logic</module>
+        <module>source-disambiguation-workflow</module>
+    </modules>
+</project>
