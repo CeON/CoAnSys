@@ -11,9 +11,9 @@
 		<map-reduce>
 			<job-tracker>${jobTracker}</job-tracker>
 			<name-node>${nameNode}</name-node>
-			<prepare>
+<!--			<prepare>
 				<delete path="${hdfsWorkingDirURI}/intermediate-data" />
-			</prepare>
+			</prepare>-->
 			<configuration>
 				<property>
 					<name>oozie.launcher.mapred.fairscheduler.pool</name>
