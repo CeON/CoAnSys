@@ -77,7 +77,7 @@ public class ReduceDocsWithSameSourceId extends Reducer<Writable, BytesWritable,
             issn=issns.iterator().next();
         }
         if (isbns.size()>0) {
-            isbn=issns.iterator().next();
+            isbn=isbns.iterator().next();
         }
         String id="http://comac.ceon.pl/source-";
         if (issn!=null) {
