@@ -179,6 +179,7 @@
         <module>keywords-extraction</module>
         <module>nlm-extraction</module>
         <module>statistics-generator</module>
+        <module>source-disambiguation</module>
     </modules>
 
     <dependencies>
