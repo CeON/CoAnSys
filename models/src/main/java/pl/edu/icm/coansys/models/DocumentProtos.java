@@ -5706,6 +5706,11 @@ public final class DocumentProtos {
         getClassifCodeOrBuilderList();
     pl.edu.icm.coansys.models.DocumentProtos.ClassifCodeOrBuilder getClassifCodeOrBuilder(
         int index);
+    
+    // repeated string parentId = 12;
+    java.util.List<String> getParentIdList();
+    int getParentIdCount();
+    String getParentId(int index);
   }
   public static final class BasicMetadata extends
       com.google.protobuf.GeneratedMessage
@@ -6055,6 +6060,20 @@ public final class DocumentProtos {
       return classifCode_.get(index);
     }
     
+    // repeated string parentId = 12;
+    public static final int PARENTID_FIELD_NUMBER = 12;
+    private com.google.protobuf.LazyStringList parentId_;
+    public java.util.List<String>
+        getParentIdList() {
+      return parentId_;
+    }
+    public int getParentIdCount() {
+      return parentId_.size();
+    }
+    public String getParentId(int index) {
+      return parentId_.get(index);
+    }
+    
     private void initFields() {
       title_ = java.util.Collections.emptyList();
       author_ = java.util.Collections.emptyList();
@@ -6067,6 +6086,7 @@ public final class DocumentProtos {
       volume_ = "";
       pages_ = "";
       classifCode_ = java.util.Collections.emptyList();
+      parentId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -6131,6 +6151,9 @@ public final class DocumentProtos {
       for (int i = 0; i < classifCode_.size(); i++) {
         output.writeMessage(11, classifCode_.get(i));
       }
+      for (int i = 0; i < parentId_.size(); i++) {
+        output.writeBytes(12, parentId_.getByteString(i));
+      }
       getUnknownFields().writeTo(output);
     }
     
@@ -6183,6 +6206,15 @@ public final class DocumentProtos {
       for (int i = 0; i < classifCode_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(11, classifCode_.get(i));
+      }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < parentId_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeBytesSizeNoTag(parentId_.getByteString(i));
+        }
+        size += dataSize;
+        size += 1 * getParentIdList().size();
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -6345,6 +6377,8 @@ public final class DocumentProtos {
         } else {
           classifCodeBuilder_.clear();
         }
+        parentId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000800);
         return this;
       }
       
@@ -6442,6 +6476,12 @@ public final class DocumentProtos {
         } else {
           result.classifCode_ = classifCodeBuilder_.build();
         }
+        if (((bitField0_ & 0x00000800) == 0x00000800)) {
+          parentId_ = new com.google.protobuf.UnmodifiableLazyStringList(
+              parentId_);
+          bitField0_ = (bitField0_ & ~0x00000800);
+        }
+        result.parentId_ = parentId_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -6560,6 +6600,16 @@ public final class DocumentProtos {
             }
           }
         }
+        if (!other.parentId_.isEmpty()) {
+          if (parentId_.isEmpty()) {
+            parentId_ = other.parentId_;
+            bitField0_ = (bitField0_ & ~0x00000800);
+          } else {
+            ensureParentIdIsMutable();
+            parentId_.addAll(other.parentId_);
+          }
+          onChanged();
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
@@ -6665,6 +6715,11 @@ public final class DocumentProtos {
               pl.edu.icm.coansys.models.DocumentProtos.ClassifCode.Builder subBuilder = pl.edu.icm.coansys.models.DocumentProtos.ClassifCode.newBuilder();
               input.readMessage(subBuilder, extensionRegistry);
               addClassifCode(subBuilder.buildPartial());
+              break;
+            }
+            case 98: {
+              ensureParentIdIsMutable();
+              parentId_.add(input.readBytes());
               break;
             }
           }
@@ -7517,6 +7572,62 @@ public final class DocumentProtos {
           classifCode_ = null;
         }
         return classifCodeBuilder_;
+      }
+      
+      // repeated string parentId = 12;
+      private com.google.protobuf.LazyStringList parentId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private void ensureParentIdIsMutable() {
+        if (!((bitField0_ & 0x00000800) == 0x00000800)) {
+          parentId_ = new com.google.protobuf.LazyStringArrayList(parentId_);
+          bitField0_ |= 0x00000800;
+         }
+      }
+      public java.util.List<String>
+          getParentIdList() {
+        return java.util.Collections.unmodifiableList(parentId_);
+      }
+      public int getParentIdCount() {
+        return parentId_.size();
+      }
+      public String getParentId(int index) {
+        return parentId_.get(index);
+      }
+      public Builder setParentId(
+          int index, String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureParentIdIsMutable();
+        parentId_.set(index, value);
+        onChanged();
+        return this;
+      }
+      public Builder addParentId(String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureParentIdIsMutable();
+        parentId_.add(value);
+        onChanged();
+        return this;
+      }
+      public Builder addAllParentId(
+          java.lang.Iterable<String> values) {
+        ensureParentIdIsMutable();
+        super.addAll(values, parentId_);
+        onChanged();
+        return this;
+      }
+      public Builder clearParentId() {
+        parentId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000800);
+        onChanged();
+        return this;
+      }
+      void addParentId(com.google.protobuf.ByteString value) {
+        ensureParentIdIsMutable();
+        parentId_.add(value);
+        onChanged();
       }
       
       // @@protoc_insertion_point(builder_scope:BasicMetadata)
@@ -14585,40 +14696,40 @@ public final class DocumentProtos {
       "\n\016affiliationRef\030\006 \003(\0132\t.KeyValue\022\r\n\005doc" +
       "Id\030\007 \001(\t\022\026\n\016positionNumber\030\010 \001(\005\022\030\n\005extI",
       "d\030\t \003(\0132\t.KeyValue\022\037\n\014auxiliarInfo\030\n \003(\013" +
-      "2\t.KeyValue\"\343\001\n\rBasicMetadata\022 \n\005title\030\001" +
+      "2\t.KeyValue\"\365\001\n\rBasicMetadata\022 \n\005title\030\001" +
       " \003(\0132\021.TextWithLanguage\022\027\n\006author\030\002 \003(\0132" +
       "\007.Author\022\013\n\003doi\030\003 \001(\t\022\017\n\007journal\030\004 \001(\t\022\014" +
       "\n\004isbn\030\005 \001(\t\022\014\n\004issn\030\006 \001(\t\022\014\n\004year\030\007 \001(\t" +
       "\022\r\n\005issue\030\010 \001(\t\022\016\n\006volume\030\t \001(\t\022\r\n\005pages" +
       "\030\n \001(\t\022!\n\013classifCode\030\013 \003(\0132\014.ClassifCod" +
-      "e\"v\n\014KeywordsList\022\014\n\004type\030\001 \001(\t\022\020\n\010langu" +
-      "age\030\002 \001(\t\022\020\n\010keywords\030\003 \003(\t\022\017\n\007comment\030\004" +
-      " \001(\t\022#\n\nprovenance\030\005 \001(\0132\017.ProvenanceInf",
-      "o\"\243\003\n\020DocumentMetadata\022\013\n\003key\030\001 \002(\t\022%\n\rb" +
-      "asicMetadata\030\002 \002(\0132\016.BasicMetadata\022+\n\020do" +
-      "cumentAbstract\030\003 \003(\0132\021.TextWithLanguage\022" +
-      "\037\n\010keywords\030\n \003(\0132\r.KeywordsList\022N\n\023simi" +
-      "larDocumentInfo\030\024 \003(\01321.pl.edu.icm.coans" +
-      "ys.models.DocumentSimilarityInfo\022\030\n\005extI" +
-      "d\030\005 \003(\0132\t.KeyValue\022\037\n\014auxiliarInfo\030\006 \003(\013" +
-      "2\t.KeyValue\022\"\n\014affiliations\030\014 \003(\0132\014.Affi" +
-      "liation\022%\n\treference\030\007 \003(\0132\022.ReferenceMe" +
-      "tadata\022\022\n\ncollection\030\010 \003(\t\022\022\n\nsourcePath",
-      "\030\t \001(\t\022\017\n\007origKey\030\013 \003(\t\"\225\001\n\021ReferenceMet" +
-      "adata\022%\n\rbasicMetadata\030\001 \002(\0132\016.BasicMeta" +
-      "data\022\024\n\014sourceDocKey\030\002 \001(\t\022\020\n\010position\030\003" +
-      " \001(\005\022\027\n\017rawCitationText\030\004 \001(\t\022\030\n\005extId\030\005" +
-      " \003(\0132\t.KeyValue\"\266\001\n\005Media\022\013\n\003key\030\001 \002(\t\022\021" +
-      "\n\tmediaType\030\002 \002(\t\022\017\n\007content\030\003 \002(\014\022\022\n\nco" +
-      "llection\030\004 \001(\t\022\022\n\nsourcePath\030\005 \001(\t\022\026\n\016so" +
-      "urceFilesize\030\006 \001(\003\022\027\n\017destinationPath\030\007 " +
-      "\001(\t\022#\n\nprovenance\030\010 \001(\0132\017.ProvenanceInfo" +
-      "\"\'\n\016MediaContainer\022\025\n\005media\030\001 \003(\0132\006.Medi",
-      "a\"v\n\017DocumentWrapper\022\r\n\005rowId\030\001 \002(\t\022+\n\020d" +
-      "ocumentMetadata\030\002 \001(\0132\021.DocumentMetadata" +
-      "\022\'\n\016mediaContainer\030\003 \001(\0132\017.MediaContaine" +
-      "rB+\n\031pl.edu.icm.coansys.modelsB\016Document" +
-      "Protos"
+      "e\022\020\n\010parentId\030\014 \003(\t\"v\n\014KeywordsList\022\014\n\004t" +
+      "ype\030\001 \001(\t\022\020\n\010language\030\002 \001(\t\022\020\n\010keywords\030" +
+      "\003 \003(\t\022\017\n\007comment\030\004 \001(\t\022#\n\nprovenance\030\005 \001",
+      "(\0132\017.ProvenanceInfo\"\243\003\n\020DocumentMetadata" +
+      "\022\013\n\003key\030\001 \002(\t\022%\n\rbasicMetadata\030\002 \002(\0132\016.B" +
+      "asicMetadata\022+\n\020documentAbstract\030\003 \003(\0132\021" +
+      ".TextWithLanguage\022\037\n\010keywords\030\n \003(\0132\r.Ke" +
+      "ywordsList\022N\n\023similarDocumentInfo\030\024 \003(\0132" +
+      "1.pl.edu.icm.coansys.models.DocumentSimi" +
+      "larityInfo\022\030\n\005extId\030\005 \003(\0132\t.KeyValue\022\037\n\014" +
+      "auxiliarInfo\030\006 \003(\0132\t.KeyValue\022\"\n\014affilia" +
+      "tions\030\014 \003(\0132\014.Affiliation\022%\n\treference\030\007" +
+      " \003(\0132\022.ReferenceMetadata\022\022\n\ncollection\030\010",
+      " \003(\t\022\022\n\nsourcePath\030\t \001(\t\022\017\n\007origKey\030\013 \003(" +
+      "\t\"\225\001\n\021ReferenceMetadata\022%\n\rbasicMetadata" +
+      "\030\001 \002(\0132\016.BasicMetadata\022\024\n\014sourceDocKey\030\002" +
+      " \001(\t\022\020\n\010position\030\003 \001(\005\022\027\n\017rawCitationTex" +
+      "t\030\004 \001(\t\022\030\n\005extId\030\005 \003(\0132\t.KeyValue\"\266\001\n\005Me" +
+      "dia\022\013\n\003key\030\001 \002(\t\022\021\n\tmediaType\030\002 \002(\t\022\017\n\007c" +
+      "ontent\030\003 \002(\014\022\022\n\ncollection\030\004 \001(\t\022\022\n\nsour" +
+      "cePath\030\005 \001(\t\022\026\n\016sourceFilesize\030\006 \001(\003\022\027\n\017" +
+      "destinationPath\030\007 \001(\t\022#\n\nprovenance\030\010 \001(" +
+      "\0132\017.ProvenanceInfo\"\'\n\016MediaContainer\022\025\n\005",
+      "media\030\001 \003(\0132\006.Media\"v\n\017DocumentWrapper\022\r" +
+      "\n\005rowId\030\001 \002(\t\022+\n\020documentMetadata\030\002 \001(\0132" +
+      "\021.DocumentMetadata\022\'\n\016mediaContainer\030\003 \001" +
+      "(\0132\017.MediaContainerB+\n\031pl.edu.icm.coansy" +
+      "s.modelsB\016DocumentProtos"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -14686,7 +14797,7 @@ public final class DocumentProtos {
           internal_static_BasicMetadata_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_BasicMetadata_descriptor,
-              new java.lang.String[] { "Title", "Author", "Doi", "Journal", "Isbn", "Issn", "Year", "Issue", "Volume", "Pages", "ClassifCode", },
+              new java.lang.String[] { "Title", "Author", "Doi", "Journal", "Isbn", "Issn", "Year", "Issue", "Volume", "Pages", "ClassifCode", "ParentId", },
               pl.edu.icm.coansys.models.DocumentProtos.BasicMetadata.class,
               pl.edu.icm.coansys.models.DocumentProtos.BasicMetadata.Builder.class);
           internal_static_KeywordsList_descriptor =

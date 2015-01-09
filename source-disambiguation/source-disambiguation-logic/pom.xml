@@ -1,0 +1,38 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <!-- (C) 2010-2012 ICM UW. All rights reserved. -->        
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+		<groupId>pl.edu.icm.coansys</groupId>
+        <artifactId>source-disambiguation</artifactId>
+        <version>1.8-SNAPSHOT</version>
+    </parent>
+    
+    <artifactId>source-disambiguation-logic</artifactId>
+    <packaging>jar</packaging>
+    <name>Source Disambiguation Tool: Logic</name>
+    <url>http://maven.apache.org</url>
+
+    <dependencies>
+        <dependency>
+            <groupId>net.sf.jopt-simple</groupId>
+            <artifactId>jopt-simple</artifactId>
+            <version>4.4-beta-2</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <version>${project.version}</version>
+            <artifactId>models</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>commons</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>pl.edu.icm.ceon</groupId>
+            <artifactId>ceon-commons</artifactId>
+            <version>0.1.0</version>
+        </dependency>
+    </dependencies>
+</project>
