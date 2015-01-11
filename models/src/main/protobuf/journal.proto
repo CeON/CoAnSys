@@ -1,0 +1,19 @@
+/
+// (C) 2010-2014 ICM UW. All rights reserved.
+//
+package pl.edu.icm.coansys.models;
+
+option java_package = "pl.edu.icm.coansys.models";
+option java_outer_classname = "JournalModelProtos";
+
+message JournalDisambiguationOut {
+  required string docId = 1;
+  required string journalId = 2;
+  repeated string journalName=3;
+  repeated Auxiliar auxs = 4;
+}
+
+message Auxiliar{
+	optional string type = 1;
+	optional string value = 2;
+}

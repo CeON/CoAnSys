@@ -73,6 +73,7 @@ message BasicMetadata{
 	optional string volume = 9;
 	optional string pages = 10;
 	repeated ClassifCode classifCode = 11;
+    repeated string parentId = 12; 
 }
 
 message KeywordsList {
