@@ -21,6 +21,16 @@
 			</description>
 		</property>
 		<property>
+			<name>and_cid_sname</name>
+			<value>${results}/cid_sname</value>
+			<description>Path for additional data - pairs ( document id,
+				contributor id, original external id, sname ). Used in 'serialize'
+				action to associate generated ( author uuid, contributor id ) pairs
+				with documents. External id and sname needed in optional accuracy
+				check after serialize.
+			</description>
+		</property>
+		<property>
 			<name>and_mapredChildJavaOpts_exh</name>
 			<!-- minimum RAM: exh_limit^2 / 2 * 64 / 8 / 1024 / 1024 MB * const1 + 
 				const2 -->
@@ -254,6 +264,7 @@
 			<param>and_splitted_output_apr_no_sim=${and_splitted_output_apr_no_sim}
 			</param>
 			<param>and_cid_dockey=${and_cid_dockey}</param>
+			<param>and_cid_sname=${and_cid_sname}</param>
 			<param>and_aproximate_sim_limit=${and_aproximate_sim_limit}</param>
 			<param>and_exhaustive_limit=${and_exhaustive_limit}</param>
 			<!-- UDF config -->

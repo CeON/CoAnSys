@@ -73,7 +73,7 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 	@Parameter(names = "-skipEmptyFeatures", arity = 1, description = "Skip contributor's features, when feature bag is empty (no data for feature).")
 	private boolean skipEmptyFeatures = false;
 	@Parameter(names = "-snameToString", arity = 1, description = "Does not normalize surname used to blocking when true. Use only for debuging.")
-	private boolean snameToString = false;
+	private boolean snameToString = true;
 	@Parameter(names = "-useIdsForExtractors", arity = 1, description = "Use short ids for extractors (features) names in temporary sequance files.")
 	private boolean useIdsForExtractors = false;
 	@Parameter(names = "-returnNull", arity = 1, description = "Return null data bag after processing. Use only for debuging.")
@@ -225,14 +225,9 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 			for (Author a : authors) {
 				i++;
 				// here we have sure that Object = Integer
-				Object normalizedSname = null;
-				if (snameToString) {
-					normalizedSname = a.getSurname().toLowerCase();
-				} else {
-					normalizedSname = extractor.normalizeExtracted(a
-							.getSurname());
-				}
-
+				Object normalizedSname = normalizedSname = extractor.normalizeExtracted(a.getSurname());
+				String rawNormalizedSname = a.getSurname().toLowerCase();
+				
 				// pig status reporter
 				reportSname(a.getSurname(), normalizedSname);
 
@@ -240,10 +235,9 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 				// taking from document metadata data specific for each contrib
 				finalAuthorMap = extractAuthBasedFeatures(dm, DocumentMap, i);
 				Object[] to = new Object[] { docKey, cId, normalizedSname,
-						finalAuthorMap };
+						finalAuthorMap, rawNormalizedSname };
 				Tuple t = TupleFactory.getInstance()
 						.newTuple(Arrays.asList(to));
-
 				ret.add(t);
 			}
 
