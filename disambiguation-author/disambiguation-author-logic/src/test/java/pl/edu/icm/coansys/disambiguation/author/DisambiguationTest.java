@@ -287,7 +287,6 @@ public class DisambiguationTest {
 		full.put( "-lang", "pl" );
 		// Note, that boolean parameters do not take arguments
 		full.put( "-skipEmptyFeatures", true );
-		full.put( "-snameToString", true );
 		full.put( "-useIdsForExtractors", true );
 		full.put( "-returnNull", true );
 		full.put( "-featureinfo", featureinfo );
