@@ -21,6 +21,7 @@
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 %DEFAULT and_inputDocsData /user/mwos/wrapped/pbn_mbojan/
+%DEFAULT and_cid_sname  'cid_sname'
 %DEFAULT and_cid_dockey 'cid_dockey'
 %DEFAULT and_splitted_output_one 'splitted/one'
 %DEFAULT and_splitted_output_exh 'splitted/exh'
@@ -36,7 +37,7 @@
 %DEFAULT and_lang 'all'
 %DEFAULT and_skip_empty_features 'true'
 %DEFAULT and_use_extractor_id_instead_name 'true'
-DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_CONTRIBDATA_GIVENDATA('-featureinfo $and_feature_info -lang $and_lang -skipEmptyFeatures $and_skip_empty_features -useIdsForExtractors $and_use_extractor_id_instead_name');
+DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_CONTRIBDATA_GIVENDATA('-snameToString true -featureinfo $and_feature_info -lang $and_lang -skipEmptyFeatures $and_skip_empty_features -useIdsForExtractors $and_use_extractor_id_instead_name');
 
 %DEFAULT and_threshold '-0.8'
 %DEFAULT and_statistics 'false'
@@ -81,16 +82,20 @@ set mapred.fairscheduler.pool $and_scheduler
 A1 = LOAD '$and_inputDocsData' USING pl.edu.icm.coansys.commons.pig.udf.RichSequenceFileLoader('org.apache.hadoop.io.Text', 'org.apache.hadoop.io.BytesWritable') as (key:chararray, value:bytearray);
 A2 = sample A1 $and_sample;
 
-B1 = foreach A2 generate flatten(snameDocumentMetaExtractor($1)) as (dockey:chararray, cId:chararray, sname:int, metadata:map[{(int)}]);
+B1 = foreach A2 generate flatten(snameDocumentMetaExtractor($1)) as (dockey:chararray, cId:chararray, sname:int, metadata:map[{(int)}],str_sname:chararray);
 
-B = FILTER B1 BY (dockey is not null);
+-- debug data, for later results inspection
+B2 =  FILTER B1 BY (dockey is not null);
+B3 = FOREACH B2 generate dockey, cId, str_sname, sname;
+STORE B3 INTO '$and_cid_sname'; 
+B = foreach B2 generate dockey, cId, sname, metadata;
 
 -- check if sname exists
 split B into
         CORRECT if (sname is not null),
         NOSNAME if (sname is null);
 
-
+/**
 -- -----------------------------------------------------
 -- PROCESSING CONTRIBUTORS WITHOUT SNAME
 -- -----------------------------------------------------
@@ -99,7 +104,7 @@ split B into
 -- after all we have to assign UUID to every contributor, even for those who do not have sname
 -- put them into separate clusters size 1
 D1A = foreach NOSNAME generate null as sname, {(cId,null,metadata)} as datagroup, 1 as count;
-
+**/
 
 -- -----------------------------------------------------
 -- PROCESSING CONTRIBUTORS DISIMILAR TO THEMSELVES
@@ -140,7 +145,7 @@ split D into
 -- -----------------------------------------------------
 
 -- add contributors with bad data to table D (single contributors)
-D1 = union D1A, D1B, D1C;
+D1 = union /*D1A,*/ D1B, D1C;
 
 store D1 into '$and_splitted_output_one';
 store D100 into '$and_splitted_output_exh';
