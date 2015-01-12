@@ -5,7 +5,7 @@
     <parent>
         <groupId>pl.edu.icm.coansys</groupId>
         <artifactId>statistics-generator</artifactId>
-        <version>1.8-SNAPSHOT</version>
+        <version>1.8-CDH-5.1.3-SNAPSHOT</version>
     </parent>
 
     <artifactId>statistics-generator-impl</artifactId>
@@ -17,7 +17,7 @@
         <dependency>
             <groupId>pl.edu.icm.coansys</groupId>
             <artifactId>commons</artifactId>
-            <version>1.8-SNAPSHOT</version>
+            <version>1.8-CDH-5.1.3-SNAPSHOT</version>
             <type>jar</type>
         </dependency>
         <dependency>
