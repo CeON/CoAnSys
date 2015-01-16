@@ -10,391 +10,737 @@ public final class CitationMatchingProtos {
   }
   public interface MatchableEntityDataOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
-    
+
     // required string id = 1;
+    /**
+     * <code>required string id = 1;</code>
+     */
     boolean hasId();
-    String getId();
-    
+    /**
+     * <code>required string id = 1;</code>
+     */
+    java.lang.String getId();
+    /**
+     * <code>required string id = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getIdBytes();
+
     // optional string author = 2;
+    /**
+     * <code>optional string author = 2;</code>
+     */
     boolean hasAuthor();
-    String getAuthor();
-    
+    /**
+     * <code>optional string author = 2;</code>
+     */
+    java.lang.String getAuthor();
+    /**
+     * <code>optional string author = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getAuthorBytes();
+
     // optional string year = 3;
+    /**
+     * <code>optional string year = 3;</code>
+     */
     boolean hasYear();
-    String getYear();
-    
+    /**
+     * <code>optional string year = 3;</code>
+     */
+    java.lang.String getYear();
+    /**
+     * <code>optional string year = 3;</code>
+     */
+    com.google.protobuf.ByteString
+        getYearBytes();
+
     // optional string pages = 4;
+    /**
+     * <code>optional string pages = 4;</code>
+     */
     boolean hasPages();
-    String getPages();
-    
+    /**
+     * <code>optional string pages = 4;</code>
+     */
+    java.lang.String getPages();
+    /**
+     * <code>optional string pages = 4;</code>
+     */
+    com.google.protobuf.ByteString
+        getPagesBytes();
+
     // optional string source = 5;
+    /**
+     * <code>optional string source = 5;</code>
+     */
     boolean hasSource();
-    String getSource();
-    
+    /**
+     * <code>optional string source = 5;</code>
+     */
+    java.lang.String getSource();
+    /**
+     * <code>optional string source = 5;</code>
+     */
+    com.google.protobuf.ByteString
+        getSourceBytes();
+
     // optional string title = 6;
+    /**
+     * <code>optional string title = 6;</code>
+     */
     boolean hasTitle();
-    String getTitle();
-    
+    /**
+     * <code>optional string title = 6;</code>
+     */
+    java.lang.String getTitle();
+    /**
+     * <code>optional string title = 6;</code>
+     */
+    com.google.protobuf.ByteString
+        getTitleBytes();
+
     // optional string rawText = 8;
+    /**
+     * <code>optional string rawText = 8;</code>
+     */
     boolean hasRawText();
-    String getRawText();
-    
+    /**
+     * <code>optional string rawText = 8;</code>
+     */
+    java.lang.String getRawText();
+    /**
+     * <code>optional string rawText = 8;</code>
+     */
+    com.google.protobuf.ByteString
+        getRawTextBytes();
+
     // optional string issue = 9;
+    /**
+     * <code>optional string issue = 9;</code>
+     */
     boolean hasIssue();
-    String getIssue();
-    
+    /**
+     * <code>optional string issue = 9;</code>
+     */
+    java.lang.String getIssue();
+    /**
+     * <code>optional string issue = 9;</code>
+     */
+    com.google.protobuf.ByteString
+        getIssueBytes();
+
     // optional string volume = 10;
+    /**
+     * <code>optional string volume = 10;</code>
+     */
     boolean hasVolume();
-    String getVolume();
-    
+    /**
+     * <code>optional string volume = 10;</code>
+     */
+    java.lang.String getVolume();
+    /**
+     * <code>optional string volume = 10;</code>
+     */
+    com.google.protobuf.ByteString
+        getVolumeBytes();
+
     // repeated .pl.edu.icm.coansys.citations.KeyValue auxiliary = 7;
+    /**
+     * <code>repeated .pl.edu.icm.coansys.citations.KeyValue auxiliary = 7;</code>
+     */
     java.util.List<pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue> 
         getAuxiliaryList();
+    /**
+     * <code>repeated .pl.edu.icm.coansys.citations.KeyValue auxiliary = 7;</code>
+     */
     pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue getAuxiliary(int index);
+    /**
+     * <code>repeated .pl.edu.icm.coansys.citations.KeyValue auxiliary = 7;</code>
+     */
     int getAuxiliaryCount();
+    /**
+     * <code>repeated .pl.edu.icm.coansys.citations.KeyValue auxiliary = 7;</code>
+     */
     java.util.List<? extends pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValueOrBuilder> 
         getAuxiliaryOrBuilderList();
+    /**
+     * <code>repeated .pl.edu.icm.coansys.citations.KeyValue auxiliary = 7;</code>
+     */
     pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValueOrBuilder getAuxiliaryOrBuilder(
         int index);
   }
+  /**
+   * Protobuf type {@code pl.edu.icm.coansys.citations.MatchableEntityData}
+   */
   public static final class MatchableEntityData extends
       com.google.protobuf.GeneratedMessage
       implements MatchableEntityDataOrBuilder {
     // Use MatchableEntityData.newBuilder() to construct.
-    private MatchableEntityData(Builder builder) {
+    private MatchableEntityData(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
-    private MatchableEntityData(boolean noInit) {}
-    
+    private MatchableEntityData(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
     private static final MatchableEntityData defaultInstance;
     public static MatchableEntityData getDefaultInstance() {
       return defaultInstance;
     }
-    
+
     public MatchableEntityData getDefaultInstanceForType() {
       return defaultInstance;
     }
-    
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private MatchableEntityData(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              bitField0_ |= 0x00000001;
+              id_ = input.readBytes();
+              break;
+            }
+            case 18: {
+              bitField0_ |= 0x00000002;
+              author_ = input.readBytes();
+              break;
+            }
+            case 26: {
+              bitField0_ |= 0x00000004;
+              year_ = input.readBytes();
+              break;
+            }
+            case 34: {
+              bitField0_ |= 0x00000008;
+              pages_ = input.readBytes();
+              break;
+            }
+            case 42: {
+              bitField0_ |= 0x00000010;
+              source_ = input.readBytes();
+              break;
+            }
+            case 50: {
+              bitField0_ |= 0x00000020;
+              title_ = input.readBytes();
+              break;
+            }
+            case 58: {
+              if (!((mutable_bitField0_ & 0x00000200) == 0x00000200)) {
+                auxiliary_ = new java.util.ArrayList<pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue>();
+                mutable_bitField0_ |= 0x00000200;
+              }
+              auxiliary_.add(input.readMessage(pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue.PARSER, extensionRegistry));
+              break;
+            }
+            case 66: {
+              bitField0_ |= 0x00000040;
+              rawText_ = input.readBytes();
+              break;
+            }
+            case 74: {
+              bitField0_ |= 0x00000080;
+              issue_ = input.readBytes();
+              break;
+            }
+            case 82: {
+              bitField0_ |= 0x00000100;
+              volume_ = input.readBytes();
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000200) == 0x00000200)) {
+          auxiliary_ = java.util.Collections.unmodifiableList(auxiliary_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
       return pl.edu.icm.coansys.citations.data.CitationMatchingProtos.internal_static_pl_edu_icm_coansys_citations_MatchableEntityData_descriptor;
     }
-    
+
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return pl.edu.icm.coansys.citations.data.CitationMatchingProtos.internal_static_pl_edu_icm_coansys_citations_MatchableEntityData_fieldAccessorTable;
+      return pl.edu.icm.coansys.citations.data.CitationMatchingProtos.internal_static_pl_edu_icm_coansys_citations_MatchableEntityData_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              pl.edu.icm.coansys.citations.data.CitationMatchingProtos.MatchableEntityData.class, pl.edu.icm.coansys.citations.data.CitationMatchingProtos.MatchableEntityData.Builder.class);
     }
-    
+
+    public static com.google.protobuf.Parser<MatchableEntityData> PARSER =
+        new com.google.protobuf.AbstractParser<MatchableEntityData>() {
+      public MatchableEntityData parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new MatchableEntityData(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<MatchableEntityData> getParserForType() {
+      return PARSER;
+    }
+
     private int bitField0_;
     // required string id = 1;
     public static final int ID_FIELD_NUMBER = 1;
     private java.lang.Object id_;
+    /**
+     * <code>required string id = 1;</code>
+     */
     public boolean hasId() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
-    public String getId() {
+    /**
+     * <code>required string id = 1;</code>
+     */
+    public java.lang.String getId() {
       java.lang.Object ref = id_;
-      if (ref instanceof String) {
-        return (String) ref;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
           id_ = s;
         }
         return s;
       }
     }
-    private com.google.protobuf.ByteString getIdBytes() {
+    /**
+     * <code>required string id = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getIdBytes() {
       java.lang.Object ref = id_;
-      if (ref instanceof String) {
+      if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
         id_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
-    
+
     // optional string author = 2;
     public static final int AUTHOR_FIELD_NUMBER = 2;
     private java.lang.Object author_;
+    /**
+     * <code>optional string author = 2;</code>
+     */
     public boolean hasAuthor() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
-    public String getAuthor() {
+    /**
+     * <code>optional string author = 2;</code>
+     */
+    public java.lang.String getAuthor() {
       java.lang.Object ref = author_;
-      if (ref instanceof String) {
-        return (String) ref;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
           author_ = s;
         }
         return s;
       }
     }
-    private com.google.protobuf.ByteString getAuthorBytes() {
+    /**
+     * <code>optional string author = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getAuthorBytes() {
       java.lang.Object ref = author_;
-      if (ref instanceof String) {
+      if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
         author_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
-    
+
     // optional string year = 3;
     public static final int YEAR_FIELD_NUMBER = 3;
     private java.lang.Object year_;
+    /**
+     * <code>optional string year = 3;</code>
+     */
     public boolean hasYear() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
-    public String getYear() {
+    /**
+     * <code>optional string year = 3;</code>
+     */
+    public java.lang.String getYear() {
       java.lang.Object ref = year_;
-      if (ref instanceof String) {
-        return (String) ref;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
           year_ = s;
         }
         return s;
       }
     }
-    private com.google.protobuf.ByteString getYearBytes() {
+    /**
+     * <code>optional string year = 3;</code>
+     */
+    public com.google.protobuf.ByteString
+        getYearBytes() {
       java.lang.Object ref = year_;
-      if (ref instanceof String) {
+      if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
         year_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
-    
+
     // optional string pages = 4;
     public static final int PAGES_FIELD_NUMBER = 4;
     private java.lang.Object pages_;
+    /**
+     * <code>optional string pages = 4;</code>
+     */
     public boolean hasPages() {
       return ((bitField0_ & 0x00000008) == 0x00000008);
     }
-    public String getPages() {
+    /**
+     * <code>optional string pages = 4;</code>
+     */
+    public java.lang.String getPages() {
       java.lang.Object ref = pages_;
-      if (ref instanceof String) {
-        return (String) ref;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
           pages_ = s;
         }
         return s;
       }
     }
-    private com.google.protobuf.ByteString getPagesBytes() {
+    /**
+     * <code>optional string pages = 4;</code>
+     */
+    public com.google.protobuf.ByteString
+        getPagesBytes() {
       java.lang.Object ref = pages_;
-      if (ref instanceof String) {
+      if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
         pages_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
-    
+
     // optional string source = 5;
     public static final int SOURCE_FIELD_NUMBER = 5;
     private java.lang.Object source_;
+    /**
+     * <code>optional string source = 5;</code>
+     */
     public boolean hasSource() {
       return ((bitField0_ & 0x00000010) == 0x00000010);
     }
-    public String getSource() {
+    /**
+     * <code>optional string source = 5;</code>
+     */
+    public java.lang.String getSource() {
       java.lang.Object ref = source_;
-      if (ref instanceof String) {
-        return (String) ref;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
           source_ = s;
         }
         return s;
       }
     }
-    private com.google.protobuf.ByteString getSourceBytes() {
+    /**
+     * <code>optional string source = 5;</code>
+     */
+    public com.google.protobuf.ByteString
+        getSourceBytes() {
       java.lang.Object ref = source_;
-      if (ref instanceof String) {
+      if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
         source_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
-    
+
     // optional string title = 6;
     public static final int TITLE_FIELD_NUMBER = 6;
     private java.lang.Object title_;
+    /**
+     * <code>optional string title = 6;</code>
+     */
     public boolean hasTitle() {
       return ((bitField0_ & 0x00000020) == 0x00000020);
     }
-    public String getTitle() {
+    /**
+     * <code>optional string title = 6;</code>
+     */
+    public java.lang.String getTitle() {
       java.lang.Object ref = title_;
-      if (ref instanceof String) {
-        return (String) ref;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
           title_ = s;
         }
         return s;
       }
     }
-    private com.google.protobuf.ByteString getTitleBytes() {
+    /**
+     * <code>optional string title = 6;</code>
+     */
+    public com.google.protobuf.ByteString
+        getTitleBytes() {
       java.lang.Object ref = title_;
-      if (ref instanceof String) {
+      if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
         title_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
-    
+
     // optional string rawText = 8;
     public static final int RAWTEXT_FIELD_NUMBER = 8;
     private java.lang.Object rawText_;
+    /**
+     * <code>optional string rawText = 8;</code>
+     */
     public boolean hasRawText() {
       return ((bitField0_ & 0x00000040) == 0x00000040);
     }
-    public String getRawText() {
+    /**
+     * <code>optional string rawText = 8;</code>
+     */
+    public java.lang.String getRawText() {
       java.lang.Object ref = rawText_;
-      if (ref instanceof String) {
-        return (String) ref;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
           rawText_ = s;
         }
         return s;
       }
     }
-    private com.google.protobuf.ByteString getRawTextBytes() {
+    /**
+     * <code>optional string rawText = 8;</code>
+     */
+    public com.google.protobuf.ByteString
+        getRawTextBytes() {
       java.lang.Object ref = rawText_;
-      if (ref instanceof String) {
+      if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
         rawText_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
-    
+
     // optional string issue = 9;
     public static final int ISSUE_FIELD_NUMBER = 9;
     private java.lang.Object issue_;
+    /**
+     * <code>optional string issue = 9;</code>
+     */
     public boolean hasIssue() {
       return ((bitField0_ & 0x00000080) == 0x00000080);
     }
-    public String getIssue() {
+    /**
+     * <code>optional string issue = 9;</code>
+     */
+    public java.lang.String getIssue() {
       java.lang.Object ref = issue_;
-      if (ref instanceof String) {
-        return (String) ref;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
           issue_ = s;
         }
         return s;
       }
     }
-    private com.google.protobuf.ByteString getIssueBytes() {
+    /**
+     * <code>optional string issue = 9;</code>
+     */
+    public com.google.protobuf.ByteString
+        getIssueBytes() {
       java.lang.Object ref = issue_;
-      if (ref instanceof String) {
+      if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
         issue_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
-    
+
     // optional string volume = 10;
     public static final int VOLUME_FIELD_NUMBER = 10;
     private java.lang.Object volume_;
+    /**
+     * <code>optional string volume = 10;</code>
+     */
     public boolean hasVolume() {
       return ((bitField0_ & 0x00000100) == 0x00000100);
     }
-    public String getVolume() {
+    /**
+     * <code>optional string volume = 10;</code>
+     */
+    public java.lang.String getVolume() {
       java.lang.Object ref = volume_;
-      if (ref instanceof String) {
-        return (String) ref;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
           volume_ = s;
         }
         return s;
       }
     }
-    private com.google.protobuf.ByteString getVolumeBytes() {
+    /**
+     * <code>optional string volume = 10;</code>
+     */
+    public com.google.protobuf.ByteString
+        getVolumeBytes() {
       java.lang.Object ref = volume_;
-      if (ref instanceof String) {
+      if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
         volume_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
-    
+
     // repeated .pl.edu.icm.coansys.citations.KeyValue auxiliary = 7;
     public static final int AUXILIARY_FIELD_NUMBER = 7;
     private java.util.List<pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue> auxiliary_;
+    /**
+     * <code>repeated .pl.edu.icm.coansys.citations.KeyValue auxiliary = 7;</code>
+     */
     public java.util.List<pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue> getAuxiliaryList() {
       return auxiliary_;
     }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.citations.KeyValue auxiliary = 7;</code>
+     */
     public java.util.List<? extends pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValueOrBuilder> 
         getAuxiliaryOrBuilderList() {
       return auxiliary_;
     }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.citations.KeyValue auxiliary = 7;</code>
+     */
     public int getAuxiliaryCount() {
       return auxiliary_.size();
     }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.citations.KeyValue auxiliary = 7;</code>
+     */
     public pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue getAuxiliary(int index) {
       return auxiliary_.get(index);
     }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.citations.KeyValue auxiliary = 7;</code>
+     */
     public pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValueOrBuilder getAuxiliaryOrBuilder(
         int index) {
       return auxiliary_.get(index);
     }
-    
+
     private void initFields() {
       id_ = "";
       author_ = "";
@@ -411,7 +757,7 @@ public final class CitationMatchingProtos {
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
-      
+
       if (!hasId()) {
         memoizedIsInitialized = 0;
         return false;
@@ -419,7 +765,7 @@ public final class CitationMatchingProtos {
       memoizedIsInitialized = 1;
       return true;
     }
-    
+
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
@@ -455,12 +801,12 @@ public final class CitationMatchingProtos {
       }
       getUnknownFields().writeTo(output);
     }
-    
+
     private int memoizedSerializedSize = -1;
     public int getSerializedSize() {
       int size = memoizedSerializedSize;
       if (size != -1) return size;
-    
+
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
@@ -506,94 +852,83 @@ public final class CitationMatchingProtos {
       memoizedSerializedSize = size;
       return size;
     }
-    
+
     private static final long serialVersionUID = 0L;
     @java.lang.Override
     protected java.lang.Object writeReplace()
         throws java.io.ObjectStreamException {
       return super.writeReplace();
     }
-    
+
     public static pl.edu.icm.coansys.citations.data.CitationMatchingProtos.MatchableEntityData parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
+      return PARSER.parseFrom(data);
     }
     public static pl.edu.icm.coansys.citations.data.CitationMatchingProtos.MatchableEntityData parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static pl.edu.icm.coansys.citations.data.CitationMatchingProtos.MatchableEntityData parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
+      return PARSER.parseFrom(data);
     }
     public static pl.edu.icm.coansys.citations.data.CitationMatchingProtos.MatchableEntityData parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static pl.edu.icm.coansys.citations.data.CitationMatchingProtos.MatchableEntityData parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
+      return PARSER.parseFrom(input);
     }
     public static pl.edu.icm.coansys.citations.data.CitationMatchingProtos.MatchableEntityData parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(input, extensionRegistry);
     }
     public static pl.edu.icm.coansys.citations.data.CitationMatchingProtos.MatchableEntityData parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
+      return PARSER.parseDelimitedFrom(input);
     }
     public static pl.edu.icm.coansys.citations.data.CitationMatchingProtos.MatchableEntityData parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
     public static pl.edu.icm.coansys.citations.data.CitationMatchingProtos.MatchableEntityData parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
+      return PARSER.parseFrom(input);
     }
     public static pl.edu.icm.coansys.citations.data.CitationMatchingProtos.MatchableEntityData parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(input, extensionRegistry);
     }
-    
+
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder(pl.edu.icm.coansys.citations.data.CitationMatchingProtos.MatchableEntityData prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
-    
+
     @java.lang.Override
     protected Builder newBuilderForType(
         com.google.protobuf.GeneratedMessage.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
+    /**
+     * Protobuf type {@code pl.edu.icm.coansys.citations.MatchableEntityData}
+     */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
        implements pl.edu.icm.coansys.citations.data.CitationMatchingProtos.MatchableEntityDataOrBuilder {
@@ -601,18 +936,21 @@ public final class CitationMatchingProtos {
           getDescriptor() {
         return pl.edu.icm.coansys.citations.data.CitationMatchingProtos.internal_static_pl_edu_icm_coansys_citations_MatchableEntityData_descriptor;
       }
-      
+
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return pl.edu.icm.coansys.citations.data.CitationMatchingProtos.internal_static_pl_edu_icm_coansys_citations_MatchableEntityData_fieldAccessorTable;
+        return pl.edu.icm.coansys.citations.data.CitationMatchingProtos.internal_static_pl_edu_icm_coansys_citations_MatchableEntityData_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                pl.edu.icm.coansys.citations.data.CitationMatchingProtos.MatchableEntityData.class, pl.edu.icm.coansys.citations.data.CitationMatchingProtos.MatchableEntityData.Builder.class);
       }
-      
+
       // Construct using pl.edu.icm.coansys.citations.data.CitationMatchingProtos.MatchableEntityData.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
-      
-      private Builder(com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
@@ -624,7 +962,7 @@ public final class CitationMatchingProtos {
       private static Builder create() {
         return new Builder();
       }
-      
+
       public Builder clear() {
         super.clear();
         id_ = "";
@@ -653,20 +991,20 @@ public final class CitationMatchingProtos {
         }
         return this;
       }
-      
+
       public Builder clone() {
         return create().mergeFrom(buildPartial());
       }
-      
+
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return pl.edu.icm.coansys.citations.data.CitationMatchingProtos.MatchableEntityData.getDescriptor();
+        return pl.edu.icm.coansys.citations.data.CitationMatchingProtos.internal_static_pl_edu_icm_coansys_citations_MatchableEntityData_descriptor;
       }
-      
+
       public pl.edu.icm.coansys.citations.data.CitationMatchingProtos.MatchableEntityData getDefaultInstanceForType() {
         return pl.edu.icm.coansys.citations.data.CitationMatchingProtos.MatchableEntityData.getDefaultInstance();
       }
-      
+
       public pl.edu.icm.coansys.citations.data.CitationMatchingProtos.MatchableEntityData build() {
         pl.edu.icm.coansys.citations.data.CitationMatchingProtos.MatchableEntityData result = buildPartial();
         if (!result.isInitialized()) {
@@ -674,17 +1012,7 @@ public final class CitationMatchingProtos {
         }
         return result;
       }
-      
-      private pl.edu.icm.coansys.citations.data.CitationMatchingProtos.MatchableEntityData buildParsed()
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        pl.edu.icm.coansys.citations.data.CitationMatchingProtos.MatchableEntityData result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(
-            result).asInvalidProtocolBufferException();
-        }
-        return result;
-      }
-      
+
       public pl.edu.icm.coansys.citations.data.CitationMatchingProtos.MatchableEntityData buildPartial() {
         pl.edu.icm.coansys.citations.data.CitationMatchingProtos.MatchableEntityData result = new pl.edu.icm.coansys.citations.data.CitationMatchingProtos.MatchableEntityData(this);
         int from_bitField0_ = bitField0_;
@@ -738,7 +1066,7 @@ public final class CitationMatchingProtos {
         onBuilt();
         return result;
       }
-      
+
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof pl.edu.icm.coansys.citations.data.CitationMatchingProtos.MatchableEntityData) {
           return mergeFrom((pl.edu.icm.coansys.citations.data.CitationMatchingProtos.MatchableEntityData)other);
@@ -747,35 +1075,53 @@ public final class CitationMatchingProtos {
           return this;
         }
       }
-      
+
       public Builder mergeFrom(pl.edu.icm.coansys.citations.data.CitationMatchingProtos.MatchableEntityData other) {
         if (other == pl.edu.icm.coansys.citations.data.CitationMatchingProtos.MatchableEntityData.getDefaultInstance()) return this;
         if (other.hasId()) {
-          setId(other.getId());
+          bitField0_ |= 0x00000001;
+          id_ = other.id_;
+          onChanged();
         }
         if (other.hasAuthor()) {
-          setAuthor(other.getAuthor());
+          bitField0_ |= 0x00000002;
+          author_ = other.author_;
+          onChanged();
         }
         if (other.hasYear()) {
-          setYear(other.getYear());
+          bitField0_ |= 0x00000004;
+          year_ = other.year_;
+          onChanged();
         }
         if (other.hasPages()) {
-          setPages(other.getPages());
+          bitField0_ |= 0x00000008;
+          pages_ = other.pages_;
+          onChanged();
         }
         if (other.hasSource()) {
-          setSource(other.getSource());
+          bitField0_ |= 0x00000010;
+          source_ = other.source_;
+          onChanged();
         }
         if (other.hasTitle()) {
-          setTitle(other.getTitle());
+          bitField0_ |= 0x00000020;
+          title_ = other.title_;
+          onChanged();
         }
         if (other.hasRawText()) {
-          setRawText(other.getRawText());
+          bitField0_ |= 0x00000040;
+          rawText_ = other.rawText_;
+          onChanged();
         }
         if (other.hasIssue()) {
-          setIssue(other.getIssue());
+          bitField0_ |= 0x00000080;
+          issue_ = other.issue_;
+          onChanged();
         }
         if (other.hasVolume()) {
-          setVolume(other.getVolume());
+          bitField0_ |= 0x00000100;
+          volume_ = other.volume_;
+          onChanged();
         }
         if (auxiliaryBuilder_ == null) {
           if (!other.auxiliary_.isEmpty()) {
@@ -806,7 +1152,7 @@ public final class CitationMatchingProtos {
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
-      
+
       public final boolean isInitialized() {
         if (!hasId()) {
           
@@ -814,103 +1160,69 @@ public final class CitationMatchingProtos {
         }
         return true;
       }
-      
+
       public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder(
-            this.getUnknownFields());
-        while (true) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              this.setUnknownFields(unknownFields.build());
-              onChanged();
-              return this;
-            default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                this.setUnknownFields(unknownFields.build());
-                onChanged();
-                return this;
-              }
-              break;
-            }
-            case 10: {
-              bitField0_ |= 0x00000001;
-              id_ = input.readBytes();
-              break;
-            }
-            case 18: {
-              bitField0_ |= 0x00000002;
-              author_ = input.readBytes();
-              break;
-            }
-            case 26: {
-              bitField0_ |= 0x00000004;
-              year_ = input.readBytes();
-              break;
-            }
-            case 34: {
-              bitField0_ |= 0x00000008;
-              pages_ = input.readBytes();
-              break;
-            }
-            case 42: {
-              bitField0_ |= 0x00000010;
-              source_ = input.readBytes();
-              break;
-            }
-            case 50: {
-              bitField0_ |= 0x00000020;
-              title_ = input.readBytes();
-              break;
-            }
-            case 58: {
-              pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue.Builder subBuilder = pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue.newBuilder();
-              input.readMessage(subBuilder, extensionRegistry);
-              addAuxiliary(subBuilder.buildPartial());
-              break;
-            }
-            case 66: {
-              bitField0_ |= 0x00000040;
-              rawText_ = input.readBytes();
-              break;
-            }
-            case 74: {
-              bitField0_ |= 0x00000080;
-              issue_ = input.readBytes();
-              break;
-            }
-            case 82: {
-              bitField0_ |= 0x00000100;
-              volume_ = input.readBytes();
-              break;
-            }
+        pl.edu.icm.coansys.citations.data.CitationMatchingProtos.MatchableEntityData parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (pl.edu.icm.coansys.citations.data.CitationMatchingProtos.MatchableEntityData) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
           }
         }
+        return this;
       }
-      
       private int bitField0_;
-      
+
       // required string id = 1;
       private java.lang.Object id_ = "";
+      /**
+       * <code>required string id = 1;</code>
+       */
       public boolean hasId() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
-      public String getId() {
+      /**
+       * <code>required string id = 1;</code>
+       */
+      public java.lang.String getId() {
         java.lang.Object ref = id_;
-        if (!(ref instanceof String)) {
-          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
           id_ = s;
           return s;
         } else {
-          return (String) ref;
+          return (java.lang.String) ref;
         }
       }
-      public Builder setId(String value) {
+      /**
+       * <code>required string id = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getIdBytes() {
+        java.lang.Object ref = id_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          id_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string id = 1;</code>
+       */
+      public Builder setId(
+          java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -919,34 +1231,72 @@ public final class CitationMatchingProtos {
         onChanged();
         return this;
       }
+      /**
+       * <code>required string id = 1;</code>
+       */
       public Builder clearId() {
         bitField0_ = (bitField0_ & ~0x00000001);
         id_ = getDefaultInstance().getId();
         onChanged();
         return this;
       }
-      void setId(com.google.protobuf.ByteString value) {
-        bitField0_ |= 0x00000001;
+      /**
+       * <code>required string id = 1;</code>
+       */
+      public Builder setIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
         id_ = value;
         onChanged();
+        return this;
       }
-      
+
       // optional string author = 2;
       private java.lang.Object author_ = "";
+      /**
+       * <code>optional string author = 2;</code>
+       */
       public boolean hasAuthor() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
-      public String getAuthor() {
+      /**
+       * <code>optional string author = 2;</code>
+       */
+      public java.lang.String getAuthor() {
         java.lang.Object ref = author_;
-        if (!(ref instanceof String)) {
-          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
           author_ = s;
           return s;
         } else {
-          return (String) ref;
+          return (java.lang.String) ref;
         }
       }
-      public Builder setAuthor(String value) {
+      /**
+       * <code>optional string author = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getAuthorBytes() {
+        java.lang.Object ref = author_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          author_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string author = 2;</code>
+       */
+      public Builder setAuthor(
+          java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -955,34 +1305,72 @@ public final class CitationMatchingProtos {
         onChanged();
         return this;
       }
+      /**
+       * <code>optional string author = 2;</code>
+       */
       public Builder clearAuthor() {
         bitField0_ = (bitField0_ & ~0x00000002);
         author_ = getDefaultInstance().getAuthor();
         onChanged();
         return this;
       }
-      void setAuthor(com.google.protobuf.ByteString value) {
-        bitField0_ |= 0x00000002;
+      /**
+       * <code>optional string author = 2;</code>
+       */
+      public Builder setAuthorBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
         author_ = value;
         onChanged();
+        return this;
       }
-      
+
       // optional string year = 3;
       private java.lang.Object year_ = "";
+      /**
+       * <code>optional string year = 3;</code>
+       */
       public boolean hasYear() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
-      public String getYear() {
+      /**
+       * <code>optional string year = 3;</code>
+       */
+      public java.lang.String getYear() {
         java.lang.Object ref = year_;
-        if (!(ref instanceof String)) {
-          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
           year_ = s;
           return s;
         } else {
-          return (String) ref;
+          return (java.lang.String) ref;
         }
       }
-      public Builder setYear(String value) {
+      /**
+       * <code>optional string year = 3;</code>
+       */
+      public com.google.protobuf.ByteString
+          getYearBytes() {
+        java.lang.Object ref = year_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          year_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string year = 3;</code>
+       */
+      public Builder setYear(
+          java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -991,34 +1379,72 @@ public final class CitationMatchingProtos {
         onChanged();
         return this;
       }
+      /**
+       * <code>optional string year = 3;</code>
+       */
       public Builder clearYear() {
         bitField0_ = (bitField0_ & ~0x00000004);
         year_ = getDefaultInstance().getYear();
         onChanged();
         return this;
       }
-      void setYear(com.google.protobuf.ByteString value) {
-        bitField0_ |= 0x00000004;
+      /**
+       * <code>optional string year = 3;</code>
+       */
+      public Builder setYearBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
         year_ = value;
         onChanged();
+        return this;
       }
-      
+
       // optional string pages = 4;
       private java.lang.Object pages_ = "";
+      /**
+       * <code>optional string pages = 4;</code>
+       */
       public boolean hasPages() {
         return ((bitField0_ & 0x00000008) == 0x00000008);
       }
-      public String getPages() {
+      /**
+       * <code>optional string pages = 4;</code>
+       */
+      public java.lang.String getPages() {
         java.lang.Object ref = pages_;
-        if (!(ref instanceof String)) {
-          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
           pages_ = s;
           return s;
         } else {
-          return (String) ref;
+          return (java.lang.String) ref;
         }
       }
-      public Builder setPages(String value) {
+      /**
+       * <code>optional string pages = 4;</code>
+       */
+      public com.google.protobuf.ByteString
+          getPagesBytes() {
+        java.lang.Object ref = pages_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          pages_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string pages = 4;</code>
+       */
+      public Builder setPages(
+          java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -1027,34 +1453,72 @@ public final class CitationMatchingProtos {
         onChanged();
         return this;
       }
+      /**
+       * <code>optional string pages = 4;</code>
+       */
       public Builder clearPages() {
         bitField0_ = (bitField0_ & ~0x00000008);
         pages_ = getDefaultInstance().getPages();
         onChanged();
         return this;
       }
-      void setPages(com.google.protobuf.ByteString value) {
-        bitField0_ |= 0x00000008;
+      /**
+       * <code>optional string pages = 4;</code>
+       */
+      public Builder setPagesBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000008;
         pages_ = value;
         onChanged();
+        return this;
       }
-      
+
       // optional string source = 5;
       private java.lang.Object source_ = "";
+      /**
+       * <code>optional string source = 5;</code>
+       */
       public boolean hasSource() {
         return ((bitField0_ & 0x00000010) == 0x00000010);
       }
-      public String getSource() {
+      /**
+       * <code>optional string source = 5;</code>
+       */
+      public java.lang.String getSource() {
         java.lang.Object ref = source_;
-        if (!(ref instanceof String)) {
-          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
           source_ = s;
           return s;
         } else {
-          return (String) ref;
+          return (java.lang.String) ref;
         }
       }
-      public Builder setSource(String value) {
+      /**
+       * <code>optional string source = 5;</code>
+       */
+      public com.google.protobuf.ByteString
+          getSourceBytes() {
+        java.lang.Object ref = source_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          source_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string source = 5;</code>
+       */
+      public Builder setSource(
+          java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -1063,34 +1527,72 @@ public final class CitationMatchingProtos {
         onChanged();
         return this;
       }
+      /**
+       * <code>optional string source = 5;</code>
+       */
       public Builder clearSource() {
         bitField0_ = (bitField0_ & ~0x00000010);
         source_ = getDefaultInstance().getSource();
         onChanged();
         return this;
       }
-      void setSource(com.google.protobuf.ByteString value) {
-        bitField0_ |= 0x00000010;
+      /**
+       * <code>optional string source = 5;</code>
+       */
+      public Builder setSourceBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000010;
         source_ = value;
         onChanged();
+        return this;
       }
-      
+
       // optional string title = 6;
       private java.lang.Object title_ = "";
+      /**
+       * <code>optional string title = 6;</code>
+       */
       public boolean hasTitle() {
         return ((bitField0_ & 0x00000020) == 0x00000020);
       }
-      public String getTitle() {
+      /**
+       * <code>optional string title = 6;</code>
+       */
+      public java.lang.String getTitle() {
         java.lang.Object ref = title_;
-        if (!(ref instanceof String)) {
-          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
           title_ = s;
           return s;
         } else {
-          return (String) ref;
+          return (java.lang.String) ref;
         }
       }
-      public Builder setTitle(String value) {
+      /**
+       * <code>optional string title = 6;</code>
+       */
+      public com.google.protobuf.ByteString
+          getTitleBytes() {
+        java.lang.Object ref = title_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          title_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string title = 6;</code>
+       */
+      public Builder setTitle(
+          java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -1099,34 +1601,72 @@ public final class CitationMatchingProtos {
         onChanged();
         return this;
       }
+      /**
+       * <code>optional string title = 6;</code>
+       */
       public Builder clearTitle() {
         bitField0_ = (bitField0_ & ~0x00000020);
         title_ = getDefaultInstance().getTitle();
         onChanged();
         return this;
       }
-      void setTitle(com.google.protobuf.ByteString value) {
-        bitField0_ |= 0x00000020;
+      /**
+       * <code>optional string title = 6;</code>
+       */
+      public Builder setTitleBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000020;
         title_ = value;
         onChanged();
+        return this;
       }
-      
+
       // optional string rawText = 8;
       private java.lang.Object rawText_ = "";
+      /**
+       * <code>optional string rawText = 8;</code>
+       */
       public boolean hasRawText() {
         return ((bitField0_ & 0x00000040) == 0x00000040);
       }
-      public String getRawText() {
+      /**
+       * <code>optional string rawText = 8;</code>
+       */
+      public java.lang.String getRawText() {
         java.lang.Object ref = rawText_;
-        if (!(ref instanceof String)) {
-          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
           rawText_ = s;
           return s;
         } else {
-          return (String) ref;
+          return (java.lang.String) ref;
         }
       }
-      public Builder setRawText(String value) {
+      /**
+       * <code>optional string rawText = 8;</code>
+       */
+      public com.google.protobuf.ByteString
+          getRawTextBytes() {
+        java.lang.Object ref = rawText_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          rawText_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string rawText = 8;</code>
+       */
+      public Builder setRawText(
+          java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -1135,34 +1675,72 @@ public final class CitationMatchingProtos {
         onChanged();
         return this;
       }
+      /**
+       * <code>optional string rawText = 8;</code>
+       */
       public Builder clearRawText() {
         bitField0_ = (bitField0_ & ~0x00000040);
         rawText_ = getDefaultInstance().getRawText();
         onChanged();
         return this;
       }
-      void setRawText(com.google.protobuf.ByteString value) {
-        bitField0_ |= 0x00000040;
+      /**
+       * <code>optional string rawText = 8;</code>
+       */
+      public Builder setRawTextBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000040;
         rawText_ = value;
         onChanged();
+        return this;
       }
-      
+
       // optional string issue = 9;
       private java.lang.Object issue_ = "";
+      /**
+       * <code>optional string issue = 9;</code>
+       */
       public boolean hasIssue() {
         return ((bitField0_ & 0x00000080) == 0x00000080);
       }
-      public String getIssue() {
+      /**
+       * <code>optional string issue = 9;</code>
+       */
+      public java.lang.String getIssue() {
         java.lang.Object ref = issue_;
-        if (!(ref instanceof String)) {
-          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
           issue_ = s;
           return s;
         } else {
-          return (String) ref;
+          return (java.lang.String) ref;
         }
       }
-      public Builder setIssue(String value) {
+      /**
+       * <code>optional string issue = 9;</code>
+       */
+      public com.google.protobuf.ByteString
+          getIssueBytes() {
+        java.lang.Object ref = issue_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          issue_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string issue = 9;</code>
+       */
+      public Builder setIssue(
+          java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -1171,34 +1749,72 @@ public final class CitationMatchingProtos {
         onChanged();
         return this;
       }
+      /**
+       * <code>optional string issue = 9;</code>
+       */
       public Builder clearIssue() {
         bitField0_ = (bitField0_ & ~0x00000080);
         issue_ = getDefaultInstance().getIssue();
         onChanged();
         return this;
       }
-      void setIssue(com.google.protobuf.ByteString value) {
-        bitField0_ |= 0x00000080;
+      /**
+       * <code>optional string issue = 9;</code>
+       */
+      public Builder setIssueBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000080;
         issue_ = value;
         onChanged();
+        return this;
       }
-      
+
       // optional string volume = 10;
       private java.lang.Object volume_ = "";
+      /**
+       * <code>optional string volume = 10;</code>
+       */
       public boolean hasVolume() {
         return ((bitField0_ & 0x00000100) == 0x00000100);
       }
-      public String getVolume() {
+      /**
+       * <code>optional string volume = 10;</code>
+       */
+      public java.lang.String getVolume() {
         java.lang.Object ref = volume_;
-        if (!(ref instanceof String)) {
-          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
           volume_ = s;
           return s;
         } else {
-          return (String) ref;
+          return (java.lang.String) ref;
         }
       }
-      public Builder setVolume(String value) {
+      /**
+       * <code>optional string volume = 10;</code>
+       */
+      public com.google.protobuf.ByteString
+          getVolumeBytes() {
+        java.lang.Object ref = volume_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          volume_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string volume = 10;</code>
+       */
+      public Builder setVolume(
+          java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -1207,18 +1823,29 @@ public final class CitationMatchingProtos {
         onChanged();
         return this;
       }
+      /**
+       * <code>optional string volume = 10;</code>
+       */
       public Builder clearVolume() {
         bitField0_ = (bitField0_ & ~0x00000100);
         volume_ = getDefaultInstance().getVolume();
         onChanged();
         return this;
       }
-      void setVolume(com.google.protobuf.ByteString value) {
-        bitField0_ |= 0x00000100;
+      /**
+       * <code>optional string volume = 10;</code>
+       */
+      public Builder setVolumeBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000100;
         volume_ = value;
         onChanged();
+        return this;
       }
-      
+
       // repeated .pl.edu.icm.coansys.citations.KeyValue auxiliary = 7;
       private java.util.List<pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue> auxiliary_ =
         java.util.Collections.emptyList();
@@ -1228,10 +1855,13 @@ public final class CitationMatchingProtos {
           bitField0_ |= 0x00000200;
          }
       }
-      
+
       private com.google.protobuf.RepeatedFieldBuilder<
           pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue, pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue.Builder, pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValueOrBuilder> auxiliaryBuilder_;
-      
+
+      /**
+       * <code>repeated .pl.edu.icm.coansys.citations.KeyValue auxiliary = 7;</code>
+       */
       public java.util.List<pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue> getAuxiliaryList() {
         if (auxiliaryBuilder_ == null) {
           return java.util.Collections.unmodifiableList(auxiliary_);
@@ -1239,6 +1869,9 @@ public final class CitationMatchingProtos {
           return auxiliaryBuilder_.getMessageList();
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.citations.KeyValue auxiliary = 7;</code>
+       */
       public int getAuxiliaryCount() {
         if (auxiliaryBuilder_ == null) {
           return auxiliary_.size();
@@ -1246,6 +1879,9 @@ public final class CitationMatchingProtos {
           return auxiliaryBuilder_.getCount();
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.citations.KeyValue auxiliary = 7;</code>
+       */
       public pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue getAuxiliary(int index) {
         if (auxiliaryBuilder_ == null) {
           return auxiliary_.get(index);
@@ -1253,6 +1889,9 @@ public final class CitationMatchingProtos {
           return auxiliaryBuilder_.getMessage(index);
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.citations.KeyValue auxiliary = 7;</code>
+       */
       public Builder setAuxiliary(
           int index, pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue value) {
         if (auxiliaryBuilder_ == null) {
@@ -1267,6 +1906,9 @@ public final class CitationMatchingProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.citations.KeyValue auxiliary = 7;</code>
+       */
       public Builder setAuxiliary(
           int index, pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue.Builder builderForValue) {
         if (auxiliaryBuilder_ == null) {
@@ -1278,6 +1920,9 @@ public final class CitationMatchingProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.citations.KeyValue auxiliary = 7;</code>
+       */
       public Builder addAuxiliary(pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue value) {
         if (auxiliaryBuilder_ == null) {
           if (value == null) {
@@ -1291,6 +1936,9 @@ public final class CitationMatchingProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.citations.KeyValue auxiliary = 7;</code>
+       */
       public Builder addAuxiliary(
           int index, pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue value) {
         if (auxiliaryBuilder_ == null) {
@@ -1305,6 +1953,9 @@ public final class CitationMatchingProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.citations.KeyValue auxiliary = 7;</code>
+       */
       public Builder addAuxiliary(
           pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue.Builder builderForValue) {
         if (auxiliaryBuilder_ == null) {
@@ -1316,6 +1967,9 @@ public final class CitationMatchingProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.citations.KeyValue auxiliary = 7;</code>
+       */
       public Builder addAuxiliary(
           int index, pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue.Builder builderForValue) {
         if (auxiliaryBuilder_ == null) {
@@ -1327,6 +1981,9 @@ public final class CitationMatchingProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.citations.KeyValue auxiliary = 7;</code>
+       */
       public Builder addAllAuxiliary(
           java.lang.Iterable<? extends pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue> values) {
         if (auxiliaryBuilder_ == null) {
@@ -1338,6 +1995,9 @@ public final class CitationMatchingProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.citations.KeyValue auxiliary = 7;</code>
+       */
       public Builder clearAuxiliary() {
         if (auxiliaryBuilder_ == null) {
           auxiliary_ = java.util.Collections.emptyList();
@@ -1348,6 +2008,9 @@ public final class CitationMatchingProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.citations.KeyValue auxiliary = 7;</code>
+       */
       public Builder removeAuxiliary(int index) {
         if (auxiliaryBuilder_ == null) {
           ensureAuxiliaryIsMutable();
@@ -1358,10 +2021,16 @@ public final class CitationMatchingProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.citations.KeyValue auxiliary = 7;</code>
+       */
       public pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue.Builder getAuxiliaryBuilder(
           int index) {
         return getAuxiliaryFieldBuilder().getBuilder(index);
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.citations.KeyValue auxiliary = 7;</code>
+       */
       public pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValueOrBuilder getAuxiliaryOrBuilder(
           int index) {
         if (auxiliaryBuilder_ == null) {
@@ -1369,6 +2038,9 @@ public final class CitationMatchingProtos {
           return auxiliaryBuilder_.getMessageOrBuilder(index);
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.citations.KeyValue auxiliary = 7;</code>
+       */
       public java.util.List<? extends pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValueOrBuilder> 
            getAuxiliaryOrBuilderList() {
         if (auxiliaryBuilder_ != null) {
@@ -1377,15 +2049,24 @@ public final class CitationMatchingProtos {
           return java.util.Collections.unmodifiableList(auxiliary_);
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.citations.KeyValue auxiliary = 7;</code>
+       */
       public pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue.Builder addAuxiliaryBuilder() {
         return getAuxiliaryFieldBuilder().addBuilder(
             pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue.getDefaultInstance());
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.citations.KeyValue auxiliary = 7;</code>
+       */
       public pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue.Builder addAuxiliaryBuilder(
           int index) {
         return getAuxiliaryFieldBuilder().addBuilder(
             index, pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue.getDefaultInstance());
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.citations.KeyValue auxiliary = 7;</code>
+       */
       public java.util.List<pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue.Builder> 
            getAuxiliaryBuilderList() {
         return getAuxiliaryFieldBuilder().getBuilderList();
@@ -1404,122 +2085,238 @@ public final class CitationMatchingProtos {
         }
         return auxiliaryBuilder_;
       }
-      
+
       // @@protoc_insertion_point(builder_scope:pl.edu.icm.coansys.citations.MatchableEntityData)
     }
-    
+
     static {
       defaultInstance = new MatchableEntityData(true);
       defaultInstance.initFields();
     }
-    
+
     // @@protoc_insertion_point(class_scope:pl.edu.icm.coansys.citations.MatchableEntityData)
   }
-  
+
   public interface KeyValueOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
-    
+
     // optional string key = 1;
+    /**
+     * <code>optional string key = 1;</code>
+     */
     boolean hasKey();
-    String getKey();
-    
+    /**
+     * <code>optional string key = 1;</code>
+     */
+    java.lang.String getKey();
+    /**
+     * <code>optional string key = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getKeyBytes();
+
     // optional string value = 2;
+    /**
+     * <code>optional string value = 2;</code>
+     */
     boolean hasValue();
-    String getValue();
+    /**
+     * <code>optional string value = 2;</code>
+     */
+    java.lang.String getValue();
+    /**
+     * <code>optional string value = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getValueBytes();
   }
+  /**
+   * Protobuf type {@code pl.edu.icm.coansys.citations.KeyValue}
+   */
   public static final class KeyValue extends
       com.google.protobuf.GeneratedMessage
       implements KeyValueOrBuilder {
     // Use KeyValue.newBuilder() to construct.
-    private KeyValue(Builder builder) {
+    private KeyValue(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
-    private KeyValue(boolean noInit) {}
-    
+    private KeyValue(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
     private static final KeyValue defaultInstance;
     public static KeyValue getDefaultInstance() {
       return defaultInstance;
     }
-    
+
     public KeyValue getDefaultInstanceForType() {
       return defaultInstance;
     }
-    
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private KeyValue(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              bitField0_ |= 0x00000001;
+              key_ = input.readBytes();
+              break;
+            }
+            case 18: {
+              bitField0_ |= 0x00000002;
+              value_ = input.readBytes();
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
       return pl.edu.icm.coansys.citations.data.CitationMatchingProtos.internal_static_pl_edu_icm_coansys_citations_KeyValue_descriptor;
     }
-    
+
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return pl.edu.icm.coansys.citations.data.CitationMatchingProtos.internal_static_pl_edu_icm_coansys_citations_KeyValue_fieldAccessorTable;
+      return pl.edu.icm.coansys.citations.data.CitationMatchingProtos.internal_static_pl_edu_icm_coansys_citations_KeyValue_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue.class, pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue.Builder.class);
     }
-    
+
+    public static com.google.protobuf.Parser<KeyValue> PARSER =
+        new com.google.protobuf.AbstractParser<KeyValue>() {
+      public KeyValue parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new KeyValue(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<KeyValue> getParserForType() {
+      return PARSER;
+    }
+
     private int bitField0_;
     // optional string key = 1;
     public static final int KEY_FIELD_NUMBER = 1;
     private java.lang.Object key_;
+    /**
+     * <code>optional string key = 1;</code>
+     */
     public boolean hasKey() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
-    public String getKey() {
+    /**
+     * <code>optional string key = 1;</code>
+     */
+    public java.lang.String getKey() {
       java.lang.Object ref = key_;
-      if (ref instanceof String) {
-        return (String) ref;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
           key_ = s;
         }
         return s;
       }
     }
-    private com.google.protobuf.ByteString getKeyBytes() {
+    /**
+     * <code>optional string key = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getKeyBytes() {
       java.lang.Object ref = key_;
-      if (ref instanceof String) {
+      if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
         key_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
-    
+
     // optional string value = 2;
     public static final int VALUE_FIELD_NUMBER = 2;
     private java.lang.Object value_;
+    /**
+     * <code>optional string value = 2;</code>
+     */
     public boolean hasValue() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
-    public String getValue() {
+    /**
+     * <code>optional string value = 2;</code>
+     */
+    public java.lang.String getValue() {
       java.lang.Object ref = value_;
-      if (ref instanceof String) {
-        return (String) ref;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
           value_ = s;
         }
         return s;
       }
     }
-    private com.google.protobuf.ByteString getValueBytes() {
+    /**
+     * <code>optional string value = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getValueBytes() {
       java.lang.Object ref = value_;
-      if (ref instanceof String) {
+      if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
         value_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
-    
+
     private void initFields() {
       key_ = "";
       value_ = "";
@@ -1528,11 +2325,11 @@ public final class CitationMatchingProtos {
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
-      
+
       memoizedIsInitialized = 1;
       return true;
     }
-    
+
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
@@ -1544,12 +2341,12 @@ public final class CitationMatchingProtos {
       }
       getUnknownFields().writeTo(output);
     }
-    
+
     private int memoizedSerializedSize = -1;
     public int getSerializedSize() {
       int size = memoizedSerializedSize;
       if (size != -1) return size;
-    
+
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
@@ -1563,94 +2360,83 @@ public final class CitationMatchingProtos {
       memoizedSerializedSize = size;
       return size;
     }
-    
+
     private static final long serialVersionUID = 0L;
     @java.lang.Override
     protected java.lang.Object writeReplace()
         throws java.io.ObjectStreamException {
       return super.writeReplace();
     }
-    
+
     public static pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
+      return PARSER.parseFrom(data);
     }
     public static pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
+      return PARSER.parseFrom(data);
     }
     public static pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
+      return PARSER.parseFrom(input);
     }
     public static pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(input, extensionRegistry);
     }
     public static pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
+      return PARSER.parseDelimitedFrom(input);
     }
     public static pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
     public static pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
+      return PARSER.parseFrom(input);
     }
     public static pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(input, extensionRegistry);
     }
-    
+
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder(pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
-    
+
     @java.lang.Override
     protected Builder newBuilderForType(
         com.google.protobuf.GeneratedMessage.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
+    /**
+     * Protobuf type {@code pl.edu.icm.coansys.citations.KeyValue}
+     */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
        implements pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValueOrBuilder {
@@ -1658,18 +2444,21 @@ public final class CitationMatchingProtos {
           getDescriptor() {
         return pl.edu.icm.coansys.citations.data.CitationMatchingProtos.internal_static_pl_edu_icm_coansys_citations_KeyValue_descriptor;
       }
-      
+
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return pl.edu.icm.coansys.citations.data.CitationMatchingProtos.internal_static_pl_edu_icm_coansys_citations_KeyValue_fieldAccessorTable;
+        return pl.edu.icm.coansys.citations.data.CitationMatchingProtos.internal_static_pl_edu_icm_coansys_citations_KeyValue_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue.class, pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue.Builder.class);
       }
-      
+
       // Construct using pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
-      
-      private Builder( com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
@@ -1680,7 +2469,7 @@ public final class CitationMatchingProtos {
       private static Builder create() {
         return new Builder();
       }
-      
+
       public Builder clear() {
         super.clear();
         key_ = "";
@@ -1689,20 +2478,20 @@ public final class CitationMatchingProtos {
         bitField0_ = (bitField0_ & ~0x00000002);
         return this;
       }
-      
+
       public Builder clone() {
         return create().mergeFrom(buildPartial());
       }
-      
+
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue.getDescriptor();
+        return pl.edu.icm.coansys.citations.data.CitationMatchingProtos.internal_static_pl_edu_icm_coansys_citations_KeyValue_descriptor;
       }
-      
+
       public pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue getDefaultInstanceForType() {
         return pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue.getDefaultInstance();
       }
-      
+
       public pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue build() {
         pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue result = buildPartial();
         if (!result.isInitialized()) {
@@ -1710,17 +2499,7 @@ public final class CitationMatchingProtos {
         }
         return result;
       }
-      
-      private pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue buildParsed()
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(
-            result).asInvalidProtocolBufferException();
-        }
-        return result;
-      }
-      
+
       public pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue buildPartial() {
         pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue result = new pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue(this);
         int from_bitField0_ = bitField0_;
@@ -1737,7 +2516,7 @@ public final class CitationMatchingProtos {
         onBuilt();
         return result;
       }
-      
+
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue) {
           return mergeFrom((pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue)other);
@@ -1746,78 +2525,89 @@ public final class CitationMatchingProtos {
           return this;
         }
       }
-      
+
       public Builder mergeFrom(pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue other) {
         if (other == pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue.getDefaultInstance()) return this;
         if (other.hasKey()) {
-          setKey(other.getKey());
+          bitField0_ |= 0x00000001;
+          key_ = other.key_;
+          onChanged();
         }
         if (other.hasValue()) {
-          setValue(other.getValue());
+          bitField0_ |= 0x00000002;
+          value_ = other.value_;
+          onChanged();
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
-      
+
       public final boolean isInitialized() {
         return true;
       }
-      
+
       public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder(
-            this.getUnknownFields());
-        while (true) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              this.setUnknownFields(unknownFields.build());
-              onChanged();
-              return this;
-            default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                this.setUnknownFields(unknownFields.build());
-                onChanged();
-                return this;
-              }
-              break;
-            }
-            case 10: {
-              bitField0_ |= 0x00000001;
-              key_ = input.readBytes();
-              break;
-            }
-            case 18: {
-              bitField0_ |= 0x00000002;
-              value_ = input.readBytes();
-              break;
-            }
+        pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
           }
         }
+        return this;
       }
-      
       private int bitField0_;
-      
+
       // optional string key = 1;
       private java.lang.Object key_ = "";
+      /**
+       * <code>optional string key = 1;</code>
+       */
       public boolean hasKey() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
-      public String getKey() {
+      /**
+       * <code>optional string key = 1;</code>
+       */
+      public java.lang.String getKey() {
         java.lang.Object ref = key_;
-        if (!(ref instanceof String)) {
-          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
           key_ = s;
           return s;
         } else {
-          return (String) ref;
+          return (java.lang.String) ref;
         }
       }
-      public Builder setKey(String value) {
+      /**
+       * <code>optional string key = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getKeyBytes() {
+        java.lang.Object ref = key_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          key_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string key = 1;</code>
+       */
+      public Builder setKey(
+          java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -1826,34 +2616,72 @@ public final class CitationMatchingProtos {
         onChanged();
         return this;
       }
+      /**
+       * <code>optional string key = 1;</code>
+       */
       public Builder clearKey() {
         bitField0_ = (bitField0_ & ~0x00000001);
         key_ = getDefaultInstance().getKey();
         onChanged();
         return this;
       }
-      void setKey(com.google.protobuf.ByteString value) {
-        bitField0_ |= 0x00000001;
+      /**
+       * <code>optional string key = 1;</code>
+       */
+      public Builder setKeyBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
         key_ = value;
         onChanged();
+        return this;
       }
-      
+
       // optional string value = 2;
       private java.lang.Object value_ = "";
+      /**
+       * <code>optional string value = 2;</code>
+       */
       public boolean hasValue() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
-      public String getValue() {
+      /**
+       * <code>optional string value = 2;</code>
+       */
+      public java.lang.String getValue() {
         java.lang.Object ref = value_;
-        if (!(ref instanceof String)) {
-          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
           value_ = s;
           return s;
         } else {
-          return (String) ref;
+          return (java.lang.String) ref;
         }
       }
-      public Builder setValue(String value) {
+      /**
+       * <code>optional string value = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getValueBytes() {
+        java.lang.Object ref = value_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          value_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string value = 2;</code>
+       */
+      public Builder setValue(
+          java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -1862,29 +2690,40 @@ public final class CitationMatchingProtos {
         onChanged();
         return this;
       }
+      /**
+       * <code>optional string value = 2;</code>
+       */
       public Builder clearValue() {
         bitField0_ = (bitField0_ & ~0x00000002);
         value_ = getDefaultInstance().getValue();
         onChanged();
         return this;
       }
-      void setValue(com.google.protobuf.ByteString value) {
-        bitField0_ |= 0x00000002;
+      /**
+       * <code>optional string value = 2;</code>
+       */
+      public Builder setValueBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
         value_ = value;
         onChanged();
+        return this;
       }
-      
+
       // @@protoc_insertion_point(builder_scope:pl.edu.icm.coansys.citations.KeyValue)
     }
-    
+
     static {
       defaultInstance = new KeyValue(true);
       defaultInstance.initFields();
     }
-    
+
     // @@protoc_insertion_point(class_scope:pl.edu.icm.coansys.citations.KeyValue)
   }
-  
+
   private static com.google.protobuf.Descriptors.Descriptor
     internal_static_pl_edu_icm_coansys_citations_MatchableEntityData_descriptor;
   private static
@@ -1895,7 +2734,7 @@ public final class CitationMatchingProtos {
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_pl_edu_icm_coansys_citations_KeyValue_fieldAccessorTable;
-  
+
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
     return descriptor;
@@ -1925,17 +2764,13 @@ public final class CitationMatchingProtos {
           internal_static_pl_edu_icm_coansys_citations_MatchableEntityData_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_pl_edu_icm_coansys_citations_MatchableEntityData_descriptor,
-              new java.lang.String[] { "Id", "Author", "Year", "Pages", "Source", "Title", "RawText", "Issue", "Volume", "Auxiliary", },
-              pl.edu.icm.coansys.citations.data.CitationMatchingProtos.MatchableEntityData.class,
-              pl.edu.icm.coansys.citations.data.CitationMatchingProtos.MatchableEntityData.Builder.class);
+              new java.lang.String[] { "Id", "Author", "Year", "Pages", "Source", "Title", "RawText", "Issue", "Volume", "Auxiliary", });
           internal_static_pl_edu_icm_coansys_citations_KeyValue_descriptor =
             getDescriptor().getMessageTypes().get(1);
           internal_static_pl_edu_icm_coansys_citations_KeyValue_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_pl_edu_icm_coansys_citations_KeyValue_descriptor,
-              new java.lang.String[] { "Key", "Value", },
-              pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue.class,
-              pl.edu.icm.coansys.citations.data.CitationMatchingProtos.KeyValue.Builder.class);
+              new java.lang.String[] { "Key", "Value", });
           return null;
         }
       };
@@ -1944,6 +2779,6 @@ public final class CitationMatchingProtos {
         new com.google.protobuf.Descriptors.FileDescriptor[] {
         }, assigner);
   }
-  
+
   // @@protoc_insertion_point(outer_class_scope)
 }
