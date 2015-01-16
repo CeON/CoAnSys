@@ -10,170 +10,368 @@ public final class DocumentSimilarityProtos {
   }
   public interface DocumentSimilarityInfoOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
-    
+
     // required string docIdA = 1;
+    /**
+     * <code>required string docIdA = 1;</code>
+     */
     boolean hasDocIdA();
-    String getDocIdA();
-    
+    /**
+     * <code>required string docIdA = 1;</code>
+     */
+    java.lang.String getDocIdA();
+    /**
+     * <code>required string docIdA = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getDocIdABytes();
+
     // repeated .pl.edu.icm.coansys.models.SecondDocInfo secondDocInfo = 2;
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.SecondDocInfo secondDocInfo = 2;</code>
+     */
     java.util.List<pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo> 
         getSecondDocInfoList();
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.SecondDocInfo secondDocInfo = 2;</code>
+     */
     pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo getSecondDocInfo(int index);
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.SecondDocInfo secondDocInfo = 2;</code>
+     */
     int getSecondDocInfoCount();
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.SecondDocInfo secondDocInfo = 2;</code>
+     */
     java.util.List<? extends pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfoOrBuilder> 
         getSecondDocInfoOrBuilderList();
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.SecondDocInfo secondDocInfo = 2;</code>
+     */
     pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfoOrBuilder getSecondDocInfoOrBuilder(
         int index);
-    
+
     // required string type = 3;
+    /**
+     * <code>required string type = 3;</code>
+     */
     boolean hasType();
-    String getType();
-    
+    /**
+     * <code>required string type = 3;</code>
+     */
+    java.lang.String getType();
+    /**
+     * <code>required string type = 3;</code>
+     */
+    com.google.protobuf.ByteString
+        getTypeBytes();
+
     // repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;</code>
+     */
     java.util.List<pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar> 
         getAuxsList();
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;</code>
+     */
     pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar getAuxs(int index);
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;</code>
+     */
     int getAuxsCount();
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;</code>
+     */
     java.util.List<? extends pl.edu.icm.coansys.models.DocumentSimilarityProtos.AuxiliarOrBuilder> 
         getAuxsOrBuilderList();
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;</code>
+     */
     pl.edu.icm.coansys.models.DocumentSimilarityProtos.AuxiliarOrBuilder getAuxsOrBuilder(
         int index);
   }
+  /**
+   * Protobuf type {@code pl.edu.icm.coansys.models.DocumentSimilarityInfo}
+   */
   public static final class DocumentSimilarityInfo extends
       com.google.protobuf.GeneratedMessage
       implements DocumentSimilarityInfoOrBuilder {
     // Use DocumentSimilarityInfo.newBuilder() to construct.
-    private DocumentSimilarityInfo(Builder builder) {
+    private DocumentSimilarityInfo(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
-    private DocumentSimilarityInfo(boolean noInit) {}
-    
+    private DocumentSimilarityInfo(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
     private static final DocumentSimilarityInfo defaultInstance;
     public static DocumentSimilarityInfo getDefaultInstance() {
       return defaultInstance;
     }
-    
+
     public DocumentSimilarityInfo getDefaultInstanceForType() {
       return defaultInstance;
     }
-    
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private DocumentSimilarityInfo(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              bitField0_ |= 0x00000001;
+              docIdA_ = input.readBytes();
+              break;
+            }
+            case 18: {
+              if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+                secondDocInfo_ = new java.util.ArrayList<pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo>();
+                mutable_bitField0_ |= 0x00000002;
+              }
+              secondDocInfo_.add(input.readMessage(pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo.PARSER, extensionRegistry));
+              break;
+            }
+            case 26: {
+              bitField0_ |= 0x00000002;
+              type_ = input.readBytes();
+              break;
+            }
+            case 34: {
+              if (!((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+                auxs_ = new java.util.ArrayList<pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar>();
+                mutable_bitField0_ |= 0x00000008;
+              }
+              auxs_.add(input.readMessage(pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar.PARSER, extensionRegistry));
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+          secondDocInfo_ = java.util.Collections.unmodifiableList(secondDocInfo_);
+        }
+        if (((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+          auxs_ = java.util.Collections.unmodifiableList(auxs_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
       return pl.edu.icm.coansys.models.DocumentSimilarityProtos.internal_static_pl_edu_icm_coansys_models_DocumentSimilarityInfo_descriptor;
     }
-    
+
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return pl.edu.icm.coansys.models.DocumentSimilarityProtos.internal_static_pl_edu_icm_coansys_models_DocumentSimilarityInfo_fieldAccessorTable;
+      return pl.edu.icm.coansys.models.DocumentSimilarityProtos.internal_static_pl_edu_icm_coansys_models_DocumentSimilarityInfo_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              pl.edu.icm.coansys.models.DocumentSimilarityProtos.DocumentSimilarityInfo.class, pl.edu.icm.coansys.models.DocumentSimilarityProtos.DocumentSimilarityInfo.Builder.class);
     }
-    
+
+    public static com.google.protobuf.Parser<DocumentSimilarityInfo> PARSER =
+        new com.google.protobuf.AbstractParser<DocumentSimilarityInfo>() {
+      public DocumentSimilarityInfo parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new DocumentSimilarityInfo(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<DocumentSimilarityInfo> getParserForType() {
+      return PARSER;
+    }
+
     private int bitField0_;
     // required string docIdA = 1;
     public static final int DOCIDA_FIELD_NUMBER = 1;
     private java.lang.Object docIdA_;
+    /**
+     * <code>required string docIdA = 1;</code>
+     */
     public boolean hasDocIdA() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
-    public String getDocIdA() {
+    /**
+     * <code>required string docIdA = 1;</code>
+     */
+    public java.lang.String getDocIdA() {
       java.lang.Object ref = docIdA_;
-      if (ref instanceof String) {
-        return (String) ref;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
           docIdA_ = s;
         }
         return s;
       }
     }
-    private com.google.protobuf.ByteString getDocIdABytes() {
+    /**
+     * <code>required string docIdA = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getDocIdABytes() {
       java.lang.Object ref = docIdA_;
-      if (ref instanceof String) {
+      if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
         docIdA_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
-    
+
     // repeated .pl.edu.icm.coansys.models.SecondDocInfo secondDocInfo = 2;
     public static final int SECONDDOCINFO_FIELD_NUMBER = 2;
     private java.util.List<pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo> secondDocInfo_;
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.SecondDocInfo secondDocInfo = 2;</code>
+     */
     public java.util.List<pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo> getSecondDocInfoList() {
       return secondDocInfo_;
     }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.SecondDocInfo secondDocInfo = 2;</code>
+     */
     public java.util.List<? extends pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfoOrBuilder> 
         getSecondDocInfoOrBuilderList() {
       return secondDocInfo_;
     }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.SecondDocInfo secondDocInfo = 2;</code>
+     */
     public int getSecondDocInfoCount() {
       return secondDocInfo_.size();
     }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.SecondDocInfo secondDocInfo = 2;</code>
+     */
     public pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo getSecondDocInfo(int index) {
       return secondDocInfo_.get(index);
     }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.SecondDocInfo secondDocInfo = 2;</code>
+     */
     public pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfoOrBuilder getSecondDocInfoOrBuilder(
         int index) {
       return secondDocInfo_.get(index);
     }
-    
+
     // required string type = 3;
     public static final int TYPE_FIELD_NUMBER = 3;
     private java.lang.Object type_;
+    /**
+     * <code>required string type = 3;</code>
+     */
     public boolean hasType() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
-    public String getType() {
+    /**
+     * <code>required string type = 3;</code>
+     */
+    public java.lang.String getType() {
       java.lang.Object ref = type_;
-      if (ref instanceof String) {
-        return (String) ref;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
           type_ = s;
         }
         return s;
       }
     }
-    private com.google.protobuf.ByteString getTypeBytes() {
+    /**
+     * <code>required string type = 3;</code>
+     */
+    public com.google.protobuf.ByteString
+        getTypeBytes() {
       java.lang.Object ref = type_;
-      if (ref instanceof String) {
+      if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
         type_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
-    
+
     // repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;
     public static final int AUXS_FIELD_NUMBER = 4;
     private java.util.List<pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar> auxs_;
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;</code>
+     */
     public java.util.List<pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar> getAuxsList() {
       return auxs_;
     }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;</code>
+     */
     public java.util.List<? extends pl.edu.icm.coansys.models.DocumentSimilarityProtos.AuxiliarOrBuilder> 
         getAuxsOrBuilderList() {
       return auxs_;
     }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;</code>
+     */
     public int getAuxsCount() {
       return auxs_.size();
     }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;</code>
+     */
     public pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar getAuxs(int index) {
       return auxs_.get(index);
     }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;</code>
+     */
     public pl.edu.icm.coansys.models.DocumentSimilarityProtos.AuxiliarOrBuilder getAuxsOrBuilder(
         int index) {
       return auxs_.get(index);
     }
-    
+
     private void initFields() {
       docIdA_ = "";
       secondDocInfo_ = java.util.Collections.emptyList();
@@ -184,7 +382,7 @@ public final class DocumentSimilarityProtos {
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
-      
+
       if (!hasDocIdA()) {
         memoizedIsInitialized = 0;
         return false;
@@ -202,7 +400,7 @@ public final class DocumentSimilarityProtos {
       memoizedIsInitialized = 1;
       return true;
     }
-    
+
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
@@ -220,12 +418,12 @@ public final class DocumentSimilarityProtos {
       }
       getUnknownFields().writeTo(output);
     }
-    
+
     private int memoizedSerializedSize = -1;
     public int getSerializedSize() {
       int size = memoizedSerializedSize;
       if (size != -1) return size;
-    
+
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
@@ -247,94 +445,83 @@ public final class DocumentSimilarityProtos {
       memoizedSerializedSize = size;
       return size;
     }
-    
+
     private static final long serialVersionUID = 0L;
     @java.lang.Override
     protected java.lang.Object writeReplace()
         throws java.io.ObjectStreamException {
       return super.writeReplace();
     }
-    
+
     public static pl.edu.icm.coansys.models.DocumentSimilarityProtos.DocumentSimilarityInfo parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
+      return PARSER.parseFrom(data);
     }
     public static pl.edu.icm.coansys.models.DocumentSimilarityProtos.DocumentSimilarityInfo parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.DocumentSimilarityProtos.DocumentSimilarityInfo parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
+      return PARSER.parseFrom(data);
     }
     public static pl.edu.icm.coansys.models.DocumentSimilarityProtos.DocumentSimilarityInfo parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.DocumentSimilarityProtos.DocumentSimilarityInfo parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
+      return PARSER.parseFrom(input);
     }
     public static pl.edu.icm.coansys.models.DocumentSimilarityProtos.DocumentSimilarityInfo parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(input, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.DocumentSimilarityProtos.DocumentSimilarityInfo parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
+      return PARSER.parseDelimitedFrom(input);
     }
     public static pl.edu.icm.coansys.models.DocumentSimilarityProtos.DocumentSimilarityInfo parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.DocumentSimilarityProtos.DocumentSimilarityInfo parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
+      return PARSER.parseFrom(input);
     }
     public static pl.edu.icm.coansys.models.DocumentSimilarityProtos.DocumentSimilarityInfo parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(input, extensionRegistry);
     }
-    
+
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder(pl.edu.icm.coansys.models.DocumentSimilarityProtos.DocumentSimilarityInfo prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
-    
+
     @java.lang.Override
     protected Builder newBuilderForType(
         com.google.protobuf.GeneratedMessage.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
+    /**
+     * Protobuf type {@code pl.edu.icm.coansys.models.DocumentSimilarityInfo}
+     */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
        implements pl.edu.icm.coansys.models.DocumentSimilarityProtos.DocumentSimilarityInfoOrBuilder {
@@ -342,18 +529,21 @@ public final class DocumentSimilarityProtos {
           getDescriptor() {
         return pl.edu.icm.coansys.models.DocumentSimilarityProtos.internal_static_pl_edu_icm_coansys_models_DocumentSimilarityInfo_descriptor;
       }
-      
+
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return pl.edu.icm.coansys.models.DocumentSimilarityProtos.internal_static_pl_edu_icm_coansys_models_DocumentSimilarityInfo_fieldAccessorTable;
+        return pl.edu.icm.coansys.models.DocumentSimilarityProtos.internal_static_pl_edu_icm_coansys_models_DocumentSimilarityInfo_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                pl.edu.icm.coansys.models.DocumentSimilarityProtos.DocumentSimilarityInfo.class, pl.edu.icm.coansys.models.DocumentSimilarityProtos.DocumentSimilarityInfo.Builder.class);
       }
-      
+
       // Construct using pl.edu.icm.coansys.models.DocumentSimilarityProtos.DocumentSimilarityInfo.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
-      
-      private Builder(BuilderParent parent) {
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
@@ -366,7 +556,7 @@ public final class DocumentSimilarityProtos {
       private static Builder create() {
         return new Builder();
       }
-      
+
       public Builder clear() {
         super.clear();
         docIdA_ = "";
@@ -387,20 +577,20 @@ public final class DocumentSimilarityProtos {
         }
         return this;
       }
-      
+
       public Builder clone() {
         return create().mergeFrom(buildPartial());
       }
-      
+
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return pl.edu.icm.coansys.models.DocumentSimilarityProtos.DocumentSimilarityInfo.getDescriptor();
+        return pl.edu.icm.coansys.models.DocumentSimilarityProtos.internal_static_pl_edu_icm_coansys_models_DocumentSimilarityInfo_descriptor;
       }
-      
+
       public pl.edu.icm.coansys.models.DocumentSimilarityProtos.DocumentSimilarityInfo getDefaultInstanceForType() {
         return pl.edu.icm.coansys.models.DocumentSimilarityProtos.DocumentSimilarityInfo.getDefaultInstance();
       }
-      
+
       public pl.edu.icm.coansys.models.DocumentSimilarityProtos.DocumentSimilarityInfo build() {
         pl.edu.icm.coansys.models.DocumentSimilarityProtos.DocumentSimilarityInfo result = buildPartial();
         if (!result.isInitialized()) {
@@ -408,17 +598,7 @@ public final class DocumentSimilarityProtos {
         }
         return result;
       }
-      
-      private pl.edu.icm.coansys.models.DocumentSimilarityProtos.DocumentSimilarityInfo buildParsed()
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        pl.edu.icm.coansys.models.DocumentSimilarityProtos.DocumentSimilarityInfo result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(
-            result).asInvalidProtocolBufferException();
-        }
-        return result;
-      }
-      
+
       public pl.edu.icm.coansys.models.DocumentSimilarityProtos.DocumentSimilarityInfo buildPartial() {
         pl.edu.icm.coansys.models.DocumentSimilarityProtos.DocumentSimilarityInfo result = new pl.edu.icm.coansys.models.DocumentSimilarityProtos.DocumentSimilarityInfo(this);
         int from_bitField0_ = bitField0_;
@@ -453,7 +633,7 @@ public final class DocumentSimilarityProtos {
         onBuilt();
         return result;
       }
-      
+
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof pl.edu.icm.coansys.models.DocumentSimilarityProtos.DocumentSimilarityInfo) {
           return mergeFrom((pl.edu.icm.coansys.models.DocumentSimilarityProtos.DocumentSimilarityInfo)other);
@@ -462,11 +642,13 @@ public final class DocumentSimilarityProtos {
           return this;
         }
       }
-      
+
       public Builder mergeFrom(pl.edu.icm.coansys.models.DocumentSimilarityProtos.DocumentSimilarityInfo other) {
         if (other == pl.edu.icm.coansys.models.DocumentSimilarityProtos.DocumentSimilarityInfo.getDefaultInstance()) return this;
         if (other.hasDocIdA()) {
-          setDocIdA(other.getDocIdA());
+          bitField0_ |= 0x00000001;
+          docIdA_ = other.docIdA_;
+          onChanged();
         }
         if (secondDocInfoBuilder_ == null) {
           if (!other.secondDocInfo_.isEmpty()) {
@@ -495,7 +677,9 @@ public final class DocumentSimilarityProtos {
           }
         }
         if (other.hasType()) {
-          setType(other.getType());
+          bitField0_ |= 0x00000004;
+          type_ = other.type_;
+          onChanged();
         }
         if (auxsBuilder_ == null) {
           if (!other.auxs_.isEmpty()) {
@@ -526,7 +710,7 @@ public final class DocumentSimilarityProtos {
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
-      
+
       public final boolean isInitialized() {
         if (!hasDocIdA()) {
           
@@ -544,74 +728,69 @@ public final class DocumentSimilarityProtos {
         }
         return true;
       }
-      
+
       public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder(
-            this.getUnknownFields());
-        while (true) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              this.setUnknownFields(unknownFields.build());
-              onChanged();
-              return this;
-            default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                this.setUnknownFields(unknownFields.build());
-                onChanged();
-                return this;
-              }
-              break;
-            }
-            case 10: {
-              bitField0_ |= 0x00000001;
-              docIdA_ = input.readBytes();
-              break;
-            }
-            case 18: {
-              pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo.Builder subBuilder = pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo.newBuilder();
-              input.readMessage(subBuilder, extensionRegistry);
-              addSecondDocInfo(subBuilder.buildPartial());
-              break;
-            }
-            case 26: {
-              bitField0_ |= 0x00000004;
-              type_ = input.readBytes();
-              break;
-            }
-            case 34: {
-              pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar.Builder subBuilder = pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar.newBuilder();
-              input.readMessage(subBuilder, extensionRegistry);
-              addAuxs(subBuilder.buildPartial());
-              break;
-            }
+        pl.edu.icm.coansys.models.DocumentSimilarityProtos.DocumentSimilarityInfo parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (pl.edu.icm.coansys.models.DocumentSimilarityProtos.DocumentSimilarityInfo) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
           }
         }
+        return this;
       }
-      
       private int bitField0_;
-      
+
       // required string docIdA = 1;
       private java.lang.Object docIdA_ = "";
+      /**
+       * <code>required string docIdA = 1;</code>
+       */
       public boolean hasDocIdA() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
-      public String getDocIdA() {
+      /**
+       * <code>required string docIdA = 1;</code>
+       */
+      public java.lang.String getDocIdA() {
         java.lang.Object ref = docIdA_;
-        if (!(ref instanceof String)) {
-          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
           docIdA_ = s;
           return s;
         } else {
-          return (String) ref;
+          return (java.lang.String) ref;
         }
       }
-      public Builder setDocIdA(String value) {
+      /**
+       * <code>required string docIdA = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getDocIdABytes() {
+        java.lang.Object ref = docIdA_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          docIdA_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string docIdA = 1;</code>
+       */
+      public Builder setDocIdA(
+          java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -620,18 +799,29 @@ public final class DocumentSimilarityProtos {
         onChanged();
         return this;
       }
+      /**
+       * <code>required string docIdA = 1;</code>
+       */
       public Builder clearDocIdA() {
         bitField0_ = (bitField0_ & ~0x00000001);
         docIdA_ = getDefaultInstance().getDocIdA();
         onChanged();
         return this;
       }
-      void setDocIdA(com.google.protobuf.ByteString value) {
-        bitField0_ |= 0x00000001;
+      /**
+       * <code>required string docIdA = 1;</code>
+       */
+      public Builder setDocIdABytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
         docIdA_ = value;
         onChanged();
+        return this;
       }
-      
+
       // repeated .pl.edu.icm.coansys.models.SecondDocInfo secondDocInfo = 2;
       private java.util.List<pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo> secondDocInfo_ =
         java.util.Collections.emptyList();
@@ -641,10 +831,13 @@ public final class DocumentSimilarityProtos {
           bitField0_ |= 0x00000002;
          }
       }
-      
+
       private com.google.protobuf.RepeatedFieldBuilder<
           pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo, pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo.Builder, pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfoOrBuilder> secondDocInfoBuilder_;
-      
+
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.SecondDocInfo secondDocInfo = 2;</code>
+       */
       public java.util.List<pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo> getSecondDocInfoList() {
         if (secondDocInfoBuilder_ == null) {
           return java.util.Collections.unmodifiableList(secondDocInfo_);
@@ -652,6 +845,9 @@ public final class DocumentSimilarityProtos {
           return secondDocInfoBuilder_.getMessageList();
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.SecondDocInfo secondDocInfo = 2;</code>
+       */
       public int getSecondDocInfoCount() {
         if (secondDocInfoBuilder_ == null) {
           return secondDocInfo_.size();
@@ -659,6 +855,9 @@ public final class DocumentSimilarityProtos {
           return secondDocInfoBuilder_.getCount();
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.SecondDocInfo secondDocInfo = 2;</code>
+       */
       public pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo getSecondDocInfo(int index) {
         if (secondDocInfoBuilder_ == null) {
           return secondDocInfo_.get(index);
@@ -666,6 +865,9 @@ public final class DocumentSimilarityProtos {
           return secondDocInfoBuilder_.getMessage(index);
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.SecondDocInfo secondDocInfo = 2;</code>
+       */
       public Builder setSecondDocInfo(
           int index, pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo value) {
         if (secondDocInfoBuilder_ == null) {
@@ -680,6 +882,9 @@ public final class DocumentSimilarityProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.SecondDocInfo secondDocInfo = 2;</code>
+       */
       public Builder setSecondDocInfo(
           int index, pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo.Builder builderForValue) {
         if (secondDocInfoBuilder_ == null) {
@@ -691,6 +896,9 @@ public final class DocumentSimilarityProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.SecondDocInfo secondDocInfo = 2;</code>
+       */
       public Builder addSecondDocInfo(pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo value) {
         if (secondDocInfoBuilder_ == null) {
           if (value == null) {
@@ -704,6 +912,9 @@ public final class DocumentSimilarityProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.SecondDocInfo secondDocInfo = 2;</code>
+       */
       public Builder addSecondDocInfo(
           int index, pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo value) {
         if (secondDocInfoBuilder_ == null) {
@@ -718,6 +929,9 @@ public final class DocumentSimilarityProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.SecondDocInfo secondDocInfo = 2;</code>
+       */
       public Builder addSecondDocInfo(
           pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo.Builder builderForValue) {
         if (secondDocInfoBuilder_ == null) {
@@ -729,6 +943,9 @@ public final class DocumentSimilarityProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.SecondDocInfo secondDocInfo = 2;</code>
+       */
       public Builder addSecondDocInfo(
           int index, pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo.Builder builderForValue) {
         if (secondDocInfoBuilder_ == null) {
@@ -740,6 +957,9 @@ public final class DocumentSimilarityProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.SecondDocInfo secondDocInfo = 2;</code>
+       */
       public Builder addAllSecondDocInfo(
           java.lang.Iterable<? extends pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo> values) {
         if (secondDocInfoBuilder_ == null) {
@@ -751,6 +971,9 @@ public final class DocumentSimilarityProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.SecondDocInfo secondDocInfo = 2;</code>
+       */
       public Builder clearSecondDocInfo() {
         if (secondDocInfoBuilder_ == null) {
           secondDocInfo_ = java.util.Collections.emptyList();
@@ -761,6 +984,9 @@ public final class DocumentSimilarityProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.SecondDocInfo secondDocInfo = 2;</code>
+       */
       public Builder removeSecondDocInfo(int index) {
         if (secondDocInfoBuilder_ == null) {
           ensureSecondDocInfoIsMutable();
@@ -771,10 +997,16 @@ public final class DocumentSimilarityProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.SecondDocInfo secondDocInfo = 2;</code>
+       */
       public pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo.Builder getSecondDocInfoBuilder(
           int index) {
         return getSecondDocInfoFieldBuilder().getBuilder(index);
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.SecondDocInfo secondDocInfo = 2;</code>
+       */
       public pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfoOrBuilder getSecondDocInfoOrBuilder(
           int index) {
         if (secondDocInfoBuilder_ == null) {
@@ -782,6 +1014,9 @@ public final class DocumentSimilarityProtos {
           return secondDocInfoBuilder_.getMessageOrBuilder(index);
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.SecondDocInfo secondDocInfo = 2;</code>
+       */
       public java.util.List<? extends pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfoOrBuilder> 
            getSecondDocInfoOrBuilderList() {
         if (secondDocInfoBuilder_ != null) {
@@ -790,15 +1025,24 @@ public final class DocumentSimilarityProtos {
           return java.util.Collections.unmodifiableList(secondDocInfo_);
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.SecondDocInfo secondDocInfo = 2;</code>
+       */
       public pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo.Builder addSecondDocInfoBuilder() {
         return getSecondDocInfoFieldBuilder().addBuilder(
             pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo.getDefaultInstance());
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.SecondDocInfo secondDocInfo = 2;</code>
+       */
       public pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo.Builder addSecondDocInfoBuilder(
           int index) {
         return getSecondDocInfoFieldBuilder().addBuilder(
             index, pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo.getDefaultInstance());
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.SecondDocInfo secondDocInfo = 2;</code>
+       */
       public java.util.List<pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo.Builder> 
            getSecondDocInfoBuilderList() {
         return getSecondDocInfoFieldBuilder().getBuilderList();
@@ -817,23 +1061,50 @@ public final class DocumentSimilarityProtos {
         }
         return secondDocInfoBuilder_;
       }
-      
+
       // required string type = 3;
       private java.lang.Object type_ = "";
+      /**
+       * <code>required string type = 3;</code>
+       */
       public boolean hasType() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
-      public String getType() {
+      /**
+       * <code>required string type = 3;</code>
+       */
+      public java.lang.String getType() {
         java.lang.Object ref = type_;
-        if (!(ref instanceof String)) {
-          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
           type_ = s;
           return s;
         } else {
-          return (String) ref;
+          return (java.lang.String) ref;
         }
       }
-      public Builder setType(String value) {
+      /**
+       * <code>required string type = 3;</code>
+       */
+      public com.google.protobuf.ByteString
+          getTypeBytes() {
+        java.lang.Object ref = type_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          type_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string type = 3;</code>
+       */
+      public Builder setType(
+          java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -842,18 +1113,29 @@ public final class DocumentSimilarityProtos {
         onChanged();
         return this;
       }
+      /**
+       * <code>required string type = 3;</code>
+       */
       public Builder clearType() {
         bitField0_ = (bitField0_ & ~0x00000004);
         type_ = getDefaultInstance().getType();
         onChanged();
         return this;
       }
-      void setType(com.google.protobuf.ByteString value) {
-        bitField0_ |= 0x00000004;
+      /**
+       * <code>required string type = 3;</code>
+       */
+      public Builder setTypeBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
         type_ = value;
         onChanged();
+        return this;
       }
-      
+
       // repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;
       private java.util.List<pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar> auxs_ =
         java.util.Collections.emptyList();
@@ -863,10 +1145,13 @@ public final class DocumentSimilarityProtos {
           bitField0_ |= 0x00000008;
          }
       }
-      
+
       private com.google.protobuf.RepeatedFieldBuilder<
           pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar, pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar.Builder, pl.edu.icm.coansys.models.DocumentSimilarityProtos.AuxiliarOrBuilder> auxsBuilder_;
-      
+
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;</code>
+       */
       public java.util.List<pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar> getAuxsList() {
         if (auxsBuilder_ == null) {
           return java.util.Collections.unmodifiableList(auxs_);
@@ -874,6 +1159,9 @@ public final class DocumentSimilarityProtos {
           return auxsBuilder_.getMessageList();
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;</code>
+       */
       public int getAuxsCount() {
         if (auxsBuilder_ == null) {
           return auxs_.size();
@@ -881,6 +1169,9 @@ public final class DocumentSimilarityProtos {
           return auxsBuilder_.getCount();
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;</code>
+       */
       public pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar getAuxs(int index) {
         if (auxsBuilder_ == null) {
           return auxs_.get(index);
@@ -888,6 +1179,9 @@ public final class DocumentSimilarityProtos {
           return auxsBuilder_.getMessage(index);
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;</code>
+       */
       public Builder setAuxs(
           int index, pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar value) {
         if (auxsBuilder_ == null) {
@@ -902,6 +1196,9 @@ public final class DocumentSimilarityProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;</code>
+       */
       public Builder setAuxs(
           int index, pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar.Builder builderForValue) {
         if (auxsBuilder_ == null) {
@@ -913,6 +1210,9 @@ public final class DocumentSimilarityProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;</code>
+       */
       public Builder addAuxs(pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar value) {
         if (auxsBuilder_ == null) {
           if (value == null) {
@@ -926,6 +1226,9 @@ public final class DocumentSimilarityProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;</code>
+       */
       public Builder addAuxs(
           int index, pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar value) {
         if (auxsBuilder_ == null) {
@@ -940,6 +1243,9 @@ public final class DocumentSimilarityProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;</code>
+       */
       public Builder addAuxs(
           pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar.Builder builderForValue) {
         if (auxsBuilder_ == null) {
@@ -951,6 +1257,9 @@ public final class DocumentSimilarityProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;</code>
+       */
       public Builder addAuxs(
           int index, pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar.Builder builderForValue) {
         if (auxsBuilder_ == null) {
@@ -962,6 +1271,9 @@ public final class DocumentSimilarityProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;</code>
+       */
       public Builder addAllAuxs(
           java.lang.Iterable<? extends pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar> values) {
         if (auxsBuilder_ == null) {
@@ -973,6 +1285,9 @@ public final class DocumentSimilarityProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;</code>
+       */
       public Builder clearAuxs() {
         if (auxsBuilder_ == null) {
           auxs_ = java.util.Collections.emptyList();
@@ -983,6 +1298,9 @@ public final class DocumentSimilarityProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;</code>
+       */
       public Builder removeAuxs(int index) {
         if (auxsBuilder_ == null) {
           ensureAuxsIsMutable();
@@ -993,10 +1311,16 @@ public final class DocumentSimilarityProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;</code>
+       */
       public pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar.Builder getAuxsBuilder(
           int index) {
         return getAuxsFieldBuilder().getBuilder(index);
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;</code>
+       */
       public pl.edu.icm.coansys.models.DocumentSimilarityProtos.AuxiliarOrBuilder getAuxsOrBuilder(
           int index) {
         if (auxsBuilder_ == null) {
@@ -1004,6 +1328,9 @@ public final class DocumentSimilarityProtos {
           return auxsBuilder_.getMessageOrBuilder(index);
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;</code>
+       */
       public java.util.List<? extends pl.edu.icm.coansys.models.DocumentSimilarityProtos.AuxiliarOrBuilder> 
            getAuxsOrBuilderList() {
         if (auxsBuilder_ != null) {
@@ -1012,15 +1339,24 @@ public final class DocumentSimilarityProtos {
           return java.util.Collections.unmodifiableList(auxs_);
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;</code>
+       */
       public pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar.Builder addAuxsBuilder() {
         return getAuxsFieldBuilder().addBuilder(
             pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar.getDefaultInstance());
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;</code>
+       */
       public pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar.Builder addAuxsBuilder(
           int index) {
         return getAuxsFieldBuilder().addBuilder(
             index, pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar.getDefaultInstance());
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;</code>
+       */
       public java.util.List<pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar.Builder> 
            getAuxsBuilderList() {
         return getAuxsFieldBuilder().getBuilderList();
@@ -1039,131 +1375,278 @@ public final class DocumentSimilarityProtos {
         }
         return auxsBuilder_;
       }
-      
+
       // @@protoc_insertion_point(builder_scope:pl.edu.icm.coansys.models.DocumentSimilarityInfo)
     }
-    
+
     static {
       defaultInstance = new DocumentSimilarityInfo(true);
       defaultInstance.initFields();
     }
-    
+
     // @@protoc_insertion_point(class_scope:pl.edu.icm.coansys.models.DocumentSimilarityInfo)
   }
-  
+
   public interface SecondDocInfoOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
-    
+
     // required string docIdB = 1;
+    /**
+     * <code>required string docIdB = 1;</code>
+     */
     boolean hasDocIdB();
-    String getDocIdB();
-    
+    /**
+     * <code>required string docIdB = 1;</code>
+     */
+    java.lang.String getDocIdB();
+    /**
+     * <code>required string docIdB = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getDocIdBBytes();
+
     // required float similarity = 2;
+    /**
+     * <code>required float similarity = 2;</code>
+     */
     boolean hasSimilarity();
+    /**
+     * <code>required float similarity = 2;</code>
+     */
     float getSimilarity();
-    
+
     // repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+     */
     java.util.List<pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar> 
         getAuxsList();
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+     */
     pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar getAuxs(int index);
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+     */
     int getAuxsCount();
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+     */
     java.util.List<? extends pl.edu.icm.coansys.models.DocumentSimilarityProtos.AuxiliarOrBuilder> 
         getAuxsOrBuilderList();
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+     */
     pl.edu.icm.coansys.models.DocumentSimilarityProtos.AuxiliarOrBuilder getAuxsOrBuilder(
         int index);
   }
+  /**
+   * Protobuf type {@code pl.edu.icm.coansys.models.SecondDocInfo}
+   */
   public static final class SecondDocInfo extends
       com.google.protobuf.GeneratedMessage
       implements SecondDocInfoOrBuilder {
     // Use SecondDocInfo.newBuilder() to construct.
-    private SecondDocInfo(Builder builder) {
+    private SecondDocInfo(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
-    private SecondDocInfo(boolean noInit) {}
-    
+    private SecondDocInfo(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
     private static final SecondDocInfo defaultInstance;
     public static SecondDocInfo getDefaultInstance() {
       return defaultInstance;
     }
-    
+
     public SecondDocInfo getDefaultInstanceForType() {
       return defaultInstance;
     }
-    
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private SecondDocInfo(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              bitField0_ |= 0x00000001;
+              docIdB_ = input.readBytes();
+              break;
+            }
+            case 21: {
+              bitField0_ |= 0x00000002;
+              similarity_ = input.readFloat();
+              break;
+            }
+            case 26: {
+              if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+                auxs_ = new java.util.ArrayList<pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar>();
+                mutable_bitField0_ |= 0x00000004;
+              }
+              auxs_.add(input.readMessage(pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar.PARSER, extensionRegistry));
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+          auxs_ = java.util.Collections.unmodifiableList(auxs_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
       return pl.edu.icm.coansys.models.DocumentSimilarityProtos.internal_static_pl_edu_icm_coansys_models_SecondDocInfo_descriptor;
     }
-    
+
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return pl.edu.icm.coansys.models.DocumentSimilarityProtos.internal_static_pl_edu_icm_coansys_models_SecondDocInfo_fieldAccessorTable;
+      return pl.edu.icm.coansys.models.DocumentSimilarityProtos.internal_static_pl_edu_icm_coansys_models_SecondDocInfo_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo.class, pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo.Builder.class);
     }
-    
+
+    public static com.google.protobuf.Parser<SecondDocInfo> PARSER =
+        new com.google.protobuf.AbstractParser<SecondDocInfo>() {
+      public SecondDocInfo parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new SecondDocInfo(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<SecondDocInfo> getParserForType() {
+      return PARSER;
+    }
+
     private int bitField0_;
     // required string docIdB = 1;
     public static final int DOCIDB_FIELD_NUMBER = 1;
     private java.lang.Object docIdB_;
+    /**
+     * <code>required string docIdB = 1;</code>
+     */
     public boolean hasDocIdB() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
-    public String getDocIdB() {
+    /**
+     * <code>required string docIdB = 1;</code>
+     */
+    public java.lang.String getDocIdB() {
       java.lang.Object ref = docIdB_;
-      if (ref instanceof String) {
-        return (String) ref;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
           docIdB_ = s;
         }
         return s;
       }
     }
-    private com.google.protobuf.ByteString getDocIdBBytes() {
+    /**
+     * <code>required string docIdB = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getDocIdBBytes() {
       java.lang.Object ref = docIdB_;
-      if (ref instanceof String) {
+      if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
         docIdB_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
-    
+
     // required float similarity = 2;
     public static final int SIMILARITY_FIELD_NUMBER = 2;
     private float similarity_;
+    /**
+     * <code>required float similarity = 2;</code>
+     */
     public boolean hasSimilarity() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
+    /**
+     * <code>required float similarity = 2;</code>
+     */
     public float getSimilarity() {
       return similarity_;
     }
-    
+
     // repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;
     public static final int AUXS_FIELD_NUMBER = 3;
     private java.util.List<pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar> auxs_;
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+     */
     public java.util.List<pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar> getAuxsList() {
       return auxs_;
     }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+     */
     public java.util.List<? extends pl.edu.icm.coansys.models.DocumentSimilarityProtos.AuxiliarOrBuilder> 
         getAuxsOrBuilderList() {
       return auxs_;
     }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+     */
     public int getAuxsCount() {
       return auxs_.size();
     }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+     */
     public pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar getAuxs(int index) {
       return auxs_.get(index);
     }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+     */
     public pl.edu.icm.coansys.models.DocumentSimilarityProtos.AuxiliarOrBuilder getAuxsOrBuilder(
         int index) {
       return auxs_.get(index);
     }
-    
+
     private void initFields() {
       docIdB_ = "";
       similarity_ = 0F;
@@ -1173,7 +1656,7 @@ public final class DocumentSimilarityProtos {
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
-      
+
       if (!hasDocIdB()) {
         memoizedIsInitialized = 0;
         return false;
@@ -1185,7 +1668,7 @@ public final class DocumentSimilarityProtos {
       memoizedIsInitialized = 1;
       return true;
     }
-    
+
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
@@ -1200,12 +1683,12 @@ public final class DocumentSimilarityProtos {
       }
       getUnknownFields().writeTo(output);
     }
-    
+
     private int memoizedSerializedSize = -1;
     public int getSerializedSize() {
       int size = memoizedSerializedSize;
       if (size != -1) return size;
-    
+
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
@@ -1223,94 +1706,83 @@ public final class DocumentSimilarityProtos {
       memoizedSerializedSize = size;
       return size;
     }
-    
+
     private static final long serialVersionUID = 0L;
     @java.lang.Override
     protected java.lang.Object writeReplace()
         throws java.io.ObjectStreamException {
       return super.writeReplace();
     }
-    
+
     public static pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
+      return PARSER.parseFrom(data);
     }
     public static pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
+      return PARSER.parseFrom(data);
     }
     public static pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
+      return PARSER.parseFrom(input);
     }
     public static pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(input, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
+      return PARSER.parseDelimitedFrom(input);
     }
     public static pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
+      return PARSER.parseFrom(input);
     }
     public static pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(input, extensionRegistry);
     }
-    
+
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder(pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
-    
+
     @java.lang.Override
     protected Builder newBuilderForType(
         com.google.protobuf.GeneratedMessage.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
+    /**
+     * Protobuf type {@code pl.edu.icm.coansys.models.SecondDocInfo}
+     */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
        implements pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfoOrBuilder {
@@ -1318,18 +1790,21 @@ public final class DocumentSimilarityProtos {
           getDescriptor() {
         return pl.edu.icm.coansys.models.DocumentSimilarityProtos.internal_static_pl_edu_icm_coansys_models_SecondDocInfo_descriptor;
       }
-      
+
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return pl.edu.icm.coansys.models.DocumentSimilarityProtos.internal_static_pl_edu_icm_coansys_models_SecondDocInfo_fieldAccessorTable;
+        return pl.edu.icm.coansys.models.DocumentSimilarityProtos.internal_static_pl_edu_icm_coansys_models_SecondDocInfo_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo.class, pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo.Builder.class);
       }
-      
+
       // Construct using pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
-      
-      private Builder(BuilderParent parent) {
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
@@ -1341,7 +1816,7 @@ public final class DocumentSimilarityProtos {
       private static Builder create() {
         return new Builder();
       }
-      
+
       public Builder clear() {
         super.clear();
         docIdB_ = "";
@@ -1356,20 +1831,20 @@ public final class DocumentSimilarityProtos {
         }
         return this;
       }
-      
+
       public Builder clone() {
         return create().mergeFrom(buildPartial());
       }
-      
+
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo.getDescriptor();
+        return pl.edu.icm.coansys.models.DocumentSimilarityProtos.internal_static_pl_edu_icm_coansys_models_SecondDocInfo_descriptor;
       }
-      
+
       public pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo getDefaultInstanceForType() {
         return pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo.getDefaultInstance();
       }
-      
+
       public pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo build() {
         pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo result = buildPartial();
         if (!result.isInitialized()) {
@@ -1377,17 +1852,7 @@ public final class DocumentSimilarityProtos {
         }
         return result;
       }
-      
-      private pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo buildParsed()
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(
-            result).asInvalidProtocolBufferException();
-        }
-        return result;
-      }
-      
+
       public pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo buildPartial() {
         pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo result = new pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo(this);
         int from_bitField0_ = bitField0_;
@@ -1413,7 +1878,7 @@ public final class DocumentSimilarityProtos {
         onBuilt();
         return result;
       }
-      
+
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo) {
           return mergeFrom((pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo)other);
@@ -1422,11 +1887,13 @@ public final class DocumentSimilarityProtos {
           return this;
         }
       }
-      
+
       public Builder mergeFrom(pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo other) {
         if (other == pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo.getDefaultInstance()) return this;
         if (other.hasDocIdB()) {
-          setDocIdB(other.getDocIdB());
+          bitField0_ |= 0x00000001;
+          docIdB_ = other.docIdB_;
+          onChanged();
         }
         if (other.hasSimilarity()) {
           setSimilarity(other.getSimilarity());
@@ -1460,7 +1927,7 @@ public final class DocumentSimilarityProtos {
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
-      
+
       public final boolean isInitialized() {
         if (!hasDocIdB()) {
           
@@ -1472,68 +1939,69 @@ public final class DocumentSimilarityProtos {
         }
         return true;
       }
-      
+
       public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder(
-            this.getUnknownFields());
-        while (true) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              this.setUnknownFields(unknownFields.build());
-              onChanged();
-              return this;
-            default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                this.setUnknownFields(unknownFields.build());
-                onChanged();
-                return this;
-              }
-              break;
-            }
-            case 10: {
-              bitField0_ |= 0x00000001;
-              docIdB_ = input.readBytes();
-              break;
-            }
-            case 21: {
-              bitField0_ |= 0x00000002;
-              similarity_ = input.readFloat();
-              break;
-            }
-            case 26: {
-              pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar.Builder subBuilder = pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar.newBuilder();
-              input.readMessage(subBuilder, extensionRegistry);
-              addAuxs(subBuilder.buildPartial());
-              break;
-            }
+        pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
           }
         }
+        return this;
       }
-      
       private int bitField0_;
-      
+
       // required string docIdB = 1;
       private java.lang.Object docIdB_ = "";
+      /**
+       * <code>required string docIdB = 1;</code>
+       */
       public boolean hasDocIdB() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
-      public String getDocIdB() {
+      /**
+       * <code>required string docIdB = 1;</code>
+       */
+      public java.lang.String getDocIdB() {
         java.lang.Object ref = docIdB_;
-        if (!(ref instanceof String)) {
-          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
           docIdB_ = s;
           return s;
         } else {
-          return (String) ref;
+          return (java.lang.String) ref;
         }
       }
-      public Builder setDocIdB(String value) {
+      /**
+       * <code>required string docIdB = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getDocIdBBytes() {
+        java.lang.Object ref = docIdB_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          docIdB_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string docIdB = 1;</code>
+       */
+      public Builder setDocIdB(
+          java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -1542,39 +2010,62 @@ public final class DocumentSimilarityProtos {
         onChanged();
         return this;
       }
+      /**
+       * <code>required string docIdB = 1;</code>
+       */
       public Builder clearDocIdB() {
         bitField0_ = (bitField0_ & ~0x00000001);
         docIdB_ = getDefaultInstance().getDocIdB();
         onChanged();
         return this;
       }
-      void setDocIdB(com.google.protobuf.ByteString value) {
-        bitField0_ |= 0x00000001;
+      /**
+       * <code>required string docIdB = 1;</code>
+       */
+      public Builder setDocIdBBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
         docIdB_ = value;
         onChanged();
+        return this;
       }
-      
+
       // required float similarity = 2;
       private float similarity_ ;
+      /**
+       * <code>required float similarity = 2;</code>
+       */
       public boolean hasSimilarity() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
+      /**
+       * <code>required float similarity = 2;</code>
+       */
       public float getSimilarity() {
         return similarity_;
       }
+      /**
+       * <code>required float similarity = 2;</code>
+       */
       public Builder setSimilarity(float value) {
         bitField0_ |= 0x00000002;
         similarity_ = value;
         onChanged();
         return this;
       }
+      /**
+       * <code>required float similarity = 2;</code>
+       */
       public Builder clearSimilarity() {
         bitField0_ = (bitField0_ & ~0x00000002);
         similarity_ = 0F;
         onChanged();
         return this;
       }
-      
+
       // repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;
       private java.util.List<pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar> auxs_ =
         java.util.Collections.emptyList();
@@ -1584,10 +2075,13 @@ public final class DocumentSimilarityProtos {
           bitField0_ |= 0x00000004;
          }
       }
-      
+
       private com.google.protobuf.RepeatedFieldBuilder<
           pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar, pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar.Builder, pl.edu.icm.coansys.models.DocumentSimilarityProtos.AuxiliarOrBuilder> auxsBuilder_;
-      
+
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+       */
       public java.util.List<pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar> getAuxsList() {
         if (auxsBuilder_ == null) {
           return java.util.Collections.unmodifiableList(auxs_);
@@ -1595,6 +2089,9 @@ public final class DocumentSimilarityProtos {
           return auxsBuilder_.getMessageList();
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+       */
       public int getAuxsCount() {
         if (auxsBuilder_ == null) {
           return auxs_.size();
@@ -1602,6 +2099,9 @@ public final class DocumentSimilarityProtos {
           return auxsBuilder_.getCount();
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+       */
       public pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar getAuxs(int index) {
         if (auxsBuilder_ == null) {
           return auxs_.get(index);
@@ -1609,6 +2109,9 @@ public final class DocumentSimilarityProtos {
           return auxsBuilder_.getMessage(index);
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+       */
       public Builder setAuxs(
           int index, pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar value) {
         if (auxsBuilder_ == null) {
@@ -1623,6 +2126,9 @@ public final class DocumentSimilarityProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+       */
       public Builder setAuxs(
           int index, pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar.Builder builderForValue) {
         if (auxsBuilder_ == null) {
@@ -1634,6 +2140,9 @@ public final class DocumentSimilarityProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+       */
       public Builder addAuxs(pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar value) {
         if (auxsBuilder_ == null) {
           if (value == null) {
@@ -1647,6 +2156,9 @@ public final class DocumentSimilarityProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+       */
       public Builder addAuxs(
           int index, pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar value) {
         if (auxsBuilder_ == null) {
@@ -1661,6 +2173,9 @@ public final class DocumentSimilarityProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+       */
       public Builder addAuxs(
           pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar.Builder builderForValue) {
         if (auxsBuilder_ == null) {
@@ -1672,6 +2187,9 @@ public final class DocumentSimilarityProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+       */
       public Builder addAuxs(
           int index, pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar.Builder builderForValue) {
         if (auxsBuilder_ == null) {
@@ -1683,6 +2201,9 @@ public final class DocumentSimilarityProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+       */
       public Builder addAllAuxs(
           java.lang.Iterable<? extends pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar> values) {
         if (auxsBuilder_ == null) {
@@ -1694,6 +2215,9 @@ public final class DocumentSimilarityProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+       */
       public Builder clearAuxs() {
         if (auxsBuilder_ == null) {
           auxs_ = java.util.Collections.emptyList();
@@ -1704,6 +2228,9 @@ public final class DocumentSimilarityProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+       */
       public Builder removeAuxs(int index) {
         if (auxsBuilder_ == null) {
           ensureAuxsIsMutable();
@@ -1714,10 +2241,16 @@ public final class DocumentSimilarityProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+       */
       public pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar.Builder getAuxsBuilder(
           int index) {
         return getAuxsFieldBuilder().getBuilder(index);
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+       */
       public pl.edu.icm.coansys.models.DocumentSimilarityProtos.AuxiliarOrBuilder getAuxsOrBuilder(
           int index) {
         if (auxsBuilder_ == null) {
@@ -1725,6 +2258,9 @@ public final class DocumentSimilarityProtos {
           return auxsBuilder_.getMessageOrBuilder(index);
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+       */
       public java.util.List<? extends pl.edu.icm.coansys.models.DocumentSimilarityProtos.AuxiliarOrBuilder> 
            getAuxsOrBuilderList() {
         if (auxsBuilder_ != null) {
@@ -1733,15 +2269,24 @@ public final class DocumentSimilarityProtos {
           return java.util.Collections.unmodifiableList(auxs_);
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+       */
       public pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar.Builder addAuxsBuilder() {
         return getAuxsFieldBuilder().addBuilder(
             pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar.getDefaultInstance());
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+       */
       public pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar.Builder addAuxsBuilder(
           int index) {
         return getAuxsFieldBuilder().addBuilder(
             index, pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar.getDefaultInstance());
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+       */
       public java.util.List<pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar.Builder> 
            getAuxsBuilderList() {
         return getAuxsFieldBuilder().getBuilderList();
@@ -1760,122 +2305,238 @@ public final class DocumentSimilarityProtos {
         }
         return auxsBuilder_;
       }
-      
+
       // @@protoc_insertion_point(builder_scope:pl.edu.icm.coansys.models.SecondDocInfo)
     }
-    
+
     static {
       defaultInstance = new SecondDocInfo(true);
       defaultInstance.initFields();
     }
-    
+
     // @@protoc_insertion_point(class_scope:pl.edu.icm.coansys.models.SecondDocInfo)
   }
-  
+
   public interface AuxiliarOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
-    
+
     // optional string type = 1;
+    /**
+     * <code>optional string type = 1;</code>
+     */
     boolean hasType();
-    String getType();
-    
+    /**
+     * <code>optional string type = 1;</code>
+     */
+    java.lang.String getType();
+    /**
+     * <code>optional string type = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getTypeBytes();
+
     // optional string value = 2;
+    /**
+     * <code>optional string value = 2;</code>
+     */
     boolean hasValue();
-    String getValue();
+    /**
+     * <code>optional string value = 2;</code>
+     */
+    java.lang.String getValue();
+    /**
+     * <code>optional string value = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getValueBytes();
   }
+  /**
+   * Protobuf type {@code pl.edu.icm.coansys.models.Auxiliar}
+   */
   public static final class Auxiliar extends
       com.google.protobuf.GeneratedMessage
       implements AuxiliarOrBuilder {
     // Use Auxiliar.newBuilder() to construct.
-    private Auxiliar(Builder builder) {
+    private Auxiliar(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
-    private Auxiliar(boolean noInit) {}
-    
+    private Auxiliar(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
     private static final Auxiliar defaultInstance;
     public static Auxiliar getDefaultInstance() {
       return defaultInstance;
     }
-    
+
     public Auxiliar getDefaultInstanceForType() {
       return defaultInstance;
     }
-    
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private Auxiliar(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              bitField0_ |= 0x00000001;
+              type_ = input.readBytes();
+              break;
+            }
+            case 18: {
+              bitField0_ |= 0x00000002;
+              value_ = input.readBytes();
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
       return pl.edu.icm.coansys.models.DocumentSimilarityProtos.internal_static_pl_edu_icm_coansys_models_Auxiliar_descriptor;
     }
-    
+
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return pl.edu.icm.coansys.models.DocumentSimilarityProtos.internal_static_pl_edu_icm_coansys_models_Auxiliar_fieldAccessorTable;
+      return pl.edu.icm.coansys.models.DocumentSimilarityProtos.internal_static_pl_edu_icm_coansys_models_Auxiliar_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar.class, pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar.Builder.class);
     }
-    
+
+    public static com.google.protobuf.Parser<Auxiliar> PARSER =
+        new com.google.protobuf.AbstractParser<Auxiliar>() {
+      public Auxiliar parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new Auxiliar(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<Auxiliar> getParserForType() {
+      return PARSER;
+    }
+
     private int bitField0_;
     // optional string type = 1;
     public static final int TYPE_FIELD_NUMBER = 1;
     private java.lang.Object type_;
+    /**
+     * <code>optional string type = 1;</code>
+     */
     public boolean hasType() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
-    public String getType() {
+    /**
+     * <code>optional string type = 1;</code>
+     */
+    public java.lang.String getType() {
       java.lang.Object ref = type_;
-      if (ref instanceof String) {
-        return (String) ref;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
           type_ = s;
         }
         return s;
       }
     }
-    private com.google.protobuf.ByteString getTypeBytes() {
+    /**
+     * <code>optional string type = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getTypeBytes() {
       java.lang.Object ref = type_;
-      if (ref instanceof String) {
+      if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
         type_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
-    
+
     // optional string value = 2;
     public static final int VALUE_FIELD_NUMBER = 2;
     private java.lang.Object value_;
+    /**
+     * <code>optional string value = 2;</code>
+     */
     public boolean hasValue() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
-    public String getValue() {
+    /**
+     * <code>optional string value = 2;</code>
+     */
+    public java.lang.String getValue() {
       java.lang.Object ref = value_;
-      if (ref instanceof String) {
-        return (String) ref;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
           value_ = s;
         }
         return s;
       }
     }
-    private com.google.protobuf.ByteString getValueBytes() {
+    /**
+     * <code>optional string value = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getValueBytes() {
       java.lang.Object ref = value_;
-      if (ref instanceof String) {
+      if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
         value_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
-    
+
     private void initFields() {
       type_ = "";
       value_ = "";
@@ -1884,11 +2545,11 @@ public final class DocumentSimilarityProtos {
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
-      
+
       memoizedIsInitialized = 1;
       return true;
     }
-    
+
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
@@ -1900,12 +2561,12 @@ public final class DocumentSimilarityProtos {
       }
       getUnknownFields().writeTo(output);
     }
-    
+
     private int memoizedSerializedSize = -1;
     public int getSerializedSize() {
       int size = memoizedSerializedSize;
       if (size != -1) return size;
-    
+
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
@@ -1919,94 +2580,83 @@ public final class DocumentSimilarityProtos {
       memoizedSerializedSize = size;
       return size;
     }
-    
+
     private static final long serialVersionUID = 0L;
     @java.lang.Override
     protected java.lang.Object writeReplace()
         throws java.io.ObjectStreamException {
       return super.writeReplace();
     }
-    
+
     public static pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
+      return PARSER.parseFrom(data);
     }
     public static pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
+      return PARSER.parseFrom(data);
     }
     public static pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
+      return PARSER.parseFrom(input);
     }
     public static pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(input, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
+      return PARSER.parseDelimitedFrom(input);
     }
     public static pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
+      return PARSER.parseFrom(input);
     }
     public static pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(input, extensionRegistry);
     }
-    
+
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder(pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
-    
+
     @java.lang.Override
     protected Builder newBuilderForType(
         com.google.protobuf.GeneratedMessage.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
+    /**
+     * Protobuf type {@code pl.edu.icm.coansys.models.Auxiliar}
+     */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
        implements pl.edu.icm.coansys.models.DocumentSimilarityProtos.AuxiliarOrBuilder {
@@ -2014,18 +2664,21 @@ public final class DocumentSimilarityProtos {
           getDescriptor() {
         return pl.edu.icm.coansys.models.DocumentSimilarityProtos.internal_static_pl_edu_icm_coansys_models_Auxiliar_descriptor;
       }
-      
+
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return pl.edu.icm.coansys.models.DocumentSimilarityProtos.internal_static_pl_edu_icm_coansys_models_Auxiliar_fieldAccessorTable;
+        return pl.edu.icm.coansys.models.DocumentSimilarityProtos.internal_static_pl_edu_icm_coansys_models_Auxiliar_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar.class, pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar.Builder.class);
       }
-      
+
       // Construct using pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
-      
-      private Builder(BuilderParent parent) {
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
@@ -2036,7 +2689,7 @@ public final class DocumentSimilarityProtos {
       private static Builder create() {
         return new Builder();
       }
-      
+
       public Builder clear() {
         super.clear();
         type_ = "";
@@ -2045,20 +2698,20 @@ public final class DocumentSimilarityProtos {
         bitField0_ = (bitField0_ & ~0x00000002);
         return this;
       }
-      
+
       public Builder clone() {
         return create().mergeFrom(buildPartial());
       }
-      
+
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar.getDescriptor();
+        return pl.edu.icm.coansys.models.DocumentSimilarityProtos.internal_static_pl_edu_icm_coansys_models_Auxiliar_descriptor;
       }
-      
+
       public pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar getDefaultInstanceForType() {
         return pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar.getDefaultInstance();
       }
-      
+
       public pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar build() {
         pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar result = buildPartial();
         if (!result.isInitialized()) {
@@ -2066,17 +2719,7 @@ public final class DocumentSimilarityProtos {
         }
         return result;
       }
-      
-      private pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar buildParsed()
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(
-            result).asInvalidProtocolBufferException();
-        }
-        return result;
-      }
-      
+
       public pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar buildPartial() {
         pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar result = new pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar(this);
         int from_bitField0_ = bitField0_;
@@ -2093,7 +2736,7 @@ public final class DocumentSimilarityProtos {
         onBuilt();
         return result;
       }
-      
+
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar) {
           return mergeFrom((pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar)other);
@@ -2102,78 +2745,89 @@ public final class DocumentSimilarityProtos {
           return this;
         }
       }
-      
+
       public Builder mergeFrom(pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar other) {
         if (other == pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar.getDefaultInstance()) return this;
         if (other.hasType()) {
-          setType(other.getType());
+          bitField0_ |= 0x00000001;
+          type_ = other.type_;
+          onChanged();
         }
         if (other.hasValue()) {
-          setValue(other.getValue());
+          bitField0_ |= 0x00000002;
+          value_ = other.value_;
+          onChanged();
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
-      
+
       public final boolean isInitialized() {
         return true;
       }
-      
+
       public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder(
-            this.getUnknownFields());
-        while (true) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              this.setUnknownFields(unknownFields.build());
-              onChanged();
-              return this;
-            default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                this.setUnknownFields(unknownFields.build());
-                onChanged();
-                return this;
-              }
-              break;
-            }
-            case 10: {
-              bitField0_ |= 0x00000001;
-              type_ = input.readBytes();
-              break;
-            }
-            case 18: {
-              bitField0_ |= 0x00000002;
-              value_ = input.readBytes();
-              break;
-            }
+        pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
           }
         }
+        return this;
       }
-      
       private int bitField0_;
-      
+
       // optional string type = 1;
       private java.lang.Object type_ = "";
+      /**
+       * <code>optional string type = 1;</code>
+       */
       public boolean hasType() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
-      public String getType() {
+      /**
+       * <code>optional string type = 1;</code>
+       */
+      public java.lang.String getType() {
         java.lang.Object ref = type_;
-        if (!(ref instanceof String)) {
-          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
           type_ = s;
           return s;
         } else {
-          return (String) ref;
+          return (java.lang.String) ref;
         }
       }
-      public Builder setType(String value) {
+      /**
+       * <code>optional string type = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getTypeBytes() {
+        java.lang.Object ref = type_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          type_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string type = 1;</code>
+       */
+      public Builder setType(
+          java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -2182,34 +2836,72 @@ public final class DocumentSimilarityProtos {
         onChanged();
         return this;
       }
+      /**
+       * <code>optional string type = 1;</code>
+       */
       public Builder clearType() {
         bitField0_ = (bitField0_ & ~0x00000001);
         type_ = getDefaultInstance().getType();
         onChanged();
         return this;
       }
-      void setType(com.google.protobuf.ByteString value) {
-        bitField0_ |= 0x00000001;
+      /**
+       * <code>optional string type = 1;</code>
+       */
+      public Builder setTypeBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
         type_ = value;
         onChanged();
+        return this;
       }
-      
+
       // optional string value = 2;
       private java.lang.Object value_ = "";
+      /**
+       * <code>optional string value = 2;</code>
+       */
       public boolean hasValue() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
-      public String getValue() {
+      /**
+       * <code>optional string value = 2;</code>
+       */
+      public java.lang.String getValue() {
         java.lang.Object ref = value_;
-        if (!(ref instanceof String)) {
-          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
           value_ = s;
           return s;
         } else {
-          return (String) ref;
+          return (java.lang.String) ref;
         }
       }
-      public Builder setValue(String value) {
+      /**
+       * <code>optional string value = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getValueBytes() {
+        java.lang.Object ref = value_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          value_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string value = 2;</code>
+       */
+      public Builder setValue(
+          java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -2218,29 +2910,40 @@ public final class DocumentSimilarityProtos {
         onChanged();
         return this;
       }
+      /**
+       * <code>optional string value = 2;</code>
+       */
       public Builder clearValue() {
         bitField0_ = (bitField0_ & ~0x00000002);
         value_ = getDefaultInstance().getValue();
         onChanged();
         return this;
       }
-      void setValue(com.google.protobuf.ByteString value) {
-        bitField0_ |= 0x00000002;
+      /**
+       * <code>optional string value = 2;</code>
+       */
+      public Builder setValueBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
         value_ = value;
         onChanged();
+        return this;
       }
-      
+
       // @@protoc_insertion_point(builder_scope:pl.edu.icm.coansys.models.Auxiliar)
     }
-    
+
     static {
       defaultInstance = new Auxiliar(true);
       defaultInstance.initFields();
     }
-    
+
     // @@protoc_insertion_point(class_scope:pl.edu.icm.coansys.models.Auxiliar)
   }
-  
+
   private static com.google.protobuf.Descriptors.Descriptor
     internal_static_pl_edu_icm_coansys_models_DocumentSimilarityInfo_descriptor;
   private static
@@ -2256,7 +2959,7 @@ public final class DocumentSimilarityProtos {
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_pl_edu_icm_coansys_models_Auxiliar_fieldAccessorTable;
-  
+
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
     return descriptor;
@@ -2287,25 +2990,19 @@ public final class DocumentSimilarityProtos {
           internal_static_pl_edu_icm_coansys_models_DocumentSimilarityInfo_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_pl_edu_icm_coansys_models_DocumentSimilarityInfo_descriptor,
-              new java.lang.String[] { "DocIdA", "SecondDocInfo", "Type", "Auxs", },
-              pl.edu.icm.coansys.models.DocumentSimilarityProtos.DocumentSimilarityInfo.class,
-              pl.edu.icm.coansys.models.DocumentSimilarityProtos.DocumentSimilarityInfo.Builder.class);
+              new java.lang.String[] { "DocIdA", "SecondDocInfo", "Type", "Auxs", });
           internal_static_pl_edu_icm_coansys_models_SecondDocInfo_descriptor =
             getDescriptor().getMessageTypes().get(1);
           internal_static_pl_edu_icm_coansys_models_SecondDocInfo_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_pl_edu_icm_coansys_models_SecondDocInfo_descriptor,
-              new java.lang.String[] { "DocIdB", "Similarity", "Auxs", },
-              pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo.class,
-              pl.edu.icm.coansys.models.DocumentSimilarityProtos.SecondDocInfo.Builder.class);
+              new java.lang.String[] { "DocIdB", "Similarity", "Auxs", });
           internal_static_pl_edu_icm_coansys_models_Auxiliar_descriptor =
             getDescriptor().getMessageTypes().get(2);
           internal_static_pl_edu_icm_coansys_models_Auxiliar_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_pl_edu_icm_coansys_models_Auxiliar_descriptor,
-              new java.lang.String[] { "Type", "Value", },
-              pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar.class,
-              pl.edu.icm.coansys.models.DocumentSimilarityProtos.Auxiliar.Builder.class);
+              new java.lang.String[] { "Type", "Value", });
           return null;
         }
       };
@@ -2314,6 +3011,6 @@ public final class DocumentSimilarityProtos {
         new com.google.protobuf.Descriptors.FileDescriptor[] {
         }, assigner);
   }
-  
+
   // @@protoc_insertion_point(outer_class_scope)
 }

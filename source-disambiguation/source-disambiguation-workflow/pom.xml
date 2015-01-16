@@ -30,7 +30,7 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>pl.edu.icm.coansys</groupId>
+            <groupId>pl.edu.icm.oozie</groupId>
             <artifactId>oozie-runner</artifactId>
             <scope>test</scope>
         </dependency>

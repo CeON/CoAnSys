@@ -25,86 +25,192 @@ public final class MostPopularProtos {
   }
   public interface ResourceStatOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
-    
+
     // required string resource_id = 1;
+    /**
+     * <code>required string resource_id = 1;</code>
+     */
     boolean hasResourceId();
-    String getResourceId();
-    
+    /**
+     * <code>required string resource_id = 1;</code>
+     */
+    java.lang.String getResourceId();
+    /**
+     * <code>required string resource_id = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getResourceIdBytes();
+
     // required int64 counter = 2;
+    /**
+     * <code>required int64 counter = 2;</code>
+     */
     boolean hasCounter();
+    /**
+     * <code>required int64 counter = 2;</code>
+     */
     long getCounter();
   }
+  /**
+   * Protobuf type {@code pl.edu.icm.coansys.models.ResourceStat}
+   */
   public static final class ResourceStat extends
       com.google.protobuf.GeneratedMessage
       implements ResourceStatOrBuilder {
     // Use ResourceStat.newBuilder() to construct.
-    private ResourceStat(Builder builder) {
+    private ResourceStat(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
-    private ResourceStat(boolean noInit) {}
-    
+    private ResourceStat(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
     private static final ResourceStat defaultInstance;
     public static ResourceStat getDefaultInstance() {
       return defaultInstance;
     }
-    
+
     public ResourceStat getDefaultInstanceForType() {
       return defaultInstance;
     }
-    
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private ResourceStat(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              bitField0_ |= 0x00000001;
+              resourceId_ = input.readBytes();
+              break;
+            }
+            case 16: {
+              bitField0_ |= 0x00000002;
+              counter_ = input.readInt64();
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
       return pl.edu.icm.coansys.models.MostPopularProtos.internal_static_pl_edu_icm_coansys_models_ResourceStat_descriptor;
     }
-    
+
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return pl.edu.icm.coansys.models.MostPopularProtos.internal_static_pl_edu_icm_coansys_models_ResourceStat_fieldAccessorTable;
+      return pl.edu.icm.coansys.models.MostPopularProtos.internal_static_pl_edu_icm_coansys_models_ResourceStat_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat.class, pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat.Builder.class);
     }
-    
+
+    public static com.google.protobuf.Parser<ResourceStat> PARSER =
+        new com.google.protobuf.AbstractParser<ResourceStat>() {
+      public ResourceStat parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new ResourceStat(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<ResourceStat> getParserForType() {
+      return PARSER;
+    }
+
     private int bitField0_;
     // required string resource_id = 1;
     public static final int RESOURCE_ID_FIELD_NUMBER = 1;
     private java.lang.Object resourceId_;
+    /**
+     * <code>required string resource_id = 1;</code>
+     */
     public boolean hasResourceId() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
-    public String getResourceId() {
+    /**
+     * <code>required string resource_id = 1;</code>
+     */
+    public java.lang.String getResourceId() {
       java.lang.Object ref = resourceId_;
-      if (ref instanceof String) {
-        return (String) ref;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
           resourceId_ = s;
         }
         return s;
       }
     }
-    private com.google.protobuf.ByteString getResourceIdBytes() {
+    /**
+     * <code>required string resource_id = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getResourceIdBytes() {
       java.lang.Object ref = resourceId_;
-      if (ref instanceof String) {
+      if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
         resourceId_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
-    
+
     // required int64 counter = 2;
     public static final int COUNTER_FIELD_NUMBER = 2;
     private long counter_;
+    /**
+     * <code>required int64 counter = 2;</code>
+     */
     public boolean hasCounter() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
+    /**
+     * <code>required int64 counter = 2;</code>
+     */
     public long getCounter() {
       return counter_;
     }
-    
+
     private void initFields() {
       resourceId_ = "";
       counter_ = 0L;
@@ -113,7 +219,7 @@ public final class MostPopularProtos {
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
-      
+
       if (!hasResourceId()) {
         memoizedIsInitialized = 0;
         return false;
@@ -125,7 +231,7 @@ public final class MostPopularProtos {
       memoizedIsInitialized = 1;
       return true;
     }
-    
+
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
@@ -137,12 +243,12 @@ public final class MostPopularProtos {
       }
       getUnknownFields().writeTo(output);
     }
-    
+
     private int memoizedSerializedSize = -1;
     public int getSerializedSize() {
       int size = memoizedSerializedSize;
       if (size != -1) return size;
-    
+
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
@@ -156,94 +262,83 @@ public final class MostPopularProtos {
       memoizedSerializedSize = size;
       return size;
     }
-    
+
     private static final long serialVersionUID = 0L;
     @java.lang.Override
     protected java.lang.Object writeReplace()
         throws java.io.ObjectStreamException {
       return super.writeReplace();
     }
-    
+
     public static pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
+      return PARSER.parseFrom(data);
     }
     public static pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
+      return PARSER.parseFrom(data);
     }
     public static pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
+      return PARSER.parseFrom(input);
     }
     public static pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(input, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
+      return PARSER.parseDelimitedFrom(input);
     }
     public static pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
+      return PARSER.parseFrom(input);
     }
     public static pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(input, extensionRegistry);
     }
-    
+
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder(pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
-    
+
     @java.lang.Override
     protected Builder newBuilderForType(
         com.google.protobuf.GeneratedMessage.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
+    /**
+     * Protobuf type {@code pl.edu.icm.coansys.models.ResourceStat}
+     */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
        implements pl.edu.icm.coansys.models.MostPopularProtos.ResourceStatOrBuilder {
@@ -251,18 +346,21 @@ public final class MostPopularProtos {
           getDescriptor() {
         return pl.edu.icm.coansys.models.MostPopularProtos.internal_static_pl_edu_icm_coansys_models_ResourceStat_descriptor;
       }
-      
+
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return pl.edu.icm.coansys.models.MostPopularProtos.internal_static_pl_edu_icm_coansys_models_ResourceStat_fieldAccessorTable;
+        return pl.edu.icm.coansys.models.MostPopularProtos.internal_static_pl_edu_icm_coansys_models_ResourceStat_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat.class, pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat.Builder.class);
       }
-      
+
       // Construct using pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
-      
-      private Builder(BuilderParent parent) {
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
@@ -273,7 +371,7 @@ public final class MostPopularProtos {
       private static Builder create() {
         return new Builder();
       }
-      
+
       public Builder clear() {
         super.clear();
         resourceId_ = "";
@@ -282,20 +380,20 @@ public final class MostPopularProtos {
         bitField0_ = (bitField0_ & ~0x00000002);
         return this;
       }
-      
+
       public Builder clone() {
         return create().mergeFrom(buildPartial());
       }
-      
+
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat.getDescriptor();
+        return pl.edu.icm.coansys.models.MostPopularProtos.internal_static_pl_edu_icm_coansys_models_ResourceStat_descriptor;
       }
-      
+
       public pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat getDefaultInstanceForType() {
         return pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat.getDefaultInstance();
       }
-      
+
       public pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat build() {
         pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat result = buildPartial();
         if (!result.isInitialized()) {
@@ -303,17 +401,7 @@ public final class MostPopularProtos {
         }
         return result;
       }
-      
-      private pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat buildParsed()
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(
-            result).asInvalidProtocolBufferException();
-        }
-        return result;
-      }
-      
+
       public pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat buildPartial() {
         pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat result = new pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat(this);
         int from_bitField0_ = bitField0_;
@@ -330,7 +418,7 @@ public final class MostPopularProtos {
         onBuilt();
         return result;
       }
-      
+
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat) {
           return mergeFrom((pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat)other);
@@ -339,11 +427,13 @@ public final class MostPopularProtos {
           return this;
         }
       }
-      
+
       public Builder mergeFrom(pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat other) {
         if (other == pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat.getDefaultInstance()) return this;
         if (other.hasResourceId()) {
-          setResourceId(other.getResourceId());
+          bitField0_ |= 0x00000001;
+          resourceId_ = other.resourceId_;
+          onChanged();
         }
         if (other.hasCounter()) {
           setCounter(other.getCounter());
@@ -351,7 +441,7 @@ public final class MostPopularProtos {
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
-      
+
       public final boolean isInitialized() {
         if (!hasResourceId()) {
           
@@ -363,62 +453,69 @@ public final class MostPopularProtos {
         }
         return true;
       }
-      
+
       public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder(
-            this.getUnknownFields());
-        while (true) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              this.setUnknownFields(unknownFields.build());
-              onChanged();
-              return this;
-            default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                this.setUnknownFields(unknownFields.build());
-                onChanged();
-                return this;
-              }
-              break;
-            }
-            case 10: {
-              bitField0_ |= 0x00000001;
-              resourceId_ = input.readBytes();
-              break;
-            }
-            case 16: {
-              bitField0_ |= 0x00000002;
-              counter_ = input.readInt64();
-              break;
-            }
+        pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
           }
         }
+        return this;
       }
-      
       private int bitField0_;
-      
+
       // required string resource_id = 1;
       private java.lang.Object resourceId_ = "";
+      /**
+       * <code>required string resource_id = 1;</code>
+       */
       public boolean hasResourceId() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
-      public String getResourceId() {
+      /**
+       * <code>required string resource_id = 1;</code>
+       */
+      public java.lang.String getResourceId() {
         java.lang.Object ref = resourceId_;
-        if (!(ref instanceof String)) {
-          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
           resourceId_ = s;
           return s;
         } else {
-          return (String) ref;
+          return (java.lang.String) ref;
         }
       }
-      public Builder setResourceId(String value) {
+      /**
+       * <code>required string resource_id = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getResourceIdBytes() {
+        java.lang.Object ref = resourceId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          resourceId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string resource_id = 1;</code>
+       */
+      public Builder setResourceId(
+          java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -427,127 +524,270 @@ public final class MostPopularProtos {
         onChanged();
         return this;
       }
+      /**
+       * <code>required string resource_id = 1;</code>
+       */
       public Builder clearResourceId() {
         bitField0_ = (bitField0_ & ~0x00000001);
         resourceId_ = getDefaultInstance().getResourceId();
         onChanged();
         return this;
       }
-      void setResourceId(com.google.protobuf.ByteString value) {
-        bitField0_ |= 0x00000001;
+      /**
+       * <code>required string resource_id = 1;</code>
+       */
+      public Builder setResourceIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
         resourceId_ = value;
         onChanged();
+        return this;
       }
-      
+
       // required int64 counter = 2;
       private long counter_ ;
+      /**
+       * <code>required int64 counter = 2;</code>
+       */
       public boolean hasCounter() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
+      /**
+       * <code>required int64 counter = 2;</code>
+       */
       public long getCounter() {
         return counter_;
       }
+      /**
+       * <code>required int64 counter = 2;</code>
+       */
       public Builder setCounter(long value) {
         bitField0_ |= 0x00000002;
         counter_ = value;
         onChanged();
         return this;
       }
+      /**
+       * <code>required int64 counter = 2;</code>
+       */
       public Builder clearCounter() {
         bitField0_ = (bitField0_ & ~0x00000002);
         counter_ = 0L;
         onChanged();
         return this;
       }
-      
+
       // @@protoc_insertion_point(builder_scope:pl.edu.icm.coansys.models.ResourceStat)
     }
-    
+
     static {
       defaultInstance = new ResourceStat(true);
       defaultInstance.initFields();
     }
-    
+
     // @@protoc_insertion_point(class_scope:pl.edu.icm.coansys.models.ResourceStat)
   }
-  
+
   public interface MostPopularStatsOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
-    
+
     // required int64 timestamp = 1;
+    /**
+     * <code>required int64 timestamp = 1;</code>
+     */
     boolean hasTimestamp();
+    /**
+     * <code>required int64 timestamp = 1;</code>
+     */
     long getTimestamp();
-    
+
     // repeated .pl.edu.icm.coansys.models.ResourceStat stat = 2;
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.ResourceStat stat = 2;</code>
+     */
     java.util.List<pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat> 
         getStatList();
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.ResourceStat stat = 2;</code>
+     */
     pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat getStat(int index);
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.ResourceStat stat = 2;</code>
+     */
     int getStatCount();
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.ResourceStat stat = 2;</code>
+     */
     java.util.List<? extends pl.edu.icm.coansys.models.MostPopularProtos.ResourceStatOrBuilder> 
         getStatOrBuilderList();
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.ResourceStat stat = 2;</code>
+     */
     pl.edu.icm.coansys.models.MostPopularProtos.ResourceStatOrBuilder getStatOrBuilder(
         int index);
   }
+  /**
+   * Protobuf type {@code pl.edu.icm.coansys.models.MostPopularStats}
+   */
   public static final class MostPopularStats extends
       com.google.protobuf.GeneratedMessage
       implements MostPopularStatsOrBuilder {
     // Use MostPopularStats.newBuilder() to construct.
-    private MostPopularStats(Builder builder) {
+    private MostPopularStats(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
-    private MostPopularStats(boolean noInit) {}
-    
+    private MostPopularStats(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
     private static final MostPopularStats defaultInstance;
     public static MostPopularStats getDefaultInstance() {
       return defaultInstance;
     }
-    
+
     public MostPopularStats getDefaultInstanceForType() {
       return defaultInstance;
     }
-    
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private MostPopularStats(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 8: {
+              bitField0_ |= 0x00000001;
+              timestamp_ = input.readInt64();
+              break;
+            }
+            case 18: {
+              if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+                stat_ = new java.util.ArrayList<pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat>();
+                mutable_bitField0_ |= 0x00000002;
+              }
+              stat_.add(input.readMessage(pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat.PARSER, extensionRegistry));
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+          stat_ = java.util.Collections.unmodifiableList(stat_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
       return pl.edu.icm.coansys.models.MostPopularProtos.internal_static_pl_edu_icm_coansys_models_MostPopularStats_descriptor;
     }
-    
+
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return pl.edu.icm.coansys.models.MostPopularProtos.internal_static_pl_edu_icm_coansys_models_MostPopularStats_fieldAccessorTable;
+      return pl.edu.icm.coansys.models.MostPopularProtos.internal_static_pl_edu_icm_coansys_models_MostPopularStats_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              pl.edu.icm.coansys.models.MostPopularProtos.MostPopularStats.class, pl.edu.icm.coansys.models.MostPopularProtos.MostPopularStats.Builder.class);
     }
-    
+
+    public static com.google.protobuf.Parser<MostPopularStats> PARSER =
+        new com.google.protobuf.AbstractParser<MostPopularStats>() {
+      public MostPopularStats parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new MostPopularStats(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<MostPopularStats> getParserForType() {
+      return PARSER;
+    }
+
     private int bitField0_;
     // required int64 timestamp = 1;
     public static final int TIMESTAMP_FIELD_NUMBER = 1;
     private long timestamp_;
+    /**
+     * <code>required int64 timestamp = 1;</code>
+     */
     public boolean hasTimestamp() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
+    /**
+     * <code>required int64 timestamp = 1;</code>
+     */
     public long getTimestamp() {
       return timestamp_;
     }
-    
+
     // repeated .pl.edu.icm.coansys.models.ResourceStat stat = 2;
     public static final int STAT_FIELD_NUMBER = 2;
     private java.util.List<pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat> stat_;
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.ResourceStat stat = 2;</code>
+     */
     public java.util.List<pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat> getStatList() {
       return stat_;
     }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.ResourceStat stat = 2;</code>
+     */
     public java.util.List<? extends pl.edu.icm.coansys.models.MostPopularProtos.ResourceStatOrBuilder> 
         getStatOrBuilderList() {
       return stat_;
     }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.ResourceStat stat = 2;</code>
+     */
     public int getStatCount() {
       return stat_.size();
     }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.ResourceStat stat = 2;</code>
+     */
     public pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat getStat(int index) {
       return stat_.get(index);
     }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.ResourceStat stat = 2;</code>
+     */
     public pl.edu.icm.coansys.models.MostPopularProtos.ResourceStatOrBuilder getStatOrBuilder(
         int index) {
       return stat_.get(index);
     }
-    
+
     private void initFields() {
       timestamp_ = 0L;
       stat_ = java.util.Collections.emptyList();
@@ -556,7 +796,7 @@ public final class MostPopularProtos {
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
-      
+
       if (!hasTimestamp()) {
         memoizedIsInitialized = 0;
         return false;
@@ -570,7 +810,7 @@ public final class MostPopularProtos {
       memoizedIsInitialized = 1;
       return true;
     }
-    
+
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
@@ -582,12 +822,12 @@ public final class MostPopularProtos {
       }
       getUnknownFields().writeTo(output);
     }
-    
+
     private int memoizedSerializedSize = -1;
     public int getSerializedSize() {
       int size = memoizedSerializedSize;
       if (size != -1) return size;
-    
+
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
@@ -601,94 +841,83 @@ public final class MostPopularProtos {
       memoizedSerializedSize = size;
       return size;
     }
-    
+
     private static final long serialVersionUID = 0L;
     @java.lang.Override
     protected java.lang.Object writeReplace()
         throws java.io.ObjectStreamException {
       return super.writeReplace();
     }
-    
+
     public static pl.edu.icm.coansys.models.MostPopularProtos.MostPopularStats parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
+      return PARSER.parseFrom(data);
     }
     public static pl.edu.icm.coansys.models.MostPopularProtos.MostPopularStats parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.MostPopularProtos.MostPopularStats parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
+      return PARSER.parseFrom(data);
     }
     public static pl.edu.icm.coansys.models.MostPopularProtos.MostPopularStats parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.MostPopularProtos.MostPopularStats parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
+      return PARSER.parseFrom(input);
     }
     public static pl.edu.icm.coansys.models.MostPopularProtos.MostPopularStats parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(input, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.MostPopularProtos.MostPopularStats parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
+      return PARSER.parseDelimitedFrom(input);
     }
     public static pl.edu.icm.coansys.models.MostPopularProtos.MostPopularStats parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.MostPopularProtos.MostPopularStats parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
+      return PARSER.parseFrom(input);
     }
     public static pl.edu.icm.coansys.models.MostPopularProtos.MostPopularStats parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(input, extensionRegistry);
     }
-    
+
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder(pl.edu.icm.coansys.models.MostPopularProtos.MostPopularStats prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
-    
+
     @java.lang.Override
     protected Builder newBuilderForType(
         com.google.protobuf.GeneratedMessage.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
+    /**
+     * Protobuf type {@code pl.edu.icm.coansys.models.MostPopularStats}
+     */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
        implements pl.edu.icm.coansys.models.MostPopularProtos.MostPopularStatsOrBuilder {
@@ -696,18 +925,21 @@ public final class MostPopularProtos {
           getDescriptor() {
         return pl.edu.icm.coansys.models.MostPopularProtos.internal_static_pl_edu_icm_coansys_models_MostPopularStats_descriptor;
       }
-      
+
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return pl.edu.icm.coansys.models.MostPopularProtos.internal_static_pl_edu_icm_coansys_models_MostPopularStats_fieldAccessorTable;
+        return pl.edu.icm.coansys.models.MostPopularProtos.internal_static_pl_edu_icm_coansys_models_MostPopularStats_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                pl.edu.icm.coansys.models.MostPopularProtos.MostPopularStats.class, pl.edu.icm.coansys.models.MostPopularProtos.MostPopularStats.Builder.class);
       }
-      
+
       // Construct using pl.edu.icm.coansys.models.MostPopularProtos.MostPopularStats.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
-      
-      private Builder(BuilderParent parent) {
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
@@ -719,7 +951,7 @@ public final class MostPopularProtos {
       private static Builder create() {
         return new Builder();
       }
-      
+
       public Builder clear() {
         super.clear();
         timestamp_ = 0L;
@@ -732,20 +964,20 @@ public final class MostPopularProtos {
         }
         return this;
       }
-      
+
       public Builder clone() {
         return create().mergeFrom(buildPartial());
       }
-      
+
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return pl.edu.icm.coansys.models.MostPopularProtos.MostPopularStats.getDescriptor();
+        return pl.edu.icm.coansys.models.MostPopularProtos.internal_static_pl_edu_icm_coansys_models_MostPopularStats_descriptor;
       }
-      
+
       public pl.edu.icm.coansys.models.MostPopularProtos.MostPopularStats getDefaultInstanceForType() {
         return pl.edu.icm.coansys.models.MostPopularProtos.MostPopularStats.getDefaultInstance();
       }
-      
+
       public pl.edu.icm.coansys.models.MostPopularProtos.MostPopularStats build() {
         pl.edu.icm.coansys.models.MostPopularProtos.MostPopularStats result = buildPartial();
         if (!result.isInitialized()) {
@@ -753,17 +985,7 @@ public final class MostPopularProtos {
         }
         return result;
       }
-      
-      private pl.edu.icm.coansys.models.MostPopularProtos.MostPopularStats buildParsed()
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        pl.edu.icm.coansys.models.MostPopularProtos.MostPopularStats result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(
-            result).asInvalidProtocolBufferException();
-        }
-        return result;
-      }
-      
+
       public pl.edu.icm.coansys.models.MostPopularProtos.MostPopularStats buildPartial() {
         pl.edu.icm.coansys.models.MostPopularProtos.MostPopularStats result = new pl.edu.icm.coansys.models.MostPopularProtos.MostPopularStats(this);
         int from_bitField0_ = bitField0_;
@@ -785,7 +1007,7 @@ public final class MostPopularProtos {
         onBuilt();
         return result;
       }
-      
+
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof pl.edu.icm.coansys.models.MostPopularProtos.MostPopularStats) {
           return mergeFrom((pl.edu.icm.coansys.models.MostPopularProtos.MostPopularStats)other);
@@ -794,7 +1016,7 @@ public final class MostPopularProtos {
           return this;
         }
       }
-      
+
       public Builder mergeFrom(pl.edu.icm.coansys.models.MostPopularProtos.MostPopularStats other) {
         if (other == pl.edu.icm.coansys.models.MostPopularProtos.MostPopularStats.getDefaultInstance()) return this;
         if (other.hasTimestamp()) {
@@ -829,7 +1051,7 @@ public final class MostPopularProtos {
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
-      
+
       public final boolean isInitialized() {
         if (!hasTimestamp()) {
           
@@ -843,68 +1065,59 @@ public final class MostPopularProtos {
         }
         return true;
       }
-      
+
       public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder(
-            this.getUnknownFields());
-        while (true) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              this.setUnknownFields(unknownFields.build());
-              onChanged();
-              return this;
-            default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                this.setUnknownFields(unknownFields.build());
-                onChanged();
-                return this;
-              }
-              break;
-            }
-            case 8: {
-              bitField0_ |= 0x00000001;
-              timestamp_ = input.readInt64();
-              break;
-            }
-            case 18: {
-              pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat.Builder subBuilder = pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat.newBuilder();
-              input.readMessage(subBuilder, extensionRegistry);
-              addStat(subBuilder.buildPartial());
-              break;
-            }
+        pl.edu.icm.coansys.models.MostPopularProtos.MostPopularStats parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (pl.edu.icm.coansys.models.MostPopularProtos.MostPopularStats) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
           }
         }
+        return this;
       }
-      
       private int bitField0_;
-      
+
       // required int64 timestamp = 1;
       private long timestamp_ ;
+      /**
+       * <code>required int64 timestamp = 1;</code>
+       */
       public boolean hasTimestamp() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
+      /**
+       * <code>required int64 timestamp = 1;</code>
+       */
       public long getTimestamp() {
         return timestamp_;
       }
+      /**
+       * <code>required int64 timestamp = 1;</code>
+       */
       public Builder setTimestamp(long value) {
         bitField0_ |= 0x00000001;
         timestamp_ = value;
         onChanged();
         return this;
       }
+      /**
+       * <code>required int64 timestamp = 1;</code>
+       */
       public Builder clearTimestamp() {
         bitField0_ = (bitField0_ & ~0x00000001);
         timestamp_ = 0L;
         onChanged();
         return this;
       }
-      
+
       // repeated .pl.edu.icm.coansys.models.ResourceStat stat = 2;
       private java.util.List<pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat> stat_ =
         java.util.Collections.emptyList();
@@ -914,10 +1127,13 @@ public final class MostPopularProtos {
           bitField0_ |= 0x00000002;
          }
       }
-      
+
       private com.google.protobuf.RepeatedFieldBuilder<
           pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat, pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat.Builder, pl.edu.icm.coansys.models.MostPopularProtos.ResourceStatOrBuilder> statBuilder_;
-      
+
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.ResourceStat stat = 2;</code>
+       */
       public java.util.List<pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat> getStatList() {
         if (statBuilder_ == null) {
           return java.util.Collections.unmodifiableList(stat_);
@@ -925,6 +1141,9 @@ public final class MostPopularProtos {
           return statBuilder_.getMessageList();
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.ResourceStat stat = 2;</code>
+       */
       public int getStatCount() {
         if (statBuilder_ == null) {
           return stat_.size();
@@ -932,6 +1151,9 @@ public final class MostPopularProtos {
           return statBuilder_.getCount();
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.ResourceStat stat = 2;</code>
+       */
       public pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat getStat(int index) {
         if (statBuilder_ == null) {
           return stat_.get(index);
@@ -939,6 +1161,9 @@ public final class MostPopularProtos {
           return statBuilder_.getMessage(index);
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.ResourceStat stat = 2;</code>
+       */
       public Builder setStat(
           int index, pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat value) {
         if (statBuilder_ == null) {
@@ -953,6 +1178,9 @@ public final class MostPopularProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.ResourceStat stat = 2;</code>
+       */
       public Builder setStat(
           int index, pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat.Builder builderForValue) {
         if (statBuilder_ == null) {
@@ -964,6 +1192,9 @@ public final class MostPopularProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.ResourceStat stat = 2;</code>
+       */
       public Builder addStat(pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat value) {
         if (statBuilder_ == null) {
           if (value == null) {
@@ -977,6 +1208,9 @@ public final class MostPopularProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.ResourceStat stat = 2;</code>
+       */
       public Builder addStat(
           int index, pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat value) {
         if (statBuilder_ == null) {
@@ -991,6 +1225,9 @@ public final class MostPopularProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.ResourceStat stat = 2;</code>
+       */
       public Builder addStat(
           pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat.Builder builderForValue) {
         if (statBuilder_ == null) {
@@ -1002,6 +1239,9 @@ public final class MostPopularProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.ResourceStat stat = 2;</code>
+       */
       public Builder addStat(
           int index, pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat.Builder builderForValue) {
         if (statBuilder_ == null) {
@@ -1013,6 +1253,9 @@ public final class MostPopularProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.ResourceStat stat = 2;</code>
+       */
       public Builder addAllStat(
           java.lang.Iterable<? extends pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat> values) {
         if (statBuilder_ == null) {
@@ -1024,6 +1267,9 @@ public final class MostPopularProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.ResourceStat stat = 2;</code>
+       */
       public Builder clearStat() {
         if (statBuilder_ == null) {
           stat_ = java.util.Collections.emptyList();
@@ -1034,6 +1280,9 @@ public final class MostPopularProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.ResourceStat stat = 2;</code>
+       */
       public Builder removeStat(int index) {
         if (statBuilder_ == null) {
           ensureStatIsMutable();
@@ -1044,10 +1293,16 @@ public final class MostPopularProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.ResourceStat stat = 2;</code>
+       */
       public pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat.Builder getStatBuilder(
           int index) {
         return getStatFieldBuilder().getBuilder(index);
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.ResourceStat stat = 2;</code>
+       */
       public pl.edu.icm.coansys.models.MostPopularProtos.ResourceStatOrBuilder getStatOrBuilder(
           int index) {
         if (statBuilder_ == null) {
@@ -1055,6 +1310,9 @@ public final class MostPopularProtos {
           return statBuilder_.getMessageOrBuilder(index);
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.ResourceStat stat = 2;</code>
+       */
       public java.util.List<? extends pl.edu.icm.coansys.models.MostPopularProtos.ResourceStatOrBuilder> 
            getStatOrBuilderList() {
         if (statBuilder_ != null) {
@@ -1063,15 +1321,24 @@ public final class MostPopularProtos {
           return java.util.Collections.unmodifiableList(stat_);
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.ResourceStat stat = 2;</code>
+       */
       public pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat.Builder addStatBuilder() {
         return getStatFieldBuilder().addBuilder(
             pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat.getDefaultInstance());
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.ResourceStat stat = 2;</code>
+       */
       public pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat.Builder addStatBuilder(
           int index) {
         return getStatFieldBuilder().addBuilder(
             index, pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat.getDefaultInstance());
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.ResourceStat stat = 2;</code>
+       */
       public java.util.List<pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat.Builder> 
            getStatBuilderList() {
         return getStatFieldBuilder().getBuilderList();
@@ -1090,18 +1357,18 @@ public final class MostPopularProtos {
         }
         return statBuilder_;
       }
-      
+
       // @@protoc_insertion_point(builder_scope:pl.edu.icm.coansys.models.MostPopularStats)
     }
-    
+
     static {
       defaultInstance = new MostPopularStats(true);
       defaultInstance.initFields();
     }
-    
+
     // @@protoc_insertion_point(class_scope:pl.edu.icm.coansys.models.MostPopularStats)
   }
-  
+
   private static com.google.protobuf.Descriptors.Descriptor
     internal_static_pl_edu_icm_coansys_models_ResourceStat_descriptor;
   private static
@@ -1112,7 +1379,7 @@ public final class MostPopularProtos {
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_pl_edu_icm_coansys_models_MostPopularStats_fieldAccessorTable;
-  
+
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
     return descriptor;
@@ -1139,17 +1406,13 @@ public final class MostPopularProtos {
           internal_static_pl_edu_icm_coansys_models_ResourceStat_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_pl_edu_icm_coansys_models_ResourceStat_descriptor,
-              new java.lang.String[] { "ResourceId", "Counter", },
-              pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat.class,
-              pl.edu.icm.coansys.models.MostPopularProtos.ResourceStat.Builder.class);
+              new java.lang.String[] { "ResourceId", "Counter", });
           internal_static_pl_edu_icm_coansys_models_MostPopularStats_descriptor =
             getDescriptor().getMessageTypes().get(1);
           internal_static_pl_edu_icm_coansys_models_MostPopularStats_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_pl_edu_icm_coansys_models_MostPopularStats_descriptor,
-              new java.lang.String[] { "Timestamp", "Stat", },
-              pl.edu.icm.coansys.models.MostPopularProtos.MostPopularStats.class,
-              pl.edu.icm.coansys.models.MostPopularProtos.MostPopularStats.Builder.class);
+              new java.lang.String[] { "Timestamp", "Stat", });
           return null;
         }
       };
@@ -1158,6 +1421,6 @@ public final class MostPopularProtos {
         new com.google.protobuf.Descriptors.FileDescriptor[] {
         }, assigner);
   }
-  
+
   // @@protoc_insertion_point(outer_class_scope)
 }
