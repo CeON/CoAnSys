@@ -10,122 +10,294 @@ public final class DocumentClassificationProtos {
   }
   public interface DocumentClassificationOutOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
-    
+
     // required string docId = 1;
+    /**
+     * <code>required string docId = 1;</code>
+     */
     boolean hasDocId();
-    String getDocId();
-    
+    /**
+     * <code>required string docId = 1;</code>
+     */
+    java.lang.String getDocId();
+    /**
+     * <code>required string docId = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getDocIdBytes();
+
     // repeated string classificationCodes = 2;
-    java.util.List<String> getClassificationCodesList();
+    /**
+     * <code>repeated string classificationCodes = 2;</code>
+     */
+    java.util.List<java.lang.String>
+    getClassificationCodesList();
+    /**
+     * <code>repeated string classificationCodes = 2;</code>
+     */
     int getClassificationCodesCount();
-    String getClassificationCodes(int index);
-    
+    /**
+     * <code>repeated string classificationCodes = 2;</code>
+     */
+    java.lang.String getClassificationCodes(int index);
+    /**
+     * <code>repeated string classificationCodes = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getClassificationCodesBytes(int index);
+
     // repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;</code>
+     */
     java.util.List<pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar> 
         getAuxsList();
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;</code>
+     */
     pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar getAuxs(int index);
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;</code>
+     */
     int getAuxsCount();
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;</code>
+     */
     java.util.List<? extends pl.edu.icm.coansys.models.DocumentClassificationProtos.AuxiliarOrBuilder> 
         getAuxsOrBuilderList();
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;</code>
+     */
     pl.edu.icm.coansys.models.DocumentClassificationProtos.AuxiliarOrBuilder getAuxsOrBuilder(
         int index);
   }
+  /**
+   * Protobuf type {@code pl.edu.icm.coansys.models.DocumentClassificationOut}
+   */
   public static final class DocumentClassificationOut extends
       com.google.protobuf.GeneratedMessage
       implements DocumentClassificationOutOrBuilder {
     // Use DocumentClassificationOut.newBuilder() to construct.
-    private DocumentClassificationOut(Builder builder) {
+    private DocumentClassificationOut(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
-    private DocumentClassificationOut(boolean noInit) {}
-    
+    private DocumentClassificationOut(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
     private static final DocumentClassificationOut defaultInstance;
     public static DocumentClassificationOut getDefaultInstance() {
       return defaultInstance;
     }
-    
+
     public DocumentClassificationOut getDefaultInstanceForType() {
       return defaultInstance;
     }
-    
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private DocumentClassificationOut(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              bitField0_ |= 0x00000001;
+              docId_ = input.readBytes();
+              break;
+            }
+            case 18: {
+              if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+                classificationCodes_ = new com.google.protobuf.LazyStringArrayList();
+                mutable_bitField0_ |= 0x00000002;
+              }
+              classificationCodes_.add(input.readBytes());
+              break;
+            }
+            case 34: {
+              if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+                auxs_ = new java.util.ArrayList<pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar>();
+                mutable_bitField0_ |= 0x00000004;
+              }
+              auxs_.add(input.readMessage(pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar.PARSER, extensionRegistry));
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+          classificationCodes_ = new com.google.protobuf.UnmodifiableLazyStringList(classificationCodes_);
+        }
+        if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+          auxs_ = java.util.Collections.unmodifiableList(auxs_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
       return pl.edu.icm.coansys.models.DocumentClassificationProtos.internal_static_pl_edu_icm_coansys_models_DocumentClassificationOut_descriptor;
     }
-    
+
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return pl.edu.icm.coansys.models.DocumentClassificationProtos.internal_static_pl_edu_icm_coansys_models_DocumentClassificationOut_fieldAccessorTable;
+      return pl.edu.icm.coansys.models.DocumentClassificationProtos.internal_static_pl_edu_icm_coansys_models_DocumentClassificationOut_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              pl.edu.icm.coansys.models.DocumentClassificationProtos.DocumentClassificationOut.class, pl.edu.icm.coansys.models.DocumentClassificationProtos.DocumentClassificationOut.Builder.class);
     }
-    
+
+    public static com.google.protobuf.Parser<DocumentClassificationOut> PARSER =
+        new com.google.protobuf.AbstractParser<DocumentClassificationOut>() {
+      public DocumentClassificationOut parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new DocumentClassificationOut(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<DocumentClassificationOut> getParserForType() {
+      return PARSER;
+    }
+
     private int bitField0_;
     // required string docId = 1;
     public static final int DOCID_FIELD_NUMBER = 1;
     private java.lang.Object docId_;
+    /**
+     * <code>required string docId = 1;</code>
+     */
     public boolean hasDocId() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
-    public String getDocId() {
+    /**
+     * <code>required string docId = 1;</code>
+     */
+    public java.lang.String getDocId() {
       java.lang.Object ref = docId_;
-      if (ref instanceof String) {
-        return (String) ref;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
           docId_ = s;
         }
         return s;
       }
     }
-    private com.google.protobuf.ByteString getDocIdBytes() {
+    /**
+     * <code>required string docId = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getDocIdBytes() {
       java.lang.Object ref = docId_;
-      if (ref instanceof String) {
+      if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
         docId_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
-    
+
     // repeated string classificationCodes = 2;
     public static final int CLASSIFICATIONCODES_FIELD_NUMBER = 2;
     private com.google.protobuf.LazyStringList classificationCodes_;
-    public java.util.List<String>
+    /**
+     * <code>repeated string classificationCodes = 2;</code>
+     */
+    public java.util.List<java.lang.String>
         getClassificationCodesList() {
       return classificationCodes_;
     }
+    /**
+     * <code>repeated string classificationCodes = 2;</code>
+     */
     public int getClassificationCodesCount() {
       return classificationCodes_.size();
     }
-    public String getClassificationCodes(int index) {
+    /**
+     * <code>repeated string classificationCodes = 2;</code>
+     */
+    public java.lang.String getClassificationCodes(int index) {
       return classificationCodes_.get(index);
     }
-    
+    /**
+     * <code>repeated string classificationCodes = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getClassificationCodesBytes(int index) {
+      return classificationCodes_.getByteString(index);
+    }
+
     // repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;
     public static final int AUXS_FIELD_NUMBER = 4;
     private java.util.List<pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar> auxs_;
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;</code>
+     */
     public java.util.List<pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar> getAuxsList() {
       return auxs_;
     }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;</code>
+     */
     public java.util.List<? extends pl.edu.icm.coansys.models.DocumentClassificationProtos.AuxiliarOrBuilder> 
         getAuxsOrBuilderList() {
       return auxs_;
     }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;</code>
+     */
     public int getAuxsCount() {
       return auxs_.size();
     }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;</code>
+     */
     public pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar getAuxs(int index) {
       return auxs_.get(index);
     }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;</code>
+     */
     public pl.edu.icm.coansys.models.DocumentClassificationProtos.AuxiliarOrBuilder getAuxsOrBuilder(
         int index) {
       return auxs_.get(index);
     }
-    
+
     private void initFields() {
       docId_ = "";
       classificationCodes_ = com.google.protobuf.LazyStringArrayList.EMPTY;
@@ -135,7 +307,7 @@ public final class DocumentClassificationProtos {
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
-      
+
       if (!hasDocId()) {
         memoizedIsInitialized = 0;
         return false;
@@ -143,7 +315,7 @@ public final class DocumentClassificationProtos {
       memoizedIsInitialized = 1;
       return true;
     }
-    
+
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
@@ -158,12 +330,12 @@ public final class DocumentClassificationProtos {
       }
       getUnknownFields().writeTo(output);
     }
-    
+
     private int memoizedSerializedSize = -1;
     public int getSerializedSize() {
       int size = memoizedSerializedSize;
       if (size != -1) return size;
-    
+
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
@@ -186,94 +358,83 @@ public final class DocumentClassificationProtos {
       memoizedSerializedSize = size;
       return size;
     }
-    
+
     private static final long serialVersionUID = 0L;
     @java.lang.Override
     protected java.lang.Object writeReplace()
         throws java.io.ObjectStreamException {
       return super.writeReplace();
     }
-    
+
     public static pl.edu.icm.coansys.models.DocumentClassificationProtos.DocumentClassificationOut parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
+      return PARSER.parseFrom(data);
     }
     public static pl.edu.icm.coansys.models.DocumentClassificationProtos.DocumentClassificationOut parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.DocumentClassificationProtos.DocumentClassificationOut parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
+      return PARSER.parseFrom(data);
     }
     public static pl.edu.icm.coansys.models.DocumentClassificationProtos.DocumentClassificationOut parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.DocumentClassificationProtos.DocumentClassificationOut parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
+      return PARSER.parseFrom(input);
     }
     public static pl.edu.icm.coansys.models.DocumentClassificationProtos.DocumentClassificationOut parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(input, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.DocumentClassificationProtos.DocumentClassificationOut parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
+      return PARSER.parseDelimitedFrom(input);
     }
     public static pl.edu.icm.coansys.models.DocumentClassificationProtos.DocumentClassificationOut parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.DocumentClassificationProtos.DocumentClassificationOut parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
+      return PARSER.parseFrom(input);
     }
     public static pl.edu.icm.coansys.models.DocumentClassificationProtos.DocumentClassificationOut parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(input, extensionRegistry);
     }
-    
+
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder(pl.edu.icm.coansys.models.DocumentClassificationProtos.DocumentClassificationOut prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
-    
+
     @java.lang.Override
     protected Builder newBuilderForType(
         com.google.protobuf.GeneratedMessage.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
+    /**
+     * Protobuf type {@code pl.edu.icm.coansys.models.DocumentClassificationOut}
+     */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
        implements pl.edu.icm.coansys.models.DocumentClassificationProtos.DocumentClassificationOutOrBuilder {
@@ -281,18 +442,21 @@ public final class DocumentClassificationProtos {
           getDescriptor() {
         return pl.edu.icm.coansys.models.DocumentClassificationProtos.internal_static_pl_edu_icm_coansys_models_DocumentClassificationOut_descriptor;
       }
-      
+
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return pl.edu.icm.coansys.models.DocumentClassificationProtos.internal_static_pl_edu_icm_coansys_models_DocumentClassificationOut_fieldAccessorTable;
+        return pl.edu.icm.coansys.models.DocumentClassificationProtos.internal_static_pl_edu_icm_coansys_models_DocumentClassificationOut_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                pl.edu.icm.coansys.models.DocumentClassificationProtos.DocumentClassificationOut.class, pl.edu.icm.coansys.models.DocumentClassificationProtos.DocumentClassificationOut.Builder.class);
       }
-      
+
       // Construct using pl.edu.icm.coansys.models.DocumentClassificationProtos.DocumentClassificationOut.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
-      
-      private Builder(BuilderParent parent) {
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
@@ -304,7 +468,7 @@ public final class DocumentClassificationProtos {
       private static Builder create() {
         return new Builder();
       }
-      
+
       public Builder clear() {
         super.clear();
         docId_ = "";
@@ -319,20 +483,20 @@ public final class DocumentClassificationProtos {
         }
         return this;
       }
-      
+
       public Builder clone() {
         return create().mergeFrom(buildPartial());
       }
-      
+
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return pl.edu.icm.coansys.models.DocumentClassificationProtos.DocumentClassificationOut.getDescriptor();
+        return pl.edu.icm.coansys.models.DocumentClassificationProtos.internal_static_pl_edu_icm_coansys_models_DocumentClassificationOut_descriptor;
       }
-      
+
       public pl.edu.icm.coansys.models.DocumentClassificationProtos.DocumentClassificationOut getDefaultInstanceForType() {
         return pl.edu.icm.coansys.models.DocumentClassificationProtos.DocumentClassificationOut.getDefaultInstance();
       }
-      
+
       public pl.edu.icm.coansys.models.DocumentClassificationProtos.DocumentClassificationOut build() {
         pl.edu.icm.coansys.models.DocumentClassificationProtos.DocumentClassificationOut result = buildPartial();
         if (!result.isInitialized()) {
@@ -340,17 +504,7 @@ public final class DocumentClassificationProtos {
         }
         return result;
       }
-      
-      private pl.edu.icm.coansys.models.DocumentClassificationProtos.DocumentClassificationOut buildParsed()
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        pl.edu.icm.coansys.models.DocumentClassificationProtos.DocumentClassificationOut result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(
-            result).asInvalidProtocolBufferException();
-        }
-        return result;
-      }
-      
+
       public pl.edu.icm.coansys.models.DocumentClassificationProtos.DocumentClassificationOut buildPartial() {
         pl.edu.icm.coansys.models.DocumentClassificationProtos.DocumentClassificationOut result = new pl.edu.icm.coansys.models.DocumentClassificationProtos.DocumentClassificationOut(this);
         int from_bitField0_ = bitField0_;
@@ -378,7 +532,7 @@ public final class DocumentClassificationProtos {
         onBuilt();
         return result;
       }
-      
+
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof pl.edu.icm.coansys.models.DocumentClassificationProtos.DocumentClassificationOut) {
           return mergeFrom((pl.edu.icm.coansys.models.DocumentClassificationProtos.DocumentClassificationOut)other);
@@ -387,11 +541,13 @@ public final class DocumentClassificationProtos {
           return this;
         }
       }
-      
+
       public Builder mergeFrom(pl.edu.icm.coansys.models.DocumentClassificationProtos.DocumentClassificationOut other) {
         if (other == pl.edu.icm.coansys.models.DocumentClassificationProtos.DocumentClassificationOut.getDefaultInstance()) return this;
         if (other.hasDocId()) {
-          setDocId(other.getDocId());
+          bitField0_ |= 0x00000001;
+          docId_ = other.docId_;
+          onChanged();
         }
         if (!other.classificationCodes_.isEmpty()) {
           if (classificationCodes_.isEmpty()) {
@@ -432,7 +588,7 @@ public final class DocumentClassificationProtos {
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
-      
+
       public final boolean isInitialized() {
         if (!hasDocId()) {
           
@@ -440,68 +596,69 @@ public final class DocumentClassificationProtos {
         }
         return true;
       }
-      
+
       public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder(
-            this.getUnknownFields());
-        while (true) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              this.setUnknownFields(unknownFields.build());
-              onChanged();
-              return this;
-            default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                this.setUnknownFields(unknownFields.build());
-                onChanged();
-                return this;
-              }
-              break;
-            }
-            case 10: {
-              bitField0_ |= 0x00000001;
-              docId_ = input.readBytes();
-              break;
-            }
-            case 18: {
-              ensureClassificationCodesIsMutable();
-              classificationCodes_.add(input.readBytes());
-              break;
-            }
-            case 34: {
-              pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar.Builder subBuilder = pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar.newBuilder();
-              input.readMessage(subBuilder, extensionRegistry);
-              addAuxs(subBuilder.buildPartial());
-              break;
-            }
+        pl.edu.icm.coansys.models.DocumentClassificationProtos.DocumentClassificationOut parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (pl.edu.icm.coansys.models.DocumentClassificationProtos.DocumentClassificationOut) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
           }
         }
+        return this;
       }
-      
       private int bitField0_;
-      
+
       // required string docId = 1;
       private java.lang.Object docId_ = "";
+      /**
+       * <code>required string docId = 1;</code>
+       */
       public boolean hasDocId() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
-      public String getDocId() {
+      /**
+       * <code>required string docId = 1;</code>
+       */
+      public java.lang.String getDocId() {
         java.lang.Object ref = docId_;
-        if (!(ref instanceof String)) {
-          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
           docId_ = s;
           return s;
         } else {
-          return (String) ref;
+          return (java.lang.String) ref;
         }
       }
-      public Builder setDocId(String value) {
+      /**
+       * <code>required string docId = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getDocIdBytes() {
+        java.lang.Object ref = docId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          docId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string docId = 1;</code>
+       */
+      public Builder setDocId(
+          java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -510,18 +667,29 @@ public final class DocumentClassificationProtos {
         onChanged();
         return this;
       }
+      /**
+       * <code>required string docId = 1;</code>
+       */
       public Builder clearDocId() {
         bitField0_ = (bitField0_ & ~0x00000001);
         docId_ = getDefaultInstance().getDocId();
         onChanged();
         return this;
       }
-      void setDocId(com.google.protobuf.ByteString value) {
-        bitField0_ |= 0x00000001;
+      /**
+       * <code>required string docId = 1;</code>
+       */
+      public Builder setDocIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
         docId_ = value;
         onChanged();
+        return this;
       }
-      
+
       // repeated string classificationCodes = 2;
       private com.google.protobuf.LazyStringList classificationCodes_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       private void ensureClassificationCodesIsMutable() {
@@ -530,18 +698,37 @@ public final class DocumentClassificationProtos {
           bitField0_ |= 0x00000002;
          }
       }
-      public java.util.List<String>
+      /**
+       * <code>repeated string classificationCodes = 2;</code>
+       */
+      public java.util.List<java.lang.String>
           getClassificationCodesList() {
         return java.util.Collections.unmodifiableList(classificationCodes_);
       }
+      /**
+       * <code>repeated string classificationCodes = 2;</code>
+       */
       public int getClassificationCodesCount() {
         return classificationCodes_.size();
       }
-      public String getClassificationCodes(int index) {
+      /**
+       * <code>repeated string classificationCodes = 2;</code>
+       */
+      public java.lang.String getClassificationCodes(int index) {
         return classificationCodes_.get(index);
       }
+      /**
+       * <code>repeated string classificationCodes = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getClassificationCodesBytes(int index) {
+        return classificationCodes_.getByteString(index);
+      }
+      /**
+       * <code>repeated string classificationCodes = 2;</code>
+       */
       public Builder setClassificationCodes(
-          int index, String value) {
+          int index, java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -550,7 +737,11 @@ public final class DocumentClassificationProtos {
         onChanged();
         return this;
       }
-      public Builder addClassificationCodes(String value) {
+      /**
+       * <code>repeated string classificationCodes = 2;</code>
+       */
+      public Builder addClassificationCodes(
+          java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -559,25 +750,39 @@ public final class DocumentClassificationProtos {
         onChanged();
         return this;
       }
+      /**
+       * <code>repeated string classificationCodes = 2;</code>
+       */
       public Builder addAllClassificationCodes(
-          java.lang.Iterable<String> values) {
+          java.lang.Iterable<java.lang.String> values) {
         ensureClassificationCodesIsMutable();
         super.addAll(values, classificationCodes_);
         onChanged();
         return this;
       }
+      /**
+       * <code>repeated string classificationCodes = 2;</code>
+       */
       public Builder clearClassificationCodes() {
         classificationCodes_ = com.google.protobuf.LazyStringArrayList.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000002);
         onChanged();
         return this;
       }
-      void addClassificationCodes(com.google.protobuf.ByteString value) {
-        ensureClassificationCodesIsMutable();
+      /**
+       * <code>repeated string classificationCodes = 2;</code>
+       */
+      public Builder addClassificationCodesBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureClassificationCodesIsMutable();
         classificationCodes_.add(value);
         onChanged();
+        return this;
       }
-      
+
       // repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;
       private java.util.List<pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar> auxs_ =
         java.util.Collections.emptyList();
@@ -587,10 +792,13 @@ public final class DocumentClassificationProtos {
           bitField0_ |= 0x00000004;
          }
       }
-      
+
       private com.google.protobuf.RepeatedFieldBuilder<
           pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar, pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar.Builder, pl.edu.icm.coansys.models.DocumentClassificationProtos.AuxiliarOrBuilder> auxsBuilder_;
-      
+
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;</code>
+       */
       public java.util.List<pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar> getAuxsList() {
         if (auxsBuilder_ == null) {
           return java.util.Collections.unmodifiableList(auxs_);
@@ -598,6 +806,9 @@ public final class DocumentClassificationProtos {
           return auxsBuilder_.getMessageList();
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;</code>
+       */
       public int getAuxsCount() {
         if (auxsBuilder_ == null) {
           return auxs_.size();
@@ -605,6 +816,9 @@ public final class DocumentClassificationProtos {
           return auxsBuilder_.getCount();
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;</code>
+       */
       public pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar getAuxs(int index) {
         if (auxsBuilder_ == null) {
           return auxs_.get(index);
@@ -612,6 +826,9 @@ public final class DocumentClassificationProtos {
           return auxsBuilder_.getMessage(index);
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;</code>
+       */
       public Builder setAuxs(
           int index, pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar value) {
         if (auxsBuilder_ == null) {
@@ -626,6 +843,9 @@ public final class DocumentClassificationProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;</code>
+       */
       public Builder setAuxs(
           int index, pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar.Builder builderForValue) {
         if (auxsBuilder_ == null) {
@@ -637,6 +857,9 @@ public final class DocumentClassificationProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;</code>
+       */
       public Builder addAuxs(pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar value) {
         if (auxsBuilder_ == null) {
           if (value == null) {
@@ -650,6 +873,9 @@ public final class DocumentClassificationProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;</code>
+       */
       public Builder addAuxs(
           int index, pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar value) {
         if (auxsBuilder_ == null) {
@@ -664,6 +890,9 @@ public final class DocumentClassificationProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;</code>
+       */
       public Builder addAuxs(
           pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar.Builder builderForValue) {
         if (auxsBuilder_ == null) {
@@ -675,6 +904,9 @@ public final class DocumentClassificationProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;</code>
+       */
       public Builder addAuxs(
           int index, pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar.Builder builderForValue) {
         if (auxsBuilder_ == null) {
@@ -686,6 +918,9 @@ public final class DocumentClassificationProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;</code>
+       */
       public Builder addAllAuxs(
           java.lang.Iterable<? extends pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar> values) {
         if (auxsBuilder_ == null) {
@@ -697,6 +932,9 @@ public final class DocumentClassificationProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;</code>
+       */
       public Builder clearAuxs() {
         if (auxsBuilder_ == null) {
           auxs_ = java.util.Collections.emptyList();
@@ -707,6 +945,9 @@ public final class DocumentClassificationProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;</code>
+       */
       public Builder removeAuxs(int index) {
         if (auxsBuilder_ == null) {
           ensureAuxsIsMutable();
@@ -717,10 +958,16 @@ public final class DocumentClassificationProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;</code>
+       */
       public pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar.Builder getAuxsBuilder(
           int index) {
         return getAuxsFieldBuilder().getBuilder(index);
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;</code>
+       */
       public pl.edu.icm.coansys.models.DocumentClassificationProtos.AuxiliarOrBuilder getAuxsOrBuilder(
           int index) {
         if (auxsBuilder_ == null) {
@@ -728,6 +975,9 @@ public final class DocumentClassificationProtos {
           return auxsBuilder_.getMessageOrBuilder(index);
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;</code>
+       */
       public java.util.List<? extends pl.edu.icm.coansys.models.DocumentClassificationProtos.AuxiliarOrBuilder> 
            getAuxsOrBuilderList() {
         if (auxsBuilder_ != null) {
@@ -736,15 +986,24 @@ public final class DocumentClassificationProtos {
           return java.util.Collections.unmodifiableList(auxs_);
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;</code>
+       */
       public pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar.Builder addAuxsBuilder() {
         return getAuxsFieldBuilder().addBuilder(
             pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar.getDefaultInstance());
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;</code>
+       */
       public pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar.Builder addAuxsBuilder(
           int index) {
         return getAuxsFieldBuilder().addBuilder(
             index, pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar.getDefaultInstance());
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 4;</code>
+       */
       public java.util.List<pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar.Builder> 
            getAuxsBuilderList() {
         return getAuxsFieldBuilder().getBuilderList();
@@ -763,122 +1022,238 @@ public final class DocumentClassificationProtos {
         }
         return auxsBuilder_;
       }
-      
+
       // @@protoc_insertion_point(builder_scope:pl.edu.icm.coansys.models.DocumentClassificationOut)
     }
-    
+
     static {
       defaultInstance = new DocumentClassificationOut(true);
       defaultInstance.initFields();
     }
-    
+
     // @@protoc_insertion_point(class_scope:pl.edu.icm.coansys.models.DocumentClassificationOut)
   }
-  
+
   public interface AuxiliarOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
-    
+
     // optional string type = 1;
+    /**
+     * <code>optional string type = 1;</code>
+     */
     boolean hasType();
-    String getType();
-    
+    /**
+     * <code>optional string type = 1;</code>
+     */
+    java.lang.String getType();
+    /**
+     * <code>optional string type = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getTypeBytes();
+
     // optional string value = 2;
+    /**
+     * <code>optional string value = 2;</code>
+     */
     boolean hasValue();
-    String getValue();
+    /**
+     * <code>optional string value = 2;</code>
+     */
+    java.lang.String getValue();
+    /**
+     * <code>optional string value = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getValueBytes();
   }
+  /**
+   * Protobuf type {@code pl.edu.icm.coansys.models.Auxiliar}
+   */
   public static final class Auxiliar extends
       com.google.protobuf.GeneratedMessage
       implements AuxiliarOrBuilder {
     // Use Auxiliar.newBuilder() to construct.
-    private Auxiliar(Builder builder) {
+    private Auxiliar(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
-    private Auxiliar(boolean noInit) {}
-    
+    private Auxiliar(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
     private static final Auxiliar defaultInstance;
     public static Auxiliar getDefaultInstance() {
       return defaultInstance;
     }
-    
+
     public Auxiliar getDefaultInstanceForType() {
       return defaultInstance;
     }
-    
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private Auxiliar(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              bitField0_ |= 0x00000001;
+              type_ = input.readBytes();
+              break;
+            }
+            case 18: {
+              bitField0_ |= 0x00000002;
+              value_ = input.readBytes();
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
       return pl.edu.icm.coansys.models.DocumentClassificationProtos.internal_static_pl_edu_icm_coansys_models_Auxiliar_descriptor;
     }
-    
+
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return pl.edu.icm.coansys.models.DocumentClassificationProtos.internal_static_pl_edu_icm_coansys_models_Auxiliar_fieldAccessorTable;
+      return pl.edu.icm.coansys.models.DocumentClassificationProtos.internal_static_pl_edu_icm_coansys_models_Auxiliar_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar.class, pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar.Builder.class);
     }
-    
+
+    public static com.google.protobuf.Parser<Auxiliar> PARSER =
+        new com.google.protobuf.AbstractParser<Auxiliar>() {
+      public Auxiliar parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new Auxiliar(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<Auxiliar> getParserForType() {
+      return PARSER;
+    }
+
     private int bitField0_;
     // optional string type = 1;
     public static final int TYPE_FIELD_NUMBER = 1;
     private java.lang.Object type_;
+    /**
+     * <code>optional string type = 1;</code>
+     */
     public boolean hasType() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
-    public String getType() {
+    /**
+     * <code>optional string type = 1;</code>
+     */
+    public java.lang.String getType() {
       java.lang.Object ref = type_;
-      if (ref instanceof String) {
-        return (String) ref;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
           type_ = s;
         }
         return s;
       }
     }
-    private com.google.protobuf.ByteString getTypeBytes() {
+    /**
+     * <code>optional string type = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getTypeBytes() {
       java.lang.Object ref = type_;
-      if (ref instanceof String) {
+      if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
         type_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
-    
+
     // optional string value = 2;
     public static final int VALUE_FIELD_NUMBER = 2;
     private java.lang.Object value_;
+    /**
+     * <code>optional string value = 2;</code>
+     */
     public boolean hasValue() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
-    public String getValue() {
+    /**
+     * <code>optional string value = 2;</code>
+     */
+    public java.lang.String getValue() {
       java.lang.Object ref = value_;
-      if (ref instanceof String) {
-        return (String) ref;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
           value_ = s;
         }
         return s;
       }
     }
-    private com.google.protobuf.ByteString getValueBytes() {
+    /**
+     * <code>optional string value = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getValueBytes() {
       java.lang.Object ref = value_;
-      if (ref instanceof String) {
+      if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
         value_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
-    
+
     private void initFields() {
       type_ = "";
       value_ = "";
@@ -887,11 +1262,11 @@ public final class DocumentClassificationProtos {
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
-      
+
       memoizedIsInitialized = 1;
       return true;
     }
-    
+
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
@@ -903,12 +1278,12 @@ public final class DocumentClassificationProtos {
       }
       getUnknownFields().writeTo(output);
     }
-    
+
     private int memoizedSerializedSize = -1;
     public int getSerializedSize() {
       int size = memoizedSerializedSize;
       if (size != -1) return size;
-    
+
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
@@ -922,94 +1297,83 @@ public final class DocumentClassificationProtos {
       memoizedSerializedSize = size;
       return size;
     }
-    
+
     private static final long serialVersionUID = 0L;
     @java.lang.Override
     protected java.lang.Object writeReplace()
         throws java.io.ObjectStreamException {
       return super.writeReplace();
     }
-    
+
     public static pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
+      return PARSER.parseFrom(data);
     }
     public static pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
+      return PARSER.parseFrom(data);
     }
     public static pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
+      return PARSER.parseFrom(input);
     }
     public static pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(input, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
+      return PARSER.parseDelimitedFrom(input);
     }
     public static pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
+      return PARSER.parseFrom(input);
     }
     public static pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(input, extensionRegistry);
     }
-    
+
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder(pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
-    
+
     @java.lang.Override
     protected Builder newBuilderForType(
         com.google.protobuf.GeneratedMessage.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
+    /**
+     * Protobuf type {@code pl.edu.icm.coansys.models.Auxiliar}
+     */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
        implements pl.edu.icm.coansys.models.DocumentClassificationProtos.AuxiliarOrBuilder {
@@ -1017,18 +1381,21 @@ public final class DocumentClassificationProtos {
           getDescriptor() {
         return pl.edu.icm.coansys.models.DocumentClassificationProtos.internal_static_pl_edu_icm_coansys_models_Auxiliar_descriptor;
       }
-      
+
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return pl.edu.icm.coansys.models.DocumentClassificationProtos.internal_static_pl_edu_icm_coansys_models_Auxiliar_fieldAccessorTable;
+        return pl.edu.icm.coansys.models.DocumentClassificationProtos.internal_static_pl_edu_icm_coansys_models_Auxiliar_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar.class, pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar.Builder.class);
       }
-      
+
       // Construct using pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
-      
-      private Builder(BuilderParent parent) {
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
@@ -1039,7 +1406,7 @@ public final class DocumentClassificationProtos {
       private static Builder create() {
         return new Builder();
       }
-      
+
       public Builder clear() {
         super.clear();
         type_ = "";
@@ -1048,20 +1415,20 @@ public final class DocumentClassificationProtos {
         bitField0_ = (bitField0_ & ~0x00000002);
         return this;
       }
-      
+
       public Builder clone() {
         return create().mergeFrom(buildPartial());
       }
-      
+
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar.getDescriptor();
+        return pl.edu.icm.coansys.models.DocumentClassificationProtos.internal_static_pl_edu_icm_coansys_models_Auxiliar_descriptor;
       }
-      
+
       public pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar getDefaultInstanceForType() {
         return pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar.getDefaultInstance();
       }
-      
+
       public pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar build() {
         pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar result = buildPartial();
         if (!result.isInitialized()) {
@@ -1069,17 +1436,7 @@ public final class DocumentClassificationProtos {
         }
         return result;
       }
-      
-      private pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar buildParsed()
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(
-            result).asInvalidProtocolBufferException();
-        }
-        return result;
-      }
-      
+
       public pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar buildPartial() {
         pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar result = new pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar(this);
         int from_bitField0_ = bitField0_;
@@ -1096,7 +1453,7 @@ public final class DocumentClassificationProtos {
         onBuilt();
         return result;
       }
-      
+
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar) {
           return mergeFrom((pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar)other);
@@ -1105,78 +1462,89 @@ public final class DocumentClassificationProtos {
           return this;
         }
       }
-      
+
       public Builder mergeFrom(pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar other) {
         if (other == pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar.getDefaultInstance()) return this;
         if (other.hasType()) {
-          setType(other.getType());
+          bitField0_ |= 0x00000001;
+          type_ = other.type_;
+          onChanged();
         }
         if (other.hasValue()) {
-          setValue(other.getValue());
+          bitField0_ |= 0x00000002;
+          value_ = other.value_;
+          onChanged();
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
-      
+
       public final boolean isInitialized() {
         return true;
       }
-      
+
       public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder(
-            this.getUnknownFields());
-        while (true) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              this.setUnknownFields(unknownFields.build());
-              onChanged();
-              return this;
-            default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                this.setUnknownFields(unknownFields.build());
-                onChanged();
-                return this;
-              }
-              break;
-            }
-            case 10: {
-              bitField0_ |= 0x00000001;
-              type_ = input.readBytes();
-              break;
-            }
-            case 18: {
-              bitField0_ |= 0x00000002;
-              value_ = input.readBytes();
-              break;
-            }
+        pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
           }
         }
+        return this;
       }
-      
       private int bitField0_;
-      
+
       // optional string type = 1;
       private java.lang.Object type_ = "";
+      /**
+       * <code>optional string type = 1;</code>
+       */
       public boolean hasType() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
-      public String getType() {
+      /**
+       * <code>optional string type = 1;</code>
+       */
+      public java.lang.String getType() {
         java.lang.Object ref = type_;
-        if (!(ref instanceof String)) {
-          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
           type_ = s;
           return s;
         } else {
-          return (String) ref;
+          return (java.lang.String) ref;
         }
       }
-      public Builder setType(String value) {
+      /**
+       * <code>optional string type = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getTypeBytes() {
+        java.lang.Object ref = type_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          type_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string type = 1;</code>
+       */
+      public Builder setType(
+          java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -1185,34 +1553,72 @@ public final class DocumentClassificationProtos {
         onChanged();
         return this;
       }
+      /**
+       * <code>optional string type = 1;</code>
+       */
       public Builder clearType() {
         bitField0_ = (bitField0_ & ~0x00000001);
         type_ = getDefaultInstance().getType();
         onChanged();
         return this;
       }
-      void setType(com.google.protobuf.ByteString value) {
-        bitField0_ |= 0x00000001;
+      /**
+       * <code>optional string type = 1;</code>
+       */
+      public Builder setTypeBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
         type_ = value;
         onChanged();
+        return this;
       }
-      
+
       // optional string value = 2;
       private java.lang.Object value_ = "";
+      /**
+       * <code>optional string value = 2;</code>
+       */
       public boolean hasValue() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
-      public String getValue() {
+      /**
+       * <code>optional string value = 2;</code>
+       */
+      public java.lang.String getValue() {
         java.lang.Object ref = value_;
-        if (!(ref instanceof String)) {
-          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
           value_ = s;
           return s;
         } else {
-          return (String) ref;
+          return (java.lang.String) ref;
         }
       }
-      public Builder setValue(String value) {
+      /**
+       * <code>optional string value = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getValueBytes() {
+        java.lang.Object ref = value_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          value_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string value = 2;</code>
+       */
+      public Builder setValue(
+          java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -1221,29 +1627,40 @@ public final class DocumentClassificationProtos {
         onChanged();
         return this;
       }
+      /**
+       * <code>optional string value = 2;</code>
+       */
       public Builder clearValue() {
         bitField0_ = (bitField0_ & ~0x00000002);
         value_ = getDefaultInstance().getValue();
         onChanged();
         return this;
       }
-      void setValue(com.google.protobuf.ByteString value) {
-        bitField0_ |= 0x00000002;
+      /**
+       * <code>optional string value = 2;</code>
+       */
+      public Builder setValueBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
         value_ = value;
         onChanged();
+        return this;
       }
-      
+
       // @@protoc_insertion_point(builder_scope:pl.edu.icm.coansys.models.Auxiliar)
     }
-    
+
     static {
       defaultInstance = new Auxiliar(true);
       defaultInstance.initFields();
     }
-    
+
     // @@protoc_insertion_point(class_scope:pl.edu.icm.coansys.models.Auxiliar)
   }
-  
+
   private static com.google.protobuf.Descriptors.Descriptor
     internal_static_pl_edu_icm_coansys_models_DocumentClassificationOut_descriptor;
   private static
@@ -1254,7 +1671,7 @@ public final class DocumentClassificationProtos {
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_pl_edu_icm_coansys_models_Auxiliar_fieldAccessorTable;
-  
+
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
     return descriptor;
@@ -1282,17 +1699,13 @@ public final class DocumentClassificationProtos {
           internal_static_pl_edu_icm_coansys_models_DocumentClassificationOut_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_pl_edu_icm_coansys_models_DocumentClassificationOut_descriptor,
-              new java.lang.String[] { "DocId", "ClassificationCodes", "Auxs", },
-              pl.edu.icm.coansys.models.DocumentClassificationProtos.DocumentClassificationOut.class,
-              pl.edu.icm.coansys.models.DocumentClassificationProtos.DocumentClassificationOut.Builder.class);
+              new java.lang.String[] { "DocId", "ClassificationCodes", "Auxs", });
           internal_static_pl_edu_icm_coansys_models_Auxiliar_descriptor =
             getDescriptor().getMessageTypes().get(1);
           internal_static_pl_edu_icm_coansys_models_Auxiliar_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_pl_edu_icm_coansys_models_Auxiliar_descriptor,
-              new java.lang.String[] { "Type", "Value", },
-              pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar.class,
-              pl.edu.icm.coansys.models.DocumentClassificationProtos.Auxiliar.Builder.class);
+              new java.lang.String[] { "Type", "Value", });
           return null;
         }
       };
@@ -1301,6 +1714,6 @@ public final class DocumentClassificationProtos {
         new com.google.protobuf.Descriptors.FileDescriptor[] {
         }, assigner);
   }
-  
+
   // @@protoc_insertion_point(outer_class_scope)
 }
