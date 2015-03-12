@@ -66,7 +66,7 @@ D100 = LOAD '$and_inputDocsData' as (sname:int, datagroup:{(cId:chararray, sname
 -- -----------------------------------------------------
 D100A = foreach D100 generate flatten( exhaustiveAND( datagroup ) ) as (uuid:chararray, cIds:{(chararray)});
 D100X1 = foreach D100A generate *, COUNT(cIds) as cnt;
-D100X2 = filter D100X1 by (uuid is not null and cnt>0)
+D100X2 = filter D100X1 by (uuid is not null and cnt>0);
 E100 = foreach D100X2 generate flatten( cIds ) as cId, uuid;
 
 store E100 into '$and_outputContribs';
