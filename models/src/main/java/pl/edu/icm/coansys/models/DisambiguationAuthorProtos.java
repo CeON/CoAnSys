@@ -10,7 +10,7 @@ public final class DisambiguationAuthorProtos {
   }
   public interface DisambiguationAuthorOutOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
-    
+
     // required string docId = 1;
     boolean hasDocId();
     String getDocId();
