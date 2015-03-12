@@ -28,7 +28,7 @@ public final class StatisticsProtos {
   }
   public interface KeyValueOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
-    
+
     // required string key = 1;
     boolean hasKey();
     String getKey();
