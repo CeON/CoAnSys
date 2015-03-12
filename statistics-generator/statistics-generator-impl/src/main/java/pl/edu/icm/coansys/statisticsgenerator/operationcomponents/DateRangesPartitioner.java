@@ -1,6 +1,6 @@
  /*
  * This file is part of CoAnSys project.
- * Copyright (c) 2012-2013 ICM-UW
+ * Copyright (c) 2012-2015 ICM-UW
  * 
  * CoAnSys is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published by
