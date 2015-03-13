@@ -16,10 +16,6 @@
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
 
---
--- (C) 2010-2012 ICM UW. All rights reserved.
---
-
 IMPORT 'macros.pig';
 %DEFAULT jars '*.jar';
 REGISTER 'lib/$jars'
