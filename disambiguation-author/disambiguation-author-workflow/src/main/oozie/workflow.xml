@@ -246,7 +246,7 @@
 
 	<decision name="startFrom">
 		<switch>
-			<case to="do_and_0">${skipSplitting eq "true"}</case>
+			<case to="do_and">${skipSplitting eq "true"}</case>
 			<default to="split" />
 		</switch>
 	</decision>
@@ -277,13 +277,16 @@
 			<param>and_scheduler=${and_pool}</param>
 			<param>and_parallel_param=${and_parallel}</param>
 		</pig>
-		<ok to="do_and_0" />
+		<ok to="do_and" />
 		<error to="kill" />
 	</action>
 
-	<!-- <fork name="do_and"> <path start="do_and_forked_node_0"/> <path start="do_and_forked_node_1"/> 
-		<path start="do_and_forked_node_2"/> <path start="do_and_forked_node_3"/> 
-		</fork> -->
+	<fork name="do_and">
+		<path start="do_and_0"/>
+		<path start="do_and_1"/> 
+		<path start="do_and_2"/>
+		<path start="do_and_3"/> 
+	</fork>
 
 	<action name="do_and_0">
 		<pig>
@@ -297,7 +300,7 @@
 			<param>and_scheduler=${and_pool}</param>
 			<param>and_parallel_param=${and_parallel}</param>
 		</pig>
-		<ok to="do_and_1" />
+		<ok to="do_and_join" />
 		<error to="kill" />
 	</action>
 
@@ -317,7 +320,7 @@
 			<param>and_scheduler=${and_pool}</param>
 			<param>and_parallel_param=${and_parallel}</param>
 		</pig>
-		<ok to="do_and_2" />
+		<ok to="do_and_join" />
 		<error to="kill" />
 	</action>
 
@@ -340,7 +343,7 @@
 			<param>and_scheduler=${and_pool}</param>
 			<param>and_parallel_param=${and_parallel}</param>
 		</pig>
-		<ok to="do_and_3" />
+		<ok to="do_and_join" />
 		<error to="kill" />
 	</action>
 
@@ -364,11 +367,11 @@
 			<param>and_scheduler=${and_pool}</param>
 			<param>and_parallel_param=${and_parallel}</param>
 		</pig>
-		<ok to="serialize_do" />
+		<ok to="do_and_join" />
 		<error to="kill" />
 	</action>
 
-	<!-- <join name="do_and_join" to="serialize_fork"/> -->
+	<join name="do_and_join" to="serialize_do"/>
 
 
 	<!-- *************************************************** -->

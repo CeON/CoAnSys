@@ -371,7 +371,7 @@
 		<error to="kill" />
 	</action>
 
-	<join name="do_and_join" to="serialize_fork"/>
+	<join name="do_and_join" to="serialize_do"/>
 
 
 	<!-- *************************************************** -->
