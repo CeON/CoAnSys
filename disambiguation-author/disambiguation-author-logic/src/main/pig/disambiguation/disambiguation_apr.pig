@@ -66,8 +66,10 @@ SET mapred.fairscheduler.pool $and_scheduler
 -- code section
 -- -----------------------------------------------------
 -- -----------------------------------------------------
-D = LOAD '$and_inputDocsData' as (sname:int, datagroup:{(cId:chararray, sname:int, data:map[{(int)}])}, count:long);
-
+D0 = LOAD '$and_inputDocsData' as (sname:int, datagroup:{(cId:chararray, sname:int, data:map[{(int)}])}, count:long);
+D1 = foreach D generate *, COUNT(datagroup) as cnt;                  
+D2 = filter D1 by (cnt>0);
+D = foreach D2 generate sname, datagroup, count;
 -- -----------------------------------------------------
 -- BIG GRUPS OF CONTRIBUTORS 
 -- -----------------------------------------------------
@@ -105,9 +107,11 @@ SINGLE = foreach F generate flatten( cIds ) as cId, uuid as uuid;
 -- CLUSTERS FOR EXHAUSTIVE
 -- -----------------------------------------------------
 
-G = foreach EEXH generate flatten( exhaustiveAND( datagroup, simTriples ) ) as (uuid:chararray, cIds:{(chararray)});
+G1 = foreach EEXH generate flatten( exhaustiveAND( datagroup, simTriples ) ) as (uuid:chararray, cIds:{(chararray)});
+G2 = foreach G1 generate *, COUNT(cIds) as cnt;
+G3 = filter G2 by (uuid is not null and cnt>0);
 -- H: {cId: chararray,uuid: chararray}
-H = foreach G generate flatten( cIds ) as cId, uuid;
+H = foreach G3 generate flatten( cIds ) as cId, uuid;
 
 -- -----------------------------------------------------
 -- STORING RESULTS
