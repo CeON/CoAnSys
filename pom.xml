@@ -22,7 +22,7 @@
         <protobuf.java.version>2.5.0</protobuf.java.version>
         <testng.version>6.5.2</testng.version>
         <maven.surefire.plugin.version>2.12.3</maven.surefire.plugin.version>
-        <spring.version>3.2.0.RELEASE</spring.version>
+        <spring.version>4.1.5.RELEASE</spring.version>
         <oozie-maven-plugin.version>1.4-CDH530-SNAPSHOT</oozie-maven-plugin.version>
         <oozie-runner.version>1.2-CDH530-SNAPSHOT</oozie-runner.version>
         <jackson-mapper-asl.version>1.9.12</jackson-mapper-asl.version>
@@ -60,6 +60,15 @@
                 <artifactId>maven-release-plugin</artifactId>
                 <version>2.5.1</version>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
         </plugins>
 
 		<pluginManagement>
@@ -83,8 +92,8 @@
                         <artifactId>maven-compiler-plugin</artifactId>
                         <version>2.3.2</version>
                         <configuration>
-                            <source>1.6</source>
-                            <target>1.7</target>
+                            <source>1.8</source>
+                            <target>1.8</target>
                         </configuration>
                     </plugin>
                     <plugin>
@@ -120,8 +129,8 @@
                         <artifactId>maven-compiler-plugin</artifactId>
                         <version>2.3.2</version>
                         <configuration>
-                            <source>1.6</source>
-                            <target>1.7</target>
+                            <source>1.8</source>
+                            <target>1.8</target>
                         </configuration>
                     </plugin>
                 </plugins>
@@ -139,8 +148,8 @@
                         <artifactId>maven-compiler-plugin</artifactId>
                         <version>2.3.2</version>
                         <configuration>
-                            <source>1.6</source>
-                            <target>1.7</target>
+                            <source>1.8</source>
+                            <target>1.8</target>
                         </configuration>
                     </plugin>
                     <plugin>
