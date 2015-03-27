@@ -14,7 +14,7 @@
 	<url>http://maven.apache.org</url>
 
 	<properties>
-		<oozie-maven-plugin.version>1.2</oozie-maven-plugin.version>
+		<!-- oozie-maven-plugin.version>1.2</oozie-maven-plugin.version -->
 	</properties>
 
 	<dependencies>

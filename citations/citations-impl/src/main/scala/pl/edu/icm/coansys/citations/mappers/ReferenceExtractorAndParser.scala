@@ -48,7 +48,7 @@ class ReferenceExtractorAndParser extends Mapper[Writable, BytesWritable, Text, 
         new CRFBibReferenceParser(model)
       else
         new CRFBibReferenceParser(
-          this.getClass.getResourceAsStream("/pl/edu/icm/cermine/bibref/acrf-small.ser.gz"))
+          this.getClass.getResourceAsStream("/pl/edu/icm/cermine/bibref/acrf.ser.gz"))
   }
 
   override def map(key: Writable, value: BytesWritable, context: Context) {

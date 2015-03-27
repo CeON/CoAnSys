@@ -30,132 +30,303 @@ public final class DisambiguationAuthorProtos {
       extends com.google.protobuf.MessageOrBuilder {
 
     // required string docId = 1;
+    /**
+     * <code>required string docId = 1;</code>
+     */
     boolean hasDocId();
-    String getDocId();
-    
+    /**
+     * <code>required string docId = 1;</code>
+     */
+    java.lang.String getDocId();
+    /**
+     * <code>required string docId = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getDocIdBytes();
+
     // repeated .pl.edu.icm.coansys.models.ContributorDescription contributorDescription = 2;
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.ContributorDescription contributorDescription = 2;</code>
+     */
     java.util.List<pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription> 
         getContributorDescriptionList();
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.ContributorDescription contributorDescription = 2;</code>
+     */
     pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription getContributorDescription(int index);
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.ContributorDescription contributorDescription = 2;</code>
+     */
     int getContributorDescriptionCount();
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.ContributorDescription contributorDescription = 2;</code>
+     */
     java.util.List<? extends pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescriptionOrBuilder> 
         getContributorDescriptionOrBuilderList();
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.ContributorDescription contributorDescription = 2;</code>
+     */
     pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescriptionOrBuilder getContributorDescriptionOrBuilder(
         int index);
-    
+
     // repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+     */
     java.util.List<pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar> 
         getAuxsList();
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+     */
     pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar getAuxs(int index);
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+     */
     int getAuxsCount();
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+     */
     java.util.List<? extends pl.edu.icm.coansys.models.DisambiguationAuthorProtos.AuxiliarOrBuilder> 
         getAuxsOrBuilderList();
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+     */
     pl.edu.icm.coansys.models.DisambiguationAuthorProtos.AuxiliarOrBuilder getAuxsOrBuilder(
         int index);
   }
+  /**
+   * Protobuf type {@code pl.edu.icm.coansys.models.DisambiguationAuthorOut}
+   */
   public static final class DisambiguationAuthorOut extends
       com.google.protobuf.GeneratedMessage
       implements DisambiguationAuthorOutOrBuilder {
     // Use DisambiguationAuthorOut.newBuilder() to construct.
-    private DisambiguationAuthorOut(Builder builder) {
+    private DisambiguationAuthorOut(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
-    private DisambiguationAuthorOut(boolean noInit) {}
-    
+    private DisambiguationAuthorOut(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
     private static final DisambiguationAuthorOut defaultInstance;
     public static DisambiguationAuthorOut getDefaultInstance() {
       return defaultInstance;
     }
-    
+
     public DisambiguationAuthorOut getDefaultInstanceForType() {
       return defaultInstance;
     }
-    
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private DisambiguationAuthorOut(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              bitField0_ |= 0x00000001;
+              docId_ = input.readBytes();
+              break;
+            }
+            case 18: {
+              if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+                contributorDescription_ = new java.util.ArrayList<pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription>();
+                mutable_bitField0_ |= 0x00000002;
+              }
+              contributorDescription_.add(input.readMessage(pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription.PARSER, extensionRegistry));
+              break;
+            }
+            case 26: {
+              if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+                auxs_ = new java.util.ArrayList<pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar>();
+                mutable_bitField0_ |= 0x00000004;
+              }
+              auxs_.add(input.readMessage(pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar.PARSER, extensionRegistry));
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+          contributorDescription_ = java.util.Collections.unmodifiableList(contributorDescription_);
+        }
+        if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+          auxs_ = java.util.Collections.unmodifiableList(auxs_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
       return pl.edu.icm.coansys.models.DisambiguationAuthorProtos.internal_static_pl_edu_icm_coansys_models_DisambiguationAuthorOut_descriptor;
     }
-    
+
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return pl.edu.icm.coansys.models.DisambiguationAuthorProtos.internal_static_pl_edu_icm_coansys_models_DisambiguationAuthorOut_fieldAccessorTable;
+      return pl.edu.icm.coansys.models.DisambiguationAuthorProtos.internal_static_pl_edu_icm_coansys_models_DisambiguationAuthorOut_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              pl.edu.icm.coansys.models.DisambiguationAuthorProtos.DisambiguationAuthorOut.class, pl.edu.icm.coansys.models.DisambiguationAuthorProtos.DisambiguationAuthorOut.Builder.class);
     }
-    
+
+    public static com.google.protobuf.Parser<DisambiguationAuthorOut> PARSER =
+        new com.google.protobuf.AbstractParser<DisambiguationAuthorOut>() {
+      public DisambiguationAuthorOut parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new DisambiguationAuthorOut(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<DisambiguationAuthorOut> getParserForType() {
+      return PARSER;
+    }
+
     private int bitField0_;
     // required string docId = 1;
     public static final int DOCID_FIELD_NUMBER = 1;
     private java.lang.Object docId_;
+    /**
+     * <code>required string docId = 1;</code>
+     */
     public boolean hasDocId() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
-    public String getDocId() {
+    /**
+     * <code>required string docId = 1;</code>
+     */
+    public java.lang.String getDocId() {
       java.lang.Object ref = docId_;
-      if (ref instanceof String) {
-        return (String) ref;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
           docId_ = s;
         }
         return s;
       }
     }
-    private com.google.protobuf.ByteString getDocIdBytes() {
+    /**
+     * <code>required string docId = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getDocIdBytes() {
       java.lang.Object ref = docId_;
-      if (ref instanceof String) {
+      if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
         docId_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
-    
+
     // repeated .pl.edu.icm.coansys.models.ContributorDescription contributorDescription = 2;
     public static final int CONTRIBUTORDESCRIPTION_FIELD_NUMBER = 2;
     private java.util.List<pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription> contributorDescription_;
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.ContributorDescription contributorDescription = 2;</code>
+     */
     public java.util.List<pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription> getContributorDescriptionList() {
       return contributorDescription_;
     }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.ContributorDescription contributorDescription = 2;</code>
+     */
     public java.util.List<? extends pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescriptionOrBuilder> 
         getContributorDescriptionOrBuilderList() {
       return contributorDescription_;
     }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.ContributorDescription contributorDescription = 2;</code>
+     */
     public int getContributorDescriptionCount() {
       return contributorDescription_.size();
     }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.ContributorDescription contributorDescription = 2;</code>
+     */
     public pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription getContributorDescription(int index) {
       return contributorDescription_.get(index);
     }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.ContributorDescription contributorDescription = 2;</code>
+     */
     public pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescriptionOrBuilder getContributorDescriptionOrBuilder(
         int index) {
       return contributorDescription_.get(index);
     }
-    
+
     // repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;
     public static final int AUXS_FIELD_NUMBER = 3;
     private java.util.List<pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar> auxs_;
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+     */
     public java.util.List<pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar> getAuxsList() {
       return auxs_;
     }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+     */
     public java.util.List<? extends pl.edu.icm.coansys.models.DisambiguationAuthorProtos.AuxiliarOrBuilder> 
         getAuxsOrBuilderList() {
       return auxs_;
     }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+     */
     public int getAuxsCount() {
       return auxs_.size();
     }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+     */
     public pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar getAuxs(int index) {
       return auxs_.get(index);
     }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+     */
     public pl.edu.icm.coansys.models.DisambiguationAuthorProtos.AuxiliarOrBuilder getAuxsOrBuilder(
         int index) {
       return auxs_.get(index);
     }
-    
+
     private void initFields() {
       docId_ = "";
       contributorDescription_ = java.util.Collections.emptyList();
@@ -165,7 +336,7 @@ public final class DisambiguationAuthorProtos {
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
-      
+
       if (!hasDocId()) {
         memoizedIsInitialized = 0;
         return false;
@@ -179,7 +350,7 @@ public final class DisambiguationAuthorProtos {
       memoizedIsInitialized = 1;
       return true;
     }
-    
+
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
@@ -194,12 +365,12 @@ public final class DisambiguationAuthorProtos {
       }
       getUnknownFields().writeTo(output);
     }
-    
+
     private int memoizedSerializedSize = -1;
     public int getSerializedSize() {
       int size = memoizedSerializedSize;
       if (size != -1) return size;
-    
+
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
@@ -217,94 +388,83 @@ public final class DisambiguationAuthorProtos {
       memoizedSerializedSize = size;
       return size;
     }
-    
+
     private static final long serialVersionUID = 0L;
     @java.lang.Override
     protected java.lang.Object writeReplace()
         throws java.io.ObjectStreamException {
       return super.writeReplace();
     }
-    
+
     public static pl.edu.icm.coansys.models.DisambiguationAuthorProtos.DisambiguationAuthorOut parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
+      return PARSER.parseFrom(data);
     }
     public static pl.edu.icm.coansys.models.DisambiguationAuthorProtos.DisambiguationAuthorOut parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.DisambiguationAuthorProtos.DisambiguationAuthorOut parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
+      return PARSER.parseFrom(data);
     }
     public static pl.edu.icm.coansys.models.DisambiguationAuthorProtos.DisambiguationAuthorOut parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.DisambiguationAuthorProtos.DisambiguationAuthorOut parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
+      return PARSER.parseFrom(input);
     }
     public static pl.edu.icm.coansys.models.DisambiguationAuthorProtos.DisambiguationAuthorOut parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(input, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.DisambiguationAuthorProtos.DisambiguationAuthorOut parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
+      return PARSER.parseDelimitedFrom(input);
     }
     public static pl.edu.icm.coansys.models.DisambiguationAuthorProtos.DisambiguationAuthorOut parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.DisambiguationAuthorProtos.DisambiguationAuthorOut parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
+      return PARSER.parseFrom(input);
     }
     public static pl.edu.icm.coansys.models.DisambiguationAuthorProtos.DisambiguationAuthorOut parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(input, extensionRegistry);
     }
-    
+
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder(pl.edu.icm.coansys.models.DisambiguationAuthorProtos.DisambiguationAuthorOut prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
-    
+
     @java.lang.Override
     protected Builder newBuilderForType(
         com.google.protobuf.GeneratedMessage.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
+    /**
+     * Protobuf type {@code pl.edu.icm.coansys.models.DisambiguationAuthorOut}
+     */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
        implements pl.edu.icm.coansys.models.DisambiguationAuthorProtos.DisambiguationAuthorOutOrBuilder {
@@ -312,18 +472,21 @@ public final class DisambiguationAuthorProtos {
           getDescriptor() {
         return pl.edu.icm.coansys.models.DisambiguationAuthorProtos.internal_static_pl_edu_icm_coansys_models_DisambiguationAuthorOut_descriptor;
       }
-      
+
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return pl.edu.icm.coansys.models.DisambiguationAuthorProtos.internal_static_pl_edu_icm_coansys_models_DisambiguationAuthorOut_fieldAccessorTable;
+        return pl.edu.icm.coansys.models.DisambiguationAuthorProtos.internal_static_pl_edu_icm_coansys_models_DisambiguationAuthorOut_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                pl.edu.icm.coansys.models.DisambiguationAuthorProtos.DisambiguationAuthorOut.class, pl.edu.icm.coansys.models.DisambiguationAuthorProtos.DisambiguationAuthorOut.Builder.class);
       }
-      
+
       // Construct using pl.edu.icm.coansys.models.DisambiguationAuthorProtos.DisambiguationAuthorOut.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
-      
-      private Builder(BuilderParent parent) {
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
@@ -336,7 +499,7 @@ public final class DisambiguationAuthorProtos {
       private static Builder create() {
         return new Builder();
       }
-      
+
       public Builder clear() {
         super.clear();
         docId_ = "";
@@ -355,20 +518,20 @@ public final class DisambiguationAuthorProtos {
         }
         return this;
       }
-      
+
       public Builder clone() {
         return create().mergeFrom(buildPartial());
       }
-      
+
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return pl.edu.icm.coansys.models.DisambiguationAuthorProtos.DisambiguationAuthorOut.getDescriptor();
+        return pl.edu.icm.coansys.models.DisambiguationAuthorProtos.internal_static_pl_edu_icm_coansys_models_DisambiguationAuthorOut_descriptor;
       }
-      
+
       public pl.edu.icm.coansys.models.DisambiguationAuthorProtos.DisambiguationAuthorOut getDefaultInstanceForType() {
         return pl.edu.icm.coansys.models.DisambiguationAuthorProtos.DisambiguationAuthorOut.getDefaultInstance();
       }
-      
+
       public pl.edu.icm.coansys.models.DisambiguationAuthorProtos.DisambiguationAuthorOut build() {
         pl.edu.icm.coansys.models.DisambiguationAuthorProtos.DisambiguationAuthorOut result = buildPartial();
         if (!result.isInitialized()) {
@@ -376,17 +539,7 @@ public final class DisambiguationAuthorProtos {
         }
         return result;
       }
-      
-      private pl.edu.icm.coansys.models.DisambiguationAuthorProtos.DisambiguationAuthorOut buildParsed()
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        pl.edu.icm.coansys.models.DisambiguationAuthorProtos.DisambiguationAuthorOut result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(
-            result).asInvalidProtocolBufferException();
-        }
-        return result;
-      }
-      
+
       public pl.edu.icm.coansys.models.DisambiguationAuthorProtos.DisambiguationAuthorOut buildPartial() {
         pl.edu.icm.coansys.models.DisambiguationAuthorProtos.DisambiguationAuthorOut result = new pl.edu.icm.coansys.models.DisambiguationAuthorProtos.DisambiguationAuthorOut(this);
         int from_bitField0_ = bitField0_;
@@ -417,7 +570,7 @@ public final class DisambiguationAuthorProtos {
         onBuilt();
         return result;
       }
-      
+
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof pl.edu.icm.coansys.models.DisambiguationAuthorProtos.DisambiguationAuthorOut) {
           return mergeFrom((pl.edu.icm.coansys.models.DisambiguationAuthorProtos.DisambiguationAuthorOut)other);
@@ -426,11 +579,13 @@ public final class DisambiguationAuthorProtos {
           return this;
         }
       }
-      
+
       public Builder mergeFrom(pl.edu.icm.coansys.models.DisambiguationAuthorProtos.DisambiguationAuthorOut other) {
         if (other == pl.edu.icm.coansys.models.DisambiguationAuthorProtos.DisambiguationAuthorOut.getDefaultInstance()) return this;
         if (other.hasDocId()) {
-          setDocId(other.getDocId());
+          bitField0_ |= 0x00000001;
+          docId_ = other.docId_;
+          onChanged();
         }
         if (contributorDescriptionBuilder_ == null) {
           if (!other.contributorDescription_.isEmpty()) {
@@ -487,7 +642,7 @@ public final class DisambiguationAuthorProtos {
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
-      
+
       public final boolean isInitialized() {
         if (!hasDocId()) {
           
@@ -501,69 +656,69 @@ public final class DisambiguationAuthorProtos {
         }
         return true;
       }
-      
+
       public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder(
-            this.getUnknownFields());
-        while (true) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              this.setUnknownFields(unknownFields.build());
-              onChanged();
-              return this;
-            default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                this.setUnknownFields(unknownFields.build());
-                onChanged();
-                return this;
-              }
-              break;
-            }
-            case 10: {
-              bitField0_ |= 0x00000001;
-              docId_ = input.readBytes();
-              break;
-            }
-            case 18: {
-              pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription.Builder subBuilder = pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription.newBuilder();
-              input.readMessage(subBuilder, extensionRegistry);
-              addContributorDescription(subBuilder.buildPartial());
-              break;
-            }
-            case 26: {
-              pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar.Builder subBuilder = pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar.newBuilder();
-              input.readMessage(subBuilder, extensionRegistry);
-              addAuxs(subBuilder.buildPartial());
-              break;
-            }
+        pl.edu.icm.coansys.models.DisambiguationAuthorProtos.DisambiguationAuthorOut parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (pl.edu.icm.coansys.models.DisambiguationAuthorProtos.DisambiguationAuthorOut) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
           }
         }
+        return this;
       }
-      
       private int bitField0_;
-      
+
       // required string docId = 1;
       private java.lang.Object docId_ = "";
+      /**
+       * <code>required string docId = 1;</code>
+       */
       public boolean hasDocId() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
-      public String getDocId() {
+      /**
+       * <code>required string docId = 1;</code>
+       */
+      public java.lang.String getDocId() {
         java.lang.Object ref = docId_;
-        if (!(ref instanceof String)) {
-          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
           docId_ = s;
           return s;
         } else {
-          return (String) ref;
+          return (java.lang.String) ref;
         }
       }
-      public Builder setDocId(String value) {
+      /**
+       * <code>required string docId = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getDocIdBytes() {
+        java.lang.Object ref = docId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          docId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string docId = 1;</code>
+       */
+      public Builder setDocId(
+          java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -572,18 +727,29 @@ public final class DisambiguationAuthorProtos {
         onChanged();
         return this;
       }
+      /**
+       * <code>required string docId = 1;</code>
+       */
       public Builder clearDocId() {
         bitField0_ = (bitField0_ & ~0x00000001);
         docId_ = getDefaultInstance().getDocId();
         onChanged();
         return this;
       }
-      void setDocId(com.google.protobuf.ByteString value) {
-        bitField0_ |= 0x00000001;
+      /**
+       * <code>required string docId = 1;</code>
+       */
+      public Builder setDocIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
         docId_ = value;
         onChanged();
+        return this;
       }
-      
+
       // repeated .pl.edu.icm.coansys.models.ContributorDescription contributorDescription = 2;
       private java.util.List<pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription> contributorDescription_ =
         java.util.Collections.emptyList();
@@ -593,10 +759,13 @@ public final class DisambiguationAuthorProtos {
           bitField0_ |= 0x00000002;
          }
       }
-      
+
       private com.google.protobuf.RepeatedFieldBuilder<
           pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription, pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription.Builder, pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescriptionOrBuilder> contributorDescriptionBuilder_;
-      
+
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.ContributorDescription contributorDescription = 2;</code>
+       */
       public java.util.List<pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription> getContributorDescriptionList() {
         if (contributorDescriptionBuilder_ == null) {
           return java.util.Collections.unmodifiableList(contributorDescription_);
@@ -604,6 +773,9 @@ public final class DisambiguationAuthorProtos {
           return contributorDescriptionBuilder_.getMessageList();
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.ContributorDescription contributorDescription = 2;</code>
+       */
       public int getContributorDescriptionCount() {
         if (contributorDescriptionBuilder_ == null) {
           return contributorDescription_.size();
@@ -611,6 +783,9 @@ public final class DisambiguationAuthorProtos {
           return contributorDescriptionBuilder_.getCount();
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.ContributorDescription contributorDescription = 2;</code>
+       */
       public pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription getContributorDescription(int index) {
         if (contributorDescriptionBuilder_ == null) {
           return contributorDescription_.get(index);
@@ -618,6 +793,9 @@ public final class DisambiguationAuthorProtos {
           return contributorDescriptionBuilder_.getMessage(index);
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.ContributorDescription contributorDescription = 2;</code>
+       */
       public Builder setContributorDescription(
           int index, pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription value) {
         if (contributorDescriptionBuilder_ == null) {
@@ -632,6 +810,9 @@ public final class DisambiguationAuthorProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.ContributorDescription contributorDescription = 2;</code>
+       */
       public Builder setContributorDescription(
           int index, pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription.Builder builderForValue) {
         if (contributorDescriptionBuilder_ == null) {
@@ -643,6 +824,9 @@ public final class DisambiguationAuthorProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.ContributorDescription contributorDescription = 2;</code>
+       */
       public Builder addContributorDescription(pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription value) {
         if (contributorDescriptionBuilder_ == null) {
           if (value == null) {
@@ -656,6 +840,9 @@ public final class DisambiguationAuthorProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.ContributorDescription contributorDescription = 2;</code>
+       */
       public Builder addContributorDescription(
           int index, pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription value) {
         if (contributorDescriptionBuilder_ == null) {
@@ -670,6 +857,9 @@ public final class DisambiguationAuthorProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.ContributorDescription contributorDescription = 2;</code>
+       */
       public Builder addContributorDescription(
           pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription.Builder builderForValue) {
         if (contributorDescriptionBuilder_ == null) {
@@ -681,6 +871,9 @@ public final class DisambiguationAuthorProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.ContributorDescription contributorDescription = 2;</code>
+       */
       public Builder addContributorDescription(
           int index, pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription.Builder builderForValue) {
         if (contributorDescriptionBuilder_ == null) {
@@ -692,6 +885,9 @@ public final class DisambiguationAuthorProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.ContributorDescription contributorDescription = 2;</code>
+       */
       public Builder addAllContributorDescription(
           java.lang.Iterable<? extends pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription> values) {
         if (contributorDescriptionBuilder_ == null) {
@@ -703,6 +899,9 @@ public final class DisambiguationAuthorProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.ContributorDescription contributorDescription = 2;</code>
+       */
       public Builder clearContributorDescription() {
         if (contributorDescriptionBuilder_ == null) {
           contributorDescription_ = java.util.Collections.emptyList();
@@ -713,6 +912,9 @@ public final class DisambiguationAuthorProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.ContributorDescription contributorDescription = 2;</code>
+       */
       public Builder removeContributorDescription(int index) {
         if (contributorDescriptionBuilder_ == null) {
           ensureContributorDescriptionIsMutable();
@@ -723,10 +925,16 @@ public final class DisambiguationAuthorProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.ContributorDescription contributorDescription = 2;</code>
+       */
       public pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription.Builder getContributorDescriptionBuilder(
           int index) {
         return getContributorDescriptionFieldBuilder().getBuilder(index);
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.ContributorDescription contributorDescription = 2;</code>
+       */
       public pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescriptionOrBuilder getContributorDescriptionOrBuilder(
           int index) {
         if (contributorDescriptionBuilder_ == null) {
@@ -734,6 +942,9 @@ public final class DisambiguationAuthorProtos {
           return contributorDescriptionBuilder_.getMessageOrBuilder(index);
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.ContributorDescription contributorDescription = 2;</code>
+       */
       public java.util.List<? extends pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescriptionOrBuilder> 
            getContributorDescriptionOrBuilderList() {
         if (contributorDescriptionBuilder_ != null) {
@@ -742,15 +953,24 @@ public final class DisambiguationAuthorProtos {
           return java.util.Collections.unmodifiableList(contributorDescription_);
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.ContributorDescription contributorDescription = 2;</code>
+       */
       public pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription.Builder addContributorDescriptionBuilder() {
         return getContributorDescriptionFieldBuilder().addBuilder(
             pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription.getDefaultInstance());
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.ContributorDescription contributorDescription = 2;</code>
+       */
       public pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription.Builder addContributorDescriptionBuilder(
           int index) {
         return getContributorDescriptionFieldBuilder().addBuilder(
             index, pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription.getDefaultInstance());
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.ContributorDescription contributorDescription = 2;</code>
+       */
       public java.util.List<pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription.Builder> 
            getContributorDescriptionBuilderList() {
         return getContributorDescriptionFieldBuilder().getBuilderList();
@@ -769,7 +989,7 @@ public final class DisambiguationAuthorProtos {
         }
         return contributorDescriptionBuilder_;
       }
-      
+
       // repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;
       private java.util.List<pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar> auxs_ =
         java.util.Collections.emptyList();
@@ -779,10 +999,13 @@ public final class DisambiguationAuthorProtos {
           bitField0_ |= 0x00000004;
          }
       }
-      
+
       private com.google.protobuf.RepeatedFieldBuilder<
           pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar, pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar.Builder, pl.edu.icm.coansys.models.DisambiguationAuthorProtos.AuxiliarOrBuilder> auxsBuilder_;
-      
+
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+       */
       public java.util.List<pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar> getAuxsList() {
         if (auxsBuilder_ == null) {
           return java.util.Collections.unmodifiableList(auxs_);
@@ -790,6 +1013,9 @@ public final class DisambiguationAuthorProtos {
           return auxsBuilder_.getMessageList();
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+       */
       public int getAuxsCount() {
         if (auxsBuilder_ == null) {
           return auxs_.size();
@@ -797,6 +1023,9 @@ public final class DisambiguationAuthorProtos {
           return auxsBuilder_.getCount();
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+       */
       public pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar getAuxs(int index) {
         if (auxsBuilder_ == null) {
           return auxs_.get(index);
@@ -804,6 +1033,9 @@ public final class DisambiguationAuthorProtos {
           return auxsBuilder_.getMessage(index);
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+       */
       public Builder setAuxs(
           int index, pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar value) {
         if (auxsBuilder_ == null) {
@@ -818,6 +1050,9 @@ public final class DisambiguationAuthorProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+       */
       public Builder setAuxs(
           int index, pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar.Builder builderForValue) {
         if (auxsBuilder_ == null) {
@@ -829,6 +1064,9 @@ public final class DisambiguationAuthorProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+       */
       public Builder addAuxs(pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar value) {
         if (auxsBuilder_ == null) {
           if (value == null) {
@@ -842,6 +1080,9 @@ public final class DisambiguationAuthorProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+       */
       public Builder addAuxs(
           int index, pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar value) {
         if (auxsBuilder_ == null) {
@@ -856,6 +1097,9 @@ public final class DisambiguationAuthorProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+       */
       public Builder addAuxs(
           pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar.Builder builderForValue) {
         if (auxsBuilder_ == null) {
@@ -867,6 +1111,9 @@ public final class DisambiguationAuthorProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+       */
       public Builder addAuxs(
           int index, pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar.Builder builderForValue) {
         if (auxsBuilder_ == null) {
@@ -878,6 +1125,9 @@ public final class DisambiguationAuthorProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+       */
       public Builder addAllAuxs(
           java.lang.Iterable<? extends pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar> values) {
         if (auxsBuilder_ == null) {
@@ -889,6 +1139,9 @@ public final class DisambiguationAuthorProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+       */
       public Builder clearAuxs() {
         if (auxsBuilder_ == null) {
           auxs_ = java.util.Collections.emptyList();
@@ -899,6 +1152,9 @@ public final class DisambiguationAuthorProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+       */
       public Builder removeAuxs(int index) {
         if (auxsBuilder_ == null) {
           ensureAuxsIsMutable();
@@ -909,10 +1165,16 @@ public final class DisambiguationAuthorProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+       */
       public pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar.Builder getAuxsBuilder(
           int index) {
         return getAuxsFieldBuilder().getBuilder(index);
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+       */
       public pl.edu.icm.coansys.models.DisambiguationAuthorProtos.AuxiliarOrBuilder getAuxsOrBuilder(
           int index) {
         if (auxsBuilder_ == null) {
@@ -920,6 +1182,9 @@ public final class DisambiguationAuthorProtos {
           return auxsBuilder_.getMessageOrBuilder(index);
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+       */
       public java.util.List<? extends pl.edu.icm.coansys.models.DisambiguationAuthorProtos.AuxiliarOrBuilder> 
            getAuxsOrBuilderList() {
         if (auxsBuilder_ != null) {
@@ -928,15 +1193,24 @@ public final class DisambiguationAuthorProtos {
           return java.util.Collections.unmodifiableList(auxs_);
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+       */
       public pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar.Builder addAuxsBuilder() {
         return getAuxsFieldBuilder().addBuilder(
             pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar.getDefaultInstance());
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+       */
       public pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar.Builder addAuxsBuilder(
           int index) {
         return getAuxsFieldBuilder().addBuilder(
             index, pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar.getDefaultInstance());
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+       */
       public java.util.List<pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar.Builder> 
            getAuxsBuilderList() {
         return getAuxsFieldBuilder().getBuilderList();
@@ -955,153 +1229,310 @@ public final class DisambiguationAuthorProtos {
         }
         return auxsBuilder_;
       }
-      
+
       // @@protoc_insertion_point(builder_scope:pl.edu.icm.coansys.models.DisambiguationAuthorOut)
     }
-    
+
     static {
       defaultInstance = new DisambiguationAuthorOut(true);
       defaultInstance.initFields();
     }
-    
+
     // @@protoc_insertion_point(class_scope:pl.edu.icm.coansys.models.DisambiguationAuthorOut)
   }
-  
+
   public interface ContributorDescriptionOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
-    
+
     // required string contribId = 1;
+    /**
+     * <code>required string contribId = 1;</code>
+     */
     boolean hasContribId();
-    String getContribId();
-    
+    /**
+     * <code>required string contribId = 1;</code>
+     */
+    java.lang.String getContribId();
+    /**
+     * <code>required string contribId = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getContribIdBytes();
+
     // required string clusterId = 2;
+    /**
+     * <code>required string clusterId = 2;</code>
+     */
     boolean hasClusterId();
-    String getClusterId();
-    
+    /**
+     * <code>required string clusterId = 2;</code>
+     */
+    java.lang.String getClusterId();
+    /**
+     * <code>required string clusterId = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getClusterIdBytes();
+
     // repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+     */
     java.util.List<pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar> 
         getAuxsList();
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+     */
     pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar getAuxs(int index);
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+     */
     int getAuxsCount();
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+     */
     java.util.List<? extends pl.edu.icm.coansys.models.DisambiguationAuthorProtos.AuxiliarOrBuilder> 
         getAuxsOrBuilderList();
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+     */
     pl.edu.icm.coansys.models.DisambiguationAuthorProtos.AuxiliarOrBuilder getAuxsOrBuilder(
         int index);
   }
+  /**
+   * Protobuf type {@code pl.edu.icm.coansys.models.ContributorDescription}
+   */
   public static final class ContributorDescription extends
       com.google.protobuf.GeneratedMessage
       implements ContributorDescriptionOrBuilder {
     // Use ContributorDescription.newBuilder() to construct.
-    private ContributorDescription(Builder builder) {
+    private ContributorDescription(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
-    private ContributorDescription(boolean noInit) {}
-    
+    private ContributorDescription(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
     private static final ContributorDescription defaultInstance;
     public static ContributorDescription getDefaultInstance() {
       return defaultInstance;
     }
-    
+
     public ContributorDescription getDefaultInstanceForType() {
       return defaultInstance;
     }
-    
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private ContributorDescription(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              bitField0_ |= 0x00000001;
+              contribId_ = input.readBytes();
+              break;
+            }
+            case 18: {
+              bitField0_ |= 0x00000002;
+              clusterId_ = input.readBytes();
+              break;
+            }
+            case 26: {
+              if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+                auxs_ = new java.util.ArrayList<pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar>();
+                mutable_bitField0_ |= 0x00000004;
+              }
+              auxs_.add(input.readMessage(pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar.PARSER, extensionRegistry));
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+          auxs_ = java.util.Collections.unmodifiableList(auxs_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
       return pl.edu.icm.coansys.models.DisambiguationAuthorProtos.internal_static_pl_edu_icm_coansys_models_ContributorDescription_descriptor;
     }
-    
+
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return pl.edu.icm.coansys.models.DisambiguationAuthorProtos.internal_static_pl_edu_icm_coansys_models_ContributorDescription_fieldAccessorTable;
+      return pl.edu.icm.coansys.models.DisambiguationAuthorProtos.internal_static_pl_edu_icm_coansys_models_ContributorDescription_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription.class, pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription.Builder.class);
     }
-    
+
+    public static com.google.protobuf.Parser<ContributorDescription> PARSER =
+        new com.google.protobuf.AbstractParser<ContributorDescription>() {
+      public ContributorDescription parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new ContributorDescription(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<ContributorDescription> getParserForType() {
+      return PARSER;
+    }
+
     private int bitField0_;
     // required string contribId = 1;
     public static final int CONTRIBID_FIELD_NUMBER = 1;
     private java.lang.Object contribId_;
+    /**
+     * <code>required string contribId = 1;</code>
+     */
     public boolean hasContribId() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
-    public String getContribId() {
+    /**
+     * <code>required string contribId = 1;</code>
+     */
+    public java.lang.String getContribId() {
       java.lang.Object ref = contribId_;
-      if (ref instanceof String) {
-        return (String) ref;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
           contribId_ = s;
         }
         return s;
       }
     }
-    private com.google.protobuf.ByteString getContribIdBytes() {
+    /**
+     * <code>required string contribId = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getContribIdBytes() {
       java.lang.Object ref = contribId_;
-      if (ref instanceof String) {
+      if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
         contribId_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
-    
+
     // required string clusterId = 2;
     public static final int CLUSTERID_FIELD_NUMBER = 2;
     private java.lang.Object clusterId_;
+    /**
+     * <code>required string clusterId = 2;</code>
+     */
     public boolean hasClusterId() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
-    public String getClusterId() {
+    /**
+     * <code>required string clusterId = 2;</code>
+     */
+    public java.lang.String getClusterId() {
       java.lang.Object ref = clusterId_;
-      if (ref instanceof String) {
-        return (String) ref;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
           clusterId_ = s;
         }
         return s;
       }
     }
-    private com.google.protobuf.ByteString getClusterIdBytes() {
+    /**
+     * <code>required string clusterId = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getClusterIdBytes() {
       java.lang.Object ref = clusterId_;
-      if (ref instanceof String) {
+      if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
         clusterId_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
-    
+
     // repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;
     public static final int AUXS_FIELD_NUMBER = 3;
     private java.util.List<pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar> auxs_;
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+     */
     public java.util.List<pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar> getAuxsList() {
       return auxs_;
     }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+     */
     public java.util.List<? extends pl.edu.icm.coansys.models.DisambiguationAuthorProtos.AuxiliarOrBuilder> 
         getAuxsOrBuilderList() {
       return auxs_;
     }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+     */
     public int getAuxsCount() {
       return auxs_.size();
     }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+     */
     public pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar getAuxs(int index) {
       return auxs_.get(index);
     }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+     */
     public pl.edu.icm.coansys.models.DisambiguationAuthorProtos.AuxiliarOrBuilder getAuxsOrBuilder(
         int index) {
       return auxs_.get(index);
     }
-    
+
     private void initFields() {
       contribId_ = "";
       clusterId_ = "";
@@ -1111,7 +1542,7 @@ public final class DisambiguationAuthorProtos {
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
-      
+
       if (!hasContribId()) {
         memoizedIsInitialized = 0;
         return false;
@@ -1123,7 +1554,7 @@ public final class DisambiguationAuthorProtos {
       memoizedIsInitialized = 1;
       return true;
     }
-    
+
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
@@ -1138,12 +1569,12 @@ public final class DisambiguationAuthorProtos {
       }
       getUnknownFields().writeTo(output);
     }
-    
+
     private int memoizedSerializedSize = -1;
     public int getSerializedSize() {
       int size = memoizedSerializedSize;
       if (size != -1) return size;
-    
+
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
@@ -1161,94 +1592,83 @@ public final class DisambiguationAuthorProtos {
       memoizedSerializedSize = size;
       return size;
     }
-    
+
     private static final long serialVersionUID = 0L;
     @java.lang.Override
     protected java.lang.Object writeReplace()
         throws java.io.ObjectStreamException {
       return super.writeReplace();
     }
-    
+
     public static pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
+      return PARSER.parseFrom(data);
     }
     public static pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
+      return PARSER.parseFrom(data);
     }
     public static pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
+      return PARSER.parseFrom(input);
     }
     public static pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(input, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
+      return PARSER.parseDelimitedFrom(input);
     }
     public static pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
+      return PARSER.parseFrom(input);
     }
     public static pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(input, extensionRegistry);
     }
-    
+
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder(pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
-    
+
     @java.lang.Override
     protected Builder newBuilderForType(
         com.google.protobuf.GeneratedMessage.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
+    /**
+     * Protobuf type {@code pl.edu.icm.coansys.models.ContributorDescription}
+     */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
        implements pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescriptionOrBuilder {
@@ -1256,18 +1676,21 @@ public final class DisambiguationAuthorProtos {
           getDescriptor() {
         return pl.edu.icm.coansys.models.DisambiguationAuthorProtos.internal_static_pl_edu_icm_coansys_models_ContributorDescription_descriptor;
       }
-      
+
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return pl.edu.icm.coansys.models.DisambiguationAuthorProtos.internal_static_pl_edu_icm_coansys_models_ContributorDescription_fieldAccessorTable;
+        return pl.edu.icm.coansys.models.DisambiguationAuthorProtos.internal_static_pl_edu_icm_coansys_models_ContributorDescription_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription.class, pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription.Builder.class);
       }
-      
+
       // Construct using pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
-      
-      private Builder(BuilderParent parent) {
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
@@ -1279,7 +1702,7 @@ public final class DisambiguationAuthorProtos {
       private static Builder create() {
         return new Builder();
       }
-      
+
       public Builder clear() {
         super.clear();
         contribId_ = "";
@@ -1294,20 +1717,20 @@ public final class DisambiguationAuthorProtos {
         }
         return this;
       }
-      
+
       public Builder clone() {
         return create().mergeFrom(buildPartial());
       }
-      
+
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription.getDescriptor();
+        return pl.edu.icm.coansys.models.DisambiguationAuthorProtos.internal_static_pl_edu_icm_coansys_models_ContributorDescription_descriptor;
       }
-      
+
       public pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription getDefaultInstanceForType() {
         return pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription.getDefaultInstance();
       }
-      
+
       public pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription build() {
         pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription result = buildPartial();
         if (!result.isInitialized()) {
@@ -1315,17 +1738,7 @@ public final class DisambiguationAuthorProtos {
         }
         return result;
       }
-      
-      private pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription buildParsed()
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(
-            result).asInvalidProtocolBufferException();
-        }
-        return result;
-      }
-      
+
       public pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription buildPartial() {
         pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription result = new pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription(this);
         int from_bitField0_ = bitField0_;
@@ -1351,7 +1764,7 @@ public final class DisambiguationAuthorProtos {
         onBuilt();
         return result;
       }
-      
+
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription) {
           return mergeFrom((pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription)other);
@@ -1360,14 +1773,18 @@ public final class DisambiguationAuthorProtos {
           return this;
         }
       }
-      
+
       public Builder mergeFrom(pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription other) {
         if (other == pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription.getDefaultInstance()) return this;
         if (other.hasContribId()) {
-          setContribId(other.getContribId());
+          bitField0_ |= 0x00000001;
+          contribId_ = other.contribId_;
+          onChanged();
         }
         if (other.hasClusterId()) {
-          setClusterId(other.getClusterId());
+          bitField0_ |= 0x00000002;
+          clusterId_ = other.clusterId_;
+          onChanged();
         }
         if (auxsBuilder_ == null) {
           if (!other.auxs_.isEmpty()) {
@@ -1398,7 +1815,7 @@ public final class DisambiguationAuthorProtos {
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
-      
+
       public final boolean isInitialized() {
         if (!hasContribId()) {
           
@@ -1410,68 +1827,69 @@ public final class DisambiguationAuthorProtos {
         }
         return true;
       }
-      
+
       public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder(
-            this.getUnknownFields());
-        while (true) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              this.setUnknownFields(unknownFields.build());
-              onChanged();
-              return this;
-            default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                this.setUnknownFields(unknownFields.build());
-                onChanged();
-                return this;
-              }
-              break;
-            }
-            case 10: {
-              bitField0_ |= 0x00000001;
-              contribId_ = input.readBytes();
-              break;
-            }
-            case 18: {
-              bitField0_ |= 0x00000002;
-              clusterId_ = input.readBytes();
-              break;
-            }
-            case 26: {
-              pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar.Builder subBuilder = pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar.newBuilder();
-              input.readMessage(subBuilder, extensionRegistry);
-              addAuxs(subBuilder.buildPartial());
-              break;
-            }
+        pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
           }
         }
+        return this;
       }
-      
       private int bitField0_;
-      
+
       // required string contribId = 1;
       private java.lang.Object contribId_ = "";
+      /**
+       * <code>required string contribId = 1;</code>
+       */
       public boolean hasContribId() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
-      public String getContribId() {
+      /**
+       * <code>required string contribId = 1;</code>
+       */
+      public java.lang.String getContribId() {
         java.lang.Object ref = contribId_;
-        if (!(ref instanceof String)) {
-          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
           contribId_ = s;
           return s;
         } else {
-          return (String) ref;
+          return (java.lang.String) ref;
         }
       }
-      public Builder setContribId(String value) {
+      /**
+       * <code>required string contribId = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getContribIdBytes() {
+        java.lang.Object ref = contribId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          contribId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string contribId = 1;</code>
+       */
+      public Builder setContribId(
+          java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -1480,34 +1898,72 @@ public final class DisambiguationAuthorProtos {
         onChanged();
         return this;
       }
+      /**
+       * <code>required string contribId = 1;</code>
+       */
       public Builder clearContribId() {
         bitField0_ = (bitField0_ & ~0x00000001);
         contribId_ = getDefaultInstance().getContribId();
         onChanged();
         return this;
       }
-      void setContribId(com.google.protobuf.ByteString value) {
-        bitField0_ |= 0x00000001;
+      /**
+       * <code>required string contribId = 1;</code>
+       */
+      public Builder setContribIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
         contribId_ = value;
         onChanged();
+        return this;
       }
-      
+
       // required string clusterId = 2;
       private java.lang.Object clusterId_ = "";
+      /**
+       * <code>required string clusterId = 2;</code>
+       */
       public boolean hasClusterId() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
-      public String getClusterId() {
+      /**
+       * <code>required string clusterId = 2;</code>
+       */
+      public java.lang.String getClusterId() {
         java.lang.Object ref = clusterId_;
-        if (!(ref instanceof String)) {
-          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
           clusterId_ = s;
           return s;
         } else {
-          return (String) ref;
+          return (java.lang.String) ref;
         }
       }
-      public Builder setClusterId(String value) {
+      /**
+       * <code>required string clusterId = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getClusterIdBytes() {
+        java.lang.Object ref = clusterId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          clusterId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string clusterId = 2;</code>
+       */
+      public Builder setClusterId(
+          java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -1516,18 +1972,29 @@ public final class DisambiguationAuthorProtos {
         onChanged();
         return this;
       }
+      /**
+       * <code>required string clusterId = 2;</code>
+       */
       public Builder clearClusterId() {
         bitField0_ = (bitField0_ & ~0x00000002);
         clusterId_ = getDefaultInstance().getClusterId();
         onChanged();
         return this;
       }
-      void setClusterId(com.google.protobuf.ByteString value) {
-        bitField0_ |= 0x00000002;
+      /**
+       * <code>required string clusterId = 2;</code>
+       */
+      public Builder setClusterIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
         clusterId_ = value;
         onChanged();
+        return this;
       }
-      
+
       // repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;
       private java.util.List<pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar> auxs_ =
         java.util.Collections.emptyList();
@@ -1537,10 +2004,13 @@ public final class DisambiguationAuthorProtos {
           bitField0_ |= 0x00000004;
          }
       }
-      
+
       private com.google.protobuf.RepeatedFieldBuilder<
           pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar, pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar.Builder, pl.edu.icm.coansys.models.DisambiguationAuthorProtos.AuxiliarOrBuilder> auxsBuilder_;
-      
+
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+       */
       public java.util.List<pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar> getAuxsList() {
         if (auxsBuilder_ == null) {
           return java.util.Collections.unmodifiableList(auxs_);
@@ -1548,6 +2018,9 @@ public final class DisambiguationAuthorProtos {
           return auxsBuilder_.getMessageList();
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+       */
       public int getAuxsCount() {
         if (auxsBuilder_ == null) {
           return auxs_.size();
@@ -1555,6 +2028,9 @@ public final class DisambiguationAuthorProtos {
           return auxsBuilder_.getCount();
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+       */
       public pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar getAuxs(int index) {
         if (auxsBuilder_ == null) {
           return auxs_.get(index);
@@ -1562,6 +2038,9 @@ public final class DisambiguationAuthorProtos {
           return auxsBuilder_.getMessage(index);
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+       */
       public Builder setAuxs(
           int index, pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar value) {
         if (auxsBuilder_ == null) {
@@ -1576,6 +2055,9 @@ public final class DisambiguationAuthorProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+       */
       public Builder setAuxs(
           int index, pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar.Builder builderForValue) {
         if (auxsBuilder_ == null) {
@@ -1587,6 +2069,9 @@ public final class DisambiguationAuthorProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+       */
       public Builder addAuxs(pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar value) {
         if (auxsBuilder_ == null) {
           if (value == null) {
@@ -1600,6 +2085,9 @@ public final class DisambiguationAuthorProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+       */
       public Builder addAuxs(
           int index, pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar value) {
         if (auxsBuilder_ == null) {
@@ -1614,6 +2102,9 @@ public final class DisambiguationAuthorProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+       */
       public Builder addAuxs(
           pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar.Builder builderForValue) {
         if (auxsBuilder_ == null) {
@@ -1625,6 +2116,9 @@ public final class DisambiguationAuthorProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+       */
       public Builder addAuxs(
           int index, pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar.Builder builderForValue) {
         if (auxsBuilder_ == null) {
@@ -1636,6 +2130,9 @@ public final class DisambiguationAuthorProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+       */
       public Builder addAllAuxs(
           java.lang.Iterable<? extends pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar> values) {
         if (auxsBuilder_ == null) {
@@ -1647,6 +2144,9 @@ public final class DisambiguationAuthorProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+       */
       public Builder clearAuxs() {
         if (auxsBuilder_ == null) {
           auxs_ = java.util.Collections.emptyList();
@@ -1657,6 +2157,9 @@ public final class DisambiguationAuthorProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+       */
       public Builder removeAuxs(int index) {
         if (auxsBuilder_ == null) {
           ensureAuxsIsMutable();
@@ -1667,10 +2170,16 @@ public final class DisambiguationAuthorProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+       */
       public pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar.Builder getAuxsBuilder(
           int index) {
         return getAuxsFieldBuilder().getBuilder(index);
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+       */
       public pl.edu.icm.coansys.models.DisambiguationAuthorProtos.AuxiliarOrBuilder getAuxsOrBuilder(
           int index) {
         if (auxsBuilder_ == null) {
@@ -1678,6 +2187,9 @@ public final class DisambiguationAuthorProtos {
           return auxsBuilder_.getMessageOrBuilder(index);
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+       */
       public java.util.List<? extends pl.edu.icm.coansys.models.DisambiguationAuthorProtos.AuxiliarOrBuilder> 
            getAuxsOrBuilderList() {
         if (auxsBuilder_ != null) {
@@ -1686,15 +2198,24 @@ public final class DisambiguationAuthorProtos {
           return java.util.Collections.unmodifiableList(auxs_);
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+       */
       public pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar.Builder addAuxsBuilder() {
         return getAuxsFieldBuilder().addBuilder(
             pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar.getDefaultInstance());
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+       */
       public pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar.Builder addAuxsBuilder(
           int index) {
         return getAuxsFieldBuilder().addBuilder(
             index, pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar.getDefaultInstance());
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Auxiliar auxs = 3;</code>
+       */
       public java.util.List<pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar.Builder> 
            getAuxsBuilderList() {
         return getAuxsFieldBuilder().getBuilderList();
@@ -1713,122 +2234,238 @@ public final class DisambiguationAuthorProtos {
         }
         return auxsBuilder_;
       }
-      
+
       // @@protoc_insertion_point(builder_scope:pl.edu.icm.coansys.models.ContributorDescription)
     }
-    
+
     static {
       defaultInstance = new ContributorDescription(true);
       defaultInstance.initFields();
     }
-    
+
     // @@protoc_insertion_point(class_scope:pl.edu.icm.coansys.models.ContributorDescription)
   }
-  
+
   public interface AuxiliarOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
-    
+
     // optional string type = 1;
+    /**
+     * <code>optional string type = 1;</code>
+     */
     boolean hasType();
-    String getType();
-    
+    /**
+     * <code>optional string type = 1;</code>
+     */
+    java.lang.String getType();
+    /**
+     * <code>optional string type = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getTypeBytes();
+
     // optional string value = 2;
+    /**
+     * <code>optional string value = 2;</code>
+     */
     boolean hasValue();
-    String getValue();
+    /**
+     * <code>optional string value = 2;</code>
+     */
+    java.lang.String getValue();
+    /**
+     * <code>optional string value = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getValueBytes();
   }
+  /**
+   * Protobuf type {@code pl.edu.icm.coansys.models.Auxiliar}
+   */
   public static final class Auxiliar extends
       com.google.protobuf.GeneratedMessage
       implements AuxiliarOrBuilder {
     // Use Auxiliar.newBuilder() to construct.
-    private Auxiliar(Builder builder) {
+    private Auxiliar(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
-    private Auxiliar(boolean noInit) {}
-    
+    private Auxiliar(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
     private static final Auxiliar defaultInstance;
     public static Auxiliar getDefaultInstance() {
       return defaultInstance;
     }
-    
+
     public Auxiliar getDefaultInstanceForType() {
       return defaultInstance;
     }
-    
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private Auxiliar(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              bitField0_ |= 0x00000001;
+              type_ = input.readBytes();
+              break;
+            }
+            case 18: {
+              bitField0_ |= 0x00000002;
+              value_ = input.readBytes();
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
       return pl.edu.icm.coansys.models.DisambiguationAuthorProtos.internal_static_pl_edu_icm_coansys_models_Auxiliar_descriptor;
     }
-    
+
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return pl.edu.icm.coansys.models.DisambiguationAuthorProtos.internal_static_pl_edu_icm_coansys_models_Auxiliar_fieldAccessorTable;
+      return pl.edu.icm.coansys.models.DisambiguationAuthorProtos.internal_static_pl_edu_icm_coansys_models_Auxiliar_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar.class, pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar.Builder.class);
     }
-    
+
+    public static com.google.protobuf.Parser<Auxiliar> PARSER =
+        new com.google.protobuf.AbstractParser<Auxiliar>() {
+      public Auxiliar parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new Auxiliar(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<Auxiliar> getParserForType() {
+      return PARSER;
+    }
+
     private int bitField0_;
     // optional string type = 1;
     public static final int TYPE_FIELD_NUMBER = 1;
     private java.lang.Object type_;
+    /**
+     * <code>optional string type = 1;</code>
+     */
     public boolean hasType() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
-    public String getType() {
+    /**
+     * <code>optional string type = 1;</code>
+     */
+    public java.lang.String getType() {
       java.lang.Object ref = type_;
-      if (ref instanceof String) {
-        return (String) ref;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
           type_ = s;
         }
         return s;
       }
     }
-    private com.google.protobuf.ByteString getTypeBytes() {
+    /**
+     * <code>optional string type = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getTypeBytes() {
       java.lang.Object ref = type_;
-      if (ref instanceof String) {
+      if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
         type_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
-    
+
     // optional string value = 2;
     public static final int VALUE_FIELD_NUMBER = 2;
     private java.lang.Object value_;
+    /**
+     * <code>optional string value = 2;</code>
+     */
     public boolean hasValue() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
-    public String getValue() {
+    /**
+     * <code>optional string value = 2;</code>
+     */
+    public java.lang.String getValue() {
       java.lang.Object ref = value_;
-      if (ref instanceof String) {
-        return (String) ref;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
           value_ = s;
         }
         return s;
       }
     }
-    private com.google.protobuf.ByteString getValueBytes() {
+    /**
+     * <code>optional string value = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getValueBytes() {
       java.lang.Object ref = value_;
-      if (ref instanceof String) {
+      if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
         value_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
-    
+
     private void initFields() {
       type_ = "";
       value_ = "";
@@ -1837,11 +2474,11 @@ public final class DisambiguationAuthorProtos {
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
-      
+
       memoizedIsInitialized = 1;
       return true;
     }
-    
+
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
@@ -1853,12 +2490,12 @@ public final class DisambiguationAuthorProtos {
       }
       getUnknownFields().writeTo(output);
     }
-    
+
     private int memoizedSerializedSize = -1;
     public int getSerializedSize() {
       int size = memoizedSerializedSize;
       if (size != -1) return size;
-    
+
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
@@ -1872,94 +2509,83 @@ public final class DisambiguationAuthorProtos {
       memoizedSerializedSize = size;
       return size;
     }
-    
+
     private static final long serialVersionUID = 0L;
     @java.lang.Override
     protected java.lang.Object writeReplace()
         throws java.io.ObjectStreamException {
       return super.writeReplace();
     }
-    
+
     public static pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
+      return PARSER.parseFrom(data);
     }
     public static pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
+      return PARSER.parseFrom(data);
     }
     public static pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
+      return PARSER.parseFrom(input);
     }
     public static pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(input, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
+      return PARSER.parseDelimitedFrom(input);
     }
     public static pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
+      return PARSER.parseFrom(input);
     }
     public static pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(input, extensionRegistry);
     }
-    
+
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder(pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
-    
+
     @java.lang.Override
     protected Builder newBuilderForType(
         com.google.protobuf.GeneratedMessage.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
+    /**
+     * Protobuf type {@code pl.edu.icm.coansys.models.Auxiliar}
+     */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
        implements pl.edu.icm.coansys.models.DisambiguationAuthorProtos.AuxiliarOrBuilder {
@@ -1967,18 +2593,21 @@ public final class DisambiguationAuthorProtos {
           getDescriptor() {
         return pl.edu.icm.coansys.models.DisambiguationAuthorProtos.internal_static_pl_edu_icm_coansys_models_Auxiliar_descriptor;
       }
-      
+
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return pl.edu.icm.coansys.models.DisambiguationAuthorProtos.internal_static_pl_edu_icm_coansys_models_Auxiliar_fieldAccessorTable;
+        return pl.edu.icm.coansys.models.DisambiguationAuthorProtos.internal_static_pl_edu_icm_coansys_models_Auxiliar_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar.class, pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar.Builder.class);
       }
-      
+
       // Construct using pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
-      
-      private Builder(BuilderParent parent) {
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
@@ -1989,7 +2618,7 @@ public final class DisambiguationAuthorProtos {
       private static Builder create() {
         return new Builder();
       }
-      
+
       public Builder clear() {
         super.clear();
         type_ = "";
@@ -1998,20 +2627,20 @@ public final class DisambiguationAuthorProtos {
         bitField0_ = (bitField0_ & ~0x00000002);
         return this;
       }
-      
+
       public Builder clone() {
         return create().mergeFrom(buildPartial());
       }
-      
+
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar.getDescriptor();
+        return pl.edu.icm.coansys.models.DisambiguationAuthorProtos.internal_static_pl_edu_icm_coansys_models_Auxiliar_descriptor;
       }
-      
+
       public pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar getDefaultInstanceForType() {
         return pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar.getDefaultInstance();
       }
-      
+
       public pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar build() {
         pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar result = buildPartial();
         if (!result.isInitialized()) {
@@ -2019,17 +2648,7 @@ public final class DisambiguationAuthorProtos {
         }
         return result;
       }
-      
-      private pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar buildParsed()
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(
-            result).asInvalidProtocolBufferException();
-        }
-        return result;
-      }
-      
+
       public pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar buildPartial() {
         pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar result = new pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar(this);
         int from_bitField0_ = bitField0_;
@@ -2046,7 +2665,7 @@ public final class DisambiguationAuthorProtos {
         onBuilt();
         return result;
       }
-      
+
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar) {
           return mergeFrom((pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar)other);
@@ -2055,78 +2674,89 @@ public final class DisambiguationAuthorProtos {
           return this;
         }
       }
-      
+
       public Builder mergeFrom(pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar other) {
         if (other == pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar.getDefaultInstance()) return this;
         if (other.hasType()) {
-          setType(other.getType());
+          bitField0_ |= 0x00000001;
+          type_ = other.type_;
+          onChanged();
         }
         if (other.hasValue()) {
-          setValue(other.getValue());
+          bitField0_ |= 0x00000002;
+          value_ = other.value_;
+          onChanged();
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
-      
+
       public final boolean isInitialized() {
         return true;
       }
-      
+
       public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder(
-            this.getUnknownFields());
-        while (true) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              this.setUnknownFields(unknownFields.build());
-              onChanged();
-              return this;
-            default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                this.setUnknownFields(unknownFields.build());
-                onChanged();
-                return this;
-              }
-              break;
-            }
-            case 10: {
-              bitField0_ |= 0x00000001;
-              type_ = input.readBytes();
-              break;
-            }
-            case 18: {
-              bitField0_ |= 0x00000002;
-              value_ = input.readBytes();
-              break;
-            }
+        pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
           }
         }
+        return this;
       }
-      
       private int bitField0_;
-      
+
       // optional string type = 1;
       private java.lang.Object type_ = "";
+      /**
+       * <code>optional string type = 1;</code>
+       */
       public boolean hasType() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
-      public String getType() {
+      /**
+       * <code>optional string type = 1;</code>
+       */
+      public java.lang.String getType() {
         java.lang.Object ref = type_;
-        if (!(ref instanceof String)) {
-          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
           type_ = s;
           return s;
         } else {
-          return (String) ref;
+          return (java.lang.String) ref;
         }
       }
-      public Builder setType(String value) {
+      /**
+       * <code>optional string type = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getTypeBytes() {
+        java.lang.Object ref = type_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          type_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string type = 1;</code>
+       */
+      public Builder setType(
+          java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -2135,34 +2765,72 @@ public final class DisambiguationAuthorProtos {
         onChanged();
         return this;
       }
+      /**
+       * <code>optional string type = 1;</code>
+       */
       public Builder clearType() {
         bitField0_ = (bitField0_ & ~0x00000001);
         type_ = getDefaultInstance().getType();
         onChanged();
         return this;
       }
-      void setType(com.google.protobuf.ByteString value) {
-        bitField0_ |= 0x00000001;
+      /**
+       * <code>optional string type = 1;</code>
+       */
+      public Builder setTypeBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
         type_ = value;
         onChanged();
+        return this;
       }
-      
+
       // optional string value = 2;
       private java.lang.Object value_ = "";
+      /**
+       * <code>optional string value = 2;</code>
+       */
       public boolean hasValue() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
-      public String getValue() {
+      /**
+       * <code>optional string value = 2;</code>
+       */
+      public java.lang.String getValue() {
         java.lang.Object ref = value_;
-        if (!(ref instanceof String)) {
-          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
           value_ = s;
           return s;
         } else {
-          return (String) ref;
+          return (java.lang.String) ref;
         }
       }
-      public Builder setValue(String value) {
+      /**
+       * <code>optional string value = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getValueBytes() {
+        java.lang.Object ref = value_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          value_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string value = 2;</code>
+       */
+      public Builder setValue(
+          java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -2171,29 +2839,40 @@ public final class DisambiguationAuthorProtos {
         onChanged();
         return this;
       }
+      /**
+       * <code>optional string value = 2;</code>
+       */
       public Builder clearValue() {
         bitField0_ = (bitField0_ & ~0x00000002);
         value_ = getDefaultInstance().getValue();
         onChanged();
         return this;
       }
-      void setValue(com.google.protobuf.ByteString value) {
-        bitField0_ |= 0x00000002;
+      /**
+       * <code>optional string value = 2;</code>
+       */
+      public Builder setValueBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
         value_ = value;
         onChanged();
+        return this;
       }
-      
+
       // @@protoc_insertion_point(builder_scope:pl.edu.icm.coansys.models.Auxiliar)
     }
-    
+
     static {
       defaultInstance = new Auxiliar(true);
       defaultInstance.initFields();
     }
-    
+
     // @@protoc_insertion_point(class_scope:pl.edu.icm.coansys.models.Auxiliar)
   }
-  
+
   private static com.google.protobuf.Descriptors.Descriptor
     internal_static_pl_edu_icm_coansys_models_DisambiguationAuthorOut_descriptor;
   private static
@@ -2209,7 +2888,7 @@ public final class DisambiguationAuthorProtos {
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_pl_edu_icm_coansys_models_Auxiliar_fieldAccessorTable;
-  
+
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
     return descriptor;
@@ -2241,25 +2920,19 @@ public final class DisambiguationAuthorProtos {
           internal_static_pl_edu_icm_coansys_models_DisambiguationAuthorOut_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_pl_edu_icm_coansys_models_DisambiguationAuthorOut_descriptor,
-              new java.lang.String[] { "DocId", "ContributorDescription", "Auxs", },
-              pl.edu.icm.coansys.models.DisambiguationAuthorProtos.DisambiguationAuthorOut.class,
-              pl.edu.icm.coansys.models.DisambiguationAuthorProtos.DisambiguationAuthorOut.Builder.class);
+              new java.lang.String[] { "DocId", "ContributorDescription", "Auxs", });
           internal_static_pl_edu_icm_coansys_models_ContributorDescription_descriptor =
             getDescriptor().getMessageTypes().get(1);
           internal_static_pl_edu_icm_coansys_models_ContributorDescription_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_pl_edu_icm_coansys_models_ContributorDescription_descriptor,
-              new java.lang.String[] { "ContribId", "ClusterId", "Auxs", },
-              pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription.class,
-              pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription.Builder.class);
+              new java.lang.String[] { "ContribId", "ClusterId", "Auxs", });
           internal_static_pl_edu_icm_coansys_models_Auxiliar_descriptor =
             getDescriptor().getMessageTypes().get(2);
           internal_static_pl_edu_icm_coansys_models_Auxiliar_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_pl_edu_icm_coansys_models_Auxiliar_descriptor,
-              new java.lang.String[] { "Type", "Value", },
-              pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar.class,
-              pl.edu.icm.coansys.models.DisambiguationAuthorProtos.Auxiliar.Builder.class);
+              new java.lang.String[] { "Type", "Value", });
           return null;
         }
       };
@@ -2268,6 +2941,6 @@ public final class DisambiguationAuthorProtos {
         new com.google.protobuf.Descriptors.FileDescriptor[] {
         }, assigner);
   }
-  
+
   // @@protoc_insertion_point(outer_class_scope)
 }
