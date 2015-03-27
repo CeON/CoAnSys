@@ -30,491 +30,129 @@ public final class StatisticsProtos {
       extends com.google.protobuf.MessageOrBuilder {
 
     // required string key = 1;
+    /**
+     * <code>required string key = 1;</code>
+     */
     boolean hasKey();
-    String getKey();
-    
+    /**
+     * <code>required string key = 1;</code>
+     */
+    java.lang.String getKey();
+    /**
+     * <code>required string key = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getKeyBytes();
+
     // required string value = 2;
+    /**
+     * <code>required string value = 2;</code>
+     */
     boolean hasValue();
-    String getValue();
-    
+    /**
+     * <code>required string value = 2;</code>
+     */
+    java.lang.String getValue();
+    /**
+     * <code>required string value = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getValueBytes();
+
     // optional string comment = 3;
+    /**
+     * <code>optional string comment = 3;</code>
+     */
     boolean hasComment();
-    String getComment();
-    
+    /**
+     * <code>optional string comment = 3;</code>
+     */
+    java.lang.String getComment();
+    /**
+     * <code>optional string comment = 3;</code>
+     */
+    com.google.protobuf.ByteString
+        getCommentBytes();
+
     // optional string language = 4;
+    /**
+     * <code>optional string language = 4;</code>
+     *
+     * <pre>
+     *in ISO 639 format
+     * </pre>
+     */
     boolean hasLanguage();
-    String getLanguage();
+    /**
+     * <code>optional string language = 4;</code>
+     *
+     * <pre>
+     *in ISO 639 format
+     * </pre>
+     */
+    java.lang.String getLanguage();
+    /**
+     * <code>optional string language = 4;</code>
+     *
+     * <pre>
+     *in ISO 639 format
+     * </pre>
+     */
+    com.google.protobuf.ByteString
+        getLanguageBytes();
   }
+  /**
+   * Protobuf type {@code pl.edu.icm.coansys.models.KeyValue}
+   *
+   * <pre>
+   * in the future it will be replaced by import
+   * </pre>
+   */
   public static final class KeyValue extends
       com.google.protobuf.GeneratedMessage
       implements KeyValueOrBuilder {
     // Use KeyValue.newBuilder() to construct.
-    private KeyValue(Builder builder) {
+    private KeyValue(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
-    private KeyValue(boolean noInit) {}
-    
+    private KeyValue(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
     private static final KeyValue defaultInstance;
     public static KeyValue getDefaultInstance() {
       return defaultInstance;
     }
-    
+
     public KeyValue getDefaultInstanceForType() {
       return defaultInstance;
     }
-    
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return pl.edu.icm.coansys.models.StatisticsProtos.internal_static_pl_edu_icm_coansys_models_KeyValue_descriptor;
-    }
-    
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return pl.edu.icm.coansys.models.StatisticsProtos.internal_static_pl_edu_icm_coansys_models_KeyValue_fieldAccessorTable;
-    }
-    
-    private int bitField0_;
-    // required string key = 1;
-    public static final int KEY_FIELD_NUMBER = 1;
-    private java.lang.Object key_;
-    public boolean hasKey() {
-      return ((bitField0_ & 0x00000001) == 0x00000001);
-    }
-    public String getKey() {
-      java.lang.Object ref = key_;
-      if (ref instanceof String) {
-        return (String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
-          key_ = s;
-        }
-        return s;
-      }
-    }
-    private com.google.protobuf.ByteString getKeyBytes() {
-      java.lang.Object ref = key_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
-        key_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    
-    // required string value = 2;
-    public static final int VALUE_FIELD_NUMBER = 2;
-    private java.lang.Object value_;
-    public boolean hasValue() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
-    }
-    public String getValue() {
-      java.lang.Object ref = value_;
-      if (ref instanceof String) {
-        return (String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
-          value_ = s;
-        }
-        return s;
-      }
-    }
-    private com.google.protobuf.ByteString getValueBytes() {
-      java.lang.Object ref = value_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
-        value_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    
-    // optional string comment = 3;
-    public static final int COMMENT_FIELD_NUMBER = 3;
-    private java.lang.Object comment_;
-    public boolean hasComment() {
-      return ((bitField0_ & 0x00000004) == 0x00000004);
-    }
-    public String getComment() {
-      java.lang.Object ref = comment_;
-      if (ref instanceof String) {
-        return (String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
-          comment_ = s;
-        }
-        return s;
-      }
-    }
-    private com.google.protobuf.ByteString getCommentBytes() {
-      java.lang.Object ref = comment_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
-        comment_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    
-    // optional string language = 4;
-    public static final int LANGUAGE_FIELD_NUMBER = 4;
-    private java.lang.Object language_;
-    public boolean hasLanguage() {
-      return ((bitField0_ & 0x00000008) == 0x00000008);
-    }
-    public String getLanguage() {
-      java.lang.Object ref = language_;
-      if (ref instanceof String) {
-        return (String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
-          language_ = s;
-        }
-        return s;
-      }
-    }
-    private com.google.protobuf.ByteString getLanguageBytes() {
-      java.lang.Object ref = language_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
-        language_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    
-    private void initFields() {
-      key_ = "";
-      value_ = "";
-      comment_ = "";
-      language_ = "";
-    }
-    private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized != -1) return isInitialized == 1;
-      
-      if (!hasKey()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      if (!hasValue()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      memoizedIsInitialized = 1;
-      return true;
-    }
-    
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      getSerializedSize();
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeBytes(1, getKeyBytes());
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeBytes(2, getValueBytes());
-      }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        output.writeBytes(3, getCommentBytes());
-      }
-      if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        output.writeBytes(4, getLanguageBytes());
-      }
-      getUnknownFields().writeTo(output);
-    }
-    
-    private int memoizedSerializedSize = -1;
-    public int getSerializedSize() {
-      int size = memoizedSerializedSize;
-      if (size != -1) return size;
-    
-      size = 0;
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(1, getKeyBytes());
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(2, getValueBytes());
-      }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(3, getCommentBytes());
-      }
-      if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(4, getLanguageBytes());
-      }
-      size += getUnknownFields().getSerializedSize();
-      memoizedSerializedSize = size;
-      return size;
-    }
-    
-    private static final long serialVersionUID = 0L;
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
     @java.lang.Override
-    protected java.lang.Object writeReplace()
-        throws java.io.ObjectStreamException {
-      return super.writeReplace();
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
     }
-    
-    public static pl.edu.icm.coansys.models.StatisticsProtos.KeyValue parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
-    }
-    public static pl.edu.icm.coansys.models.StatisticsProtos.KeyValue parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
-    }
-    public static pl.edu.icm.coansys.models.StatisticsProtos.KeyValue parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
-    }
-    public static pl.edu.icm.coansys.models.StatisticsProtos.KeyValue parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
-    }
-    public static pl.edu.icm.coansys.models.StatisticsProtos.KeyValue parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
-    }
-    public static pl.edu.icm.coansys.models.StatisticsProtos.KeyValue parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
-    }
-    public static pl.edu.icm.coansys.models.StatisticsProtos.KeyValue parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
-    }
-    public static pl.edu.icm.coansys.models.StatisticsProtos.KeyValue parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
-    }
-    public static pl.edu.icm.coansys.models.StatisticsProtos.KeyValue parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
-    }
-    public static pl.edu.icm.coansys.models.StatisticsProtos.KeyValue parseFrom(
+    private KeyValue(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
-    }
-    
-    public static Builder newBuilder() { return Builder.create(); }
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(pl.edu.icm.coansys.models.StatisticsProtos.KeyValue prototype) {
-      return newBuilder().mergeFrom(prototype);
-    }
-    public Builder toBuilder() { return newBuilder(this); }
-    
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements pl.edu.icm.coansys.models.StatisticsProtos.KeyValueOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return pl.edu.icm.coansys.models.StatisticsProtos.internal_static_pl_edu_icm_coansys_models_KeyValue_descriptor;
-      }
-      
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return pl.edu.icm.coansys.models.StatisticsProtos.internal_static_pl_edu_icm_coansys_models_KeyValue_fieldAccessorTable;
-      }
-      
-      // Construct using pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-      
-      private Builder(BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-        }
-      }
-      private static Builder create() {
-        return new Builder();
-      }
-      
-      public Builder clear() {
-        super.clear();
-        key_ = "";
-        bitField0_ = (bitField0_ & ~0x00000001);
-        value_ = "";
-        bitField0_ = (bitField0_ & ~0x00000002);
-        comment_ = "";
-        bitField0_ = (bitField0_ & ~0x00000004);
-        language_ = "";
-        bitField0_ = (bitField0_ & ~0x00000008);
-        return this;
-      }
-      
-      public Builder clone() {
-        return create().mergeFrom(buildPartial());
-      }
-      
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.getDescriptor();
-      }
-      
-      public pl.edu.icm.coansys.models.StatisticsProtos.KeyValue getDefaultInstanceForType() {
-        return pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.getDefaultInstance();
-      }
-      
-      public pl.edu.icm.coansys.models.StatisticsProtos.KeyValue build() {
-        pl.edu.icm.coansys.models.StatisticsProtos.KeyValue result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-      
-      private pl.edu.icm.coansys.models.StatisticsProtos.KeyValue buildParsed()
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        pl.edu.icm.coansys.models.StatisticsProtos.KeyValue result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(
-            result).asInvalidProtocolBufferException();
-        }
-        return result;
-      }
-      
-      public pl.edu.icm.coansys.models.StatisticsProtos.KeyValue buildPartial() {
-        pl.edu.icm.coansys.models.StatisticsProtos.KeyValue result = new pl.edu.icm.coansys.models.StatisticsProtos.KeyValue(this);
-        int from_bitField0_ = bitField0_;
-        int to_bitField0_ = 0;
-        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
-          to_bitField0_ |= 0x00000001;
-        }
-        result.key_ = key_;
-        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
-          to_bitField0_ |= 0x00000002;
-        }
-        result.value_ = value_;
-        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
-          to_bitField0_ |= 0x00000004;
-        }
-        result.comment_ = comment_;
-        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
-          to_bitField0_ |= 0x00000008;
-        }
-        result.language_ = language_;
-        result.bitField0_ = to_bitField0_;
-        onBuilt();
-        return result;
-      }
-      
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof pl.edu.icm.coansys.models.StatisticsProtos.KeyValue) {
-          return mergeFrom((pl.edu.icm.coansys.models.StatisticsProtos.KeyValue)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-      
-      public Builder mergeFrom(pl.edu.icm.coansys.models.StatisticsProtos.KeyValue other) {
-        if (other == pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.getDefaultInstance()) return this;
-        if (other.hasKey()) {
-          setKey(other.getKey());
-        }
-        if (other.hasValue()) {
-          setValue(other.getValue());
-        }
-        if (other.hasComment()) {
-          setComment(other.getComment());
-        }
-        if (other.hasLanguage()) {
-          setLanguage(other.getLanguage());
-        }
-        this.mergeUnknownFields(other.getUnknownFields());
-        return this;
-      }
-      
-      public final boolean isInitialized() {
-        if (!hasKey()) {
-          
-          return false;
-        }
-        if (!hasValue()) {
-          
-          return false;
-        }
-        return true;
-      }
-      
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder(
-            this.getUnknownFields());
-        while (true) {
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
           int tag = input.readTag();
           switch (tag) {
             case 0:
-              this.setUnknownFields(unknownFields.build());
-              onChanged();
-              return this;
+              done = true;
+              break;
             default: {
               if (!parseUnknownField(input, unknownFields,
                                      extensionRegistry, tag)) {
-                this.setUnknownFields(unknownFields.build());
-                onChanged();
-                return this;
+                done = true;
               }
               break;
             }
@@ -540,26 +178,577 @@ public final class StatisticsProtos {
             }
           }
         }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
       }
-      
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return pl.edu.icm.coansys.models.StatisticsProtos.internal_static_pl_edu_icm_coansys_models_KeyValue_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return pl.edu.icm.coansys.models.StatisticsProtos.internal_static_pl_edu_icm_coansys_models_KeyValue_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.class, pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<KeyValue> PARSER =
+        new com.google.protobuf.AbstractParser<KeyValue>() {
+      public KeyValue parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new KeyValue(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<KeyValue> getParserForType() {
+      return PARSER;
+    }
+
+    private int bitField0_;
+    // required string key = 1;
+    public static final int KEY_FIELD_NUMBER = 1;
+    private java.lang.Object key_;
+    /**
+     * <code>required string key = 1;</code>
+     */
+    public boolean hasKey() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>required string key = 1;</code>
+     */
+    public java.lang.String getKey() {
+      java.lang.Object ref = key_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          key_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>required string key = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getKeyBytes() {
+      java.lang.Object ref = key_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        key_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    // required string value = 2;
+    public static final int VALUE_FIELD_NUMBER = 2;
+    private java.lang.Object value_;
+    /**
+     * <code>required string value = 2;</code>
+     */
+    public boolean hasValue() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>required string value = 2;</code>
+     */
+    public java.lang.String getValue() {
+      java.lang.Object ref = value_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          value_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>required string value = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getValueBytes() {
+      java.lang.Object ref = value_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        value_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    // optional string comment = 3;
+    public static final int COMMENT_FIELD_NUMBER = 3;
+    private java.lang.Object comment_;
+    /**
+     * <code>optional string comment = 3;</code>
+     */
+    public boolean hasComment() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    /**
+     * <code>optional string comment = 3;</code>
+     */
+    public java.lang.String getComment() {
+      java.lang.Object ref = comment_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          comment_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string comment = 3;</code>
+     */
+    public com.google.protobuf.ByteString
+        getCommentBytes() {
+      java.lang.Object ref = comment_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        comment_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    // optional string language = 4;
+    public static final int LANGUAGE_FIELD_NUMBER = 4;
+    private java.lang.Object language_;
+    /**
+     * <code>optional string language = 4;</code>
+     *
+     * <pre>
+     *in ISO 639 format
+     * </pre>
+     */
+    public boolean hasLanguage() {
+      return ((bitField0_ & 0x00000008) == 0x00000008);
+    }
+    /**
+     * <code>optional string language = 4;</code>
+     *
+     * <pre>
+     *in ISO 639 format
+     * </pre>
+     */
+    public java.lang.String getLanguage() {
+      java.lang.Object ref = language_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          language_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string language = 4;</code>
+     *
+     * <pre>
+     *in ISO 639 format
+     * </pre>
+     */
+    public com.google.protobuf.ByteString
+        getLanguageBytes() {
+      java.lang.Object ref = language_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        language_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    private void initFields() {
+      key_ = "";
+      value_ = "";
+      comment_ = "";
+      language_ = "";
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+
+      if (!hasKey()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasValue()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeBytes(1, getKeyBytes());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeBytes(2, getValueBytes());
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        output.writeBytes(3, getCommentBytes());
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        output.writeBytes(4, getLanguageBytes());
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(1, getKeyBytes());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(2, getValueBytes());
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(3, getCommentBytes());
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(4, getLanguageBytes());
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static pl.edu.icm.coansys.models.StatisticsProtos.KeyValue parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static pl.edu.icm.coansys.models.StatisticsProtos.KeyValue parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static pl.edu.icm.coansys.models.StatisticsProtos.KeyValue parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static pl.edu.icm.coansys.models.StatisticsProtos.KeyValue parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static pl.edu.icm.coansys.models.StatisticsProtos.KeyValue parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static pl.edu.icm.coansys.models.StatisticsProtos.KeyValue parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static pl.edu.icm.coansys.models.StatisticsProtos.KeyValue parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static pl.edu.icm.coansys.models.StatisticsProtos.KeyValue parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static pl.edu.icm.coansys.models.StatisticsProtos.KeyValue parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static pl.edu.icm.coansys.models.StatisticsProtos.KeyValue parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(pl.edu.icm.coansys.models.StatisticsProtos.KeyValue prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code pl.edu.icm.coansys.models.KeyValue}
+     *
+     * <pre>
+     * in the future it will be replaced by import
+     * </pre>
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements pl.edu.icm.coansys.models.StatisticsProtos.KeyValueOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return pl.edu.icm.coansys.models.StatisticsProtos.internal_static_pl_edu_icm_coansys_models_KeyValue_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return pl.edu.icm.coansys.models.StatisticsProtos.internal_static_pl_edu_icm_coansys_models_KeyValue_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.class, pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.Builder.class);
+      }
+
+      // Construct using pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        key_ = "";
+        bitField0_ = (bitField0_ & ~0x00000001);
+        value_ = "";
+        bitField0_ = (bitField0_ & ~0x00000002);
+        comment_ = "";
+        bitField0_ = (bitField0_ & ~0x00000004);
+        language_ = "";
+        bitField0_ = (bitField0_ & ~0x00000008);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return pl.edu.icm.coansys.models.StatisticsProtos.internal_static_pl_edu_icm_coansys_models_KeyValue_descriptor;
+      }
+
+      public pl.edu.icm.coansys.models.StatisticsProtos.KeyValue getDefaultInstanceForType() {
+        return pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.getDefaultInstance();
+      }
+
+      public pl.edu.icm.coansys.models.StatisticsProtos.KeyValue build() {
+        pl.edu.icm.coansys.models.StatisticsProtos.KeyValue result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public pl.edu.icm.coansys.models.StatisticsProtos.KeyValue buildPartial() {
+        pl.edu.icm.coansys.models.StatisticsProtos.KeyValue result = new pl.edu.icm.coansys.models.StatisticsProtos.KeyValue(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.key_ = key_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.value_ = value_;
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        result.comment_ = comment_;
+        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+          to_bitField0_ |= 0x00000008;
+        }
+        result.language_ = language_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof pl.edu.icm.coansys.models.StatisticsProtos.KeyValue) {
+          return mergeFrom((pl.edu.icm.coansys.models.StatisticsProtos.KeyValue)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(pl.edu.icm.coansys.models.StatisticsProtos.KeyValue other) {
+        if (other == pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.getDefaultInstance()) return this;
+        if (other.hasKey()) {
+          bitField0_ |= 0x00000001;
+          key_ = other.key_;
+          onChanged();
+        }
+        if (other.hasValue()) {
+          bitField0_ |= 0x00000002;
+          value_ = other.value_;
+          onChanged();
+        }
+        if (other.hasComment()) {
+          bitField0_ |= 0x00000004;
+          comment_ = other.comment_;
+          onChanged();
+        }
+        if (other.hasLanguage()) {
+          bitField0_ |= 0x00000008;
+          language_ = other.language_;
+          onChanged();
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        if (!hasKey()) {
+          
+          return false;
+        }
+        if (!hasValue()) {
+          
+          return false;
+        }
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        pl.edu.icm.coansys.models.StatisticsProtos.KeyValue parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (pl.edu.icm.coansys.models.StatisticsProtos.KeyValue) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
       private int bitField0_;
-      
+
       // required string key = 1;
       private java.lang.Object key_ = "";
+      /**
+       * <code>required string key = 1;</code>
+       */
       public boolean hasKey() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
-      public String getKey() {
+      /**
+       * <code>required string key = 1;</code>
+       */
+      public java.lang.String getKey() {
         java.lang.Object ref = key_;
-        if (!(ref instanceof String)) {
-          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
           key_ = s;
           return s;
         } else {
-          return (String) ref;
+          return (java.lang.String) ref;
         }
       }
-      public Builder setKey(String value) {
+      /**
+       * <code>required string key = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getKeyBytes() {
+        java.lang.Object ref = key_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          key_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string key = 1;</code>
+       */
+      public Builder setKey(
+          java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -568,34 +757,72 @@ public final class StatisticsProtos {
         onChanged();
         return this;
       }
+      /**
+       * <code>required string key = 1;</code>
+       */
       public Builder clearKey() {
         bitField0_ = (bitField0_ & ~0x00000001);
         key_ = getDefaultInstance().getKey();
         onChanged();
         return this;
       }
-      void setKey(com.google.protobuf.ByteString value) {
-        bitField0_ |= 0x00000001;
+      /**
+       * <code>required string key = 1;</code>
+       */
+      public Builder setKeyBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
         key_ = value;
         onChanged();
+        return this;
       }
-      
+
       // required string value = 2;
       private java.lang.Object value_ = "";
+      /**
+       * <code>required string value = 2;</code>
+       */
       public boolean hasValue() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
-      public String getValue() {
+      /**
+       * <code>required string value = 2;</code>
+       */
+      public java.lang.String getValue() {
         java.lang.Object ref = value_;
-        if (!(ref instanceof String)) {
-          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
           value_ = s;
           return s;
         } else {
-          return (String) ref;
+          return (java.lang.String) ref;
         }
       }
-      public Builder setValue(String value) {
+      /**
+       * <code>required string value = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getValueBytes() {
+        java.lang.Object ref = value_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          value_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string value = 2;</code>
+       */
+      public Builder setValue(
+          java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -604,34 +831,72 @@ public final class StatisticsProtos {
         onChanged();
         return this;
       }
+      /**
+       * <code>required string value = 2;</code>
+       */
       public Builder clearValue() {
         bitField0_ = (bitField0_ & ~0x00000002);
         value_ = getDefaultInstance().getValue();
         onChanged();
         return this;
       }
-      void setValue(com.google.protobuf.ByteString value) {
-        bitField0_ |= 0x00000002;
+      /**
+       * <code>required string value = 2;</code>
+       */
+      public Builder setValueBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
         value_ = value;
         onChanged();
+        return this;
       }
-      
+
       // optional string comment = 3;
       private java.lang.Object comment_ = "";
+      /**
+       * <code>optional string comment = 3;</code>
+       */
       public boolean hasComment() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
-      public String getComment() {
+      /**
+       * <code>optional string comment = 3;</code>
+       */
+      public java.lang.String getComment() {
         java.lang.Object ref = comment_;
-        if (!(ref instanceof String)) {
-          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
           comment_ = s;
           return s;
         } else {
-          return (String) ref;
+          return (java.lang.String) ref;
         }
       }
-      public Builder setComment(String value) {
+      /**
+       * <code>optional string comment = 3;</code>
+       */
+      public com.google.protobuf.ByteString
+          getCommentBytes() {
+        java.lang.Object ref = comment_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          comment_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string comment = 3;</code>
+       */
+      public Builder setComment(
+          java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -640,34 +905,88 @@ public final class StatisticsProtos {
         onChanged();
         return this;
       }
+      /**
+       * <code>optional string comment = 3;</code>
+       */
       public Builder clearComment() {
         bitField0_ = (bitField0_ & ~0x00000004);
         comment_ = getDefaultInstance().getComment();
         onChanged();
         return this;
       }
-      void setComment(com.google.protobuf.ByteString value) {
-        bitField0_ |= 0x00000004;
+      /**
+       * <code>optional string comment = 3;</code>
+       */
+      public Builder setCommentBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
         comment_ = value;
         onChanged();
+        return this;
       }
-      
+
       // optional string language = 4;
       private java.lang.Object language_ = "";
+      /**
+       * <code>optional string language = 4;</code>
+       *
+       * <pre>
+       *in ISO 639 format
+       * </pre>
+       */
       public boolean hasLanguage() {
         return ((bitField0_ & 0x00000008) == 0x00000008);
       }
-      public String getLanguage() {
+      /**
+       * <code>optional string language = 4;</code>
+       *
+       * <pre>
+       *in ISO 639 format
+       * </pre>
+       */
+      public java.lang.String getLanguage() {
         java.lang.Object ref = language_;
-        if (!(ref instanceof String)) {
-          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
           language_ = s;
           return s;
         } else {
-          return (String) ref;
+          return (java.lang.String) ref;
         }
       }
-      public Builder setLanguage(String value) {
+      /**
+       * <code>optional string language = 4;</code>
+       *
+       * <pre>
+       *in ISO 639 format
+       * </pre>
+       */
+      public com.google.protobuf.ByteString
+          getLanguageBytes() {
+        java.lang.Object ref = language_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          language_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string language = 4;</code>
+       *
+       * <pre>
+       *in ISO 639 format
+       * </pre>
+       */
+      public Builder setLanguage(
+          java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -676,128 +995,277 @@ public final class StatisticsProtos {
         onChanged();
         return this;
       }
+      /**
+       * <code>optional string language = 4;</code>
+       *
+       * <pre>
+       *in ISO 639 format
+       * </pre>
+       */
       public Builder clearLanguage() {
         bitField0_ = (bitField0_ & ~0x00000008);
         language_ = getDefaultInstance().getLanguage();
         onChanged();
         return this;
       }
-      void setLanguage(com.google.protobuf.ByteString value) {
-        bitField0_ |= 0x00000008;
+      /**
+       * <code>optional string language = 4;</code>
+       *
+       * <pre>
+       *in ISO 639 format
+       * </pre>
+       */
+      public Builder setLanguageBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000008;
         language_ = value;
         onChanged();
+        return this;
       }
-      
+
       // @@protoc_insertion_point(builder_scope:pl.edu.icm.coansys.models.KeyValue)
     }
-    
+
     static {
       defaultInstance = new KeyValue(true);
       defaultInstance.initFields();
     }
-    
+
     // @@protoc_insertion_point(class_scope:pl.edu.icm.coansys.models.KeyValue)
   }
-  
+
   public interface InputEntryOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
-    
+
     // required string label = 1;
+    /**
+     * <code>required string label = 1;</code>
+     */
     boolean hasLabel();
-    String getLabel();
-    
+    /**
+     * <code>required string label = 1;</code>
+     */
+    java.lang.String getLabel();
+    /**
+     * <code>required string label = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getLabelBytes();
+
     // repeated .pl.edu.icm.coansys.models.KeyValue field = 2;
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.KeyValue field = 2;</code>
+     */
     java.util.List<pl.edu.icm.coansys.models.StatisticsProtos.KeyValue> 
         getFieldList();
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.KeyValue field = 2;</code>
+     */
     pl.edu.icm.coansys.models.StatisticsProtos.KeyValue getField(int index);
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.KeyValue field = 2;</code>
+     */
     int getFieldCount();
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.KeyValue field = 2;</code>
+     */
     java.util.List<? extends pl.edu.icm.coansys.models.StatisticsProtos.KeyValueOrBuilder> 
         getFieldOrBuilderList();
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.KeyValue field = 2;</code>
+     */
     pl.edu.icm.coansys.models.StatisticsProtos.KeyValueOrBuilder getFieldOrBuilder(
         int index);
   }
+  /**
+   * Protobuf type {@code pl.edu.icm.coansys.models.InputEntry}
+   */
   public static final class InputEntry extends
       com.google.protobuf.GeneratedMessage
       implements InputEntryOrBuilder {
     // Use InputEntry.newBuilder() to construct.
-    private InputEntry(Builder builder) {
+    private InputEntry(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
-    private InputEntry(boolean noInit) {}
-    
+    private InputEntry(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
     private static final InputEntry defaultInstance;
     public static InputEntry getDefaultInstance() {
       return defaultInstance;
     }
-    
+
     public InputEntry getDefaultInstanceForType() {
       return defaultInstance;
     }
-    
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private InputEntry(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              bitField0_ |= 0x00000001;
+              label_ = input.readBytes();
+              break;
+            }
+            case 18: {
+              if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+                field_ = new java.util.ArrayList<pl.edu.icm.coansys.models.StatisticsProtos.KeyValue>();
+                mutable_bitField0_ |= 0x00000002;
+              }
+              field_.add(input.readMessage(pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.PARSER, extensionRegistry));
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+          field_ = java.util.Collections.unmodifiableList(field_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
       return pl.edu.icm.coansys.models.StatisticsProtos.internal_static_pl_edu_icm_coansys_models_InputEntry_descriptor;
     }
-    
+
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return pl.edu.icm.coansys.models.StatisticsProtos.internal_static_pl_edu_icm_coansys_models_InputEntry_fieldAccessorTable;
+      return pl.edu.icm.coansys.models.StatisticsProtos.internal_static_pl_edu_icm_coansys_models_InputEntry_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              pl.edu.icm.coansys.models.StatisticsProtos.InputEntry.class, pl.edu.icm.coansys.models.StatisticsProtos.InputEntry.Builder.class);
     }
-    
+
+    public static com.google.protobuf.Parser<InputEntry> PARSER =
+        new com.google.protobuf.AbstractParser<InputEntry>() {
+      public InputEntry parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new InputEntry(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<InputEntry> getParserForType() {
+      return PARSER;
+    }
+
     private int bitField0_;
     // required string label = 1;
     public static final int LABEL_FIELD_NUMBER = 1;
     private java.lang.Object label_;
+    /**
+     * <code>required string label = 1;</code>
+     */
     public boolean hasLabel() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
-    public String getLabel() {
+    /**
+     * <code>required string label = 1;</code>
+     */
+    public java.lang.String getLabel() {
       java.lang.Object ref = label_;
-      if (ref instanceof String) {
-        return (String) ref;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
           label_ = s;
         }
         return s;
       }
     }
-    private com.google.protobuf.ByteString getLabelBytes() {
+    /**
+     * <code>required string label = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getLabelBytes() {
       java.lang.Object ref = label_;
-      if (ref instanceof String) {
+      if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
         label_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
-    
+
     // repeated .pl.edu.icm.coansys.models.KeyValue field = 2;
     public static final int FIELD_FIELD_NUMBER = 2;
     private java.util.List<pl.edu.icm.coansys.models.StatisticsProtos.KeyValue> field_;
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.KeyValue field = 2;</code>
+     */
     public java.util.List<pl.edu.icm.coansys.models.StatisticsProtos.KeyValue> getFieldList() {
       return field_;
     }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.KeyValue field = 2;</code>
+     */
     public java.util.List<? extends pl.edu.icm.coansys.models.StatisticsProtos.KeyValueOrBuilder> 
         getFieldOrBuilderList() {
       return field_;
     }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.KeyValue field = 2;</code>
+     */
     public int getFieldCount() {
       return field_.size();
     }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.KeyValue field = 2;</code>
+     */
     public pl.edu.icm.coansys.models.StatisticsProtos.KeyValue getField(int index) {
       return field_.get(index);
     }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.KeyValue field = 2;</code>
+     */
     public pl.edu.icm.coansys.models.StatisticsProtos.KeyValueOrBuilder getFieldOrBuilder(
         int index) {
       return field_.get(index);
     }
-    
+
     private void initFields() {
       label_ = "";
       field_ = java.util.Collections.emptyList();
@@ -806,7 +1274,7 @@ public final class StatisticsProtos {
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
-      
+
       if (!hasLabel()) {
         memoizedIsInitialized = 0;
         return false;
@@ -820,7 +1288,7 @@ public final class StatisticsProtos {
       memoizedIsInitialized = 1;
       return true;
     }
-    
+
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
@@ -832,12 +1300,12 @@ public final class StatisticsProtos {
       }
       getUnknownFields().writeTo(output);
     }
-    
+
     private int memoizedSerializedSize = -1;
     public int getSerializedSize() {
       int size = memoizedSerializedSize;
       if (size != -1) return size;
-    
+
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
@@ -851,94 +1319,83 @@ public final class StatisticsProtos {
       memoizedSerializedSize = size;
       return size;
     }
-    
+
     private static final long serialVersionUID = 0L;
     @java.lang.Override
     protected java.lang.Object writeReplace()
         throws java.io.ObjectStreamException {
       return super.writeReplace();
     }
-    
+
     public static pl.edu.icm.coansys.models.StatisticsProtos.InputEntry parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
+      return PARSER.parseFrom(data);
     }
     public static pl.edu.icm.coansys.models.StatisticsProtos.InputEntry parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.StatisticsProtos.InputEntry parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
+      return PARSER.parseFrom(data);
     }
     public static pl.edu.icm.coansys.models.StatisticsProtos.InputEntry parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.StatisticsProtos.InputEntry parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
+      return PARSER.parseFrom(input);
     }
     public static pl.edu.icm.coansys.models.StatisticsProtos.InputEntry parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(input, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.StatisticsProtos.InputEntry parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
+      return PARSER.parseDelimitedFrom(input);
     }
     public static pl.edu.icm.coansys.models.StatisticsProtos.InputEntry parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.StatisticsProtos.InputEntry parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
+      return PARSER.parseFrom(input);
     }
     public static pl.edu.icm.coansys.models.StatisticsProtos.InputEntry parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(input, extensionRegistry);
     }
-    
+
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder(pl.edu.icm.coansys.models.StatisticsProtos.InputEntry prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
-    
+
     @java.lang.Override
     protected Builder newBuilderForType(
         com.google.protobuf.GeneratedMessage.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
+    /**
+     * Protobuf type {@code pl.edu.icm.coansys.models.InputEntry}
+     */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
        implements pl.edu.icm.coansys.models.StatisticsProtos.InputEntryOrBuilder {
@@ -946,18 +1403,21 @@ public final class StatisticsProtos {
           getDescriptor() {
         return pl.edu.icm.coansys.models.StatisticsProtos.internal_static_pl_edu_icm_coansys_models_InputEntry_descriptor;
       }
-      
+
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return pl.edu.icm.coansys.models.StatisticsProtos.internal_static_pl_edu_icm_coansys_models_InputEntry_fieldAccessorTable;
+        return pl.edu.icm.coansys.models.StatisticsProtos.internal_static_pl_edu_icm_coansys_models_InputEntry_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                pl.edu.icm.coansys.models.StatisticsProtos.InputEntry.class, pl.edu.icm.coansys.models.StatisticsProtos.InputEntry.Builder.class);
       }
-      
+
       // Construct using pl.edu.icm.coansys.models.StatisticsProtos.InputEntry.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
-      
-      private Builder(BuilderParent parent) {
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
@@ -969,7 +1429,7 @@ public final class StatisticsProtos {
       private static Builder create() {
         return new Builder();
       }
-      
+
       public Builder clear() {
         super.clear();
         label_ = "";
@@ -982,20 +1442,20 @@ public final class StatisticsProtos {
         }
         return this;
       }
-      
+
       public Builder clone() {
         return create().mergeFrom(buildPartial());
       }
-      
+
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return pl.edu.icm.coansys.models.StatisticsProtos.InputEntry.getDescriptor();
+        return pl.edu.icm.coansys.models.StatisticsProtos.internal_static_pl_edu_icm_coansys_models_InputEntry_descriptor;
       }
-      
+
       public pl.edu.icm.coansys.models.StatisticsProtos.InputEntry getDefaultInstanceForType() {
         return pl.edu.icm.coansys.models.StatisticsProtos.InputEntry.getDefaultInstance();
       }
-      
+
       public pl.edu.icm.coansys.models.StatisticsProtos.InputEntry build() {
         pl.edu.icm.coansys.models.StatisticsProtos.InputEntry result = buildPartial();
         if (!result.isInitialized()) {
@@ -1003,17 +1463,7 @@ public final class StatisticsProtos {
         }
         return result;
       }
-      
-      private pl.edu.icm.coansys.models.StatisticsProtos.InputEntry buildParsed()
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        pl.edu.icm.coansys.models.StatisticsProtos.InputEntry result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(
-            result).asInvalidProtocolBufferException();
-        }
-        return result;
-      }
-      
+
       public pl.edu.icm.coansys.models.StatisticsProtos.InputEntry buildPartial() {
         pl.edu.icm.coansys.models.StatisticsProtos.InputEntry result = new pl.edu.icm.coansys.models.StatisticsProtos.InputEntry(this);
         int from_bitField0_ = bitField0_;
@@ -1035,7 +1485,7 @@ public final class StatisticsProtos {
         onBuilt();
         return result;
       }
-      
+
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof pl.edu.icm.coansys.models.StatisticsProtos.InputEntry) {
           return mergeFrom((pl.edu.icm.coansys.models.StatisticsProtos.InputEntry)other);
@@ -1044,11 +1494,13 @@ public final class StatisticsProtos {
           return this;
         }
       }
-      
+
       public Builder mergeFrom(pl.edu.icm.coansys.models.StatisticsProtos.InputEntry other) {
         if (other == pl.edu.icm.coansys.models.StatisticsProtos.InputEntry.getDefaultInstance()) return this;
         if (other.hasLabel()) {
-          setLabel(other.getLabel());
+          bitField0_ |= 0x00000001;
+          label_ = other.label_;
+          onChanged();
         }
         if (fieldBuilder_ == null) {
           if (!other.field_.isEmpty()) {
@@ -1079,7 +1531,7 @@ public final class StatisticsProtos {
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
-      
+
       public final boolean isInitialized() {
         if (!hasLabel()) {
           
@@ -1093,63 +1545,69 @@ public final class StatisticsProtos {
         }
         return true;
       }
-      
+
       public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder(
-            this.getUnknownFields());
-        while (true) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              this.setUnknownFields(unknownFields.build());
-              onChanged();
-              return this;
-            default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                this.setUnknownFields(unknownFields.build());
-                onChanged();
-                return this;
-              }
-              break;
-            }
-            case 10: {
-              bitField0_ |= 0x00000001;
-              label_ = input.readBytes();
-              break;
-            }
-            case 18: {
-              pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.Builder subBuilder = pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.newBuilder();
-              input.readMessage(subBuilder, extensionRegistry);
-              addField(subBuilder.buildPartial());
-              break;
-            }
+        pl.edu.icm.coansys.models.StatisticsProtos.InputEntry parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (pl.edu.icm.coansys.models.StatisticsProtos.InputEntry) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
           }
         }
+        return this;
       }
-      
       private int bitField0_;
-      
+
       // required string label = 1;
       private java.lang.Object label_ = "";
+      /**
+       * <code>required string label = 1;</code>
+       */
       public boolean hasLabel() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
-      public String getLabel() {
+      /**
+       * <code>required string label = 1;</code>
+       */
+      public java.lang.String getLabel() {
         java.lang.Object ref = label_;
-        if (!(ref instanceof String)) {
-          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
           label_ = s;
           return s;
         } else {
-          return (String) ref;
+          return (java.lang.String) ref;
         }
       }
-      public Builder setLabel(String value) {
+      /**
+       * <code>required string label = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getLabelBytes() {
+        java.lang.Object ref = label_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          label_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string label = 1;</code>
+       */
+      public Builder setLabel(
+          java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -1158,18 +1616,29 @@ public final class StatisticsProtos {
         onChanged();
         return this;
       }
+      /**
+       * <code>required string label = 1;</code>
+       */
       public Builder clearLabel() {
         bitField0_ = (bitField0_ & ~0x00000001);
         label_ = getDefaultInstance().getLabel();
         onChanged();
         return this;
       }
-      void setLabel(com.google.protobuf.ByteString value) {
-        bitField0_ |= 0x00000001;
+      /**
+       * <code>required string label = 1;</code>
+       */
+      public Builder setLabelBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
         label_ = value;
         onChanged();
+        return this;
       }
-      
+
       // repeated .pl.edu.icm.coansys.models.KeyValue field = 2;
       private java.util.List<pl.edu.icm.coansys.models.StatisticsProtos.KeyValue> field_ =
         java.util.Collections.emptyList();
@@ -1179,10 +1648,13 @@ public final class StatisticsProtos {
           bitField0_ |= 0x00000002;
          }
       }
-      
+
       private com.google.protobuf.RepeatedFieldBuilder<
           pl.edu.icm.coansys.models.StatisticsProtos.KeyValue, pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.Builder, pl.edu.icm.coansys.models.StatisticsProtos.KeyValueOrBuilder> fieldBuilder_;
-      
+
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue field = 2;</code>
+       */
       public java.util.List<pl.edu.icm.coansys.models.StatisticsProtos.KeyValue> getFieldList() {
         if (fieldBuilder_ == null) {
           return java.util.Collections.unmodifiableList(field_);
@@ -1190,6 +1662,9 @@ public final class StatisticsProtos {
           return fieldBuilder_.getMessageList();
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue field = 2;</code>
+       */
       public int getFieldCount() {
         if (fieldBuilder_ == null) {
           return field_.size();
@@ -1197,6 +1672,9 @@ public final class StatisticsProtos {
           return fieldBuilder_.getCount();
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue field = 2;</code>
+       */
       public pl.edu.icm.coansys.models.StatisticsProtos.KeyValue getField(int index) {
         if (fieldBuilder_ == null) {
           return field_.get(index);
@@ -1204,6 +1682,9 @@ public final class StatisticsProtos {
           return fieldBuilder_.getMessage(index);
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue field = 2;</code>
+       */
       public Builder setField(
           int index, pl.edu.icm.coansys.models.StatisticsProtos.KeyValue value) {
         if (fieldBuilder_ == null) {
@@ -1218,6 +1699,9 @@ public final class StatisticsProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue field = 2;</code>
+       */
       public Builder setField(
           int index, pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.Builder builderForValue) {
         if (fieldBuilder_ == null) {
@@ -1229,6 +1713,9 @@ public final class StatisticsProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue field = 2;</code>
+       */
       public Builder addField(pl.edu.icm.coansys.models.StatisticsProtos.KeyValue value) {
         if (fieldBuilder_ == null) {
           if (value == null) {
@@ -1242,6 +1729,9 @@ public final class StatisticsProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue field = 2;</code>
+       */
       public Builder addField(
           int index, pl.edu.icm.coansys.models.StatisticsProtos.KeyValue value) {
         if (fieldBuilder_ == null) {
@@ -1256,6 +1746,9 @@ public final class StatisticsProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue field = 2;</code>
+       */
       public Builder addField(
           pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.Builder builderForValue) {
         if (fieldBuilder_ == null) {
@@ -1267,6 +1760,9 @@ public final class StatisticsProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue field = 2;</code>
+       */
       public Builder addField(
           int index, pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.Builder builderForValue) {
         if (fieldBuilder_ == null) {
@@ -1278,6 +1774,9 @@ public final class StatisticsProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue field = 2;</code>
+       */
       public Builder addAllField(
           java.lang.Iterable<? extends pl.edu.icm.coansys.models.StatisticsProtos.KeyValue> values) {
         if (fieldBuilder_ == null) {
@@ -1289,6 +1788,9 @@ public final class StatisticsProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue field = 2;</code>
+       */
       public Builder clearField() {
         if (fieldBuilder_ == null) {
           field_ = java.util.Collections.emptyList();
@@ -1299,6 +1801,9 @@ public final class StatisticsProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue field = 2;</code>
+       */
       public Builder removeField(int index) {
         if (fieldBuilder_ == null) {
           ensureFieldIsMutable();
@@ -1309,10 +1814,16 @@ public final class StatisticsProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue field = 2;</code>
+       */
       public pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.Builder getFieldBuilder(
           int index) {
         return getFieldFieldBuilder().getBuilder(index);
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue field = 2;</code>
+       */
       public pl.edu.icm.coansys.models.StatisticsProtos.KeyValueOrBuilder getFieldOrBuilder(
           int index) {
         if (fieldBuilder_ == null) {
@@ -1320,6 +1831,9 @@ public final class StatisticsProtos {
           return fieldBuilder_.getMessageOrBuilder(index);
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue field = 2;</code>
+       */
       public java.util.List<? extends pl.edu.icm.coansys.models.StatisticsProtos.KeyValueOrBuilder> 
            getFieldOrBuilderList() {
         if (fieldBuilder_ != null) {
@@ -1328,15 +1842,24 @@ public final class StatisticsProtos {
           return java.util.Collections.unmodifiableList(field_);
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue field = 2;</code>
+       */
       public pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.Builder addFieldBuilder() {
         return getFieldFieldBuilder().addBuilder(
             pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.getDefaultInstance());
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue field = 2;</code>
+       */
       public pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.Builder addFieldBuilder(
           int index) {
         return getFieldFieldBuilder().addBuilder(
             index, pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.getDefaultInstance());
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue field = 2;</code>
+       */
       public java.util.List<pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.Builder> 
            getFieldBuilderList() {
         return getFieldFieldBuilder().getBuilderList();
@@ -1355,126 +1878,287 @@ public final class StatisticsProtos {
         }
         return fieldBuilder_;
       }
-      
+
       // @@protoc_insertion_point(builder_scope:pl.edu.icm.coansys.models.InputEntry)
     }
-    
+
     static {
       defaultInstance = new InputEntry(true);
       defaultInstance.initFields();
     }
-    
+
     // @@protoc_insertion_point(class_scope:pl.edu.icm.coansys.models.InputEntry)
   }
-  
+
   public interface StatisticsOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
-    
+
     // required int64 timestamp = 1;
+    /**
+     * <code>required int64 timestamp = 1;</code>
+     */
     boolean hasTimestamp();
+    /**
+     * <code>required int64 timestamp = 1;</code>
+     */
     long getTimestamp();
-    
+
     // repeated .pl.edu.icm.coansys.models.KeyValue partitions = 2;
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.KeyValue partitions = 2;</code>
+     */
     java.util.List<pl.edu.icm.coansys.models.StatisticsProtos.KeyValue> 
         getPartitionsList();
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.KeyValue partitions = 2;</code>
+     */
     pl.edu.icm.coansys.models.StatisticsProtos.KeyValue getPartitions(int index);
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.KeyValue partitions = 2;</code>
+     */
     int getPartitionsCount();
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.KeyValue partitions = 2;</code>
+     */
     java.util.List<? extends pl.edu.icm.coansys.models.StatisticsProtos.KeyValueOrBuilder> 
         getPartitionsOrBuilderList();
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.KeyValue partitions = 2;</code>
+     */
     pl.edu.icm.coansys.models.StatisticsProtos.KeyValueOrBuilder getPartitionsOrBuilder(
         int index);
-    
+
     // repeated .pl.edu.icm.coansys.models.KeyValue statistics = 3;
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.KeyValue statistics = 3;</code>
+     */
     java.util.List<pl.edu.icm.coansys.models.StatisticsProtos.KeyValue> 
         getStatisticsList();
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.KeyValue statistics = 3;</code>
+     */
     pl.edu.icm.coansys.models.StatisticsProtos.KeyValue getStatistics(int index);
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.KeyValue statistics = 3;</code>
+     */
     int getStatisticsCount();
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.KeyValue statistics = 3;</code>
+     */
     java.util.List<? extends pl.edu.icm.coansys.models.StatisticsProtos.KeyValueOrBuilder> 
         getStatisticsOrBuilderList();
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.KeyValue statistics = 3;</code>
+     */
     pl.edu.icm.coansys.models.StatisticsProtos.KeyValueOrBuilder getStatisticsOrBuilder(
         int index);
   }
+  /**
+   * Protobuf type {@code pl.edu.icm.coansys.models.Statistics}
+   */
   public static final class Statistics extends
       com.google.protobuf.GeneratedMessage
       implements StatisticsOrBuilder {
     // Use Statistics.newBuilder() to construct.
-    private Statistics(Builder builder) {
+    private Statistics(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
-    private Statistics(boolean noInit) {}
-    
+    private Statistics(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
     private static final Statistics defaultInstance;
     public static Statistics getDefaultInstance() {
       return defaultInstance;
     }
-    
+
     public Statistics getDefaultInstanceForType() {
       return defaultInstance;
     }
-    
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private Statistics(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 8: {
+              bitField0_ |= 0x00000001;
+              timestamp_ = input.readInt64();
+              break;
+            }
+            case 18: {
+              if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+                partitions_ = new java.util.ArrayList<pl.edu.icm.coansys.models.StatisticsProtos.KeyValue>();
+                mutable_bitField0_ |= 0x00000002;
+              }
+              partitions_.add(input.readMessage(pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.PARSER, extensionRegistry));
+              break;
+            }
+            case 26: {
+              if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+                statistics_ = new java.util.ArrayList<pl.edu.icm.coansys.models.StatisticsProtos.KeyValue>();
+                mutable_bitField0_ |= 0x00000004;
+              }
+              statistics_.add(input.readMessage(pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.PARSER, extensionRegistry));
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+          partitions_ = java.util.Collections.unmodifiableList(partitions_);
+        }
+        if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+          statistics_ = java.util.Collections.unmodifiableList(statistics_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
       return pl.edu.icm.coansys.models.StatisticsProtos.internal_static_pl_edu_icm_coansys_models_Statistics_descriptor;
     }
-    
+
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return pl.edu.icm.coansys.models.StatisticsProtos.internal_static_pl_edu_icm_coansys_models_Statistics_fieldAccessorTable;
+      return pl.edu.icm.coansys.models.StatisticsProtos.internal_static_pl_edu_icm_coansys_models_Statistics_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              pl.edu.icm.coansys.models.StatisticsProtos.Statistics.class, pl.edu.icm.coansys.models.StatisticsProtos.Statistics.Builder.class);
     }
-    
+
+    public static com.google.protobuf.Parser<Statistics> PARSER =
+        new com.google.protobuf.AbstractParser<Statistics>() {
+      public Statistics parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new Statistics(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<Statistics> getParserForType() {
+      return PARSER;
+    }
+
     private int bitField0_;
     // required int64 timestamp = 1;
     public static final int TIMESTAMP_FIELD_NUMBER = 1;
     private long timestamp_;
+    /**
+     * <code>required int64 timestamp = 1;</code>
+     */
     public boolean hasTimestamp() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
+    /**
+     * <code>required int64 timestamp = 1;</code>
+     */
     public long getTimestamp() {
       return timestamp_;
     }
-    
+
     // repeated .pl.edu.icm.coansys.models.KeyValue partitions = 2;
     public static final int PARTITIONS_FIELD_NUMBER = 2;
     private java.util.List<pl.edu.icm.coansys.models.StatisticsProtos.KeyValue> partitions_;
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.KeyValue partitions = 2;</code>
+     */
     public java.util.List<pl.edu.icm.coansys.models.StatisticsProtos.KeyValue> getPartitionsList() {
       return partitions_;
     }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.KeyValue partitions = 2;</code>
+     */
     public java.util.List<? extends pl.edu.icm.coansys.models.StatisticsProtos.KeyValueOrBuilder> 
         getPartitionsOrBuilderList() {
       return partitions_;
     }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.KeyValue partitions = 2;</code>
+     */
     public int getPartitionsCount() {
       return partitions_.size();
     }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.KeyValue partitions = 2;</code>
+     */
     public pl.edu.icm.coansys.models.StatisticsProtos.KeyValue getPartitions(int index) {
       return partitions_.get(index);
     }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.KeyValue partitions = 2;</code>
+     */
     public pl.edu.icm.coansys.models.StatisticsProtos.KeyValueOrBuilder getPartitionsOrBuilder(
         int index) {
       return partitions_.get(index);
     }
-    
+
     // repeated .pl.edu.icm.coansys.models.KeyValue statistics = 3;
     public static final int STATISTICS_FIELD_NUMBER = 3;
     private java.util.List<pl.edu.icm.coansys.models.StatisticsProtos.KeyValue> statistics_;
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.KeyValue statistics = 3;</code>
+     */
     public java.util.List<pl.edu.icm.coansys.models.StatisticsProtos.KeyValue> getStatisticsList() {
       return statistics_;
     }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.KeyValue statistics = 3;</code>
+     */
     public java.util.List<? extends pl.edu.icm.coansys.models.StatisticsProtos.KeyValueOrBuilder> 
         getStatisticsOrBuilderList() {
       return statistics_;
     }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.KeyValue statistics = 3;</code>
+     */
     public int getStatisticsCount() {
       return statistics_.size();
     }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.KeyValue statistics = 3;</code>
+     */
     public pl.edu.icm.coansys.models.StatisticsProtos.KeyValue getStatistics(int index) {
       return statistics_.get(index);
     }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.KeyValue statistics = 3;</code>
+     */
     public pl.edu.icm.coansys.models.StatisticsProtos.KeyValueOrBuilder getStatisticsOrBuilder(
         int index) {
       return statistics_.get(index);
     }
-    
+
     private void initFields() {
       timestamp_ = 0L;
       partitions_ = java.util.Collections.emptyList();
@@ -1484,7 +2168,7 @@ public final class StatisticsProtos {
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
-      
+
       if (!hasTimestamp()) {
         memoizedIsInitialized = 0;
         return false;
@@ -1504,7 +2188,7 @@ public final class StatisticsProtos {
       memoizedIsInitialized = 1;
       return true;
     }
-    
+
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
@@ -1519,12 +2203,12 @@ public final class StatisticsProtos {
       }
       getUnknownFields().writeTo(output);
     }
-    
+
     private int memoizedSerializedSize = -1;
     public int getSerializedSize() {
       int size = memoizedSerializedSize;
       if (size != -1) return size;
-    
+
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
@@ -1542,94 +2226,83 @@ public final class StatisticsProtos {
       memoizedSerializedSize = size;
       return size;
     }
-    
+
     private static final long serialVersionUID = 0L;
     @java.lang.Override
     protected java.lang.Object writeReplace()
         throws java.io.ObjectStreamException {
       return super.writeReplace();
     }
-    
+
     public static pl.edu.icm.coansys.models.StatisticsProtos.Statistics parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
+      return PARSER.parseFrom(data);
     }
     public static pl.edu.icm.coansys.models.StatisticsProtos.Statistics parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.StatisticsProtos.Statistics parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
+      return PARSER.parseFrom(data);
     }
     public static pl.edu.icm.coansys.models.StatisticsProtos.Statistics parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.StatisticsProtos.Statistics parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
+      return PARSER.parseFrom(input);
     }
     public static pl.edu.icm.coansys.models.StatisticsProtos.Statistics parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(input, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.StatisticsProtos.Statistics parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
+      return PARSER.parseDelimitedFrom(input);
     }
     public static pl.edu.icm.coansys.models.StatisticsProtos.Statistics parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.StatisticsProtos.Statistics parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
+      return PARSER.parseFrom(input);
     }
     public static pl.edu.icm.coansys.models.StatisticsProtos.Statistics parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(input, extensionRegistry);
     }
-    
+
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder(pl.edu.icm.coansys.models.StatisticsProtos.Statistics prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
-    
+
     @java.lang.Override
     protected Builder newBuilderForType(
         com.google.protobuf.GeneratedMessage.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
+    /**
+     * Protobuf type {@code pl.edu.icm.coansys.models.Statistics}
+     */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
        implements pl.edu.icm.coansys.models.StatisticsProtos.StatisticsOrBuilder {
@@ -1637,18 +2310,21 @@ public final class StatisticsProtos {
           getDescriptor() {
         return pl.edu.icm.coansys.models.StatisticsProtos.internal_static_pl_edu_icm_coansys_models_Statistics_descriptor;
       }
-      
+
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return pl.edu.icm.coansys.models.StatisticsProtos.internal_static_pl_edu_icm_coansys_models_Statistics_fieldAccessorTable;
+        return pl.edu.icm.coansys.models.StatisticsProtos.internal_static_pl_edu_icm_coansys_models_Statistics_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                pl.edu.icm.coansys.models.StatisticsProtos.Statistics.class, pl.edu.icm.coansys.models.StatisticsProtos.Statistics.Builder.class);
       }
-      
+
       // Construct using pl.edu.icm.coansys.models.StatisticsProtos.Statistics.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
-      
-      private Builder(BuilderParent parent) {
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
@@ -1661,7 +2337,7 @@ public final class StatisticsProtos {
       private static Builder create() {
         return new Builder();
       }
-      
+
       public Builder clear() {
         super.clear();
         timestamp_ = 0L;
@@ -1680,20 +2356,20 @@ public final class StatisticsProtos {
         }
         return this;
       }
-      
+
       public Builder clone() {
         return create().mergeFrom(buildPartial());
       }
-      
+
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return pl.edu.icm.coansys.models.StatisticsProtos.Statistics.getDescriptor();
+        return pl.edu.icm.coansys.models.StatisticsProtos.internal_static_pl_edu_icm_coansys_models_Statistics_descriptor;
       }
-      
+
       public pl.edu.icm.coansys.models.StatisticsProtos.Statistics getDefaultInstanceForType() {
         return pl.edu.icm.coansys.models.StatisticsProtos.Statistics.getDefaultInstance();
       }
-      
+
       public pl.edu.icm.coansys.models.StatisticsProtos.Statistics build() {
         pl.edu.icm.coansys.models.StatisticsProtos.Statistics result = buildPartial();
         if (!result.isInitialized()) {
@@ -1701,17 +2377,7 @@ public final class StatisticsProtos {
         }
         return result;
       }
-      
-      private pl.edu.icm.coansys.models.StatisticsProtos.Statistics buildParsed()
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        pl.edu.icm.coansys.models.StatisticsProtos.Statistics result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(
-            result).asInvalidProtocolBufferException();
-        }
-        return result;
-      }
-      
+
       public pl.edu.icm.coansys.models.StatisticsProtos.Statistics buildPartial() {
         pl.edu.icm.coansys.models.StatisticsProtos.Statistics result = new pl.edu.icm.coansys.models.StatisticsProtos.Statistics(this);
         int from_bitField0_ = bitField0_;
@@ -1742,7 +2408,7 @@ public final class StatisticsProtos {
         onBuilt();
         return result;
       }
-      
+
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof pl.edu.icm.coansys.models.StatisticsProtos.Statistics) {
           return mergeFrom((pl.edu.icm.coansys.models.StatisticsProtos.Statistics)other);
@@ -1751,7 +2417,7 @@ public final class StatisticsProtos {
           return this;
         }
       }
-      
+
       public Builder mergeFrom(pl.edu.icm.coansys.models.StatisticsProtos.Statistics other) {
         if (other == pl.edu.icm.coansys.models.StatisticsProtos.Statistics.getDefaultInstance()) return this;
         if (other.hasTimestamp()) {
@@ -1812,7 +2478,7 @@ public final class StatisticsProtos {
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
-      
+
       public final boolean isInitialized() {
         if (!hasTimestamp()) {
           
@@ -1832,74 +2498,59 @@ public final class StatisticsProtos {
         }
         return true;
       }
-      
+
       public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder(
-            this.getUnknownFields());
-        while (true) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              this.setUnknownFields(unknownFields.build());
-              onChanged();
-              return this;
-            default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                this.setUnknownFields(unknownFields.build());
-                onChanged();
-                return this;
-              }
-              break;
-            }
-            case 8: {
-              bitField0_ |= 0x00000001;
-              timestamp_ = input.readInt64();
-              break;
-            }
-            case 18: {
-              pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.Builder subBuilder = pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.newBuilder();
-              input.readMessage(subBuilder, extensionRegistry);
-              addPartitions(subBuilder.buildPartial());
-              break;
-            }
-            case 26: {
-              pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.Builder subBuilder = pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.newBuilder();
-              input.readMessage(subBuilder, extensionRegistry);
-              addStatistics(subBuilder.buildPartial());
-              break;
-            }
+        pl.edu.icm.coansys.models.StatisticsProtos.Statistics parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (pl.edu.icm.coansys.models.StatisticsProtos.Statistics) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
           }
         }
+        return this;
       }
-      
       private int bitField0_;
-      
+
       // required int64 timestamp = 1;
       private long timestamp_ ;
+      /**
+       * <code>required int64 timestamp = 1;</code>
+       */
       public boolean hasTimestamp() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
+      /**
+       * <code>required int64 timestamp = 1;</code>
+       */
       public long getTimestamp() {
         return timestamp_;
       }
+      /**
+       * <code>required int64 timestamp = 1;</code>
+       */
       public Builder setTimestamp(long value) {
         bitField0_ |= 0x00000001;
         timestamp_ = value;
         onChanged();
         return this;
       }
+      /**
+       * <code>required int64 timestamp = 1;</code>
+       */
       public Builder clearTimestamp() {
         bitField0_ = (bitField0_ & ~0x00000001);
         timestamp_ = 0L;
         onChanged();
         return this;
       }
-      
+
       // repeated .pl.edu.icm.coansys.models.KeyValue partitions = 2;
       private java.util.List<pl.edu.icm.coansys.models.StatisticsProtos.KeyValue> partitions_ =
         java.util.Collections.emptyList();
@@ -1909,10 +2560,13 @@ public final class StatisticsProtos {
           bitField0_ |= 0x00000002;
          }
       }
-      
+
       private com.google.protobuf.RepeatedFieldBuilder<
           pl.edu.icm.coansys.models.StatisticsProtos.KeyValue, pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.Builder, pl.edu.icm.coansys.models.StatisticsProtos.KeyValueOrBuilder> partitionsBuilder_;
-      
+
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue partitions = 2;</code>
+       */
       public java.util.List<pl.edu.icm.coansys.models.StatisticsProtos.KeyValue> getPartitionsList() {
         if (partitionsBuilder_ == null) {
           return java.util.Collections.unmodifiableList(partitions_);
@@ -1920,6 +2574,9 @@ public final class StatisticsProtos {
           return partitionsBuilder_.getMessageList();
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue partitions = 2;</code>
+       */
       public int getPartitionsCount() {
         if (partitionsBuilder_ == null) {
           return partitions_.size();
@@ -1927,6 +2584,9 @@ public final class StatisticsProtos {
           return partitionsBuilder_.getCount();
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue partitions = 2;</code>
+       */
       public pl.edu.icm.coansys.models.StatisticsProtos.KeyValue getPartitions(int index) {
         if (partitionsBuilder_ == null) {
           return partitions_.get(index);
@@ -1934,6 +2594,9 @@ public final class StatisticsProtos {
           return partitionsBuilder_.getMessage(index);
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue partitions = 2;</code>
+       */
       public Builder setPartitions(
           int index, pl.edu.icm.coansys.models.StatisticsProtos.KeyValue value) {
         if (partitionsBuilder_ == null) {
@@ -1948,6 +2611,9 @@ public final class StatisticsProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue partitions = 2;</code>
+       */
       public Builder setPartitions(
           int index, pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.Builder builderForValue) {
         if (partitionsBuilder_ == null) {
@@ -1959,6 +2625,9 @@ public final class StatisticsProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue partitions = 2;</code>
+       */
       public Builder addPartitions(pl.edu.icm.coansys.models.StatisticsProtos.KeyValue value) {
         if (partitionsBuilder_ == null) {
           if (value == null) {
@@ -1972,6 +2641,9 @@ public final class StatisticsProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue partitions = 2;</code>
+       */
       public Builder addPartitions(
           int index, pl.edu.icm.coansys.models.StatisticsProtos.KeyValue value) {
         if (partitionsBuilder_ == null) {
@@ -1986,6 +2658,9 @@ public final class StatisticsProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue partitions = 2;</code>
+       */
       public Builder addPartitions(
           pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.Builder builderForValue) {
         if (partitionsBuilder_ == null) {
@@ -1997,6 +2672,9 @@ public final class StatisticsProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue partitions = 2;</code>
+       */
       public Builder addPartitions(
           int index, pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.Builder builderForValue) {
         if (partitionsBuilder_ == null) {
@@ -2008,6 +2686,9 @@ public final class StatisticsProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue partitions = 2;</code>
+       */
       public Builder addAllPartitions(
           java.lang.Iterable<? extends pl.edu.icm.coansys.models.StatisticsProtos.KeyValue> values) {
         if (partitionsBuilder_ == null) {
@@ -2019,6 +2700,9 @@ public final class StatisticsProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue partitions = 2;</code>
+       */
       public Builder clearPartitions() {
         if (partitionsBuilder_ == null) {
           partitions_ = java.util.Collections.emptyList();
@@ -2029,6 +2713,9 @@ public final class StatisticsProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue partitions = 2;</code>
+       */
       public Builder removePartitions(int index) {
         if (partitionsBuilder_ == null) {
           ensurePartitionsIsMutable();
@@ -2039,10 +2726,16 @@ public final class StatisticsProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue partitions = 2;</code>
+       */
       public pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.Builder getPartitionsBuilder(
           int index) {
         return getPartitionsFieldBuilder().getBuilder(index);
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue partitions = 2;</code>
+       */
       public pl.edu.icm.coansys.models.StatisticsProtos.KeyValueOrBuilder getPartitionsOrBuilder(
           int index) {
         if (partitionsBuilder_ == null) {
@@ -2050,6 +2743,9 @@ public final class StatisticsProtos {
           return partitionsBuilder_.getMessageOrBuilder(index);
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue partitions = 2;</code>
+       */
       public java.util.List<? extends pl.edu.icm.coansys.models.StatisticsProtos.KeyValueOrBuilder> 
            getPartitionsOrBuilderList() {
         if (partitionsBuilder_ != null) {
@@ -2058,15 +2754,24 @@ public final class StatisticsProtos {
           return java.util.Collections.unmodifiableList(partitions_);
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue partitions = 2;</code>
+       */
       public pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.Builder addPartitionsBuilder() {
         return getPartitionsFieldBuilder().addBuilder(
             pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.getDefaultInstance());
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue partitions = 2;</code>
+       */
       public pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.Builder addPartitionsBuilder(
           int index) {
         return getPartitionsFieldBuilder().addBuilder(
             index, pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.getDefaultInstance());
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue partitions = 2;</code>
+       */
       public java.util.List<pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.Builder> 
            getPartitionsBuilderList() {
         return getPartitionsFieldBuilder().getBuilderList();
@@ -2085,7 +2790,7 @@ public final class StatisticsProtos {
         }
         return partitionsBuilder_;
       }
-      
+
       // repeated .pl.edu.icm.coansys.models.KeyValue statistics = 3;
       private java.util.List<pl.edu.icm.coansys.models.StatisticsProtos.KeyValue> statistics_ =
         java.util.Collections.emptyList();
@@ -2095,10 +2800,13 @@ public final class StatisticsProtos {
           bitField0_ |= 0x00000004;
          }
       }
-      
+
       private com.google.protobuf.RepeatedFieldBuilder<
           pl.edu.icm.coansys.models.StatisticsProtos.KeyValue, pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.Builder, pl.edu.icm.coansys.models.StatisticsProtos.KeyValueOrBuilder> statisticsBuilder_;
-      
+
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue statistics = 3;</code>
+       */
       public java.util.List<pl.edu.icm.coansys.models.StatisticsProtos.KeyValue> getStatisticsList() {
         if (statisticsBuilder_ == null) {
           return java.util.Collections.unmodifiableList(statistics_);
@@ -2106,6 +2814,9 @@ public final class StatisticsProtos {
           return statisticsBuilder_.getMessageList();
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue statistics = 3;</code>
+       */
       public int getStatisticsCount() {
         if (statisticsBuilder_ == null) {
           return statistics_.size();
@@ -2113,6 +2824,9 @@ public final class StatisticsProtos {
           return statisticsBuilder_.getCount();
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue statistics = 3;</code>
+       */
       public pl.edu.icm.coansys.models.StatisticsProtos.KeyValue getStatistics(int index) {
         if (statisticsBuilder_ == null) {
           return statistics_.get(index);
@@ -2120,6 +2834,9 @@ public final class StatisticsProtos {
           return statisticsBuilder_.getMessage(index);
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue statistics = 3;</code>
+       */
       public Builder setStatistics(
           int index, pl.edu.icm.coansys.models.StatisticsProtos.KeyValue value) {
         if (statisticsBuilder_ == null) {
@@ -2134,6 +2851,9 @@ public final class StatisticsProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue statistics = 3;</code>
+       */
       public Builder setStatistics(
           int index, pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.Builder builderForValue) {
         if (statisticsBuilder_ == null) {
@@ -2145,6 +2865,9 @@ public final class StatisticsProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue statistics = 3;</code>
+       */
       public Builder addStatistics(pl.edu.icm.coansys.models.StatisticsProtos.KeyValue value) {
         if (statisticsBuilder_ == null) {
           if (value == null) {
@@ -2158,6 +2881,9 @@ public final class StatisticsProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue statistics = 3;</code>
+       */
       public Builder addStatistics(
           int index, pl.edu.icm.coansys.models.StatisticsProtos.KeyValue value) {
         if (statisticsBuilder_ == null) {
@@ -2172,6 +2898,9 @@ public final class StatisticsProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue statistics = 3;</code>
+       */
       public Builder addStatistics(
           pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.Builder builderForValue) {
         if (statisticsBuilder_ == null) {
@@ -2183,6 +2912,9 @@ public final class StatisticsProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue statistics = 3;</code>
+       */
       public Builder addStatistics(
           int index, pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.Builder builderForValue) {
         if (statisticsBuilder_ == null) {
@@ -2194,6 +2926,9 @@ public final class StatisticsProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue statistics = 3;</code>
+       */
       public Builder addAllStatistics(
           java.lang.Iterable<? extends pl.edu.icm.coansys.models.StatisticsProtos.KeyValue> values) {
         if (statisticsBuilder_ == null) {
@@ -2205,6 +2940,9 @@ public final class StatisticsProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue statistics = 3;</code>
+       */
       public Builder clearStatistics() {
         if (statisticsBuilder_ == null) {
           statistics_ = java.util.Collections.emptyList();
@@ -2215,6 +2953,9 @@ public final class StatisticsProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue statistics = 3;</code>
+       */
       public Builder removeStatistics(int index) {
         if (statisticsBuilder_ == null) {
           ensureStatisticsIsMutable();
@@ -2225,10 +2966,16 @@ public final class StatisticsProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue statistics = 3;</code>
+       */
       public pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.Builder getStatisticsBuilder(
           int index) {
         return getStatisticsFieldBuilder().getBuilder(index);
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue statistics = 3;</code>
+       */
       public pl.edu.icm.coansys.models.StatisticsProtos.KeyValueOrBuilder getStatisticsOrBuilder(
           int index) {
         if (statisticsBuilder_ == null) {
@@ -2236,6 +2983,9 @@ public final class StatisticsProtos {
           return statisticsBuilder_.getMessageOrBuilder(index);
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue statistics = 3;</code>
+       */
       public java.util.List<? extends pl.edu.icm.coansys.models.StatisticsProtos.KeyValueOrBuilder> 
            getStatisticsOrBuilderList() {
         if (statisticsBuilder_ != null) {
@@ -2244,15 +2994,24 @@ public final class StatisticsProtos {
           return java.util.Collections.unmodifiableList(statistics_);
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue statistics = 3;</code>
+       */
       public pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.Builder addStatisticsBuilder() {
         return getStatisticsFieldBuilder().addBuilder(
             pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.getDefaultInstance());
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue statistics = 3;</code>
+       */
       public pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.Builder addStatisticsBuilder(
           int index) {
         return getStatisticsFieldBuilder().addBuilder(
             index, pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.getDefaultInstance());
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue statistics = 3;</code>
+       */
       public java.util.List<pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.Builder> 
            getStatisticsBuilderList() {
         return getStatisticsFieldBuilder().getBuilderList();
@@ -2271,198 +3030,413 @@ public final class StatisticsProtos {
         }
         return statisticsBuilder_;
       }
-      
+
       // @@protoc_insertion_point(builder_scope:pl.edu.icm.coansys.models.Statistics)
     }
-    
+
     static {
       defaultInstance = new Statistics(true);
       defaultInstance.initFields();
     }
-    
+
     // @@protoc_insertion_point(class_scope:pl.edu.icm.coansys.models.Statistics)
   }
-  
+
   public interface SelectedStatisticsOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
-    
+
     // required string selected_stat = 1;
+    /**
+     * <code>required string selected_stat = 1;</code>
+     */
     boolean hasSelectedStat();
-    String getSelectedStat();
-    
+    /**
+     * <code>required string selected_stat = 1;</code>
+     */
+    java.lang.String getSelectedStat();
+    /**
+     * <code>required string selected_stat = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getSelectedStatBytes();
+
     // required string sort_order = 2;
+    /**
+     * <code>required string sort_order = 2;</code>
+     */
     boolean hasSortOrder();
-    String getSortOrder();
-    
+    /**
+     * <code>required string sort_order = 2;</code>
+     */
+    java.lang.String getSortOrder();
+    /**
+     * <code>required string sort_order = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getSortOrderBytes();
+
     // required int32 limit = 3;
+    /**
+     * <code>required int32 limit = 3;</code>
+     */
     boolean hasLimit();
+    /**
+     * <code>required int32 limit = 3;</code>
+     */
     int getLimit();
-    
+
     // repeated .pl.edu.icm.coansys.models.KeyValue fixed_partitions = 4;
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.KeyValue fixed_partitions = 4;</code>
+     */
     java.util.List<pl.edu.icm.coansys.models.StatisticsProtos.KeyValue> 
         getFixedPartitionsList();
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.KeyValue fixed_partitions = 4;</code>
+     */
     pl.edu.icm.coansys.models.StatisticsProtos.KeyValue getFixedPartitions(int index);
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.KeyValue fixed_partitions = 4;</code>
+     */
     int getFixedPartitionsCount();
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.KeyValue fixed_partitions = 4;</code>
+     */
     java.util.List<? extends pl.edu.icm.coansys.models.StatisticsProtos.KeyValueOrBuilder> 
         getFixedPartitionsOrBuilderList();
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.KeyValue fixed_partitions = 4;</code>
+     */
     pl.edu.icm.coansys.models.StatisticsProtos.KeyValueOrBuilder getFixedPartitionsOrBuilder(
         int index);
-    
+
     // repeated .pl.edu.icm.coansys.models.Statistics stats = 5;
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Statistics stats = 5;</code>
+     */
     java.util.List<pl.edu.icm.coansys.models.StatisticsProtos.Statistics> 
         getStatsList();
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Statistics stats = 5;</code>
+     */
     pl.edu.icm.coansys.models.StatisticsProtos.Statistics getStats(int index);
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Statistics stats = 5;</code>
+     */
     int getStatsCount();
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Statistics stats = 5;</code>
+     */
     java.util.List<? extends pl.edu.icm.coansys.models.StatisticsProtos.StatisticsOrBuilder> 
         getStatsOrBuilderList();
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Statistics stats = 5;</code>
+     */
     pl.edu.icm.coansys.models.StatisticsProtos.StatisticsOrBuilder getStatsOrBuilder(
         int index);
   }
+  /**
+   * Protobuf type {@code pl.edu.icm.coansys.models.SelectedStatistics}
+   */
   public static final class SelectedStatistics extends
       com.google.protobuf.GeneratedMessage
       implements SelectedStatisticsOrBuilder {
     // Use SelectedStatistics.newBuilder() to construct.
-    private SelectedStatistics(Builder builder) {
+    private SelectedStatistics(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
-    private SelectedStatistics(boolean noInit) {}
-    
+    private SelectedStatistics(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
     private static final SelectedStatistics defaultInstance;
     public static SelectedStatistics getDefaultInstance() {
       return defaultInstance;
     }
-    
+
     public SelectedStatistics getDefaultInstanceForType() {
       return defaultInstance;
     }
-    
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private SelectedStatistics(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              bitField0_ |= 0x00000001;
+              selectedStat_ = input.readBytes();
+              break;
+            }
+            case 18: {
+              bitField0_ |= 0x00000002;
+              sortOrder_ = input.readBytes();
+              break;
+            }
+            case 24: {
+              bitField0_ |= 0x00000004;
+              limit_ = input.readInt32();
+              break;
+            }
+            case 34: {
+              if (!((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+                fixedPartitions_ = new java.util.ArrayList<pl.edu.icm.coansys.models.StatisticsProtos.KeyValue>();
+                mutable_bitField0_ |= 0x00000008;
+              }
+              fixedPartitions_.add(input.readMessage(pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.PARSER, extensionRegistry));
+              break;
+            }
+            case 42: {
+              if (!((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
+                stats_ = new java.util.ArrayList<pl.edu.icm.coansys.models.StatisticsProtos.Statistics>();
+                mutable_bitField0_ |= 0x00000010;
+              }
+              stats_.add(input.readMessage(pl.edu.icm.coansys.models.StatisticsProtos.Statistics.PARSER, extensionRegistry));
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+          fixedPartitions_ = java.util.Collections.unmodifiableList(fixedPartitions_);
+        }
+        if (((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
+          stats_ = java.util.Collections.unmodifiableList(stats_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
       return pl.edu.icm.coansys.models.StatisticsProtos.internal_static_pl_edu_icm_coansys_models_SelectedStatistics_descriptor;
     }
-    
+
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return pl.edu.icm.coansys.models.StatisticsProtos.internal_static_pl_edu_icm_coansys_models_SelectedStatistics_fieldAccessorTable;
+      return pl.edu.icm.coansys.models.StatisticsProtos.internal_static_pl_edu_icm_coansys_models_SelectedStatistics_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics.class, pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics.Builder.class);
     }
-    
+
+    public static com.google.protobuf.Parser<SelectedStatistics> PARSER =
+        new com.google.protobuf.AbstractParser<SelectedStatistics>() {
+      public SelectedStatistics parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new SelectedStatistics(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<SelectedStatistics> getParserForType() {
+      return PARSER;
+    }
+
     private int bitField0_;
     // required string selected_stat = 1;
     public static final int SELECTED_STAT_FIELD_NUMBER = 1;
     private java.lang.Object selectedStat_;
+    /**
+     * <code>required string selected_stat = 1;</code>
+     */
     public boolean hasSelectedStat() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
-    public String getSelectedStat() {
+    /**
+     * <code>required string selected_stat = 1;</code>
+     */
+    public java.lang.String getSelectedStat() {
       java.lang.Object ref = selectedStat_;
-      if (ref instanceof String) {
-        return (String) ref;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
           selectedStat_ = s;
         }
         return s;
       }
     }
-    private com.google.protobuf.ByteString getSelectedStatBytes() {
+    /**
+     * <code>required string selected_stat = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getSelectedStatBytes() {
       java.lang.Object ref = selectedStat_;
-      if (ref instanceof String) {
+      if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
         selectedStat_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
-    
+
     // required string sort_order = 2;
     public static final int SORT_ORDER_FIELD_NUMBER = 2;
     private java.lang.Object sortOrder_;
+    /**
+     * <code>required string sort_order = 2;</code>
+     */
     public boolean hasSortOrder() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
-    public String getSortOrder() {
+    /**
+     * <code>required string sort_order = 2;</code>
+     */
+    public java.lang.String getSortOrder() {
       java.lang.Object ref = sortOrder_;
-      if (ref instanceof String) {
-        return (String) ref;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
           sortOrder_ = s;
         }
         return s;
       }
     }
-    private com.google.protobuf.ByteString getSortOrderBytes() {
+    /**
+     * <code>required string sort_order = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getSortOrderBytes() {
       java.lang.Object ref = sortOrder_;
-      if (ref instanceof String) {
+      if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
         sortOrder_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
-    
+
     // required int32 limit = 3;
     public static final int LIMIT_FIELD_NUMBER = 3;
     private int limit_;
+    /**
+     * <code>required int32 limit = 3;</code>
+     */
     public boolean hasLimit() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
+    /**
+     * <code>required int32 limit = 3;</code>
+     */
     public int getLimit() {
       return limit_;
     }
-    
+
     // repeated .pl.edu.icm.coansys.models.KeyValue fixed_partitions = 4;
     public static final int FIXED_PARTITIONS_FIELD_NUMBER = 4;
     private java.util.List<pl.edu.icm.coansys.models.StatisticsProtos.KeyValue> fixedPartitions_;
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.KeyValue fixed_partitions = 4;</code>
+     */
     public java.util.List<pl.edu.icm.coansys.models.StatisticsProtos.KeyValue> getFixedPartitionsList() {
       return fixedPartitions_;
     }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.KeyValue fixed_partitions = 4;</code>
+     */
     public java.util.List<? extends pl.edu.icm.coansys.models.StatisticsProtos.KeyValueOrBuilder> 
         getFixedPartitionsOrBuilderList() {
       return fixedPartitions_;
     }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.KeyValue fixed_partitions = 4;</code>
+     */
     public int getFixedPartitionsCount() {
       return fixedPartitions_.size();
     }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.KeyValue fixed_partitions = 4;</code>
+     */
     public pl.edu.icm.coansys.models.StatisticsProtos.KeyValue getFixedPartitions(int index) {
       return fixedPartitions_.get(index);
     }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.KeyValue fixed_partitions = 4;</code>
+     */
     public pl.edu.icm.coansys.models.StatisticsProtos.KeyValueOrBuilder getFixedPartitionsOrBuilder(
         int index) {
       return fixedPartitions_.get(index);
     }
-    
+
     // repeated .pl.edu.icm.coansys.models.Statistics stats = 5;
     public static final int STATS_FIELD_NUMBER = 5;
     private java.util.List<pl.edu.icm.coansys.models.StatisticsProtos.Statistics> stats_;
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Statistics stats = 5;</code>
+     */
     public java.util.List<pl.edu.icm.coansys.models.StatisticsProtos.Statistics> getStatsList() {
       return stats_;
     }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Statistics stats = 5;</code>
+     */
     public java.util.List<? extends pl.edu.icm.coansys.models.StatisticsProtos.StatisticsOrBuilder> 
         getStatsOrBuilderList() {
       return stats_;
     }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Statistics stats = 5;</code>
+     */
     public int getStatsCount() {
       return stats_.size();
     }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Statistics stats = 5;</code>
+     */
     public pl.edu.icm.coansys.models.StatisticsProtos.Statistics getStats(int index) {
       return stats_.get(index);
     }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.Statistics stats = 5;</code>
+     */
     public pl.edu.icm.coansys.models.StatisticsProtos.StatisticsOrBuilder getStatsOrBuilder(
         int index) {
       return stats_.get(index);
     }
-    
+
     private void initFields() {
       selectedStat_ = "";
       sortOrder_ = "";
@@ -2474,7 +3448,7 @@ public final class StatisticsProtos {
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
-      
+
       if (!hasSelectedStat()) {
         memoizedIsInitialized = 0;
         return false;
@@ -2502,7 +3476,7 @@ public final class StatisticsProtos {
       memoizedIsInitialized = 1;
       return true;
     }
-    
+
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
@@ -2523,12 +3497,12 @@ public final class StatisticsProtos {
       }
       getUnknownFields().writeTo(output);
     }
-    
+
     private int memoizedSerializedSize = -1;
     public int getSerializedSize() {
       int size = memoizedSerializedSize;
       if (size != -1) return size;
-    
+
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
@@ -2554,94 +3528,83 @@ public final class StatisticsProtos {
       memoizedSerializedSize = size;
       return size;
     }
-    
+
     private static final long serialVersionUID = 0L;
     @java.lang.Override
     protected java.lang.Object writeReplace()
         throws java.io.ObjectStreamException {
       return super.writeReplace();
     }
-    
+
     public static pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
+      return PARSER.parseFrom(data);
     }
     public static pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
+      return PARSER.parseFrom(data);
     }
     public static pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
+      return PARSER.parseFrom(input);
     }
     public static pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(input, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
+      return PARSER.parseDelimitedFrom(input);
     }
     public static pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
+      return PARSER.parseFrom(input);
     }
     public static pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(input, extensionRegistry);
     }
-    
+
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder(pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
-    
+
     @java.lang.Override
     protected Builder newBuilderForType(
         com.google.protobuf.GeneratedMessage.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
+    /**
+     * Protobuf type {@code pl.edu.icm.coansys.models.SelectedStatistics}
+     */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
        implements pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatisticsOrBuilder {
@@ -2649,18 +3612,21 @@ public final class StatisticsProtos {
           getDescriptor() {
         return pl.edu.icm.coansys.models.StatisticsProtos.internal_static_pl_edu_icm_coansys_models_SelectedStatistics_descriptor;
       }
-      
+
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return pl.edu.icm.coansys.models.StatisticsProtos.internal_static_pl_edu_icm_coansys_models_SelectedStatistics_fieldAccessorTable;
+        return pl.edu.icm.coansys.models.StatisticsProtos.internal_static_pl_edu_icm_coansys_models_SelectedStatistics_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics.class, pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics.Builder.class);
       }
-      
+
       // Construct using pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
-      
-      private Builder(BuilderParent parent) {
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
@@ -2673,7 +3639,7 @@ public final class StatisticsProtos {
       private static Builder create() {
         return new Builder();
       }
-      
+
       public Builder clear() {
         super.clear();
         selectedStat_ = "";
@@ -2696,20 +3662,20 @@ public final class StatisticsProtos {
         }
         return this;
       }
-      
+
       public Builder clone() {
         return create().mergeFrom(buildPartial());
       }
-      
+
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics.getDescriptor();
+        return pl.edu.icm.coansys.models.StatisticsProtos.internal_static_pl_edu_icm_coansys_models_SelectedStatistics_descriptor;
       }
-      
+
       public pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics getDefaultInstanceForType() {
         return pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics.getDefaultInstance();
       }
-      
+
       public pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics build() {
         pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics result = buildPartial();
         if (!result.isInitialized()) {
@@ -2717,17 +3683,7 @@ public final class StatisticsProtos {
         }
         return result;
       }
-      
-      private pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics buildParsed()
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(
-            result).asInvalidProtocolBufferException();
-        }
-        return result;
-      }
-      
+
       public pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics buildPartial() {
         pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics result = new pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics(this);
         int from_bitField0_ = bitField0_;
@@ -2766,7 +3722,7 @@ public final class StatisticsProtos {
         onBuilt();
         return result;
       }
-      
+
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics) {
           return mergeFrom((pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics)other);
@@ -2775,14 +3731,18 @@ public final class StatisticsProtos {
           return this;
         }
       }
-      
+
       public Builder mergeFrom(pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics other) {
         if (other == pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics.getDefaultInstance()) return this;
         if (other.hasSelectedStat()) {
-          setSelectedStat(other.getSelectedStat());
+          bitField0_ |= 0x00000001;
+          selectedStat_ = other.selectedStat_;
+          onChanged();
         }
         if (other.hasSortOrder()) {
-          setSortOrder(other.getSortOrder());
+          bitField0_ |= 0x00000002;
+          sortOrder_ = other.sortOrder_;
+          onChanged();
         }
         if (other.hasLimit()) {
           setLimit(other.getLimit());
@@ -2842,7 +3802,7 @@ public final class StatisticsProtos {
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
-      
+
       public final boolean isInitialized() {
         if (!hasSelectedStat()) {
           
@@ -2870,79 +3830,69 @@ public final class StatisticsProtos {
         }
         return true;
       }
-      
+
       public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder(
-            this.getUnknownFields());
-        while (true) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              this.setUnknownFields(unknownFields.build());
-              onChanged();
-              return this;
-            default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                this.setUnknownFields(unknownFields.build());
-                onChanged();
-                return this;
-              }
-              break;
-            }
-            case 10: {
-              bitField0_ |= 0x00000001;
-              selectedStat_ = input.readBytes();
-              break;
-            }
-            case 18: {
-              bitField0_ |= 0x00000002;
-              sortOrder_ = input.readBytes();
-              break;
-            }
-            case 24: {
-              bitField0_ |= 0x00000004;
-              limit_ = input.readInt32();
-              break;
-            }
-            case 34: {
-              pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.Builder subBuilder = pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.newBuilder();
-              input.readMessage(subBuilder, extensionRegistry);
-              addFixedPartitions(subBuilder.buildPartial());
-              break;
-            }
-            case 42: {
-              pl.edu.icm.coansys.models.StatisticsProtos.Statistics.Builder subBuilder = pl.edu.icm.coansys.models.StatisticsProtos.Statistics.newBuilder();
-              input.readMessage(subBuilder, extensionRegistry);
-              addStats(subBuilder.buildPartial());
-              break;
-            }
+        pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
           }
         }
+        return this;
       }
-      
       private int bitField0_;
-      
+
       // required string selected_stat = 1;
       private java.lang.Object selectedStat_ = "";
+      /**
+       * <code>required string selected_stat = 1;</code>
+       */
       public boolean hasSelectedStat() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
-      public String getSelectedStat() {
+      /**
+       * <code>required string selected_stat = 1;</code>
+       */
+      public java.lang.String getSelectedStat() {
         java.lang.Object ref = selectedStat_;
-        if (!(ref instanceof String)) {
-          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
           selectedStat_ = s;
           return s;
         } else {
-          return (String) ref;
+          return (java.lang.String) ref;
         }
       }
-      public Builder setSelectedStat(String value) {
+      /**
+       * <code>required string selected_stat = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getSelectedStatBytes() {
+        java.lang.Object ref = selectedStat_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          selectedStat_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string selected_stat = 1;</code>
+       */
+      public Builder setSelectedStat(
+          java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -2951,34 +3901,72 @@ public final class StatisticsProtos {
         onChanged();
         return this;
       }
+      /**
+       * <code>required string selected_stat = 1;</code>
+       */
       public Builder clearSelectedStat() {
         bitField0_ = (bitField0_ & ~0x00000001);
         selectedStat_ = getDefaultInstance().getSelectedStat();
         onChanged();
         return this;
       }
-      void setSelectedStat(com.google.protobuf.ByteString value) {
-        bitField0_ |= 0x00000001;
+      /**
+       * <code>required string selected_stat = 1;</code>
+       */
+      public Builder setSelectedStatBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
         selectedStat_ = value;
         onChanged();
+        return this;
       }
-      
+
       // required string sort_order = 2;
       private java.lang.Object sortOrder_ = "";
+      /**
+       * <code>required string sort_order = 2;</code>
+       */
       public boolean hasSortOrder() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
-      public String getSortOrder() {
+      /**
+       * <code>required string sort_order = 2;</code>
+       */
+      public java.lang.String getSortOrder() {
         java.lang.Object ref = sortOrder_;
-        if (!(ref instanceof String)) {
-          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
           sortOrder_ = s;
           return s;
         } else {
-          return (String) ref;
+          return (java.lang.String) ref;
         }
       }
-      public Builder setSortOrder(String value) {
+      /**
+       * <code>required string sort_order = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getSortOrderBytes() {
+        java.lang.Object ref = sortOrder_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          sortOrder_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string sort_order = 2;</code>
+       */
+      public Builder setSortOrder(
+          java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -2987,39 +3975,62 @@ public final class StatisticsProtos {
         onChanged();
         return this;
       }
+      /**
+       * <code>required string sort_order = 2;</code>
+       */
       public Builder clearSortOrder() {
         bitField0_ = (bitField0_ & ~0x00000002);
         sortOrder_ = getDefaultInstance().getSortOrder();
         onChanged();
         return this;
       }
-      void setSortOrder(com.google.protobuf.ByteString value) {
-        bitField0_ |= 0x00000002;
+      /**
+       * <code>required string sort_order = 2;</code>
+       */
+      public Builder setSortOrderBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
         sortOrder_ = value;
         onChanged();
+        return this;
       }
-      
+
       // required int32 limit = 3;
       private int limit_ ;
+      /**
+       * <code>required int32 limit = 3;</code>
+       */
       public boolean hasLimit() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
+      /**
+       * <code>required int32 limit = 3;</code>
+       */
       public int getLimit() {
         return limit_;
       }
+      /**
+       * <code>required int32 limit = 3;</code>
+       */
       public Builder setLimit(int value) {
         bitField0_ |= 0x00000004;
         limit_ = value;
         onChanged();
         return this;
       }
+      /**
+       * <code>required int32 limit = 3;</code>
+       */
       public Builder clearLimit() {
         bitField0_ = (bitField0_ & ~0x00000004);
         limit_ = 0;
         onChanged();
         return this;
       }
-      
+
       // repeated .pl.edu.icm.coansys.models.KeyValue fixed_partitions = 4;
       private java.util.List<pl.edu.icm.coansys.models.StatisticsProtos.KeyValue> fixedPartitions_ =
         java.util.Collections.emptyList();
@@ -3029,10 +4040,13 @@ public final class StatisticsProtos {
           bitField0_ |= 0x00000008;
          }
       }
-      
+
       private com.google.protobuf.RepeatedFieldBuilder<
           pl.edu.icm.coansys.models.StatisticsProtos.KeyValue, pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.Builder, pl.edu.icm.coansys.models.StatisticsProtos.KeyValueOrBuilder> fixedPartitionsBuilder_;
-      
+
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue fixed_partitions = 4;</code>
+       */
       public java.util.List<pl.edu.icm.coansys.models.StatisticsProtos.KeyValue> getFixedPartitionsList() {
         if (fixedPartitionsBuilder_ == null) {
           return java.util.Collections.unmodifiableList(fixedPartitions_);
@@ -3040,6 +4054,9 @@ public final class StatisticsProtos {
           return fixedPartitionsBuilder_.getMessageList();
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue fixed_partitions = 4;</code>
+       */
       public int getFixedPartitionsCount() {
         if (fixedPartitionsBuilder_ == null) {
           return fixedPartitions_.size();
@@ -3047,6 +4064,9 @@ public final class StatisticsProtos {
           return fixedPartitionsBuilder_.getCount();
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue fixed_partitions = 4;</code>
+       */
       public pl.edu.icm.coansys.models.StatisticsProtos.KeyValue getFixedPartitions(int index) {
         if (fixedPartitionsBuilder_ == null) {
           return fixedPartitions_.get(index);
@@ -3054,6 +4074,9 @@ public final class StatisticsProtos {
           return fixedPartitionsBuilder_.getMessage(index);
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue fixed_partitions = 4;</code>
+       */
       public Builder setFixedPartitions(
           int index, pl.edu.icm.coansys.models.StatisticsProtos.KeyValue value) {
         if (fixedPartitionsBuilder_ == null) {
@@ -3068,6 +4091,9 @@ public final class StatisticsProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue fixed_partitions = 4;</code>
+       */
       public Builder setFixedPartitions(
           int index, pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.Builder builderForValue) {
         if (fixedPartitionsBuilder_ == null) {
@@ -3079,6 +4105,9 @@ public final class StatisticsProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue fixed_partitions = 4;</code>
+       */
       public Builder addFixedPartitions(pl.edu.icm.coansys.models.StatisticsProtos.KeyValue value) {
         if (fixedPartitionsBuilder_ == null) {
           if (value == null) {
@@ -3092,6 +4121,9 @@ public final class StatisticsProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue fixed_partitions = 4;</code>
+       */
       public Builder addFixedPartitions(
           int index, pl.edu.icm.coansys.models.StatisticsProtos.KeyValue value) {
         if (fixedPartitionsBuilder_ == null) {
@@ -3106,6 +4138,9 @@ public final class StatisticsProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue fixed_partitions = 4;</code>
+       */
       public Builder addFixedPartitions(
           pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.Builder builderForValue) {
         if (fixedPartitionsBuilder_ == null) {
@@ -3117,6 +4152,9 @@ public final class StatisticsProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue fixed_partitions = 4;</code>
+       */
       public Builder addFixedPartitions(
           int index, pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.Builder builderForValue) {
         if (fixedPartitionsBuilder_ == null) {
@@ -3128,6 +4166,9 @@ public final class StatisticsProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue fixed_partitions = 4;</code>
+       */
       public Builder addAllFixedPartitions(
           java.lang.Iterable<? extends pl.edu.icm.coansys.models.StatisticsProtos.KeyValue> values) {
         if (fixedPartitionsBuilder_ == null) {
@@ -3139,6 +4180,9 @@ public final class StatisticsProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue fixed_partitions = 4;</code>
+       */
       public Builder clearFixedPartitions() {
         if (fixedPartitionsBuilder_ == null) {
           fixedPartitions_ = java.util.Collections.emptyList();
@@ -3149,6 +4193,9 @@ public final class StatisticsProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue fixed_partitions = 4;</code>
+       */
       public Builder removeFixedPartitions(int index) {
         if (fixedPartitionsBuilder_ == null) {
           ensureFixedPartitionsIsMutable();
@@ -3159,10 +4206,16 @@ public final class StatisticsProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue fixed_partitions = 4;</code>
+       */
       public pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.Builder getFixedPartitionsBuilder(
           int index) {
         return getFixedPartitionsFieldBuilder().getBuilder(index);
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue fixed_partitions = 4;</code>
+       */
       public pl.edu.icm.coansys.models.StatisticsProtos.KeyValueOrBuilder getFixedPartitionsOrBuilder(
           int index) {
         if (fixedPartitionsBuilder_ == null) {
@@ -3170,6 +4223,9 @@ public final class StatisticsProtos {
           return fixedPartitionsBuilder_.getMessageOrBuilder(index);
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue fixed_partitions = 4;</code>
+       */
       public java.util.List<? extends pl.edu.icm.coansys.models.StatisticsProtos.KeyValueOrBuilder> 
            getFixedPartitionsOrBuilderList() {
         if (fixedPartitionsBuilder_ != null) {
@@ -3178,15 +4234,24 @@ public final class StatisticsProtos {
           return java.util.Collections.unmodifiableList(fixedPartitions_);
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue fixed_partitions = 4;</code>
+       */
       public pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.Builder addFixedPartitionsBuilder() {
         return getFixedPartitionsFieldBuilder().addBuilder(
             pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.getDefaultInstance());
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue fixed_partitions = 4;</code>
+       */
       public pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.Builder addFixedPartitionsBuilder(
           int index) {
         return getFixedPartitionsFieldBuilder().addBuilder(
             index, pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.getDefaultInstance());
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.KeyValue fixed_partitions = 4;</code>
+       */
       public java.util.List<pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.Builder> 
            getFixedPartitionsBuilderList() {
         return getFixedPartitionsFieldBuilder().getBuilderList();
@@ -3205,7 +4270,7 @@ public final class StatisticsProtos {
         }
         return fixedPartitionsBuilder_;
       }
-      
+
       // repeated .pl.edu.icm.coansys.models.Statistics stats = 5;
       private java.util.List<pl.edu.icm.coansys.models.StatisticsProtos.Statistics> stats_ =
         java.util.Collections.emptyList();
@@ -3215,10 +4280,13 @@ public final class StatisticsProtos {
           bitField0_ |= 0x00000010;
          }
       }
-      
+
       private com.google.protobuf.RepeatedFieldBuilder<
           pl.edu.icm.coansys.models.StatisticsProtos.Statistics, pl.edu.icm.coansys.models.StatisticsProtos.Statistics.Builder, pl.edu.icm.coansys.models.StatisticsProtos.StatisticsOrBuilder> statsBuilder_;
-      
+
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Statistics stats = 5;</code>
+       */
       public java.util.List<pl.edu.icm.coansys.models.StatisticsProtos.Statistics> getStatsList() {
         if (statsBuilder_ == null) {
           return java.util.Collections.unmodifiableList(stats_);
@@ -3226,6 +4294,9 @@ public final class StatisticsProtos {
           return statsBuilder_.getMessageList();
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Statistics stats = 5;</code>
+       */
       public int getStatsCount() {
         if (statsBuilder_ == null) {
           return stats_.size();
@@ -3233,6 +4304,9 @@ public final class StatisticsProtos {
           return statsBuilder_.getCount();
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Statistics stats = 5;</code>
+       */
       public pl.edu.icm.coansys.models.StatisticsProtos.Statistics getStats(int index) {
         if (statsBuilder_ == null) {
           return stats_.get(index);
@@ -3240,6 +4314,9 @@ public final class StatisticsProtos {
           return statsBuilder_.getMessage(index);
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Statistics stats = 5;</code>
+       */
       public Builder setStats(
           int index, pl.edu.icm.coansys.models.StatisticsProtos.Statistics value) {
         if (statsBuilder_ == null) {
@@ -3254,6 +4331,9 @@ public final class StatisticsProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Statistics stats = 5;</code>
+       */
       public Builder setStats(
           int index, pl.edu.icm.coansys.models.StatisticsProtos.Statistics.Builder builderForValue) {
         if (statsBuilder_ == null) {
@@ -3265,6 +4345,9 @@ public final class StatisticsProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Statistics stats = 5;</code>
+       */
       public Builder addStats(pl.edu.icm.coansys.models.StatisticsProtos.Statistics value) {
         if (statsBuilder_ == null) {
           if (value == null) {
@@ -3278,6 +4361,9 @@ public final class StatisticsProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Statistics stats = 5;</code>
+       */
       public Builder addStats(
           int index, pl.edu.icm.coansys.models.StatisticsProtos.Statistics value) {
         if (statsBuilder_ == null) {
@@ -3292,6 +4378,9 @@ public final class StatisticsProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Statistics stats = 5;</code>
+       */
       public Builder addStats(
           pl.edu.icm.coansys.models.StatisticsProtos.Statistics.Builder builderForValue) {
         if (statsBuilder_ == null) {
@@ -3303,6 +4392,9 @@ public final class StatisticsProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Statistics stats = 5;</code>
+       */
       public Builder addStats(
           int index, pl.edu.icm.coansys.models.StatisticsProtos.Statistics.Builder builderForValue) {
         if (statsBuilder_ == null) {
@@ -3314,6 +4406,9 @@ public final class StatisticsProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Statistics stats = 5;</code>
+       */
       public Builder addAllStats(
           java.lang.Iterable<? extends pl.edu.icm.coansys.models.StatisticsProtos.Statistics> values) {
         if (statsBuilder_ == null) {
@@ -3325,6 +4420,9 @@ public final class StatisticsProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Statistics stats = 5;</code>
+       */
       public Builder clearStats() {
         if (statsBuilder_ == null) {
           stats_ = java.util.Collections.emptyList();
@@ -3335,6 +4433,9 @@ public final class StatisticsProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Statistics stats = 5;</code>
+       */
       public Builder removeStats(int index) {
         if (statsBuilder_ == null) {
           ensureStatsIsMutable();
@@ -3345,10 +4446,16 @@ public final class StatisticsProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Statistics stats = 5;</code>
+       */
       public pl.edu.icm.coansys.models.StatisticsProtos.Statistics.Builder getStatsBuilder(
           int index) {
         return getStatsFieldBuilder().getBuilder(index);
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Statistics stats = 5;</code>
+       */
       public pl.edu.icm.coansys.models.StatisticsProtos.StatisticsOrBuilder getStatsOrBuilder(
           int index) {
         if (statsBuilder_ == null) {
@@ -3356,6 +4463,9 @@ public final class StatisticsProtos {
           return statsBuilder_.getMessageOrBuilder(index);
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Statistics stats = 5;</code>
+       */
       public java.util.List<? extends pl.edu.icm.coansys.models.StatisticsProtos.StatisticsOrBuilder> 
            getStatsOrBuilderList() {
         if (statsBuilder_ != null) {
@@ -3364,15 +4474,24 @@ public final class StatisticsProtos {
           return java.util.Collections.unmodifiableList(stats_);
         }
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Statistics stats = 5;</code>
+       */
       public pl.edu.icm.coansys.models.StatisticsProtos.Statistics.Builder addStatsBuilder() {
         return getStatsFieldBuilder().addBuilder(
             pl.edu.icm.coansys.models.StatisticsProtos.Statistics.getDefaultInstance());
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Statistics stats = 5;</code>
+       */
       public pl.edu.icm.coansys.models.StatisticsProtos.Statistics.Builder addStatsBuilder(
           int index) {
         return getStatsFieldBuilder().addBuilder(
             index, pl.edu.icm.coansys.models.StatisticsProtos.Statistics.getDefaultInstance());
       }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.Statistics stats = 5;</code>
+       */
       public java.util.List<pl.edu.icm.coansys.models.StatisticsProtos.Statistics.Builder> 
            getStatsBuilderList() {
         return getStatsFieldBuilder().getBuilderList();
@@ -3391,18 +4510,18 @@ public final class StatisticsProtos {
         }
         return statsBuilder_;
       }
-      
+
       // @@protoc_insertion_point(builder_scope:pl.edu.icm.coansys.models.SelectedStatistics)
     }
-    
+
     static {
       defaultInstance = new SelectedStatistics(true);
       defaultInstance.initFields();
     }
-    
+
     // @@protoc_insertion_point(class_scope:pl.edu.icm.coansys.models.SelectedStatistics)
   }
-  
+
   private static com.google.protobuf.Descriptors.Descriptor
     internal_static_pl_edu_icm_coansys_models_KeyValue_descriptor;
   private static
@@ -3423,7 +4542,7 @@ public final class StatisticsProtos {
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_pl_edu_icm_coansys_models_SelectedStatistics_fieldAccessorTable;
-  
+
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
     return descriptor;
@@ -3459,33 +4578,25 @@ public final class StatisticsProtos {
           internal_static_pl_edu_icm_coansys_models_KeyValue_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_pl_edu_icm_coansys_models_KeyValue_descriptor,
-              new java.lang.String[] { "Key", "Value", "Comment", "Language", },
-              pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.class,
-              pl.edu.icm.coansys.models.StatisticsProtos.KeyValue.Builder.class);
+              new java.lang.String[] { "Key", "Value", "Comment", "Language", });
           internal_static_pl_edu_icm_coansys_models_InputEntry_descriptor =
             getDescriptor().getMessageTypes().get(1);
           internal_static_pl_edu_icm_coansys_models_InputEntry_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_pl_edu_icm_coansys_models_InputEntry_descriptor,
-              new java.lang.String[] { "Label", "Field", },
-              pl.edu.icm.coansys.models.StatisticsProtos.InputEntry.class,
-              pl.edu.icm.coansys.models.StatisticsProtos.InputEntry.Builder.class);
+              new java.lang.String[] { "Label", "Field", });
           internal_static_pl_edu_icm_coansys_models_Statistics_descriptor =
             getDescriptor().getMessageTypes().get(2);
           internal_static_pl_edu_icm_coansys_models_Statistics_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_pl_edu_icm_coansys_models_Statistics_descriptor,
-              new java.lang.String[] { "Timestamp", "Partitions", "Statistics", },
-              pl.edu.icm.coansys.models.StatisticsProtos.Statistics.class,
-              pl.edu.icm.coansys.models.StatisticsProtos.Statistics.Builder.class);
+              new java.lang.String[] { "Timestamp", "Partitions", "Statistics", });
           internal_static_pl_edu_icm_coansys_models_SelectedStatistics_descriptor =
             getDescriptor().getMessageTypes().get(3);
           internal_static_pl_edu_icm_coansys_models_SelectedStatistics_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_pl_edu_icm_coansys_models_SelectedStatistics_descriptor,
-              new java.lang.String[] { "SelectedStat", "SortOrder", "Limit", "FixedPartitions", "Stats", },
-              pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics.class,
-              pl.edu.icm.coansys.models.StatisticsProtos.SelectedStatistics.Builder.class);
+              new java.lang.String[] { "SelectedStat", "SortOrder", "Limit", "FixedPartitions", "Stats", });
           return null;
         }
       };
@@ -3494,6 +4605,6 @@ public final class StatisticsProtos {
         new com.google.protobuf.Descriptors.FileDescriptor[] {
         }, assigner);
   }
-  
+
   // @@protoc_insertion_point(outer_class_scope)
 }

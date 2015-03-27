@@ -6,11 +6,11 @@
     <parent>
         <artifactId>coansys</artifactId>
         <groupId>pl.edu.icm.coansys</groupId>
-        <version>1.9-SNAPSHOT</version>
+        <version>1.8-CDH-5.3.0-SNAPSHOT</version>
     </parent>
 
     <properties>
-        <oozie-maven-plugin.version>1.2</oozie-maven-plugin.version>
+        <!-- oozie-maven-plugin.version>1.2</oozie-maven-plugin.version -->
         <!-- <oozie-runner.version>1.1</oozie-runner.version> -->
     </properties>
 

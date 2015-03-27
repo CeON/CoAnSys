@@ -27,7 +27,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.edu.icm.ceon.commons.CeonGeneralException;
 
-import pl.edu.icm.cermine.DocumentTextExtractor;
 import pl.edu.icm.cermine.PdfNLMContentExtractor;
 import pl.edu.icm.cermine.PdfRawTextExtractor;
 import pl.edu.icm.cermine.exception.AnalysisException;
@@ -166,7 +165,7 @@ public class RakeExtractor {
 
         if (result == null || result.isEmpty()) {
             pdfStream = new ByteArrayInputStream(pdfContent);
-            DocumentTextExtractor<String> extr = new PdfRawTextExtractor();
+            PdfRawTextExtractor extr = new PdfRawTextExtractor();
             result = extr.extractText(pdfStream);
         }
 
