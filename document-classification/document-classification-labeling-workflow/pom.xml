@@ -4,7 +4,7 @@
     <parent>
 		<groupId>pl.edu.icm.coansys</groupId>
         <artifactId>document-classification</artifactId>
-        <version>1.9-SNAPSHOT</version>
+        <version>1.9-CDH-4.3.0-SNAPSHOT</version>
     </parent>
     
     <artifactId>document-classification-labeling-workflow</artifactId>
