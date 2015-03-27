@@ -2,7 +2,7 @@
     <parent>
         <artifactId>citations</artifactId>
         <groupId>pl.edu.icm.coansys</groupId>
-        <version>1.8-CDH-5.3.0-SNAPSHOT</version>
+        <version>1.9-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>citations-core-workflow</artifactId>
