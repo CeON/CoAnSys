@@ -4,13 +4,26 @@
     <parent>
         <groupId>pl.edu.icm.coansys</groupId>
         <artifactId>keywords-extraction</artifactId>
-        <version>1.8-SNAPSHOT</version>
+        <version>1.9-SNAPSHOT</version>
     </parent>
     
     <artifactId>keywords-extraction-impl</artifactId>
     <packaging>jar</packaging>
     <name>Keywords Extraction Implementation</name>
     <url>http://maven.apache.org</url>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
     <dependencies>
         <dependency>
             <groupId>net.sf.jopt-simple</groupId>
@@ -24,11 +37,6 @@
             <artifactId>models</artifactId>
         </dependency>
         <dependency>
-            <groupId>pl.edu.icm.cermine</groupId>
-            <artifactId>cermine-impl</artifactId>
-            <version>1.1</version>
-        </dependency>
-        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>commons</artifactId>
             <version>${project.version}</version>
@@ -37,6 +45,11 @@
             <groupId>pl.edu.icm.ceon</groupId>
             <artifactId>ceon-commons</artifactId>
             <version>0.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>pl.edu.icm.cermine</groupId>
+            <artifactId>cermine-impl</artifactId>
+            <version>1.4</version>
         </dependency>
     </dependencies>
 </project>
