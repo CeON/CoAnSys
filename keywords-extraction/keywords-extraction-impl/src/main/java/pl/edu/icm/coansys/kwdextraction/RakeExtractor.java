@@ -35,7 +35,7 @@ import pl.edu.icm.coansys.commons.stopwords.Stopwords.Lang;
 import pl.edu.icm.coansys.models.DocumentProtos;
 import pl.edu.icm.coansys.models.DocumentProtos.TextWithLanguage;
 import pl.edu.icm.coansys.models.constants.ProtoConstants;
-import pl.edu.icm.yadda.tools.textcat.LanguageIdentifierBean;
+import pl.edu.icm.ceon.tools.textcat.LanguageIdentifierBean;
 
 /**
  * Implementation of Rapid Automatic Keyword Extraction algorithm
