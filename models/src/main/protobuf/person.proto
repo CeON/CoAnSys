@@ -1,0 +1,28 @@
+
+import "bw2.proto";
+
+option java_package = "pl.edu.icm.coansys.models";
+option java_outer_classname = "PersonProtos";
+
+
+message PersonMetadata {
+  required string key = 1;
+// Full name - use it for display if priovided 
+  repeated string name=2;
+  repeated string firstname=3;
+  repeated string lastname=4;
+  repeated string email=5;
+// orcid , ...
+  repeated KeyValue otherId=6;
+}
+
+
+
+
+// used only in sequece files, to store both metadata and media as a single value;
+// rowId -- collection + (if PDF attached) "_PDF" + "_" + documentMetadata.key;
+message PersonWrapper{
+	required string rowId = 1;
+	optional PersonMetadata personMetadata = 2;
+	optional MediaContainer mediaContainer = 3;
+}
