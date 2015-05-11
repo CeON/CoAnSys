@@ -10,179 +10,549 @@ public final class PersonProtos {
   }
   public interface PersonMetadataOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
-    
+
     // required string key = 1;
+    /**
+     * <code>required string key = 1;</code>
+     */
     boolean hasKey();
-    String getKey();
-    
+    /**
+     * <code>required string key = 1;</code>
+     */
+    java.lang.String getKey();
+    /**
+     * <code>required string key = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getKeyBytes();
+
     // repeated string name = 2;
-    java.util.List<String> getNameList();
+    /**
+     * <code>repeated string name = 2;</code>
+     *
+     * <pre>
+     * Full name - use it for display if priovided 
+     * </pre>
+     */
+    java.util.List<java.lang.String>
+    getNameList();
+    /**
+     * <code>repeated string name = 2;</code>
+     *
+     * <pre>
+     * Full name - use it for display if priovided 
+     * </pre>
+     */
     int getNameCount();
-    String getName(int index);
-    
+    /**
+     * <code>repeated string name = 2;</code>
+     *
+     * <pre>
+     * Full name - use it for display if priovided 
+     * </pre>
+     */
+    java.lang.String getName(int index);
+    /**
+     * <code>repeated string name = 2;</code>
+     *
+     * <pre>
+     * Full name - use it for display if priovided 
+     * </pre>
+     */
+    com.google.protobuf.ByteString
+        getNameBytes(int index);
+
     // repeated string firstname = 3;
-    java.util.List<String> getFirstnameList();
+    /**
+     * <code>repeated string firstname = 3;</code>
+     */
+    java.util.List<java.lang.String>
+    getFirstnameList();
+    /**
+     * <code>repeated string firstname = 3;</code>
+     */
     int getFirstnameCount();
-    String getFirstname(int index);
-    
+    /**
+     * <code>repeated string firstname = 3;</code>
+     */
+    java.lang.String getFirstname(int index);
+    /**
+     * <code>repeated string firstname = 3;</code>
+     */
+    com.google.protobuf.ByteString
+        getFirstnameBytes(int index);
+
     // repeated string lastname = 4;
-    java.util.List<String> getLastnameList();
+    /**
+     * <code>repeated string lastname = 4;</code>
+     */
+    java.util.List<java.lang.String>
+    getLastnameList();
+    /**
+     * <code>repeated string lastname = 4;</code>
+     */
     int getLastnameCount();
-    String getLastname(int index);
-    
+    /**
+     * <code>repeated string lastname = 4;</code>
+     */
+    java.lang.String getLastname(int index);
+    /**
+     * <code>repeated string lastname = 4;</code>
+     */
+    com.google.protobuf.ByteString
+        getLastnameBytes(int index);
+
     // repeated string email = 5;
-    java.util.List<String> getEmailList();
+    /**
+     * <code>repeated string email = 5;</code>
+     */
+    java.util.List<java.lang.String>
+    getEmailList();
+    /**
+     * <code>repeated string email = 5;</code>
+     */
     int getEmailCount();
-    String getEmail(int index);
-    
+    /**
+     * <code>repeated string email = 5;</code>
+     */
+    java.lang.String getEmail(int index);
+    /**
+     * <code>repeated string email = 5;</code>
+     */
+    com.google.protobuf.ByteString
+        getEmailBytes(int index);
+
     // repeated .KeyValue otherId = 6;
+    /**
+     * <code>repeated .KeyValue otherId = 6;</code>
+     *
+     * <pre>
+     * orcid , ...
+     * </pre>
+     */
     java.util.List<pl.edu.icm.coansys.models.DocumentProtos.KeyValue> 
         getOtherIdList();
+    /**
+     * <code>repeated .KeyValue otherId = 6;</code>
+     *
+     * <pre>
+     * orcid , ...
+     * </pre>
+     */
     pl.edu.icm.coansys.models.DocumentProtos.KeyValue getOtherId(int index);
+    /**
+     * <code>repeated .KeyValue otherId = 6;</code>
+     *
+     * <pre>
+     * orcid , ...
+     * </pre>
+     */
     int getOtherIdCount();
+    /**
+     * <code>repeated .KeyValue otherId = 6;</code>
+     *
+     * <pre>
+     * orcid , ...
+     * </pre>
+     */
     java.util.List<? extends pl.edu.icm.coansys.models.DocumentProtos.KeyValueOrBuilder> 
         getOtherIdOrBuilderList();
+    /**
+     * <code>repeated .KeyValue otherId = 6;</code>
+     *
+     * <pre>
+     * orcid , ...
+     * </pre>
+     */
     pl.edu.icm.coansys.models.DocumentProtos.KeyValueOrBuilder getOtherIdOrBuilder(
         int index);
   }
+  /**
+   * Protobuf type {@code PersonMetadata}
+   */
   public static final class PersonMetadata extends
       com.google.protobuf.GeneratedMessage
       implements PersonMetadataOrBuilder {
     // Use PersonMetadata.newBuilder() to construct.
-    private PersonMetadata(Builder builder) {
+    private PersonMetadata(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
-    private PersonMetadata(boolean noInit) {}
-    
+    private PersonMetadata(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
     private static final PersonMetadata defaultInstance;
     public static PersonMetadata getDefaultInstance() {
       return defaultInstance;
     }
-    
+
     public PersonMetadata getDefaultInstanceForType() {
       return defaultInstance;
     }
-    
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private PersonMetadata(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              bitField0_ |= 0x00000001;
+              key_ = input.readBytes();
+              break;
+            }
+            case 18: {
+              if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+                name_ = new com.google.protobuf.LazyStringArrayList();
+                mutable_bitField0_ |= 0x00000002;
+              }
+              name_.add(input.readBytes());
+              break;
+            }
+            case 26: {
+              if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+                firstname_ = new com.google.protobuf.LazyStringArrayList();
+                mutable_bitField0_ |= 0x00000004;
+              }
+              firstname_.add(input.readBytes());
+              break;
+            }
+            case 34: {
+              if (!((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+                lastname_ = new com.google.protobuf.LazyStringArrayList();
+                mutable_bitField0_ |= 0x00000008;
+              }
+              lastname_.add(input.readBytes());
+              break;
+            }
+            case 42: {
+              if (!((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
+                email_ = new com.google.protobuf.LazyStringArrayList();
+                mutable_bitField0_ |= 0x00000010;
+              }
+              email_.add(input.readBytes());
+              break;
+            }
+            case 50: {
+              if (!((mutable_bitField0_ & 0x00000020) == 0x00000020)) {
+                otherId_ = new java.util.ArrayList<pl.edu.icm.coansys.models.DocumentProtos.KeyValue>();
+                mutable_bitField0_ |= 0x00000020;
+              }
+              otherId_.add(input.readMessage(pl.edu.icm.coansys.models.DocumentProtos.KeyValue.PARSER, extensionRegistry));
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+          name_ = new com.google.protobuf.UnmodifiableLazyStringList(name_);
+        }
+        if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+          firstname_ = new com.google.protobuf.UnmodifiableLazyStringList(firstname_);
+        }
+        if (((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+          lastname_ = new com.google.protobuf.UnmodifiableLazyStringList(lastname_);
+        }
+        if (((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
+          email_ = new com.google.protobuf.UnmodifiableLazyStringList(email_);
+        }
+        if (((mutable_bitField0_ & 0x00000020) == 0x00000020)) {
+          otherId_ = java.util.Collections.unmodifiableList(otherId_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
       return pl.edu.icm.coansys.models.PersonProtos.internal_static_PersonMetadata_descriptor;
     }
-    
+
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return pl.edu.icm.coansys.models.PersonProtos.internal_static_PersonMetadata_fieldAccessorTable;
+      return pl.edu.icm.coansys.models.PersonProtos.internal_static_PersonMetadata_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              pl.edu.icm.coansys.models.PersonProtos.PersonMetadata.class, pl.edu.icm.coansys.models.PersonProtos.PersonMetadata.Builder.class);
     }
-    
+
+    public static com.google.protobuf.Parser<PersonMetadata> PARSER =
+        new com.google.protobuf.AbstractParser<PersonMetadata>() {
+      public PersonMetadata parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new PersonMetadata(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<PersonMetadata> getParserForType() {
+      return PARSER;
+    }
+
     private int bitField0_;
     // required string key = 1;
     public static final int KEY_FIELD_NUMBER = 1;
     private java.lang.Object key_;
+    /**
+     * <code>required string key = 1;</code>
+     */
     public boolean hasKey() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
-    public String getKey() {
+    /**
+     * <code>required string key = 1;</code>
+     */
+    public java.lang.String getKey() {
       java.lang.Object ref = key_;
-      if (ref instanceof String) {
-        return (String) ref;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
           key_ = s;
         }
         return s;
       }
     }
-    private com.google.protobuf.ByteString getKeyBytes() {
+    /**
+     * <code>required string key = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getKeyBytes() {
       java.lang.Object ref = key_;
-      if (ref instanceof String) {
+      if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
         key_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
-    
+
     // repeated string name = 2;
     public static final int NAME_FIELD_NUMBER = 2;
     private com.google.protobuf.LazyStringList name_;
-    public java.util.List<String>
+    /**
+     * <code>repeated string name = 2;</code>
+     *
+     * <pre>
+     * Full name - use it for display if priovided 
+     * </pre>
+     */
+    public java.util.List<java.lang.String>
         getNameList() {
       return name_;
     }
+    /**
+     * <code>repeated string name = 2;</code>
+     *
+     * <pre>
+     * Full name - use it for display if priovided 
+     * </pre>
+     */
     public int getNameCount() {
       return name_.size();
     }
-    public String getName(int index) {
+    /**
+     * <code>repeated string name = 2;</code>
+     *
+     * <pre>
+     * Full name - use it for display if priovided 
+     * </pre>
+     */
+    public java.lang.String getName(int index) {
       return name_.get(index);
     }
-    
+    /**
+     * <code>repeated string name = 2;</code>
+     *
+     * <pre>
+     * Full name - use it for display if priovided 
+     * </pre>
+     */
+    public com.google.protobuf.ByteString
+        getNameBytes(int index) {
+      return name_.getByteString(index);
+    }
+
     // repeated string firstname = 3;
     public static final int FIRSTNAME_FIELD_NUMBER = 3;
     private com.google.protobuf.LazyStringList firstname_;
-    public java.util.List<String>
+    /**
+     * <code>repeated string firstname = 3;</code>
+     */
+    public java.util.List<java.lang.String>
         getFirstnameList() {
       return firstname_;
     }
+    /**
+     * <code>repeated string firstname = 3;</code>
+     */
     public int getFirstnameCount() {
       return firstname_.size();
     }
-    public String getFirstname(int index) {
+    /**
+     * <code>repeated string firstname = 3;</code>
+     */
+    public java.lang.String getFirstname(int index) {
       return firstname_.get(index);
     }
-    
+    /**
+     * <code>repeated string firstname = 3;</code>
+     */
+    public com.google.protobuf.ByteString
+        getFirstnameBytes(int index) {
+      return firstname_.getByteString(index);
+    }
+
     // repeated string lastname = 4;
     public static final int LASTNAME_FIELD_NUMBER = 4;
     private com.google.protobuf.LazyStringList lastname_;
-    public java.util.List<String>
+    /**
+     * <code>repeated string lastname = 4;</code>
+     */
+    public java.util.List<java.lang.String>
         getLastnameList() {
       return lastname_;
     }
+    /**
+     * <code>repeated string lastname = 4;</code>
+     */
     public int getLastnameCount() {
       return lastname_.size();
     }
-    public String getLastname(int index) {
+    /**
+     * <code>repeated string lastname = 4;</code>
+     */
+    public java.lang.String getLastname(int index) {
       return lastname_.get(index);
     }
-    
+    /**
+     * <code>repeated string lastname = 4;</code>
+     */
+    public com.google.protobuf.ByteString
+        getLastnameBytes(int index) {
+      return lastname_.getByteString(index);
+    }
+
     // repeated string email = 5;
     public static final int EMAIL_FIELD_NUMBER = 5;
     private com.google.protobuf.LazyStringList email_;
-    public java.util.List<String>
+    /**
+     * <code>repeated string email = 5;</code>
+     */
+    public java.util.List<java.lang.String>
         getEmailList() {
       return email_;
     }
+    /**
+     * <code>repeated string email = 5;</code>
+     */
     public int getEmailCount() {
       return email_.size();
     }
-    public String getEmail(int index) {
+    /**
+     * <code>repeated string email = 5;</code>
+     */
+    public java.lang.String getEmail(int index) {
       return email_.get(index);
     }
-    
+    /**
+     * <code>repeated string email = 5;</code>
+     */
+    public com.google.protobuf.ByteString
+        getEmailBytes(int index) {
+      return email_.getByteString(index);
+    }
+
     // repeated .KeyValue otherId = 6;
     public static final int OTHERID_FIELD_NUMBER = 6;
     private java.util.List<pl.edu.icm.coansys.models.DocumentProtos.KeyValue> otherId_;
+    /**
+     * <code>repeated .KeyValue otherId = 6;</code>
+     *
+     * <pre>
+     * orcid , ...
+     * </pre>
+     */
     public java.util.List<pl.edu.icm.coansys.models.DocumentProtos.KeyValue> getOtherIdList() {
       return otherId_;
     }
+    /**
+     * <code>repeated .KeyValue otherId = 6;</code>
+     *
+     * <pre>
+     * orcid , ...
+     * </pre>
+     */
     public java.util.List<? extends pl.edu.icm.coansys.models.DocumentProtos.KeyValueOrBuilder> 
         getOtherIdOrBuilderList() {
       return otherId_;
     }
+    /**
+     * <code>repeated .KeyValue otherId = 6;</code>
+     *
+     * <pre>
+     * orcid , ...
+     * </pre>
+     */
     public int getOtherIdCount() {
       return otherId_.size();
     }
+    /**
+     * <code>repeated .KeyValue otherId = 6;</code>
+     *
+     * <pre>
+     * orcid , ...
+     * </pre>
+     */
     public pl.edu.icm.coansys.models.DocumentProtos.KeyValue getOtherId(int index) {
       return otherId_.get(index);
     }
+    /**
+     * <code>repeated .KeyValue otherId = 6;</code>
+     *
+     * <pre>
+     * orcid , ...
+     * </pre>
+     */
     public pl.edu.icm.coansys.models.DocumentProtos.KeyValueOrBuilder getOtherIdOrBuilder(
         int index) {
       return otherId_.get(index);
     }
-    
+
     private void initFields() {
       key_ = "";
       name_ = com.google.protobuf.LazyStringArrayList.EMPTY;
@@ -195,7 +565,7 @@ public final class PersonProtos {
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
-      
+
       if (!hasKey()) {
         memoizedIsInitialized = 0;
         return false;
@@ -209,7 +579,7 @@ public final class PersonProtos {
       memoizedIsInitialized = 1;
       return true;
     }
-    
+
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
@@ -233,12 +603,12 @@ public final class PersonProtos {
       }
       getUnknownFields().writeTo(output);
     }
-    
+
     private int memoizedSerializedSize = -1;
     public int getSerializedSize() {
       int size = memoizedSerializedSize;
       if (size != -1) return size;
-    
+
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
@@ -288,94 +658,83 @@ public final class PersonProtos {
       memoizedSerializedSize = size;
       return size;
     }
-    
+
     private static final long serialVersionUID = 0L;
     @java.lang.Override
     protected java.lang.Object writeReplace()
         throws java.io.ObjectStreamException {
       return super.writeReplace();
     }
-    
+
     public static pl.edu.icm.coansys.models.PersonProtos.PersonMetadata parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
+      return PARSER.parseFrom(data);
     }
     public static pl.edu.icm.coansys.models.PersonProtos.PersonMetadata parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.PersonProtos.PersonMetadata parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
+      return PARSER.parseFrom(data);
     }
     public static pl.edu.icm.coansys.models.PersonProtos.PersonMetadata parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.PersonProtos.PersonMetadata parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
+      return PARSER.parseFrom(input);
     }
     public static pl.edu.icm.coansys.models.PersonProtos.PersonMetadata parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(input, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.PersonProtos.PersonMetadata parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
+      return PARSER.parseDelimitedFrom(input);
     }
     public static pl.edu.icm.coansys.models.PersonProtos.PersonMetadata parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.PersonProtos.PersonMetadata parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
+      return PARSER.parseFrom(input);
     }
     public static pl.edu.icm.coansys.models.PersonProtos.PersonMetadata parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(input, extensionRegistry);
     }
-    
+
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder(pl.edu.icm.coansys.models.PersonProtos.PersonMetadata prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
-    
+
     @java.lang.Override
     protected Builder newBuilderForType(
         com.google.protobuf.GeneratedMessage.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
+    /**
+     * Protobuf type {@code PersonMetadata}
+     */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
        implements pl.edu.icm.coansys.models.PersonProtos.PersonMetadataOrBuilder {
@@ -383,18 +742,21 @@ public final class PersonProtos {
           getDescriptor() {
         return pl.edu.icm.coansys.models.PersonProtos.internal_static_PersonMetadata_descriptor;
       }
-      
+
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return pl.edu.icm.coansys.models.PersonProtos.internal_static_PersonMetadata_fieldAccessorTable;
+        return pl.edu.icm.coansys.models.PersonProtos.internal_static_PersonMetadata_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                pl.edu.icm.coansys.models.PersonProtos.PersonMetadata.class, pl.edu.icm.coansys.models.PersonProtos.PersonMetadata.Builder.class);
       }
-      
+
       // Construct using pl.edu.icm.coansys.models.PersonProtos.PersonMetadata.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
-      
-      private Builder(BuilderParent parent) {
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
@@ -406,7 +768,7 @@ public final class PersonProtos {
       private static Builder create() {
         return new Builder();
       }
-      
+
       public Builder clear() {
         super.clear();
         key_ = "";
@@ -427,20 +789,20 @@ public final class PersonProtos {
         }
         return this;
       }
-      
+
       public Builder clone() {
         return create().mergeFrom(buildPartial());
       }
-      
+
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return pl.edu.icm.coansys.models.PersonProtos.PersonMetadata.getDescriptor();
+        return pl.edu.icm.coansys.models.PersonProtos.internal_static_PersonMetadata_descriptor;
       }
-      
+
       public pl.edu.icm.coansys.models.PersonProtos.PersonMetadata getDefaultInstanceForType() {
         return pl.edu.icm.coansys.models.PersonProtos.PersonMetadata.getDefaultInstance();
       }
-      
+
       public pl.edu.icm.coansys.models.PersonProtos.PersonMetadata build() {
         pl.edu.icm.coansys.models.PersonProtos.PersonMetadata result = buildPartial();
         if (!result.isInitialized()) {
@@ -448,17 +810,7 @@ public final class PersonProtos {
         }
         return result;
       }
-      
-      private pl.edu.icm.coansys.models.PersonProtos.PersonMetadata buildParsed()
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        pl.edu.icm.coansys.models.PersonProtos.PersonMetadata result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(
-            result).asInvalidProtocolBufferException();
-        }
-        return result;
-      }
-      
+
       public pl.edu.icm.coansys.models.PersonProtos.PersonMetadata buildPartial() {
         pl.edu.icm.coansys.models.PersonProtos.PersonMetadata result = new pl.edu.icm.coansys.models.PersonProtos.PersonMetadata(this);
         int from_bitField0_ = bitField0_;
@@ -504,7 +856,7 @@ public final class PersonProtos {
         onBuilt();
         return result;
       }
-      
+
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof pl.edu.icm.coansys.models.PersonProtos.PersonMetadata) {
           return mergeFrom((pl.edu.icm.coansys.models.PersonProtos.PersonMetadata)other);
@@ -513,11 +865,13 @@ public final class PersonProtos {
           return this;
         }
       }
-      
+
       public Builder mergeFrom(pl.edu.icm.coansys.models.PersonProtos.PersonMetadata other) {
         if (other == pl.edu.icm.coansys.models.PersonProtos.PersonMetadata.getDefaultInstance()) return this;
         if (other.hasKey()) {
-          setKey(other.getKey());
+          bitField0_ |= 0x00000001;
+          key_ = other.key_;
+          onChanged();
         }
         if (!other.name_.isEmpty()) {
           if (name_.isEmpty()) {
@@ -588,7 +942,7 @@ public final class PersonProtos {
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
-      
+
       public final boolean isInitialized() {
         if (!hasKey()) {
           
@@ -602,83 +956,69 @@ public final class PersonProtos {
         }
         return true;
       }
-      
+
       public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder(
-            this.getUnknownFields());
-        while (true) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              this.setUnknownFields(unknownFields.build());
-              onChanged();
-              return this;
-            default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                this.setUnknownFields(unknownFields.build());
-                onChanged();
-                return this;
-              }
-              break;
-            }
-            case 10: {
-              bitField0_ |= 0x00000001;
-              key_ = input.readBytes();
-              break;
-            }
-            case 18: {
-              ensureNameIsMutable();
-              name_.add(input.readBytes());
-              break;
-            }
-            case 26: {
-              ensureFirstnameIsMutable();
-              firstname_.add(input.readBytes());
-              break;
-            }
-            case 34: {
-              ensureLastnameIsMutable();
-              lastname_.add(input.readBytes());
-              break;
-            }
-            case 42: {
-              ensureEmailIsMutable();
-              email_.add(input.readBytes());
-              break;
-            }
-            case 50: {
-              pl.edu.icm.coansys.models.DocumentProtos.KeyValue.Builder subBuilder = pl.edu.icm.coansys.models.DocumentProtos.KeyValue.newBuilder();
-              input.readMessage(subBuilder, extensionRegistry);
-              addOtherId(subBuilder.buildPartial());
-              break;
-            }
+        pl.edu.icm.coansys.models.PersonProtos.PersonMetadata parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (pl.edu.icm.coansys.models.PersonProtos.PersonMetadata) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
           }
         }
+        return this;
       }
-      
       private int bitField0_;
-      
+
       // required string key = 1;
       private java.lang.Object key_ = "";
+      /**
+       * <code>required string key = 1;</code>
+       */
       public boolean hasKey() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
-      public String getKey() {
+      /**
+       * <code>required string key = 1;</code>
+       */
+      public java.lang.String getKey() {
         java.lang.Object ref = key_;
-        if (!(ref instanceof String)) {
-          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
           key_ = s;
           return s;
         } else {
-          return (String) ref;
+          return (java.lang.String) ref;
         }
       }
-      public Builder setKey(String value) {
+      /**
+       * <code>required string key = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getKeyBytes() {
+        java.lang.Object ref = key_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          key_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string key = 1;</code>
+       */
+      public Builder setKey(
+          java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -687,18 +1027,29 @@ public final class PersonProtos {
         onChanged();
         return this;
       }
+      /**
+       * <code>required string key = 1;</code>
+       */
       public Builder clearKey() {
         bitField0_ = (bitField0_ & ~0x00000001);
         key_ = getDefaultInstance().getKey();
         onChanged();
         return this;
       }
-      void setKey(com.google.protobuf.ByteString value) {
-        bitField0_ |= 0x00000001;
+      /**
+       * <code>required string key = 1;</code>
+       */
+      public Builder setKeyBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
         key_ = value;
         onChanged();
+        return this;
       }
-      
+
       // repeated string name = 2;
       private com.google.protobuf.LazyStringList name_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       private void ensureNameIsMutable() {
@@ -707,18 +1058,57 @@ public final class PersonProtos {
           bitField0_ |= 0x00000002;
          }
       }
-      public java.util.List<String>
+      /**
+       * <code>repeated string name = 2;</code>
+       *
+       * <pre>
+       * Full name - use it for display if priovided 
+       * </pre>
+       */
+      public java.util.List<java.lang.String>
           getNameList() {
         return java.util.Collections.unmodifiableList(name_);
       }
+      /**
+       * <code>repeated string name = 2;</code>
+       *
+       * <pre>
+       * Full name - use it for display if priovided 
+       * </pre>
+       */
       public int getNameCount() {
         return name_.size();
       }
-      public String getName(int index) {
+      /**
+       * <code>repeated string name = 2;</code>
+       *
+       * <pre>
+       * Full name - use it for display if priovided 
+       * </pre>
+       */
+      public java.lang.String getName(int index) {
         return name_.get(index);
       }
+      /**
+       * <code>repeated string name = 2;</code>
+       *
+       * <pre>
+       * Full name - use it for display if priovided 
+       * </pre>
+       */
+      public com.google.protobuf.ByteString
+          getNameBytes(int index) {
+        return name_.getByteString(index);
+      }
+      /**
+       * <code>repeated string name = 2;</code>
+       *
+       * <pre>
+       * Full name - use it for display if priovided 
+       * </pre>
+       */
       public Builder setName(
-          int index, String value) {
+          int index, java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -727,7 +1117,15 @@ public final class PersonProtos {
         onChanged();
         return this;
       }
-      public Builder addName(String value) {
+      /**
+       * <code>repeated string name = 2;</code>
+       *
+       * <pre>
+       * Full name - use it for display if priovided 
+       * </pre>
+       */
+      public Builder addName(
+          java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -736,25 +1134,51 @@ public final class PersonProtos {
         onChanged();
         return this;
       }
+      /**
+       * <code>repeated string name = 2;</code>
+       *
+       * <pre>
+       * Full name - use it for display if priovided 
+       * </pre>
+       */
       public Builder addAllName(
-          java.lang.Iterable<String> values) {
+          java.lang.Iterable<java.lang.String> values) {
         ensureNameIsMutable();
         super.addAll(values, name_);
         onChanged();
         return this;
       }
+      /**
+       * <code>repeated string name = 2;</code>
+       *
+       * <pre>
+       * Full name - use it for display if priovided 
+       * </pre>
+       */
       public Builder clearName() {
         name_ = com.google.protobuf.LazyStringArrayList.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000002);
         onChanged();
         return this;
       }
-      void addName(com.google.protobuf.ByteString value) {
-        ensureNameIsMutable();
+      /**
+       * <code>repeated string name = 2;</code>
+       *
+       * <pre>
+       * Full name - use it for display if priovided 
+       * </pre>
+       */
+      public Builder addNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureNameIsMutable();
         name_.add(value);
         onChanged();
+        return this;
       }
-      
+
       // repeated string firstname = 3;
       private com.google.protobuf.LazyStringList firstname_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       private void ensureFirstnameIsMutable() {
@@ -763,18 +1187,37 @@ public final class PersonProtos {
           bitField0_ |= 0x00000004;
          }
       }
-      public java.util.List<String>
+      /**
+       * <code>repeated string firstname = 3;</code>
+       */
+      public java.util.List<java.lang.String>
           getFirstnameList() {
         return java.util.Collections.unmodifiableList(firstname_);
       }
+      /**
+       * <code>repeated string firstname = 3;</code>
+       */
       public int getFirstnameCount() {
         return firstname_.size();
       }
-      public String getFirstname(int index) {
+      /**
+       * <code>repeated string firstname = 3;</code>
+       */
+      public java.lang.String getFirstname(int index) {
         return firstname_.get(index);
       }
+      /**
+       * <code>repeated string firstname = 3;</code>
+       */
+      public com.google.protobuf.ByteString
+          getFirstnameBytes(int index) {
+        return firstname_.getByteString(index);
+      }
+      /**
+       * <code>repeated string firstname = 3;</code>
+       */
       public Builder setFirstname(
-          int index, String value) {
+          int index, java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -783,7 +1226,11 @@ public final class PersonProtos {
         onChanged();
         return this;
       }
-      public Builder addFirstname(String value) {
+      /**
+       * <code>repeated string firstname = 3;</code>
+       */
+      public Builder addFirstname(
+          java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -792,25 +1239,39 @@ public final class PersonProtos {
         onChanged();
         return this;
       }
+      /**
+       * <code>repeated string firstname = 3;</code>
+       */
       public Builder addAllFirstname(
-          java.lang.Iterable<String> values) {
+          java.lang.Iterable<java.lang.String> values) {
         ensureFirstnameIsMutable();
         super.addAll(values, firstname_);
         onChanged();
         return this;
       }
+      /**
+       * <code>repeated string firstname = 3;</code>
+       */
       public Builder clearFirstname() {
         firstname_ = com.google.protobuf.LazyStringArrayList.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000004);
         onChanged();
         return this;
       }
-      void addFirstname(com.google.protobuf.ByteString value) {
-        ensureFirstnameIsMutable();
+      /**
+       * <code>repeated string firstname = 3;</code>
+       */
+      public Builder addFirstnameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureFirstnameIsMutable();
         firstname_.add(value);
         onChanged();
+        return this;
       }
-      
+
       // repeated string lastname = 4;
       private com.google.protobuf.LazyStringList lastname_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       private void ensureLastnameIsMutable() {
@@ -819,18 +1280,37 @@ public final class PersonProtos {
           bitField0_ |= 0x00000008;
          }
       }
-      public java.util.List<String>
+      /**
+       * <code>repeated string lastname = 4;</code>
+       */
+      public java.util.List<java.lang.String>
           getLastnameList() {
         return java.util.Collections.unmodifiableList(lastname_);
       }
+      /**
+       * <code>repeated string lastname = 4;</code>
+       */
       public int getLastnameCount() {
         return lastname_.size();
       }
-      public String getLastname(int index) {
+      /**
+       * <code>repeated string lastname = 4;</code>
+       */
+      public java.lang.String getLastname(int index) {
         return lastname_.get(index);
       }
+      /**
+       * <code>repeated string lastname = 4;</code>
+       */
+      public com.google.protobuf.ByteString
+          getLastnameBytes(int index) {
+        return lastname_.getByteString(index);
+      }
+      /**
+       * <code>repeated string lastname = 4;</code>
+       */
       public Builder setLastname(
-          int index, String value) {
+          int index, java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -839,7 +1319,11 @@ public final class PersonProtos {
         onChanged();
         return this;
       }
-      public Builder addLastname(String value) {
+      /**
+       * <code>repeated string lastname = 4;</code>
+       */
+      public Builder addLastname(
+          java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -848,25 +1332,39 @@ public final class PersonProtos {
         onChanged();
         return this;
       }
+      /**
+       * <code>repeated string lastname = 4;</code>
+       */
       public Builder addAllLastname(
-          java.lang.Iterable<String> values) {
+          java.lang.Iterable<java.lang.String> values) {
         ensureLastnameIsMutable();
         super.addAll(values, lastname_);
         onChanged();
         return this;
       }
+      /**
+       * <code>repeated string lastname = 4;</code>
+       */
       public Builder clearLastname() {
         lastname_ = com.google.protobuf.LazyStringArrayList.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000008);
         onChanged();
         return this;
       }
-      void addLastname(com.google.protobuf.ByteString value) {
-        ensureLastnameIsMutable();
+      /**
+       * <code>repeated string lastname = 4;</code>
+       */
+      public Builder addLastnameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureLastnameIsMutable();
         lastname_.add(value);
         onChanged();
+        return this;
       }
-      
+
       // repeated string email = 5;
       private com.google.protobuf.LazyStringList email_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       private void ensureEmailIsMutable() {
@@ -875,18 +1373,37 @@ public final class PersonProtos {
           bitField0_ |= 0x00000010;
          }
       }
-      public java.util.List<String>
+      /**
+       * <code>repeated string email = 5;</code>
+       */
+      public java.util.List<java.lang.String>
           getEmailList() {
         return java.util.Collections.unmodifiableList(email_);
       }
+      /**
+       * <code>repeated string email = 5;</code>
+       */
       public int getEmailCount() {
         return email_.size();
       }
-      public String getEmail(int index) {
+      /**
+       * <code>repeated string email = 5;</code>
+       */
+      public java.lang.String getEmail(int index) {
         return email_.get(index);
       }
+      /**
+       * <code>repeated string email = 5;</code>
+       */
+      public com.google.protobuf.ByteString
+          getEmailBytes(int index) {
+        return email_.getByteString(index);
+      }
+      /**
+       * <code>repeated string email = 5;</code>
+       */
       public Builder setEmail(
-          int index, String value) {
+          int index, java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -895,7 +1412,11 @@ public final class PersonProtos {
         onChanged();
         return this;
       }
-      public Builder addEmail(String value) {
+      /**
+       * <code>repeated string email = 5;</code>
+       */
+      public Builder addEmail(
+          java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -904,25 +1425,39 @@ public final class PersonProtos {
         onChanged();
         return this;
       }
+      /**
+       * <code>repeated string email = 5;</code>
+       */
       public Builder addAllEmail(
-          java.lang.Iterable<String> values) {
+          java.lang.Iterable<java.lang.String> values) {
         ensureEmailIsMutable();
         super.addAll(values, email_);
         onChanged();
         return this;
       }
+      /**
+       * <code>repeated string email = 5;</code>
+       */
       public Builder clearEmail() {
         email_ = com.google.protobuf.LazyStringArrayList.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000010);
         onChanged();
         return this;
       }
-      void addEmail(com.google.protobuf.ByteString value) {
-        ensureEmailIsMutable();
+      /**
+       * <code>repeated string email = 5;</code>
+       */
+      public Builder addEmailBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureEmailIsMutable();
         email_.add(value);
         onChanged();
+        return this;
       }
-      
+
       // repeated .KeyValue otherId = 6;
       private java.util.List<pl.edu.icm.coansys.models.DocumentProtos.KeyValue> otherId_ =
         java.util.Collections.emptyList();
@@ -932,10 +1467,17 @@ public final class PersonProtos {
           bitField0_ |= 0x00000020;
          }
       }
-      
+
       private com.google.protobuf.RepeatedFieldBuilder<
           pl.edu.icm.coansys.models.DocumentProtos.KeyValue, pl.edu.icm.coansys.models.DocumentProtos.KeyValue.Builder, pl.edu.icm.coansys.models.DocumentProtos.KeyValueOrBuilder> otherIdBuilder_;
-      
+
+      /**
+       * <code>repeated .KeyValue otherId = 6;</code>
+       *
+       * <pre>
+       * orcid , ...
+       * </pre>
+       */
       public java.util.List<pl.edu.icm.coansys.models.DocumentProtos.KeyValue> getOtherIdList() {
         if (otherIdBuilder_ == null) {
           return java.util.Collections.unmodifiableList(otherId_);
@@ -943,6 +1485,13 @@ public final class PersonProtos {
           return otherIdBuilder_.getMessageList();
         }
       }
+      /**
+       * <code>repeated .KeyValue otherId = 6;</code>
+       *
+       * <pre>
+       * orcid , ...
+       * </pre>
+       */
       public int getOtherIdCount() {
         if (otherIdBuilder_ == null) {
           return otherId_.size();
@@ -950,6 +1499,13 @@ public final class PersonProtos {
           return otherIdBuilder_.getCount();
         }
       }
+      /**
+       * <code>repeated .KeyValue otherId = 6;</code>
+       *
+       * <pre>
+       * orcid , ...
+       * </pre>
+       */
       public pl.edu.icm.coansys.models.DocumentProtos.KeyValue getOtherId(int index) {
         if (otherIdBuilder_ == null) {
           return otherId_.get(index);
@@ -957,6 +1513,13 @@ public final class PersonProtos {
           return otherIdBuilder_.getMessage(index);
         }
       }
+      /**
+       * <code>repeated .KeyValue otherId = 6;</code>
+       *
+       * <pre>
+       * orcid , ...
+       * </pre>
+       */
       public Builder setOtherId(
           int index, pl.edu.icm.coansys.models.DocumentProtos.KeyValue value) {
         if (otherIdBuilder_ == null) {
@@ -971,6 +1534,13 @@ public final class PersonProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .KeyValue otherId = 6;</code>
+       *
+       * <pre>
+       * orcid , ...
+       * </pre>
+       */
       public Builder setOtherId(
           int index, pl.edu.icm.coansys.models.DocumentProtos.KeyValue.Builder builderForValue) {
         if (otherIdBuilder_ == null) {
@@ -982,6 +1552,13 @@ public final class PersonProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .KeyValue otherId = 6;</code>
+       *
+       * <pre>
+       * orcid , ...
+       * </pre>
+       */
       public Builder addOtherId(pl.edu.icm.coansys.models.DocumentProtos.KeyValue value) {
         if (otherIdBuilder_ == null) {
           if (value == null) {
@@ -995,6 +1572,13 @@ public final class PersonProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .KeyValue otherId = 6;</code>
+       *
+       * <pre>
+       * orcid , ...
+       * </pre>
+       */
       public Builder addOtherId(
           int index, pl.edu.icm.coansys.models.DocumentProtos.KeyValue value) {
         if (otherIdBuilder_ == null) {
@@ -1009,6 +1593,13 @@ public final class PersonProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .KeyValue otherId = 6;</code>
+       *
+       * <pre>
+       * orcid , ...
+       * </pre>
+       */
       public Builder addOtherId(
           pl.edu.icm.coansys.models.DocumentProtos.KeyValue.Builder builderForValue) {
         if (otherIdBuilder_ == null) {
@@ -1020,6 +1611,13 @@ public final class PersonProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .KeyValue otherId = 6;</code>
+       *
+       * <pre>
+       * orcid , ...
+       * </pre>
+       */
       public Builder addOtherId(
           int index, pl.edu.icm.coansys.models.DocumentProtos.KeyValue.Builder builderForValue) {
         if (otherIdBuilder_ == null) {
@@ -1031,6 +1629,13 @@ public final class PersonProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .KeyValue otherId = 6;</code>
+       *
+       * <pre>
+       * orcid , ...
+       * </pre>
+       */
       public Builder addAllOtherId(
           java.lang.Iterable<? extends pl.edu.icm.coansys.models.DocumentProtos.KeyValue> values) {
         if (otherIdBuilder_ == null) {
@@ -1042,6 +1647,13 @@ public final class PersonProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .KeyValue otherId = 6;</code>
+       *
+       * <pre>
+       * orcid , ...
+       * </pre>
+       */
       public Builder clearOtherId() {
         if (otherIdBuilder_ == null) {
           otherId_ = java.util.Collections.emptyList();
@@ -1052,6 +1664,13 @@ public final class PersonProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .KeyValue otherId = 6;</code>
+       *
+       * <pre>
+       * orcid , ...
+       * </pre>
+       */
       public Builder removeOtherId(int index) {
         if (otherIdBuilder_ == null) {
           ensureOtherIdIsMutable();
@@ -1062,10 +1681,24 @@ public final class PersonProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .KeyValue otherId = 6;</code>
+       *
+       * <pre>
+       * orcid , ...
+       * </pre>
+       */
       public pl.edu.icm.coansys.models.DocumentProtos.KeyValue.Builder getOtherIdBuilder(
           int index) {
         return getOtherIdFieldBuilder().getBuilder(index);
       }
+      /**
+       * <code>repeated .KeyValue otherId = 6;</code>
+       *
+       * <pre>
+       * orcid , ...
+       * </pre>
+       */
       public pl.edu.icm.coansys.models.DocumentProtos.KeyValueOrBuilder getOtherIdOrBuilder(
           int index) {
         if (otherIdBuilder_ == null) {
@@ -1073,6 +1706,13 @@ public final class PersonProtos {
           return otherIdBuilder_.getMessageOrBuilder(index);
         }
       }
+      /**
+       * <code>repeated .KeyValue otherId = 6;</code>
+       *
+       * <pre>
+       * orcid , ...
+       * </pre>
+       */
       public java.util.List<? extends pl.edu.icm.coansys.models.DocumentProtos.KeyValueOrBuilder> 
            getOtherIdOrBuilderList() {
         if (otherIdBuilder_ != null) {
@@ -1081,15 +1721,36 @@ public final class PersonProtos {
           return java.util.Collections.unmodifiableList(otherId_);
         }
       }
+      /**
+       * <code>repeated .KeyValue otherId = 6;</code>
+       *
+       * <pre>
+       * orcid , ...
+       * </pre>
+       */
       public pl.edu.icm.coansys.models.DocumentProtos.KeyValue.Builder addOtherIdBuilder() {
         return getOtherIdFieldBuilder().addBuilder(
             pl.edu.icm.coansys.models.DocumentProtos.KeyValue.getDefaultInstance());
       }
+      /**
+       * <code>repeated .KeyValue otherId = 6;</code>
+       *
+       * <pre>
+       * orcid , ...
+       * </pre>
+       */
       public pl.edu.icm.coansys.models.DocumentProtos.KeyValue.Builder addOtherIdBuilder(
           int index) {
         return getOtherIdFieldBuilder().addBuilder(
             index, pl.edu.icm.coansys.models.DocumentProtos.KeyValue.getDefaultInstance());
       }
+      /**
+       * <code>repeated .KeyValue otherId = 6;</code>
+       *
+       * <pre>
+       * orcid , ...
+       * </pre>
+       */
       public java.util.List<pl.edu.icm.coansys.models.DocumentProtos.KeyValue.Builder> 
            getOtherIdBuilderList() {
         return getOtherIdFieldBuilder().getBuilderList();
@@ -1108,122 +1769,278 @@ public final class PersonProtos {
         }
         return otherIdBuilder_;
       }
-      
+
       // @@protoc_insertion_point(builder_scope:PersonMetadata)
     }
-    
+
     static {
       defaultInstance = new PersonMetadata(true);
       defaultInstance.initFields();
     }
-    
+
     // @@protoc_insertion_point(class_scope:PersonMetadata)
   }
-  
+
   public interface PersonWrapperOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
-    
+
     // required string rowId = 1;
+    /**
+     * <code>required string rowId = 1;</code>
+     */
     boolean hasRowId();
-    String getRowId();
-    
+    /**
+     * <code>required string rowId = 1;</code>
+     */
+    java.lang.String getRowId();
+    /**
+     * <code>required string rowId = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getRowIdBytes();
+
     // optional .PersonMetadata personMetadata = 2;
+    /**
+     * <code>optional .PersonMetadata personMetadata = 2;</code>
+     */
     boolean hasPersonMetadata();
+    /**
+     * <code>optional .PersonMetadata personMetadata = 2;</code>
+     */
     pl.edu.icm.coansys.models.PersonProtos.PersonMetadata getPersonMetadata();
+    /**
+     * <code>optional .PersonMetadata personMetadata = 2;</code>
+     */
     pl.edu.icm.coansys.models.PersonProtos.PersonMetadataOrBuilder getPersonMetadataOrBuilder();
-    
+
     // optional .MediaContainer mediaContainer = 3;
+    /**
+     * <code>optional .MediaContainer mediaContainer = 3;</code>
+     */
     boolean hasMediaContainer();
+    /**
+     * <code>optional .MediaContainer mediaContainer = 3;</code>
+     */
     pl.edu.icm.coansys.models.DocumentProtos.MediaContainer getMediaContainer();
+    /**
+     * <code>optional .MediaContainer mediaContainer = 3;</code>
+     */
     pl.edu.icm.coansys.models.DocumentProtos.MediaContainerOrBuilder getMediaContainerOrBuilder();
   }
+  /**
+   * Protobuf type {@code PersonWrapper}
+   *
+   * <pre>
+   * used only in sequece files, to store both metadata and media as a single value;
+   * rowId -- collection + (if PDF attached) "_PDF" + "_" + documentMetadata.key;
+   * </pre>
+   */
   public static final class PersonWrapper extends
       com.google.protobuf.GeneratedMessage
       implements PersonWrapperOrBuilder {
     // Use PersonWrapper.newBuilder() to construct.
-    private PersonWrapper(Builder builder) {
+    private PersonWrapper(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
-    private PersonWrapper(boolean noInit) {}
-    
+    private PersonWrapper(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
     private static final PersonWrapper defaultInstance;
     public static PersonWrapper getDefaultInstance() {
       return defaultInstance;
     }
-    
+
     public PersonWrapper getDefaultInstanceForType() {
       return defaultInstance;
     }
-    
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private PersonWrapper(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              bitField0_ |= 0x00000001;
+              rowId_ = input.readBytes();
+              break;
+            }
+            case 18: {
+              pl.edu.icm.coansys.models.PersonProtos.PersonMetadata.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000002) == 0x00000002)) {
+                subBuilder = personMetadata_.toBuilder();
+              }
+              personMetadata_ = input.readMessage(pl.edu.icm.coansys.models.PersonProtos.PersonMetadata.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(personMetadata_);
+                personMetadata_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000002;
+              break;
+            }
+            case 26: {
+              pl.edu.icm.coansys.models.DocumentProtos.MediaContainer.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000004) == 0x00000004)) {
+                subBuilder = mediaContainer_.toBuilder();
+              }
+              mediaContainer_ = input.readMessage(pl.edu.icm.coansys.models.DocumentProtos.MediaContainer.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(mediaContainer_);
+                mediaContainer_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000004;
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
       return pl.edu.icm.coansys.models.PersonProtos.internal_static_PersonWrapper_descriptor;
     }
-    
+
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return pl.edu.icm.coansys.models.PersonProtos.internal_static_PersonWrapper_fieldAccessorTable;
+      return pl.edu.icm.coansys.models.PersonProtos.internal_static_PersonWrapper_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              pl.edu.icm.coansys.models.PersonProtos.PersonWrapper.class, pl.edu.icm.coansys.models.PersonProtos.PersonWrapper.Builder.class);
     }
-    
+
+    public static com.google.protobuf.Parser<PersonWrapper> PARSER =
+        new com.google.protobuf.AbstractParser<PersonWrapper>() {
+      public PersonWrapper parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new PersonWrapper(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<PersonWrapper> getParserForType() {
+      return PARSER;
+    }
+
     private int bitField0_;
     // required string rowId = 1;
     public static final int ROWID_FIELD_NUMBER = 1;
     private java.lang.Object rowId_;
+    /**
+     * <code>required string rowId = 1;</code>
+     */
     public boolean hasRowId() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
-    public String getRowId() {
+    /**
+     * <code>required string rowId = 1;</code>
+     */
+    public java.lang.String getRowId() {
       java.lang.Object ref = rowId_;
-      if (ref instanceof String) {
-        return (String) ref;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
           rowId_ = s;
         }
         return s;
       }
     }
-    private com.google.protobuf.ByteString getRowIdBytes() {
+    /**
+     * <code>required string rowId = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getRowIdBytes() {
       java.lang.Object ref = rowId_;
-      if (ref instanceof String) {
+      if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
         rowId_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
-    
+
     // optional .PersonMetadata personMetadata = 2;
     public static final int PERSONMETADATA_FIELD_NUMBER = 2;
     private pl.edu.icm.coansys.models.PersonProtos.PersonMetadata personMetadata_;
+    /**
+     * <code>optional .PersonMetadata personMetadata = 2;</code>
+     */
     public boolean hasPersonMetadata() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
+    /**
+     * <code>optional .PersonMetadata personMetadata = 2;</code>
+     */
     public pl.edu.icm.coansys.models.PersonProtos.PersonMetadata getPersonMetadata() {
       return personMetadata_;
     }
+    /**
+     * <code>optional .PersonMetadata personMetadata = 2;</code>
+     */
     public pl.edu.icm.coansys.models.PersonProtos.PersonMetadataOrBuilder getPersonMetadataOrBuilder() {
       return personMetadata_;
     }
-    
+
     // optional .MediaContainer mediaContainer = 3;
     public static final int MEDIACONTAINER_FIELD_NUMBER = 3;
     private pl.edu.icm.coansys.models.DocumentProtos.MediaContainer mediaContainer_;
+    /**
+     * <code>optional .MediaContainer mediaContainer = 3;</code>
+     */
     public boolean hasMediaContainer() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
+    /**
+     * <code>optional .MediaContainer mediaContainer = 3;</code>
+     */
     public pl.edu.icm.coansys.models.DocumentProtos.MediaContainer getMediaContainer() {
       return mediaContainer_;
     }
+    /**
+     * <code>optional .MediaContainer mediaContainer = 3;</code>
+     */
     public pl.edu.icm.coansys.models.DocumentProtos.MediaContainerOrBuilder getMediaContainerOrBuilder() {
       return mediaContainer_;
     }
-    
+
     private void initFields() {
       rowId_ = "";
       personMetadata_ = pl.edu.icm.coansys.models.PersonProtos.PersonMetadata.getDefaultInstance();
@@ -1233,7 +2050,7 @@ public final class PersonProtos {
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
-      
+
       if (!hasRowId()) {
         memoizedIsInitialized = 0;
         return false;
@@ -1253,7 +2070,7 @@ public final class PersonProtos {
       memoizedIsInitialized = 1;
       return true;
     }
-    
+
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
@@ -1268,12 +2085,12 @@ public final class PersonProtos {
       }
       getUnknownFields().writeTo(output);
     }
-    
+
     private int memoizedSerializedSize = -1;
     public int getSerializedSize() {
       int size = memoizedSerializedSize;
       if (size != -1) return size;
-    
+
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
@@ -1291,94 +2108,88 @@ public final class PersonProtos {
       memoizedSerializedSize = size;
       return size;
     }
-    
+
     private static final long serialVersionUID = 0L;
     @java.lang.Override
     protected java.lang.Object writeReplace()
         throws java.io.ObjectStreamException {
       return super.writeReplace();
     }
-    
+
     public static pl.edu.icm.coansys.models.PersonProtos.PersonWrapper parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
+      return PARSER.parseFrom(data);
     }
     public static pl.edu.icm.coansys.models.PersonProtos.PersonWrapper parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.PersonProtos.PersonWrapper parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
+      return PARSER.parseFrom(data);
     }
     public static pl.edu.icm.coansys.models.PersonProtos.PersonWrapper parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.PersonProtos.PersonWrapper parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
+      return PARSER.parseFrom(input);
     }
     public static pl.edu.icm.coansys.models.PersonProtos.PersonWrapper parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(input, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.PersonProtos.PersonWrapper parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
+      return PARSER.parseDelimitedFrom(input);
     }
     public static pl.edu.icm.coansys.models.PersonProtos.PersonWrapper parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.PersonProtos.PersonWrapper parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
+      return PARSER.parseFrom(input);
     }
     public static pl.edu.icm.coansys.models.PersonProtos.PersonWrapper parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(input, extensionRegistry);
     }
-    
+
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder(pl.edu.icm.coansys.models.PersonProtos.PersonWrapper prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
-    
+
     @java.lang.Override
     protected Builder newBuilderForType(
         com.google.protobuf.GeneratedMessage.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
+    /**
+     * Protobuf type {@code PersonWrapper}
+     *
+     * <pre>
+     * used only in sequece files, to store both metadata and media as a single value;
+     * rowId -- collection + (if PDF attached) "_PDF" + "_" + documentMetadata.key;
+     * </pre>
+     */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
        implements pl.edu.icm.coansys.models.PersonProtos.PersonWrapperOrBuilder {
@@ -1386,18 +2197,21 @@ public final class PersonProtos {
           getDescriptor() {
         return pl.edu.icm.coansys.models.PersonProtos.internal_static_PersonWrapper_descriptor;
       }
-      
+
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return pl.edu.icm.coansys.models.PersonProtos.internal_static_PersonWrapper_fieldAccessorTable;
+        return pl.edu.icm.coansys.models.PersonProtos.internal_static_PersonWrapper_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                pl.edu.icm.coansys.models.PersonProtos.PersonWrapper.class, pl.edu.icm.coansys.models.PersonProtos.PersonWrapper.Builder.class);
       }
-      
+
       // Construct using pl.edu.icm.coansys.models.PersonProtos.PersonWrapper.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
-      
-      private Builder(BuilderParent parent) {
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
@@ -1410,7 +2224,7 @@ public final class PersonProtos {
       private static Builder create() {
         return new Builder();
       }
-      
+
       public Builder clear() {
         super.clear();
         rowId_ = "";
@@ -1429,20 +2243,20 @@ public final class PersonProtos {
         bitField0_ = (bitField0_ & ~0x00000004);
         return this;
       }
-      
+
       public Builder clone() {
         return create().mergeFrom(buildPartial());
       }
-      
+
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return pl.edu.icm.coansys.models.PersonProtos.PersonWrapper.getDescriptor();
+        return pl.edu.icm.coansys.models.PersonProtos.internal_static_PersonWrapper_descriptor;
       }
-      
+
       public pl.edu.icm.coansys.models.PersonProtos.PersonWrapper getDefaultInstanceForType() {
         return pl.edu.icm.coansys.models.PersonProtos.PersonWrapper.getDefaultInstance();
       }
-      
+
       public pl.edu.icm.coansys.models.PersonProtos.PersonWrapper build() {
         pl.edu.icm.coansys.models.PersonProtos.PersonWrapper result = buildPartial();
         if (!result.isInitialized()) {
@@ -1450,17 +2264,7 @@ public final class PersonProtos {
         }
         return result;
       }
-      
-      private pl.edu.icm.coansys.models.PersonProtos.PersonWrapper buildParsed()
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        pl.edu.icm.coansys.models.PersonProtos.PersonWrapper result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(
-            result).asInvalidProtocolBufferException();
-        }
-        return result;
-      }
-      
+
       public pl.edu.icm.coansys.models.PersonProtos.PersonWrapper buildPartial() {
         pl.edu.icm.coansys.models.PersonProtos.PersonWrapper result = new pl.edu.icm.coansys.models.PersonProtos.PersonWrapper(this);
         int from_bitField0_ = bitField0_;
@@ -1489,7 +2293,7 @@ public final class PersonProtos {
         onBuilt();
         return result;
       }
-      
+
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof pl.edu.icm.coansys.models.PersonProtos.PersonWrapper) {
           return mergeFrom((pl.edu.icm.coansys.models.PersonProtos.PersonWrapper)other);
@@ -1498,11 +2302,13 @@ public final class PersonProtos {
           return this;
         }
       }
-      
+
       public Builder mergeFrom(pl.edu.icm.coansys.models.PersonProtos.PersonWrapper other) {
         if (other == pl.edu.icm.coansys.models.PersonProtos.PersonWrapper.getDefaultInstance()) return this;
         if (other.hasRowId()) {
-          setRowId(other.getRowId());
+          bitField0_ |= 0x00000001;
+          rowId_ = other.rowId_;
+          onChanged();
         }
         if (other.hasPersonMetadata()) {
           mergePersonMetadata(other.getPersonMetadata());
@@ -1513,7 +2319,7 @@ public final class PersonProtos {
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
-      
+
       public final boolean isInitialized() {
         if (!hasRowId()) {
           
@@ -1533,75 +2339,69 @@ public final class PersonProtos {
         }
         return true;
       }
-      
+
       public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder(
-            this.getUnknownFields());
-        while (true) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              this.setUnknownFields(unknownFields.build());
-              onChanged();
-              return this;
-            default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                this.setUnknownFields(unknownFields.build());
-                onChanged();
-                return this;
-              }
-              break;
-            }
-            case 10: {
-              bitField0_ |= 0x00000001;
-              rowId_ = input.readBytes();
-              break;
-            }
-            case 18: {
-              pl.edu.icm.coansys.models.PersonProtos.PersonMetadata.Builder subBuilder = pl.edu.icm.coansys.models.PersonProtos.PersonMetadata.newBuilder();
-              if (hasPersonMetadata()) {
-                subBuilder.mergeFrom(getPersonMetadata());
-              }
-              input.readMessage(subBuilder, extensionRegistry);
-              setPersonMetadata(subBuilder.buildPartial());
-              break;
-            }
-            case 26: {
-              pl.edu.icm.coansys.models.DocumentProtos.MediaContainer.Builder subBuilder = pl.edu.icm.coansys.models.DocumentProtos.MediaContainer.newBuilder();
-              if (hasMediaContainer()) {
-                subBuilder.mergeFrom(getMediaContainer());
-              }
-              input.readMessage(subBuilder, extensionRegistry);
-              setMediaContainer(subBuilder.buildPartial());
-              break;
-            }
+        pl.edu.icm.coansys.models.PersonProtos.PersonWrapper parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (pl.edu.icm.coansys.models.PersonProtos.PersonWrapper) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
           }
         }
+        return this;
       }
-      
       private int bitField0_;
-      
+
       // required string rowId = 1;
       private java.lang.Object rowId_ = "";
+      /**
+       * <code>required string rowId = 1;</code>
+       */
       public boolean hasRowId() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
-      public String getRowId() {
+      /**
+       * <code>required string rowId = 1;</code>
+       */
+      public java.lang.String getRowId() {
         java.lang.Object ref = rowId_;
-        if (!(ref instanceof String)) {
-          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
           rowId_ = s;
           return s;
         } else {
-          return (String) ref;
+          return (java.lang.String) ref;
         }
       }
-      public Builder setRowId(String value) {
+      /**
+       * <code>required string rowId = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getRowIdBytes() {
+        java.lang.Object ref = rowId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          rowId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string rowId = 1;</code>
+       */
+      public Builder setRowId(
+          java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -1610,25 +2410,42 @@ public final class PersonProtos {
         onChanged();
         return this;
       }
+      /**
+       * <code>required string rowId = 1;</code>
+       */
       public Builder clearRowId() {
         bitField0_ = (bitField0_ & ~0x00000001);
         rowId_ = getDefaultInstance().getRowId();
         onChanged();
         return this;
       }
-      void setRowId(com.google.protobuf.ByteString value) {
-        bitField0_ |= 0x00000001;
+      /**
+       * <code>required string rowId = 1;</code>
+       */
+      public Builder setRowIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
         rowId_ = value;
         onChanged();
+        return this;
       }
-      
+
       // optional .PersonMetadata personMetadata = 2;
       private pl.edu.icm.coansys.models.PersonProtos.PersonMetadata personMetadata_ = pl.edu.icm.coansys.models.PersonProtos.PersonMetadata.getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
           pl.edu.icm.coansys.models.PersonProtos.PersonMetadata, pl.edu.icm.coansys.models.PersonProtos.PersonMetadata.Builder, pl.edu.icm.coansys.models.PersonProtos.PersonMetadataOrBuilder> personMetadataBuilder_;
+      /**
+       * <code>optional .PersonMetadata personMetadata = 2;</code>
+       */
       public boolean hasPersonMetadata() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
+      /**
+       * <code>optional .PersonMetadata personMetadata = 2;</code>
+       */
       public pl.edu.icm.coansys.models.PersonProtos.PersonMetadata getPersonMetadata() {
         if (personMetadataBuilder_ == null) {
           return personMetadata_;
@@ -1636,6 +2453,9 @@ public final class PersonProtos {
           return personMetadataBuilder_.getMessage();
         }
       }
+      /**
+       * <code>optional .PersonMetadata personMetadata = 2;</code>
+       */
       public Builder setPersonMetadata(pl.edu.icm.coansys.models.PersonProtos.PersonMetadata value) {
         if (personMetadataBuilder_ == null) {
           if (value == null) {
@@ -1649,6 +2469,9 @@ public final class PersonProtos {
         bitField0_ |= 0x00000002;
         return this;
       }
+      /**
+       * <code>optional .PersonMetadata personMetadata = 2;</code>
+       */
       public Builder setPersonMetadata(
           pl.edu.icm.coansys.models.PersonProtos.PersonMetadata.Builder builderForValue) {
         if (personMetadataBuilder_ == null) {
@@ -1660,6 +2483,9 @@ public final class PersonProtos {
         bitField0_ |= 0x00000002;
         return this;
       }
+      /**
+       * <code>optional .PersonMetadata personMetadata = 2;</code>
+       */
       public Builder mergePersonMetadata(pl.edu.icm.coansys.models.PersonProtos.PersonMetadata value) {
         if (personMetadataBuilder_ == null) {
           if (((bitField0_ & 0x00000002) == 0x00000002) &&
@@ -1676,6 +2502,9 @@ public final class PersonProtos {
         bitField0_ |= 0x00000002;
         return this;
       }
+      /**
+       * <code>optional .PersonMetadata personMetadata = 2;</code>
+       */
       public Builder clearPersonMetadata() {
         if (personMetadataBuilder_ == null) {
           personMetadata_ = pl.edu.icm.coansys.models.PersonProtos.PersonMetadata.getDefaultInstance();
@@ -1686,11 +2515,17 @@ public final class PersonProtos {
         bitField0_ = (bitField0_ & ~0x00000002);
         return this;
       }
+      /**
+       * <code>optional .PersonMetadata personMetadata = 2;</code>
+       */
       public pl.edu.icm.coansys.models.PersonProtos.PersonMetadata.Builder getPersonMetadataBuilder() {
         bitField0_ |= 0x00000002;
         onChanged();
         return getPersonMetadataFieldBuilder().getBuilder();
       }
+      /**
+       * <code>optional .PersonMetadata personMetadata = 2;</code>
+       */
       public pl.edu.icm.coansys.models.PersonProtos.PersonMetadataOrBuilder getPersonMetadataOrBuilder() {
         if (personMetadataBuilder_ != null) {
           return personMetadataBuilder_.getMessageOrBuilder();
@@ -1698,6 +2533,9 @@ public final class PersonProtos {
           return personMetadata_;
         }
       }
+      /**
+       * <code>optional .PersonMetadata personMetadata = 2;</code>
+       */
       private com.google.protobuf.SingleFieldBuilder<
           pl.edu.icm.coansys.models.PersonProtos.PersonMetadata, pl.edu.icm.coansys.models.PersonProtos.PersonMetadata.Builder, pl.edu.icm.coansys.models.PersonProtos.PersonMetadataOrBuilder> 
           getPersonMetadataFieldBuilder() {
@@ -1711,14 +2549,20 @@ public final class PersonProtos {
         }
         return personMetadataBuilder_;
       }
-      
+
       // optional .MediaContainer mediaContainer = 3;
       private pl.edu.icm.coansys.models.DocumentProtos.MediaContainer mediaContainer_ = pl.edu.icm.coansys.models.DocumentProtos.MediaContainer.getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
           pl.edu.icm.coansys.models.DocumentProtos.MediaContainer, pl.edu.icm.coansys.models.DocumentProtos.MediaContainer.Builder, pl.edu.icm.coansys.models.DocumentProtos.MediaContainerOrBuilder> mediaContainerBuilder_;
+      /**
+       * <code>optional .MediaContainer mediaContainer = 3;</code>
+       */
       public boolean hasMediaContainer() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
+      /**
+       * <code>optional .MediaContainer mediaContainer = 3;</code>
+       */
       public pl.edu.icm.coansys.models.DocumentProtos.MediaContainer getMediaContainer() {
         if (mediaContainerBuilder_ == null) {
           return mediaContainer_;
@@ -1726,6 +2570,9 @@ public final class PersonProtos {
           return mediaContainerBuilder_.getMessage();
         }
       }
+      /**
+       * <code>optional .MediaContainer mediaContainer = 3;</code>
+       */
       public Builder setMediaContainer(pl.edu.icm.coansys.models.DocumentProtos.MediaContainer value) {
         if (mediaContainerBuilder_ == null) {
           if (value == null) {
@@ -1739,6 +2586,9 @@ public final class PersonProtos {
         bitField0_ |= 0x00000004;
         return this;
       }
+      /**
+       * <code>optional .MediaContainer mediaContainer = 3;</code>
+       */
       public Builder setMediaContainer(
           pl.edu.icm.coansys.models.DocumentProtos.MediaContainer.Builder builderForValue) {
         if (mediaContainerBuilder_ == null) {
@@ -1750,6 +2600,9 @@ public final class PersonProtos {
         bitField0_ |= 0x00000004;
         return this;
       }
+      /**
+       * <code>optional .MediaContainer mediaContainer = 3;</code>
+       */
       public Builder mergeMediaContainer(pl.edu.icm.coansys.models.DocumentProtos.MediaContainer value) {
         if (mediaContainerBuilder_ == null) {
           if (((bitField0_ & 0x00000004) == 0x00000004) &&
@@ -1766,6 +2619,9 @@ public final class PersonProtos {
         bitField0_ |= 0x00000004;
         return this;
       }
+      /**
+       * <code>optional .MediaContainer mediaContainer = 3;</code>
+       */
       public Builder clearMediaContainer() {
         if (mediaContainerBuilder_ == null) {
           mediaContainer_ = pl.edu.icm.coansys.models.DocumentProtos.MediaContainer.getDefaultInstance();
@@ -1776,11 +2632,17 @@ public final class PersonProtos {
         bitField0_ = (bitField0_ & ~0x00000004);
         return this;
       }
+      /**
+       * <code>optional .MediaContainer mediaContainer = 3;</code>
+       */
       public pl.edu.icm.coansys.models.DocumentProtos.MediaContainer.Builder getMediaContainerBuilder() {
         bitField0_ |= 0x00000004;
         onChanged();
         return getMediaContainerFieldBuilder().getBuilder();
       }
+      /**
+       * <code>optional .MediaContainer mediaContainer = 3;</code>
+       */
       public pl.edu.icm.coansys.models.DocumentProtos.MediaContainerOrBuilder getMediaContainerOrBuilder() {
         if (mediaContainerBuilder_ != null) {
           return mediaContainerBuilder_.getMessageOrBuilder();
@@ -1788,6 +2650,9 @@ public final class PersonProtos {
           return mediaContainer_;
         }
       }
+      /**
+       * <code>optional .MediaContainer mediaContainer = 3;</code>
+       */
       private com.google.protobuf.SingleFieldBuilder<
           pl.edu.icm.coansys.models.DocumentProtos.MediaContainer, pl.edu.icm.coansys.models.DocumentProtos.MediaContainer.Builder, pl.edu.icm.coansys.models.DocumentProtos.MediaContainerOrBuilder> 
           getMediaContainerFieldBuilder() {
@@ -1801,18 +2666,18 @@ public final class PersonProtos {
         }
         return mediaContainerBuilder_;
       }
-      
+
       // @@protoc_insertion_point(builder_scope:PersonWrapper)
     }
-    
+
     static {
       defaultInstance = new PersonWrapper(true);
       defaultInstance.initFields();
     }
-    
+
     // @@protoc_insertion_point(class_scope:PersonWrapper)
   }
-  
+
   private static com.google.protobuf.Descriptors.Descriptor
     internal_static_PersonMetadata_descriptor;
   private static
@@ -1823,7 +2688,7 @@ public final class PersonProtos {
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_PersonWrapper_fieldAccessorTable;
-  
+
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
     return descriptor;
@@ -1851,17 +2716,13 @@ public final class PersonProtos {
           internal_static_PersonMetadata_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_PersonMetadata_descriptor,
-              new java.lang.String[] { "Key", "Name", "Firstname", "Lastname", "Email", "OtherId", },
-              pl.edu.icm.coansys.models.PersonProtos.PersonMetadata.class,
-              pl.edu.icm.coansys.models.PersonProtos.PersonMetadata.Builder.class);
+              new java.lang.String[] { "Key", "Name", "Firstname", "Lastname", "Email", "OtherId", });
           internal_static_PersonWrapper_descriptor =
             getDescriptor().getMessageTypes().get(1);
           internal_static_PersonWrapper_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_PersonWrapper_descriptor,
-              new java.lang.String[] { "RowId", "PersonMetadata", "MediaContainer", },
-              pl.edu.icm.coansys.models.PersonProtos.PersonWrapper.class,
-              pl.edu.icm.coansys.models.PersonProtos.PersonWrapper.Builder.class);
+              new java.lang.String[] { "RowId", "PersonMetadata", "MediaContainer", });
           return null;
         }
       };
@@ -1871,6 +2732,6 @@ public final class PersonProtos {
           pl.edu.icm.coansys.models.DocumentProtos.getDescriptor(),
         }, assigner);
   }
-  
+
   // @@protoc_insertion_point(outer_class_scope)
 }

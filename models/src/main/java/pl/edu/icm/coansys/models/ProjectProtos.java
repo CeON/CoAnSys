@@ -10,304 +10,668 @@ public final class ProjectProtos {
   }
   public interface ProjectMetadataOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
-    
+
     // required string key = 1;
+    /**
+     * <code>required string key = 1;</code>
+     */
     boolean hasKey();
-    String getKey();
-    
+    /**
+     * <code>required string key = 1;</code>
+     */
+    java.lang.String getKey();
+    /**
+     * <code>required string key = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getKeyBytes();
+
     // repeated string name = 2;
-    java.util.List<String> getNameList();
+    /**
+     * <code>repeated string name = 2;</code>
+     */
+    java.util.List<java.lang.String>
+    getNameList();
+    /**
+     * <code>repeated string name = 2;</code>
+     */
     int getNameCount();
-    String getName(int index);
-    
+    /**
+     * <code>repeated string name = 2;</code>
+     */
+    java.lang.String getName(int index);
+    /**
+     * <code>repeated string name = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getNameBytes(int index);
+
     // optional string description = 3;
+    /**
+     * <code>optional string description = 3;</code>
+     */
     boolean hasDescription();
-    String getDescription();
-    
+    /**
+     * <code>optional string description = 3;</code>
+     */
+    java.lang.String getDescription();
+    /**
+     * <code>optional string description = 3;</code>
+     */
+    com.google.protobuf.ByteString
+        getDescriptionBytes();
+
     // optional string url = 4;
+    /**
+     * <code>optional string url = 4;</code>
+     */
     boolean hasUrl();
-    String getUrl();
-    
+    /**
+     * <code>optional string url = 4;</code>
+     */
+    java.lang.String getUrl();
+    /**
+     * <code>optional string url = 4;</code>
+     */
+    com.google.protobuf.ByteString
+        getUrlBytes();
+
     // optional string intitutionCoordinatorId = 5;
+    /**
+     * <code>optional string intitutionCoordinatorId = 5;</code>
+     */
     boolean hasIntitutionCoordinatorId();
-    String getIntitutionCoordinatorId();
-    
+    /**
+     * <code>optional string intitutionCoordinatorId = 5;</code>
+     */
+    java.lang.String getIntitutionCoordinatorId();
+    /**
+     * <code>optional string intitutionCoordinatorId = 5;</code>
+     */
+    com.google.protobuf.ByteString
+        getIntitutionCoordinatorIdBytes();
+
     // optional string personCoordinatorId = 6;
+    /**
+     * <code>optional string personCoordinatorId = 6;</code>
+     */
     boolean hasPersonCoordinatorId();
-    String getPersonCoordinatorId();
-    
+    /**
+     * <code>optional string personCoordinatorId = 6;</code>
+     */
+    java.lang.String getPersonCoordinatorId();
+    /**
+     * <code>optional string personCoordinatorId = 6;</code>
+     */
+    com.google.protobuf.ByteString
+        getPersonCoordinatorIdBytes();
+
     // repeated string intitutionPartnerId = 7;
-    java.util.List<String> getIntitutionPartnerIdList();
+    /**
+     * <code>repeated string intitutionPartnerId = 7;</code>
+     */
+    java.util.List<java.lang.String>
+    getIntitutionPartnerIdList();
+    /**
+     * <code>repeated string intitutionPartnerId = 7;</code>
+     */
     int getIntitutionPartnerIdCount();
-    String getIntitutionPartnerId(int index);
-    
+    /**
+     * <code>repeated string intitutionPartnerId = 7;</code>
+     */
+    java.lang.String getIntitutionPartnerId(int index);
+    /**
+     * <code>repeated string intitutionPartnerId = 7;</code>
+     */
+    com.google.protobuf.ByteString
+        getIntitutionPartnerIdBytes(int index);
+
     // repeated string personParticipantId = 8;
-    java.util.List<String> getPersonParticipantIdList();
+    /**
+     * <code>repeated string personParticipantId = 8;</code>
+     */
+    java.util.List<java.lang.String>
+    getPersonParticipantIdList();
+    /**
+     * <code>repeated string personParticipantId = 8;</code>
+     */
     int getPersonParticipantIdCount();
-    String getPersonParticipantId(int index);
-    
+    /**
+     * <code>repeated string personParticipantId = 8;</code>
+     */
+    java.lang.String getPersonParticipantId(int index);
+    /**
+     * <code>repeated string personParticipantId = 8;</code>
+     */
+    com.google.protobuf.ByteString
+        getPersonParticipantIdBytes(int index);
+
     // repeated .KeyValue otherId = 9;
+    /**
+     * <code>repeated .KeyValue otherId = 9;</code>
+     */
     java.util.List<pl.edu.icm.coansys.models.DocumentProtos.KeyValue> 
         getOtherIdList();
+    /**
+     * <code>repeated .KeyValue otherId = 9;</code>
+     */
     pl.edu.icm.coansys.models.DocumentProtos.KeyValue getOtherId(int index);
+    /**
+     * <code>repeated .KeyValue otherId = 9;</code>
+     */
     int getOtherIdCount();
+    /**
+     * <code>repeated .KeyValue otherId = 9;</code>
+     */
     java.util.List<? extends pl.edu.icm.coansys.models.DocumentProtos.KeyValueOrBuilder> 
         getOtherIdOrBuilderList();
+    /**
+     * <code>repeated .KeyValue otherId = 9;</code>
+     */
     pl.edu.icm.coansys.models.DocumentProtos.KeyValueOrBuilder getOtherIdOrBuilder(
         int index);
   }
+  /**
+   * Protobuf type {@code ProjectMetadata}
+   */
   public static final class ProjectMetadata extends
       com.google.protobuf.GeneratedMessage
       implements ProjectMetadataOrBuilder {
     // Use ProjectMetadata.newBuilder() to construct.
-    private ProjectMetadata(Builder builder) {
+    private ProjectMetadata(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
-    private ProjectMetadata(boolean noInit) {}
-    
+    private ProjectMetadata(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
     private static final ProjectMetadata defaultInstance;
     public static ProjectMetadata getDefaultInstance() {
       return defaultInstance;
     }
-    
+
     public ProjectMetadata getDefaultInstanceForType() {
       return defaultInstance;
     }
-    
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private ProjectMetadata(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              bitField0_ |= 0x00000001;
+              key_ = input.readBytes();
+              break;
+            }
+            case 18: {
+              if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+                name_ = new com.google.protobuf.LazyStringArrayList();
+                mutable_bitField0_ |= 0x00000002;
+              }
+              name_.add(input.readBytes());
+              break;
+            }
+            case 26: {
+              bitField0_ |= 0x00000002;
+              description_ = input.readBytes();
+              break;
+            }
+            case 34: {
+              bitField0_ |= 0x00000004;
+              url_ = input.readBytes();
+              break;
+            }
+            case 42: {
+              bitField0_ |= 0x00000008;
+              intitutionCoordinatorId_ = input.readBytes();
+              break;
+            }
+            case 50: {
+              bitField0_ |= 0x00000010;
+              personCoordinatorId_ = input.readBytes();
+              break;
+            }
+            case 58: {
+              if (!((mutable_bitField0_ & 0x00000040) == 0x00000040)) {
+                intitutionPartnerId_ = new com.google.protobuf.LazyStringArrayList();
+                mutable_bitField0_ |= 0x00000040;
+              }
+              intitutionPartnerId_.add(input.readBytes());
+              break;
+            }
+            case 66: {
+              if (!((mutable_bitField0_ & 0x00000080) == 0x00000080)) {
+                personParticipantId_ = new com.google.protobuf.LazyStringArrayList();
+                mutable_bitField0_ |= 0x00000080;
+              }
+              personParticipantId_.add(input.readBytes());
+              break;
+            }
+            case 74: {
+              if (!((mutable_bitField0_ & 0x00000100) == 0x00000100)) {
+                otherId_ = new java.util.ArrayList<pl.edu.icm.coansys.models.DocumentProtos.KeyValue>();
+                mutable_bitField0_ |= 0x00000100;
+              }
+              otherId_.add(input.readMessage(pl.edu.icm.coansys.models.DocumentProtos.KeyValue.PARSER, extensionRegistry));
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+          name_ = new com.google.protobuf.UnmodifiableLazyStringList(name_);
+        }
+        if (((mutable_bitField0_ & 0x00000040) == 0x00000040)) {
+          intitutionPartnerId_ = new com.google.protobuf.UnmodifiableLazyStringList(intitutionPartnerId_);
+        }
+        if (((mutable_bitField0_ & 0x00000080) == 0x00000080)) {
+          personParticipantId_ = new com.google.protobuf.UnmodifiableLazyStringList(personParticipantId_);
+        }
+        if (((mutable_bitField0_ & 0x00000100) == 0x00000100)) {
+          otherId_ = java.util.Collections.unmodifiableList(otherId_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
       return pl.edu.icm.coansys.models.ProjectProtos.internal_static_ProjectMetadata_descriptor;
     }
-    
+
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return pl.edu.icm.coansys.models.ProjectProtos.internal_static_ProjectMetadata_fieldAccessorTable;
+      return pl.edu.icm.coansys.models.ProjectProtos.internal_static_ProjectMetadata_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadata.class, pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadata.Builder.class);
     }
-    
+
+    public static com.google.protobuf.Parser<ProjectMetadata> PARSER =
+        new com.google.protobuf.AbstractParser<ProjectMetadata>() {
+      public ProjectMetadata parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new ProjectMetadata(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<ProjectMetadata> getParserForType() {
+      return PARSER;
+    }
+
     private int bitField0_;
     // required string key = 1;
     public static final int KEY_FIELD_NUMBER = 1;
     private java.lang.Object key_;
+    /**
+     * <code>required string key = 1;</code>
+     */
     public boolean hasKey() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
-    public String getKey() {
+    /**
+     * <code>required string key = 1;</code>
+     */
+    public java.lang.String getKey() {
       java.lang.Object ref = key_;
-      if (ref instanceof String) {
-        return (String) ref;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
           key_ = s;
         }
         return s;
       }
     }
-    private com.google.protobuf.ByteString getKeyBytes() {
+    /**
+     * <code>required string key = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getKeyBytes() {
       java.lang.Object ref = key_;
-      if (ref instanceof String) {
+      if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
         key_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
-    
+
     // repeated string name = 2;
     public static final int NAME_FIELD_NUMBER = 2;
     private com.google.protobuf.LazyStringList name_;
-    public java.util.List<String>
+    /**
+     * <code>repeated string name = 2;</code>
+     */
+    public java.util.List<java.lang.String>
         getNameList() {
       return name_;
     }
+    /**
+     * <code>repeated string name = 2;</code>
+     */
     public int getNameCount() {
       return name_.size();
     }
-    public String getName(int index) {
+    /**
+     * <code>repeated string name = 2;</code>
+     */
+    public java.lang.String getName(int index) {
       return name_.get(index);
     }
-    
+    /**
+     * <code>repeated string name = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getNameBytes(int index) {
+      return name_.getByteString(index);
+    }
+
     // optional string description = 3;
     public static final int DESCRIPTION_FIELD_NUMBER = 3;
     private java.lang.Object description_;
+    /**
+     * <code>optional string description = 3;</code>
+     */
     public boolean hasDescription() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
-    public String getDescription() {
+    /**
+     * <code>optional string description = 3;</code>
+     */
+    public java.lang.String getDescription() {
       java.lang.Object ref = description_;
-      if (ref instanceof String) {
-        return (String) ref;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
           description_ = s;
         }
         return s;
       }
     }
-    private com.google.protobuf.ByteString getDescriptionBytes() {
+    /**
+     * <code>optional string description = 3;</code>
+     */
+    public com.google.protobuf.ByteString
+        getDescriptionBytes() {
       java.lang.Object ref = description_;
-      if (ref instanceof String) {
+      if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
         description_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
-    
+
     // optional string url = 4;
     public static final int URL_FIELD_NUMBER = 4;
     private java.lang.Object url_;
+    /**
+     * <code>optional string url = 4;</code>
+     */
     public boolean hasUrl() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
-    public String getUrl() {
+    /**
+     * <code>optional string url = 4;</code>
+     */
+    public java.lang.String getUrl() {
       java.lang.Object ref = url_;
-      if (ref instanceof String) {
-        return (String) ref;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
           url_ = s;
         }
         return s;
       }
     }
-    private com.google.protobuf.ByteString getUrlBytes() {
+    /**
+     * <code>optional string url = 4;</code>
+     */
+    public com.google.protobuf.ByteString
+        getUrlBytes() {
       java.lang.Object ref = url_;
-      if (ref instanceof String) {
+      if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
         url_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
-    
+
     // optional string intitutionCoordinatorId = 5;
     public static final int INTITUTIONCOORDINATORID_FIELD_NUMBER = 5;
     private java.lang.Object intitutionCoordinatorId_;
+    /**
+     * <code>optional string intitutionCoordinatorId = 5;</code>
+     */
     public boolean hasIntitutionCoordinatorId() {
       return ((bitField0_ & 0x00000008) == 0x00000008);
     }
-    public String getIntitutionCoordinatorId() {
+    /**
+     * <code>optional string intitutionCoordinatorId = 5;</code>
+     */
+    public java.lang.String getIntitutionCoordinatorId() {
       java.lang.Object ref = intitutionCoordinatorId_;
-      if (ref instanceof String) {
-        return (String) ref;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
           intitutionCoordinatorId_ = s;
         }
         return s;
       }
     }
-    private com.google.protobuf.ByteString getIntitutionCoordinatorIdBytes() {
+    /**
+     * <code>optional string intitutionCoordinatorId = 5;</code>
+     */
+    public com.google.protobuf.ByteString
+        getIntitutionCoordinatorIdBytes() {
       java.lang.Object ref = intitutionCoordinatorId_;
-      if (ref instanceof String) {
+      if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
         intitutionCoordinatorId_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
-    
+
     // optional string personCoordinatorId = 6;
     public static final int PERSONCOORDINATORID_FIELD_NUMBER = 6;
     private java.lang.Object personCoordinatorId_;
+    /**
+     * <code>optional string personCoordinatorId = 6;</code>
+     */
     public boolean hasPersonCoordinatorId() {
       return ((bitField0_ & 0x00000010) == 0x00000010);
     }
-    public String getPersonCoordinatorId() {
+    /**
+     * <code>optional string personCoordinatorId = 6;</code>
+     */
+    public java.lang.String getPersonCoordinatorId() {
       java.lang.Object ref = personCoordinatorId_;
-      if (ref instanceof String) {
-        return (String) ref;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
           personCoordinatorId_ = s;
         }
         return s;
       }
     }
-    private com.google.protobuf.ByteString getPersonCoordinatorIdBytes() {
+    /**
+     * <code>optional string personCoordinatorId = 6;</code>
+     */
+    public com.google.protobuf.ByteString
+        getPersonCoordinatorIdBytes() {
       java.lang.Object ref = personCoordinatorId_;
-      if (ref instanceof String) {
+      if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
         personCoordinatorId_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
-    
+
     // repeated string intitutionPartnerId = 7;
     public static final int INTITUTIONPARTNERID_FIELD_NUMBER = 7;
     private com.google.protobuf.LazyStringList intitutionPartnerId_;
-    public java.util.List<String>
+    /**
+     * <code>repeated string intitutionPartnerId = 7;</code>
+     */
+    public java.util.List<java.lang.String>
         getIntitutionPartnerIdList() {
       return intitutionPartnerId_;
     }
+    /**
+     * <code>repeated string intitutionPartnerId = 7;</code>
+     */
     public int getIntitutionPartnerIdCount() {
       return intitutionPartnerId_.size();
     }
-    public String getIntitutionPartnerId(int index) {
+    /**
+     * <code>repeated string intitutionPartnerId = 7;</code>
+     */
+    public java.lang.String getIntitutionPartnerId(int index) {
       return intitutionPartnerId_.get(index);
     }
-    
+    /**
+     * <code>repeated string intitutionPartnerId = 7;</code>
+     */
+    public com.google.protobuf.ByteString
+        getIntitutionPartnerIdBytes(int index) {
+      return intitutionPartnerId_.getByteString(index);
+    }
+
     // repeated string personParticipantId = 8;
     public static final int PERSONPARTICIPANTID_FIELD_NUMBER = 8;
     private com.google.protobuf.LazyStringList personParticipantId_;
-    public java.util.List<String>
+    /**
+     * <code>repeated string personParticipantId = 8;</code>
+     */
+    public java.util.List<java.lang.String>
         getPersonParticipantIdList() {
       return personParticipantId_;
     }
+    /**
+     * <code>repeated string personParticipantId = 8;</code>
+     */
     public int getPersonParticipantIdCount() {
       return personParticipantId_.size();
     }
-    public String getPersonParticipantId(int index) {
+    /**
+     * <code>repeated string personParticipantId = 8;</code>
+     */
+    public java.lang.String getPersonParticipantId(int index) {
       return personParticipantId_.get(index);
     }
-    
+    /**
+     * <code>repeated string personParticipantId = 8;</code>
+     */
+    public com.google.protobuf.ByteString
+        getPersonParticipantIdBytes(int index) {
+      return personParticipantId_.getByteString(index);
+    }
+
     // repeated .KeyValue otherId = 9;
     public static final int OTHERID_FIELD_NUMBER = 9;
     private java.util.List<pl.edu.icm.coansys.models.DocumentProtos.KeyValue> otherId_;
+    /**
+     * <code>repeated .KeyValue otherId = 9;</code>
+     */
     public java.util.List<pl.edu.icm.coansys.models.DocumentProtos.KeyValue> getOtherIdList() {
       return otherId_;
     }
+    /**
+     * <code>repeated .KeyValue otherId = 9;</code>
+     */
     public java.util.List<? extends pl.edu.icm.coansys.models.DocumentProtos.KeyValueOrBuilder> 
         getOtherIdOrBuilderList() {
       return otherId_;
     }
+    /**
+     * <code>repeated .KeyValue otherId = 9;</code>
+     */
     public int getOtherIdCount() {
       return otherId_.size();
     }
+    /**
+     * <code>repeated .KeyValue otherId = 9;</code>
+     */
     public pl.edu.icm.coansys.models.DocumentProtos.KeyValue getOtherId(int index) {
       return otherId_.get(index);
     }
+    /**
+     * <code>repeated .KeyValue otherId = 9;</code>
+     */
     public pl.edu.icm.coansys.models.DocumentProtos.KeyValueOrBuilder getOtherIdOrBuilder(
         int index) {
       return otherId_.get(index);
     }
-    
+
     private void initFields() {
       key_ = "";
       name_ = com.google.protobuf.LazyStringArrayList.EMPTY;
@@ -323,7 +687,7 @@ public final class ProjectProtos {
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
-      
+
       if (!hasKey()) {
         memoizedIsInitialized = 0;
         return false;
@@ -337,7 +701,7 @@ public final class ProjectProtos {
       memoizedIsInitialized = 1;
       return true;
     }
-    
+
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
@@ -370,12 +734,12 @@ public final class ProjectProtos {
       }
       getUnknownFields().writeTo(output);
     }
-    
+
     private int memoizedSerializedSize = -1;
     public int getSerializedSize() {
       int size = memoizedSerializedSize;
       if (size != -1) return size;
-    
+
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
@@ -432,94 +796,83 @@ public final class ProjectProtos {
       memoizedSerializedSize = size;
       return size;
     }
-    
+
     private static final long serialVersionUID = 0L;
     @java.lang.Override
     protected java.lang.Object writeReplace()
         throws java.io.ObjectStreamException {
       return super.writeReplace();
     }
-    
+
     public static pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadata parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
+      return PARSER.parseFrom(data);
     }
     public static pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadata parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadata parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
+      return PARSER.parseFrom(data);
     }
     public static pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadata parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadata parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
+      return PARSER.parseFrom(input);
     }
     public static pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadata parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(input, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadata parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
+      return PARSER.parseDelimitedFrom(input);
     }
     public static pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadata parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadata parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
+      return PARSER.parseFrom(input);
     }
     public static pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadata parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(input, extensionRegistry);
     }
-    
+
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder(pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadata prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
-    
+
     @java.lang.Override
     protected Builder newBuilderForType(
         com.google.protobuf.GeneratedMessage.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
+    /**
+     * Protobuf type {@code ProjectMetadata}
+     */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
        implements pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadataOrBuilder {
@@ -527,18 +880,21 @@ public final class ProjectProtos {
           getDescriptor() {
         return pl.edu.icm.coansys.models.ProjectProtos.internal_static_ProjectMetadata_descriptor;
       }
-      
+
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return pl.edu.icm.coansys.models.ProjectProtos.internal_static_ProjectMetadata_fieldAccessorTable;
+        return pl.edu.icm.coansys.models.ProjectProtos.internal_static_ProjectMetadata_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadata.class, pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadata.Builder.class);
       }
-      
+
       // Construct using pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadata.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
-      
-      private Builder(BuilderParent parent) {
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
@@ -550,7 +906,7 @@ public final class ProjectProtos {
       private static Builder create() {
         return new Builder();
       }
-      
+
       public Builder clear() {
         super.clear();
         key_ = "";
@@ -577,20 +933,20 @@ public final class ProjectProtos {
         }
         return this;
       }
-      
+
       public Builder clone() {
         return create().mergeFrom(buildPartial());
       }
-      
+
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadata.getDescriptor();
+        return pl.edu.icm.coansys.models.ProjectProtos.internal_static_ProjectMetadata_descriptor;
       }
-      
+
       public pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadata getDefaultInstanceForType() {
         return pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadata.getDefaultInstance();
       }
-      
+
       public pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadata build() {
         pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadata result = buildPartial();
         if (!result.isInitialized()) {
@@ -598,17 +954,7 @@ public final class ProjectProtos {
         }
         return result;
       }
-      
-      private pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadata buildParsed()
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadata result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(
-            result).asInvalidProtocolBufferException();
-        }
-        return result;
-      }
-      
+
       public pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadata buildPartial() {
         pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadata result = new pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadata(this);
         int from_bitField0_ = bitField0_;
@@ -664,7 +1010,7 @@ public final class ProjectProtos {
         onBuilt();
         return result;
       }
-      
+
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadata) {
           return mergeFrom((pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadata)other);
@@ -673,11 +1019,13 @@ public final class ProjectProtos {
           return this;
         }
       }
-      
+
       public Builder mergeFrom(pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadata other) {
         if (other == pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadata.getDefaultInstance()) return this;
         if (other.hasKey()) {
-          setKey(other.getKey());
+          bitField0_ |= 0x00000001;
+          key_ = other.key_;
+          onChanged();
         }
         if (!other.name_.isEmpty()) {
           if (name_.isEmpty()) {
@@ -690,16 +1038,24 @@ public final class ProjectProtos {
           onChanged();
         }
         if (other.hasDescription()) {
-          setDescription(other.getDescription());
+          bitField0_ |= 0x00000004;
+          description_ = other.description_;
+          onChanged();
         }
         if (other.hasUrl()) {
-          setUrl(other.getUrl());
+          bitField0_ |= 0x00000008;
+          url_ = other.url_;
+          onChanged();
         }
         if (other.hasIntitutionCoordinatorId()) {
-          setIntitutionCoordinatorId(other.getIntitutionCoordinatorId());
+          bitField0_ |= 0x00000010;
+          intitutionCoordinatorId_ = other.intitutionCoordinatorId_;
+          onChanged();
         }
         if (other.hasPersonCoordinatorId()) {
-          setPersonCoordinatorId(other.getPersonCoordinatorId());
+          bitField0_ |= 0x00000020;
+          personCoordinatorId_ = other.personCoordinatorId_;
+          onChanged();
         }
         if (!other.intitutionPartnerId_.isEmpty()) {
           if (intitutionPartnerId_.isEmpty()) {
@@ -750,7 +1106,7 @@ public final class ProjectProtos {
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
-      
+
       public final boolean isInitialized() {
         if (!hasKey()) {
           
@@ -764,98 +1120,69 @@ public final class ProjectProtos {
         }
         return true;
       }
-      
+
       public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder(
-            this.getUnknownFields());
-        while (true) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              this.setUnknownFields(unknownFields.build());
-              onChanged();
-              return this;
-            default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                this.setUnknownFields(unknownFields.build());
-                onChanged();
-                return this;
-              }
-              break;
-            }
-            case 10: {
-              bitField0_ |= 0x00000001;
-              key_ = input.readBytes();
-              break;
-            }
-            case 18: {
-              ensureNameIsMutable();
-              name_.add(input.readBytes());
-              break;
-            }
-            case 26: {
-              bitField0_ |= 0x00000004;
-              description_ = input.readBytes();
-              break;
-            }
-            case 34: {
-              bitField0_ |= 0x00000008;
-              url_ = input.readBytes();
-              break;
-            }
-            case 42: {
-              bitField0_ |= 0x00000010;
-              intitutionCoordinatorId_ = input.readBytes();
-              break;
-            }
-            case 50: {
-              bitField0_ |= 0x00000020;
-              personCoordinatorId_ = input.readBytes();
-              break;
-            }
-            case 58: {
-              ensureIntitutionPartnerIdIsMutable();
-              intitutionPartnerId_.add(input.readBytes());
-              break;
-            }
-            case 66: {
-              ensurePersonParticipantIdIsMutable();
-              personParticipantId_.add(input.readBytes());
-              break;
-            }
-            case 74: {
-              pl.edu.icm.coansys.models.DocumentProtos.KeyValue.Builder subBuilder = pl.edu.icm.coansys.models.DocumentProtos.KeyValue.newBuilder();
-              input.readMessage(subBuilder, extensionRegistry);
-              addOtherId(subBuilder.buildPartial());
-              break;
-            }
+        pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadata parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadata) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
           }
         }
+        return this;
       }
-      
       private int bitField0_;
-      
+
       // required string key = 1;
       private java.lang.Object key_ = "";
+      /**
+       * <code>required string key = 1;</code>
+       */
       public boolean hasKey() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
-      public String getKey() {
+      /**
+       * <code>required string key = 1;</code>
+       */
+      public java.lang.String getKey() {
         java.lang.Object ref = key_;
-        if (!(ref instanceof String)) {
-          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
           key_ = s;
           return s;
         } else {
-          return (String) ref;
+          return (java.lang.String) ref;
         }
       }
-      public Builder setKey(String value) {
+      /**
+       * <code>required string key = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getKeyBytes() {
+        java.lang.Object ref = key_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          key_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string key = 1;</code>
+       */
+      public Builder setKey(
+          java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -864,18 +1191,29 @@ public final class ProjectProtos {
         onChanged();
         return this;
       }
+      /**
+       * <code>required string key = 1;</code>
+       */
       public Builder clearKey() {
         bitField0_ = (bitField0_ & ~0x00000001);
         key_ = getDefaultInstance().getKey();
         onChanged();
         return this;
       }
-      void setKey(com.google.protobuf.ByteString value) {
-        bitField0_ |= 0x00000001;
+      /**
+       * <code>required string key = 1;</code>
+       */
+      public Builder setKeyBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
         key_ = value;
         onChanged();
+        return this;
       }
-      
+
       // repeated string name = 2;
       private com.google.protobuf.LazyStringList name_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       private void ensureNameIsMutable() {
@@ -884,18 +1222,37 @@ public final class ProjectProtos {
           bitField0_ |= 0x00000002;
          }
       }
-      public java.util.List<String>
+      /**
+       * <code>repeated string name = 2;</code>
+       */
+      public java.util.List<java.lang.String>
           getNameList() {
         return java.util.Collections.unmodifiableList(name_);
       }
+      /**
+       * <code>repeated string name = 2;</code>
+       */
       public int getNameCount() {
         return name_.size();
       }
-      public String getName(int index) {
+      /**
+       * <code>repeated string name = 2;</code>
+       */
+      public java.lang.String getName(int index) {
         return name_.get(index);
       }
+      /**
+       * <code>repeated string name = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getNameBytes(int index) {
+        return name_.getByteString(index);
+      }
+      /**
+       * <code>repeated string name = 2;</code>
+       */
       public Builder setName(
-          int index, String value) {
+          int index, java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -904,7 +1261,11 @@ public final class ProjectProtos {
         onChanged();
         return this;
       }
-      public Builder addName(String value) {
+      /**
+       * <code>repeated string name = 2;</code>
+       */
+      public Builder addName(
+          java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -913,41 +1274,82 @@ public final class ProjectProtos {
         onChanged();
         return this;
       }
+      /**
+       * <code>repeated string name = 2;</code>
+       */
       public Builder addAllName(
-          java.lang.Iterable<String> values) {
+          java.lang.Iterable<java.lang.String> values) {
         ensureNameIsMutable();
         super.addAll(values, name_);
         onChanged();
         return this;
       }
+      /**
+       * <code>repeated string name = 2;</code>
+       */
       public Builder clearName() {
         name_ = com.google.protobuf.LazyStringArrayList.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000002);
         onChanged();
         return this;
       }
-      void addName(com.google.protobuf.ByteString value) {
-        ensureNameIsMutable();
+      /**
+       * <code>repeated string name = 2;</code>
+       */
+      public Builder addNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureNameIsMutable();
         name_.add(value);
         onChanged();
+        return this;
       }
-      
+
       // optional string description = 3;
       private java.lang.Object description_ = "";
+      /**
+       * <code>optional string description = 3;</code>
+       */
       public boolean hasDescription() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
-      public String getDescription() {
+      /**
+       * <code>optional string description = 3;</code>
+       */
+      public java.lang.String getDescription() {
         java.lang.Object ref = description_;
-        if (!(ref instanceof String)) {
-          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
           description_ = s;
           return s;
         } else {
-          return (String) ref;
+          return (java.lang.String) ref;
         }
       }
-      public Builder setDescription(String value) {
+      /**
+       * <code>optional string description = 3;</code>
+       */
+      public com.google.protobuf.ByteString
+          getDescriptionBytes() {
+        java.lang.Object ref = description_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          description_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string description = 3;</code>
+       */
+      public Builder setDescription(
+          java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -956,34 +1358,72 @@ public final class ProjectProtos {
         onChanged();
         return this;
       }
+      /**
+       * <code>optional string description = 3;</code>
+       */
       public Builder clearDescription() {
         bitField0_ = (bitField0_ & ~0x00000004);
         description_ = getDefaultInstance().getDescription();
         onChanged();
         return this;
       }
-      void setDescription(com.google.protobuf.ByteString value) {
-        bitField0_ |= 0x00000004;
+      /**
+       * <code>optional string description = 3;</code>
+       */
+      public Builder setDescriptionBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
         description_ = value;
         onChanged();
+        return this;
       }
-      
+
       // optional string url = 4;
       private java.lang.Object url_ = "";
+      /**
+       * <code>optional string url = 4;</code>
+       */
       public boolean hasUrl() {
         return ((bitField0_ & 0x00000008) == 0x00000008);
       }
-      public String getUrl() {
+      /**
+       * <code>optional string url = 4;</code>
+       */
+      public java.lang.String getUrl() {
         java.lang.Object ref = url_;
-        if (!(ref instanceof String)) {
-          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
           url_ = s;
           return s;
         } else {
-          return (String) ref;
+          return (java.lang.String) ref;
         }
       }
-      public Builder setUrl(String value) {
+      /**
+       * <code>optional string url = 4;</code>
+       */
+      public com.google.protobuf.ByteString
+          getUrlBytes() {
+        java.lang.Object ref = url_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          url_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string url = 4;</code>
+       */
+      public Builder setUrl(
+          java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -992,34 +1432,72 @@ public final class ProjectProtos {
         onChanged();
         return this;
       }
+      /**
+       * <code>optional string url = 4;</code>
+       */
       public Builder clearUrl() {
         bitField0_ = (bitField0_ & ~0x00000008);
         url_ = getDefaultInstance().getUrl();
         onChanged();
         return this;
       }
-      void setUrl(com.google.protobuf.ByteString value) {
-        bitField0_ |= 0x00000008;
+      /**
+       * <code>optional string url = 4;</code>
+       */
+      public Builder setUrlBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000008;
         url_ = value;
         onChanged();
+        return this;
       }
-      
+
       // optional string intitutionCoordinatorId = 5;
       private java.lang.Object intitutionCoordinatorId_ = "";
+      /**
+       * <code>optional string intitutionCoordinatorId = 5;</code>
+       */
       public boolean hasIntitutionCoordinatorId() {
         return ((bitField0_ & 0x00000010) == 0x00000010);
       }
-      public String getIntitutionCoordinatorId() {
+      /**
+       * <code>optional string intitutionCoordinatorId = 5;</code>
+       */
+      public java.lang.String getIntitutionCoordinatorId() {
         java.lang.Object ref = intitutionCoordinatorId_;
-        if (!(ref instanceof String)) {
-          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
           intitutionCoordinatorId_ = s;
           return s;
         } else {
-          return (String) ref;
+          return (java.lang.String) ref;
         }
       }
-      public Builder setIntitutionCoordinatorId(String value) {
+      /**
+       * <code>optional string intitutionCoordinatorId = 5;</code>
+       */
+      public com.google.protobuf.ByteString
+          getIntitutionCoordinatorIdBytes() {
+        java.lang.Object ref = intitutionCoordinatorId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          intitutionCoordinatorId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string intitutionCoordinatorId = 5;</code>
+       */
+      public Builder setIntitutionCoordinatorId(
+          java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -1028,34 +1506,72 @@ public final class ProjectProtos {
         onChanged();
         return this;
       }
+      /**
+       * <code>optional string intitutionCoordinatorId = 5;</code>
+       */
       public Builder clearIntitutionCoordinatorId() {
         bitField0_ = (bitField0_ & ~0x00000010);
         intitutionCoordinatorId_ = getDefaultInstance().getIntitutionCoordinatorId();
         onChanged();
         return this;
       }
-      void setIntitutionCoordinatorId(com.google.protobuf.ByteString value) {
-        bitField0_ |= 0x00000010;
+      /**
+       * <code>optional string intitutionCoordinatorId = 5;</code>
+       */
+      public Builder setIntitutionCoordinatorIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000010;
         intitutionCoordinatorId_ = value;
         onChanged();
+        return this;
       }
-      
+
       // optional string personCoordinatorId = 6;
       private java.lang.Object personCoordinatorId_ = "";
+      /**
+       * <code>optional string personCoordinatorId = 6;</code>
+       */
       public boolean hasPersonCoordinatorId() {
         return ((bitField0_ & 0x00000020) == 0x00000020);
       }
-      public String getPersonCoordinatorId() {
+      /**
+       * <code>optional string personCoordinatorId = 6;</code>
+       */
+      public java.lang.String getPersonCoordinatorId() {
         java.lang.Object ref = personCoordinatorId_;
-        if (!(ref instanceof String)) {
-          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
           personCoordinatorId_ = s;
           return s;
         } else {
-          return (String) ref;
+          return (java.lang.String) ref;
         }
       }
-      public Builder setPersonCoordinatorId(String value) {
+      /**
+       * <code>optional string personCoordinatorId = 6;</code>
+       */
+      public com.google.protobuf.ByteString
+          getPersonCoordinatorIdBytes() {
+        java.lang.Object ref = personCoordinatorId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          personCoordinatorId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string personCoordinatorId = 6;</code>
+       */
+      public Builder setPersonCoordinatorId(
+          java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -1064,18 +1580,29 @@ public final class ProjectProtos {
         onChanged();
         return this;
       }
+      /**
+       * <code>optional string personCoordinatorId = 6;</code>
+       */
       public Builder clearPersonCoordinatorId() {
         bitField0_ = (bitField0_ & ~0x00000020);
         personCoordinatorId_ = getDefaultInstance().getPersonCoordinatorId();
         onChanged();
         return this;
       }
-      void setPersonCoordinatorId(com.google.protobuf.ByteString value) {
-        bitField0_ |= 0x00000020;
+      /**
+       * <code>optional string personCoordinatorId = 6;</code>
+       */
+      public Builder setPersonCoordinatorIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000020;
         personCoordinatorId_ = value;
         onChanged();
+        return this;
       }
-      
+
       // repeated string intitutionPartnerId = 7;
       private com.google.protobuf.LazyStringList intitutionPartnerId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       private void ensureIntitutionPartnerIdIsMutable() {
@@ -1084,18 +1611,37 @@ public final class ProjectProtos {
           bitField0_ |= 0x00000040;
          }
       }
-      public java.util.List<String>
+      /**
+       * <code>repeated string intitutionPartnerId = 7;</code>
+       */
+      public java.util.List<java.lang.String>
           getIntitutionPartnerIdList() {
         return java.util.Collections.unmodifiableList(intitutionPartnerId_);
       }
+      /**
+       * <code>repeated string intitutionPartnerId = 7;</code>
+       */
       public int getIntitutionPartnerIdCount() {
         return intitutionPartnerId_.size();
       }
-      public String getIntitutionPartnerId(int index) {
+      /**
+       * <code>repeated string intitutionPartnerId = 7;</code>
+       */
+      public java.lang.String getIntitutionPartnerId(int index) {
         return intitutionPartnerId_.get(index);
       }
+      /**
+       * <code>repeated string intitutionPartnerId = 7;</code>
+       */
+      public com.google.protobuf.ByteString
+          getIntitutionPartnerIdBytes(int index) {
+        return intitutionPartnerId_.getByteString(index);
+      }
+      /**
+       * <code>repeated string intitutionPartnerId = 7;</code>
+       */
       public Builder setIntitutionPartnerId(
-          int index, String value) {
+          int index, java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -1104,7 +1650,11 @@ public final class ProjectProtos {
         onChanged();
         return this;
       }
-      public Builder addIntitutionPartnerId(String value) {
+      /**
+       * <code>repeated string intitutionPartnerId = 7;</code>
+       */
+      public Builder addIntitutionPartnerId(
+          java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -1113,25 +1663,39 @@ public final class ProjectProtos {
         onChanged();
         return this;
       }
+      /**
+       * <code>repeated string intitutionPartnerId = 7;</code>
+       */
       public Builder addAllIntitutionPartnerId(
-          java.lang.Iterable<String> values) {
+          java.lang.Iterable<java.lang.String> values) {
         ensureIntitutionPartnerIdIsMutable();
         super.addAll(values, intitutionPartnerId_);
         onChanged();
         return this;
       }
+      /**
+       * <code>repeated string intitutionPartnerId = 7;</code>
+       */
       public Builder clearIntitutionPartnerId() {
         intitutionPartnerId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000040);
         onChanged();
         return this;
       }
-      void addIntitutionPartnerId(com.google.protobuf.ByteString value) {
-        ensureIntitutionPartnerIdIsMutable();
+      /**
+       * <code>repeated string intitutionPartnerId = 7;</code>
+       */
+      public Builder addIntitutionPartnerIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureIntitutionPartnerIdIsMutable();
         intitutionPartnerId_.add(value);
         onChanged();
+        return this;
       }
-      
+
       // repeated string personParticipantId = 8;
       private com.google.protobuf.LazyStringList personParticipantId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       private void ensurePersonParticipantIdIsMutable() {
@@ -1140,18 +1704,37 @@ public final class ProjectProtos {
           bitField0_ |= 0x00000080;
          }
       }
-      public java.util.List<String>
+      /**
+       * <code>repeated string personParticipantId = 8;</code>
+       */
+      public java.util.List<java.lang.String>
           getPersonParticipantIdList() {
         return java.util.Collections.unmodifiableList(personParticipantId_);
       }
+      /**
+       * <code>repeated string personParticipantId = 8;</code>
+       */
       public int getPersonParticipantIdCount() {
         return personParticipantId_.size();
       }
-      public String getPersonParticipantId(int index) {
+      /**
+       * <code>repeated string personParticipantId = 8;</code>
+       */
+      public java.lang.String getPersonParticipantId(int index) {
         return personParticipantId_.get(index);
       }
+      /**
+       * <code>repeated string personParticipantId = 8;</code>
+       */
+      public com.google.protobuf.ByteString
+          getPersonParticipantIdBytes(int index) {
+        return personParticipantId_.getByteString(index);
+      }
+      /**
+       * <code>repeated string personParticipantId = 8;</code>
+       */
       public Builder setPersonParticipantId(
-          int index, String value) {
+          int index, java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -1160,7 +1743,11 @@ public final class ProjectProtos {
         onChanged();
         return this;
       }
-      public Builder addPersonParticipantId(String value) {
+      /**
+       * <code>repeated string personParticipantId = 8;</code>
+       */
+      public Builder addPersonParticipantId(
+          java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -1169,25 +1756,39 @@ public final class ProjectProtos {
         onChanged();
         return this;
       }
+      /**
+       * <code>repeated string personParticipantId = 8;</code>
+       */
       public Builder addAllPersonParticipantId(
-          java.lang.Iterable<String> values) {
+          java.lang.Iterable<java.lang.String> values) {
         ensurePersonParticipantIdIsMutable();
         super.addAll(values, personParticipantId_);
         onChanged();
         return this;
       }
+      /**
+       * <code>repeated string personParticipantId = 8;</code>
+       */
       public Builder clearPersonParticipantId() {
         personParticipantId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000080);
         onChanged();
         return this;
       }
-      void addPersonParticipantId(com.google.protobuf.ByteString value) {
-        ensurePersonParticipantIdIsMutable();
+      /**
+       * <code>repeated string personParticipantId = 8;</code>
+       */
+      public Builder addPersonParticipantIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensurePersonParticipantIdIsMutable();
         personParticipantId_.add(value);
         onChanged();
+        return this;
       }
-      
+
       // repeated .KeyValue otherId = 9;
       private java.util.List<pl.edu.icm.coansys.models.DocumentProtos.KeyValue> otherId_ =
         java.util.Collections.emptyList();
@@ -1197,10 +1798,13 @@ public final class ProjectProtos {
           bitField0_ |= 0x00000100;
          }
       }
-      
+
       private com.google.protobuf.RepeatedFieldBuilder<
           pl.edu.icm.coansys.models.DocumentProtos.KeyValue, pl.edu.icm.coansys.models.DocumentProtos.KeyValue.Builder, pl.edu.icm.coansys.models.DocumentProtos.KeyValueOrBuilder> otherIdBuilder_;
-      
+
+      /**
+       * <code>repeated .KeyValue otherId = 9;</code>
+       */
       public java.util.List<pl.edu.icm.coansys.models.DocumentProtos.KeyValue> getOtherIdList() {
         if (otherIdBuilder_ == null) {
           return java.util.Collections.unmodifiableList(otherId_);
@@ -1208,6 +1812,9 @@ public final class ProjectProtos {
           return otherIdBuilder_.getMessageList();
         }
       }
+      /**
+       * <code>repeated .KeyValue otherId = 9;</code>
+       */
       public int getOtherIdCount() {
         if (otherIdBuilder_ == null) {
           return otherId_.size();
@@ -1215,6 +1822,9 @@ public final class ProjectProtos {
           return otherIdBuilder_.getCount();
         }
       }
+      /**
+       * <code>repeated .KeyValue otherId = 9;</code>
+       */
       public pl.edu.icm.coansys.models.DocumentProtos.KeyValue getOtherId(int index) {
         if (otherIdBuilder_ == null) {
           return otherId_.get(index);
@@ -1222,6 +1832,9 @@ public final class ProjectProtos {
           return otherIdBuilder_.getMessage(index);
         }
       }
+      /**
+       * <code>repeated .KeyValue otherId = 9;</code>
+       */
       public Builder setOtherId(
           int index, pl.edu.icm.coansys.models.DocumentProtos.KeyValue value) {
         if (otherIdBuilder_ == null) {
@@ -1236,6 +1849,9 @@ public final class ProjectProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .KeyValue otherId = 9;</code>
+       */
       public Builder setOtherId(
           int index, pl.edu.icm.coansys.models.DocumentProtos.KeyValue.Builder builderForValue) {
         if (otherIdBuilder_ == null) {
@@ -1247,6 +1863,9 @@ public final class ProjectProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .KeyValue otherId = 9;</code>
+       */
       public Builder addOtherId(pl.edu.icm.coansys.models.DocumentProtos.KeyValue value) {
         if (otherIdBuilder_ == null) {
           if (value == null) {
@@ -1260,6 +1879,9 @@ public final class ProjectProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .KeyValue otherId = 9;</code>
+       */
       public Builder addOtherId(
           int index, pl.edu.icm.coansys.models.DocumentProtos.KeyValue value) {
         if (otherIdBuilder_ == null) {
@@ -1274,6 +1896,9 @@ public final class ProjectProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .KeyValue otherId = 9;</code>
+       */
       public Builder addOtherId(
           pl.edu.icm.coansys.models.DocumentProtos.KeyValue.Builder builderForValue) {
         if (otherIdBuilder_ == null) {
@@ -1285,6 +1910,9 @@ public final class ProjectProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .KeyValue otherId = 9;</code>
+       */
       public Builder addOtherId(
           int index, pl.edu.icm.coansys.models.DocumentProtos.KeyValue.Builder builderForValue) {
         if (otherIdBuilder_ == null) {
@@ -1296,6 +1924,9 @@ public final class ProjectProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .KeyValue otherId = 9;</code>
+       */
       public Builder addAllOtherId(
           java.lang.Iterable<? extends pl.edu.icm.coansys.models.DocumentProtos.KeyValue> values) {
         if (otherIdBuilder_ == null) {
@@ -1307,6 +1938,9 @@ public final class ProjectProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .KeyValue otherId = 9;</code>
+       */
       public Builder clearOtherId() {
         if (otherIdBuilder_ == null) {
           otherId_ = java.util.Collections.emptyList();
@@ -1317,6 +1951,9 @@ public final class ProjectProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .KeyValue otherId = 9;</code>
+       */
       public Builder removeOtherId(int index) {
         if (otherIdBuilder_ == null) {
           ensureOtherIdIsMutable();
@@ -1327,10 +1964,16 @@ public final class ProjectProtos {
         }
         return this;
       }
+      /**
+       * <code>repeated .KeyValue otherId = 9;</code>
+       */
       public pl.edu.icm.coansys.models.DocumentProtos.KeyValue.Builder getOtherIdBuilder(
           int index) {
         return getOtherIdFieldBuilder().getBuilder(index);
       }
+      /**
+       * <code>repeated .KeyValue otherId = 9;</code>
+       */
       public pl.edu.icm.coansys.models.DocumentProtos.KeyValueOrBuilder getOtherIdOrBuilder(
           int index) {
         if (otherIdBuilder_ == null) {
@@ -1338,6 +1981,9 @@ public final class ProjectProtos {
           return otherIdBuilder_.getMessageOrBuilder(index);
         }
       }
+      /**
+       * <code>repeated .KeyValue otherId = 9;</code>
+       */
       public java.util.List<? extends pl.edu.icm.coansys.models.DocumentProtos.KeyValueOrBuilder> 
            getOtherIdOrBuilderList() {
         if (otherIdBuilder_ != null) {
@@ -1346,15 +1992,24 @@ public final class ProjectProtos {
           return java.util.Collections.unmodifiableList(otherId_);
         }
       }
+      /**
+       * <code>repeated .KeyValue otherId = 9;</code>
+       */
       public pl.edu.icm.coansys.models.DocumentProtos.KeyValue.Builder addOtherIdBuilder() {
         return getOtherIdFieldBuilder().addBuilder(
             pl.edu.icm.coansys.models.DocumentProtos.KeyValue.getDefaultInstance());
       }
+      /**
+       * <code>repeated .KeyValue otherId = 9;</code>
+       */
       public pl.edu.icm.coansys.models.DocumentProtos.KeyValue.Builder addOtherIdBuilder(
           int index) {
         return getOtherIdFieldBuilder().addBuilder(
             index, pl.edu.icm.coansys.models.DocumentProtos.KeyValue.getDefaultInstance());
       }
+      /**
+       * <code>repeated .KeyValue otherId = 9;</code>
+       */
       public java.util.List<pl.edu.icm.coansys.models.DocumentProtos.KeyValue.Builder> 
            getOtherIdBuilderList() {
         return getOtherIdFieldBuilder().getBuilderList();
@@ -1373,122 +2028,278 @@ public final class ProjectProtos {
         }
         return otherIdBuilder_;
       }
-      
+
       // @@protoc_insertion_point(builder_scope:ProjectMetadata)
     }
-    
+
     static {
       defaultInstance = new ProjectMetadata(true);
       defaultInstance.initFields();
     }
-    
+
     // @@protoc_insertion_point(class_scope:ProjectMetadata)
   }
-  
+
   public interface ProjectWrapperOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
-    
+
     // required string rowId = 1;
+    /**
+     * <code>required string rowId = 1;</code>
+     */
     boolean hasRowId();
-    String getRowId();
-    
+    /**
+     * <code>required string rowId = 1;</code>
+     */
+    java.lang.String getRowId();
+    /**
+     * <code>required string rowId = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getRowIdBytes();
+
     // optional .ProjectMetadata projectMetadata = 2;
+    /**
+     * <code>optional .ProjectMetadata projectMetadata = 2;</code>
+     */
     boolean hasProjectMetadata();
+    /**
+     * <code>optional .ProjectMetadata projectMetadata = 2;</code>
+     */
     pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadata getProjectMetadata();
+    /**
+     * <code>optional .ProjectMetadata projectMetadata = 2;</code>
+     */
     pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadataOrBuilder getProjectMetadataOrBuilder();
-    
+
     // optional .MediaContainer mediaContainer = 3;
+    /**
+     * <code>optional .MediaContainer mediaContainer = 3;</code>
+     */
     boolean hasMediaContainer();
+    /**
+     * <code>optional .MediaContainer mediaContainer = 3;</code>
+     */
     pl.edu.icm.coansys.models.DocumentProtos.MediaContainer getMediaContainer();
+    /**
+     * <code>optional .MediaContainer mediaContainer = 3;</code>
+     */
     pl.edu.icm.coansys.models.DocumentProtos.MediaContainerOrBuilder getMediaContainerOrBuilder();
   }
+  /**
+   * Protobuf type {@code ProjectWrapper}
+   *
+   * <pre>
+   * used only in sequece files, to store both metadata and media as a single value;
+   * rowId -- collection + (if PDF attached) "_PDF" + "_" + documentMetadata.key;
+   * </pre>
+   */
   public static final class ProjectWrapper extends
       com.google.protobuf.GeneratedMessage
       implements ProjectWrapperOrBuilder {
     // Use ProjectWrapper.newBuilder() to construct.
-    private ProjectWrapper(Builder builder) {
+    private ProjectWrapper(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
+      this.unknownFields = builder.getUnknownFields();
     }
-    private ProjectWrapper(boolean noInit) {}
-    
+    private ProjectWrapper(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
     private static final ProjectWrapper defaultInstance;
     public static ProjectWrapper getDefaultInstance() {
       return defaultInstance;
     }
-    
+
     public ProjectWrapper getDefaultInstanceForType() {
       return defaultInstance;
     }
-    
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private ProjectWrapper(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              bitField0_ |= 0x00000001;
+              rowId_ = input.readBytes();
+              break;
+            }
+            case 18: {
+              pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadata.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000002) == 0x00000002)) {
+                subBuilder = projectMetadata_.toBuilder();
+              }
+              projectMetadata_ = input.readMessage(pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadata.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(projectMetadata_);
+                projectMetadata_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000002;
+              break;
+            }
+            case 26: {
+              pl.edu.icm.coansys.models.DocumentProtos.MediaContainer.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000004) == 0x00000004)) {
+                subBuilder = mediaContainer_.toBuilder();
+              }
+              mediaContainer_ = input.readMessage(pl.edu.icm.coansys.models.DocumentProtos.MediaContainer.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(mediaContainer_);
+                mediaContainer_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000004;
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
       return pl.edu.icm.coansys.models.ProjectProtos.internal_static_ProjectWrapper_descriptor;
     }
-    
+
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return pl.edu.icm.coansys.models.ProjectProtos.internal_static_ProjectWrapper_fieldAccessorTable;
+      return pl.edu.icm.coansys.models.ProjectProtos.internal_static_ProjectWrapper_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              pl.edu.icm.coansys.models.ProjectProtos.ProjectWrapper.class, pl.edu.icm.coansys.models.ProjectProtos.ProjectWrapper.Builder.class);
     }
-    
+
+    public static com.google.protobuf.Parser<ProjectWrapper> PARSER =
+        new com.google.protobuf.AbstractParser<ProjectWrapper>() {
+      public ProjectWrapper parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new ProjectWrapper(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<ProjectWrapper> getParserForType() {
+      return PARSER;
+    }
+
     private int bitField0_;
     // required string rowId = 1;
     public static final int ROWID_FIELD_NUMBER = 1;
     private java.lang.Object rowId_;
+    /**
+     * <code>required string rowId = 1;</code>
+     */
     public boolean hasRowId() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
-    public String getRowId() {
+    /**
+     * <code>required string rowId = 1;</code>
+     */
+    public java.lang.String getRowId() {
       java.lang.Object ref = rowId_;
-      if (ref instanceof String) {
-        return (String) ref;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
           rowId_ = s;
         }
         return s;
       }
     }
-    private com.google.protobuf.ByteString getRowIdBytes() {
+    /**
+     * <code>required string rowId = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getRowIdBytes() {
       java.lang.Object ref = rowId_;
-      if (ref instanceof String) {
+      if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
         rowId_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
-    
+
     // optional .ProjectMetadata projectMetadata = 2;
     public static final int PROJECTMETADATA_FIELD_NUMBER = 2;
     private pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadata projectMetadata_;
+    /**
+     * <code>optional .ProjectMetadata projectMetadata = 2;</code>
+     */
     public boolean hasProjectMetadata() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
+    /**
+     * <code>optional .ProjectMetadata projectMetadata = 2;</code>
+     */
     public pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadata getProjectMetadata() {
       return projectMetadata_;
     }
+    /**
+     * <code>optional .ProjectMetadata projectMetadata = 2;</code>
+     */
     public pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadataOrBuilder getProjectMetadataOrBuilder() {
       return projectMetadata_;
     }
-    
+
     // optional .MediaContainer mediaContainer = 3;
     public static final int MEDIACONTAINER_FIELD_NUMBER = 3;
     private pl.edu.icm.coansys.models.DocumentProtos.MediaContainer mediaContainer_;
+    /**
+     * <code>optional .MediaContainer mediaContainer = 3;</code>
+     */
     public boolean hasMediaContainer() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
+    /**
+     * <code>optional .MediaContainer mediaContainer = 3;</code>
+     */
     public pl.edu.icm.coansys.models.DocumentProtos.MediaContainer getMediaContainer() {
       return mediaContainer_;
     }
+    /**
+     * <code>optional .MediaContainer mediaContainer = 3;</code>
+     */
     public pl.edu.icm.coansys.models.DocumentProtos.MediaContainerOrBuilder getMediaContainerOrBuilder() {
       return mediaContainer_;
     }
-    
+
     private void initFields() {
       rowId_ = "";
       projectMetadata_ = pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadata.getDefaultInstance();
@@ -1498,7 +2309,7 @@ public final class ProjectProtos {
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
-      
+
       if (!hasRowId()) {
         memoizedIsInitialized = 0;
         return false;
@@ -1518,7 +2329,7 @@ public final class ProjectProtos {
       memoizedIsInitialized = 1;
       return true;
     }
-    
+
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
@@ -1533,12 +2344,12 @@ public final class ProjectProtos {
       }
       getUnknownFields().writeTo(output);
     }
-    
+
     private int memoizedSerializedSize = -1;
     public int getSerializedSize() {
       int size = memoizedSerializedSize;
       if (size != -1) return size;
-    
+
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
@@ -1556,94 +2367,88 @@ public final class ProjectProtos {
       memoizedSerializedSize = size;
       return size;
     }
-    
+
     private static final long serialVersionUID = 0L;
     @java.lang.Override
     protected java.lang.Object writeReplace()
         throws java.io.ObjectStreamException {
       return super.writeReplace();
     }
-    
+
     public static pl.edu.icm.coansys.models.ProjectProtos.ProjectWrapper parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
+      return PARSER.parseFrom(data);
     }
     public static pl.edu.icm.coansys.models.ProjectProtos.ProjectWrapper parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.ProjectProtos.ProjectWrapper parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
+      return PARSER.parseFrom(data);
     }
     public static pl.edu.icm.coansys.models.ProjectProtos.ProjectWrapper parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.ProjectProtos.ProjectWrapper parseFrom(java.io.InputStream input)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
+      return PARSER.parseFrom(input);
     }
     public static pl.edu.icm.coansys.models.ProjectProtos.ProjectWrapper parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(input, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.ProjectProtos.ProjectWrapper parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
+      return PARSER.parseDelimitedFrom(input);
     }
     public static pl.edu.icm.coansys.models.ProjectProtos.ProjectWrapper parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
     public static pl.edu.icm.coansys.models.ProjectProtos.ProjectWrapper parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
+      return PARSER.parseFrom(input);
     }
     public static pl.edu.icm.coansys.models.ProjectProtos.ProjectWrapper parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
+      return PARSER.parseFrom(input, extensionRegistry);
     }
-    
+
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder(pl.edu.icm.coansys.models.ProjectProtos.ProjectWrapper prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
-    
+
     @java.lang.Override
     protected Builder newBuilderForType(
         com.google.protobuf.GeneratedMessage.BuilderParent parent) {
       Builder builder = new Builder(parent);
       return builder;
     }
+    /**
+     * Protobuf type {@code ProjectWrapper}
+     *
+     * <pre>
+     * used only in sequece files, to store both metadata and media as a single value;
+     * rowId -- collection + (if PDF attached) "_PDF" + "_" + documentMetadata.key;
+     * </pre>
+     */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
        implements pl.edu.icm.coansys.models.ProjectProtos.ProjectWrapperOrBuilder {
@@ -1651,18 +2456,21 @@ public final class ProjectProtos {
           getDescriptor() {
         return pl.edu.icm.coansys.models.ProjectProtos.internal_static_ProjectWrapper_descriptor;
       }
-      
+
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return pl.edu.icm.coansys.models.ProjectProtos.internal_static_ProjectWrapper_fieldAccessorTable;
+        return pl.edu.icm.coansys.models.ProjectProtos.internal_static_ProjectWrapper_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                pl.edu.icm.coansys.models.ProjectProtos.ProjectWrapper.class, pl.edu.icm.coansys.models.ProjectProtos.ProjectWrapper.Builder.class);
       }
-      
+
       // Construct using pl.edu.icm.coansys.models.ProjectProtos.ProjectWrapper.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
-      
-      private Builder(BuilderParent parent) {
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
         super(parent);
         maybeForceBuilderInitialization();
       }
@@ -1675,7 +2483,7 @@ public final class ProjectProtos {
       private static Builder create() {
         return new Builder();
       }
-      
+
       public Builder clear() {
         super.clear();
         rowId_ = "";
@@ -1694,20 +2502,20 @@ public final class ProjectProtos {
         bitField0_ = (bitField0_ & ~0x00000004);
         return this;
       }
-      
+
       public Builder clone() {
         return create().mergeFrom(buildPartial());
       }
-      
+
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return pl.edu.icm.coansys.models.ProjectProtos.ProjectWrapper.getDescriptor();
+        return pl.edu.icm.coansys.models.ProjectProtos.internal_static_ProjectWrapper_descriptor;
       }
-      
+
       public pl.edu.icm.coansys.models.ProjectProtos.ProjectWrapper getDefaultInstanceForType() {
         return pl.edu.icm.coansys.models.ProjectProtos.ProjectWrapper.getDefaultInstance();
       }
-      
+
       public pl.edu.icm.coansys.models.ProjectProtos.ProjectWrapper build() {
         pl.edu.icm.coansys.models.ProjectProtos.ProjectWrapper result = buildPartial();
         if (!result.isInitialized()) {
@@ -1715,17 +2523,7 @@ public final class ProjectProtos {
         }
         return result;
       }
-      
-      private pl.edu.icm.coansys.models.ProjectProtos.ProjectWrapper buildParsed()
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        pl.edu.icm.coansys.models.ProjectProtos.ProjectWrapper result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(
-            result).asInvalidProtocolBufferException();
-        }
-        return result;
-      }
-      
+
       public pl.edu.icm.coansys.models.ProjectProtos.ProjectWrapper buildPartial() {
         pl.edu.icm.coansys.models.ProjectProtos.ProjectWrapper result = new pl.edu.icm.coansys.models.ProjectProtos.ProjectWrapper(this);
         int from_bitField0_ = bitField0_;
@@ -1754,7 +2552,7 @@ public final class ProjectProtos {
         onBuilt();
         return result;
       }
-      
+
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof pl.edu.icm.coansys.models.ProjectProtos.ProjectWrapper) {
           return mergeFrom((pl.edu.icm.coansys.models.ProjectProtos.ProjectWrapper)other);
@@ -1763,11 +2561,13 @@ public final class ProjectProtos {
           return this;
         }
       }
-      
+
       public Builder mergeFrom(pl.edu.icm.coansys.models.ProjectProtos.ProjectWrapper other) {
         if (other == pl.edu.icm.coansys.models.ProjectProtos.ProjectWrapper.getDefaultInstance()) return this;
         if (other.hasRowId()) {
-          setRowId(other.getRowId());
+          bitField0_ |= 0x00000001;
+          rowId_ = other.rowId_;
+          onChanged();
         }
         if (other.hasProjectMetadata()) {
           mergeProjectMetadata(other.getProjectMetadata());
@@ -1778,7 +2578,7 @@ public final class ProjectProtos {
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
-      
+
       public final boolean isInitialized() {
         if (!hasRowId()) {
           
@@ -1798,75 +2598,69 @@ public final class ProjectProtos {
         }
         return true;
       }
-      
+
       public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder(
-            this.getUnknownFields());
-        while (true) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              this.setUnknownFields(unknownFields.build());
-              onChanged();
-              return this;
-            default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                this.setUnknownFields(unknownFields.build());
-                onChanged();
-                return this;
-              }
-              break;
-            }
-            case 10: {
-              bitField0_ |= 0x00000001;
-              rowId_ = input.readBytes();
-              break;
-            }
-            case 18: {
-              pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadata.Builder subBuilder = pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadata.newBuilder();
-              if (hasProjectMetadata()) {
-                subBuilder.mergeFrom(getProjectMetadata());
-              }
-              input.readMessage(subBuilder, extensionRegistry);
-              setProjectMetadata(subBuilder.buildPartial());
-              break;
-            }
-            case 26: {
-              pl.edu.icm.coansys.models.DocumentProtos.MediaContainer.Builder subBuilder = pl.edu.icm.coansys.models.DocumentProtos.MediaContainer.newBuilder();
-              if (hasMediaContainer()) {
-                subBuilder.mergeFrom(getMediaContainer());
-              }
-              input.readMessage(subBuilder, extensionRegistry);
-              setMediaContainer(subBuilder.buildPartial());
-              break;
-            }
+        pl.edu.icm.coansys.models.ProjectProtos.ProjectWrapper parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (pl.edu.icm.coansys.models.ProjectProtos.ProjectWrapper) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
           }
         }
+        return this;
       }
-      
       private int bitField0_;
-      
+
       // required string rowId = 1;
       private java.lang.Object rowId_ = "";
+      /**
+       * <code>required string rowId = 1;</code>
+       */
       public boolean hasRowId() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
-      public String getRowId() {
+      /**
+       * <code>required string rowId = 1;</code>
+       */
+      public java.lang.String getRowId() {
         java.lang.Object ref = rowId_;
-        if (!(ref instanceof String)) {
-          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
           rowId_ = s;
           return s;
         } else {
-          return (String) ref;
+          return (java.lang.String) ref;
         }
       }
-      public Builder setRowId(String value) {
+      /**
+       * <code>required string rowId = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getRowIdBytes() {
+        java.lang.Object ref = rowId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          rowId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string rowId = 1;</code>
+       */
+      public Builder setRowId(
+          java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -1875,25 +2669,42 @@ public final class ProjectProtos {
         onChanged();
         return this;
       }
+      /**
+       * <code>required string rowId = 1;</code>
+       */
       public Builder clearRowId() {
         bitField0_ = (bitField0_ & ~0x00000001);
         rowId_ = getDefaultInstance().getRowId();
         onChanged();
         return this;
       }
-      void setRowId(com.google.protobuf.ByteString value) {
-        bitField0_ |= 0x00000001;
+      /**
+       * <code>required string rowId = 1;</code>
+       */
+      public Builder setRowIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
         rowId_ = value;
         onChanged();
+        return this;
       }
-      
+
       // optional .ProjectMetadata projectMetadata = 2;
       private pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadata projectMetadata_ = pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadata.getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
           pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadata, pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadata.Builder, pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadataOrBuilder> projectMetadataBuilder_;
+      /**
+       * <code>optional .ProjectMetadata projectMetadata = 2;</code>
+       */
       public boolean hasProjectMetadata() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
+      /**
+       * <code>optional .ProjectMetadata projectMetadata = 2;</code>
+       */
       public pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadata getProjectMetadata() {
         if (projectMetadataBuilder_ == null) {
           return projectMetadata_;
@@ -1901,6 +2712,9 @@ public final class ProjectProtos {
           return projectMetadataBuilder_.getMessage();
         }
       }
+      /**
+       * <code>optional .ProjectMetadata projectMetadata = 2;</code>
+       */
       public Builder setProjectMetadata(pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadata value) {
         if (projectMetadataBuilder_ == null) {
           if (value == null) {
@@ -1914,6 +2728,9 @@ public final class ProjectProtos {
         bitField0_ |= 0x00000002;
         return this;
       }
+      /**
+       * <code>optional .ProjectMetadata projectMetadata = 2;</code>
+       */
       public Builder setProjectMetadata(
           pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadata.Builder builderForValue) {
         if (projectMetadataBuilder_ == null) {
@@ -1925,6 +2742,9 @@ public final class ProjectProtos {
         bitField0_ |= 0x00000002;
         return this;
       }
+      /**
+       * <code>optional .ProjectMetadata projectMetadata = 2;</code>
+       */
       public Builder mergeProjectMetadata(pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadata value) {
         if (projectMetadataBuilder_ == null) {
           if (((bitField0_ & 0x00000002) == 0x00000002) &&
@@ -1941,6 +2761,9 @@ public final class ProjectProtos {
         bitField0_ |= 0x00000002;
         return this;
       }
+      /**
+       * <code>optional .ProjectMetadata projectMetadata = 2;</code>
+       */
       public Builder clearProjectMetadata() {
         if (projectMetadataBuilder_ == null) {
           projectMetadata_ = pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadata.getDefaultInstance();
@@ -1951,11 +2774,17 @@ public final class ProjectProtos {
         bitField0_ = (bitField0_ & ~0x00000002);
         return this;
       }
+      /**
+       * <code>optional .ProjectMetadata projectMetadata = 2;</code>
+       */
       public pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadata.Builder getProjectMetadataBuilder() {
         bitField0_ |= 0x00000002;
         onChanged();
         return getProjectMetadataFieldBuilder().getBuilder();
       }
+      /**
+       * <code>optional .ProjectMetadata projectMetadata = 2;</code>
+       */
       public pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadataOrBuilder getProjectMetadataOrBuilder() {
         if (projectMetadataBuilder_ != null) {
           return projectMetadataBuilder_.getMessageOrBuilder();
@@ -1963,6 +2792,9 @@ public final class ProjectProtos {
           return projectMetadata_;
         }
       }
+      /**
+       * <code>optional .ProjectMetadata projectMetadata = 2;</code>
+       */
       private com.google.protobuf.SingleFieldBuilder<
           pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadata, pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadata.Builder, pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadataOrBuilder> 
           getProjectMetadataFieldBuilder() {
@@ -1976,14 +2808,20 @@ public final class ProjectProtos {
         }
         return projectMetadataBuilder_;
       }
-      
+
       // optional .MediaContainer mediaContainer = 3;
       private pl.edu.icm.coansys.models.DocumentProtos.MediaContainer mediaContainer_ = pl.edu.icm.coansys.models.DocumentProtos.MediaContainer.getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
           pl.edu.icm.coansys.models.DocumentProtos.MediaContainer, pl.edu.icm.coansys.models.DocumentProtos.MediaContainer.Builder, pl.edu.icm.coansys.models.DocumentProtos.MediaContainerOrBuilder> mediaContainerBuilder_;
+      /**
+       * <code>optional .MediaContainer mediaContainer = 3;</code>
+       */
       public boolean hasMediaContainer() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
+      /**
+       * <code>optional .MediaContainer mediaContainer = 3;</code>
+       */
       public pl.edu.icm.coansys.models.DocumentProtos.MediaContainer getMediaContainer() {
         if (mediaContainerBuilder_ == null) {
           return mediaContainer_;
@@ -1991,6 +2829,9 @@ public final class ProjectProtos {
           return mediaContainerBuilder_.getMessage();
         }
       }
+      /**
+       * <code>optional .MediaContainer mediaContainer = 3;</code>
+       */
       public Builder setMediaContainer(pl.edu.icm.coansys.models.DocumentProtos.MediaContainer value) {
         if (mediaContainerBuilder_ == null) {
           if (value == null) {
@@ -2004,6 +2845,9 @@ public final class ProjectProtos {
         bitField0_ |= 0x00000004;
         return this;
       }
+      /**
+       * <code>optional .MediaContainer mediaContainer = 3;</code>
+       */
       public Builder setMediaContainer(
           pl.edu.icm.coansys.models.DocumentProtos.MediaContainer.Builder builderForValue) {
         if (mediaContainerBuilder_ == null) {
@@ -2015,6 +2859,9 @@ public final class ProjectProtos {
         bitField0_ |= 0x00000004;
         return this;
       }
+      /**
+       * <code>optional .MediaContainer mediaContainer = 3;</code>
+       */
       public Builder mergeMediaContainer(pl.edu.icm.coansys.models.DocumentProtos.MediaContainer value) {
         if (mediaContainerBuilder_ == null) {
           if (((bitField0_ & 0x00000004) == 0x00000004) &&
@@ -2031,6 +2878,9 @@ public final class ProjectProtos {
         bitField0_ |= 0x00000004;
         return this;
       }
+      /**
+       * <code>optional .MediaContainer mediaContainer = 3;</code>
+       */
       public Builder clearMediaContainer() {
         if (mediaContainerBuilder_ == null) {
           mediaContainer_ = pl.edu.icm.coansys.models.DocumentProtos.MediaContainer.getDefaultInstance();
@@ -2041,11 +2891,17 @@ public final class ProjectProtos {
         bitField0_ = (bitField0_ & ~0x00000004);
         return this;
       }
+      /**
+       * <code>optional .MediaContainer mediaContainer = 3;</code>
+       */
       public pl.edu.icm.coansys.models.DocumentProtos.MediaContainer.Builder getMediaContainerBuilder() {
         bitField0_ |= 0x00000004;
         onChanged();
         return getMediaContainerFieldBuilder().getBuilder();
       }
+      /**
+       * <code>optional .MediaContainer mediaContainer = 3;</code>
+       */
       public pl.edu.icm.coansys.models.DocumentProtos.MediaContainerOrBuilder getMediaContainerOrBuilder() {
         if (mediaContainerBuilder_ != null) {
           return mediaContainerBuilder_.getMessageOrBuilder();
@@ -2053,6 +2909,9 @@ public final class ProjectProtos {
           return mediaContainer_;
         }
       }
+      /**
+       * <code>optional .MediaContainer mediaContainer = 3;</code>
+       */
       private com.google.protobuf.SingleFieldBuilder<
           pl.edu.icm.coansys.models.DocumentProtos.MediaContainer, pl.edu.icm.coansys.models.DocumentProtos.MediaContainer.Builder, pl.edu.icm.coansys.models.DocumentProtos.MediaContainerOrBuilder> 
           getMediaContainerFieldBuilder() {
@@ -2066,18 +2925,18 @@ public final class ProjectProtos {
         }
         return mediaContainerBuilder_;
       }
-      
+
       // @@protoc_insertion_point(builder_scope:ProjectWrapper)
     }
-    
+
     static {
       defaultInstance = new ProjectWrapper(true);
       defaultInstance.initFields();
     }
-    
+
     // @@protoc_insertion_point(class_scope:ProjectWrapper)
   }
-  
+
   private static com.google.protobuf.Descriptors.Descriptor
     internal_static_ProjectMetadata_descriptor;
   private static
@@ -2088,7 +2947,7 @@ public final class ProjectProtos {
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_ProjectWrapper_fieldAccessorTable;
-  
+
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
     return descriptor;
@@ -2119,17 +2978,13 @@ public final class ProjectProtos {
           internal_static_ProjectMetadata_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_ProjectMetadata_descriptor,
-              new java.lang.String[] { "Key", "Name", "Description", "Url", "IntitutionCoordinatorId", "PersonCoordinatorId", "IntitutionPartnerId", "PersonParticipantId", "OtherId", },
-              pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadata.class,
-              pl.edu.icm.coansys.models.ProjectProtos.ProjectMetadata.Builder.class);
+              new java.lang.String[] { "Key", "Name", "Description", "Url", "IntitutionCoordinatorId", "PersonCoordinatorId", "IntitutionPartnerId", "PersonParticipantId", "OtherId", });
           internal_static_ProjectWrapper_descriptor =
             getDescriptor().getMessageTypes().get(1);
           internal_static_ProjectWrapper_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_ProjectWrapper_descriptor,
-              new java.lang.String[] { "RowId", "ProjectMetadata", "MediaContainer", },
-              pl.edu.icm.coansys.models.ProjectProtos.ProjectWrapper.class,
-              pl.edu.icm.coansys.models.ProjectProtos.ProjectWrapper.Builder.class);
+              new java.lang.String[] { "RowId", "ProjectMetadata", "MediaContainer", });
           return null;
         }
       };
@@ -2139,6 +2994,6 @@ public final class ProjectProtos {
           pl.edu.icm.coansys.models.DocumentProtos.getDescriptor(),
         }, assigner);
   }
-  
+
   // @@protoc_insertion_point(outer_class_scope)
 }
