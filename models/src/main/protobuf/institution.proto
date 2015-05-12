@@ -1,0 +1,32 @@
+
+import "bw2.proto";
+
+option java_package = "pl.edu.icm.coansys.models";
+option java_outer_classname = "InstitutionProtos";
+
+
+message InstitutionMetadata {
+  required string key = 1;
+  repeated string originalName=2;
+  repeated string englishName=3;
+  repeated string shortName=4; 
+  required string country=5; 
+  optional string url=6; 
+  optional string cityAddress=7; 
+  optional string parentId=8; 
+  repeated string parentOriginalName=9;
+  repeated string parentEnglishName=10;
+  optional string parentURL=11; 
+  repeated KeyValue otherId=12;
+}
+
+
+
+
+// used only in sequece files, to store both metadata and media as a single value;
+// rowId -- collection + (if PDF attached) "_PDF" + "_" + documentMetadata.key;
+message InstitutionWrapper{
+	required string rowId = 1;
+	optional InstitutionMetadata institutionMetadata = 2;
+	optional MediaContainer mediaContainer = 3;
+}
