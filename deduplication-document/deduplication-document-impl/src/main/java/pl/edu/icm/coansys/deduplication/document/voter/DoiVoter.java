@@ -17,6 +17,8 @@
  */
 package pl.edu.icm.coansys.deduplication.document.voter;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import pl.edu.icm.coansys.models.DocumentProtos;
 
 /**
@@ -25,8 +27,6 @@ import pl.edu.icm.coansys.models.DocumentProtos;
  */
 public class DoiVoter extends AbstractSimilarityVoter {
     
-    private static final int MINDOILENGTH = 5;  // number dot number slash number
-
     @Override
     public Vote vote(DocumentProtos.DocumentMetadata doc1, DocumentProtos.DocumentMetadata doc2) {
         String doi1 = extractDOI(doc1);
@@ -45,10 +45,28 @@ public class DoiVoter extends AbstractSimilarityVoter {
         if (!basicMetadata.hasDoi()) {
             return null;
         }
-        String doi = basicMetadata.getDoi();
-        if (doi.length() < MINDOILENGTH) {
+        
+        String rawDoi = basicMetadata.getDoi().trim();
+        String[] splittedDoi = rawDoi.split("\\|");
+        if (splittedDoi.length == 2 && (splittedDoi[0].equals(splittedDoi[1]) || splittedDoi[1].startsWith("issn"))) {
+            rawDoi = splittedDoi[0];
+        } else if (rawDoi.length() % 2 == 0) {
+            String firstHalf = rawDoi.substring(0, rawDoi.length() / 2);
+            String secondHalf = rawDoi.substring(rawDoi.length() / 2);
+            if (firstHalf.equals(secondHalf)) {
+                rawDoi = firstHalf;
+            }
+        }
+        
+        String doiregex = ".*?(10[.][0-9]{4,}[^\\s\"/<>]*/[^\\s\"]+[^\\s\"\\]\\.;]).*";
+        Pattern doiPattern = Pattern.compile(doiregex);
+        Matcher matcher = doiPattern.matcher(rawDoi);
+        
+        if (matcher.matches()) {
+            String doi = matcher.group(1);
+            return doi;
+        } else {
             return null;
         }
-        return doi;
     }
 }
