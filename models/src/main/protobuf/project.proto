@@ -10,9 +10,9 @@ message ProjectMetadata {
   repeated string name=2;
   optional string description=3;
   optional string url=4;
-  optional string intitutionCoordinatorId=5;
+  optional string organizationCoordinatorId=5;
   optional string personCoordinatorId=6;
-  repeated string intitutionPartnerId=7;
+  repeated string organizationPartnerId=7;
   repeated string personParticipantId=8; 
   repeated KeyValue otherId=9;
 }

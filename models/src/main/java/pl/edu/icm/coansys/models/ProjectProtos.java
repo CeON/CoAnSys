@@ -76,20 +76,20 @@ public final class ProjectProtos {
     com.google.protobuf.ByteString
         getUrlBytes();
 
-    // optional string intitutionCoordinatorId = 5;
+    // optional string organizationCoordinatorId = 5;
     /**
-     * <code>optional string intitutionCoordinatorId = 5;</code>
+     * <code>optional string organizationCoordinatorId = 5;</code>
      */
-    boolean hasIntitutionCoordinatorId();
+    boolean hasOrganizationCoordinatorId();
     /**
-     * <code>optional string intitutionCoordinatorId = 5;</code>
+     * <code>optional string organizationCoordinatorId = 5;</code>
      */
-    java.lang.String getIntitutionCoordinatorId();
+    java.lang.String getOrganizationCoordinatorId();
     /**
-     * <code>optional string intitutionCoordinatorId = 5;</code>
+     * <code>optional string organizationCoordinatorId = 5;</code>
      */
     com.google.protobuf.ByteString
-        getIntitutionCoordinatorIdBytes();
+        getOrganizationCoordinatorIdBytes();
 
     // optional string personCoordinatorId = 6;
     /**
@@ -106,25 +106,25 @@ public final class ProjectProtos {
     com.google.protobuf.ByteString
         getPersonCoordinatorIdBytes();
 
-    // repeated string intitutionPartnerId = 7;
+    // repeated string organizationPartnerId = 7;
     /**
-     * <code>repeated string intitutionPartnerId = 7;</code>
+     * <code>repeated string organizationPartnerId = 7;</code>
      */
     java.util.List<java.lang.String>
-    getIntitutionPartnerIdList();
+    getOrganizationPartnerIdList();
     /**
-     * <code>repeated string intitutionPartnerId = 7;</code>
+     * <code>repeated string organizationPartnerId = 7;</code>
      */
-    int getIntitutionPartnerIdCount();
+    int getOrganizationPartnerIdCount();
     /**
-     * <code>repeated string intitutionPartnerId = 7;</code>
+     * <code>repeated string organizationPartnerId = 7;</code>
      */
-    java.lang.String getIntitutionPartnerId(int index);
+    java.lang.String getOrganizationPartnerId(int index);
     /**
-     * <code>repeated string intitutionPartnerId = 7;</code>
+     * <code>repeated string organizationPartnerId = 7;</code>
      */
     com.google.protobuf.ByteString
-        getIntitutionPartnerIdBytes(int index);
+        getOrganizationPartnerIdBytes(int index);
 
     // repeated string personParticipantId = 8;
     /**
@@ -247,7 +247,7 @@ public final class ProjectProtos {
             }
             case 42: {
               bitField0_ |= 0x00000008;
-              intitutionCoordinatorId_ = input.readBytes();
+              organizationCoordinatorId_ = input.readBytes();
               break;
             }
             case 50: {
@@ -257,10 +257,10 @@ public final class ProjectProtos {
             }
             case 58: {
               if (!((mutable_bitField0_ & 0x00000040) == 0x00000040)) {
-                intitutionPartnerId_ = new com.google.protobuf.LazyStringArrayList();
+                organizationPartnerId_ = new com.google.protobuf.LazyStringArrayList();
                 mutable_bitField0_ |= 0x00000040;
               }
-              intitutionPartnerId_.add(input.readBytes());
+              organizationPartnerId_.add(input.readBytes());
               break;
             }
             case 66: {
@@ -291,7 +291,7 @@ public final class ProjectProtos {
           name_ = new com.google.protobuf.UnmodifiableLazyStringList(name_);
         }
         if (((mutable_bitField0_ & 0x00000040) == 0x00000040)) {
-          intitutionPartnerId_ = new com.google.protobuf.UnmodifiableLazyStringList(intitutionPartnerId_);
+          organizationPartnerId_ = new com.google.protobuf.UnmodifiableLazyStringList(organizationPartnerId_);
         }
         if (((mutable_bitField0_ & 0x00000080) == 0x00000080)) {
           personParticipantId_ = new com.google.protobuf.UnmodifiableLazyStringList(personParticipantId_);
@@ -490,20 +490,20 @@ public final class ProjectProtos {
       }
     }
 
-    // optional string intitutionCoordinatorId = 5;
-    public static final int INTITUTIONCOORDINATORID_FIELD_NUMBER = 5;
-    private java.lang.Object intitutionCoordinatorId_;
+    // optional string organizationCoordinatorId = 5;
+    public static final int ORGANIZATIONCOORDINATORID_FIELD_NUMBER = 5;
+    private java.lang.Object organizationCoordinatorId_;
     /**
-     * <code>optional string intitutionCoordinatorId = 5;</code>
+     * <code>optional string organizationCoordinatorId = 5;</code>
      */
-    public boolean hasIntitutionCoordinatorId() {
+    public boolean hasOrganizationCoordinatorId() {
       return ((bitField0_ & 0x00000008) == 0x00000008);
     }
     /**
-     * <code>optional string intitutionCoordinatorId = 5;</code>
+     * <code>optional string organizationCoordinatorId = 5;</code>
      */
-    public java.lang.String getIntitutionCoordinatorId() {
-      java.lang.Object ref = intitutionCoordinatorId_;
+    public java.lang.String getOrganizationCoordinatorId() {
+      java.lang.Object ref = organizationCoordinatorId_;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
@@ -511,22 +511,22 @@ public final class ProjectProtos {
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         if (bs.isValidUtf8()) {
-          intitutionCoordinatorId_ = s;
+          organizationCoordinatorId_ = s;
         }
         return s;
       }
     }
     /**
-     * <code>optional string intitutionCoordinatorId = 5;</code>
+     * <code>optional string organizationCoordinatorId = 5;</code>
      */
     public com.google.protobuf.ByteString
-        getIntitutionCoordinatorIdBytes() {
-      java.lang.Object ref = intitutionCoordinatorId_;
+        getOrganizationCoordinatorIdBytes() {
+      java.lang.Object ref = organizationCoordinatorId_;
       if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        intitutionCoordinatorId_ = b;
+        organizationCoordinatorId_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
@@ -576,34 +576,34 @@ public final class ProjectProtos {
       }
     }
 
-    // repeated string intitutionPartnerId = 7;
-    public static final int INTITUTIONPARTNERID_FIELD_NUMBER = 7;
-    private com.google.protobuf.LazyStringList intitutionPartnerId_;
+    // repeated string organizationPartnerId = 7;
+    public static final int ORGANIZATIONPARTNERID_FIELD_NUMBER = 7;
+    private com.google.protobuf.LazyStringList organizationPartnerId_;
     /**
-     * <code>repeated string intitutionPartnerId = 7;</code>
+     * <code>repeated string organizationPartnerId = 7;</code>
      */
     public java.util.List<java.lang.String>
-        getIntitutionPartnerIdList() {
-      return intitutionPartnerId_;
+        getOrganizationPartnerIdList() {
+      return organizationPartnerId_;
     }
     /**
-     * <code>repeated string intitutionPartnerId = 7;</code>
+     * <code>repeated string organizationPartnerId = 7;</code>
      */
-    public int getIntitutionPartnerIdCount() {
-      return intitutionPartnerId_.size();
+    public int getOrganizationPartnerIdCount() {
+      return organizationPartnerId_.size();
     }
     /**
-     * <code>repeated string intitutionPartnerId = 7;</code>
+     * <code>repeated string organizationPartnerId = 7;</code>
      */
-    public java.lang.String getIntitutionPartnerId(int index) {
-      return intitutionPartnerId_.get(index);
+    public java.lang.String getOrganizationPartnerId(int index) {
+      return organizationPartnerId_.get(index);
     }
     /**
-     * <code>repeated string intitutionPartnerId = 7;</code>
+     * <code>repeated string organizationPartnerId = 7;</code>
      */
     public com.google.protobuf.ByteString
-        getIntitutionPartnerIdBytes(int index) {
-      return intitutionPartnerId_.getByteString(index);
+        getOrganizationPartnerIdBytes(int index) {
+      return organizationPartnerId_.getByteString(index);
     }
 
     // repeated string personParticipantId = 8;
@@ -677,9 +677,9 @@ public final class ProjectProtos {
       name_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       description_ = "";
       url_ = "";
-      intitutionCoordinatorId_ = "";
+      organizationCoordinatorId_ = "";
       personCoordinatorId_ = "";
-      intitutionPartnerId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      organizationPartnerId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       personParticipantId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       otherId_ = java.util.Collections.emptyList();
     }
@@ -718,13 +718,13 @@ public final class ProjectProtos {
         output.writeBytes(4, getUrlBytes());
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        output.writeBytes(5, getIntitutionCoordinatorIdBytes());
+        output.writeBytes(5, getOrganizationCoordinatorIdBytes());
       }
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
         output.writeBytes(6, getPersonCoordinatorIdBytes());
       }
-      for (int i = 0; i < intitutionPartnerId_.size(); i++) {
-        output.writeBytes(7, intitutionPartnerId_.getByteString(i));
+      for (int i = 0; i < organizationPartnerId_.size(); i++) {
+        output.writeBytes(7, organizationPartnerId_.getByteString(i));
       }
       for (int i = 0; i < personParticipantId_.size(); i++) {
         output.writeBytes(8, personParticipantId_.getByteString(i));
@@ -764,7 +764,7 @@ public final class ProjectProtos {
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(5, getIntitutionCoordinatorIdBytes());
+          .computeBytesSize(5, getOrganizationCoordinatorIdBytes());
       }
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
         size += com.google.protobuf.CodedOutputStream
@@ -772,12 +772,12 @@ public final class ProjectProtos {
       }
       {
         int dataSize = 0;
-        for (int i = 0; i < intitutionPartnerId_.size(); i++) {
+        for (int i = 0; i < organizationPartnerId_.size(); i++) {
           dataSize += com.google.protobuf.CodedOutputStream
-            .computeBytesSizeNoTag(intitutionPartnerId_.getByteString(i));
+            .computeBytesSizeNoTag(organizationPartnerId_.getByteString(i));
         }
         size += dataSize;
-        size += 1 * getIntitutionPartnerIdList().size();
+        size += 1 * getOrganizationPartnerIdList().size();
       }
       {
         int dataSize = 0;
@@ -917,11 +917,11 @@ public final class ProjectProtos {
         bitField0_ = (bitField0_ & ~0x00000004);
         url_ = "";
         bitField0_ = (bitField0_ & ~0x00000008);
-        intitutionCoordinatorId_ = "";
+        organizationCoordinatorId_ = "";
         bitField0_ = (bitField0_ & ~0x00000010);
         personCoordinatorId_ = "";
         bitField0_ = (bitField0_ & ~0x00000020);
-        intitutionPartnerId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        organizationPartnerId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000040);
         personParticipantId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000080);
@@ -980,17 +980,17 @@ public final class ProjectProtos {
         if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
           to_bitField0_ |= 0x00000008;
         }
-        result.intitutionCoordinatorId_ = intitutionCoordinatorId_;
+        result.organizationCoordinatorId_ = organizationCoordinatorId_;
         if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
           to_bitField0_ |= 0x00000010;
         }
         result.personCoordinatorId_ = personCoordinatorId_;
         if (((bitField0_ & 0x00000040) == 0x00000040)) {
-          intitutionPartnerId_ = new com.google.protobuf.UnmodifiableLazyStringList(
-              intitutionPartnerId_);
+          organizationPartnerId_ = new com.google.protobuf.UnmodifiableLazyStringList(
+              organizationPartnerId_);
           bitField0_ = (bitField0_ & ~0x00000040);
         }
-        result.intitutionPartnerId_ = intitutionPartnerId_;
+        result.organizationPartnerId_ = organizationPartnerId_;
         if (((bitField0_ & 0x00000080) == 0x00000080)) {
           personParticipantId_ = new com.google.protobuf.UnmodifiableLazyStringList(
               personParticipantId_);
@@ -1047,9 +1047,9 @@ public final class ProjectProtos {
           url_ = other.url_;
           onChanged();
         }
-        if (other.hasIntitutionCoordinatorId()) {
+        if (other.hasOrganizationCoordinatorId()) {
           bitField0_ |= 0x00000010;
-          intitutionCoordinatorId_ = other.intitutionCoordinatorId_;
+          organizationCoordinatorId_ = other.organizationCoordinatorId_;
           onChanged();
         }
         if (other.hasPersonCoordinatorId()) {
@@ -1057,13 +1057,13 @@ public final class ProjectProtos {
           personCoordinatorId_ = other.personCoordinatorId_;
           onChanged();
         }
-        if (!other.intitutionPartnerId_.isEmpty()) {
-          if (intitutionPartnerId_.isEmpty()) {
-            intitutionPartnerId_ = other.intitutionPartnerId_;
+        if (!other.organizationPartnerId_.isEmpty()) {
+          if (organizationPartnerId_.isEmpty()) {
+            organizationPartnerId_ = other.organizationPartnerId_;
             bitField0_ = (bitField0_ & ~0x00000040);
           } else {
-            ensureIntitutionPartnerIdIsMutable();
-            intitutionPartnerId_.addAll(other.intitutionPartnerId_);
+            ensureOrganizationPartnerIdIsMutable();
+            organizationPartnerId_.addAll(other.organizationPartnerId_);
           }
           onChanged();
         }
@@ -1455,76 +1455,76 @@ public final class ProjectProtos {
         return this;
       }
 
-      // optional string intitutionCoordinatorId = 5;
-      private java.lang.Object intitutionCoordinatorId_ = "";
+      // optional string organizationCoordinatorId = 5;
+      private java.lang.Object organizationCoordinatorId_ = "";
       /**
-       * <code>optional string intitutionCoordinatorId = 5;</code>
+       * <code>optional string organizationCoordinatorId = 5;</code>
        */
-      public boolean hasIntitutionCoordinatorId() {
+      public boolean hasOrganizationCoordinatorId() {
         return ((bitField0_ & 0x00000010) == 0x00000010);
       }
       /**
-       * <code>optional string intitutionCoordinatorId = 5;</code>
+       * <code>optional string organizationCoordinatorId = 5;</code>
        */
-      public java.lang.String getIntitutionCoordinatorId() {
-        java.lang.Object ref = intitutionCoordinatorId_;
+      public java.lang.String getOrganizationCoordinatorId() {
+        java.lang.Object ref = organizationCoordinatorId_;
         if (!(ref instanceof java.lang.String)) {
           java.lang.String s = ((com.google.protobuf.ByteString) ref)
               .toStringUtf8();
-          intitutionCoordinatorId_ = s;
+          organizationCoordinatorId_ = s;
           return s;
         } else {
           return (java.lang.String) ref;
         }
       }
       /**
-       * <code>optional string intitutionCoordinatorId = 5;</code>
+       * <code>optional string organizationCoordinatorId = 5;</code>
        */
       public com.google.protobuf.ByteString
-          getIntitutionCoordinatorIdBytes() {
-        java.lang.Object ref = intitutionCoordinatorId_;
+          getOrganizationCoordinatorIdBytes() {
+        java.lang.Object ref = organizationCoordinatorId_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
-          intitutionCoordinatorId_ = b;
+          organizationCoordinatorId_ = b;
           return b;
         } else {
           return (com.google.protobuf.ByteString) ref;
         }
       }
       /**
-       * <code>optional string intitutionCoordinatorId = 5;</code>
+       * <code>optional string organizationCoordinatorId = 5;</code>
        */
-      public Builder setIntitutionCoordinatorId(
+      public Builder setOrganizationCoordinatorId(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
   bitField0_ |= 0x00000010;
-        intitutionCoordinatorId_ = value;
+        organizationCoordinatorId_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional string intitutionCoordinatorId = 5;</code>
+       * <code>optional string organizationCoordinatorId = 5;</code>
        */
-      public Builder clearIntitutionCoordinatorId() {
+      public Builder clearOrganizationCoordinatorId() {
         bitField0_ = (bitField0_ & ~0x00000010);
-        intitutionCoordinatorId_ = getDefaultInstance().getIntitutionCoordinatorId();
+        organizationCoordinatorId_ = getDefaultInstance().getOrganizationCoordinatorId();
         onChanged();
         return this;
       }
       /**
-       * <code>optional string intitutionCoordinatorId = 5;</code>
+       * <code>optional string organizationCoordinatorId = 5;</code>
        */
-      public Builder setIntitutionCoordinatorIdBytes(
+      public Builder setOrganizationCoordinatorIdBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   bitField0_ |= 0x00000010;
-        intitutionCoordinatorId_ = value;
+        organizationCoordinatorId_ = value;
         onChanged();
         return this;
       }
@@ -1603,95 +1603,95 @@ public final class ProjectProtos {
         return this;
       }
 
-      // repeated string intitutionPartnerId = 7;
-      private com.google.protobuf.LazyStringList intitutionPartnerId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-      private void ensureIntitutionPartnerIdIsMutable() {
+      // repeated string organizationPartnerId = 7;
+      private com.google.protobuf.LazyStringList organizationPartnerId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private void ensureOrganizationPartnerIdIsMutable() {
         if (!((bitField0_ & 0x00000040) == 0x00000040)) {
-          intitutionPartnerId_ = new com.google.protobuf.LazyStringArrayList(intitutionPartnerId_);
+          organizationPartnerId_ = new com.google.protobuf.LazyStringArrayList(organizationPartnerId_);
           bitField0_ |= 0x00000040;
          }
       }
       /**
-       * <code>repeated string intitutionPartnerId = 7;</code>
+       * <code>repeated string organizationPartnerId = 7;</code>
        */
       public java.util.List<java.lang.String>
-          getIntitutionPartnerIdList() {
-        return java.util.Collections.unmodifiableList(intitutionPartnerId_);
+          getOrganizationPartnerIdList() {
+        return java.util.Collections.unmodifiableList(organizationPartnerId_);
       }
       /**
-       * <code>repeated string intitutionPartnerId = 7;</code>
+       * <code>repeated string organizationPartnerId = 7;</code>
        */
-      public int getIntitutionPartnerIdCount() {
-        return intitutionPartnerId_.size();
+      public int getOrganizationPartnerIdCount() {
+        return organizationPartnerId_.size();
       }
       /**
-       * <code>repeated string intitutionPartnerId = 7;</code>
+       * <code>repeated string organizationPartnerId = 7;</code>
        */
-      public java.lang.String getIntitutionPartnerId(int index) {
-        return intitutionPartnerId_.get(index);
+      public java.lang.String getOrganizationPartnerId(int index) {
+        return organizationPartnerId_.get(index);
       }
       /**
-       * <code>repeated string intitutionPartnerId = 7;</code>
+       * <code>repeated string organizationPartnerId = 7;</code>
        */
       public com.google.protobuf.ByteString
-          getIntitutionPartnerIdBytes(int index) {
-        return intitutionPartnerId_.getByteString(index);
+          getOrganizationPartnerIdBytes(int index) {
+        return organizationPartnerId_.getByteString(index);
       }
       /**
-       * <code>repeated string intitutionPartnerId = 7;</code>
+       * <code>repeated string organizationPartnerId = 7;</code>
        */
-      public Builder setIntitutionPartnerId(
+      public Builder setOrganizationPartnerId(
           int index, java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  ensureIntitutionPartnerIdIsMutable();
-        intitutionPartnerId_.set(index, value);
+  ensureOrganizationPartnerIdIsMutable();
+        organizationPartnerId_.set(index, value);
         onChanged();
         return this;
       }
       /**
-       * <code>repeated string intitutionPartnerId = 7;</code>
+       * <code>repeated string organizationPartnerId = 7;</code>
        */
-      public Builder addIntitutionPartnerId(
+      public Builder addOrganizationPartnerId(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  ensureIntitutionPartnerIdIsMutable();
-        intitutionPartnerId_.add(value);
+  ensureOrganizationPartnerIdIsMutable();
+        organizationPartnerId_.add(value);
         onChanged();
         return this;
       }
       /**
-       * <code>repeated string intitutionPartnerId = 7;</code>
+       * <code>repeated string organizationPartnerId = 7;</code>
        */
-      public Builder addAllIntitutionPartnerId(
+      public Builder addAllOrganizationPartnerId(
           java.lang.Iterable<java.lang.String> values) {
-        ensureIntitutionPartnerIdIsMutable();
-        super.addAll(values, intitutionPartnerId_);
+        ensureOrganizationPartnerIdIsMutable();
+        super.addAll(values, organizationPartnerId_);
         onChanged();
         return this;
       }
       /**
-       * <code>repeated string intitutionPartnerId = 7;</code>
+       * <code>repeated string organizationPartnerId = 7;</code>
        */
-      public Builder clearIntitutionPartnerId() {
-        intitutionPartnerId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      public Builder clearOrganizationPartnerId() {
+        organizationPartnerId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000040);
         onChanged();
         return this;
       }
       /**
-       * <code>repeated string intitutionPartnerId = 7;</code>
+       * <code>repeated string organizationPartnerId = 7;</code>
        */
-      public Builder addIntitutionPartnerIdBytes(
+      public Builder addOrganizationPartnerIdBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  ensureIntitutionPartnerIdIsMutable();
-        intitutionPartnerId_.add(value);
+  ensureOrganizationPartnerIdIsMutable();
+        organizationPartnerId_.add(value);
         onChanged();
         return this;
       }
@@ -2956,17 +2956,17 @@ public final class ProjectProtos {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\rproject.proto\032\tbw2.proto\"\342\001\n\017ProjectMe" +
+      "\n\rproject.proto\032\tbw2.proto\"\346\001\n\017ProjectMe" +
       "tadata\022\013\n\003key\030\001 \002(\t\022\014\n\004name\030\002 \003(\t\022\023\n\013des" +
-      "cription\030\003 \001(\t\022\013\n\003url\030\004 \001(\t\022\037\n\027intitutio" +
-      "nCoordinatorId\030\005 \001(\t\022\033\n\023personCoordinato" +
-      "rId\030\006 \001(\t\022\033\n\023intitutionPartnerId\030\007 \003(\t\022\033" +
-      "\n\023personParticipantId\030\010 \003(\t\022\032\n\007otherId\030\t" +
-      " \003(\0132\t.KeyValue\"s\n\016ProjectWrapper\022\r\n\005row" +
-      "Id\030\001 \002(\t\022)\n\017projectMetadata\030\002 \001(\0132\020.Proj" +
-      "ectMetadata\022\'\n\016mediaContainer\030\003 \001(\0132\017.Me" +
-      "diaContainerB*\n\031pl.edu.icm.coansys.model",
-      "sB\rProjectProtos"
+      "cription\030\003 \001(\t\022\013\n\003url\030\004 \001(\t\022!\n\031organizat" +
+      "ionCoordinatorId\030\005 \001(\t\022\033\n\023personCoordina" +
+      "torId\030\006 \001(\t\022\035\n\025organizationPartnerId\030\007 \003" +
+      "(\t\022\033\n\023personParticipantId\030\010 \003(\t\022\032\n\007other" +
+      "Id\030\t \003(\0132\t.KeyValue\"s\n\016ProjectWrapper\022\r\n" +
+      "\005rowId\030\001 \002(\t\022)\n\017projectMetadata\030\002 \001(\0132\020." +
+      "ProjectMetadata\022\'\n\016mediaContainer\030\003 \001(\0132" +
+      "\017.MediaContainerB*\n\031pl.edu.icm.coansys.m",
+      "odelsB\rProjectProtos"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -2978,7 +2978,7 @@ public final class ProjectProtos {
           internal_static_ProjectMetadata_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_ProjectMetadata_descriptor,
-              new java.lang.String[] { "Key", "Name", "Description", "Url", "IntitutionCoordinatorId", "PersonCoordinatorId", "IntitutionPartnerId", "PersonParticipantId", "OtherId", });
+              new java.lang.String[] { "Key", "Name", "Description", "Url", "OrganizationCoordinatorId", "PersonCoordinatorId", "OrganizationPartnerId", "PersonParticipantId", "OtherId", });
           internal_static_ProjectWrapper_descriptor =
             getDescriptor().getMessageTypes().get(1);
           internal_static_ProjectWrapper_fieldAccessorTable = new
