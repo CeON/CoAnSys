@@ -29,7 +29,10 @@ public final class HBaseConstant {
     // DocumentProtos Constants
     public static final String FAMILY_METADATA = "m";
     public static final String FAMILY_CONTENT = "c";
-    public static final String FAMILY_METADATA_QUALIFIER_PROTO = "mproto";
+    public static final String FAMILY_METADATA_DOCUMENT_QUALIFIER_PROTO = "mproto";
+    public static final String FAMILY_METADATA_ORGANIZATION_QUALIFIER_PROTO = "orgmproto";
+    public static final String FAMILY_METADATA_PROJECT_QUALIFIER_PROTO = "projmproto";
+    public static final String FAMILY_METADATA_PERSON_QUALIFIER_PROTO = "persmproto";
     public static final String FAMILY_CONTENT_QUALIFIER_PROTO = "cproto";
     public static final String ROW_ID_MEDIA_TYPE_PDF = "PDF";
     // PIC Constants
