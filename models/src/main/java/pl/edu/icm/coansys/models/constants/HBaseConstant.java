@@ -30,7 +30,7 @@ public final class HBaseConstant {
     public static final String FAMILY_METADATA = "m";
     public static final String FAMILY_CONTENT = "c";
     public static final String FAMILY_METADATA_DOCUMENT_QUALIFIER_PROTO = "mproto";
-    public static final String FAMILY_METADATA_INSTITUTION_QUALIFIER_PROTO = "instmproto";
+    public static final String FAMILY_METADATA_ORGANIZATION_QUALIFIER_PROTO = "orgmproto";
     public static final String FAMILY_METADATA_PROJECT_QUALIFIER_PROTO = "projmproto";
     public static final String FAMILY_METADATA_PERSON_QUALIFIER_PROTO = "persmproto";
     public static final String FAMILY_CONTENT_QUALIFIER_PROTO = "cproto";
