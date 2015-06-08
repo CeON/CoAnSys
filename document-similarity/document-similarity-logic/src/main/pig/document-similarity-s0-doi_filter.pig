@@ -26,6 +26,8 @@ REGISTER '$commonJarsPath'
 %default sample 0.1
 SET default_parallel $parallel
 SET mapred.child.java.opts $mapredChildJavaOpts
+SET mapreduce.map.java.opts $mapredChildJavaOpts
+SET mapreduce.reduce.java.opts $mapredChildJavaOpts
 SET pig.tmpfilecompression true
 SET pig.tmpfilecompression.codec $tmpCompressionCodec
 %DEFAULT scheduler default
