@@ -67,7 +67,7 @@ SET mapred.fairscheduler.pool $and_scheduler
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 D0 = LOAD '$and_inputDocsData' as (sname:int, datagroup:{(cId:chararray, sname:int, data:map[{(int)}])}, count:long);
-D1 = foreach D generate *, COUNT(datagroup) as cnt;                  
+D1 = foreach D0 generate *, COUNT(datagroup) as cnt;                  
 D2 = filter D1 by (cnt>0);
 D = foreach D2 generate sname, datagroup, count;
 -- -----------------------------------------------------
