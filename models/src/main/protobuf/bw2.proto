@@ -56,8 +56,9 @@ message Author{
 	repeated KeyValue affiliationRef = 6;
 	optional string docId = 7;
 	optional int32  positionNumber = 8;
-	repeated KeyValue extId = 9;
+    repeated KeyValue extId = 9;
 	repeated KeyValue auxiliarInfo = 10;
+	optional string currentPersonId=11;
 }
 
 // common metadata for documents and references
@@ -74,6 +75,7 @@ message BasicMetadata{
 	optional string pages = 10;
 	repeated ClassifCode classifCode = 11;
     repeated string parentId = 12; 
+    repeated string currentProjectId= 13;
 }
 
 message KeywordsList {
