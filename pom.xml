@@ -9,7 +9,7 @@
     <groupId>pl.edu.icm.coansys</groupId>
     <artifactId>coansys</artifactId>
     <name>Content Analysis Systems</name>
-    <version>1.9-SNAPSHOT</version>
+    <version>1.10-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <properties>
