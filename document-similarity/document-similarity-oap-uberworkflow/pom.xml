@@ -5,7 +5,7 @@
 	<parent>
 		<artifactId>document-similarity</artifactId>
 		<groupId>pl.edu.icm.coansys</groupId>
-		<version>1.10-SNAPSHOT</version>
+		<version>1.9-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>document-similarity-oap-uberworkflow</artifactId>
