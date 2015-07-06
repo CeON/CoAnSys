@@ -37,6 +37,7 @@ import org.jdom.Element;
 import org.jdom.output.XMLOutputter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.edu.icm.cermine.ComponentConfiguration;
 import pl.edu.icm.cermine.PdfBxStructureExtractor;
 import pl.edu.icm.cermine.PdfNLMContentExtractor;
 import pl.edu.icm.cermine.exception.AnalysisException;
@@ -96,11 +97,8 @@ public class NLMExtractionJob implements Tool {
 
                         InputStream pdfIS = media.getContent().newInput();
                         try {
+                            PdfNLMContentExtractor.THREADS_NUMBER = 1;
                             PdfNLMContentExtractor nlmExtr = new PdfNLMContentExtractor();
-                            PdfBxStructureExtractor strExtractor = new PdfBxStructureExtractor();
-                            strExtractor.setPageSegmenter(new DocstrumSegmenter());
-                            nlmExtr.setStructureExtractor(strExtractor);
-
                             Element nlmContent = nlmExtr.extractContent(pdfIS);
 
                             XMLOutputter outp = new XMLOutputter();
