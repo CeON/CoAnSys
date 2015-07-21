@@ -3,10 +3,13 @@ package pl.edu.icm.coansys.deduplication.organization
 
 import org.apache.spark.SparkContext
 import org.apache.spark.SparkContext._
+import com.google.common.hash.Hashing
+import java.nio.charset.Charset
 import java.util.Locale
 import org.apache.hadoop.io.BytesWritable
 import org.apache.spark.SparkConf
 import scala.collection.JavaConversions._
+import org.apache.spark.graphx.lib.ConnectedComponents
 import pl.edu.icm.coansys.models.OrganizationProtos.OrganizationWrapper
 import com.google.common.hash.HashCode
 import org.apache.spark.graphx._
@@ -15,10 +18,27 @@ import org.apache.spark.graphx._
 
 object DoDeduplication {
 
-  def hash(name: String): String = {
+  def simplify(name: String): String = {
     name.toLowerCase(Locale.ENGLISH).replaceAll("[^a-z0-9]", "");
   }
 
+  def hf = Hashing.md5
+  
+  def longHash(str:String) :Long = {
+    val hc=hf.newHasher.putString(str, Charset.forName("UTF-8")).hash();
+    hc.asLong();
+  }
+  
+  def getOrganizationName(org:OrganizationWrapper) : String = {
+    if (org.getOrganizationMetadata.getOriginalNameCount>0) {
+       org.getOrganizationMetadata.getOriginalName(0)
+    } else if (org.getOrganizationMetadata.getEnglishNameCount>0) {
+       org.getOrganizationMetadata.getEnglishName(0)
+    } else {
+      ""
+    }
+  }
+  
   /**
    * @param args the command line arguments
    */
@@ -35,9 +55,9 @@ object DoDeduplication {
     val toEdges = vertexesPrep.flatMap[(String, OrganizationWrapper)] {
        record => {
         ((record.getOrganizationMetadata.getOriginalNameList.map(
-          (name: String) => (hash(name), record)
+          (name: String) => (simplify(name), record)
         )) ++ (record.getOrganizationMetadata.getEnglishNameList.map(
-            (name: String) => (hash(name), record)
+            (name: String) => (simplify(name), record)
           )));
       }
     }
@@ -50,20 +70,62 @@ object DoDeduplication {
     }
 
     val vertexes=vertexesPrep.map{
-         record:OrganizationWrapper => (HashCode.fromString(record.getRowId()).asLong(),record);
+         record:OrganizationWrapper => (longHash(record.getRowId()),record);
     }
     
     val edges=edgesPrep.map{
       case (rec1:OrganizationWrapper, rec2:OrganizationWrapper) => {
-        Edge(HashCode.fromString(rec1.getRowId()).asLong(),HashCode.fromString(rec2.getRowId()).asLong())
+        Edge(longHash(rec1.getRowId()),longHash(rec2.getRowId()),getOrganizationName(rec2));
       }
     }
+    
     val graph = Graph(vertexes, edges)
     
     
-    val numAs = logData.filter(line => line.contains("a")).count()
-    val numBs = logData.filter(line => line.contains("b")).count()
-    println("Lines with a: %s, Lines with b: %s".format(numAs, numBs))
+    val components=ConnectedComponents.run(graph);
+    
+    val d=components.vertices.map{ x => {
+        println(x);
+        x
+     }
+    }
+      
+    
+    val  grouped=graph.vertices.cogroup(components.vertices).flatMap{ 
+      case (k:Long, (oi:Iterable[OrganizationWrapper], ki:Iterable[Long])) => 
+        {
+          oi.flatMap{ ow:OrganizationWrapper => {
+                ki.map{
+                  a:Long=>
+                   (a,ow)
+                }
+            }
+          }
+            
+          
+        }
+    }
+    
+    val ret=grouped.groupByKey.map{
+      case (k:Long,it:Iterable[OrganizationWrapper]) =>
+      {
+        
+        
+        it.reduce(
+          (ow1:OrganizationWrapper, ow2:OrganizationWrapper) => {
+              println(getOrganizationName(ow1));
+              ow1
+          })
+        
+          
+        
+      }
+    }
+    
+    
+//    val numAs = logData.filter(line => line.contains("a")).count()
+//    val numBs = logData.filter(line => line.contains("b")).count()
+    println("vertexes count   "+vertexes.count+" after reduce count "+ret.count);
   }
 
 }
