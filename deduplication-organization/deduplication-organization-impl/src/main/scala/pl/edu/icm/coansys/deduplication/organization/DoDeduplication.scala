@@ -84,11 +84,6 @@ object DoDeduplication {
     
     val components=ConnectedComponents.run(graph);
     
-    val d=components.vertices.map{ x => {
-        println(x);
-        x
-     }
-    }
       
     
     val  grouped=graph.vertices.cogroup(components.vertices).flatMap{ 
@@ -109,12 +104,19 @@ object DoDeduplication {
     val ret=grouped.groupByKey.map{
       case (k:Long,it:Iterable[OrganizationWrapper]) =>
       {
-        
-        
         it.reduce(
           (ow1:OrganizationWrapper, ow2:OrganizationWrapper) => {
-              println(getOrganizationName(ow1));
-              ow1
+//              println(getOrganizationName(ow1));
+//              println(ow1.getRowId);
+//              println(getOrganizationName(ow2));
+//              println(ow2.getRowId);
+              val builder=ow1.toBuilder
+              val onameslist=ow2.getOrganizationMetadata.getOriginalNameList;
+              onameslist.removeAll(ow1.getOrganizationMetadata.getOriginalNameList);
+              builder.getOrganizationMetadataBuilder.addAllOriginalName(onameslist);
+              
+             
+              builder.build
           })
         
           
