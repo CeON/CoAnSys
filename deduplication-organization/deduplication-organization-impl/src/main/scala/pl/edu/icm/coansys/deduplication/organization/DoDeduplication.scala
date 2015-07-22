@@ -10,6 +10,7 @@ import org.apache.hadoop.io.BytesWritable
 import org.apache.spark.SparkConf
 import scala.collection.JavaConversions._
 import org.apache.spark.graphx.lib.ConnectedComponents
+import org.apache.spark.rdd.RDD
 import pl.edu.icm.coansys.models.OrganizationProtos.OrganizationWrapper
 import com.google.common.hash.HashCode
 import org.apache.spark.graphx._
@@ -39,20 +40,9 @@ object DoDeduplication {
     }
   }
   
-  /**
-   * @param args the command line arguments
-   */
-  def main(args: Array[String]): Unit = {
-    val organizationFile = "/mnt/win/space/comac/ORGANIZATION/" // Should be some file on your system
-    val conf = new SparkConf().setAppName("Simple Application").setMaster("local");
-    val sc = new SparkContext(conf)
-    val logData = sc.sequenceFile[String, BytesWritable](organizationFile);
-    val vertexesPrep= logData.map{
-      case (key, bw)=> {
-          OrganizationWrapper.parseFrom(bw.copyBytes);
-        }
-    }
-    val toEdges = vertexesPrep.flatMap[(String, OrganizationWrapper)] {
+  
+  def dedupOrganizations(organizations:RDD[OrganizationWrapper]):RDD[OrganizationWrapper] = {
+     val toEdges = organizations.flatMap[(String, OrganizationWrapper)] {
        record => {
         ((record.getOrganizationMetadata.getOriginalNameList.map(
           (name: String) => (simplify(name), record)
@@ -61,19 +51,16 @@ object DoDeduplication {
           )));
       }
     }
-
-    val edgesPrep = toEdges.groupByKey().flatMap {
+     val edgesPrep = toEdges.groupByKey().flatMap {
       case (hash: String, records: Iterable[OrganizationWrapper]) => {
         val recWithMinKey = records.min(Ordering.by(((_: OrganizationWrapper).getRowId())));
         records.map { rec => (rec, recWithMinKey) }
       }
     }
-
-    val vertexes=vertexesPrep.map{
+    val vertexes=organizations.map{
          record:OrganizationWrapper => (longHash(record.getRowId()),record);
     }
-    
-    val edges=edgesPrep.map{
+     val edges=edgesPrep.map{
       case (rec1:OrganizationWrapper, rec2:OrganizationWrapper) => {
         Edge(longHash(rec1.getRowId()),longHash(rec2.getRowId()),getOrganizationName(rec2));
       }
@@ -84,7 +71,7 @@ object DoDeduplication {
     
     val components=ConnectedComponents.run(graph);
     
-      
+     
     
     val  grouped=graph.vertices.cogroup(components.vertices).flatMap{ 
       case (k:Long, (oi:Iterable[OrganizationWrapper], ki:Iterable[Long])) => 
@@ -123,11 +110,30 @@ object DoDeduplication {
         
       }
     }
-    
-    
-//    val numAs = logData.filter(line => line.contains("a")).count()
-//    val numBs = logData.filter(line => line.contains("b")).count()
-    println("vertexes count   "+vertexes.count+" after reduce count "+ret.count);
+    ret
   }
+  
+  
+  
+  /**
+   * @param args the command line arguments
+   */
+  def main(args: Array[String]): Unit = {
+    val organizationFile =args(0) // Should be some file on your system
+    val conf = new SparkConf().setAppName("Organization deduplication")
+    val sc = new SparkContext(conf)
+    val logData = sc.sequenceFile[String, BytesWritable](organizationFile);
+    val organizations= logData.map{
+      case (key, bw)=> {
+          OrganizationWrapper.parseFrom(bw.copyBytes);
+        }
+    }
+    
+    dedupOrganizations(organizations).map((o:OrganizationWrapper)=> {(o.getRowId,o.toByteArray)})
+    .saveAsSequenceFile(args(1));
+     
+    
+    
+ }
 
 }

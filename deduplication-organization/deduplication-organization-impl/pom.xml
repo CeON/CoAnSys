@@ -24,7 +24,7 @@
                     <execution>
                         <goals>
                             <goal>compile</goal>
-                            <!--<goal>testCompile</goal>-->
+                            <goal>testCompile</goal>
                         </goals>
                         <configuration>
                             <args>
