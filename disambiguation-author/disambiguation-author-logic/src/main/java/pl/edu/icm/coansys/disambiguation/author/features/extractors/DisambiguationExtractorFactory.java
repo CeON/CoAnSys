@@ -133,6 +133,16 @@ public class DisambiguationExtractorFactory {
 			ClassNotFoundException {
 
 		String extractorName = toExName(fi.getFeatureExtractorName());
+		if(extractorName == null){
+			extractorName = fi.getFeatureExtractorName();
+		}
+
+		if(extractorName == null){
+			System.out.println("Cannot find class(FeatureExtractionName) with name: " + 
+				fi.getFeatureExtractorName());
+			System.out.println("Cannot read mapping of class(FeatureExtractionName) with name: " + 
+				toExName(fi.getFeatureExtractorName()));
+		}
 		String currentClassName = THIS_PACKAGE + "." + extractorName;
 
 		// creating extractor with given name

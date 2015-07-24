@@ -1,0 +1,65 @@
+<workflow-app xmlns="uri:oozie:workflow:0.4" name="deduplication-document-wf">
+    <parameters>
+        <property>
+            <name>DFS_SOCKET_CLIENT_TIMEOUT</name>
+            <value>120000</value>
+        </property>
+        <property>
+            <name>MAPRED_TASK_TIMEOUT</name>
+            <value>3600000</value>
+        </property>
+        <property>
+            <name>POOL_NAME</name>
+            <value>default</value>
+        </property>
+        <property>
+            <name>INITIAL_MAX_DOCS_SET_SIZE</name>
+            <value>1000</value>
+        </property>
+        <property>
+            <name>MAX_DOCS_SET_SIZE_INC</name>
+            <value>200</value>
+        </property>
+        <property>
+            <name>MAX_SPLIT_LEVEL</name>
+            <value>10</value>
+        </property>
+        <property>
+            <name>MAPRED_REDUCE_TASKS</name>
+            <value>16</value>
+        </property>
+    </parameters>
+    <start to="deduplication-organization" />
+    <action name="deduplication-organization">
+          <spark xmlns="uri:oozie:spark-action:0.1">
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <prepare>
+               <delete path="${inputSeqFile}"/>
+               <!--<mkdir path="[PATH]"/>-->
+            </prepare>
+<!--            <job-xml>[SPARK SETTINGS FILE]</job-xml>
+            <configuration>
+                <property>
+                    <name>[PROPERTY-NAME]</name>
+                    <value>[PROPERTY-VALUE]</value>
+                </property>
+            </configuration>-->
+            <master>yarn-cluster</master>
+            <mode>cluster</mode>
+            <name>Organization deduplication</name>
+            <class>pl.edu.icm.coansys.deduplication.organization.DoDeduplication</class>
+<!--            <jar>[SPARK DEPENDENCIES JAR / PYTHON FILE]</jar>-->
+<!--            <spark-opts>[SPARK-OPTIONS]</spark-opts>-->
+            <arg>${inputSeqFile}</arg>
+            <arg>${outputSeqFile}</arg>
+        </spark>
+		<ok to="finalize" />
+		<error to="finalize-error" />
+	</action>
+
+	<kill name="finalize-error">
+		<message>Workflow failed</message>
+	</kill>
+	<end name="finalize" />
+</workflow-app>
