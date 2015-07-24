@@ -39,12 +39,12 @@ public abstract class AbstractNumbersVoter extends AbstractSimilarityVoter {
     private float subsetResult = 0.8f;
     private float partiallyMatchResult = 0.64f;
     private boolean removeRepeated = false;
-    private static Logger log = LoggerFactory.getLogger(AbstractNumbersVoter.class);
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Override
     public Vote vote(DocumentProtos.DocumentMetadata doc1, DocumentProtos.DocumentMetadata doc2) {
-        List<Integer> numbers1 = extractNumbers(doc1, removeRepeated);
-        List<Integer> numbers2 = extractNumbers(doc2, removeRepeated);
+        List<Long> numbers1 = extractNumbers(doc1, removeRepeated);
+        List<Long> numbers2 = extractNumbers(doc2, removeRepeated);
 
         if (numbers1.size() * numbers2.size() == 0) {
             return abstainIfAbsent ? new Vote(Vote.VoteStatus.ABSTAIN) : new Vote(Vote.VoteStatus.PROBABILITY, absentResult);
@@ -84,19 +84,23 @@ public abstract class AbstractNumbersVoter extends AbstractSimilarityVoter {
 
     }
 
-    private List<Integer> extractNumbers(DocumentProtos.DocumentMetadata doc, boolean removeRepeated) {
+    private List<Long> extractNumbers(DocumentProtos.DocumentMetadata doc, boolean removeRepeated) {
 
         Pattern digitsPatt = Pattern.compile("\\d+");
 
-        List<Integer> result = new ArrayList<Integer>();
+        List<Long> result = new ArrayList<Long>();
         String allFields = extractNumbersString(doc);
         Matcher digitsMatcher = digitsPatt.matcher(allFields);
         while (digitsMatcher.find()) {
-            result.add(Integer.parseInt(digitsMatcher.group()));
+            try {
+                result.add(Long.parseLong(digitsMatcher.group()));
+            } catch(NumberFormatException ex) {
+                log.warn(ex.getMessage());
+            }
         }
         
         if (removeRepeated) {
-            Set<Integer> numbersSet = new HashSet<Integer>(result);
+            Set<Long> numbersSet = new HashSet<Long>(result);
             result.clear();
             result.addAll(numbersSet);
         }
