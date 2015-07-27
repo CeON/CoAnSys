@@ -122,6 +122,7 @@ object DoDeduplication {
     val organizationFile =args(0) // Should be some file on your system
     val conf = new SparkConf().setAppName("Organization deduplication")
     val sc = new SparkContext(conf)
+    val builder=OrganizationWrapper.newBuilder
     val logData = sc.sequenceFile[String, BytesWritable](organizationFile);
     val organizations= logData.map{
       case (key, bw)=> {
