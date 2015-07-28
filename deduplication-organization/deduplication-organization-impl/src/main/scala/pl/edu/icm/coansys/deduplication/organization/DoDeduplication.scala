@@ -1,4 +1,3 @@
-println("graph ready: " + edges.count);
 package pl.edu.icm.coansys.deduplication.organization
 
 import org.apache.spark.SparkContext
