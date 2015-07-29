@@ -4196,6 +4196,21 @@ public final class DocumentProtos {
      * <code>optional .ProvenanceInfo provenance = 4;</code>
      */
     pl.edu.icm.coansys.models.DocumentProtos.ProvenanceInfoOrBuilder getProvenanceOrBuilder();
+
+    // optional string organizationCurrentId = 5;
+    /**
+     * <code>optional string organizationCurrentId = 5;</code>
+     */
+    boolean hasOrganizationCurrentId();
+    /**
+     * <code>optional string organizationCurrentId = 5;</code>
+     */
+    java.lang.String getOrganizationCurrentId();
+    /**
+     * <code>optional string organizationCurrentId = 5;</code>
+     */
+    com.google.protobuf.ByteString
+        getOrganizationCurrentIdBytes();
   }
   /**
    * Protobuf type {@code Affiliation}
@@ -4274,6 +4289,11 @@ public final class DocumentProtos {
                 provenance_ = subBuilder.buildPartial();
               }
               bitField0_ |= 0x00000008;
+              break;
+            }
+            case 42: {
+              bitField0_ |= 0x00000010;
+              organizationCurrentId_ = input.readBytes();
               break;
             }
           }
@@ -4467,11 +4487,55 @@ public final class DocumentProtos {
       return provenance_;
     }
 
+    // optional string organizationCurrentId = 5;
+    public static final int ORGANIZATIONCURRENTID_FIELD_NUMBER = 5;
+    private java.lang.Object organizationCurrentId_;
+    /**
+     * <code>optional string organizationCurrentId = 5;</code>
+     */
+    public boolean hasOrganizationCurrentId() {
+      return ((bitField0_ & 0x00000010) == 0x00000010);
+    }
+    /**
+     * <code>optional string organizationCurrentId = 5;</code>
+     */
+    public java.lang.String getOrganizationCurrentId() {
+      java.lang.Object ref = organizationCurrentId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          organizationCurrentId_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string organizationCurrentId = 5;</code>
+     */
+    public com.google.protobuf.ByteString
+        getOrganizationCurrentIdBytes() {
+      java.lang.Object ref = organizationCurrentId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        organizationCurrentId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private void initFields() {
       key_ = "";
       affiliationId_ = "";
       text_ = "";
       provenance_ = pl.edu.icm.coansys.models.DocumentProtos.ProvenanceInfo.getDefaultInstance();
+      organizationCurrentId_ = "";
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -4515,6 +4579,9 @@ public final class DocumentProtos {
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         output.writeMessage(4, provenance_);
       }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        output.writeBytes(5, getOrganizationCurrentIdBytes());
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -4539,6 +4606,10 @@ public final class DocumentProtos {
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(4, provenance_);
+      }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(5, getOrganizationCurrentIdBytes());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -4669,6 +4740,8 @@ public final class DocumentProtos {
           provenanceBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000008);
+        organizationCurrentId_ = "";
+        bitField0_ = (bitField0_ & ~0x00000010);
         return this;
       }
 
@@ -4717,6 +4790,10 @@ public final class DocumentProtos {
         } else {
           result.provenance_ = provenanceBuilder_.build();
         }
+        if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+          to_bitField0_ |= 0x00000010;
+        }
+        result.organizationCurrentId_ = organizationCurrentId_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -4750,6 +4827,11 @@ public final class DocumentProtos {
         }
         if (other.hasProvenance()) {
           mergeProvenance(other.getProvenance());
+        }
+        if (other.hasOrganizationCurrentId()) {
+          bitField0_ |= 0x00000010;
+          organizationCurrentId_ = other.organizationCurrentId_;
+          onChanged();
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -5133,6 +5215,80 @@ public final class DocumentProtos {
           provenance_ = null;
         }
         return provenanceBuilder_;
+      }
+
+      // optional string organizationCurrentId = 5;
+      private java.lang.Object organizationCurrentId_ = "";
+      /**
+       * <code>optional string organizationCurrentId = 5;</code>
+       */
+      public boolean hasOrganizationCurrentId() {
+        return ((bitField0_ & 0x00000010) == 0x00000010);
+      }
+      /**
+       * <code>optional string organizationCurrentId = 5;</code>
+       */
+      public java.lang.String getOrganizationCurrentId() {
+        java.lang.Object ref = organizationCurrentId_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          organizationCurrentId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string organizationCurrentId = 5;</code>
+       */
+      public com.google.protobuf.ByteString
+          getOrganizationCurrentIdBytes() {
+        java.lang.Object ref = organizationCurrentId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          organizationCurrentId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string organizationCurrentId = 5;</code>
+       */
+      public Builder setOrganizationCurrentId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000010;
+        organizationCurrentId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string organizationCurrentId = 5;</code>
+       */
+      public Builder clearOrganizationCurrentId() {
+        bitField0_ = (bitField0_ & ~0x00000010);
+        organizationCurrentId_ = getDefaultInstance().getOrganizationCurrentId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string organizationCurrentId = 5;</code>
+       */
+      public Builder setOrganizationCurrentIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000010;
+        organizationCurrentId_ = value;
+        onChanged();
+        return this;
       }
 
       // @@protoc_insertion_point(builder_scope:Affiliation)
@@ -20335,49 +20491,50 @@ public final class DocumentProtos {
       "ext\030\001 \002(\t\022\020\n\010language\030\002 \001(\t\022\017\n\007comment\030\003" +
       " \001(\t\"Q\n\013ClassifCode\022\016\n\006source\030\001 \002(\t\022\r\n\005v" +
       "alue\030\002 \003(\t\022#\n\nprovenance\030\003 \001(\0132\017.Provena" +
-      "nceInfo\"d\n\013Affiliation\022\013\n\003key\030\001 \002(\t\022\025\n\ra" +
-      "ffiliationId\030\002 \002(\t\022\014\n\004text\030\003 \002(\t\022#\n\nprov" +
-      "enance\030\004 \001(\0132\017.ProvenanceInfo\"\364\001\n\006Author" +
-      "\022\013\n\003key\030\001 \002(\t\022\021\n\tforenames\030\002 \001(\t\022\017\n\007surn" +
-      "ame\030\003 \001(\t\022\014\n\004name\030\004 \001(\t\022\r\n\005email\030\005 \001(\t\022!" +
-      "\n\016affiliationRef\030\006 \003(\0132\t.KeyValue\022\r\n\005doc" +
-      "Id\030\007 \001(\t\022\026\n\016positionNumber\030\010 \001(\005\022\030\n\005extI",
-      "d\030\t \003(\0132\t.KeyValue\022\037\n\014auxiliarInfo\030\n \003(\013" +
-      "2\t.KeyValue\022\027\n\017currentPersonId\030\013 \001(\t\"\217\002\n" +
-      "\rBasicMetadata\022 \n\005title\030\001 \003(\0132\021.TextWith" +
-      "Language\022\027\n\006author\030\002 \003(\0132\007.Author\022\013\n\003doi" +
-      "\030\003 \001(\t\022\017\n\007journal\030\004 \001(\t\022\014\n\004isbn\030\005 \001(\t\022\014\n" +
-      "\004issn\030\006 \001(\t\022\014\n\004year\030\007 \001(\t\022\r\n\005issue\030\010 \001(\t" +
-      "\022\016\n\006volume\030\t \001(\t\022\r\n\005pages\030\n \001(\t\022!\n\013class" +
-      "ifCode\030\013 \003(\0132\014.ClassifCode\022\020\n\010parentId\030\014" +
-      " \003(\t\022\030\n\020currentProjectId\030\r \003(\t\"v\n\014Keywor" +
-      "dsList\022\014\n\004type\030\001 \001(\t\022\020\n\010language\030\002 \001(\t\022\020",
-      "\n\010keywords\030\003 \003(\t\022\017\n\007comment\030\004 \001(\t\022#\n\npro" +
-      "venance\030\005 \001(\0132\017.ProvenanceInfo\"\243\003\n\020Docum" +
-      "entMetadata\022\013\n\003key\030\001 \002(\t\022%\n\rbasicMetadat" +
-      "a\030\002 \002(\0132\016.BasicMetadata\022+\n\020documentAbstr" +
-      "act\030\003 \003(\0132\021.TextWithLanguage\022\037\n\010keywords" +
-      "\030\n \003(\0132\r.KeywordsList\022N\n\023similarDocument" +
-      "Info\030\024 \003(\01321.pl.edu.icm.coansys.models.D" +
-      "ocumentSimilarityInfo\022\030\n\005extId\030\005 \003(\0132\t.K" +
-      "eyValue\022\037\n\014auxiliarInfo\030\006 \003(\0132\t.KeyValue" +
-      "\022\"\n\014affiliations\030\014 \003(\0132\014.Affiliation\022%\n\t",
-      "reference\030\007 \003(\0132\022.ReferenceMetadata\022\022\n\nc" +
-      "ollection\030\010 \003(\t\022\022\n\nsourcePath\030\t \001(\t\022\017\n\007o" +
-      "rigKey\030\013 \003(\t\"\225\001\n\021ReferenceMetadata\022%\n\rba" +
-      "sicMetadata\030\001 \002(\0132\016.BasicMetadata\022\024\n\014sou" +
-      "rceDocKey\030\002 \001(\t\022\020\n\010position\030\003 \001(\005\022\027\n\017raw" +
-      "CitationText\030\004 \001(\t\022\030\n\005extId\030\005 \003(\0132\t.KeyV" +
-      "alue\"\266\001\n\005Media\022\013\n\003key\030\001 \002(\t\022\021\n\tmediaType" +
-      "\030\002 \002(\t\022\017\n\007content\030\003 \002(\014\022\022\n\ncollection\030\004 " +
-      "\001(\t\022\022\n\nsourcePath\030\005 \001(\t\022\026\n\016sourceFilesiz" +
-      "e\030\006 \001(\003\022\027\n\017destinationPath\030\007 \001(\t\022#\n\nprov",
-      "enance\030\010 \001(\0132\017.ProvenanceInfo\"\'\n\016MediaCo" +
-      "ntainer\022\025\n\005media\030\001 \003(\0132\006.Media\"v\n\017Docume" +
-      "ntWrapper\022\r\n\005rowId\030\001 \002(\t\022+\n\020documentMeta" +
-      "data\030\002 \001(\0132\021.DocumentMetadata\022\'\n\016mediaCo" +
-      "ntainer\030\003 \001(\0132\017.MediaContainerB+\n\031pl.edu" +
-      ".icm.coansys.modelsB\016DocumentProtos"
+      "nceInfo\"\203\001\n\013Affiliation\022\013\n\003key\030\001 \002(\t\022\025\n\r" +
+      "affiliationId\030\002 \002(\t\022\014\n\004text\030\003 \002(\t\022#\n\npro" +
+      "venance\030\004 \001(\0132\017.ProvenanceInfo\022\035\n\025organi" +
+      "zationCurrentId\030\005 \001(\t\"\364\001\n\006Author\022\013\n\003key\030" +
+      "\001 \002(\t\022\021\n\tforenames\030\002 \001(\t\022\017\n\007surname\030\003 \001(" +
+      "\t\022\014\n\004name\030\004 \001(\t\022\r\n\005email\030\005 \001(\t\022!\n\016affili" +
+      "ationRef\030\006 \003(\0132\t.KeyValue\022\r\n\005docId\030\007 \001(\t",
+      "\022\026\n\016positionNumber\030\010 \001(\005\022\030\n\005extId\030\t \003(\0132" +
+      "\t.KeyValue\022\037\n\014auxiliarInfo\030\n \003(\0132\t.KeyVa" +
+      "lue\022\027\n\017currentPersonId\030\013 \001(\t\"\217\002\n\rBasicMe" +
+      "tadata\022 \n\005title\030\001 \003(\0132\021.TextWithLanguage" +
+      "\022\027\n\006author\030\002 \003(\0132\007.Author\022\013\n\003doi\030\003 \001(\t\022\017" +
+      "\n\007journal\030\004 \001(\t\022\014\n\004isbn\030\005 \001(\t\022\014\n\004issn\030\006 " +
+      "\001(\t\022\014\n\004year\030\007 \001(\t\022\r\n\005issue\030\010 \001(\t\022\016\n\006volu" +
+      "me\030\t \001(\t\022\r\n\005pages\030\n \001(\t\022!\n\013classifCode\030\013" +
+      " \003(\0132\014.ClassifCode\022\020\n\010parentId\030\014 \003(\t\022\030\n\020" +
+      "currentProjectId\030\r \003(\t\"v\n\014KeywordsList\022\014",
+      "\n\004type\030\001 \001(\t\022\020\n\010language\030\002 \001(\t\022\020\n\010keywor" +
+      "ds\030\003 \003(\t\022\017\n\007comment\030\004 \001(\t\022#\n\nprovenance\030" +
+      "\005 \001(\0132\017.ProvenanceInfo\"\243\003\n\020DocumentMetad" +
+      "ata\022\013\n\003key\030\001 \002(\t\022%\n\rbasicMetadata\030\002 \002(\0132" +
+      "\016.BasicMetadata\022+\n\020documentAbstract\030\003 \003(" +
+      "\0132\021.TextWithLanguage\022\037\n\010keywords\030\n \003(\0132\r" +
+      ".KeywordsList\022N\n\023similarDocumentInfo\030\024 \003" +
+      "(\01321.pl.edu.icm.coansys.models.DocumentS" +
+      "imilarityInfo\022\030\n\005extId\030\005 \003(\0132\t.KeyValue\022" +
+      "\037\n\014auxiliarInfo\030\006 \003(\0132\t.KeyValue\022\"\n\014affi",
+      "liations\030\014 \003(\0132\014.Affiliation\022%\n\treferenc" +
+      "e\030\007 \003(\0132\022.ReferenceMetadata\022\022\n\ncollectio" +
+      "n\030\010 \003(\t\022\022\n\nsourcePath\030\t \001(\t\022\017\n\007origKey\030\013" +
+      " \003(\t\"\225\001\n\021ReferenceMetadata\022%\n\rbasicMetad" +
+      "ata\030\001 \002(\0132\016.BasicMetadata\022\024\n\014sourceDocKe" +
+      "y\030\002 \001(\t\022\020\n\010position\030\003 \001(\005\022\027\n\017rawCitation" +
+      "Text\030\004 \001(\t\022\030\n\005extId\030\005 \003(\0132\t.KeyValue\"\266\001\n" +
+      "\005Media\022\013\n\003key\030\001 \002(\t\022\021\n\tmediaType\030\002 \002(\t\022\017" +
+      "\n\007content\030\003 \002(\014\022\022\n\ncollection\030\004 \001(\t\022\022\n\ns" +
+      "ourcePath\030\005 \001(\t\022\026\n\016sourceFilesize\030\006 \001(\003\022",
+      "\027\n\017destinationPath\030\007 \001(\t\022#\n\nprovenance\030\010" +
+      " \001(\0132\017.ProvenanceInfo\"\'\n\016MediaContainer\022" +
+      "\025\n\005media\030\001 \003(\0132\006.Media\"v\n\017DocumentWrappe" +
+      "r\022\r\n\005rowId\030\001 \002(\t\022+\n\020documentMetadata\030\002 \001" +
+      "(\0132\021.DocumentMetadata\022\'\n\016mediaContainer\030" +
+      "\003 \001(\0132\017.MediaContainerB+\n\031pl.edu.icm.coa" +
+      "nsys.modelsB\016DocumentProtos"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -20419,7 +20576,7 @@ public final class DocumentProtos {
           internal_static_Affiliation_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_Affiliation_descriptor,
-              new java.lang.String[] { "Key", "AffiliationId", "Text", "Provenance", });
+              new java.lang.String[] { "Key", "AffiliationId", "Text", "Provenance", "OrganizationCurrentId", });
           internal_static_Author_descriptor =
             getDescriptor().getMessageTypes().get(5);
           internal_static_Author_fieldAccessorTable = new
