@@ -31,21 +31,22 @@ import pl.edu.icm.coansys.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.models.DocumentProtos.KeyValue;
 
-public class EX_PERSON_IDS extends DisambiguationExtractorAuthor {
+public class EX_PERSON_IDS_NOT_STATED extends DisambiguationExtractorAuthor {
 
 	// put here id names which should not be extracted to disambiguation
 	// e.g. "pbnPersonId"
 	public static final String SKIPPED_PERSON_ID_KIND[] = {
-
+		"pbnPersonId",
+		"orcidId"
 	};
 	private Set<String> skip_id_set = new HashSet<String>(
 			Arrays.asList(SKIPPED_PERSON_ID_KIND));
 
-	public EX_PERSON_IDS() {
+	public EX_PERSON_IDS_NOT_STATED() {
 		super();
 	}
 
-	public EX_PERSON_IDS(PigNormalizer[] new_normalizers) {
+	public EX_PERSON_IDS_NOT_STATED(PigNormalizer[] new_normalizers) {
 		super(new_normalizers);
 	}
 
@@ -70,6 +71,6 @@ public class EX_PERSON_IDS extends DisambiguationExtractorAuthor {
 
 	@Override
 	public String getId() {
-		return "E";
+		return "8.1";
 	}
 }

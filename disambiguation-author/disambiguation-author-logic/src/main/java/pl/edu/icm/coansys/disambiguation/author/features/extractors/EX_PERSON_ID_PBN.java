@@ -20,16 +20,17 @@ package pl.edu.icm.coansys.disambiguation.author.features.extractors;
 import pl.edu.icm.coansys.disambiguation.author.normalizers.PigNormalizer;
 
 
-public class EX_PERSON_COANSYS_ID extends EX_PERSON_ID {
+public class EX_PERSON_ID_PBN extends EX_PERSON_ID {
 
-	private static PigNormalizer[] new_normalizers = {};
-	
-	public EX_PERSON_COANSYS_ID() {
-		super(new_normalizers, "coansys/disambiguation-author");
-	}
+        private static PigNormalizer[] new_normalizers = {};
+        private static String[] usedIDs = {"pbnPersonId"};
+
+        public EX_PERSON_ID_PBN() {
+                super(new_normalizers, usedIDs);
+        }
 
 	@Override
 	public String getId() {
-		return "8.1";
+		return "8.2";
 	}
 }
