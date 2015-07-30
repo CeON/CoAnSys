@@ -43,85 +43,6 @@ object DoMatching {
   }
   
   
-  def dedupOrganizations(organizations:RDD[OrganizationWrapper]):RDD[Array[Byte]] = {
-     val toEdges = organizations.flatMap[(String, Array[Byte])] {
-       record => {
-        ((record.getOrganizationMetadata.getOriginalNameList.map(
-          (name: String) => (simplify(name), record.toByteArray)
-        )) ++ (record.getOrganizationMetadata.getEnglishNameList.map(
-            (name: String) => (simplify(name), record.toByteArray)
-          )));
-      }
-    }
-    
-    println("edges stage 1 ready: "+toEdges.count);   
-     val edgesPrep = toEdges.groupByKey.flatMap[(OrganizationWrapper,OrganizationWrapper)] {
-      case (hash: String, recordsB: Iterable[Array[Byte]/*OrganizationWrapper*/]) => {
-        val records=recordsB.map{case (r:Array[Byte])=>{
-            OrganizationWrapper.parseFrom(r)
-          }};
-         val recWithMinKey = records.min(Ordering.by(((_: OrganizationWrapper).getRowId())));
-        records.map { rec => (rec, recWithMinKey) }
-      }
-    }
-    val vertexes=organizations.map{
-         record:OrganizationWrapper => (longHash(record.getRowId()),record.toByteArray);
-    }
-     val edges=edgesPrep.map{
-      case (rec1:OrganizationWrapper, rec2:OrganizationWrapper) => {
-        Edge(longHash(rec1.getRowId()),longHash(rec2.getRowId()),getOrganizationName(rec2));
-      }
-    }
-    
-    val graph = Graph(vertexes, edges)
-    
-     println("graph ready: "+edges.count);   
-    val components=ConnectedComponents.run(graph);
-    
-    
-    val  grouped=graph.vertices.cogroup(components.vertices).flatMap{ 
-      case (k:Long, (oi:Iterable[Array[Byte]], ki:Iterable[Long])) => 
-        {
-          oi.flatMap{ ow:Array[Byte] => {
-                ki.map{
-                  a:Long=>
-                   (a,ow)
-                }
-            }
-          }
-            
-          
-        }
-    }
-    
-    val ret=grouped.groupByKey.map{
-      case (k:Long,it:Iterable[Array[Byte]]) =>
-      {
-        it.reduce(
-          (ow1b:Array[Byte], ow2b:Array[Byte]) => {
-//              println(getOrganizationName(ow1));
-//              println(ow1.getRowId);
-//              println(getOrganizationName(ow2));
-//              println(ow2.getRowId);
-              val ow1=OrganizationWrapper.parseFrom(ow1b)
-              val ow2=OrganizationWrapper.parseFrom(ow2b)
-             
-              val builder=ow1.toBuilder
-              val onameslist=ow2.getOrganizationMetadata.getOriginalNameList;
-              onameslist.removeAll(ow1.getOrganizationMetadata.getOriginalNameList);
-              builder.getOrganizationMetadataBuilder.addAllOriginalName(onameslist);
-              
-             
-              builder.build.toByteArray
-          })
-        
-          
-        
-      }
-    }
-    ret
-  }
-  
   
   
   
@@ -139,11 +60,11 @@ object DoMatching {
           val org=OrganizationWrapper.parseFrom(bw.copyBytes);
           org.getOrganizationMetadata.getEnglishNameList.map(
             (s:String) => {
-              (s.toLowerCase.trim,org.getRowId)
+              (simplify(s),org.getRowId)
             }
           )++org.getOrganizationMetadata.getOriginalNameList.map(
             (s:String) => {
-              (s.toLowerCase.trim,org.getRowId)
+              (simplify(s),org.getRowId)
             }
           )
         }
@@ -153,7 +74,7 @@ object DoMatching {
       case ((orgName,orgId),(docId,docContent)) =>{
           val doc=DocumentWrapper.parseFrom(docContent.copyBytes);
           !(doc.getDocumentMetadata.getAffiliationsList.filter((a :Affiliation ) =>{
-              a.getText.toLowerCase().contains(orgName)
+              simplify(a.getText).contains(orgName)
           }).isEmpty)
       }
     }
@@ -161,7 +82,7 @@ object DoMatching {
       case ((orgName,orgId),(docId,docContent)) =>{
           val doc=DocumentWrapper.parseFrom(docContent.copyBytes);
           doc.getDocumentMetadata.getAffiliationsList.filter((a :Affiliation ) =>{
-              a.getText.toLowerCase().contains(orgName)
+              simplify(a.getText).contains(orgName)
           }).map((a :Affiliation )=>{
             (docId,OrganizationMatchingOut.
                                            newBuilder.setAffiliationId(a.getAffiliationId)
@@ -172,7 +93,7 @@ object DoMatching {
       }
     }
    
-    ready.s
+    ready.saveAsSequenceFile(args(2));
     
      
     
