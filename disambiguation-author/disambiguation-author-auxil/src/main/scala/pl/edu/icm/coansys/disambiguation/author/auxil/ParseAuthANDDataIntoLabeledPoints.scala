@@ -13,8 +13,13 @@ import pl.edu.icm.coansys.models.OrganizationProtos.OrganizationWrapper
 import com.google.common.hash.HashCode
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.Intersection
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.CosineSimilarity
+import collection.JavaConversions._
+import collection.mutable.ArrayBuffer
+import java.lang.Object
+import org.apache.spark.mllib.regression.LabeledPoint
+import org.apache.spark.mllib.linalg.Vectors
 
-object ParseInputANDTrainingData {
+object ParseAuthANDDataIntoLabeledPoints {
 
   case class UUID(id:String)
   case class Feature(name: String, vals:Array[Long])
@@ -28,35 +33,49 @@ object ParseInputANDTrainingData {
     val sc = new SparkContext(conf)
     val inputFilePath = args(0)
     val outputFilePath = args(1)
+    val decField = args(2)
     val linesRDD = sc.textFile(inputFilePath)
     val usersRDD = linesRDD.map { l => 
       val ui = parseInputLine(l)
       (ui.sname,ui)
     }
     
+    
+    val feRDD = usersRDD.flatMap(kv => kv._2.features.map(t => (t.name))).distinct().filter { x => x!=decField }
+    val fNameTofIdx = feRDD.zipWithIndex().map{ kv =>
+      (kv._1,kv._2+1)
+    }.collectAsMap()
+    val bcFNameTofIdx = sc.broadcast(fNameTofIdx)
+    
     val groupsRDD = usersRDD.groupByKey()
-    val pairs = groupRDD.map{in =>
-      val sname = in._1
-      val iter =  in._2
-      val list = iter.toList
+    val points = groupsRDD.flatMap{in =>
+      val list = in._2.toList
       val size = list.size
-      val indsToProcess = (0 to (size-1)) cross (0 to (size-1)) filter (t => t._1 > t._2)
-      val pairComp = indsToProcess map { t=>
-        val csim = new CosineSimilarity
-        val aUser : UserInfo = list(t._1)
-        val bUser : UserInfo = list(t._2)
-        val aFeat = aUser.features.map(f => (f.name, f.vals))
-        val bFeat = bUser.features.map(f => (f.name, f.vals))
-        val joined = aFeat.join(bFeat)
-        val fvals = joined.map{(key,aF,bF) =>
-          (name,csim(aF,bF))
-        }.sortByKey()
-        (aUser.docId,aUser.authId,bUser.docId,bUser.authId, fvals)
+      val idxSet: Set[Int] = 0 until size toSet
+      val indsToProcess = (for (x<-idxSet; y<-idxSet) yield (x,y)) filter (t => t._1 < t._2)
+      val pointsPerSname = indsToProcess map { t=>
+        val aFeat = list(t._1).features.map(f => (f.name, f.vals))
+        val bFeat = list(t._2).features.map(f => (f.name, f.vals))
+        val grouped = (aFeat ++ bFeat).groupBy(_._1).toList
+        val allFeVals = grouped.filter(kv => kv._2.toList.size==2)
+        .map{ kv =>
+          val name = kv._1
+          scala.collection.mutable.Seq(kv._2(0)._2.toSeq)
+          val fA : java.util.List[java.lang.Object] = scala.collection.mutable.Seq(kv._2(0)._2)
+          val fB : java.util.List[java.lang.Object] = scala.collection.mutable.Seq(kv._2(1)._2) 
+          val idx = bcFNameTofIdx.value.getOrDefault(name,0)
+          val v = new CosineSimilarity().calculateAffinity(fA, fB)
+          (idx.toInt,v)
+        }.sortBy(kv => kv._1).map(kv => kv._2)
+        val regFeVals = allFeVals.slice(1,allFeVals.size).toArray
+        val vec = Vectors.dense(regFeVals)
+        val decFeVal = allFeVals(0)
+        new LabeledPoint(decFeVal,vec)  
       }
+      pointsPerSname
     }
-    pairs.saveAsTextFile(outputFilePath)
+    points.saveAsTextFile(outputFilePath) 
   }
-   
   
   def parseInputLine(line:String): UserInfo = {
     val arr = line.split("\t")
