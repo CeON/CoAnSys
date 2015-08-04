@@ -190,6 +190,7 @@
         <module>disambiguation-author</module>
         <module>deduplication-document</module>
         <module>deduplication-organization</module>
+        <module>affiliation-organization-matching</module>
         <module>document-classification</module>
         <module>document-similarity</module>
         <module>integration</module>
