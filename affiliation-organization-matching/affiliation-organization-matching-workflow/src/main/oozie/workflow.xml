@@ -40,7 +40,7 @@
            <master>yarn-cluster</master>
             <name>Affiliation matching</name>
             <class>pl.edu.icm.coansys.matching.organization.DoMatching</class>
-            <jar>${comacWfPath}/lib/deduplication-organization-impl-1.10-SNAPSHOT.jar</jar>
+            <jar>${comacWfPath}/lib/affiliation-organization-matching-impl-1.10-SNAPSHOT.jar</jar>
             <arg>${organizationsInputSeqFile}</arg>
             <arg>${documentsInputSeqFile}</arg>
             <arg>${outputSeqFile}</arg>
