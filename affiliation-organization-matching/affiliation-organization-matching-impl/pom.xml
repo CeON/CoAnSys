@@ -39,7 +39,7 @@
                         <launcher>
                             <id>sample</id>
                             <!-- This is to set the main to App.scala-->
-                            <mainClass>pl.edu.icm.coansys.deduplication.organization.DoDeduplication</mainClass>
+                            <mainClass>pl.edu.icm.coansys.matching.organization.DoMatching</mainClass>
                             <args>
                                 <arg>${basedir}</arg>
                             </args>

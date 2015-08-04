@@ -10,7 +10,7 @@
 
     <artifactId>affiliation-organization-matching</artifactId>
     <packaging>pom</packaging>
-    <name>Deduplication - Organization</name>
+    <name>affiliation-matching - Organization</name>
     <url>http://maven.apache.org</url>
 
     <modules>

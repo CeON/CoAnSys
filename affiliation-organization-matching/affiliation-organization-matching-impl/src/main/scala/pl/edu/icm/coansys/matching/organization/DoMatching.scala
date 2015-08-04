@@ -43,21 +43,10 @@ object DoMatching {
   }
   
   
-  
-  
-  
-  /**
-   * @param args the command line arguments
-   */
-  def main(args: Array[String]): Unit = {
-    val organizationFile =args(0) // Should be some file on your system
-    val documentsFile =args(1);
-    val conf = new SparkConf().setAppName("Organization matching")
-    val sc = new SparkContext(conf)
-    val orgData = sc.sequenceFile[String, BytesWritable](organizationFile);
-    val organizationsNames= orgData.flatMap{
+  def doMatching(orgData:RDD[(String,Array[Byte])],docData :RDD[(String,Array[Byte])]):RDD[(String,Array[Byte])] ={
+ val organizationsNames= orgData.flatMap{
       case (key, bw)=> {
-          val org=OrganizationWrapper.parseFrom(bw.copyBytes);
+          val org=OrganizationWrapper.parseFrom(bw);
           org.getOrganizationMetadata.getEnglishNameList.map(
             (s:String) => {
               (simplify(s),org.getRowId)
@@ -68,11 +57,11 @@ object DoMatching {
             }
           )
         }
-    }
-    val docData = sc.sequenceFile[String, BytesWritable](documentsFile);
+    }    
+    
     val matched=organizationsNames.cartesian(docData).filter{
       case ((orgName,orgId),(docId,docContent)) =>{
-          val doc=DocumentWrapper.parseFrom(docContent.copyBytes);
+          val doc=DocumentWrapper.parseFrom(docContent);
           !(doc.getDocumentMetadata.getAffiliationsList.filter((a :Affiliation ) =>{
               simplify(a.getText).contains(orgName)
           }).isEmpty)
@@ -80,7 +69,7 @@ object DoMatching {
     }
     val ready=matched.flatMap[(String,Array[Byte])]{
       case ((orgName,orgId),(docId,docContent)) =>{
-          val doc=DocumentWrapper.parseFrom(docContent.copyBytes);
+          val doc=DocumentWrapper.parseFrom(docContent);
           doc.getDocumentMetadata.getAffiliationsList.filter((a :Affiliation ) =>{
               simplify(a.getText).contains(orgName)
           }).map((a :Affiliation )=>{
@@ -91,9 +80,32 @@ object DoMatching {
                                            .build.toByteArray)
           })
       }
-    }
+    };
+    ready
+    
+    
+  }
+  
+  
+  /**
+   * @param args the command line arguments
+   */
+  def main(args: Array[String]): Unit = {
+    val organizationFile =args(0) // Should be some file on your system
+    val documentsFile =args(1);
+    val conf = new SparkConf().setAppName("Organization matching")
+    val sc = new SparkContext(conf)
+    val orgData = sc.sequenceFile[String, BytesWritable](organizationFile).map{case (a,b) =>{
+        (a,b.copyBytes)
+      }
+    };
    
-    ready.saveAsSequenceFile(args(2));
+    val docData = sc.sequenceFile[String, BytesWritable](documentsFile).map{case (a,b) =>{
+        (a,b.copyBytes)
+      }
+    };
+    
+    doMatching(orgData, docData).saveAsSequenceFile(args(2));
     
      
     
