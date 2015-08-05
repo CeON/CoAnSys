@@ -58,7 +58,7 @@ object DoMatching {
           )
         }
     }    
-    
+    println("organizations names count: "+organizationsNames.count);
     val matched=organizationsNames.cartesian(docData).filter{
       case ((orgName,orgId),(docId,docContent)) =>{
           val doc=DocumentWrapper.parseFrom(docContent);
@@ -67,6 +67,7 @@ object DoMatching {
           }).isEmpty)
       }
     }
+     println("matched count: "+matched.count);
     val ready=matched.flatMap[(String,Array[Byte])]{
       case ((orgName,orgId),(docId,docContent)) =>{
           val doc=DocumentWrapper.parseFrom(docContent);
@@ -105,7 +106,10 @@ object DoMatching {
       }
     };
     
-    doMatching(orgData, docData).saveAsSequenceFile(args(2));
+    
+    val results=doMatching(orgData, docData);
+    println("results count: "+results.count);
+    results.saveAsSequenceFile(args(2));
     
      
     
