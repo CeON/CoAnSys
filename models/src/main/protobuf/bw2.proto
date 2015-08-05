@@ -43,6 +43,7 @@ message Affiliation{
 	required string affiliationId = 2;
 	required string text = 3;
 	optional ProvenanceInfo provenance = 4;
+    optional string organizationCurrentId=5;
 }
 
 // key -- docId + "#c" + positionNumber

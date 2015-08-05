@@ -35,7 +35,7 @@
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
             <prepare>
-               <delete path="${inputSeqFile}"/>
+               <delete path="${outputSeqFile}"/>
                <!--<mkdir path="[PATH]"/>-->
             </prepare>
 <!--            <job-xml>[SPARK SETTINGS FILE]</job-xml>
