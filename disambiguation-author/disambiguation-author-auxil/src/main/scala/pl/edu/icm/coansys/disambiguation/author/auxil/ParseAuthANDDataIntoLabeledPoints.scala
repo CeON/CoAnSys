@@ -31,40 +31,44 @@ object ParseAuthANDDataIntoLabeledPoints {
     }
 
 
-    val feRDD = usersRDD.flatMap(kv => kv._2.features.map(t => (t.name))).distinct().filter { x => x!=decField }
-    val fNameTofIdx = feRDD.zipWithIndex().map{ kv =>
+    val featureNamesRDD = usersRDD.flatMap(kv => kv._2.features.map(t => (t.name))).distinct().filter { x => x!=decField }
+    val featureNameTofIdxMap = featureNamesRDD.zipWithIndex().map{ kv =>
       (kv._1,kv._2+1)
     }.collectAsMap()
-    val bcFNameTofIdx = sc.broadcast(fNameTofIdx)
+    val bcFeatureNameToIdxMap= sc.broadcast(featureNameTofIdxMap)
 
-    val groupsRDD = usersRDD.groupByKey()
-    val points = groupsRDD.flatMap{in =>
-      val list = in._2.toList
-      val size = list.size
-      val idxSet: Set[Int] = 0 until size toSet
-      val indsToProcess = (for (x<-idxSet; y<-idxSet) yield (x,y)) filter (t => t._1 < t._2)
-      val pointsPerSname = indsToProcess map { t=>
-        val aFeat = list(t._1).features.map(f => (f.name, f.vals))
-        val bFeat = list(t._2).features.map(f => (f.name, f.vals))
-        val grouped = (aFeat ++ bFeat).groupBy(_._1).toList
-        val allFeVals = grouped.filter(kv => kv._2.toList.size==2)
-        .map{ kv =>
-          val name = kv._1
-          scala.collection.mutable.Seq(kv._2(0)._2.toSeq)
-          val fA : java.util.List[java.lang.Object] = scala.collection.mutable.Seq(kv._2(0)._2)
-          val fB : java.util.List[java.lang.Object] = scala.collection.mutable.Seq(kv._2(1)._2)
-          val idx = bcFNameTofIdx.value.getOrDefault(name,0)
-          val v = new CosineSimilarity().calculateAffinity(fA, fB)
-          (idx.toInt,v)
-        }.sortBy(kv => kv._1).map(kv => kv._2)
-        val regFeVals = allFeVals.slice(1,allFeVals.size).toArray
-        val vec = Vectors.dense(regFeVals)
-        val decFeVal = allFeVals(0)
-        new LabeledPoint(decFeVal,vec)
+    val userGroupsByKeyRDD = usersRDD.groupByKey()
+    val pairTrainingPointsRDD = userGroupsByKeyRDD.flatMap{in =>
+      val listOfAuthors = in._2.toList
+      val sizeOfList = listOfAuthors.size
+      val setOfIndices: Set[Int] = 0 until sizeOfList toSet
+      val legalPairsOfIndices = (for (x<-setOfIndices; y<-setOfIndices) yield (x,y)) filter (t => t._1 < t._2)
+      val pairTrainingItems = legalPairsOfIndices map { t=>
+        val aFeat = listOfAuthors(t._1).features.map(f => (f.name, f.vals))
+        val bFeat = listOfAuthors(t._2).features.map(f => (f.name, f.vals))
+        val pairTrainingItem = ((aFeat ++ bFeat).groupBy(_._1).toList)
+          .filter(kv => kv._2.toList.size==2)
+          .map{ kv =>
+            val name = kv._1
+            scala.collection.mutable.Seq(kv._2(0)._2.toSeq)
+            val fA : java.util.List[java.lang.Object] = scala.collection.mutable.Seq(kv._2(0)._2)
+            val fB : java.util.List[java.lang.Object] = scala.collection.mutable.Seq(kv._2(1)._2)
+            val idx = bcFeatureNameToIdxMap.value.getOrDefault(name,0)
+            val v = new CosineSimilarity().calculateAffinity(fA, fB)
+            (idx.toInt,v)
+          }.sortBy(kv => kv._1)
+
+        new LabeledPoint(
+          pairTrainingItem(0)._2,
+          Vectors.sparse(
+            bcFeatureNameToIdxMap.value.size,
+            pairTrainingItem.slice(1,pairTrainingItem.length)
+          )
+        )
       }
-      pointsPerSname
+      pairTrainingItems
     }
-    points.saveAsTextFile(outputFilePath)
+    pairTrainingPointsRDD.saveAsTextFile(outputFilePath)
   }
   
   def parseInputLine(line:String): UserInfo = {
