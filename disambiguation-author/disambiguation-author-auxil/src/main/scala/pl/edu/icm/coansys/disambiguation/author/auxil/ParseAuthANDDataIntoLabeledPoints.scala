@@ -30,9 +30,10 @@ object ParseAuthANDDataIntoLabeledPoints {
       "6a80a1a7-3071-3d7e-98e7-f1a07348f17a\t64da331f-1e9d-3dfe-ab04-cb1c71d67218\t92905994\t[EX_AUTH_FNAME_FST_LETTER#{(98)},EX_DOC_AUTHS_FNAME_FST_LETTER#{(115),(98)},EX_PERSON_ID_ORCID#{(0000-0003-4285-6256)},EX_DOC_AUTHS_SNAMES#{(-535238152),(92905994)},EX_TITLE#{(-510284725)},EX_TITLE_SPLIT#{(98291),(1745201474),(3151786),(1147603242),(1943748620),(563698677),(112905370),(3365),(103910395),(-982210431),(96727),(3095218),(-455789922)},EX_AUTH_FNAMES_FST_LETTER#{(98)}]\tallen"
     ))
     var decField = "EX_PERSON_ID_ORCID"
+    var outputFilePath = ""
     if(!test){
       val inputFilePath = args(0)
-      val outputFilePath = args(1)
+      outputFilePath = args(1)
       decField = args(2)
       linesRDD = sc.textFile(inputFilePath)
     }
@@ -64,10 +65,8 @@ object ParseAuthANDDataIntoLabeledPoints {
           .map{ kv =>
             val name = kv._1
             scala.collection.mutable.Seq(kv._2(0)._2.toSeq)
-            val fA : java.util.List[java.lang.Object] = scala.collection.mutable.Seq(kv._2(0)._2)
-            val fB : java.util.List[java.lang.Object] = scala.collection.mutable.Seq(kv._2(1)._2)
             val idx = bcFeatureNameToIdxMap.value.getOrDefault(name,0)
-            val v = new CosineSimilarity().calculateAffinity(fA, fB)
+            val v = new CosineSimilarity().calculateAffinity(kv._2(0)._2.toList, kv._2(1)._2.toList)
             (idx.toInt,v)
           }.sortBy(kv => kv._1)
 
@@ -81,8 +80,13 @@ object ParseAuthANDDataIntoLabeledPoints {
       }
       pairTrainingItems
     }
-    //pairTrainingPointsRDD.collect().foreach(println(_))
-    pairTrainingPointsRDD.saveAsTextFile(outputFilePath)
+
+    if(test){
+      pairTrainingPointsRDD.collect().foreach(println(_))
+    }else{
+      pairTrainingPointsRDD.saveAsTextFile(outputFilePath)
+
+    }
   }
   
   def parseInputLine(line:String): UserInfo = {
