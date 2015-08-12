@@ -45,7 +45,7 @@ object ParseAuthANDDataIntoLabeledPoints {
       (ui.sname,ui)
     }
 
-    val featureNameToIdxMap : collection.Map[String, Long] = createFeatureMap(linesRDD, decField)
+    val featureNameToIdxMap : collection.Map[String, Long] = createFeatureMap(linesRDD, decField, "EX_PERSON_*")
     val bcFeatureNameToIdxMap= sc.broadcast(featureNameToIdxMap)
 
     val userGroupsByKeyRDD = usersRDD.groupByKey()
@@ -86,12 +86,15 @@ object ParseAuthANDDataIntoLabeledPoints {
     }
   }
 
-  def createFeatureMap(linesRDD : RDD[String], decField : String): collection.Map[String, Long] = {
+  def createFeatureMap(linesRDD : RDD[String], decField : String, skippedFeatures : String): collection.Map[String, Long] = {
     val usersRDD = linesRDD.map { l =>
       val ui = ParseAuthANDDataIntoLabeledPoints.parseInputLine(l)
       (ui.sname,ui)
     }
-    val featureNamesRDD = usersRDD.flatMap(kv => kv._2.features.map(t => (t.name))).distinct().filter { x => x!=decField }
+    val featureNamesRDD = usersRDD.flatMap(kv => kv._2.features.map(t => (t.name)))
+                                  .distinct()
+                                  .filter { x => x!=decField }
+                                  .filter { x => x.replaceAll(skippedFeatures,"").length == x.length}
     val featureNameTofIdxMap = featureNamesRDD.zipWithIndex().map{ kv =>
       (kv._1,kv._2+1)
     }.collectAsMap()

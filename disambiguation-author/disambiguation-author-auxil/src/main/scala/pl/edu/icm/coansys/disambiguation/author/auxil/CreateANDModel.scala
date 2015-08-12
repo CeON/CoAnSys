@@ -58,7 +58,7 @@ object CreateANDModel {
       prevLinesRDD = sc.textFile(inputRawData)
       linesRDD = sc.textFile(inputSvmPoints)
     }
-    val featureNameToIdxMap : collection.Map[String, Long] = ParseAuthANDDataIntoLabeledPoints.createFeatureMap(prevLinesRDD, decField)
+    val featureNameToIdxMap : collection.Map[String, Long] = ParseAuthANDDataIntoLabeledPoints.createFeatureMap(prevLinesRDD, decField,"EX_PERSON_*")
     val points = linesRDD.map(LabeledPoint.parse(_))
 
     /*
