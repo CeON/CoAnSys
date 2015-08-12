@@ -3,6 +3,7 @@ package pl.edu.icm.coansys.disambiguation.author.auxil
 import org.apache.spark.SparkContext._
 import org.apache.spark.mllib.linalg.Vectors
 import org.apache.spark.mllib.regression.LabeledPoint
+import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkConf, SparkContext}
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.CosineSimilarity
 
@@ -44,12 +45,8 @@ object ParseAuthANDDataIntoLabeledPoints {
       (ui.sname,ui)
     }
 
-
-    val featureNamesRDD = usersRDD.flatMap(kv => kv._2.features.map(t => (t.name))).distinct().filter { x => x!=decField }
-    val featureNameTofIdxMap = featureNamesRDD.zipWithIndex().map{ kv =>
-      (kv._1,kv._2+1)
-    }.collectAsMap()
-    val bcFeatureNameToIdxMap= sc.broadcast(featureNameTofIdxMap)
+    val featureNameToIdxMap : collection.Map[String, Long] = createFeatureMap(linesRDD, decField)
+    val bcFeatureNameToIdxMap= sc.broadcast(featureNameToIdxMap)
 
     val userGroupsByKeyRDD = usersRDD.groupByKey()
     val pairTrainingPointsRDD = userGroupsByKeyRDD.flatMap{in =>
@@ -88,7 +85,19 @@ object ParseAuthANDDataIntoLabeledPoints {
 
     }
   }
-  
+
+  def createFeatureMap(linesRDD : RDD[String], decField : String): collection.Map[String, Long] = {
+    val usersRDD = linesRDD.map { l =>
+      val ui = ParseAuthANDDataIntoLabeledPoints.parseInputLine(l)
+      (ui.sname,ui)
+    }
+    val featureNamesRDD = usersRDD.flatMap(kv => kv._2.features.map(t => (t.name))).distinct().filter { x => x!=decField }
+    val featureNameTofIdxMap = featureNamesRDD.zipWithIndex().map{ kv =>
+      (kv._1,kv._2+1)
+    }.collectAsMap()
+    return featureNameTofIdxMap
+  }
+
   def parseInputLine(line:String): UserInfo = {
     val arr = line.split("\t")
     val docId = UUID(arr(0));

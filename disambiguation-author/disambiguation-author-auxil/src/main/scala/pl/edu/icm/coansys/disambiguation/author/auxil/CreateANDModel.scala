@@ -1,9 +1,7 @@
 package pl.edu.icm.coansys.disambiguation.author.auxil
 
-import org.apache.spark.SparkContext._
 import org.apache.spark.mllib.classification.{SVMModel, SVMWithSGD}
 import org.apache.spark.mllib.regression.LabeledPoint
-import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkConf, SparkContext}
 
 object CreateANDModel {
@@ -60,7 +58,7 @@ object CreateANDModel {
       prevLinesRDD = sc.textFile(inputRawData)
       linesRDD = sc.textFile(inputSvmPoints)
     }
-    val featureNameToIdxMap : collection.Map[String, Long] = createFeatureMap(prevLinesRDD, decField)
+    val featureNameToIdxMap : collection.Map[String, Long] = ParseAuthANDDataIntoLabeledPoints.createFeatureMap(prevLinesRDD, decField)
     val points = linesRDD.map(LabeledPoint.parse(_))
 
     /*
@@ -85,58 +83,8 @@ object CreateANDModel {
       print(kv._1+"\t")
       println(weights(kv._2.toInt))
     }
+    println("Intercept: " + model.intercept)
     sc.stop()
   }
 
-  def createFeatureMap(linesRDD : RDD[String], decField : String): collection.Map[String, Long] = {
-    val usersRDD = linesRDD.map { l =>
-      val ui = parseInputLine(l)
-      (ui.sname,ui)
-    }
-    val featureNamesRDD = usersRDD.flatMap(kv => kv._2.features.map(t => (t.name))).distinct().filter { x => x!=decField }
-    val featureNameTofIdxMap = featureNamesRDD.zipWithIndex().map{ kv =>
-      (kv._1,kv._2+1)
-    }.collectAsMap()
-    return featureNameTofIdxMap
-  }
-
-  def parseInputLine(line:String): UserInfo = {
-    val arr = line.split("\t")
-    val docId = UUID(arr(0));
-    val authId = UUID(arr(1))
-    val hashAuth = arr(2)
-    val features : List[Feature] = parseManyFeatures(arr(3))
-    val sname = arr(4)
-    return UserInfo(docId,authId,hashAuth,features,sname)
-  }
-  def findIndices(strA: String, subStr:String) : List[Int] = {
-    val idx = strA.indexOf(subStr)
-    if(idx == -1){
-      return List()
-    }
-    val len = subStr.length()
-    val shift = len + idx
-    val strB = strA.substring(shift);
-    return List(idx) ++ findIndices(strB, subStr).map(i => i+shift)
-  }
-
-  def parseManyFeatures(featuresStr:String): List[Feature] = {
-    val sA = featuresStr
-    val sB = sA.substring(1)
-    val staInds = findIndices(sB, "EX_")
-    val stoInds = staInds.slice(1, staInds.size) ++ List(sB.length())
-    val staStoInds : List[(Int,Int)] = staInds.zip(stoInds)
-    val feStrs : List[String] = staStoInds.map(se => sB.substring(se._1,se._2-1))
-    val feEls : List[Feature] = feStrs.map(s => parseOneFeature(s)) 
-    return feEls
-  }
-
-  def parseOneFeature(feStr : String): Feature = {
-    val genArr = feStr.split("#")
-    val feName = genArr(0) //feature name
-    val feValsStr = genArr(1).substring(1,genArr(1).length()-1)
-    val feValsArr = feValsStr.split(",") 
-    val feValsFin = feValsArr.map(s =>  s.substring(1,s.length()-1)) //feature values
-    return new Feature(feName, feValsFin)
-  }
 }
