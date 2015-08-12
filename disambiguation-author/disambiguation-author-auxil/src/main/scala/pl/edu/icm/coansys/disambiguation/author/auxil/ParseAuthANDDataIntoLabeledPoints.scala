@@ -116,16 +116,22 @@ object ParseAuthANDDataIntoLabeledPoints {
     val stoInds = staInds.slice(1, staInds.size) ++ List(sB.length())
     val staStoInds : List[(Int,Int)] = staInds.zip(stoInds)
     val feStrs : List[String] = staStoInds.map(se => sB.substring(se._1,se._2-1))
-    val feEls : List[Feature] = feStrs.map(s => parseOneFeature(s)) 
+    val feEls : List[Feature] = feStrs.map(s => parseOneFeature(s))
+      .filter(a => a.isInstanceOf[Feature])
+      .map(a => a.asInstanceOf[Feature])
     return feEls
   }
 
-  def parseOneFeature(feStr : String): Feature = {
-    val genArr = feStr.split("#")
-    val feName = genArr(0) //feature name
-    val feValsStr = genArr(1).substring(1,genArr(1).length()-1)
-    val feValsArr = feValsStr.split(",") 
-    val feValsFin = feValsArr.map(s =>  s.substring(1,s.length()-1)) //feature values
-    return new Feature(feName, feValsFin)
+  def parseOneFeature(feStr : String): Any = {
+    try {
+      val genArr = feStr.split("#")
+      val feName = genArr(0) //feature name
+      val feValsStr = genArr(1).substring(1, genArr(1).length() - 1)
+      val feValsArr = feValsStr.split(",")
+      val feValsFin = feValsArr.map(s => s.substring(1, s.length() - 1)) //feature values
+      return new Feature(feName, feValsFin)
+    }catch{
+      case e: Exception => return None
+    }
   }
 }
