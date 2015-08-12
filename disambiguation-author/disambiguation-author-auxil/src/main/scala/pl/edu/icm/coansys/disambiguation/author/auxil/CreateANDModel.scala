@@ -64,13 +64,18 @@ object CreateANDModel {
     /*
      * CREATE MODEL
      */
+    points.cache()
     val dataSplits = points.randomSplit(Array(0.8,0.2), seed=11L)
-    val model : SVMModel = SVMWithSGD.train(dataSplits(0), 20)
+    val trainSet = dataSplits(0)
+    val testSet = dataSplits(1)
+    trainSet.cache()
+    testSet.cache()
+    val model : SVMModel = SVMWithSGD.train(trainSet, 20)
 
-    val predsAndLabels = dataSplits(1).map { p =>
+    val predsAndLabels = testSet.map { p =>
       (model.predict(p.features),p.label)
     }
-    val acc = 1.0 * predsAndLabels.filter(x=> x._1==x._2).count/ dataSplits(1).count
+    val acc = 1.0 * predsAndLabels.filter(x=> x._1==x._2).count/ testSet.count
 
     /*
      * RETURN RESULTS
