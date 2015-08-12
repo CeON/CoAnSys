@@ -22,13 +22,13 @@ object ParseAuthANDDataIntoLabeledPoints {
 
     val conf = new SparkConf()
       .setAppName("Parsing data for AND model")
-//      .setMaster("local")
+      .setMaster("local")
     val sc = new SparkContext(conf)
-    val test = false
+    val test = true
 
     var linesRDD = sc.parallelize(List(
-      "6a80a1a7-3071-3d7e-98e7-f1a07348f17a\t64da331f-1e9d-3dfe-ab04-cb1c71d67218\t92905994\t[EX_AUTH_FNAME_FST_LETTER#{(98)},EX_DOC_AUTHS_FNAME_FST_LETTER#{(115),(98)},EX_PERSON_ID_ORCID#{(0000-0003-4285-6256)},EX_DOC_AUTHS_SNAMES#{(-535238152),(92905994)},EX_TITLE#{(-510284725)},EX_TITLE_SPLIT#{(98291),(1745201474),(3151786),(1147603242),(1943748620),(563698677),(112905370),(3365),(103910395),(-982210431),(96727),(3095218),(-455789922)},EX_AUTH_FNAMES_FST_LETTER#{(98)}]\tallen",
-      "6a80a1a7-3071-3d7e-98e7-f1a07348f17a\t64da331f-1e9d-3dfe-ab04-cb1c71d67218\t92905994\t[EX_AUTH_FNAME_FST_LETTER#{(98)},EX_DOC_AUTHS_FNAME_FST_LETTER#{(115),(98)},EX_PERSON_ID_ORCID#{(0000-0003-4285-6256)},EX_DOC_AUTHS_SNAMES#{(-535238152),(92905994)},EX_TITLE#{(-510284725)},EX_TITLE_SPLIT#{(98291),(1745201474),(3151786),(1147603242),(1943748620),(563698677),(112905370),(3365),(103910395),(-982210431),(96727),(3095218),(-455789922)},EX_AUTH_FNAMES_FST_LETTER#{(98)}]\tallen"
+      "0041f6a9-6834-3c44-ba03-4cb142918a9c\t9d9cce09-a5c7-3bd9-8497-2c14106523cb\t3641859\t[EX_PERSON_ID_PBN#{(0000-0002-5979-5544)},EX_PERSON_ID_COANSYS#{(0000-0002-5979-5544)},EX_AUTH_FNAME_FST_LETTER#{(122)},EX_AUTH_FNAMES#{(122)},EX_DOC_AUTHS_FNAME_FST_LETTER#{(112),(114),(106),(97),(122)},EX_PERSON_ID_ORCID#{(0000-0002-5979-5544)},EX_DOC_AUTHS_SNAMES#{(-1217173850),(-925564068),(1674970301),(-1338811464),(3641859)},EX_TITLE#{(1557727042)},EX_COAUTH_SNAME#{(-1217173850),(-925564068),(1674970301),(3641859)},EX_AUTH_FNAME#{(3828)},EX_TITLE_SPLIT#{(108401386),(3707),(109264607),(3522631),(283723001),(96727),(-1266509013)},EX_AUTH_FNAMES_FST_LETTER#{(122)}]\twang",
+      "0041f6a9-6834-3c44-ba03-4cb142918a9c\t9d9cce09-a5c7-3bd9-8497-2c14106523cb\t3641859\t[EX_PERSON_ID_PBN#{(0000-0002-5979-5544)},EX_PERSON_ID_COANSYS#{(0000-0002-5979-5544)},EX_AUTH_FNAME_FST_LETTER#{(122)},EX_AUTH_FNAMES#{(122)},EX_DOC_AUTHS_FNAME_FST_LETTER#{(112),(114),(106),(97),(122)},EX_PERSON_ID_ORCID#{(0000-0002-5979-5544)},EX_DOC_AUTHS_SNAMES#{(-1217173850),(-925564068),(1674970301),(-1338811464),(3641859)},EX_TITLE#{(1557727042)},EX_COAUTH_SNAME#{(-1217173850),(-925564068),(1674970301),(3641859)},EX_AUTH_FNAME#{(3828)},EX_TITLE_SPLIT#{(108401386),(3707),(109264607),(3522631),(283723001),(96727),(-1266509013)},EX_AUTH_FNAMES_FST_LETTER#{(122)}]\twang"
     ))
     var decField = "EX_PERSON_ID_ORCID"
     var outputFilePath = ""
@@ -62,10 +62,13 @@ object ParseAuthANDDataIntoLabeledPoints {
           .map{ kv =>
             val name = kv._1
             scala.collection.mutable.Seq(kv._2(0)._2.toSeq)
-            val idx = bcFeatureNameToIdxMap.value.getOrDefault(name,0)
+            var idx = bcFeatureNameToIdxMap.value.getOrDefault(name,0)
+            if(idx==0 && name!=decField){
+              idx = -1;
+            }
             val v = new CosineSimilarity().calculateAffinity(kv._2(0)._2.toList, kv._2(1)._2.toList)
             (idx.toInt,v)
-          }.sortBy(kv => kv._1)
+          }.filter(kv => kv._1 != -1).sortBy(kv => kv._1)
 
         new LabeledPoint(
           pairTrainingItem(0)._2,
@@ -88,7 +91,7 @@ object ParseAuthANDDataIntoLabeledPoints {
 
   def createFeatureMap(linesRDD : RDD[String], decField : String, skippedFeatures : String): collection.Map[String, Long] = {
     val usersRDD = linesRDD.map { l =>
-      val ui = ParseAuthANDDataIntoLabeledPoints.parseInputLine(l)
+      val ui = parseInputLine(l)
       (ui.sname,ui)
     }
     val featureNamesRDD = usersRDD.flatMap(kv => kv._2.features.map(t => (t.name)))
