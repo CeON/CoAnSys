@@ -42,6 +42,15 @@ object DoMatching {
     }
   }
   
+  def trimOrganizationNamesForHash(nam:String) :String = {
+    val common=Array("university","institute","of ", " of");
+    var nn=nam.toLowerCase;
+    for (s <- common) {
+     nn=nn.replaceAll(s+" ", " ").replaceAll(" "+s, " ");
+    }
+    nn
+  }
+  
   
   def doMatching(orgData:RDD[(String,Array[Byte])],docData :RDD[(String,Array[Byte])]):RDD[(String,Array[Byte])] ={
  val organizationsNames= orgData.flatMap{
@@ -57,19 +66,61 @@ object DoMatching {
             }
           )
         }
-    }    
-    println("organizations names count: "+organizationsNames.count);
-    val matched=organizationsNames.cartesian(docData).filter{
+    }
+  
+    val hashSize=3
+    
+    val organizationsHash= organizationsNames.map{
+       case (orgName,orgId) => {
+         val sn=trimOrganizationNamesForHash(orgName).replaceAll(" ", "");
+         val s=if (sn.size<=hashSize) sn else sn.substring(0, hashSize);
+         (s,(orgName,orgId))
+       }
+    } 
+  
+    val docAffHash=docData.flatMap{
+      case (docId,docContent) => {
+         val doc=DocumentWrapper.parseFrom(docContent);
+         doc.getDocumentMetadata.getAffiliationsList.flatMap((a:Affiliation) => {
+              val nn=trimOrganizationNamesForHash(a.getText)
+              
+              if (nn.size<=hashSize) {
+                (1 to nn.length).map(i=>{(nn.substring(0, i),(docId,docContent))})
+              } else {
+              (0 to nn.length-hashSize).flatMap(i => {
+                val t=nn.substring(i, i+hashSize);
+                (1 to t.length).map(j=>{(t.substring(0, j),(docId,docContent))})
+              })
+              }
+         }
+         )
+      }
+    }
+      println("organizations hash count: "+organizationsHash.count);
+      println("documents hash count: "+docAffHash.count);
+    
+   val matched=docAffHash.join(organizationsHash).filter{
+     
+  case (key:String,((docId:String,docContent:Array[Byte]),(orgName:String ,orgId:String))) =>{
+          val doc=DocumentWrapper.parseFrom(docContent);
+          !(doc.getDocumentMetadata.getAffiliationsList.filter((a :Affiliation ) =>{
+              simplify(a.getText).contains(orgName)
+          }).isEmpty)
+         
+      }
+   }
+   
+   /* val matched=organizationsNames.cartesian(docData).filter{
       case ((orgName,orgId),(docId,docContent)) =>{
           val doc=DocumentWrapper.parseFrom(docContent);
           !(doc.getDocumentMetadata.getAffiliationsList.filter((a :Affiliation ) =>{
               simplify(a.getText).contains(orgName)
           }).isEmpty)
       }
-    }
+    }*/
      println("matched count: "+matched.count);
     val ready=matched.flatMap[(String,Array[Byte])]{
-      case ((orgName,orgId),(docId,docContent)) =>{
+      case (key,((docId,docContent),(orgName,orgId))) =>{
           val doc=DocumentWrapper.parseFrom(docContent);
           doc.getDocumentMetadata.getAffiliationsList.filter((a :Affiliation ) =>{
               simplify(a.getText).contains(orgName)
