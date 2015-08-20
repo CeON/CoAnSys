@@ -100,7 +100,7 @@ object DoMatching {
     }
       println("organizations hash count: "+organizationsHash.count);
       println("documents hash count: "+docAffHash.count);
-    println("documents keys:")
+  //  println("documents keys:")
     docAffHash.foreach{
       case (key:String, t )=>{
           println(key)
