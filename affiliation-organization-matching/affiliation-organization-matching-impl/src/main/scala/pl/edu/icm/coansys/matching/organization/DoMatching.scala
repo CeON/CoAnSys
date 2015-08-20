@@ -90,6 +90,8 @@ object DoMatching {
               (0 to nn.length-hashSize).flatMap(i => {
                 val t=nn.substring(i, i+hashSize);
                 (1 to t.length).map(j=>{(t.substring(0, j),(docId,docContent))})
+              }) ++ (1 to hashSize-1).map (i=> {
+                  (nn.substring(nn.length-i),(docId,docContent))
               })
               }
          }
@@ -98,7 +100,12 @@ object DoMatching {
     }
       println("organizations hash count: "+organizationsHash.count);
       println("documents hash count: "+docAffHash.count);
-    
+    println("documents keys:")
+    docAffHash.foreach{
+      case (key:String, t )=>{
+          println(key)
+      }
+    }
    val matched=docAffHash.join(organizationsHash).filter{
      
   case (key:String,((docId:String,docContent:Array[Byte]),(orgName:String ,orgId:String))) =>{
