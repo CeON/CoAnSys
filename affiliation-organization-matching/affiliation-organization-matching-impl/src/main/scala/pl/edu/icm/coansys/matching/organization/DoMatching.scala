@@ -101,11 +101,11 @@ object DoMatching {
       println("organizations hash count: "+organizationsHash.count);
       println("documents hash count: "+docAffHash.count);
   //  println("documents keys:")
-    docAffHash.foreach{
-      case (key:String, t )=>{
-          println(key)
-      }
-    }
+//    docAffHash.foreach{
+//      case (key:String, t )=>{
+//          println(key)
+//      }
+//    }
    val matched=docAffHash.join(organizationsHash).filter{
      
   case (key:String,((docId:String,docContent:Array[Byte]),(orgName:String ,orgId:String))) =>{
