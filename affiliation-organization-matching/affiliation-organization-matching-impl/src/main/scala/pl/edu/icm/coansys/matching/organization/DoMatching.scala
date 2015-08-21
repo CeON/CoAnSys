@@ -85,21 +85,22 @@ object DoMatching {
               val nn=trimOrganizationNamesForHash(a.getText)
               
               if (nn.size<=hashSize) {
-                (1 to nn.length).map(i=>{(nn.substring(0, i),(docId,docContent))})
+                (1 to nn.length).map(i=>{(nn.substring(0, i),(docId,(a.getText,docContent)))})
               } else {
               (0 to nn.length-hashSize).flatMap(i => {
                 val t=nn.substring(i, i+hashSize);
-                (1 to t.length).map(j=>{(t.substring(0, j),(docId,docContent))})
+                (1 to t.length).map(j=>{(t.substring(0, j),(docId,(a.getText,docContent)))})
               }) ++ (1 to hashSize-1).map (i=> {
-                  (nn.substring(nn.length-i),(docId,docContent))
+                  (nn.substring(nn.length-i),(docId,(a.getText,docContent)))
               })
               }
          }
          )
       }
     }
-      println("organizations hash count: "+organizationsHash.count);
-      println("documents hash count: "+docAffHash.count);
+    //  println("organizations hash count: "+organizationsHash.count);
+    docAffHash.cache
+    println("documents hash count: "+docAffHash.count);
   //  println("documents keys:")
 //    docAffHash.foreach{
 //      case (key:String, t )=>{
@@ -108,12 +109,8 @@ object DoMatching {
 //    }
    val matched=docAffHash.join(organizationsHash).filter{
      
-  case (key:String,((docId:String,docContent:Array[Byte]),(orgName:String ,orgId:String))) =>{
-          val doc=DocumentWrapper.parseFrom(docContent);
-          !(doc.getDocumentMetadata.getAffiliationsList.filter((a :Affiliation ) =>{
-              simplify(a.getText).contains(orgName)
-          }).isEmpty)
-         
+  case (key:String,((docId:String,(affText:String,docContent:Array[Byte])),(orgName:String ,orgId:String))) =>{
+          simplify(affText).contains(orgName)
       }
    }
    
@@ -125,9 +122,10 @@ object DoMatching {
           }).isEmpty)
       }
     }*/
-     println("matched count: "+matched.count);
+    matched.cache
+    println("matched count: "+matched.count);
     val ready=matched.flatMap[(String,Array[Byte])]{
-      case (key,((docId,docContent),(orgName,orgId))) =>{
+      case (key,((docId,(affText,docContent)),(orgName,orgId))) =>{
           val doc=DocumentWrapper.parseFrom(docContent);
           doc.getDocumentMetadata.getAffiliationsList.filter((a :Affiliation ) =>{
               simplify(a.getText).contains(orgName)
