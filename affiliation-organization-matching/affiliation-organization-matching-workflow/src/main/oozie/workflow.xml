@@ -1,4 +1,4 @@
-<workflow-app xmlns="uri:oozie:workflow:0.4" name="deduplication-document-wf">
+<workflow-app xmlns="uri:oozie:workflow:0.4" name="affiliation-organization-matching-wf">
     <parameters>
         <property>
             <name>DFS_SOCKET_CLIENT_TIMEOUT</name>
@@ -29,8 +29,8 @@
             <value>16</value>
         </property>
     </parameters>
- <start to="deduplication-organization" />
-    <action name="deduplication-organization">
+ <start to="affiliation-organization-matching" />
+    <action name="affiliation-organization-matching">
           <spark xmlns="uri:oozie:spark-action:0.1">
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
@@ -41,6 +41,7 @@
             <name>Affiliation matching</name>
             <class>pl.edu.icm.coansys.matching.organization.DoMatching</class>
             <jar>${comacWfPath}/lib/affiliation-organization-matching-impl-1.10-SNAPSHOT.jar</jar>
+            <spark-opts>--executor-memory 40G --driver-memory 60G --num-executors 50</spark-opts>
             <arg>${organizationsInputSeqFile}</arg>
             <arg>${documentsInputSeqFile}</arg>
             <arg>${outputSeqFile}</arg>
