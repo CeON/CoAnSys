@@ -28,6 +28,18 @@
             <name>MAPRED_REDUCE_TASKS</name>
             <value>16</value>
         </property>
+        <property>
+            <name>SPARK_EXECUTOR_MEMORY</name>
+            <value>10G</value>
+        </property>
+        <property>
+            <name>SPARK_DRIVER_MEMORY</name>
+            <value>60G</value>
+        </property>
+         <property>
+            <name>SPARK_NUM_EXECUTORS</name>
+            <value>60</value>
+        </property>
     </parameters>
  <start to="affiliation-organization-matching" />
     <action name="affiliation-organization-matching">
@@ -41,7 +53,7 @@
             <name>Affiliation matching</name>
             <class>pl.edu.icm.coansys.matching.organization.DoMatching</class>
             <jar>${comacWfPath}/lib/affiliation-organization-matching-impl-1.10-SNAPSHOT.jar</jar>
-            <spark-opts>--executor-memory 40G --driver-memory 60G --num-executors 50</spark-opts>
+            <spark-opts>--executor-memory ${SPARK_EXECUTOR_MEMORY} --driver-memory ${SPARK_DRIVER_MEMORY} --num-executors ${SPARK_NUM_EXECUTORS}</spark-opts>
             <arg>${organizationsInputSeqFile}</arg>
             <arg>${documentsInputSeqFile}</arg>
             <arg>${outputSeqFile}</arg>
