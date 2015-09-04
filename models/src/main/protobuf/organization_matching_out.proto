@@ -13,6 +13,12 @@ message OrganizationMatchingOut {
   repeated Auxiliar auxs = 4;
 }
 
+message AllOrganizationFromDocMatchingOut {
+  required string docId = 1;
+  repeated OrganizationMatchingOut singleMatch = 2;
+}
+
+
 message Auxiliar{
 	optional string type = 1;
 	optional string value = 2;
