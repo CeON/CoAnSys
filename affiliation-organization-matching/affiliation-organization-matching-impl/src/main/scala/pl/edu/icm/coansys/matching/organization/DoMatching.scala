@@ -97,7 +97,7 @@ object DoMatching {
     }
     //  println("organizations hash count: "+organizationsHash.count);
     docAffHash.cache
-    println("documents hash count: " + docAffHash.count);
+  //  println("documents hash count: " + docAffHash.count);
     //  println("documents keys:")
     //    docAffHash.foreach{
     //      case (key:String, t )=>{
@@ -112,7 +112,7 @@ object DoMatching {
 
    
     matched.cache
-    println("matched count: " + matched.count);
+ //   println("matched count: " + matched.count);
     
     
     val toGroup=matched.map[(String,((String,Array[Byte]),(String,String)))]{
@@ -167,7 +167,7 @@ object DoMatching {
 
     
     val results=doMatching(orgData, docData);
-    println("results count: "+results.count);
+  //  println("results count: "+results.count);
     results.saveAsSequenceFile(args(2));
     
      
