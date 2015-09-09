@@ -1177,6 +1177,859 @@ public final class AffiliationMatchedProtos {
     // @@protoc_insertion_point(class_scope:pl.edu.icm.coansys.models.OrganizationMatchingOut)
   }
 
+  public interface AllOrganizationFromDocMatchingOutOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+
+    // required string docId = 1;
+    /**
+     * <code>required string docId = 1;</code>
+     */
+    boolean hasDocId();
+    /**
+     * <code>required string docId = 1;</code>
+     */
+    java.lang.String getDocId();
+    /**
+     * <code>required string docId = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getDocIdBytes();
+
+    // repeated .pl.edu.icm.coansys.models.OrganizationMatchingOut singleMatch = 2;
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.OrganizationMatchingOut singleMatch = 2;</code>
+     */
+    java.util.List<pl.edu.icm.coansys.models.AffiliationMatchedProtos.OrganizationMatchingOut> 
+        getSingleMatchList();
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.OrganizationMatchingOut singleMatch = 2;</code>
+     */
+    pl.edu.icm.coansys.models.AffiliationMatchedProtos.OrganizationMatchingOut getSingleMatch(int index);
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.OrganizationMatchingOut singleMatch = 2;</code>
+     */
+    int getSingleMatchCount();
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.OrganizationMatchingOut singleMatch = 2;</code>
+     */
+    java.util.List<? extends pl.edu.icm.coansys.models.AffiliationMatchedProtos.OrganizationMatchingOutOrBuilder> 
+        getSingleMatchOrBuilderList();
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.OrganizationMatchingOut singleMatch = 2;</code>
+     */
+    pl.edu.icm.coansys.models.AffiliationMatchedProtos.OrganizationMatchingOutOrBuilder getSingleMatchOrBuilder(
+        int index);
+  }
+  /**
+   * Protobuf type {@code pl.edu.icm.coansys.models.AllOrganizationFromDocMatchingOut}
+   */
+  public static final class AllOrganizationFromDocMatchingOut extends
+      com.google.protobuf.GeneratedMessage
+      implements AllOrganizationFromDocMatchingOutOrBuilder {
+    // Use AllOrganizationFromDocMatchingOut.newBuilder() to construct.
+    private AllOrganizationFromDocMatchingOut(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private AllOrganizationFromDocMatchingOut(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final AllOrganizationFromDocMatchingOut defaultInstance;
+    public static AllOrganizationFromDocMatchingOut getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public AllOrganizationFromDocMatchingOut getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private AllOrganizationFromDocMatchingOut(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              bitField0_ |= 0x00000001;
+              docId_ = input.readBytes();
+              break;
+            }
+            case 18: {
+              if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+                singleMatch_ = new java.util.ArrayList<pl.edu.icm.coansys.models.AffiliationMatchedProtos.OrganizationMatchingOut>();
+                mutable_bitField0_ |= 0x00000002;
+              }
+              singleMatch_.add(input.readMessage(pl.edu.icm.coansys.models.AffiliationMatchedProtos.OrganizationMatchingOut.PARSER, extensionRegistry));
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+          singleMatch_ = java.util.Collections.unmodifiableList(singleMatch_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return pl.edu.icm.coansys.models.AffiliationMatchedProtos.internal_static_pl_edu_icm_coansys_models_AllOrganizationFromDocMatchingOut_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return pl.edu.icm.coansys.models.AffiliationMatchedProtos.internal_static_pl_edu_icm_coansys_models_AllOrganizationFromDocMatchingOut_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              pl.edu.icm.coansys.models.AffiliationMatchedProtos.AllOrganizationFromDocMatchingOut.class, pl.edu.icm.coansys.models.AffiliationMatchedProtos.AllOrganizationFromDocMatchingOut.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<AllOrganizationFromDocMatchingOut> PARSER =
+        new com.google.protobuf.AbstractParser<AllOrganizationFromDocMatchingOut>() {
+      public AllOrganizationFromDocMatchingOut parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new AllOrganizationFromDocMatchingOut(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<AllOrganizationFromDocMatchingOut> getParserForType() {
+      return PARSER;
+    }
+
+    private int bitField0_;
+    // required string docId = 1;
+    public static final int DOCID_FIELD_NUMBER = 1;
+    private java.lang.Object docId_;
+    /**
+     * <code>required string docId = 1;</code>
+     */
+    public boolean hasDocId() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>required string docId = 1;</code>
+     */
+    public java.lang.String getDocId() {
+      java.lang.Object ref = docId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          docId_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>required string docId = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getDocIdBytes() {
+      java.lang.Object ref = docId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        docId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    // repeated .pl.edu.icm.coansys.models.OrganizationMatchingOut singleMatch = 2;
+    public static final int SINGLEMATCH_FIELD_NUMBER = 2;
+    private java.util.List<pl.edu.icm.coansys.models.AffiliationMatchedProtos.OrganizationMatchingOut> singleMatch_;
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.OrganizationMatchingOut singleMatch = 2;</code>
+     */
+    public java.util.List<pl.edu.icm.coansys.models.AffiliationMatchedProtos.OrganizationMatchingOut> getSingleMatchList() {
+      return singleMatch_;
+    }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.OrganizationMatchingOut singleMatch = 2;</code>
+     */
+    public java.util.List<? extends pl.edu.icm.coansys.models.AffiliationMatchedProtos.OrganizationMatchingOutOrBuilder> 
+        getSingleMatchOrBuilderList() {
+      return singleMatch_;
+    }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.OrganizationMatchingOut singleMatch = 2;</code>
+     */
+    public int getSingleMatchCount() {
+      return singleMatch_.size();
+    }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.OrganizationMatchingOut singleMatch = 2;</code>
+     */
+    public pl.edu.icm.coansys.models.AffiliationMatchedProtos.OrganizationMatchingOut getSingleMatch(int index) {
+      return singleMatch_.get(index);
+    }
+    /**
+     * <code>repeated .pl.edu.icm.coansys.models.OrganizationMatchingOut singleMatch = 2;</code>
+     */
+    public pl.edu.icm.coansys.models.AffiliationMatchedProtos.OrganizationMatchingOutOrBuilder getSingleMatchOrBuilder(
+        int index) {
+      return singleMatch_.get(index);
+    }
+
+    private void initFields() {
+      docId_ = "";
+      singleMatch_ = java.util.Collections.emptyList();
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+
+      if (!hasDocId()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      for (int i = 0; i < getSingleMatchCount(); i++) {
+        if (!getSingleMatch(i).isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeBytes(1, getDocIdBytes());
+      }
+      for (int i = 0; i < singleMatch_.size(); i++) {
+        output.writeMessage(2, singleMatch_.get(i));
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(1, getDocIdBytes());
+      }
+      for (int i = 0; i < singleMatch_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(2, singleMatch_.get(i));
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static pl.edu.icm.coansys.models.AffiliationMatchedProtos.AllOrganizationFromDocMatchingOut parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static pl.edu.icm.coansys.models.AffiliationMatchedProtos.AllOrganizationFromDocMatchingOut parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static pl.edu.icm.coansys.models.AffiliationMatchedProtos.AllOrganizationFromDocMatchingOut parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static pl.edu.icm.coansys.models.AffiliationMatchedProtos.AllOrganizationFromDocMatchingOut parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static pl.edu.icm.coansys.models.AffiliationMatchedProtos.AllOrganizationFromDocMatchingOut parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static pl.edu.icm.coansys.models.AffiliationMatchedProtos.AllOrganizationFromDocMatchingOut parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static pl.edu.icm.coansys.models.AffiliationMatchedProtos.AllOrganizationFromDocMatchingOut parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static pl.edu.icm.coansys.models.AffiliationMatchedProtos.AllOrganizationFromDocMatchingOut parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static pl.edu.icm.coansys.models.AffiliationMatchedProtos.AllOrganizationFromDocMatchingOut parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static pl.edu.icm.coansys.models.AffiliationMatchedProtos.AllOrganizationFromDocMatchingOut parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(pl.edu.icm.coansys.models.AffiliationMatchedProtos.AllOrganizationFromDocMatchingOut prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code pl.edu.icm.coansys.models.AllOrganizationFromDocMatchingOut}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements pl.edu.icm.coansys.models.AffiliationMatchedProtos.AllOrganizationFromDocMatchingOutOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return pl.edu.icm.coansys.models.AffiliationMatchedProtos.internal_static_pl_edu_icm_coansys_models_AllOrganizationFromDocMatchingOut_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return pl.edu.icm.coansys.models.AffiliationMatchedProtos.internal_static_pl_edu_icm_coansys_models_AllOrganizationFromDocMatchingOut_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                pl.edu.icm.coansys.models.AffiliationMatchedProtos.AllOrganizationFromDocMatchingOut.class, pl.edu.icm.coansys.models.AffiliationMatchedProtos.AllOrganizationFromDocMatchingOut.Builder.class);
+      }
+
+      // Construct using pl.edu.icm.coansys.models.AffiliationMatchedProtos.AllOrganizationFromDocMatchingOut.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          getSingleMatchFieldBuilder();
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        docId_ = "";
+        bitField0_ = (bitField0_ & ~0x00000001);
+        if (singleMatchBuilder_ == null) {
+          singleMatch_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000002);
+        } else {
+          singleMatchBuilder_.clear();
+        }
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return pl.edu.icm.coansys.models.AffiliationMatchedProtos.internal_static_pl_edu_icm_coansys_models_AllOrganizationFromDocMatchingOut_descriptor;
+      }
+
+      public pl.edu.icm.coansys.models.AffiliationMatchedProtos.AllOrganizationFromDocMatchingOut getDefaultInstanceForType() {
+        return pl.edu.icm.coansys.models.AffiliationMatchedProtos.AllOrganizationFromDocMatchingOut.getDefaultInstance();
+      }
+
+      public pl.edu.icm.coansys.models.AffiliationMatchedProtos.AllOrganizationFromDocMatchingOut build() {
+        pl.edu.icm.coansys.models.AffiliationMatchedProtos.AllOrganizationFromDocMatchingOut result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public pl.edu.icm.coansys.models.AffiliationMatchedProtos.AllOrganizationFromDocMatchingOut buildPartial() {
+        pl.edu.icm.coansys.models.AffiliationMatchedProtos.AllOrganizationFromDocMatchingOut result = new pl.edu.icm.coansys.models.AffiliationMatchedProtos.AllOrganizationFromDocMatchingOut(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.docId_ = docId_;
+        if (singleMatchBuilder_ == null) {
+          if (((bitField0_ & 0x00000002) == 0x00000002)) {
+            singleMatch_ = java.util.Collections.unmodifiableList(singleMatch_);
+            bitField0_ = (bitField0_ & ~0x00000002);
+          }
+          result.singleMatch_ = singleMatch_;
+        } else {
+          result.singleMatch_ = singleMatchBuilder_.build();
+        }
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof pl.edu.icm.coansys.models.AffiliationMatchedProtos.AllOrganizationFromDocMatchingOut) {
+          return mergeFrom((pl.edu.icm.coansys.models.AffiliationMatchedProtos.AllOrganizationFromDocMatchingOut)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(pl.edu.icm.coansys.models.AffiliationMatchedProtos.AllOrganizationFromDocMatchingOut other) {
+        if (other == pl.edu.icm.coansys.models.AffiliationMatchedProtos.AllOrganizationFromDocMatchingOut.getDefaultInstance()) return this;
+        if (other.hasDocId()) {
+          bitField0_ |= 0x00000001;
+          docId_ = other.docId_;
+          onChanged();
+        }
+        if (singleMatchBuilder_ == null) {
+          if (!other.singleMatch_.isEmpty()) {
+            if (singleMatch_.isEmpty()) {
+              singleMatch_ = other.singleMatch_;
+              bitField0_ = (bitField0_ & ~0x00000002);
+            } else {
+              ensureSingleMatchIsMutable();
+              singleMatch_.addAll(other.singleMatch_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.singleMatch_.isEmpty()) {
+            if (singleMatchBuilder_.isEmpty()) {
+              singleMatchBuilder_.dispose();
+              singleMatchBuilder_ = null;
+              singleMatch_ = other.singleMatch_;
+              bitField0_ = (bitField0_ & ~0x00000002);
+              singleMatchBuilder_ = 
+                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
+                   getSingleMatchFieldBuilder() : null;
+            } else {
+              singleMatchBuilder_.addAllMessages(other.singleMatch_);
+            }
+          }
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        if (!hasDocId()) {
+          
+          return false;
+        }
+        for (int i = 0; i < getSingleMatchCount(); i++) {
+          if (!getSingleMatch(i).isInitialized()) {
+            
+            return false;
+          }
+        }
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        pl.edu.icm.coansys.models.AffiliationMatchedProtos.AllOrganizationFromDocMatchingOut parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (pl.edu.icm.coansys.models.AffiliationMatchedProtos.AllOrganizationFromDocMatchingOut) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      // required string docId = 1;
+      private java.lang.Object docId_ = "";
+      /**
+       * <code>required string docId = 1;</code>
+       */
+      public boolean hasDocId() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>required string docId = 1;</code>
+       */
+      public java.lang.String getDocId() {
+        java.lang.Object ref = docId_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          docId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>required string docId = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getDocIdBytes() {
+        java.lang.Object ref = docId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          docId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string docId = 1;</code>
+       */
+      public Builder setDocId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        docId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string docId = 1;</code>
+       */
+      public Builder clearDocId() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        docId_ = getDefaultInstance().getDocId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string docId = 1;</code>
+       */
+      public Builder setDocIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        docId_ = value;
+        onChanged();
+        return this;
+      }
+
+      // repeated .pl.edu.icm.coansys.models.OrganizationMatchingOut singleMatch = 2;
+      private java.util.List<pl.edu.icm.coansys.models.AffiliationMatchedProtos.OrganizationMatchingOut> singleMatch_ =
+        java.util.Collections.emptyList();
+      private void ensureSingleMatchIsMutable() {
+        if (!((bitField0_ & 0x00000002) == 0x00000002)) {
+          singleMatch_ = new java.util.ArrayList<pl.edu.icm.coansys.models.AffiliationMatchedProtos.OrganizationMatchingOut>(singleMatch_);
+          bitField0_ |= 0x00000002;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilder<
+          pl.edu.icm.coansys.models.AffiliationMatchedProtos.OrganizationMatchingOut, pl.edu.icm.coansys.models.AffiliationMatchedProtos.OrganizationMatchingOut.Builder, pl.edu.icm.coansys.models.AffiliationMatchedProtos.OrganizationMatchingOutOrBuilder> singleMatchBuilder_;
+
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.OrganizationMatchingOut singleMatch = 2;</code>
+       */
+      public java.util.List<pl.edu.icm.coansys.models.AffiliationMatchedProtos.OrganizationMatchingOut> getSingleMatchList() {
+        if (singleMatchBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(singleMatch_);
+        } else {
+          return singleMatchBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.OrganizationMatchingOut singleMatch = 2;</code>
+       */
+      public int getSingleMatchCount() {
+        if (singleMatchBuilder_ == null) {
+          return singleMatch_.size();
+        } else {
+          return singleMatchBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.OrganizationMatchingOut singleMatch = 2;</code>
+       */
+      public pl.edu.icm.coansys.models.AffiliationMatchedProtos.OrganizationMatchingOut getSingleMatch(int index) {
+        if (singleMatchBuilder_ == null) {
+          return singleMatch_.get(index);
+        } else {
+          return singleMatchBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.OrganizationMatchingOut singleMatch = 2;</code>
+       */
+      public Builder setSingleMatch(
+          int index, pl.edu.icm.coansys.models.AffiliationMatchedProtos.OrganizationMatchingOut value) {
+        if (singleMatchBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureSingleMatchIsMutable();
+          singleMatch_.set(index, value);
+          onChanged();
+        } else {
+          singleMatchBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.OrganizationMatchingOut singleMatch = 2;</code>
+       */
+      public Builder setSingleMatch(
+          int index, pl.edu.icm.coansys.models.AffiliationMatchedProtos.OrganizationMatchingOut.Builder builderForValue) {
+        if (singleMatchBuilder_ == null) {
+          ensureSingleMatchIsMutable();
+          singleMatch_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          singleMatchBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.OrganizationMatchingOut singleMatch = 2;</code>
+       */
+      public Builder addSingleMatch(pl.edu.icm.coansys.models.AffiliationMatchedProtos.OrganizationMatchingOut value) {
+        if (singleMatchBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureSingleMatchIsMutable();
+          singleMatch_.add(value);
+          onChanged();
+        } else {
+          singleMatchBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.OrganizationMatchingOut singleMatch = 2;</code>
+       */
+      public Builder addSingleMatch(
+          int index, pl.edu.icm.coansys.models.AffiliationMatchedProtos.OrganizationMatchingOut value) {
+        if (singleMatchBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureSingleMatchIsMutable();
+          singleMatch_.add(index, value);
+          onChanged();
+        } else {
+          singleMatchBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.OrganizationMatchingOut singleMatch = 2;</code>
+       */
+      public Builder addSingleMatch(
+          pl.edu.icm.coansys.models.AffiliationMatchedProtos.OrganizationMatchingOut.Builder builderForValue) {
+        if (singleMatchBuilder_ == null) {
+          ensureSingleMatchIsMutable();
+          singleMatch_.add(builderForValue.build());
+          onChanged();
+        } else {
+          singleMatchBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.OrganizationMatchingOut singleMatch = 2;</code>
+       */
+      public Builder addSingleMatch(
+          int index, pl.edu.icm.coansys.models.AffiliationMatchedProtos.OrganizationMatchingOut.Builder builderForValue) {
+        if (singleMatchBuilder_ == null) {
+          ensureSingleMatchIsMutable();
+          singleMatch_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          singleMatchBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.OrganizationMatchingOut singleMatch = 2;</code>
+       */
+      public Builder addAllSingleMatch(
+          java.lang.Iterable<? extends pl.edu.icm.coansys.models.AffiliationMatchedProtos.OrganizationMatchingOut> values) {
+        if (singleMatchBuilder_ == null) {
+          ensureSingleMatchIsMutable();
+          super.addAll(values, singleMatch_);
+          onChanged();
+        } else {
+          singleMatchBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.OrganizationMatchingOut singleMatch = 2;</code>
+       */
+      public Builder clearSingleMatch() {
+        if (singleMatchBuilder_ == null) {
+          singleMatch_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000002);
+          onChanged();
+        } else {
+          singleMatchBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.OrganizationMatchingOut singleMatch = 2;</code>
+       */
+      public Builder removeSingleMatch(int index) {
+        if (singleMatchBuilder_ == null) {
+          ensureSingleMatchIsMutable();
+          singleMatch_.remove(index);
+          onChanged();
+        } else {
+          singleMatchBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.OrganizationMatchingOut singleMatch = 2;</code>
+       */
+      public pl.edu.icm.coansys.models.AffiliationMatchedProtos.OrganizationMatchingOut.Builder getSingleMatchBuilder(
+          int index) {
+        return getSingleMatchFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.OrganizationMatchingOut singleMatch = 2;</code>
+       */
+      public pl.edu.icm.coansys.models.AffiliationMatchedProtos.OrganizationMatchingOutOrBuilder getSingleMatchOrBuilder(
+          int index) {
+        if (singleMatchBuilder_ == null) {
+          return singleMatch_.get(index);  } else {
+          return singleMatchBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.OrganizationMatchingOut singleMatch = 2;</code>
+       */
+      public java.util.List<? extends pl.edu.icm.coansys.models.AffiliationMatchedProtos.OrganizationMatchingOutOrBuilder> 
+           getSingleMatchOrBuilderList() {
+        if (singleMatchBuilder_ != null) {
+          return singleMatchBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(singleMatch_);
+        }
+      }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.OrganizationMatchingOut singleMatch = 2;</code>
+       */
+      public pl.edu.icm.coansys.models.AffiliationMatchedProtos.OrganizationMatchingOut.Builder addSingleMatchBuilder() {
+        return getSingleMatchFieldBuilder().addBuilder(
+            pl.edu.icm.coansys.models.AffiliationMatchedProtos.OrganizationMatchingOut.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.OrganizationMatchingOut singleMatch = 2;</code>
+       */
+      public pl.edu.icm.coansys.models.AffiliationMatchedProtos.OrganizationMatchingOut.Builder addSingleMatchBuilder(
+          int index) {
+        return getSingleMatchFieldBuilder().addBuilder(
+            index, pl.edu.icm.coansys.models.AffiliationMatchedProtos.OrganizationMatchingOut.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .pl.edu.icm.coansys.models.OrganizationMatchingOut singleMatch = 2;</code>
+       */
+      public java.util.List<pl.edu.icm.coansys.models.AffiliationMatchedProtos.OrganizationMatchingOut.Builder> 
+           getSingleMatchBuilderList() {
+        return getSingleMatchFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilder<
+          pl.edu.icm.coansys.models.AffiliationMatchedProtos.OrganizationMatchingOut, pl.edu.icm.coansys.models.AffiliationMatchedProtos.OrganizationMatchingOut.Builder, pl.edu.icm.coansys.models.AffiliationMatchedProtos.OrganizationMatchingOutOrBuilder> 
+          getSingleMatchFieldBuilder() {
+        if (singleMatchBuilder_ == null) {
+          singleMatchBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
+              pl.edu.icm.coansys.models.AffiliationMatchedProtos.OrganizationMatchingOut, pl.edu.icm.coansys.models.AffiliationMatchedProtos.OrganizationMatchingOut.Builder, pl.edu.icm.coansys.models.AffiliationMatchedProtos.OrganizationMatchingOutOrBuilder>(
+                  singleMatch_,
+                  ((bitField0_ & 0x00000002) == 0x00000002),
+                  getParentForChildren(),
+                  isClean());
+          singleMatch_ = null;
+        }
+        return singleMatchBuilder_;
+      }
+
+      // @@protoc_insertion_point(builder_scope:pl.edu.icm.coansys.models.AllOrganizationFromDocMatchingOut)
+    }
+
+    static {
+      defaultInstance = new AllOrganizationFromDocMatchingOut(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:pl.edu.icm.coansys.models.AllOrganizationFromDocMatchingOut)
+  }
+
   public interface AuxiliarOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
@@ -1810,6 +2663,11 @@ public final class AffiliationMatchedProtos {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_pl_edu_icm_coansys_models_OrganizationMatchingOut_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_pl_edu_icm_coansys_models_AllOrganizationFromDocMatchingOut_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_pl_edu_icm_coansys_models_AllOrganizationFromDocMatchingOut_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
     internal_static_pl_edu_icm_coansys_models_Auxiliar_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
@@ -1828,9 +2686,12 @@ public final class AffiliationMatchedProtos {
       "chingOut\022\r\n\005docId\030\001 \002(\t\022\025\n\raffiliationId" +
       "\030\002 \002(\t\022\026\n\016organizationId\030\003 \002(\t\0221\n\004auxs\030\004" +
       " \003(\0132#.pl.edu.icm.coansys.models.Auxilia" +
-      "r\"\'\n\010Auxiliar\022\014\n\004type\030\001 \001(\t\022\r\n\005value\030\002 \001" +
-      "(\tB5\n\031pl.edu.icm.coansys.modelsB\030Affilia" +
-      "tionMatchedProtos"
+      "r\"{\n!AllOrganizationFromDocMatchingOut\022\r" +
+      "\n\005docId\030\001 \002(\t\022G\n\013singleMatch\030\002 \003(\01322.pl." +
+      "edu.icm.coansys.models.OrganizationMatch" +
+      "ingOut\"\'\n\010Auxiliar\022\014\n\004type\030\001 \001(\t\022\r\n\005valu" +
+      "e\030\002 \001(\tB5\n\031pl.edu.icm.coansys.modelsB\030Af",
+      "filiationMatchedProtos"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -1843,8 +2704,14 @@ public final class AffiliationMatchedProtos {
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_pl_edu_icm_coansys_models_OrganizationMatchingOut_descriptor,
               new java.lang.String[] { "DocId", "AffiliationId", "OrganizationId", "Auxs", });
-          internal_static_pl_edu_icm_coansys_models_Auxiliar_descriptor =
+          internal_static_pl_edu_icm_coansys_models_AllOrganizationFromDocMatchingOut_descriptor =
             getDescriptor().getMessageTypes().get(1);
+          internal_static_pl_edu_icm_coansys_models_AllOrganizationFromDocMatchingOut_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_pl_edu_icm_coansys_models_AllOrganizationFromDocMatchingOut_descriptor,
+              new java.lang.String[] { "DocId", "SingleMatch", });
+          internal_static_pl_edu_icm_coansys_models_Auxiliar_descriptor =
+            getDescriptor().getMessageTypes().get(2);
           internal_static_pl_edu_icm_coansys_models_Auxiliar_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_pl_edu_icm_coansys_models_Auxiliar_descriptor,

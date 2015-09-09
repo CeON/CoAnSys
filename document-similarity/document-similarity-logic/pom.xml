@@ -97,5 +97,10 @@
 		<artifactId>oozie-client</artifactId>
 		<version>4.1.0-cdh5.4.2</version>
 		</dependency>
+         <dependency>
+            <groupId>org.apache.pig</groupId>
+            <artifactId>pigunit</artifactId>
+            <scope>test</scope>
+        </dependency>
 	</dependencies>
 </project>

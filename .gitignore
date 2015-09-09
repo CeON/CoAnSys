@@ -36,3 +36,4 @@ maven-eclipse.xml
 
 #vim files
 *.swp
+/affiliation-organization-matching/affiliation-organization-matching-impl/src/main/scala/pl/edu/icm/coansys/matching/organization/TestMatchingT.scala

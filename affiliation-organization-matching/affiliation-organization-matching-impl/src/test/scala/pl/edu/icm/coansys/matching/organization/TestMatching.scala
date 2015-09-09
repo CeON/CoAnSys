@@ -11,11 +11,12 @@ import org.apache.spark.SparkContext
 import org.testng._
 import org.testng.annotations._
 import Assert._
+import pl.edu.icm.coansys.models.AffiliationMatchedProtos.AllOrganizationFromDocMatchingOut
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper
 import pl.edu.icm.coansys.models.OrganizationProtos.OrganizationWrapper
 
 
-class TestMatching {
+object TestMatching {
 
 
   @Test
@@ -43,8 +44,14 @@ class TestMatching {
     val organizations=context.parallelize(org);
     val documents=context.parallelize(doc)
     val dedup=DoMatching.doMatching(organizations,documents);
-    assertEquals(dedup.count, 2)
+    val matched=AllOrganizationFromDocMatchingOut.parseFrom(dedup.first._2)
+    assertEquals(matched.getSingleMatchCount, 2)
   }
   
-
+  /**
+   * @param args the command line arguments
+   */
+  def main(args: Array[String]): Unit = {
+    example
+  }
 }
