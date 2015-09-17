@@ -110,8 +110,6 @@ public class DuplicateWorkDetectReduceService implements DiReduceService<Text, B
             }
             if (counter > 0) {
                 log.info("---- key " + key.toString() + ", part "+ partNb + ", documents {} " + counter);
-                log.info(" **************** first: " + metadataList.get(0).getKey());
-                log.info(" **************** last: " + metadataList.get(metadataList.size() - 1).getKey());
                 if (isDebugMode(context.getConfiguration())) {
                     duplicateWorkService.findDuplicates(metadataList, context);
                 } else {
