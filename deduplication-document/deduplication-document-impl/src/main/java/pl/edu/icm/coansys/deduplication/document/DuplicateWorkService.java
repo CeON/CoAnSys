@@ -70,16 +70,20 @@ public class DuplicateWorkService {
      * <2, <BBb, bbb>>
      * 
      * 
+     * @param documents
+     * @param context
+     * @return 
      */
     public Map<Integer, Set<DocumentProtos.DocumentMetadata>> findDuplicates(List<DocumentProtos.DocumentMetadata> documents, Reducer<Text, BytesWritable, Text, Text>.Context context) {
         Map<Integer, Set<DocumentProtos.DocumentMetadata>> sameWorksMap = Maps.newHashMap();
-        
+
         List<DocumentProtos.DocumentMetadata> documentsCopy = Lists.newArrayList(documents);
         
-        int i=0;
-        for (DocumentProtos.DocumentMetadata document : documents) {
-           
-           for (DocumentProtos.DocumentMetadata other : new ArrayList<DocumentProtos.DocumentMetadata>(documentsCopy)) {
+        int i = 0;
+        while (!documentsCopy.isEmpty()) {
+            DocumentProtos.DocumentMetadata document = documentsCopy.remove(0);
+
+            for (DocumentProtos.DocumentMetadata other : new ArrayList<>(documentsCopy)) {
                 if (document.getKey().equals(other.getKey())) {
                     documentsCopy.remove(other);
                 } else {
@@ -89,7 +93,7 @@ public class DuplicateWorkService {
                     }
                 }
             }
-           i++;
+            i++;
         }
         return sameWorksMap;
     }
