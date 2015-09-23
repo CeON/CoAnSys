@@ -12426,6 +12426,16 @@ public final class DocumentProtos {
      */
     com.google.protobuf.ByteString
         getOrigKeyBytes(int index);
+
+    // optional .DocumentMetadata.Type type = 21 [default = ARTICLE];
+    /**
+     * <code>optional .DocumentMetadata.Type type = 21 [default = ARTICLE];</code>
+     */
+    boolean hasType();
+    /**
+     * <code>optional .DocumentMetadata.Type type = 21 [default = ARTICLE];</code>
+     */
+    pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata.Type getType();
   }
   /**
    * Protobuf type {@code DocumentMetadata}
@@ -12580,6 +12590,17 @@ public final class DocumentProtos {
               similarDocumentInfo_.add(input.readMessage(pl.edu.icm.coansys.models.DocumentSimilarityProtos.DocumentSimilarityInfo.PARSER, extensionRegistry));
               break;
             }
+            case 168: {
+              int rawValue = input.readEnum();
+              pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata.Type value = pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata.Type.valueOf(rawValue);
+              if (value == null) {
+                unknownFields.mergeVarintField(21, rawValue);
+              } else {
+                bitField0_ |= 0x00000008;
+                type_ = value;
+              }
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -12644,6 +12665,97 @@ public final class DocumentProtos {
     @java.lang.Override
     public com.google.protobuf.Parser<DocumentMetadata> getParserForType() {
       return PARSER;
+    }
+
+    /**
+     * Protobuf enum {@code DocumentMetadata.Type}
+     */
+    public enum Type
+        implements com.google.protobuf.ProtocolMessageEnum {
+      /**
+       * <code>ARTICLE = 0;</code>
+       */
+      ARTICLE(0, 0),
+      /**
+       * <code>BOOK = 1;</code>
+       */
+      BOOK(1, 1),
+      /**
+       * <code>DATASET = 2;</code>
+       */
+      DATASET(2, 2),
+      ;
+
+      /**
+       * <code>ARTICLE = 0;</code>
+       */
+      public static final int ARTICLE_VALUE = 0;
+      /**
+       * <code>BOOK = 1;</code>
+       */
+      public static final int BOOK_VALUE = 1;
+      /**
+       * <code>DATASET = 2;</code>
+       */
+      public static final int DATASET_VALUE = 2;
+
+
+      public final int getNumber() { return value; }
+
+      public static Type valueOf(int value) {
+        switch (value) {
+          case 0: return ARTICLE;
+          case 1: return BOOK;
+          case 2: return DATASET;
+          default: return null;
+        }
+      }
+
+      public static com.google.protobuf.Internal.EnumLiteMap<Type>
+          internalGetValueMap() {
+        return internalValueMap;
+      }
+      private static com.google.protobuf.Internal.EnumLiteMap<Type>
+          internalValueMap =
+            new com.google.protobuf.Internal.EnumLiteMap<Type>() {
+              public Type findValueByNumber(int number) {
+                return Type.valueOf(number);
+              }
+            };
+
+      public final com.google.protobuf.Descriptors.EnumValueDescriptor
+          getValueDescriptor() {
+        return getDescriptor().getValues().get(index);
+      }
+      public final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptorForType() {
+        return getDescriptor();
+      }
+      public static final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptor() {
+        return pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata.getDescriptor().getEnumTypes().get(0);
+      }
+
+      private static final Type[] VALUES = values();
+
+      public static Type valueOf(
+          com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+        if (desc.getType() != getDescriptor()) {
+          throw new java.lang.IllegalArgumentException(
+            "EnumValueDescriptor is not for this type.");
+        }
+        return VALUES[desc.getIndex()];
+      }
+
+      private final int index;
+      private final int value;
+
+      private Type(int index, int value) {
+        this.index = index;
+        this.value = value;
+      }
+
+      // @@protoc_insertion_point(enum_scope:DocumentMetadata.Type)
     }
 
     private int bitField0_;
@@ -13067,6 +13179,22 @@ public final class DocumentProtos {
       return origKey_.getByteString(index);
     }
 
+    // optional .DocumentMetadata.Type type = 21 [default = ARTICLE];
+    public static final int TYPE_FIELD_NUMBER = 21;
+    private pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata.Type type_;
+    /**
+     * <code>optional .DocumentMetadata.Type type = 21 [default = ARTICLE];</code>
+     */
+    public boolean hasType() {
+      return ((bitField0_ & 0x00000008) == 0x00000008);
+    }
+    /**
+     * <code>optional .DocumentMetadata.Type type = 21 [default = ARTICLE];</code>
+     */
+    public pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata.Type getType() {
+      return type_;
+    }
+
     private void initFields() {
       key_ = "";
       basicMetadata_ = pl.edu.icm.coansys.models.DocumentProtos.BasicMetadata.getDefaultInstance();
@@ -13080,6 +13208,7 @@ public final class DocumentProtos {
       collection_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       sourcePath_ = "";
       origKey_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      type_ = pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata.Type.ARTICLE;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -13183,6 +13312,9 @@ public final class DocumentProtos {
       for (int i = 0; i < similarDocumentInfo_.size(); i++) {
         output.writeMessage(20, similarDocumentInfo_.get(i));
       }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        output.writeEnum(21, type_.getNumber());
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -13249,6 +13381,10 @@ public final class DocumentProtos {
       for (int i = 0; i < similarDocumentInfo_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(20, similarDocumentInfo_.get(i));
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeEnumSize(21, type_.getNumber());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -13437,6 +13573,8 @@ public final class DocumentProtos {
         bitField0_ = (bitField0_ & ~0x00000400);
         origKey_ = com.google.protobuf.LazyStringArrayList.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000800);
+        type_ = pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata.Type.ARTICLE;
+        bitField0_ = (bitField0_ & ~0x00001000);
         return this;
       }
 
@@ -13556,6 +13694,10 @@ public final class DocumentProtos {
           bitField0_ = (bitField0_ & ~0x00000800);
         }
         result.origKey_ = origKey_;
+        if (((from_bitField0_ & 0x00001000) == 0x00001000)) {
+          to_bitField0_ |= 0x00000008;
+        }
+        result.type_ = type_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -13786,6 +13928,9 @@ public final class DocumentProtos {
             origKey_.addAll(other.origKey_);
           }
           onChanged();
+        }
+        if (other.hasType()) {
+          setType(other.getType());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -15995,6 +16140,42 @@ public final class DocumentProtos {
   }
   ensureOrigKeyIsMutable();
         origKey_.add(value);
+        onChanged();
+        return this;
+      }
+
+      // optional .DocumentMetadata.Type type = 21 [default = ARTICLE];
+      private pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata.Type type_ = pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata.Type.ARTICLE;
+      /**
+       * <code>optional .DocumentMetadata.Type type = 21 [default = ARTICLE];</code>
+       */
+      public boolean hasType() {
+        return ((bitField0_ & 0x00001000) == 0x00001000);
+      }
+      /**
+       * <code>optional .DocumentMetadata.Type type = 21 [default = ARTICLE];</code>
+       */
+      public pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata.Type getType() {
+        return type_;
+      }
+      /**
+       * <code>optional .DocumentMetadata.Type type = 21 [default = ARTICLE];</code>
+       */
+      public Builder setType(pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata.Type value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00001000;
+        type_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional .DocumentMetadata.Type type = 21 [default = ARTICLE];</code>
+       */
+      public Builder clearType() {
+        bitField0_ = (bitField0_ & ~0x00001000);
+        type_ = pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata.Type.ARTICLE;
         onChanged();
         return this;
       }
@@ -20510,7 +20691,7 @@ public final class DocumentProtos {
       "currentProjectId\030\r \003(\t\"v\n\014KeywordsList\022\014",
       "\n\004type\030\001 \001(\t\022\020\n\010language\030\002 \001(\t\022\020\n\010keywor" +
       "ds\030\003 \003(\t\022\017\n\007comment\030\004 \001(\t\022#\n\nprovenance\030" +
-      "\005 \001(\0132\017.ProvenanceInfo\"\243\003\n\020DocumentMetad" +
+      "\005 \001(\0132\017.ProvenanceInfo\"\376\003\n\020DocumentMetad" +
       "ata\022\013\n\003key\030\001 \002(\t\022%\n\rbasicMetadata\030\002 \002(\0132" +
       "\016.BasicMetadata\022+\n\020documentAbstract\030\003 \003(" +
       "\0132\021.TextWithLanguage\022\037\n\010keywords\030\n \003(\0132\r" +
@@ -20521,20 +20702,22 @@ public final class DocumentProtos {
       "liations\030\014 \003(\0132\014.Affiliation\022%\n\treferenc" +
       "e\030\007 \003(\0132\022.ReferenceMetadata\022\022\n\ncollectio" +
       "n\030\010 \003(\t\022\022\n\nsourcePath\030\t \001(\t\022\017\n\007origKey\030\013" +
-      " \003(\t\"\225\001\n\021ReferenceMetadata\022%\n\rbasicMetad" +
-      "ata\030\001 \002(\0132\016.BasicMetadata\022\024\n\014sourceDocKe" +
-      "y\030\002 \001(\t\022\020\n\010position\030\003 \001(\005\022\027\n\017rawCitation" +
-      "Text\030\004 \001(\t\022\030\n\005extId\030\005 \003(\0132\t.KeyValue\"\266\001\n" +
-      "\005Media\022\013\n\003key\030\001 \002(\t\022\021\n\tmediaType\030\002 \002(\t\022\017" +
-      "\n\007content\030\003 \002(\014\022\022\n\ncollection\030\004 \001(\t\022\022\n\ns" +
-      "ourcePath\030\005 \001(\t\022\026\n\016sourceFilesize\030\006 \001(\003\022",
-      "\027\n\017destinationPath\030\007 \001(\t\022#\n\nprovenance\030\010" +
-      " \001(\0132\017.ProvenanceInfo\"\'\n\016MediaContainer\022" +
-      "\025\n\005media\030\001 \003(\0132\006.Media\"v\n\017DocumentWrappe" +
-      "r\022\r\n\005rowId\030\001 \002(\t\022+\n\020documentMetadata\030\002 \001" +
-      "(\0132\021.DocumentMetadata\022\'\n\016mediaContainer\030" +
-      "\003 \001(\0132\017.MediaContainerB+\n\031pl.edu.icm.coa" +
-      "nsys.modelsB\016DocumentProtos"
+      " \003(\t\022-\n\004type\030\025 \001(\0162\026.DocumentMetadata.Ty" +
+      "pe:\007ARTICLE\"*\n\004Type\022\013\n\007ARTICLE\020\000\022\010\n\004BOOK" +
+      "\020\001\022\013\n\007DATASET\020\002\"\225\001\n\021ReferenceMetadata\022%\n" +
+      "\rbasicMetadata\030\001 \002(\0132\016.BasicMetadata\022\024\n\014" +
+      "sourceDocKey\030\002 \001(\t\022\020\n\010position\030\003 \001(\005\022\027\n\017" +
+      "rawCitationText\030\004 \001(\t\022\030\n\005extId\030\005 \003(\0132\t.K" +
+      "eyValue\"\266\001\n\005Media\022\013\n\003key\030\001 \002(\t\022\021\n\tmediaT",
+      "ype\030\002 \002(\t\022\017\n\007content\030\003 \002(\014\022\022\n\ncollection" +
+      "\030\004 \001(\t\022\022\n\nsourcePath\030\005 \001(\t\022\026\n\016sourceFile" +
+      "size\030\006 \001(\003\022\027\n\017destinationPath\030\007 \001(\t\022#\n\np" +
+      "rovenance\030\010 \001(\0132\017.ProvenanceInfo\"\'\n\016Medi" +
+      "aContainer\022\025\n\005media\030\001 \003(\0132\006.Media\"v\n\017Doc" +
+      "umentWrapper\022\r\n\005rowId\030\001 \002(\t\022+\n\020documentM" +
+      "etadata\030\002 \001(\0132\021.DocumentMetadata\022\'\n\016medi" +
+      "aContainer\030\003 \001(\0132\017.MediaContainerB+\n\031pl." +
+      "edu.icm.coansys.modelsB\016DocumentProtos"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -20600,7 +20783,7 @@ public final class DocumentProtos {
           internal_static_DocumentMetadata_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_DocumentMetadata_descriptor,
-              new java.lang.String[] { "Key", "BasicMetadata", "DocumentAbstract", "Keywords", "SimilarDocumentInfo", "ExtId", "AuxiliarInfo", "Affiliations", "Reference", "Collection", "SourcePath", "OrigKey", });
+              new java.lang.String[] { "Key", "BasicMetadata", "DocumentAbstract", "Keywords", "SimilarDocumentInfo", "ExtId", "AuxiliarInfo", "Affiliations", "Reference", "Collection", "SourcePath", "OrigKey", "Type", });
           internal_static_ReferenceMetadata_descriptor =
             getDescriptor().getMessageTypes().get(9);
           internal_static_ReferenceMetadata_fieldAccessorTable = new
