@@ -104,6 +104,12 @@ message DocumentMetadata{
 	repeated string collection = 8;
 	optional string sourcePath = 9;
 	repeated string origKey = 11;
+    enum Type {
+      ARTICLE=0;
+      BOOK=1;
+      DATASET=2;
+    }
+    optional Type type = 21  [default = ARTICLE];
 }
 
 
