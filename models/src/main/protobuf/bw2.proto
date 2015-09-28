@@ -108,6 +108,7 @@ message DocumentMetadata{
       ARTICLE=0;
       BOOK=1;
       DATASET=2;
+      BLOG_ENTRY=3;
     }
     optional Type type = 21  [default = ARTICLE];
 }

@@ -12684,6 +12684,10 @@ public final class DocumentProtos {
        * <code>DATASET = 2;</code>
        */
       DATASET(2, 2),
+      /**
+       * <code>BLOG_ENTRY = 3;</code>
+       */
+      BLOG_ENTRY(3, 3),
       ;
 
       /**
@@ -12698,6 +12702,10 @@ public final class DocumentProtos {
        * <code>DATASET = 2;</code>
        */
       public static final int DATASET_VALUE = 2;
+      /**
+       * <code>BLOG_ENTRY = 3;</code>
+       */
+      public static final int BLOG_ENTRY_VALUE = 3;
 
 
       public final int getNumber() { return value; }
@@ -12707,6 +12715,7 @@ public final class DocumentProtos {
           case 0: return ARTICLE;
           case 1: return BOOK;
           case 2: return DATASET;
+          case 3: return BLOG_ENTRY;
           default: return null;
         }
       }
@@ -20691,7 +20700,7 @@ public final class DocumentProtos {
       "currentProjectId\030\r \003(\t\"v\n\014KeywordsList\022\014",
       "\n\004type\030\001 \001(\t\022\020\n\010language\030\002 \001(\t\022\020\n\010keywor" +
       "ds\030\003 \003(\t\022\017\n\007comment\030\004 \001(\t\022#\n\nprovenance\030" +
-      "\005 \001(\0132\017.ProvenanceInfo\"\376\003\n\020DocumentMetad" +
+      "\005 \001(\0132\017.ProvenanceInfo\"\216\004\n\020DocumentMetad" +
       "ata\022\013\n\003key\030\001 \002(\t\022%\n\rbasicMetadata\030\002 \002(\0132" +
       "\016.BasicMetadata\022+\n\020documentAbstract\030\003 \003(" +
       "\0132\021.TextWithLanguage\022\037\n\010keywords\030\n \003(\0132\r" +
@@ -20703,21 +20712,22 @@ public final class DocumentProtos {
       "e\030\007 \003(\0132\022.ReferenceMetadata\022\022\n\ncollectio" +
       "n\030\010 \003(\t\022\022\n\nsourcePath\030\t \001(\t\022\017\n\007origKey\030\013" +
       " \003(\t\022-\n\004type\030\025 \001(\0162\026.DocumentMetadata.Ty" +
-      "pe:\007ARTICLE\"*\n\004Type\022\013\n\007ARTICLE\020\000\022\010\n\004BOOK" +
-      "\020\001\022\013\n\007DATASET\020\002\"\225\001\n\021ReferenceMetadata\022%\n" +
-      "\rbasicMetadata\030\001 \002(\0132\016.BasicMetadata\022\024\n\014" +
-      "sourceDocKey\030\002 \001(\t\022\020\n\010position\030\003 \001(\005\022\027\n\017" +
-      "rawCitationText\030\004 \001(\t\022\030\n\005extId\030\005 \003(\0132\t.K" +
-      "eyValue\"\266\001\n\005Media\022\013\n\003key\030\001 \002(\t\022\021\n\tmediaT",
-      "ype\030\002 \002(\t\022\017\n\007content\030\003 \002(\014\022\022\n\ncollection" +
-      "\030\004 \001(\t\022\022\n\nsourcePath\030\005 \001(\t\022\026\n\016sourceFile" +
-      "size\030\006 \001(\003\022\027\n\017destinationPath\030\007 \001(\t\022#\n\np" +
-      "rovenance\030\010 \001(\0132\017.ProvenanceInfo\"\'\n\016Medi" +
-      "aContainer\022\025\n\005media\030\001 \003(\0132\006.Media\"v\n\017Doc" +
-      "umentWrapper\022\r\n\005rowId\030\001 \002(\t\022+\n\020documentM" +
-      "etadata\030\002 \001(\0132\021.DocumentMetadata\022\'\n\016medi" +
-      "aContainer\030\003 \001(\0132\017.MediaContainerB+\n\031pl." +
-      "edu.icm.coansys.modelsB\016DocumentProtos"
+      "pe:\007ARTICLE\":\n\004Type\022\013\n\007ARTICLE\020\000\022\010\n\004BOOK" +
+      "\020\001\022\013\n\007DATASET\020\002\022\016\n\nBLOG_ENTRY\020\003\"\225\001\n\021Refe" +
+      "renceMetadata\022%\n\rbasicMetadata\030\001 \002(\0132\016.B" +
+      "asicMetadata\022\024\n\014sourceDocKey\030\002 \001(\t\022\020\n\010po" +
+      "sition\030\003 \001(\005\022\027\n\017rawCitationText\030\004 \001(\t\022\030\n" +
+      "\005extId\030\005 \003(\0132\t.KeyValue\"\266\001\n\005Media\022\013\n\003key",
+      "\030\001 \002(\t\022\021\n\tmediaType\030\002 \002(\t\022\017\n\007content\030\003 \002" +
+      "(\014\022\022\n\ncollection\030\004 \001(\t\022\022\n\nsourcePath\030\005 \001" +
+      "(\t\022\026\n\016sourceFilesize\030\006 \001(\003\022\027\n\017destinatio" +
+      "nPath\030\007 \001(\t\022#\n\nprovenance\030\010 \001(\0132\017.Proven" +
+      "anceInfo\"\'\n\016MediaContainer\022\025\n\005media\030\001 \003(" +
+      "\0132\006.Media\"v\n\017DocumentWrapper\022\r\n\005rowId\030\001 " +
+      "\002(\t\022+\n\020documentMetadata\030\002 \001(\0132\021.Document" +
+      "Metadata\022\'\n\016mediaContainer\030\003 \001(\0132\017.Media" +
+      "ContainerB+\n\031pl.edu.icm.coansys.modelsB\016" +
+      "DocumentProtos"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
