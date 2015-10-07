@@ -47,6 +47,12 @@ public class MapDocProtosToSourceBasIds extends Mapper<Writable, BytesWritable, 
        String isbn=null;
        if (docWrapper.hasDocumentMetadata() && docWrapper.getDocumentMetadata().hasBasicMetadata()) {
            DocumentProtos.BasicMetadataOrBuilder bm=docWrapper.getDocumentMetadata().getBasicMetadataOrBuilder();
+           if (bm.hasParentType()) {
+               if (bm.getParentType()==DocumentProtos.BasicMetadata.ParentType.BLOG) {
+                    // No blog disambiguation yet
+                   return ; 
+               }
+           }
            if (bm.hasIssn()) {
                issn=bm.getIssn();
            }
