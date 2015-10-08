@@ -112,6 +112,11 @@ public class ReduceDocsWithSameSourceId extends Reducer<Writable, BytesWritable,
             parent.setDocId(docId);
             parent.setParentId(id);
             parent.addAllParentName(titles);
+            if (isbn!=null) {
+                parent.setType(DocumentProtos.BasicMetadata.ParentType.BOOK);
+            } else  {
+                parent.setType(DocumentProtos.BasicMetadata.ParentType.JOURNAL);
+            }
             context.write(new Text(docId), new BytesWritable(parent.build().toByteArray()));
         }
         

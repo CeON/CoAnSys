@@ -8001,14 +8001,26 @@ public final class DocumentProtos {
     // optional string journal = 4;
     /**
      * <code>optional string journal = 4;</code>
+     *
+     * <pre>
+     * journal should be treated as parent name
+     * </pre>
      */
     boolean hasJournal();
     /**
      * <code>optional string journal = 4;</code>
+     *
+     * <pre>
+     * journal should be treated as parent name
+     * </pre>
      */
     java.lang.String getJournal();
     /**
      * <code>optional string journal = 4;</code>
+     *
+     * <pre>
+     * journal should be treated as parent name
+     * </pre>
      */
     com.google.protobuf.ByteString
         getJournalBytes();
@@ -8167,6 +8179,36 @@ public final class DocumentProtos {
      */
     com.google.protobuf.ByteString
         getCurrentProjectIdBytes(int index);
+
+    // optional .BasicMetadata.ParentType parentType = 14 [default = JOURNAL];
+    /**
+     * <code>optional .BasicMetadata.ParentType parentType = 14 [default = JOURNAL];</code>
+     */
+    boolean hasParentType();
+    /**
+     * <code>optional .BasicMetadata.ParentType parentType = 14 [default = JOURNAL];</code>
+     */
+    pl.edu.icm.coansys.models.DocumentProtos.BasicMetadata.ParentType getParentType();
+
+    // repeated string parentUrl = 15;
+    /**
+     * <code>repeated string parentUrl = 15;</code>
+     */
+    java.util.List<java.lang.String>
+    getParentUrlList();
+    /**
+     * <code>repeated string parentUrl = 15;</code>
+     */
+    int getParentUrlCount();
+    /**
+     * <code>repeated string parentUrl = 15;</code>
+     */
+    java.lang.String getParentUrl(int index);
+    /**
+     * <code>repeated string parentUrl = 15;</code>
+     */
+    com.google.protobuf.ByteString
+        getParentUrlBytes(int index);
   }
   /**
    * Protobuf type {@code BasicMetadata}
@@ -8303,6 +8345,25 @@ public final class DocumentProtos {
               currentProjectId_.add(input.readBytes());
               break;
             }
+            case 112: {
+              int rawValue = input.readEnum();
+              pl.edu.icm.coansys.models.DocumentProtos.BasicMetadata.ParentType value = pl.edu.icm.coansys.models.DocumentProtos.BasicMetadata.ParentType.valueOf(rawValue);
+              if (value == null) {
+                unknownFields.mergeVarintField(14, rawValue);
+              } else {
+                bitField0_ |= 0x00000100;
+                parentType_ = value;
+              }
+              break;
+            }
+            case 122: {
+              if (!((mutable_bitField0_ & 0x00004000) == 0x00004000)) {
+                parentUrl_ = new com.google.protobuf.LazyStringArrayList();
+                mutable_bitField0_ |= 0x00004000;
+              }
+              parentUrl_.add(input.readBytes());
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -8325,6 +8386,9 @@ public final class DocumentProtos {
         }
         if (((mutable_bitField0_ & 0x00001000) == 0x00001000)) {
           currentProjectId_ = new com.google.protobuf.UnmodifiableLazyStringList(currentProjectId_);
+        }
+        if (((mutable_bitField0_ & 0x00004000) == 0x00004000)) {
+          parentUrl_ = new com.google.protobuf.UnmodifiableLazyStringList(parentUrl_);
         }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -8355,6 +8419,97 @@ public final class DocumentProtos {
     @java.lang.Override
     public com.google.protobuf.Parser<BasicMetadata> getParserForType() {
       return PARSER;
+    }
+
+    /**
+     * Protobuf enum {@code BasicMetadata.ParentType}
+     */
+    public enum ParentType
+        implements com.google.protobuf.ProtocolMessageEnum {
+      /**
+       * <code>JOURNAL = 1;</code>
+       */
+      JOURNAL(0, 1),
+      /**
+       * <code>BOOK = 2;</code>
+       */
+      BOOK(1, 2),
+      /**
+       * <code>BLOG = 3;</code>
+       */
+      BLOG(2, 3),
+      ;
+
+      /**
+       * <code>JOURNAL = 1;</code>
+       */
+      public static final int JOURNAL_VALUE = 1;
+      /**
+       * <code>BOOK = 2;</code>
+       */
+      public static final int BOOK_VALUE = 2;
+      /**
+       * <code>BLOG = 3;</code>
+       */
+      public static final int BLOG_VALUE = 3;
+
+
+      public final int getNumber() { return value; }
+
+      public static ParentType valueOf(int value) {
+        switch (value) {
+          case 1: return JOURNAL;
+          case 2: return BOOK;
+          case 3: return BLOG;
+          default: return null;
+        }
+      }
+
+      public static com.google.protobuf.Internal.EnumLiteMap<ParentType>
+          internalGetValueMap() {
+        return internalValueMap;
+      }
+      private static com.google.protobuf.Internal.EnumLiteMap<ParentType>
+          internalValueMap =
+            new com.google.protobuf.Internal.EnumLiteMap<ParentType>() {
+              public ParentType findValueByNumber(int number) {
+                return ParentType.valueOf(number);
+              }
+            };
+
+      public final com.google.protobuf.Descriptors.EnumValueDescriptor
+          getValueDescriptor() {
+        return getDescriptor().getValues().get(index);
+      }
+      public final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptorForType() {
+        return getDescriptor();
+      }
+      public static final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptor() {
+        return pl.edu.icm.coansys.models.DocumentProtos.BasicMetadata.getDescriptor().getEnumTypes().get(0);
+      }
+
+      private static final ParentType[] VALUES = values();
+
+      public static ParentType valueOf(
+          com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+        if (desc.getType() != getDescriptor()) {
+          throw new java.lang.IllegalArgumentException(
+            "EnumValueDescriptor is not for this type.");
+        }
+        return VALUES[desc.getIndex()];
+      }
+
+      private final int index;
+      private final int value;
+
+      private ParentType(int index, int value) {
+        this.index = index;
+        this.value = value;
+      }
+
+      // @@protoc_insertion_point(enum_scope:BasicMetadata.ParentType)
     }
 
     private int bitField0_;
@@ -8478,12 +8633,20 @@ public final class DocumentProtos {
     private java.lang.Object journal_;
     /**
      * <code>optional string journal = 4;</code>
+     *
+     * <pre>
+     * journal should be treated as parent name
+     * </pre>
      */
     public boolean hasJournal() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
      * <code>optional string journal = 4;</code>
+     *
+     * <pre>
+     * journal should be treated as parent name
+     * </pre>
      */
     public java.lang.String getJournal() {
       java.lang.Object ref = journal_;
@@ -8501,6 +8664,10 @@ public final class DocumentProtos {
     }
     /**
      * <code>optional string journal = 4;</code>
+     *
+     * <pre>
+     * journal should be treated as parent name
+     * </pre>
      */
     public com.google.protobuf.ByteString
         getJournalBytes() {
@@ -8870,6 +9037,52 @@ public final class DocumentProtos {
       return currentProjectId_.getByteString(index);
     }
 
+    // optional .BasicMetadata.ParentType parentType = 14 [default = JOURNAL];
+    public static final int PARENTTYPE_FIELD_NUMBER = 14;
+    private pl.edu.icm.coansys.models.DocumentProtos.BasicMetadata.ParentType parentType_;
+    /**
+     * <code>optional .BasicMetadata.ParentType parentType = 14 [default = JOURNAL];</code>
+     */
+    public boolean hasParentType() {
+      return ((bitField0_ & 0x00000100) == 0x00000100);
+    }
+    /**
+     * <code>optional .BasicMetadata.ParentType parentType = 14 [default = JOURNAL];</code>
+     */
+    public pl.edu.icm.coansys.models.DocumentProtos.BasicMetadata.ParentType getParentType() {
+      return parentType_;
+    }
+
+    // repeated string parentUrl = 15;
+    public static final int PARENTURL_FIELD_NUMBER = 15;
+    private com.google.protobuf.LazyStringList parentUrl_;
+    /**
+     * <code>repeated string parentUrl = 15;</code>
+     */
+    public java.util.List<java.lang.String>
+        getParentUrlList() {
+      return parentUrl_;
+    }
+    /**
+     * <code>repeated string parentUrl = 15;</code>
+     */
+    public int getParentUrlCount() {
+      return parentUrl_.size();
+    }
+    /**
+     * <code>repeated string parentUrl = 15;</code>
+     */
+    public java.lang.String getParentUrl(int index) {
+      return parentUrl_.get(index);
+    }
+    /**
+     * <code>repeated string parentUrl = 15;</code>
+     */
+    public com.google.protobuf.ByteString
+        getParentUrlBytes(int index) {
+      return parentUrl_.getByteString(index);
+    }
+
     private void initFields() {
       title_ = java.util.Collections.emptyList();
       author_ = java.util.Collections.emptyList();
@@ -8884,6 +9097,8 @@ public final class DocumentProtos {
       classifCode_ = java.util.Collections.emptyList();
       parentId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       currentProjectId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      parentType_ = pl.edu.icm.coansys.models.DocumentProtos.BasicMetadata.ParentType.JOURNAL;
+      parentUrl_ = com.google.protobuf.LazyStringArrayList.EMPTY;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -8953,6 +9168,12 @@ public final class DocumentProtos {
       }
       for (int i = 0; i < currentProjectId_.size(); i++) {
         output.writeBytes(13, currentProjectId_.getByteString(i));
+      }
+      if (((bitField0_ & 0x00000100) == 0x00000100)) {
+        output.writeEnum(14, parentType_.getNumber());
+      }
+      for (int i = 0; i < parentUrl_.size(); i++) {
+        output.writeBytes(15, parentUrl_.getByteString(i));
       }
       getUnknownFields().writeTo(output);
     }
@@ -9024,6 +9245,19 @@ public final class DocumentProtos {
         }
         size += dataSize;
         size += 1 * getCurrentProjectIdList().size();
+      }
+      if (((bitField0_ & 0x00000100) == 0x00000100)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeEnumSize(14, parentType_.getNumber());
+      }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < parentUrl_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeBytesSizeNoTag(parentUrl_.getByteString(i));
+        }
+        size += dataSize;
+        size += 1 * getParentUrlList().size();
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -9186,6 +9420,10 @@ public final class DocumentProtos {
         bitField0_ = (bitField0_ & ~0x00000800);
         currentProjectId_ = com.google.protobuf.LazyStringArrayList.EMPTY;
         bitField0_ = (bitField0_ & ~0x00001000);
+        parentType_ = pl.edu.icm.coansys.models.DocumentProtos.BasicMetadata.ParentType.JOURNAL;
+        bitField0_ = (bitField0_ & ~0x00002000);
+        parentUrl_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00004000);
         return this;
       }
 
@@ -9285,6 +9523,16 @@ public final class DocumentProtos {
           bitField0_ = (bitField0_ & ~0x00001000);
         }
         result.currentProjectId_ = currentProjectId_;
+        if (((from_bitField0_ & 0x00002000) == 0x00002000)) {
+          to_bitField0_ |= 0x00000100;
+        }
+        result.parentType_ = parentType_;
+        if (((bitField0_ & 0x00004000) == 0x00004000)) {
+          parentUrl_ = new com.google.protobuf.UnmodifiableLazyStringList(
+              parentUrl_);
+          bitField0_ = (bitField0_ & ~0x00004000);
+        }
+        result.parentUrl_ = parentUrl_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -9436,6 +9684,19 @@ public final class DocumentProtos {
           } else {
             ensureCurrentProjectIdIsMutable();
             currentProjectId_.addAll(other.currentProjectId_);
+          }
+          onChanged();
+        }
+        if (other.hasParentType()) {
+          setParentType(other.getParentType());
+        }
+        if (!other.parentUrl_.isEmpty()) {
+          if (parentUrl_.isEmpty()) {
+            parentUrl_ = other.parentUrl_;
+            bitField0_ = (bitField0_ & ~0x00004000);
+          } else {
+            ensureParentUrlIsMutable();
+            parentUrl_.addAll(other.parentUrl_);
           }
           onChanged();
         }
@@ -10042,12 +10303,20 @@ public final class DocumentProtos {
       private java.lang.Object journal_ = "";
       /**
        * <code>optional string journal = 4;</code>
+       *
+       * <pre>
+       * journal should be treated as parent name
+       * </pre>
        */
       public boolean hasJournal() {
         return ((bitField0_ & 0x00000008) == 0x00000008);
       }
       /**
        * <code>optional string journal = 4;</code>
+       *
+       * <pre>
+       * journal should be treated as parent name
+       * </pre>
        */
       public java.lang.String getJournal() {
         java.lang.Object ref = journal_;
@@ -10062,6 +10331,10 @@ public final class DocumentProtos {
       }
       /**
        * <code>optional string journal = 4;</code>
+       *
+       * <pre>
+       * journal should be treated as parent name
+       * </pre>
        */
       public com.google.protobuf.ByteString
           getJournalBytes() {
@@ -10078,6 +10351,10 @@ public final class DocumentProtos {
       }
       /**
        * <code>optional string journal = 4;</code>
+       *
+       * <pre>
+       * journal should be treated as parent name
+       * </pre>
        */
       public Builder setJournal(
           java.lang.String value) {
@@ -10091,6 +10368,10 @@ public final class DocumentProtos {
       }
       /**
        * <code>optional string journal = 4;</code>
+       *
+       * <pre>
+       * journal should be treated as parent name
+       * </pre>
        */
       public Builder clearJournal() {
         bitField0_ = (bitField0_ & ~0x00000008);
@@ -10100,6 +10381,10 @@ public final class DocumentProtos {
       }
       /**
        * <code>optional string journal = 4;</code>
+       *
+       * <pre>
+       * journal should be treated as parent name
+       * </pre>
        */
       public Builder setJournalBytes(
           com.google.protobuf.ByteString value) {
@@ -10978,6 +11263,135 @@ public final class DocumentProtos {
   }
   ensureCurrentProjectIdIsMutable();
         currentProjectId_.add(value);
+        onChanged();
+        return this;
+      }
+
+      // optional .BasicMetadata.ParentType parentType = 14 [default = JOURNAL];
+      private pl.edu.icm.coansys.models.DocumentProtos.BasicMetadata.ParentType parentType_ = pl.edu.icm.coansys.models.DocumentProtos.BasicMetadata.ParentType.JOURNAL;
+      /**
+       * <code>optional .BasicMetadata.ParentType parentType = 14 [default = JOURNAL];</code>
+       */
+      public boolean hasParentType() {
+        return ((bitField0_ & 0x00002000) == 0x00002000);
+      }
+      /**
+       * <code>optional .BasicMetadata.ParentType parentType = 14 [default = JOURNAL];</code>
+       */
+      public pl.edu.icm.coansys.models.DocumentProtos.BasicMetadata.ParentType getParentType() {
+        return parentType_;
+      }
+      /**
+       * <code>optional .BasicMetadata.ParentType parentType = 14 [default = JOURNAL];</code>
+       */
+      public Builder setParentType(pl.edu.icm.coansys.models.DocumentProtos.BasicMetadata.ParentType value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00002000;
+        parentType_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional .BasicMetadata.ParentType parentType = 14 [default = JOURNAL];</code>
+       */
+      public Builder clearParentType() {
+        bitField0_ = (bitField0_ & ~0x00002000);
+        parentType_ = pl.edu.icm.coansys.models.DocumentProtos.BasicMetadata.ParentType.JOURNAL;
+        onChanged();
+        return this;
+      }
+
+      // repeated string parentUrl = 15;
+      private com.google.protobuf.LazyStringList parentUrl_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private void ensureParentUrlIsMutable() {
+        if (!((bitField0_ & 0x00004000) == 0x00004000)) {
+          parentUrl_ = new com.google.protobuf.LazyStringArrayList(parentUrl_);
+          bitField0_ |= 0x00004000;
+         }
+      }
+      /**
+       * <code>repeated string parentUrl = 15;</code>
+       */
+      public java.util.List<java.lang.String>
+          getParentUrlList() {
+        return java.util.Collections.unmodifiableList(parentUrl_);
+      }
+      /**
+       * <code>repeated string parentUrl = 15;</code>
+       */
+      public int getParentUrlCount() {
+        return parentUrl_.size();
+      }
+      /**
+       * <code>repeated string parentUrl = 15;</code>
+       */
+      public java.lang.String getParentUrl(int index) {
+        return parentUrl_.get(index);
+      }
+      /**
+       * <code>repeated string parentUrl = 15;</code>
+       */
+      public com.google.protobuf.ByteString
+          getParentUrlBytes(int index) {
+        return parentUrl_.getByteString(index);
+      }
+      /**
+       * <code>repeated string parentUrl = 15;</code>
+       */
+      public Builder setParentUrl(
+          int index, java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureParentUrlIsMutable();
+        parentUrl_.set(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string parentUrl = 15;</code>
+       */
+      public Builder addParentUrl(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureParentUrlIsMutable();
+        parentUrl_.add(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string parentUrl = 15;</code>
+       */
+      public Builder addAllParentUrl(
+          java.lang.Iterable<java.lang.String> values) {
+        ensureParentUrlIsMutable();
+        super.addAll(values, parentUrl_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string parentUrl = 15;</code>
+       */
+      public Builder clearParentUrl() {
+        parentUrl_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00004000);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string parentUrl = 15;</code>
+       */
+      public Builder addParentUrlBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureParentUrlIsMutable();
+        parentUrl_.add(value);
         onChanged();
         return this;
       }
@@ -20690,44 +21104,47 @@ public final class DocumentProtos {
       "ationRef\030\006 \003(\0132\t.KeyValue\022\r\n\005docId\030\007 \001(\t",
       "\022\026\n\016positionNumber\030\010 \001(\005\022\030\n\005extId\030\t \003(\0132" +
       "\t.KeyValue\022\037\n\014auxiliarInfo\030\n \003(\0132\t.KeyVa" +
-      "lue\022\027\n\017currentPersonId\030\013 \001(\t\"\217\002\n\rBasicMe" +
+      "lue\022\027\n\017currentPersonId\030\013 \001(\t\"\211\003\n\rBasicMe" +
       "tadata\022 \n\005title\030\001 \003(\0132\021.TextWithLanguage" +
       "\022\027\n\006author\030\002 \003(\0132\007.Author\022\013\n\003doi\030\003 \001(\t\022\017" +
       "\n\007journal\030\004 \001(\t\022\014\n\004isbn\030\005 \001(\t\022\014\n\004issn\030\006 " +
       "\001(\t\022\014\n\004year\030\007 \001(\t\022\r\n\005issue\030\010 \001(\t\022\016\n\006volu" +
       "me\030\t \001(\t\022\r\n\005pages\030\n \001(\t\022!\n\013classifCode\030\013" +
       " \003(\0132\014.ClassifCode\022\020\n\010parentId\030\014 \003(\t\022\030\n\020" +
-      "currentProjectId\030\r \003(\t\"v\n\014KeywordsList\022\014",
-      "\n\004type\030\001 \001(\t\022\020\n\010language\030\002 \001(\t\022\020\n\010keywor" +
-      "ds\030\003 \003(\t\022\017\n\007comment\030\004 \001(\t\022#\n\nprovenance\030" +
-      "\005 \001(\0132\017.ProvenanceInfo\"\216\004\n\020DocumentMetad" +
-      "ata\022\013\n\003key\030\001 \002(\t\022%\n\rbasicMetadata\030\002 \002(\0132" +
-      "\016.BasicMetadata\022+\n\020documentAbstract\030\003 \003(" +
-      "\0132\021.TextWithLanguage\022\037\n\010keywords\030\n \003(\0132\r" +
-      ".KeywordsList\022N\n\023similarDocumentInfo\030\024 \003" +
-      "(\01321.pl.edu.icm.coansys.models.DocumentS" +
-      "imilarityInfo\022\030\n\005extId\030\005 \003(\0132\t.KeyValue\022" +
-      "\037\n\014auxiliarInfo\030\006 \003(\0132\t.KeyValue\022\"\n\014affi",
-      "liations\030\014 \003(\0132\014.Affiliation\022%\n\treferenc" +
-      "e\030\007 \003(\0132\022.ReferenceMetadata\022\022\n\ncollectio" +
-      "n\030\010 \003(\t\022\022\n\nsourcePath\030\t \001(\t\022\017\n\007origKey\030\013" +
-      " \003(\t\022-\n\004type\030\025 \001(\0162\026.DocumentMetadata.Ty" +
-      "pe:\007ARTICLE\":\n\004Type\022\013\n\007ARTICLE\020\000\022\010\n\004BOOK" +
-      "\020\001\022\013\n\007DATASET\020\002\022\016\n\nBLOG_ENTRY\020\003\"\225\001\n\021Refe" +
-      "renceMetadata\022%\n\rbasicMetadata\030\001 \002(\0132\016.B" +
-      "asicMetadata\022\024\n\014sourceDocKey\030\002 \001(\t\022\020\n\010po" +
-      "sition\030\003 \001(\005\022\027\n\017rawCitationText\030\004 \001(\t\022\030\n" +
-      "\005extId\030\005 \003(\0132\t.KeyValue\"\266\001\n\005Media\022\013\n\003key",
-      "\030\001 \002(\t\022\021\n\tmediaType\030\002 \002(\t\022\017\n\007content\030\003 \002" +
-      "(\014\022\022\n\ncollection\030\004 \001(\t\022\022\n\nsourcePath\030\005 \001" +
-      "(\t\022\026\n\016sourceFilesize\030\006 \001(\003\022\027\n\017destinatio" +
-      "nPath\030\007 \001(\t\022#\n\nprovenance\030\010 \001(\0132\017.Proven" +
-      "anceInfo\"\'\n\016MediaContainer\022\025\n\005media\030\001 \003(" +
-      "\0132\006.Media\"v\n\017DocumentWrapper\022\r\n\005rowId\030\001 " +
-      "\002(\t\022+\n\020documentMetadata\030\002 \001(\0132\021.Document" +
-      "Metadata\022\'\n\016mediaContainer\030\003 \001(\0132\017.Media" +
-      "ContainerB+\n\031pl.edu.icm.coansys.modelsB\016" +
-      "DocumentProtos"
+      "currentProjectId\030\r \003(\t\0226\n\nparentType\030\016 \001",
+      "(\0162\031.BasicMetadata.ParentType:\007JOURNAL\022\021" +
+      "\n\tparentUrl\030\017 \003(\t\"-\n\nParentType\022\013\n\007JOURN" +
+      "AL\020\001\022\010\n\004BOOK\020\002\022\010\n\004BLOG\020\003\"v\n\014KeywordsList" +
+      "\022\014\n\004type\030\001 \001(\t\022\020\n\010language\030\002 \001(\t\022\020\n\010keyw" +
+      "ords\030\003 \003(\t\022\017\n\007comment\030\004 \001(\t\022#\n\nprovenanc" +
+      "e\030\005 \001(\0132\017.ProvenanceInfo\"\216\004\n\020DocumentMet" +
+      "adata\022\013\n\003key\030\001 \002(\t\022%\n\rbasicMetadata\030\002 \002(" +
+      "\0132\016.BasicMetadata\022+\n\020documentAbstract\030\003 " +
+      "\003(\0132\021.TextWithLanguage\022\037\n\010keywords\030\n \003(\013" +
+      "2\r.KeywordsList\022N\n\023similarDocumentInfo\030\024",
+      " \003(\01321.pl.edu.icm.coansys.models.Documen" +
+      "tSimilarityInfo\022\030\n\005extId\030\005 \003(\0132\t.KeyValu" +
+      "e\022\037\n\014auxiliarInfo\030\006 \003(\0132\t.KeyValue\022\"\n\014af" +
+      "filiations\030\014 \003(\0132\014.Affiliation\022%\n\trefere" +
+      "nce\030\007 \003(\0132\022.ReferenceMetadata\022\022\n\ncollect" +
+      "ion\030\010 \003(\t\022\022\n\nsourcePath\030\t \001(\t\022\017\n\007origKey" +
+      "\030\013 \003(\t\022-\n\004type\030\025 \001(\0162\026.DocumentMetadata." +
+      "Type:\007ARTICLE\":\n\004Type\022\013\n\007ARTICLE\020\000\022\010\n\004BO" +
+      "OK\020\001\022\013\n\007DATASET\020\002\022\016\n\nBLOG_ENTRY\020\003\"\225\001\n\021Re" +
+      "ferenceMetadata\022%\n\rbasicMetadata\030\001 \002(\0132\016",
+      ".BasicMetadata\022\024\n\014sourceDocKey\030\002 \001(\t\022\020\n\010" +
+      "position\030\003 \001(\005\022\027\n\017rawCitationText\030\004 \001(\t\022" +
+      "\030\n\005extId\030\005 \003(\0132\t.KeyValue\"\266\001\n\005Media\022\013\n\003k" +
+      "ey\030\001 \002(\t\022\021\n\tmediaType\030\002 \002(\t\022\017\n\007content\030\003" +
+      " \002(\014\022\022\n\ncollection\030\004 \001(\t\022\022\n\nsourcePath\030\005" +
+      " \001(\t\022\026\n\016sourceFilesize\030\006 \001(\003\022\027\n\017destinat" +
+      "ionPath\030\007 \001(\t\022#\n\nprovenance\030\010 \001(\0132\017.Prov" +
+      "enanceInfo\"\'\n\016MediaContainer\022\025\n\005media\030\001 " +
+      "\003(\0132\006.Media\"v\n\017DocumentWrapper\022\r\n\005rowId\030" +
+      "\001 \002(\t\022+\n\020documentMetadata\030\002 \001(\0132\021.Docume",
+      "ntMetadata\022\'\n\016mediaContainer\030\003 \001(\0132\017.Med" +
+      "iaContainerB+\n\031pl.edu.icm.coansys.models" +
+      "B\016DocumentProtos"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -20781,7 +21198,7 @@ public final class DocumentProtos {
           internal_static_BasicMetadata_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_BasicMetadata_descriptor,
-              new java.lang.String[] { "Title", "Author", "Doi", "Journal", "Isbn", "Issn", "Year", "Issue", "Volume", "Pages", "ClassifCode", "ParentId", "CurrentProjectId", });
+              new java.lang.String[] { "Title", "Author", "Doi", "Journal", "Isbn", "Issn", "Year", "Issue", "Volume", "Pages", "ClassifCode", "ParentId", "CurrentProjectId", "ParentType", "ParentUrl", });
           internal_static_KeywordsList_descriptor =
             getDescriptor().getMessageTypes().get(7);
           internal_static_KeywordsList_fieldAccessorTable = new

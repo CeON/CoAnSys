@@ -1,7 +1,8 @@
 //
 // (C) 2010-2014 ICM UW. All rights reserved.
 //
-package pl.edu.icm.coansys.models;
+
+import "bw2.proto";
 
 option java_package = "pl.edu.icm.coansys.models";
 option java_outer_classname = "ParentModelProtos";
@@ -11,6 +12,7 @@ message ParentDisambiguationOut {
   required string parentId = 2;
   repeated string parentName=3;
   repeated Auxiliar auxs = 4;
+  optional BasicMetadata.ParentType type= 5;
 }
 
 message Auxiliar{
