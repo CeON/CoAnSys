@@ -18,6 +18,11 @@ message OrganizationMetadata {
   repeated string parentEnglishName=10;
   optional string parentURL=11; 
   repeated KeyValue otherId=12;
+  optional string city=13;
+  optional string zipCode=14;
+  optional string street=15;
+  optional double latitude = 16;
+  optional double longitude = 17;
 }
 
 
