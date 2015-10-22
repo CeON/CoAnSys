@@ -225,6 +225,71 @@ public final class OrganizationProtos {
      */
     pl.edu.icm.coansys.models.DocumentProtos.KeyValueOrBuilder getOtherIdOrBuilder(
         int index);
+
+    // optional string city = 13;
+    /**
+     * <code>optional string city = 13;</code>
+     */
+    boolean hasCity();
+    /**
+     * <code>optional string city = 13;</code>
+     */
+    java.lang.String getCity();
+    /**
+     * <code>optional string city = 13;</code>
+     */
+    com.google.protobuf.ByteString
+        getCityBytes();
+
+    // optional string zipCode = 14;
+    /**
+     * <code>optional string zipCode = 14;</code>
+     */
+    boolean hasZipCode();
+    /**
+     * <code>optional string zipCode = 14;</code>
+     */
+    java.lang.String getZipCode();
+    /**
+     * <code>optional string zipCode = 14;</code>
+     */
+    com.google.protobuf.ByteString
+        getZipCodeBytes();
+
+    // optional string street = 15;
+    /**
+     * <code>optional string street = 15;</code>
+     */
+    boolean hasStreet();
+    /**
+     * <code>optional string street = 15;</code>
+     */
+    java.lang.String getStreet();
+    /**
+     * <code>optional string street = 15;</code>
+     */
+    com.google.protobuf.ByteString
+        getStreetBytes();
+
+    // optional double latitude = 16;
+    /**
+     * <code>optional double latitude = 16;</code>
+     */
+    boolean hasLatitude();
+    /**
+     * <code>optional double latitude = 16;</code>
+     */
+    double getLatitude();
+
+    // optional double longitude = 17;
+    /**
+     * <code>optional double longitude = 17;</code>
+     */
+    boolean hasLongitude();
+    /**
+     * <code>optional double longitude = 17;</code>
+     */
+    double getLongitude();
   }
   /**
    * Protobuf type {@code OrganizationMetadata}
@@ -353,6 +418,31 @@ public final class OrganizationProtos {
                 mutable_bitField0_ |= 0x00000800;
               }
               otherId_.add(input.readMessage(pl.edu.icm.coansys.models.DocumentProtos.KeyValue.PARSER, extensionRegistry));
+              break;
+            }
+            case 106: {
+              bitField0_ |= 0x00000040;
+              city_ = input.readBytes();
+              break;
+            }
+            case 114: {
+              bitField0_ |= 0x00000080;
+              zipCode_ = input.readBytes();
+              break;
+            }
+            case 122: {
+              bitField0_ |= 0x00000100;
+              street_ = input.readBytes();
+              break;
+            }
+            case 129: {
+              bitField0_ |= 0x00000200;
+              latitude_ = input.readDouble();
+              break;
+            }
+            case 137: {
+              bitField0_ |= 0x00000400;
+              longitude_ = input.readDouble();
               break;
             }
           }
@@ -857,6 +947,167 @@ public final class OrganizationProtos {
       return otherId_.get(index);
     }
 
+    // optional string city = 13;
+    public static final int CITY_FIELD_NUMBER = 13;
+    private java.lang.Object city_;
+    /**
+     * <code>optional string city = 13;</code>
+     */
+    public boolean hasCity() {
+      return ((bitField0_ & 0x00000040) == 0x00000040);
+    }
+    /**
+     * <code>optional string city = 13;</code>
+     */
+    public java.lang.String getCity() {
+      java.lang.Object ref = city_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          city_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string city = 13;</code>
+     */
+    public com.google.protobuf.ByteString
+        getCityBytes() {
+      java.lang.Object ref = city_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        city_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    // optional string zipCode = 14;
+    public static final int ZIPCODE_FIELD_NUMBER = 14;
+    private java.lang.Object zipCode_;
+    /**
+     * <code>optional string zipCode = 14;</code>
+     */
+    public boolean hasZipCode() {
+      return ((bitField0_ & 0x00000080) == 0x00000080);
+    }
+    /**
+     * <code>optional string zipCode = 14;</code>
+     */
+    public java.lang.String getZipCode() {
+      java.lang.Object ref = zipCode_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          zipCode_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string zipCode = 14;</code>
+     */
+    public com.google.protobuf.ByteString
+        getZipCodeBytes() {
+      java.lang.Object ref = zipCode_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        zipCode_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    // optional string street = 15;
+    public static final int STREET_FIELD_NUMBER = 15;
+    private java.lang.Object street_;
+    /**
+     * <code>optional string street = 15;</code>
+     */
+    public boolean hasStreet() {
+      return ((bitField0_ & 0x00000100) == 0x00000100);
+    }
+    /**
+     * <code>optional string street = 15;</code>
+     */
+    public java.lang.String getStreet() {
+      java.lang.Object ref = street_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          street_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string street = 15;</code>
+     */
+    public com.google.protobuf.ByteString
+        getStreetBytes() {
+      java.lang.Object ref = street_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        street_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    // optional double latitude = 16;
+    public static final int LATITUDE_FIELD_NUMBER = 16;
+    private double latitude_;
+    /**
+     * <code>optional double latitude = 16;</code>
+     */
+    public boolean hasLatitude() {
+      return ((bitField0_ & 0x00000200) == 0x00000200);
+    }
+    /**
+     * <code>optional double latitude = 16;</code>
+     */
+    public double getLatitude() {
+      return latitude_;
+    }
+
+    // optional double longitude = 17;
+    public static final int LONGITUDE_FIELD_NUMBER = 17;
+    private double longitude_;
+    /**
+     * <code>optional double longitude = 17;</code>
+     */
+    public boolean hasLongitude() {
+      return ((bitField0_ & 0x00000400) == 0x00000400);
+    }
+    /**
+     * <code>optional double longitude = 17;</code>
+     */
+    public double getLongitude() {
+      return longitude_;
+    }
+
     private void initFields() {
       key_ = "";
       originalName_ = com.google.protobuf.LazyStringArrayList.EMPTY;
@@ -870,6 +1121,11 @@ public final class OrganizationProtos {
       parentEnglishName_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       parentURL_ = "";
       otherId_ = java.util.Collections.emptyList();
+      city_ = "";
+      zipCode_ = "";
+      street_ = "";
+      latitude_ = 0D;
+      longitude_ = 0D;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -928,6 +1184,21 @@ public final class OrganizationProtos {
       }
       for (int i = 0; i < otherId_.size(); i++) {
         output.writeMessage(12, otherId_.get(i));
+      }
+      if (((bitField0_ & 0x00000040) == 0x00000040)) {
+        output.writeBytes(13, getCityBytes());
+      }
+      if (((bitField0_ & 0x00000080) == 0x00000080)) {
+        output.writeBytes(14, getZipCodeBytes());
+      }
+      if (((bitField0_ & 0x00000100) == 0x00000100)) {
+        output.writeBytes(15, getStreetBytes());
+      }
+      if (((bitField0_ & 0x00000200) == 0x00000200)) {
+        output.writeDouble(16, latitude_);
+      }
+      if (((bitField0_ & 0x00000400) == 0x00000400)) {
+        output.writeDouble(17, longitude_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -1010,6 +1281,26 @@ public final class OrganizationProtos {
       for (int i = 0; i < otherId_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(12, otherId_.get(i));
+      }
+      if (((bitField0_ & 0x00000040) == 0x00000040)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(13, getCityBytes());
+      }
+      if (((bitField0_ & 0x00000080) == 0x00000080)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(14, getZipCodeBytes());
+      }
+      if (((bitField0_ & 0x00000100) == 0x00000100)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(15, getStreetBytes());
+      }
+      if (((bitField0_ & 0x00000200) == 0x00000200)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeDoubleSize(16, latitude_);
+      }
+      if (((bitField0_ & 0x00000400) == 0x00000400)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeDoubleSize(17, longitude_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -1156,6 +1447,16 @@ public final class OrganizationProtos {
         } else {
           otherIdBuilder_.clear();
         }
+        city_ = "";
+        bitField0_ = (bitField0_ & ~0x00001000);
+        zipCode_ = "";
+        bitField0_ = (bitField0_ & ~0x00002000);
+        street_ = "";
+        bitField0_ = (bitField0_ & ~0x00004000);
+        latitude_ = 0D;
+        bitField0_ = (bitField0_ & ~0x00008000);
+        longitude_ = 0D;
+        bitField0_ = (bitField0_ & ~0x00010000);
         return this;
       }
 
@@ -1247,6 +1548,26 @@ public final class OrganizationProtos {
         } else {
           result.otherId_ = otherIdBuilder_.build();
         }
+        if (((from_bitField0_ & 0x00001000) == 0x00001000)) {
+          to_bitField0_ |= 0x00000040;
+        }
+        result.city_ = city_;
+        if (((from_bitField0_ & 0x00002000) == 0x00002000)) {
+          to_bitField0_ |= 0x00000080;
+        }
+        result.zipCode_ = zipCode_;
+        if (((from_bitField0_ & 0x00004000) == 0x00004000)) {
+          to_bitField0_ |= 0x00000100;
+        }
+        result.street_ = street_;
+        if (((from_bitField0_ & 0x00008000) == 0x00008000)) {
+          to_bitField0_ |= 0x00000200;
+        }
+        result.latitude_ = latitude_;
+        if (((from_bitField0_ & 0x00010000) == 0x00010000)) {
+          to_bitField0_ |= 0x00000400;
+        }
+        result.longitude_ = longitude_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -1368,6 +1689,27 @@ public final class OrganizationProtos {
               otherIdBuilder_.addAllMessages(other.otherId_);
             }
           }
+        }
+        if (other.hasCity()) {
+          bitField0_ |= 0x00001000;
+          city_ = other.city_;
+          onChanged();
+        }
+        if (other.hasZipCode()) {
+          bitField0_ |= 0x00002000;
+          zipCode_ = other.zipCode_;
+          onChanged();
+        }
+        if (other.hasStreet()) {
+          bitField0_ |= 0x00004000;
+          street_ = other.street_;
+          onChanged();
+        }
+        if (other.hasLatitude()) {
+          setLatitude(other.getLatitude());
+        }
+        if (other.hasLongitude()) {
+          setLongitude(other.getLongitude());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -2555,6 +2897,294 @@ public final class OrganizationProtos {
         return otherIdBuilder_;
       }
 
+      // optional string city = 13;
+      private java.lang.Object city_ = "";
+      /**
+       * <code>optional string city = 13;</code>
+       */
+      public boolean hasCity() {
+        return ((bitField0_ & 0x00001000) == 0x00001000);
+      }
+      /**
+       * <code>optional string city = 13;</code>
+       */
+      public java.lang.String getCity() {
+        java.lang.Object ref = city_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          city_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string city = 13;</code>
+       */
+      public com.google.protobuf.ByteString
+          getCityBytes() {
+        java.lang.Object ref = city_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          city_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string city = 13;</code>
+       */
+      public Builder setCity(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00001000;
+        city_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string city = 13;</code>
+       */
+      public Builder clearCity() {
+        bitField0_ = (bitField0_ & ~0x00001000);
+        city_ = getDefaultInstance().getCity();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string city = 13;</code>
+       */
+      public Builder setCityBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00001000;
+        city_ = value;
+        onChanged();
+        return this;
+      }
+
+      // optional string zipCode = 14;
+      private java.lang.Object zipCode_ = "";
+      /**
+       * <code>optional string zipCode = 14;</code>
+       */
+      public boolean hasZipCode() {
+        return ((bitField0_ & 0x00002000) == 0x00002000);
+      }
+      /**
+       * <code>optional string zipCode = 14;</code>
+       */
+      public java.lang.String getZipCode() {
+        java.lang.Object ref = zipCode_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          zipCode_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string zipCode = 14;</code>
+       */
+      public com.google.protobuf.ByteString
+          getZipCodeBytes() {
+        java.lang.Object ref = zipCode_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          zipCode_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string zipCode = 14;</code>
+       */
+      public Builder setZipCode(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00002000;
+        zipCode_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string zipCode = 14;</code>
+       */
+      public Builder clearZipCode() {
+        bitField0_ = (bitField0_ & ~0x00002000);
+        zipCode_ = getDefaultInstance().getZipCode();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string zipCode = 14;</code>
+       */
+      public Builder setZipCodeBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00002000;
+        zipCode_ = value;
+        onChanged();
+        return this;
+      }
+
+      // optional string street = 15;
+      private java.lang.Object street_ = "";
+      /**
+       * <code>optional string street = 15;</code>
+       */
+      public boolean hasStreet() {
+        return ((bitField0_ & 0x00004000) == 0x00004000);
+      }
+      /**
+       * <code>optional string street = 15;</code>
+       */
+      public java.lang.String getStreet() {
+        java.lang.Object ref = street_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          street_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string street = 15;</code>
+       */
+      public com.google.protobuf.ByteString
+          getStreetBytes() {
+        java.lang.Object ref = street_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          street_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string street = 15;</code>
+       */
+      public Builder setStreet(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00004000;
+        street_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string street = 15;</code>
+       */
+      public Builder clearStreet() {
+        bitField0_ = (bitField0_ & ~0x00004000);
+        street_ = getDefaultInstance().getStreet();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string street = 15;</code>
+       */
+      public Builder setStreetBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00004000;
+        street_ = value;
+        onChanged();
+        return this;
+      }
+
+      // optional double latitude = 16;
+      private double latitude_ ;
+      /**
+       * <code>optional double latitude = 16;</code>
+       */
+      public boolean hasLatitude() {
+        return ((bitField0_ & 0x00008000) == 0x00008000);
+      }
+      /**
+       * <code>optional double latitude = 16;</code>
+       */
+      public double getLatitude() {
+        return latitude_;
+      }
+      /**
+       * <code>optional double latitude = 16;</code>
+       */
+      public Builder setLatitude(double value) {
+        bitField0_ |= 0x00008000;
+        latitude_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional double latitude = 16;</code>
+       */
+      public Builder clearLatitude() {
+        bitField0_ = (bitField0_ & ~0x00008000);
+        latitude_ = 0D;
+        onChanged();
+        return this;
+      }
+
+      // optional double longitude = 17;
+      private double longitude_ ;
+      /**
+       * <code>optional double longitude = 17;</code>
+       */
+      public boolean hasLongitude() {
+        return ((bitField0_ & 0x00010000) == 0x00010000);
+      }
+      /**
+       * <code>optional double longitude = 17;</code>
+       */
+      public double getLongitude() {
+        return longitude_;
+      }
+      /**
+       * <code>optional double longitude = 17;</code>
+       */
+      public Builder setLongitude(double value) {
+        bitField0_ |= 0x00010000;
+        longitude_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional double longitude = 17;</code>
+       */
+      public Builder clearLongitude() {
+        bitField0_ = (bitField0_ & ~0x00010000);
+        longitude_ = 0D;
+        onChanged();
+        return this;
+      }
+
       // @@protoc_insertion_point(builder_scope:OrganizationMetadata)
     }
 
@@ -3482,19 +4112,21 @@ public final class OrganizationProtos {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\022organization.proto\032\tbw2.proto\"\214\002\n\024Orga" +
+      "\n\022organization.proto\032\tbw2.proto\"\340\002\n\024Orga" +
       "nizationMetadata\022\013\n\003key\030\001 \002(\t\022\024\n\014origina" +
       "lName\030\002 \003(\t\022\023\n\013englishName\030\003 \003(\t\022\021\n\tshor" +
       "tName\030\004 \003(\t\022\017\n\007country\030\005 \001(\t\022\013\n\003url\030\006 \001(" +
       "\t\022\023\n\013cityAddress\030\007 \001(\t\022\020\n\010parentId\030\010 \001(\t" +
       "\022\032\n\022parentOriginalName\030\t \003(\t\022\031\n\021parentEn" +
       "glishName\030\n \003(\t\022\021\n\tparentURL\030\013 \001(\t\022\032\n\007ot" +
-      "herId\030\014 \003(\0132\t.KeyValue\"\202\001\n\023OrganizationW" +
-      "rapper\022\r\n\005rowId\030\001 \002(\t\0223\n\024organizationMet" +
-      "adata\030\002 \001(\0132\025.OrganizationMetadata\022\'\n\016me",
-      "diaContainer\030\003 \001(\0132\017.MediaContainerB/\n\031p" +
-      "l.edu.icm.coansys.modelsB\022OrganizationPr" +
-      "otos"
+      "herId\030\014 \003(\0132\t.KeyValue\022\014\n\004city\030\r \001(\t\022\017\n\007" +
+      "zipCode\030\016 \001(\t\022\016\n\006street\030\017 \001(\t\022\020\n\010latitud" +
+      "e\030\020 \001(\001\022\021\n\tlongitude\030\021 \001(\001\"\202\001\n\023Organizat",
+      "ionWrapper\022\r\n\005rowId\030\001 \002(\t\0223\n\024organizatio" +
+      "nMetadata\030\002 \001(\0132\025.OrganizationMetadata\022\'" +
+      "\n\016mediaContainer\030\003 \001(\0132\017.MediaContainerB" +
+      "/\n\031pl.edu.icm.coansys.modelsB\022Organizati" +
+      "onProtos"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -3506,7 +4138,7 @@ public final class OrganizationProtos {
           internal_static_OrganizationMetadata_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_OrganizationMetadata_descriptor,
-              new java.lang.String[] { "Key", "OriginalName", "EnglishName", "ShortName", "Country", "Url", "CityAddress", "ParentId", "ParentOriginalName", "ParentEnglishName", "ParentURL", "OtherId", });
+              new java.lang.String[] { "Key", "OriginalName", "EnglishName", "ShortName", "Country", "Url", "CityAddress", "ParentId", "ParentOriginalName", "ParentEnglishName", "ParentURL", "OtherId", "City", "ZipCode", "Street", "Latitude", "Longitude", });
           internal_static_OrganizationWrapper_descriptor =
             getDescriptor().getMessageTypes().get(1);
           internal_static_OrganizationWrapper_fieldAccessorTable = new

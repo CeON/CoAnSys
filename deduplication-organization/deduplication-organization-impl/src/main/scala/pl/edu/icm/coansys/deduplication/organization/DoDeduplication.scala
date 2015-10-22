@@ -51,7 +51,6 @@ object DoDeduplication {
       }
     }
     
-    println("edges stage 1 ready: "+toEdges.count);   
      val edgesPrep = toEdges.groupByKey.flatMap[(OrganizationWrapper,OrganizationWrapper)] {
       case (hash: String, recordsB: Iterable[Array[Byte]/*OrganizationWrapper*/]) => {
         val records=recordsB.map{case (r:Array[Byte])=>{
@@ -72,7 +71,6 @@ object DoDeduplication {
     
     val graph = Graph(vertexes, edges)
     
-     println("graph ready: "+edges.count);   
     val components=ConnectedComponents.run(graph);
     
     
@@ -105,6 +103,7 @@ object DoDeduplication {
              
               val builder=ow1.toBuilder
               val onameslist=ow2.getOrganizationMetadata.getOriginalNameList;
+              builder.mergeFrom(ow2);
               onameslist.removeAll(ow1.getOrganizationMetadata.getOriginalNameList);
               builder.getOrganizationMetadataBuilder.addAllOriginalName(onameslist);
               
@@ -134,7 +133,6 @@ object DoDeduplication {
           OrganizationWrapper.parseFrom(bw.copyBytes);
         }
     }
-    println("organization mapped: "+organizations.count);   
     dedupOrganizations(organizations).map((o:Array[Byte])=> {(OrganizationWrapper.parseFrom(o).getRowId,o)})
     .saveAsSequenceFile(args(1));
      

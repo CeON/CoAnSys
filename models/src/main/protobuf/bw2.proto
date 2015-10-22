@@ -67,6 +67,7 @@ message BasicMetadata{
 	repeated TextWithLanguage title = 1;
 	repeated Author author = 2;
 	optional string doi = 3;
+// journal should be treated as parent name
 	optional string journal = 4;
 	optional string isbn = 5;
 	optional string issn = 6;
@@ -77,6 +78,13 @@ message BasicMetadata{
 	repeated ClassifCode classifCode = 11;
     repeated string parentId = 12; 
     repeated string currentProjectId= 13;
+    enum ParentType{
+      JOURNAL=1;
+      BOOK=2;
+      BLOG=3;
+    }
+    optional ParentType parentType=14 [default=JOURNAL];
+    repeated string parentUrl=15;
 }
 
 message KeywordsList {
@@ -104,6 +112,13 @@ message DocumentMetadata{
 	repeated string collection = 8;
 	optional string sourcePath = 9;
 	repeated string origKey = 11;
+    enum Type {
+      ARTICLE=0;
+      BOOK=1;
+      DATASET=2;
+      BLOG_ENTRY=3;
+    }
+    optional Type type = 21  [default = ARTICLE];
 }
 
 
