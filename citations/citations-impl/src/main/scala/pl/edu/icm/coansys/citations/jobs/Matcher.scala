@@ -43,7 +43,7 @@ object Matcher extends MyScoobiApp {
     citations
       .flatMapWithResource(new AuthorIndex(indexUri)) {
       case (index, cit) => Stream.continually(cit) zip approximatelyMatchingDocuments(cit, index)
-    }.groupByKey[MatchableEntity, EntityId].flatMap {
+    }.groupByKey[MatchableEntity, EntityId].mapFlatten {
       case (cit, ents) => Stream.continually(cit) zip ents
     }
 
@@ -154,7 +154,7 @@ object Matcher extends MyScoobiApp {
 
     implicit val stringConverter = new BytesConverter[String](misc.uuidEncode, misc.uuidDecode)
     implicit val picOutConverter = new BytesConverter[PICProtos.PicOut](_.toByteString.toByteArray, PICProtos.PicOut.parseFrom)
-    persist(toTextFile(myMatchesDebug, outUri, overwrite = true))
+    myMatchesDebug.toTextFile(outUri, overwrite = true).persist
     //    persist(toTextFile(heuristicStats(readCitationsFromDocumentsFromSeqFiles(List(documentsUri), parserModelUri), keyIndexUri, authorIndexUri), outUri, overwrite = true))
   }
 }

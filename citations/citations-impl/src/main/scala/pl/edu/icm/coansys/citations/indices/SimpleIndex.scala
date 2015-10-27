@@ -74,7 +74,7 @@ class SimpleIndex[K <: WritableComparable[_] : Manifest, V <: Writable : Manifes
 
 object SimpleIndex {
   def buildKeyIndex(documents: DList[MatchableEntity], indexFile: String)(implicit conf: ScoobiConfiguration) {
-    persist(toSequenceFile(documents.map(doc => (doc.id, doc)), indexFile))
+    documents.map(doc => (doc.id, doc)).toSequenceFile(indexFile).persist
     sequencefile.mergeWithScoobi[String, BytesWritable](indexFile)
     sequencefile.convertToMapFile(indexFile)(conf)
   }

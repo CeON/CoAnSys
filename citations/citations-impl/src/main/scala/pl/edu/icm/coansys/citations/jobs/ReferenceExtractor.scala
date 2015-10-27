@@ -33,7 +33,7 @@ object ReferenceExtractor extends MyScoobiApp {
 
    def extractReferences(docs: DList[DocumentWrapper]) =
      docs.filterNot(_.getDocumentMetadata.getKey.isEmpty)
-       .flatMap{x =>
+       .mapFlatten{x =>
        val docId = x.getDocumentMetadata.getKey
        x.getDocumentMetadata.getReferenceList.map { ref =>
          (citationIdPrefix + docId + "_" + ref.getPosition, ref.getRawCitationText)
@@ -46,6 +46,6 @@ object ReferenceExtractor extends MyScoobiApp {
 
      val entities = extractReferences(valueFromSequenceFile[DocumentWrapper](inUri))
 
-     persist(toSequenceFile(entities, outUri))
+     entities.toSequenceFile(outUri).persist
    }
  }
