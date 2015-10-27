@@ -62,6 +62,6 @@ object ReferencesToEntitiesConverter extends MyScoobiApp {
         None
     }
 
-    persist(toSequenceFile(entities, outUri))
+    entities.toSequenceFile(outUri).persist
   }
 }

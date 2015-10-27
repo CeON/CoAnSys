@@ -33,7 +33,7 @@
         <dependency>
             <groupId>com.nicta</groupId>
             <artifactId>scoobi_2.10</artifactId>
-            <version>0.7.3</version>
+            <version>0.9.1-cdh5</version>
         </dependency>
         <dependency>
             <groupId>pl.edu.icm.ceon</groupId>

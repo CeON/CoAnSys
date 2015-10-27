@@ -73,7 +73,7 @@ object misc {
     implicit val referenceConverter = new BytesConverter[ReferenceMetadata](_.toByteArray, ReferenceMetadata.parseFrom(_))
     implicit val wrapperConverter = new BytesConverter[DocumentWrapper](_.toByteArray, DocumentWrapper.parseFrom(_))
     val refmeta = valueFromSequenceFile[DocumentWrapper](uris)
-      .flatMap(_.getDocumentMetadata.getReferenceList)
+      .mapFlatten(_.getDocumentMetadata.getReferenceList)
     if (parserModel != null)
       refmeta.flatMapWithResource(new CRFBibReferenceParser(parserModel) with NoOpClose) {
         case (parser, meta) if !meta.getRawCitationText.isEmpty =>
