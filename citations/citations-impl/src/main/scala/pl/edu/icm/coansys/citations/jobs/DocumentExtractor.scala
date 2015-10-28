@@ -41,6 +41,6 @@ object DocumentExtractor extends MyScoobiApp {
     val outUri = args(1)
 
     val entities = extractDocuments(valueFromSequenceFile[DocumentWrapper](inUri))
-    persist(toSequenceFile(entities, outUri))
+    entities.toSequenceFile(outUri).persist
   }
 }
