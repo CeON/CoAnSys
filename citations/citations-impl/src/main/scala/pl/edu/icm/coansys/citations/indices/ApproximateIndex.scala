@@ -23,7 +23,6 @@ import org.apache.hadoop.io.{Writable, Text}
 import collection.mutable.ListBuffer
 import com.nicta.scoobi.core.DList
 import com.nicta.scoobi.io.sequence.SeqSchema
-import com.nicta.scoobi.io.sequence.SequenceOutput.toSequenceFile
 import com.nicta.scoobi.Scoobi._
 import pl.edu.icm.coansys.citations.data.MatchableEntity
 import pl.edu.icm.coansys.citations.util.misc
@@ -99,10 +98,10 @@ object ApproximateIndex {
     def indexEntries(allDocs: DList[MatchableEntity]) = {
       val tokensWithDocs =
         allDocs
-          .flatMap(d => d.normalisedAuthorTokens zip Iterator.continually(d.id).toIterable)
+          .mapFlatten(d => d.normalisedAuthorTokens zip Iterator.continually(d.id).toIterable)
           .groupByKey[String, String]
 
-      val rotationsWithDocs = tokensWithDocs.flatMap {
+      val rotationsWithDocs = tokensWithDocs.mapFlatten {
         case (token, docs) =>
           // The next line is important. The supplied iterable can be traversed once only. If we didn't convert it to a
           // list, we'd end up with a bunch of empty iterators.
@@ -123,7 +122,7 @@ object ApproximateIndex {
       type SeqType = BytesIterable
       val mf = manifest[BytesIterable]
     }
-    persist(toSequenceFile(indexEntries(documents), indexFile))
+    indexEntries(documents).toSequenceFile(indexFile).persist
     sequencefile.mergeWithScoobi[String, BytesIterable](indexFile)
     sequencefile.convertToMapFile(indexFile)(conf)
   }

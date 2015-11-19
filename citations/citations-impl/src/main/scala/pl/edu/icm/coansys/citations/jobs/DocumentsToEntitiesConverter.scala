@@ -35,6 +35,6 @@ object DocumentsToEntitiesConverter extends MyScoobiApp {
     val entities = valueFromSequenceFile[DocumentWrapper](inUri)
       .filterNot(_.getDocumentMetadata.getKey.isEmpty)
       .map(x => MatchableEntity.fromDocumentMetadata(x.getDocumentMetadata))
-    persist(toSequenceFile(entities.map(ent => (ent.id, ent)), outUri))
+    entities.map(ent => (ent.id, ent)).toSequenceFile(outUri).persist
   }
 }
