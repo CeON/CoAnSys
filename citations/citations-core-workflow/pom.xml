@@ -26,5 +26,10 @@
             <artifactId>citations-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>pl.edu.icm.oozie</groupId>
+            <artifactId>oozie-runner</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>
