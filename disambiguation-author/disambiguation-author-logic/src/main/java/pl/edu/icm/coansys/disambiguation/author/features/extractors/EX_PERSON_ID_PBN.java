@@ -31,6 +31,6 @@ public class EX_PERSON_ID_PBN extends EX_PERSON_ID {
 
 	@Override
 	public String getId() {
-		return "8.2";
+		return "8.5";
 	}
 }
