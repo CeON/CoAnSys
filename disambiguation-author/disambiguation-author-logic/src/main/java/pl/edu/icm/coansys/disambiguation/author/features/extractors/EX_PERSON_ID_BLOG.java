@@ -20,18 +20,17 @@ package pl.edu.icm.coansys.disambiguation.author.features.extractors;
 import pl.edu.icm.coansys.disambiguation.author.normalizers.PigNormalizer;
 
 
-public class EX_PERSON_ID_ORCID extends EX_PERSON_ID {
-
+public class EX_PERSON_ID_BLOG extends EX_PERSON_ID {
 
         private static PigNormalizer[] new_normalizers = {};
-        private static String[] usedIDs = {"orcidId"};
+        private static String[] usedIDs = {"blogPersonId"};
 
-        public EX_PERSON_ID_ORCID() {
+        public EX_PERSON_ID_BLOG() {
                 super(new_normalizers, usedIDs);
         }
 
 	@Override
 	public String getId() {
-		return "8.4";
+		return "8.1";
 	}
 }

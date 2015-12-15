@@ -31,6 +31,6 @@ public class EX_PERSON_ID_COANSYS extends EX_PERSON_ID {
 
 	@Override
 	public String getId() {
-		return "8.1";
+		return "8.2";
 	}
 }

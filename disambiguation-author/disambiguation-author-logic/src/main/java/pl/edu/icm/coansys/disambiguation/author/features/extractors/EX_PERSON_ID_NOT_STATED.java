@@ -76,6 +76,6 @@ public class EX_PERSON_ID_NOT_STATED extends DisambiguationExtractorAuthor {
 
 	@Override
 	public String getId() {
-		return "8.4";
+		return "8.3";
 	}
 }
