@@ -160,7 +160,7 @@ public class DisambiguationTest {
    				"3",
    				"C",
    				"D",
-   				"8.2"
+   				"8.5"
    		};
    		
    		assert ( ids.length == extractors.length );
