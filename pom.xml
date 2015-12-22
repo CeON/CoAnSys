@@ -85,6 +85,13 @@
                     <artifactId>oozie-maven-plugin</artifactId>
                     <version>${oozie-maven-plugin.version}</version>
 				</plugin>
+    
+                <plugin>
+                    <groupId>net.alchim31.maven</groupId>
+                    <artifactId>scala-maven-plugin</artifactId>
+                    <version>3.2.2</version>
+				</plugin>
+				
 			</plugins>
 	    </pluginManagement>
     </build>
@@ -183,7 +190,7 @@
     </profiles>
 
     <modules>
-        <module>citations</module>
+        <module>citation-matching</module>
         <module>commons</module>
         <module>models</module>
         <module>disambiguation</module>

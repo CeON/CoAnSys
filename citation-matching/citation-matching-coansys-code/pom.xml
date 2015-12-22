@@ -1,0 +1,56 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>pl.edu.icm.coansys</groupId>
+    <artifactId>citation-matching</artifactId>
+    <version>1.10-SPARK-CIT-SNAPSHOT</version>
+  </parent>
+  
+  <artifactId>citation-matching-coansys-code</artifactId>
+  
+  <dependencies>
+  
+    <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>citation-matching-core-code</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+ 
+  </dependencies>
+  
+      <build>
+       
+        <plugins>
+            <plugin>
+                <groupId>net.alchim31.maven</groupId>
+                <artifactId>scala-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>scala-compile</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>scala-test-compile</id>
+                        <phase>process-test-resources</phase>
+                        <goals>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+            
+        </plugins>
+    </build>
+  
+  
+  
+</project>
