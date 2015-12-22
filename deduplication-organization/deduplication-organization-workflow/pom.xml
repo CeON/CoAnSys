@@ -18,6 +18,33 @@
                 <artifactId>oozie-maven-plugin</artifactId>
                 <extensions>true</extensions>
             </plugin>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.7</version>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>src/main/oozie</outputDirectory>
+                            <resources>
+                                <resource>
+                                
+                                    <directory>src/main/oozie-in</directory>
+                                    <filtering>true</filtering>
+                                    <includes>
+                                        <include>*.xml</include>
+                                    </includes>
+                                
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
     <dependencies>

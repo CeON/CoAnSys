@@ -38,3 +38,5 @@ maven-eclipse.xml
 *.swp
 /affiliation-organization-matching/affiliation-organization-matching-impl/src/main/scala/pl/edu/icm/coansys/matching/organization/TestMatchingT.scala
 dependency-reduced-pom.xml
+/affiliation-organization-matching/affiliation-organization-matching-workflow/src/main/oozie/workflow.xml
+/deduplication-organization/deduplication-organization-workflow/src/main/oozie/workflow.xml
