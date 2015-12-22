@@ -74,6 +74,8 @@ public class LocalSequenceFileUtils {
             
             while (reader.next(key, value)) {
                 records.add(new ImmutablePair<K, V>(key, value));
+                key = ReflectionUtils.newInstance(keyClass, conf);
+                value = ReflectionUtils.newInstance(valueClass, conf);
             }
             
         }
