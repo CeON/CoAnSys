@@ -48,7 +48,7 @@ public class CitationsCoreWorkflowIT {
         
         for (Pair<MatchableEntity, String> expectedMatchedCitation : expectedMatchedCitations) {
             String expectedSourceId = expectedMatchedCitation.getLeft().id();
-            String expectedDestId = expectedMatchedCitation.getRight().split(":")[1];
+            String expectedDestId = expectedMatchedCitation.getRight().substring(expectedMatchedCitation.getRight().indexOf(":") + 1);
             
             Pair<MatchableEntity, String> actualMatchedCitation = findCitation(actualMatchedCitations, expectedSourceId, expectedDestId);
             
@@ -85,7 +85,7 @@ public class CitationsCoreWorkflowIT {
         for (Pair<MatchableEntity, String> citation : citations) {
             
             String actualSourceId = citation.getLeft().id();
-            String actualDestId = citation.getRight().split(":")[1];
+            String actualDestId = citation.getRight().substring(citation.getRight().indexOf(":") + 1);
             
             if (StringUtils.equals(actualSourceId, sourceId) && StringUtils.equals(actualDestId, destId)) {
                 return citation;
