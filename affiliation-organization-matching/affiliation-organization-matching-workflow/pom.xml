@@ -27,7 +27,6 @@
                             <outputDirectory>src/main/oozie</outputDirectory>
                             <resources>
                                 <resource>
-                                
                                     <directory>src/main/oozie-in</directory>
                                     <filtering>true</filtering>
                                     <includes>
