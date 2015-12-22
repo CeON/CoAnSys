@@ -49,7 +49,7 @@
             <!--<mode>cluster</mode>-->
             <name>Organization deduplication</name>
             <class>pl.edu.icm.coansys.deduplication.organization.DoDeduplication</class>
-            <jar>${comacWfPath}/lib/deduplication-organization-impl-1.10-SNAPSHOT.jar</jar>
+            <jar>${comacWfPath}/lib/deduplication-organization-impl-${project.version}.jar</jar>
 <!--            <spark-opts>[SPARK-OPTIONS]</spark-opts>-->
             <arg>${inputSeqFile}</arg>
             <arg>${outputSeqFile}</arg>
