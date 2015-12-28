@@ -35,6 +35,8 @@ object ReferenceExtractor extends MyScoobiApp {
      docs.filterNot(_.getDocumentMetadata.getKey.isEmpty)
        .mapFlatten{x =>
        val docId = x.getDocumentMetadata.getKey
+    //TODO: make another way of storing position whileit is extracted later in CitEntityId   
+    
        x.getDocumentMetadata.getReferenceList.map { ref =>
          (citationIdPrefix + docId + "_" + ref.getPosition, ref.getRawCitationText)
        }
