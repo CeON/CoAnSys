@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.SystemUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.hadoop.conf.Configuration;
@@ -42,7 +43,10 @@ public class LocalSequenceFileUtils {
     public static <K extends Writable, V extends Writable> List<Pair<K, V>> readSequenceFile(File sequenceFile, Class<K> keyClass, Class<V> valueClass) throws IOException {
         
         if (sequenceFile.isFile()) {
-            return readSequenceFile(new Path("file://" + sequenceFile.getAbsolutePath()), keyClass, valueClass);
+            
+            Path path = getAbsolutePath(sequenceFile);
+            
+            return readSequenceFile(path, keyClass, valueClass);
         }
         
         List<Pair<K, V>> records = Lists.newArrayList();
@@ -50,7 +54,7 @@ public class LocalSequenceFileUtils {
         for (File f : FileUtils.listFiles(sequenceFile, null, true)) {
             if (f.isFile() && f.getName().startsWith("part-")) {
                 
-                Path path = new Path("file://" + f.getAbsolutePath());
+                Path path = getAbsolutePath(f);
                 List<Pair<K, V>> singleFileRecords = readSequenceFile(path, keyClass, valueClass);
                 
                 records.addAll(singleFileRecords);
@@ -59,7 +63,8 @@ public class LocalSequenceFileUtils {
         
         return records;
     }
-    
+
+  
     
     //------------------------ PRIVATE --------------------------
     
@@ -82,5 +87,19 @@ public class LocalSequenceFileUtils {
         
         return records;
     }
+    
+    private static Path getAbsolutePath(File sequenceFile) {
+        
+        String pathString = sequenceFile.getAbsolutePath();
+        Path path = null;
+        
+        if (SystemUtils.IS_OS_WINDOWS) {
+            path = new Path("file:///" + pathString); // hadoop utils assume that the absolute path starts with "/"
+        } else {
+            path = new Path("file://" + pathString);
+        }
+        return path;
+    }
+    
     
 }
