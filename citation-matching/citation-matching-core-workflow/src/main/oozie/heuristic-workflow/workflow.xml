@@ -121,14 +121,14 @@
             <delete path="${workingDirectory}"/>
             <mkdir path="${workingDirectory}"/>
         </fs>
-        <ok to="small-buckets"/>
+        <ok to="hash-matcher"/>
         <error to="fail"/>
     </action>
 
-    <action name="small-buckets">
+    <action name="hash-matcher">
         <map-reduce>
             <prepare>
-                <delete path="${workingDirectory}/small_buckets"/>
+                <delete path="${workingDirectory}/matched_hashes"/>
             </prepare>
             <configuration>
                 <property>
@@ -189,118 +189,15 @@
                 </property>
                 <property>
                     <name>mapreduce.reduce.class</name>
-                    <value>pl.edu.icm.coansys.citations.reducers.BucketMeasurer</value>
+                    <value>pl.edu.icm.coansys.citations.reducers.HashMatchingReducer</value>
                 </property>
                 <property>
                     <name>max.bucket.size</name>
                     <value>${maxBucketSize}</value>
                 </property>
                 <property>
-                    <name>mapreduce.outputformat.class</name>
-                    <value>org.apache.hadoop.mapreduce.lib.output.TextOutputFormat</value>
-                </property>
-                <property>
                     <name>mapred.output.dir</name>
-                    <value>${workingDirectory}/small_buckets</value>
-                </property>
-                <property>
-                    <name>mapred.output.key.class</name>
-                    <value>org.apache.hadoop.io.Text</value>
-                </property>
-                <property>
-                    <name>mapred.output.value.class</name>
-                    <value>org.apache.hadoop.io.NullWritable</value>
-                </property>
-            </configuration>
-        </map-reduce>
-        <ok to="small-buckets-merger"/>
-        <error to="fail"/>
-    </action>
-    
-    <action name="small-buckets-merger">
-        <java>
-            <job-tracker>${jobTracker}</job-tracker>
-            <name-node>${nameNode}</name-node>
-            <prepare>
-                <delete path="${workingDirectory}/small_buckets.txt"/>
-            </prepare>
-            <main-class>pl.edu.icm.coansys.citations.jobs.CopyMerge</main-class>
-            <arg>${workingDirectory}/small_buckets</arg>
-            <arg>${workingDirectory}/small_buckets.txt</arg>
-        </java>
-        <ok to="heuristic"/>
-        <error to="fail"/>
-    </action>
-
-    <action name="heuristic">
-        <map-reduce>
-            <prepare>
-                <delete path="${workingDirectory}/heuristic_with_dups"/>
-            </prepare>
-            <configuration>
-                <property>
-                    <name>mapreduce.inputformat.class</name>
-                    <value>org.apache.hadoop.mapreduce.lib.input.DelegatingInputFormat</value>
-                </property>
-                <property>
-                    <name>mapreduce.map.class</name>
-                    <value>org.apache.hadoop.mapreduce.lib.input.DelegatingMapper</value>
-                </property>
-                <property>
-                    <name>mapred.input.dir.mappers</name>
-                    <value>
-                        ${sourceEntities};pl.edu.icm.coansys.citations.mappers.CitationHashGenerator,${destinationEntities};pl.edu.icm.coansys.citations.mappers.DocumentHashGenerator
-                    </value>
-                </property>
-                <property>
-                    <name>coansys.citations.citation.hasher</name>
-                    <value>${citationHasher}</value>
-                </property>
-                <property>
-                    <name>coansys.citations.mark.citations</name>
-                    <value>false</value>
-                </property>
-                <property>
-                    <name>coansys.citations.document.hasher</name>
-                    <value>${documentHasher}</value>
-                </property>
-                <property>
-                    <name>coansys.citations.mark.documents</name>
-                    <value>true</value>
-                </property>
-                <property>
-                    <name>mapred.input.dir.formats</name>
-                    <value>
-                        ${sourceEntities};org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat,${destinationEntities};org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat
-                    </value>
-                </property>
-                <property>
-                    <name>mapred.mapoutput.key.class</name>
-                    <value>pl.edu.icm.coansys.citations.data.MarkedText</value>
-                </property>
-                <property>
-                    <name>mapred.mapoutput.value.class</name>
-                    <value>pl.edu.icm.coansys.citations.data.MarkedText</value>
-                </property>
-                <property>
-                    <name>mapreduce.partitioner.class</name>
-                    <value>pl.edu.icm.coansys.citations.data.MarkedTextPartitioner</value>
-                </property>
-                <property>
-                    <name>mapred.output.value.groupfn.class</name>
-                    <value>pl.edu.icm.coansys.citations.data.MarkedTextGroupComparator</value>
-                </property>
-                <property>
-                    <name>mapred.output.key.comparator.class</name>
-                    <value>pl.edu.icm.coansys.citations.data.MarkedTextSortComparator</value>
-                </property>
-                <property>
-                    <name>mapreduce.reduce.class</name>
-                    <value>pl.edu.icm.coansys.citations.reducers.HashJoiner</value>
-                </property>
-                <property>
-                    <name>mapred.output.dir</name>
-                    <value>${workingDirectory}/heuristic_with_dups</value>
+                    <value>${workingDirectory}/matched_hashes</value>
                 </property>
                 <property>
                     <name>mapred.output.key.class</name>
@@ -310,8 +207,10 @@
                     <name>mapred.output.value.class</name>
                     <value>org.apache.hadoop.io.Text</value>
                 </property>
+                
+                
+                
             </configuration>
-            <file>${workingDirectory}/small_buckets.txt#small_buckets.txt</file>
         </map-reduce>
         <ok to="distinctor"/>
         <error to="fail"/>
@@ -333,7 +232,7 @@
                 </property>
                 <property>
                     <name>mapred.input.dir</name>
-                    <value>${workingDirectory}/heuristic_with_dups</value>
+                    <value>${workingDirectory}/matched_hashes</value>
                 </property>
                 <property>
                     <name>mapred.output.dir</name>
