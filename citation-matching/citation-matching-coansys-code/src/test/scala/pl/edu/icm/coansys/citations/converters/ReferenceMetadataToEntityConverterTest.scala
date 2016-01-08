@@ -44,6 +44,8 @@ class ReferenceMetadataToEntityConverterTest {
   @Test(groups = Array("fast"))
   def convertTest() {
     
+    // given
+    
     val reference = ReferenceMetadata.newBuilder()
       .setSourceDocKey("sourceId")
       .setPosition(12)
@@ -54,8 +56,12 @@ class ReferenceMetadataToEntityConverterTest {
     when(basicMetadataConverter.convert("cit_sourceId_12", reference.getBasicMetadata)).thenReturn(entity)
     
     
+    // execute
+    
     val actualEntity = referenceMetadataConverter.convert(reference)
     
+    
+    // assert
     
     assertTrue(entity == actualEntity)
     

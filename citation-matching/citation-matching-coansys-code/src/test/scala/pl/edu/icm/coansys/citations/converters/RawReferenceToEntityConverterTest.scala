@@ -46,6 +46,8 @@ class RawReferenceToEntityConverterTest {
   @Test(groups = Array("fast"))
   def convertTest() {
     
+    // given
+    
     val bibEntry = new BibEntry()
     bibEntry.setField(BibEntry.FIELD_AUTHOR, "John Doe")
     bibEntry.setField(BibEntry.FIELD_JOURNAL, "Some Journal")
@@ -57,8 +59,12 @@ class RawReferenceToEntityConverterTest {
     when(referenceParser.parseBibReference("reference text")).thenReturn(bibEntry)
     
     
+    // execute
+    
     val entity = rawReferenceToEntityConverter.convert(new CitEntityId("id", 12), "reference text")
     
+    
+    // assert
     
     val expectedEntity = MatchableEntity.fromParametersExt("cit_id_12", "John Doe", "Some Journal", "Some Title", "15-32", "2005", null, "22", "reference text")
     assertMatchableEntityEquals(entity, expectedEntity)
@@ -69,12 +75,18 @@ class RawReferenceToEntityConverterTest {
   @Test(groups = Array("fast"))
   def convertEmptyTest() {
     
+    // given
+    
     val bibEntry = new BibEntry()
     when(referenceParser.parseBibReference("reference text")).thenReturn(bibEntry)
     
     
+    // execute
+    
     val entity = rawReferenceToEntityConverter.convert(new CitEntityId("id", 12), "reference text")
     
+    
+    // assert
     
     val expectedEntity = MatchableEntity.fromParameters("cit_id_12", null, null, null, null, null, "reference text")
     assertMatchableEntityEquals(entity, expectedEntity)
@@ -85,14 +97,20 @@ class RawReferenceToEntityConverterTest {
   @Test(groups = Array("fast"))
   def convertMultipleAuthorsTest() {
     
+    // given
+    
     val bibEntry = new BibEntry()
     bibEntry.addField(BibEntry.FIELD_AUTHOR, "John Doe")
     bibEntry.addField(BibEntry.FIELD_AUTHOR, "Jane Doe")
     when(referenceParser.parseBibReference("reference text")).thenReturn(bibEntry)
     
     
+    // execute
+    
     val entity = rawReferenceToEntityConverter.convert(new CitEntityId("id", 12), "reference text")
     
+    
+    // assert
     
     val expectedEntity = MatchableEntity.fromParameters("cit_id_12", "John Doe, Jane Doe", null, null, null, null, "reference text")
     assertMatchableEntityEquals(entity, expectedEntity)
@@ -103,14 +121,20 @@ class RawReferenceToEntityConverterTest {
   @Test(groups = Array("fast"))
   def convertMultipleTitleTest() {
     
+    // given
+    
     val bibEntry = new BibEntry()
     bibEntry.addField(BibEntry.FIELD_TITLE, "First Title")
     bibEntry.addField(BibEntry.FIELD_TITLE, "Second Title")
     when(referenceParser.parseBibReference("reference text")).thenReturn(bibEntry)
     
     
+    // execute
+    
     val entity = rawReferenceToEntityConverter.convert(new CitEntityId("id", 12), "reference text")
     
+    
+    // assert
     
     val expectedEntity = MatchableEntity.fromParameters("cit_id_12", null, null, "First Title Second Title", null, null, "reference text")
     assertMatchableEntityEquals(entity, expectedEntity)
@@ -121,12 +145,18 @@ class RawReferenceToEntityConverterTest {
   @Test(groups = Array("fast"))
   def convertWithDiactricsTest() {
     
+    // given
+    
     val bibEntry = new BibEntry()
     when(referenceParser.parseBibReference("AE ss aelozzcsn cou")).thenReturn(bibEntry)
     
     
+    // execute
+    
     val entity = rawReferenceToEntityConverter.convert(new CitEntityId("id", 12), "Æ ß ąęłóżźćśń çöü")
     
+    
+    // assert
     
     val expectedEntity = MatchableEntity.fromParameters("cit_id_12", null, null, null, null, null, "Æ ß ąęłóżźćśń çöü")
     assertMatchableEntityEquals(entity, expectedEntity)

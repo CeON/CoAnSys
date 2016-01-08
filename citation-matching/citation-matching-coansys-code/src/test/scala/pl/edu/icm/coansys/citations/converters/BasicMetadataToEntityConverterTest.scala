@@ -36,6 +36,8 @@ class BasicMetadataToEntityConverterTest {
   @Test(groups = Array("fast"))
   def convertTest() {
     
+    // given
+    
     val basicMetadata = BasicMetadata.newBuilder()
       .addAuthor(Author.newBuilder().setKey("author_id_1").setName("John Doe"))
       .setJournal("Some Journal")
@@ -47,8 +49,12 @@ class BasicMetadataToEntityConverterTest {
       .build()
     
     
+    // execute
+    
     val actualEntity = basicMetadataConverter.convert("some_id", basicMetadata)
     
+    
+    // assert
     
     val expectedEntity = MatchableEntity.fromParametersExt("some_id", "John Doe", "Some Journal", "Some Title", "12-19", "2001", "23", "345", null)
     assertMatchableEntityEquals(actualEntity, expectedEntity)
@@ -59,12 +65,18 @@ class BasicMetadataToEntityConverterTest {
   @Test(groups = Array("fast"))
   def convertEmptyTest() {
     
+    // given
+    
     val basicMetadata = BasicMetadata.newBuilder()
       .build()
     
     
+    // execute
+    
     val actualEntity = basicMetadataConverter.convert("some_id", basicMetadata)
     
+    
+    // assert
     
     val expectedEntity = MatchableEntity.fromParameters("some_id", null, null, null, null, null, null)
     assertMatchableEntityEquals(actualEntity, expectedEntity)
@@ -75,14 +87,20 @@ class BasicMetadataToEntityConverterTest {
   @Test(groups = Array("fast"))
   def convertWithMultipleAuthorsTest() {
     
+    // given
+    
     val basicMetadata = BasicMetadata.newBuilder()
       .addAuthor(Author.newBuilder().setKey("author_id_1").setName("John Doe"))
       .addAuthor(Author.newBuilder().setKey("author_id_2").setName("Jane Doe"))
       .build()
     
     
+    // execute
+    
     val actualEntity = basicMetadataConverter.convert("some_id", basicMetadata)
     
+    
+    // assert
     
     val expectedEntity = MatchableEntity.fromParameters("some_id", "John Doe, Jane Doe", null, null, null, null, null)
     assertMatchableEntityEquals(actualEntity, expectedEntity)
@@ -93,13 +111,19 @@ class BasicMetadataToEntityConverterTest {
   @Test(groups = Array("fast"))
   def convertWithAuthorForenameAndSurnameTest() {
     
+    // given
+    
     val basicMetadata = BasicMetadata.newBuilder()
       .addAuthor(Author.newBuilder().setKey("author_id_1").setSurname("Bush").setForenames("George W."))
       .build()
     
     
+    // execute
+    
     val actualEntity = basicMetadataConverter.convert("some_id", basicMetadata)
     
+    
+    // assert
     
     val expectedEntity = MatchableEntity.fromParameters("some_id", "George W. Bush", null, null, null, null, null)
     assertMatchableEntityEquals(actualEntity, expectedEntity)
@@ -110,14 +134,20 @@ class BasicMetadataToEntityConverterTest {
   @Test(groups = Array("fast"))
   def convertWithMultipleTitlesTest() {
     
+    // given
+    
     val basicMetadata = BasicMetadata.newBuilder()
       .addTitle(TextWithLanguage.newBuilder().setText("First Title"))
       .addTitle(TextWithLanguage.newBuilder().setText("Second Title"))
       .build()
     
     
+    // execute
+    
     val actualEntity = basicMetadataConverter.convert("some_id", basicMetadata)
     
+    
+    // assert
     
     val expectedEntity = MatchableEntity.fromParameters("some_id", null, null, "First Title. Second Title", null, null, null)
     assertMatchableEntityEquals(actualEntity, expectedEntity)

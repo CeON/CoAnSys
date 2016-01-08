@@ -44,6 +44,8 @@ class DocumentMetadataToEntityConverterTest {
   @Test(groups = Array("fast"))
   def convertTest() {
     
+    // given
+    
     val document = DocumentMetadata.newBuilder()
       .setKey("some_id")
       .setBasicMetadata(BasicMetadata.newBuilder().build())
@@ -53,8 +55,12 @@ class DocumentMetadataToEntityConverterTest {
     when(basicMetadataConverter.convert("doc_some_id", document.getBasicMetadata)).thenReturn(entity)
     
     
+    // execute
+    
     val actualEntity = documentMetadataConverter.convert(document)
     
+    
+    // assert
     
     assertTrue(entity == actualEntity)
     
