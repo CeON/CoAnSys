@@ -19,8 +19,9 @@ package pl.edu.icm.coansys.citations.jobs
 
 import com.nicta.scoobi.Scoobi._
 import pl.edu.icm.coansys.citations.data.WireFormats.picConverter
-import pl.edu.icm.coansys.citations.data.entity_id.{DocEntityId, CitEntityId}
 import pl.edu.icm.coansys.citations.util.MyScoobiApp
+import pl.edu.icm.coansys.citations.data.entity_id.CitEntityId
+import pl.edu.icm.coansys.citations.data.entity_id.DocEntityId
 import pl.edu.icm.coansys.models.PICProtos
 
 /**

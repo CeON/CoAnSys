@@ -18,26 +18,27 @@
 
 package pl.edu.icm.coansys.citations.jobs
 
-import pl.edu.icm.coansys.citations.util.{MyScoobiApp, BytesConverter}
-import pl.edu.icm.coansys.models.DocumentProtos.BasicMetadata
-import pl.edu.icm.coansys.citations.data.MatchableEntity
+import pl.edu.icm.coansys.citations.util.MyScoobiApp
 import com.nicta.scoobi.Scoobi._
+import pl.edu.icm.coansys.citations.util.BytesConverter
+import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper
+import pl.edu.icm.coansys.citations.converters.DocumentMetadataToEntityConverter
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
-object BasicMetadataToEntitiesConverter extends MyScoobiApp {
-
+object DocumentsToEntitiesConverter extends MyScoobiApp {
+  
+  val documentMetadataToEntityConverter = new DocumentMetadataToEntityConverter()
+  
   def run() {
     val inUri = args(0)
     val outUri = args(1)
 
-    implicit val converter = new BytesConverter[BasicMetadata](_.toByteArray, BasicMetadata.parseFrom)
-    val entities = fromSequenceFile[String, BasicMetadata](inUri)
-      .map {
-      case (id, meta) => MatchableEntity.fromBasicMetadata(id, meta)
-    }
-    persist(entities.map(ent => (ent.id, ent)).toSequenceFile(outUri))
-//    persist(toSequenceFile(entities.map(ent => (ent.id, ent)), outUri))
+    implicit val converter = new BytesConverter[DocumentWrapper](_.toByteArray, DocumentWrapper.parseFrom)
+    val entities = valueFromSequenceFile[DocumentWrapper](inUri)
+      .filterNot(_.getDocumentMetadata.getKey.isEmpty)
+      .map(x => documentMetadataToEntityConverter.convert(x.getDocumentMetadata))
+    entities.map(ent => (ent.id, ent)).toSequenceFile(outUri).persist
   }
 }

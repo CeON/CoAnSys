@@ -68,23 +68,6 @@ object misc {
       .filter(_.length > 2)
       .map(_.toLowerCase)
 
-  def readCitationsFromDocumentsFromSeqFiles(uris: List[String], parserModel: String): DList[MatchableEntity] = {
-    //implicit val documentConverter = new BytesConverter[DocumentMetadata](_.toByteArray, DocumentMetadata.parseFrom(_))
-    implicit val referenceConverter = new BytesConverter[ReferenceMetadata](_.toByteArray, ReferenceMetadata.parseFrom(_))
-    implicit val wrapperConverter = new BytesConverter[DocumentWrapper](_.toByteArray, DocumentWrapper.parseFrom(_))
-    val refmeta = valueFromSequenceFile[DocumentWrapper](uris)
-      .mapFlatten(_.getDocumentMetadata.getReferenceList)
-    if (parserModel != null)
-      refmeta.flatMapWithResource(new CRFBibReferenceParser(parserModel) with NoOpClose) {
-        case (parser, meta) if !meta.getRawCitationText.isEmpty =>
-          Some(MatchableEntity.fromUnparsedReferenceMetadata(parser, meta))
-        case _ =>
-          None
-      }
-    else
-      refmeta.map(MatchableEntity.fromReferenceMetadata(_))
-  }
-
   private val uuidCharset = "UTF-8"
 
   def uuidEncode(uuid: String): Array[Byte] =

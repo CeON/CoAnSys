@@ -19,11 +19,14 @@
 package pl.edu.icm.coansys.citations.jobs
 
 import com.nicta.scoobi.Scoobi._
+import pl.edu.icm.coansys.citations.util.MyScoobiApp
 import pl.edu.icm.coansys.citations.util.AugmentedDList.augmentDList
-import pl.edu.icm.coansys.citations.util.{MyScoobiApp, NoOpClose}
-import pl.edu.icm.coansys.citations.data.MatchableEntity
-import pl.edu.icm.cermine.bibref.{BibReferenceParser, CRFBibReferenceParser}
+import pl.edu.icm.cermine.bibref.BibReferenceParser
+import pl.edu.icm.coansys.citations.util.NoOpClose
 import pl.edu.icm.cermine.bibref.model.BibEntry
+import pl.edu.icm.cermine.bibref.CRFBibReferenceParser
+import pl.edu.icm.coansys.citations.converters.RawReferenceToEntityConverter
+import pl.edu.icm.coansys.citations.data.entity_id.CitEntityId
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -51,7 +54,7 @@ object ReferencesToEntitiesConverter extends MyScoobiApp {
       .flatMapWithResource(parser()) {
       case (the_parser, (id, text)) if !text.isEmpty && text.length <= maxSupportedCitationLength =>
         try {
-          Some(id, MatchableEntity.fromUnparsedReference(the_parser, id, text))
+          Some(id, new RawReferenceToEntityConverter(the_parser).convert(CitEntityId.fromString(id), text))
         } catch {
           case e:Exception =>
             System.err.println("Error while parsing " + text)

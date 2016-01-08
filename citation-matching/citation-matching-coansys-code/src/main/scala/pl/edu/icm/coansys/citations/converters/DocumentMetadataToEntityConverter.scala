@@ -16,25 +16,25 @@
  * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.edu.icm.coansys.citations.jobs
+package pl.edu.icm.coansys.citations.converters
 
-import pl.edu.icm.coansys.citations.util.{MyScoobiApp, BytesConverter}
-import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper
 import pl.edu.icm.coansys.citations.data.MatchableEntity
-import com.nicta.scoobi.Scoobi._
+import pl.edu.icm.coansys.citations.data.entity_id.DocEntityId
+import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata
+
 
 /**
+ * Converter of DocumentMetadata object to MatchableEntity object
+ * 
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
+ * @author madryk
  */
-object DocumentsToEntitiesConverter extends MyScoobiApp {
-  def run() {
-    val inUri = args(0)
-    val outUri = args(1)
-
-    implicit val converter = new BytesConverter[DocumentWrapper](_.toByteArray, DocumentWrapper.parseFrom)
-    val entities = valueFromSequenceFile[DocumentWrapper](inUri)
-      .filterNot(_.getDocumentMetadata.getKey.isEmpty)
-      .map(x => MatchableEntity.fromDocumentMetadata(x.getDocumentMetadata))
-    entities.map(ent => (ent.id, ent)).toSequenceFile(outUri).persist
-  }
+class DocumentMetadataToEntityConverter(basicMetadataToEntityConverter: BasicMetadataToEntityConverter) {
+  
+  def this() { this(new BasicMetadataToEntityConverter()) }
+  
+  
+  def convert(meta: DocumentMetadata): MatchableEntity =
+    basicMetadataToEntityConverter.convert(DocEntityId(meta.getKey).toString, meta.getBasicMetadata)
+  
 }

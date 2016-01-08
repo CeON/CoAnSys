@@ -27,6 +27,7 @@ import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper
 import org.slf4j.LoggerFactory
 import pl.edu.icm.coansys.citations.data.entity_id.CitEntityId
 import org.apache.commons.lang.StringUtils
+import pl.edu.icm.coansys.citations.converters.RawReferenceToEntityConverter
 
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
@@ -37,16 +38,17 @@ class ReferenceExtractorAndParser extends Mapper[Writable, BytesWritable, Text, 
   private val logger = LoggerFactory.getLogger(classOf[ReferenceExtractorAndParser])
   private val keyWritable = new Text()
   private val valueWritable = new BytesWritable()
-  private var parser: CRFBibReferenceParser = null
+  private var rawReferenceConverter: RawReferenceToEntityConverter = null
 
   override def setup(context: Context) {
     val model = context.getConfiguration.get("crf.reference.parser.model")
-    parser =
+    val parser =
       if (model != null)
         new CRFBibReferenceParser(model)
       else
         new CRFBibReferenceParser(
           this.getClass.getResourceAsStream("/pl/edu/icm/cermine/bibref/acrf.ser.gz"))
+    rawReferenceConverter = new RawReferenceToEntityConverter(parser)
   }
 
   override def map(key: Writable, value: BytesWritable, context: Context) {
@@ -57,8 +59,7 @@ class ReferenceExtractorAndParser extends Mapper[Writable, BytesWritable, Text, 
           if (ref.getRawCitationText.length > maxSupportedCitationLength) {
             logger.warn(s"Citation ${ref.getPosition} in document ${wrapper.getRowId} exceeds max supported citation length. Omitted.")
           } else {
-            val citId = new CitEntityId(wrapper.getDocumentMetadata.getKey, ref.getPosition)
-            val entity = MatchableEntity.fromUnparsedReference(parser, citId.toString, ref.getRawCitationText)
+            val entity = rawReferenceConverter.convert(new CitEntityId(wrapper.getDocumentMetadata.getKey, ref.getPosition), ref.getRawCitationText)
             val bytes = entity.data.toByteArray
             keyWritable.set(entity.id)
             valueWritable.set(bytes, 0, bytes.length)
