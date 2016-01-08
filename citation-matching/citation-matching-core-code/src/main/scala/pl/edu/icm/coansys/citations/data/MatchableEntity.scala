@@ -24,7 +24,6 @@ import org.apache.commons.lang.StringUtils
 import pl.edu.icm.cermine.bibref.BibReferenceParser
 import pl.edu.icm.cermine.bibref.model.BibEntry
 import pl.edu.icm.coansys.citations.data.CitationMatchingProtos.MatchableEntityData
-import pl.edu.icm.coansys.citations.data.entity_id.{DocEntityId, CitEntityId}
 import pl.edu.icm.coansys.citations.util.{misc, BytesConverter}
 import pl.edu.icm.coansys.commons.java.DiacriticsRemover.removeDiacritics
 import pl.edu.icm.coansys.models.DocumentProtos.{DocumentMetadata, BasicMetadata, ReferenceMetadata}
@@ -135,68 +134,6 @@ object MatchableEntity {
 
     new MatchableEntity(data.build())
   }
-
-  private def fillUsingBasicMetadata(data: MatchableEntityData.Builder, meta: BasicMetadata) {
-    if (meta.getAuthorCount > 0)
-      data.setAuthor(meta.getAuthorList.map(a => if (a.hasName) a.getName else a.getForenames + " " + a.getSurname).mkString(", "))
-    if (meta.hasJournal)
-      data.setSource(meta.getJournal)
-    if (meta.getTitleCount > 0)
-      data.setTitle(meta.getTitleList.map(_.getText).mkString(". "))
-    if (meta.hasPages)
-      data.setPages(meta.getPages)
-    if (meta.hasIssue)
-      data.setIssue(meta.getIssue)
-    if (meta.hasVolume)
-      data.setVolume(meta.getVolume)
-    if (meta.hasYear)
-      data.setYear(meta.getYear)
-  }
-
-  def fromBasicMetadata(id: String, meta: BasicMetadata): MatchableEntity = {
-    val data = MatchableEntityData.newBuilder()
-    data.setId(id)
-    fillUsingBasicMetadata(data, meta)
-    new MatchableEntity(data.build())
-  }
-
-  def fromDocumentMetadata(meta: DocumentMetadata): MatchableEntity =
-    fromBasicMetadata(DocEntityId(meta.getKey).toString, meta.getBasicMetadata)
-
-  def fromDocumentMetadata(id: String, meta: DocumentMetadata): MatchableEntity =
-    fromBasicMetadata(id, meta.getBasicMetadata)
-
-  def fromReferenceMetadata(meta: ReferenceMetadata): MatchableEntity =
-    fromBasicMetadata(CitEntityId(meta.getSourceDocKey, meta.getPosition).toString, meta.getBasicMetadata)
-
-  def fromReferenceMetadata(id: String, meta: ReferenceMetadata): MatchableEntity =
-    fromBasicMetadata(id, meta.getBasicMetadata)
-
-  def fromUnparsedReference(bibReferenceParser: BibReferenceParser[BibEntry], id: String,
-                            rawText: String): MatchableEntity = {
-    def getField(bibEntry: BibEntry, key: String, separator: String = " "): String =
-      bibEntry.getAllFieldValues(key).mkString(separator)
-
-    val bibEntry = bibReferenceParser.parseBibReference(removeDiacritics(rawText))
-    val data = MatchableEntityData.newBuilder()
-    data.setId(id)
-    data.setAuthor(getField(bibEntry, BibEntry.FIELD_AUTHOR, ", "))
-    data.setSource(getField(bibEntry, BibEntry.FIELD_JOURNAL))
-    data.setTitle(getField(bibEntry, BibEntry.FIELD_TITLE))
-    data.setPages(getField(bibEntry, BibEntry.FIELD_PAGES))
-    data.setYear(getField(bibEntry, BibEntry.FIELD_YEAR))
-    data.setVolume(getField(bibEntry, BibEntry.FIELD_VOLUME))
-    data.setRawText(rawText)
-
-    new MatchableEntity(data.build())
-  }
-
-  def fromUnparsedReferenceMetadata(bibReferenceParser: BibReferenceParser[BibEntry],
-                                    meta: ReferenceMetadata): MatchableEntity =
-    fromUnparsedReference(
-      bibReferenceParser,
-      CitEntityId(meta.getSourceDocKey, meta.getPosition).toString,
-      meta.getRawCitationText)
 
 
 }
