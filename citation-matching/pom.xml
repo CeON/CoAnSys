@@ -14,6 +14,7 @@
         <module>citation-matching-core-workflow</module>
         <module>citation-matching-coansys-code</module>
         <module>citation-matching-coansys-workflow</module>
+        <module>citation-matching-core-cod</module>
     </modules>
 
 

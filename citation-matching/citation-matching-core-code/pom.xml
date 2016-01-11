@@ -1,17 +1,12 @@
-<!--
-  ~ (C) 2010-2012 ICM UW. All rights reserved.
-  -->
-
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <parent>
-        <artifactId>citation-matching</artifactId>
-        <groupId>pl.edu.icm.coansys</groupId>
-        <version>1.10-SPARK-CIT-SNAPSHOT</version>
-    </parent>
-
-    <modelVersion>4.0.0</modelVersion>
-    <artifactId>citation-matching-core-code</artifactId>
-
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>pl.edu.icm.coansys</groupId>
+    <artifactId>citation-matching</artifactId>
+    <version>1.10-SPARK-CIT-SNAPSHOT</version>
+  </parent>
+  <artifactId>citation-matching-core-code</artifactId>     
+  
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -21,7 +16,6 @@
         <dependency>
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-library</artifactId>
-            <version>${scala.version}</version>
         </dependency>
         <dependency>
             <groupId>com.jsuereth</groupId>
@@ -60,6 +54,7 @@
             <version>1.3</version>
             <scope>test</scope>
         </dependency>
+        
         <dependency>
             <groupId>org.apache.mrunit</groupId>
             <artifactId>mrunit</artifactId>
@@ -67,23 +62,66 @@
             <classifier>hadoop2</classifier>
         </dependency>
         
+       
+       <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-core_2.10</artifactId>
+        </dependency>
+
         <dependency>
-            <groupId>pl.edu.icm.oozie</groupId>
-            <artifactId>oozie-runner</artifactId>
-            <scope>test</scope>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-sql_2.10</artifactId>
         </dependency>
         
-    </dependencies>
-
-      <build>
-       
+        <dependency>
+            <groupId>pl.edu.icm.spark-utils</groupId>
+            <artifactId>spark-utils</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.beust</groupId>
+            <artifactId>jcommander</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.1.0</version>
+            <scope>runtime</scope>
+        </dependency>
+  
+      </dependencies>
+   <build>
+           <pluginManagement>
         <plugins>
             <plugin>
+            <groupId>net.alchim31.maven</groupId>
+            <artifactId>scala-maven-plugin</artifactId>
+            <version>3.2.2</version>
+            </plugin>
+            <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.1</version>
+                </plugin>
+
+        </plugins>
+    
+    
+    </pluginManagement>
+    
+    
+    
+    <plugins>
+        
+ 
+           <plugin>
                 <groupId>net.alchim31.maven</groupId>
                 <artifactId>scala-maven-plugin</artifactId>
+
                 <executions>
                     <execution>
-                        <id>scala-compile</id>
+                        <id>scala-compile-first</id>
                         <phase>process-resources</phase>
                         <goals>
                             <goal>add-source</goal>
@@ -91,19 +129,29 @@
                         </goals>
                     </execution>
                     <execution>
-                        <id>scala-test-compile</id>
-                        <phase>process-test-resources</phase>
-                        <goals>
-                            <goal>testCompile</goal>
-                        </goals>
-                    </execution>
+						<id>scala-test-compile</id>
+						<phase>process-test-resources</phase>
+						<goals>
+							<goal>testCompile</goal>
+						</goals>
+					</execution>
+                    
                 </executions>
             </plugin>
             
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
+            
             
         </plugins>
     </build>
