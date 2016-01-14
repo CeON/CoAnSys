@@ -244,16 +244,16 @@ public class CitationMatchingJobTest {
         
         assertEquals(expectedMatchedCitations.size(), actualMatchedCitations.size());
         
-        for (Pair<Text, Text> actualCitation : actualMatchedCitations) {
-            assertTrue(isInMatchedCitations(expectedMatchedCitations, actualCitation));
+        for (Pair<Text, Text> actualCitationDocIdPair : actualMatchedCitations) {
+            assertTrue(isInMatchedCitations(expectedMatchedCitations, actualCitationDocIdPair));
         }
     }
     
     
-    private boolean isInMatchedCitations(List<Pair<Text, Text>> citations, Pair<Text, Text> citation) {
+    private boolean isInMatchedCitations(List<Pair<Text, Text>> citations, Pair<Text, Text> citationDocIdPair) {
         
-        for (Pair<Text, Text> cit : citations) {
-            if (cit.getKey().equals(citation.getKey()) && (cit.getValue().equals(citation.getValue()))) {
+        for (Pair<Text, Text> citDocIdPair : citations) { 
+            if (citDocIdPair.getKey().equals(citationDocIdPair.getKey()) && (citDocIdPair.getValue().equals(citationDocIdPair.getValue()))) {
                 return true;
             }
         }
@@ -265,9 +265,10 @@ public class CitationMatchingJobTest {
     private boolean isInUnmatchedCitations(List<Pair<Text, BytesWritable>> citations, Pair<Text, BytesWritable> citation) {
         
         for (Pair<Text, BytesWritable> cit : citations) {
-            if (cit.getKey().equals(citation.getKey()) && (Arrays.equals(cit.getValue().getBytes(), citation.getValue().getBytes()))) {
-                return true;
+            if (cit.getKey().equals(citation.getKey())) {
+                return Arrays.equals(cit.getValue().getBytes(), citation.getValue().getBytes());
             }
+                
         }
         
         return false;
