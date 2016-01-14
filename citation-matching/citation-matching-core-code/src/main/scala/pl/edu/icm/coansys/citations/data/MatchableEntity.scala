@@ -19,12 +19,15 @@
 package pl.edu.icm.coansys.citations.data
 
 import collection.JavaConversions._
+
 import com.nicta.scoobi.core.Grouping
+
 import org.apache.commons.lang.StringUtils
+
 import pl.edu.icm.cermine.bibref.BibReferenceParser
 import pl.edu.icm.cermine.bibref.model.BibEntry
-import pl.edu.icm.coansys.citations.data.CitationMatchingProtos.MatchableEntityData
 import pl.edu.icm.coansys.citations.util.{misc, BytesConverter}
+import pl.edu.icm.coansys.citations.data.CitationMatchingProtos.MatchableEntityData;
 import pl.edu.icm.coansys.commons.java.DiacriticsRemover.removeDiacritics
 import pl.edu.icm.coansys.models.DocumentProtos.{DocumentMetadata, BasicMetadata, ReferenceMetadata}
 

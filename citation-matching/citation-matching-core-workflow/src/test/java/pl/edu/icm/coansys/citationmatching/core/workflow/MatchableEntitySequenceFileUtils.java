@@ -1,4 +1,4 @@
-package pl.edu.icm.coansys.citations;
+package pl.edu.icm.coansys.citationmatching.core.workflow;
 
 import java.io.File;
 import java.io.IOException;

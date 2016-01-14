@@ -22,7 +22,7 @@ import resource._
 import org.jdom.Element
 import pl.edu.icm.ceon.scala_commons.xml._
 import pl.edu.icm.cermine.bibref.model.BibEntry
-import io.Source
+import scala.io.Source
 import collection.mutable.ListBuffer
 import org.jdom.output.XMLOutputter
 import java.io.{FileWriter, BufferedWriter, FilenameFilter, File}
@@ -157,7 +157,7 @@ object dataset_readers {
   )
 
   def importBibEntriesFromCorarefFile(path: String): List[BibEntry] = {
-    getTaggedReferenceListFromCorarefSource(Source.fromFile(path)(io.Codec.ISO8859))
+    getTaggedReferenceListFromCorarefSource(Source.fromFile(path)(scala.io.Codec.ISO8859))
       .unzip._2.map(taggedReferenceToBibEntry(_, corarefTagMapping))
   }
 

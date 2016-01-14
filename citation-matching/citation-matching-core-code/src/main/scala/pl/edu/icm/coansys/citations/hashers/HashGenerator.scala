@@ -23,6 +23,6 @@ import pl.edu.icm.coansys.citations.data.MatchableEntity
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
-trait HashGenerator {
+trait HashGenerator extends Serializable {
   def generate(entity: MatchableEntity): Iterable[String]
 }

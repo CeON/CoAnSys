@@ -46,9 +46,14 @@
             <value>-showversion</value>
         </property>
         <property>
-            <name>maxDocumentsPerBucket</name>
-            <value>100</value>
-            <description>This setting is used in heuristic, in hash matching; buckets exceeding this limit will be omitted.</description>
+            <name>maxHashBucketSize</name>
+            <value>10000</value>
+            <description>Buckets exceeding this limit will be omitted</description>
+        </property>
+        <property>
+            <name>maxBucketSize</name>
+            <value>10000</value>
+            <description>Buckets exceeding this limit will be omitted</description>
         </property>
         <property>
             <name>workingDirectory</name>
@@ -116,162 +121,126 @@
             <delete path="${workingDirectory}"/>
             <mkdir path="${workingDirectory}"/>
         </fs>
-        <ok to="heuristic-1"/>
+        <ok to="heuristic-matcher-1"/>
         <error to="fail"/>
     </action>
 
-    <action name="heuristic-1">
-        <sub-workflow>
-            <app-path>${wf:appPath()}/heuristic-workflow</app-path>
-            <propagate-configuration/>
-            <configuration>
-                <property>
-                    <name>workingDirectory</name>
-                    <value>${workingDirectory}/heuristic-1_workflow</value>
-                </property>
-                <property>
-                    <name>sourceEntities</name>
-                    <value>${sourceEntities}</value>
-                </property>
-                <property>
-                    <name>destinationEntities</name>
-                    <value>${destinationEntities}</value>
-                </property>
-                <property>
-                    <name>citationHasher</name>
-                    <value>pl.edu.icm.coansys.citations.hashers.CitationNameYearPagesHashGenerator</value>
-                </property>
-                <property>
-                    <name>documentHasher</name>
-                    <value>pl.edu.icm.coansys.citations.hashers.DocumentNameYearPagesHashGenerator</value>
-                </property>
-                <property>
-                    <name>unmatched</name>
-                    <value>${workingDirectory}/unmatched-1</value>
-                </property>
-                <property>
-                    <name>output</name>
-                    <value>${workingDirectory}/heuristic-out-1</value>
-                </property>
-            </configuration>
-        </sub-workflow>
-        <ok to="heuristic-2"/>
+    
+    <action name="heuristic-matcher-1">
+        
+        <spark xmlns="uri:oozie:spark-action:0.1">
+
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+           
+            <master>yarn-cluster</master>
+            <mode>cluster</mode>
+            <name>heuristic-matcher-1</name>
+
+            <class>pl.edu.icm.coansys.citations.data.CitationMatchingJob</class>
+
+            <jar>${wfDirectory}/lib/citation-matching-core-code-${projectVersion}.jar</jar>
+        
+            <arg>-citationPath = ${sourceEntities}</arg>
+            <arg>-documentPath = ${destinationEntities}</arg>
+            <arg>-citationHashGeneratorClass = pl.edu.icm.coansys.citations.hashers.CitationNameYearPagesHashGenerator</arg>
+            <arg>-documentHashGeneratorClass = pl.edu.icm.coansys.citations.hashers.DocumentNameYearPagesHashGenerator</arg>
+            <arg>-unmatchedCitationDirPath = ${workingDirectory}/unmatched-1</arg>
+            <arg>-outputDirPath = ${workingDirectory}/heuristic-out-1</arg>
+            <arg>-maxHashBucketSize = ${maxHashBucketSize}</arg>
+            
+        </spark>
+        <ok to="heuristic-matcher-2"/>
         <error to="fail"/>
     </action>
 
-    <action name="heuristic-2">
-        <sub-workflow>
-            <app-path>${wf:appPath()}/heuristic-workflow</app-path>
-            <propagate-configuration/>
-            <configuration>
-                <property>
-                    <name>workingDirectory</name>
-                    <value>${workingDirectory}/heuristic-2_workflow</value>
-                </property>
-                <property>
-                    <name>sourceEntities</name>
-                    <value>${workingDirectory}/unmatched-1</value>
-                </property>
-                <property>
-                    <name>destinationEntities</name>
-                    <value>${destinationEntities}</value>
-                </property>
-                <property>
-                    <name>citationHasher</name>
-                    <value>pl.edu.icm.coansys.citations.hashers.CitationNameYearPagesHashGenerator</value>
-                </property>
-                <property>
-                    <name>documentHasher</name>
-                    <value>pl.edu.icm.coansys.citations.hashers.DocumentNameYearNumNumHashGenerator</value>
-                </property>
-                <property>
-                    <name>unmatched</name>
-                    <value>${workingDirectory}/unmatched-2</value>
-                </property>
-                <property>
-                    <name>output</name>
-                    <value>${workingDirectory}/heuristic-out-2</value>
-                </property>
-            </configuration>
-        </sub-workflow>
-        <ok to="heuristic-3"/>
+    
+    <action name="heuristic-matcher-2">
+        
+        <spark xmlns="uri:oozie:spark-action:0.1">
+
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+           
+            <master>yarn-cluster</master>
+            <mode>cluster</mode>
+            <name>heuristic-matcher-2</name>
+
+            <class>pl.edu.icm.coansys.citations.data.CitationMatchingJob</class>
+
+            <jar>${wfDirectory}/lib/citation-matching-core-code-${projectVersion}.jar</jar>
+        
+            <arg>-citationPath = ${workingDirectory}/unmatched-1</arg>
+            <arg>-documentPath = ${destinationEntities}</arg>
+            <arg>-citationHashGeneratorClass = pl.edu.icm.coansys.citations.hashers.CitationNameYearPagesHashGenerator</arg>
+            <arg>-documentHashGeneratorClass = pl.edu.icm.coansys.citations.hashers.DocumentNameYearNumNumHashGenerator</arg>
+            <arg>-unmatchedCitationDirPath = ${workingDirectory}/unmatched-2</arg>
+            <arg>-outputDirPath = ${workingDirectory}/heuristic-out-2</arg>
+            <arg>-maxHashBucketSize = ${maxHashBucketSize}</arg>
+            
+        </spark>
+        <ok to="heuristic-matcher-3"/>
         <error to="fail"/>
     </action>
 
-    <action name="heuristic-3">
-        <sub-workflow>
-            <app-path>${wf:appPath()}/heuristic-workflow</app-path>
-            <propagate-configuration/>
-            <configuration>
-                <property>
-                    <name>workingDirectory</name>
-                    <value>${workingDirectory}/heuristic-3_workflow</value>
-                </property>
-                <property>
-                    <name>sourceEntities</name>
-                    <value>${workingDirectory}/unmatched-2</value>
-                </property>
-                <property>
-                    <name>destinationEntities</name>
-                    <value>${destinationEntities}</value>
-                </property>
-                <property>
-                    <name>citationHasher</name>
-                    <value>pl.edu.icm.coansys.citations.hashers.CitationNameYearHashGenerator</value>
-                </property>
-                <property>
-                    <name>documentHasher</name>
-                    <value>pl.edu.icm.coansys.citations.hashers.DocumentNameYearStrictHashGenerator</value>
-                </property>
-                <property>
-                    <name>unmatched</name>
-                    <value>${workingDirectory}/unmatched-3</value>
-                </property>
-                <property>
-                    <name>output</name>
-                    <value>${workingDirectory}/heuristic-out-3</value>
-                </property>
-            </configuration>
-        </sub-workflow>
-        <ok to="heuristic-4"/>
+
+    <action name="heuristic-matcher-3">
+        
+        <spark xmlns="uri:oozie:spark-action:0.1">
+
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+           
+            <master>yarn-cluster</master>
+            <mode>cluster</mode>
+            <name>heuristic-matcher-3</name>
+
+            <class>pl.edu.icm.coansys.citations.data.CitationMatchingJob</class>
+
+            <jar>${wfDirectory}/lib/citation-matching-core-code-${projectVersion}.jar</jar>
+        
+            <arg>-citationPath = ${workingDirectory}/unmatched-2</arg>
+            <arg>-documentPath = ${destinationEntities}</arg>
+            <arg>-citationHashGeneratorClass = pl.edu.icm.coansys.citations.hashers.CitationNameYearHashGenerator</arg>
+            <arg>-documentHashGeneratorClass = pl.edu.icm.coansys.citations.hashers.DocumentNameYearStrictHashGenerator</arg>
+            <arg>-unmatchedCitationDirPath = ${workingDirectory}/unmatched-3</arg>
+            <arg>-outputDirPath = ${workingDirectory}/heuristic-out-3</arg>
+            <arg>-maxHashBucketSize = ${maxHashBucketSize}</arg>
+            
+        </spark>
+        <ok to="heuristic-matcher-4"/>
         <error to="fail"/>
     </action>
+ 
 
-    <action name="heuristic-4">
-        <sub-workflow>
-            <app-path>${wf:appPath()}/heuristic-workflow</app-path>
-            <propagate-configuration/>
-            <configuration>
-                <property>
-                    <name>workingDirectory</name>
-                    <value>${workingDirectory}/heuristic-4_workflow</value>
-                </property>
-                <property>
-                    <name>sourceEntities</name>
-                    <value>${workingDirectory}/unmatched-3</value>
-                </property>
-                <property>
-                    <name>destinationEntities</name>
-                    <value>${destinationEntities}</value>
-                </property>
-                <property>
-                    <name>citationHasher</name>
-                    <value>pl.edu.icm.coansys.citations.hashers.CitationNameYearHashGenerator</value>
-                </property>
-                <property>
-                    <name>documentHasher</name>
-                    <value>pl.edu.icm.coansys.citations.hashers.DocumentNameYearHashGenerator</value>
-                </property>
-                <property>
-                    <name>output</name>
-                    <value>${workingDirectory}/heuristic-out-4</value>
-                </property>
-            </configuration>
-        </sub-workflow>
+    <action name="heuristic-matcher-4">
+        
+        <spark xmlns="uri:oozie:spark-action:0.1">
+
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+           
+            <master>yarn-cluster</master>
+            <mode>cluster</mode>
+            <name>heuristic-matcher-4</name>
+
+            <class>pl.edu.icm.coansys.citations.data.CitationMatchingJob</class>
+
+            <jar>${wfDirectory}/lib/citation-matching-core-code-${projectVersion}.jar</jar>
+        
+            <arg>-citationPath = ${workingDirectory}/unmatched-3</arg>
+            <arg>-documentPath = ${destinationEntities}</arg>
+            <arg>-citationHashGeneratorClass = pl.edu.icm.coansys.citations.hashers.CitationNameYearHashGenerator</arg>
+            <arg>-documentHashGeneratorClass = pl.edu.icm.coansys.citations.hashers.DocumentNameYearHashGenerator</arg>
+            <arg>-outputDirPath = ${workingDirectory}/heuristic-out-4</arg>
+            <arg>-maxHashBucketSize = ${maxHashBucketSize}</arg>
+            
+        </spark>
         <ok to="doc-attacher"/>
         <error to="fail"/>
     </action>
-
+    
+   
     <action name="doc-attacher">
         <map-reduce>
             <prepare>
