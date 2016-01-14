@@ -38,13 +38,13 @@ public class CitationsCoreWorkflowIT {
         
         File workflowOutputData = oozieRunner.run();
         
-        
         // assert
         
         List<Pair<MatchableEntity, String>> actualMatchedCitations = MatchableEntitySequenceFileUtils.readMatchedCitations(workflowOutputData);
         
         List<Pair<MatchableEntity, String>> expectedMatchedCitations = MatchableEntitySequenceFileUtils.readMatchedCitations(new File("src/test/resources/expectedOutput/matchedCitations"));
         
+        assertEquals(expectedMatchedCitations.size(), actualMatchedCitations.size());
         
         for (Pair<MatchableEntity, String> expectedMatchedCitation : expectedMatchedCitations) {
             String expectedSourceId = expectedMatchedCitation.getLeft().id();
@@ -60,7 +60,6 @@ public class CitationsCoreWorkflowIT {
             assertMatchedCitationEquals(expectedMatchedCitation, actualMatchedCitation);
         }
         
-        assertEquals(expectedMatchedCitations.size(), actualMatchedCitations.size());
         
     }
     

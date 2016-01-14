@@ -41,7 +41,7 @@
             <value>0.70</value>
         </property>
         <property>
-            <name>maxBucketSize</name>
+            <name>maxHashBucketSize</name>
             <value>10000</value>
             <description>Buckets exceeding this limit will be omitted</description>
         </property>

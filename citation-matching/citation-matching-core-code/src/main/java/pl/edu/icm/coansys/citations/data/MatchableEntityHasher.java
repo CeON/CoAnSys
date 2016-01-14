@@ -4,11 +4,14 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.common.base.Preconditions;
+
 import pl.edu.icm.coansys.citations.hashers.HashGenerator;
 import scala.Tuple2;
-import scala.collection.JavaConversions;
 
 /**
+ * Hasher of {@link MatchableEntity} objects
+ * 
  * @author Łukasz Dumiszewski
  */
 
@@ -18,33 +21,33 @@ public class MatchableEntityHasher implements Serializable {
     	
     private HashGenerator hashGenerator;
     
+    private ScalaIterableConverter scalaIterableConverter = new ScalaIterableConverter();
     
     
     
     //------------------------ LOGIC --------------------------
     
+    /**
+     * Hashes the given {@link MatchableEntity} by using {@link #setHashGenerator(HashGenerator)}. Returns
+     * list of tuples of the generated hashes and {@link MatchableEntity#id()} - (hash, entity.id()
+     */
     public List<Tuple2<String, String>> hashEntity(MatchableEntity entity) {
+        
+        Preconditions.checkNotNull(entity);
         
         List<Tuple2<String, String>> hashIdPairs = new ArrayList<>();
         
-        Iterable<String> hashes = JavaConversions.asJavaIterable(hashGenerator.generate(entity));
+        Iterable<String> hashes = scalaIterableConverter.convertToJavaIterable(hashGenerator.generate(entity));
         
         for (String hash : hashes) {
-            hashIdPairs.add(createHashIdPair(hash, entity.id()));
+            hashIdPairs.add(new Tuple2<>(hash, entity.id()));
         }
         
         return hashIdPairs;
      }
 
     
-    //------------------------ PRIVATE --------------------------
-
-    private Tuple2<String, String> createHashIdPair(String hash, String id) {
-        //MarkedText entityId = new MarkedText(id, true);
-        //MarkedText generatedHash = new MarkedText(hash, false);
-        Tuple2<String, String> hashIdPair = new Tuple2<>(hash, id);
-        return hashIdPair;
-    }
+    
 
     
     //------------------------ SETTERS --------------------------
@@ -53,5 +56,10 @@ public class MatchableEntityHasher implements Serializable {
         this.hashGenerator = hashGenerator;
     }
     
+    void setScalaIterableConverter(ScalaIterableConverter scalaIterableConverter) {
+        this.scalaIterableConverter = scalaIterableConverter;
+    }
+
+
 }
     
