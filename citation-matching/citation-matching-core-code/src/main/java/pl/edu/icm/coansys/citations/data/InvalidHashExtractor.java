@@ -12,7 +12,7 @@ public class InvalidHashExtractor {
 
     
     /**
-     * Extracts hashes that are invalid. The invalid hashe is one whose number of appearances in the hashIdPairs1 
+     * Extracts hashes that are invalid. The invalid hash is one whose number of appearances in the hashIdPairs1 
      * multiplied by the number in the hashIdPairs2 is bigger than maxHashBucketSize or equal 0 (zero)
      * 
      * @param hashIdPairs1 pair rdd that has tuples containing id and hash
