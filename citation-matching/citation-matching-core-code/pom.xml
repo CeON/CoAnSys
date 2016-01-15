@@ -26,6 +26,12 @@
             <groupId>com.nicta</groupId>
             <artifactId>scoobi_2.10</artifactId>
             <version>0.9.1-cdh5</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.mortbay.jetty</groupId>
+                    <artifactId>servlet-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>pl.edu.icm.ceon</groupId>

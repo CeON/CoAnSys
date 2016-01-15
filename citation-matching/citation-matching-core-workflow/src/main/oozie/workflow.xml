@@ -242,77 +242,21 @@
     
    
     <action name="doc-attacher">
-        <map-reduce>
+        <spark xmlns="uri:oozie:spark-action:0.1">
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
             <prepare>
                 <delete path="${workingDirectory}/heuristic_with_docs"/>
             </prepare>
-            <configuration>
-                <property>
-                    <name>mapreduce.inputformat.class</name>
-                    <value>org.apache.hadoop.mapreduce.lib.input.DelegatingInputFormat</value>
-                </property>
-                <property>
-                    <name>mapreduce.map.class</name>
-                    <value>org.apache.hadoop.mapreduce.lib.input.DelegatingMapper</value>
-                </property>
-                <property>
-                    <name>mapred.input.dir.mappers</name>
-                    <value>
-                        ${workingDirectory}/heuristic-out-*;pl.edu.icm.coansys.citations.mappers.SwapperMarker,${destinationEntities};pl.edu.icm.coansys.citations.mappers.EntityMarker
-                    </value>
-                </property>
-                <property>
-                    <name>mapred.input.dir.formats</name>
-                    <value>
-                        ${workingDirectory}/heuristic-out-*;org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat,${destinationEntities};org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat
-                    </value>
-                </property>
-                <property>
-                    <name>coansys.citations.mark.entities</name>
-                    <value>true</value>
-                </property>
-                <property>
-                    <name>coansys.citations.mark.ids</name>
-                    <value>false</value>
-                </property>
-                <property>
-                    <name>mapred.mapoutput.key.class</name>
-                    <value>pl.edu.icm.coansys.citations.data.MarkedText</value>
-                </property>
-                <property>
-                    <name>mapred.mapoutput.value.class</name>
-                    <value>pl.edu.icm.coansys.citations.data.TextWithBytesWritable</value>
-                </property>
-                <property>
-                    <name>mapreduce.partitioner.class</name>
-                    <value>pl.edu.icm.coansys.citations.data.MarkedTextPartitioner</value>
-                </property>
-                <property>
-                    <name>mapred.output.value.groupfn.class</name>
-                    <value>pl.edu.icm.coansys.citations.data.MarkedTextGroupComparator</value>
-                </property>
-                <property>
-                    <name>mapred.output.key.comparator.class</name>
-                    <value>pl.edu.icm.coansys.citations.data.MarkedTextSortComparator</value>
-                </property>
-                <property>
-                    <name>mapreduce.reduce.class</name>
-                    <value>pl.edu.icm.coansys.citations.reducers.DocumentAttacher</value>
-                </property>
-                <property>
-                    <name>mapred.output.dir</name>
-                    <value>${workingDirectory}/heuristic_with_docs</value>
-                </property>
-                <property>
-                    <name>mapred.output.key.class</name>
-                    <value>pl.edu.icm.coansys.citations.data.MarkedText</value>
-                </property>
-                <property>
-                    <name>mapred.output.value.class</name>
-                    <value>pl.edu.icm.coansys.citations.data.TextWithBytesWritable</value>
-                </property>
-            </configuration>
-        </map-reduce>
+            <master>yarn-cluster</master>
+            <name>Document attacher</name>
+            <class>pl.edu.icm.coansys.citations.DocAttacherJob</class>
+            <jar>${wfDirectory}/lib/citation-matching-core-code-${projectVersion}.jar</jar>
+            
+            <arg>-inputMatchedPath=${workingDirectory}/heuristic-out-*</arg>
+            <arg>-inputDocsPath=${destinationEntities}</arg>
+            <arg>-outputPath=${workingDirectory}/heuristic_with_docs</arg>
+        </spark>
         <ok to="cit-attacher-and-preassessor"/>
         <error to="fail"/>
     </action>
