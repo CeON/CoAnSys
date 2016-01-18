@@ -1,11 +1,13 @@
 package pl.edu.icm.coansys.citations.data;
 
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.Text;
-import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
@@ -14,9 +16,9 @@ import org.apache.spark.api.java.JavaSparkContext;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
+import com.google.common.collect.Lists;
 
 import pl.edu.icm.coansys.citations.hashers.HashGenerator;
-import scala.Tuple2;
 
 /**
  * 
@@ -26,8 +28,6 @@ import scala.Tuple2;
  */
 
 public class CitationMatchingJob {
-
-    private static InvalidHashExtractor invalidHashExtractor = new InvalidHashExtractor();
     
     
     //------------------------ LOGIC --------------------------
@@ -46,35 +46,31 @@ public class CitationMatchingJob {
         try (JavaSparkContext sc = new JavaSparkContext(conf)) {
             
             // read citations and documents
-            JavaPairRDD<Writable, BytesWritable> citations = sc.sequenceFile(params.citationPath, Writable.class, BytesWritable.class);
+            JavaPairRDD<Text, BytesWritable> citations = sc.sequenceFile(params.citationPath, Text.class, BytesWritable.class);
             //citations.cache(); cache here makes the join (a few lines below) not working - the join gives 0 results
-            JavaPairRDD<Writable, BytesWritable> documents = sc.sequenceFile(params.documentPath, Writable.class, BytesWritable.class);
+            JavaPairRDD<Text, BytesWritable> documents = sc.sequenceFile(params.documentPath, Text.class, BytesWritable.class);
             
-            // generate hashes
             
-            JavaPairRDD<String, String> citationHashIdPairs = generateHashIdPairs(citations, params.citationHashGeneratorClass);
-            JavaPairRDD<String, String> documentHashIdPairs = generateHashIdPairs(documents, params.documentHashGeneratorClass);
-
-            // remove invalid hashes
-            JavaPairRDD<String, Long> invalidHashes = invalidHashExtractor.extractInvalidHashes(citationHashIdPairs, documentHashIdPairs, params.maxHashBucketSize);
-
-            citationHashIdPairs = citationHashIdPairs.subtractByKey(invalidHashes);
-            documentHashIdPairs = documentHashIdPairs.subtractByKey(invalidHashes);
+            List<Pair<MatchableEntityHasher, MatchableEntityHasher>> entitiesHashers = createMatchableEntityHashers(params.hashGeneratorClasses);
             
-            // join citationIds to documentIds by hash
-            JavaPairRDD<String, String> citationDocumentIdPairs = citationHashIdPairs.join(documentHashIdPairs).mapToPair(cd->cd._2()).distinct();
             
-            // find and save unmatched citations
-            if (StringUtils.isNotEmpty(params.unmatchedCitationDirPath)) {
-                JavaPairRDD<String, BytesWritable> citationIdBytes = citations.mapToPair(c->new Tuple2<String, BytesWritable>(c._1().toString(), c._2()));
-                JavaPairRDD<Text, BytesWritable> unmatchedCitations = citationIdBytes.subtractByKey(citationDocumentIdPairs).mapToPair(c->new Tuple2<Text, BytesWritable>(new Text(c._1()), c._2()));
-                unmatchedCitations.saveAsNewAPIHadoopFile(params.unmatchedCitationDirPath, Text.class, BytesWritable.class, SequenceFileOutputFormat.class);
+            JavaPairRDD<Text, BytesWritable> unmatchedCitations = citations;
+            JavaPairRDD<Text, Text> joinedCitDocIdPairs = JavaPairRDD.fromJavaRDD(sc.emptyRDD());
+            
+            Iterator<Pair<MatchableEntityHasher, MatchableEntityHasher>> citAndDocHashersIterator = entitiesHashers.iterator();
+            while(citAndDocHashersIterator.hasNext()) {
+                Pair<MatchableEntityHasher, MatchableEntityHasher> citAndDocHashers = citAndDocHashersIterator.next();
+                HashHeuristicCitationMatcher hashHeuristicCitationMatcher = new HashHeuristicCitationMatcher(citAndDocHashers.getLeft(), citAndDocHashers.getRight(), params.maxHashBucketSize);
                 
+                HashHeuristicResult matchedResult = 
+                        hashHeuristicCitationMatcher.matchCitations(unmatchedCitations, documents, citAndDocHashersIterator.hasNext());
+                
+                joinedCitDocIdPairs = joinedCitDocIdPairs.union(matchedResult.getCitDocIdPairs());
+                unmatchedCitations = matchedResult.getUnmatchedCitations();
             }
 
             // save matched citationId-docId pairs
-            JavaPairRDD<Text, Text> textCitDocIdPairs = citationDocumentIdPairs.mapToPair(strCitDocId -> new Tuple2<Text, Text>(new Text(strCitDocId._1()), new Text(strCitDocId._2())));
-            textCitDocIdPairs.saveAsNewAPIHadoopFile(params.outputDirPath, Text.class, Text.class, SequenceFileOutputFormat.class);
+            joinedCitDocIdPairs.saveAsNewAPIHadoopFile(params.outputDirPath, Text.class, Text.class, SequenceFileOutputFormat.class);
             
         }
         
@@ -84,21 +80,22 @@ public class CitationMatchingJob {
 
 
     //------------------------ PRIVATE --------------------------
-
     
-    
-    private static JavaPairRDD<String, String> generateHashIdPairs(JavaPairRDD<Writable, BytesWritable> matchableEntityBytes, String hashGeneratorClass) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-
-        MatchableEntityHasher hasher = createMatchableEntityHasher(hashGeneratorClass);
+    private static List<Pair<MatchableEntityHasher, MatchableEntityHasher>> createMatchableEntityHashers(List<String> hashGeneratorClassNames) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+        List<Pair<MatchableEntityHasher, MatchableEntityHasher>> matchableEntityHashers = Lists.newArrayList();
         
-        JavaPairRDD<String, String> hashIdPairs = matchableEntityBytes.flatMapToPair((Tuple2<Writable, BytesWritable> keyValue)-> {
-            MatchableEntity matchableEntity = MatchableEntity.fromBytes(keyValue._2().copyBytes());
-            return hasher.hashEntity(matchableEntity);
-        });
+        for (String citAndDocHashGeneratorClassNames : hashGeneratorClassNames) {
+            String citationHashGeneratorClassName = citAndDocHashGeneratorClassNames.split(":")[0];
+            String documentHashGeneratorClassName = citAndDocHashGeneratorClassNames.split(":")[1];
+            
+            MatchableEntityHasher citationHasher = createMatchableEntityHasher(citationHashGeneratorClassName);
+            MatchableEntityHasher documentHasher = createMatchableEntityHasher(documentHashGeneratorClassName);
+            
+            matchableEntityHashers.add(new ImmutablePair<MatchableEntityHasher, MatchableEntityHasher>(citationHasher, documentHasher));
+        }
         
-        return hashIdPairs;
+        return matchableEntityHashers;
     }
-    
     
     private static MatchableEntityHasher createMatchableEntityHasher(String hashGeneratorClass) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
         HashGenerator hashGenerator = (HashGenerator) Class.forName(hashGeneratorClass).newInstance();
@@ -107,7 +104,8 @@ public class CitationMatchingJob {
         return matchableEntityHasher;
     }
     
-   @Parameters(separators = "=")
+    
+    @Parameters(separators = "=")
     private static class CitationMatchingJobParameters {
         
         @Parameter(names = "-citationPath", required = true, description = "path to directory/file with citations")
@@ -116,14 +114,13 @@ public class CitationMatchingJob {
         @Parameter(names = "-documentPath", required = true, description = "path to directory/file with documents")
         private String documentPath;
         
-        @Parameter(names = "-citationHashGeneratorClass", required = true)
-        private String citationHashGeneratorClass;
         
-        @Parameter(names = "-documentHashGeneratorClass", required = true)
-        private String documentHashGeneratorClass;
-        
-        @Parameter(names = "-unmatchedCitationDirPath", required = false, description = "path to directory with unmatched citations, empty - do not look for and do not save unmatched citations")
-        private String unmatchedCitationDirPath;
+        @Parameter(names = "-hashGeneratorClasses", required = true, 
+                description = "Name of classes used for generating hashes for citations and documents. Names must be seperated by colon sign (:). "
+                        + "First class will be used for citations and second for documents."
+                        + "Classes must implement pl.edu.icm.coansys.citations.hashers.HashGenerator interface."
+                        + "Parameter may be specified multiple times for multiple heuristics.")
+        private List<String> hashGeneratorClasses;
         
         @Parameter(names = "-outputDirPath", required = true, description = "path to directory with results")
         private String outputDirPath;
