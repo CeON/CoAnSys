@@ -5,16 +5,15 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.hadoop.io.Text;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.Lists;
 import com.google.common.io.Files;
 
 import pl.edu.icm.coansys.commons.hadoop.LocalSequenceFileUtils;
@@ -74,11 +73,7 @@ public class CitationMatchingJobTest {
         
         // assert
         
-        assertMatchedCitations(outputDirPath, 
-                "src/test/resources/heuristic/heuristic-out-1",
-                "src/test/resources/heuristic/heuristic-out-2",
-                "src/test/resources/heuristic/heuristic-out-3",
-                "src/test/resources/heuristic/heuristic-out-4");
+        assertMatchedCitations(outputDirPath, "src/test/resources/heuristic_with_docs");
         
     }
     
@@ -111,28 +106,25 @@ public class CitationMatchingJobTest {
     }
     
     
-    private void assertMatchedCitations(String outputDirPath, String ... expectedMatchedCitationPartsDirPath) throws IOException {
+    private void assertMatchedCitations(String outputDirPath, String expectedMatchedCitationDirPath) throws IOException {
         
-        List<Pair<Text, Text>> actualMatchedCitations = LocalSequenceFileUtils.readSequenceFile(new File(outputDirPath), Text.class, Text.class);
+        List<Pair<MarkedText, TextWithBytesWritable>> actualMatchedCitations = LocalSequenceFileUtils.readSequenceFile(new File(outputDirPath), MarkedText.class, TextWithBytesWritable.class);
         
-        List<Pair<Text, Text>> expectedMatchedCitations = Lists.newArrayList();
-        for (String expectedMatchedCitationPartDirPath : expectedMatchedCitationPartsDirPath) {
-            expectedMatchedCitations.addAll(LocalSequenceFileUtils.readSequenceFile(new File(expectedMatchedCitationPartDirPath), Text.class, Text.class));
-        }
+        List<Pair<MarkedText, TextWithBytesWritable>> expectedMatchedCitations = LocalSequenceFileUtils.readSequenceFile(new File(expectedMatchedCitationDirPath), MarkedText.class, TextWithBytesWritable.class);
         
         assertEquals(expectedMatchedCitations.size(), actualMatchedCitations.size());
         
-        for (Pair<Text, Text> actualCitationDocIdPair : actualMatchedCitations) {
+        for (Pair<MarkedText, TextWithBytesWritable> actualCitationDocIdPair : actualMatchedCitations) {
             assertTrue(isInMatchedCitations(expectedMatchedCitations, actualCitationDocIdPair));
         }
     }
     
     
-    private boolean isInMatchedCitations(List<Pair<Text, Text>> citations, Pair<Text, Text> citationDocIdPair) {
+    private boolean isInMatchedCitations(List<Pair<MarkedText, TextWithBytesWritable>> citations, Pair<MarkedText, TextWithBytesWritable> citationIdDocPair) {
         
-        for (Pair<Text, Text> citDocIdPair : citations) { 
-            if (citDocIdPair.getKey().equals(citationDocIdPair.getKey()) && (citDocIdPair.getValue().equals(citationDocIdPair.getValue()))) {
-                return true;
+        for (Pair<MarkedText, TextWithBytesWritable> citIdDocPair : citations) { 
+            if (citIdDocPair.getKey().equals(citationIdDocPair.getKey()) && (citIdDocPair.getValue().text().equals(citationIdDocPair.getValue().text()))) {
+                return Arrays.equals(citIdDocPair.getValue().bytes().copyBytes(), citationIdDocPair.getValue().bytes().copyBytes());
             }
         }
         

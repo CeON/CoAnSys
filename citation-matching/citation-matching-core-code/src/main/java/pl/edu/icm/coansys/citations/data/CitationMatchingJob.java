@@ -18,7 +18,10 @@ import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import com.google.common.collect.Lists;
 
+import pl.edu.icm.coansys.citations.DocumentAttacher;
 import pl.edu.icm.coansys.citations.hashers.HashGenerator;
+import scala.Tuple2;
+import pl.edu.icm.coansys.citations.data.TextWithBytesWritable;
 
 /**
  * 
@@ -28,6 +31,8 @@ import pl.edu.icm.coansys.citations.hashers.HashGenerator;
  */
 
 public class CitationMatchingJob {
+    
+    private static DocumentAttacher documentAttacher = new DocumentAttacher();
     
     
     //------------------------ LOGIC --------------------------
@@ -69,8 +74,14 @@ public class CitationMatchingJob {
                 unmatchedCitations = matchedResult.getUnmatchedCitations();
             }
 
-            // save matched citationId-docId pairs
-            joinedCitDocIdPairs.saveAsNewAPIHadoopFile(params.outputDirPath, Text.class, Text.class, SequenceFileOutputFormat.class);
+            JavaPairRDD<Text, TextWithBytesWritable> matchedWithDocsAttached = documentAttacher.attachDocuments(joinedCitDocIdPairs, documents);
+            
+            // save matched citationId-doc pairs
+            JavaPairRDD<MarkedText, TextWithBytesWritable> markedMatchedWithDocsAttached = 
+                    matchedWithDocsAttached.mapToPair(pair -> new Tuple2<MarkedText, TextWithBytesWritable>(
+                            new MarkedText(pair._1.toString(), false),
+                            pair._2));
+            markedMatchedWithDocsAttached.saveAsNewAPIHadoopFile(params.outputDirPath, MarkedText.class, TextWithBytesWritable.class, SequenceFileOutputFormat.class);
             
         }
         
