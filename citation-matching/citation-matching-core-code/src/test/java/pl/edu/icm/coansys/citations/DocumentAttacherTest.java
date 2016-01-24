@@ -1,14 +1,11 @@
 package pl.edu.icm.coansys.citations;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.testng.Assert.*;
+import static pl.edu.icm.coansys.citations.MatchableEntityDataProvider.*;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.spark.SparkConf;
@@ -18,8 +15,9 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import com.google.common.collect.Lists;
+
 import pl.edu.icm.coansys.citations.data.TextWithBytesWritable;
-import pl.edu.icm.coansys.commons.hadoop.LocalSequenceFileUtils;
 import scala.Tuple2;
 
 /**
@@ -35,7 +33,7 @@ public class DocumentAttacherTest {
     @BeforeMethod
     public void before() {
         
-        SparkConf conf = new SparkConf().setMaster("local").setAppName("HashHeuristicCitationMatcherTest")
+        SparkConf conf = new SparkConf().setMaster("local").setAppName("DocumentAttacherTest")
                 .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer");
         
         sparkContext = new JavaSparkContext(conf);
@@ -57,81 +55,85 @@ public class DocumentAttacherTest {
     //------------------------ TESTS --------------------------
     
     @Test
-    public void attachDocuments() throws IOException {
+    public void attachDocuments() {
         
         
         // given
         
-        String matchedPath = "src/test/resources/doc_attacher/input/matched_citations";
+        JavaPairRDD<Text, Text> matchedCitations = sparkContext.parallelizePairs(generateCitIdDocIdPairs(
+                Lists.newArrayList(citation1, citation1, citation4, citation4),
+                Lists.newArrayList(document1, document2, document2, document5)));
         
-        String documentPath = "src/test/resources/doc_attacher/input/documents";
-        
-        
-        JavaPairRDD<Text, Text> matchedCitations = sparkContext.sequenceFile(matchedPath, Text.class, Text.class);
-        
-        JavaPairRDD<Text, BytesWritable> documents = sparkContext.sequenceFile(documentPath, Text.class, BytesWritable.class);
+        JavaPairRDD<Text, BytesWritable> documents = sparkContext.parallelizePairs(generateEntitiesWritable(
+                Lists.newArrayList(document1, document2, document3, document4, document5)));
         
         
         
         // execute
         
-        JavaPairRDD<Text, TextWithBytesWritable> actualDocAttachedMatchedCit = documentAttacher.attachDocuments(matchedCitations, documents);
+        JavaPairRDD<Text, TextWithBytesWritable> actualCitIdDocPairs = documentAttacher.attachDocuments(matchedCitations, documents);
         
         
         // assert
+        List<Tuple2<Text, TextWithBytesWritable>> expectedCitIdDocPairs = generateCitIdDocPairs(
+                Lists.newArrayList(citation1, citation1, citation4, citation4),
+                Lists.newArrayList(document1, document2, document2, document5));
         
-        assertDocAttachedMatchedCitations(actualDocAttachedMatchedCit.collect(), "src/test/resources/doc_attacher/expected_output/matched_with_docs");
+        assertDocAttachedMatchedCitations(actualCitIdDocPairs.collect(), expectedCitIdDocPairs);
         
     }
     
     @Test
-    public void attachDocuments_EMPTY_DOCS() throws IOException {
+    public void attachDocuments_EMPTY_DOCS() {
         
         
         // given
         
-        String matchedPath = "src/test/resources/doc_attacher/input/matched_citations";
+        JavaPairRDD<Text, Text> matchedCitations = sparkContext.parallelizePairs(generateCitIdDocIdPairs(
+                Lists.newArrayList(citation1, citation1, citation4),
+                Lists.newArrayList(document1, document2, document5)));
         
-        String documentPath = "src/test/resources/doc_attacher/input/documents_empty";
-        
-        
-        JavaPairRDD<Text, Text> matchedCitations = sparkContext.sequenceFile(matchedPath, Text.class, Text.class);
-        
-        JavaPairRDD<Text, BytesWritable> documents = sparkContext.sequenceFile(documentPath, Text.class, BytesWritable.class);
+        JavaPairRDD<Text, BytesWritable> documents = sparkContext.parallelizePairs(generateEntitiesWritable(
+                Lists.newArrayList()));
         
         
         
         // execute
         
-        JavaPairRDD<Text, TextWithBytesWritable> actualDocAttachedMatchedCit = documentAttacher.attachDocuments(matchedCitations, documents);
+        JavaPairRDD<Text, TextWithBytesWritable> actualCitIdDocPairs = documentAttacher.attachDocuments(matchedCitations, documents);
         
         
         // assert
         
-        assertEquals(0, actualDocAttachedMatchedCit.count());
+        assertEquals(actualCitIdDocPairs.count(), 0);
         
     }
     
     
     //------------------------ PRIVATE --------------------------
     
-    private void assertDocAttachedMatchedCitations(List<Tuple2<Text, TextWithBytesWritable>> actualMatchedCitations, String expectedMatchedCitationDirPath) throws IOException {
+    private void assertDocAttachedMatchedCitations(List<Tuple2<Text, TextWithBytesWritable>> actualCitIdDocPairs, List<Tuple2<Text, TextWithBytesWritable>> expectedCitIdDocPairs) {
         
-        List<Pair<Text, TextWithBytesWritable>> expectedMatchedCitations = LocalSequenceFileUtils.readSequenceFile(new File(expectedMatchedCitationDirPath), Text.class, TextWithBytesWritable.class);
+        assertEquals(actualCitIdDocPairs.size(), expectedCitIdDocPairs.size());
         
-        assertEquals(expectedMatchedCitations.size(), actualMatchedCitations.size());
-        
-        for (Tuple2<Text, TextWithBytesWritable> actualCitationIdDocPair : actualMatchedCitations) {
-            assertTrue(isInMatchedCitations(expectedMatchedCitations, actualCitationIdDocPair));
+        for (Tuple2<Text, TextWithBytesWritable> actualCitIdDocPair : actualCitIdDocPairs) {
+            assertTrue(isInCitIdDocPairs(expectedCitIdDocPairs, actualCitIdDocPair));
         }
     }
     
     
-    private boolean isInMatchedCitations(List<Pair<Text, TextWithBytesWritable>> citations, Tuple2<Text, TextWithBytesWritable> citationIdDocPair) {
+    private boolean isInCitIdDocPairs(List<Tuple2<Text, TextWithBytesWritable>> citIdDocPairs, Tuple2<Text, TextWithBytesWritable> citIdDocPairToFind) {
         
-        for (Pair<Text, TextWithBytesWritable> citIdDocPair : citations) { 
-            if (citIdDocPair.getKey().equals(citationIdDocPair._1) && (citIdDocPair.getValue().text().equals(citationIdDocPair._2.text()))) {
-                return Arrays.equals(citIdDocPair.getValue().bytes().copyBytes(), citationIdDocPair._2.bytes().copyBytes());
+        Text citIdToFind = citIdDocPairToFind._1;
+        Text docIdToFind = citIdDocPairToFind._2.text();
+        
+        for (Tuple2<Text, TextWithBytesWritable> citIdDocPair : citIdDocPairs) {
+            
+            Text citId = citIdDocPair._1;
+            Text docId = citIdDocPair._2.text();
+            
+            if (citId.equals(citIdToFind) && docId.equals(docIdToFind)) {
+                return Arrays.equals(citIdDocPair._2.bytes().copyBytes(), citIdDocPairToFind._2.bytes().copyBytes());
             }
         }
         
