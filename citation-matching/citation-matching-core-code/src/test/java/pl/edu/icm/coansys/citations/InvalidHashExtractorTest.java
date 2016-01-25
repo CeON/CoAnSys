@@ -1,4 +1,4 @@
-package pl.edu.icm.coansys.citations.data;
+package pl.edu.icm.coansys.citations;
 
 import static org.junit.Assert.assertEquals;
 
@@ -12,6 +12,7 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.Lists;
 
+import pl.edu.icm.coansys.citations.data.InvalidHashExtractor;
 import scala.Tuple2;
 
 /**

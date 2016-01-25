@@ -1,4 +1,4 @@
-package pl.edu.icm.coansys.citations.data;
+package pl.edu.icm.coansys.citations;
 
 import java.io.Serializable;
 

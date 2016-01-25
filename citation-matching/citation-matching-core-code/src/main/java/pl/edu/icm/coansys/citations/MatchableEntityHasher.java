@@ -1,4 +1,4 @@
-package pl.edu.icm.coansys.citations.data;
+package pl.edu.icm.coansys.citations;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.google.common.base.Preconditions;
 
+import pl.edu.icm.coansys.citations.data.MatchableEntity;
 import pl.edu.icm.coansys.citations.hashers.HashGenerator;
 import scala.Tuple2;
 

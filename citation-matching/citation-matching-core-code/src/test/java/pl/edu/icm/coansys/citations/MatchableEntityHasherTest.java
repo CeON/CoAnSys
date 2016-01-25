@@ -1,4 +1,4 @@
-package pl.edu.icm.coansys.citations.data;
+package pl.edu.icm.coansys.citations;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -12,6 +12,9 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.Lists;
 
+import pl.edu.icm.coansys.citations.MatchableEntityHasher;
+import pl.edu.icm.coansys.citations.ScalaIterableConverter;
+import pl.edu.icm.coansys.citations.data.MatchableEntity;
 import pl.edu.icm.coansys.citations.hashers.HashGenerator;
 import scala.Tuple2;
 
