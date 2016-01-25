@@ -30,12 +30,12 @@ public class BestMatchedCitationPicker implements Serializable {
     //------------------------ LOGIC --------------------------
     
     /**
-     * Picks best matched citation among every (citation, document) pair sharing the same citation.
+     * Picks best matched citations among every (citation, document) pair sharing the same citation.
      * Best matched citation is picked based on a similarity between its citation and document.
      * Similarity is calculated using {@link SimilarityMeasurer#similarity(MatchableEntity, MatchableEntity)}.
      * To be included in final results, similarity must be equal or greater than 0.5
      * 
-     * Method returns rdd where keys are citations and values are a text composed of similarity and document id separated by colon
+     * @return Rdd with keys being citations and values being {@link Text}s composed of similarity and document id separated by colon
      */
     public JavaPairRDD<TextWithBytesWritable, Text> pickBest(JavaPairRDD<TextWithBytesWritable, TextWithBytesWritable> citDocPairs) {
         
@@ -79,7 +79,7 @@ public class BestMatchedCitationPicker implements Serializable {
         
         return new Tuple2<TextWithBytesWritable, IdWithSimilarity>(
                 citationWritable, 
-                new IdWithSimilarity(similarity, documentWritable.text().toString()));
+                new IdWithSimilarity(documentWritable.text().toString(), similarity));
     }
     
     private double calculateSimilarity(SimilarityMeasurer similarityMeasurer,
@@ -96,12 +96,12 @@ public class BestMatchedCitationPicker implements Serializable {
     
     private static class IdWithSimilarity {
         
-        private double similarity;
         private String id;
+        private double similarity;
         
-        public IdWithSimilarity(double similarity, String id) {
-            this.similarity = similarity;
+        public IdWithSimilarity(String id, double similarity) {
             this.id = id;
+            this.similarity = similarity;
         }
 
         public double getSimilarity() {

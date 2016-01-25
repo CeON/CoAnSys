@@ -4,7 +4,7 @@ import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.spark.api.java.JavaPairRDD;
 
-import pl.edu.icm.coansys.citations.data.HashHeuristicResult;
+import pl.edu.icm.coansys.citations.data.HeuristicHashMatchingResult;
 import pl.edu.icm.coansys.citations.data.InvalidHashExtractor;
 import pl.edu.icm.coansys.citations.data.MatchableEntity;
 import scala.Tuple2;
@@ -15,7 +15,7 @@ import scala.Tuple2;
  * @author Łukasz Dumiszewski
  *
  */
-public class HashHeuristicCitationMatcher {
+public class HeuristicHashCitationMatcher {
 
     private InvalidHashExtractor invalidHashExtractor = new InvalidHashExtractor();
     
@@ -28,7 +28,7 @@ public class HashHeuristicCitationMatcher {
     
     //------------------------ CONSTRUCTORS --------------------------
     
-    public HashHeuristicCitationMatcher(MatchableEntityHasher citationHasher, MatchableEntityHasher documentHasher, long maxHashBucketSize) {
+    public HeuristicHashCitationMatcher(MatchableEntityHasher citationHasher, MatchableEntityHasher documentHasher, long maxHashBucketSize) {
         this.citationHasher = citationHasher;
         this.documentHasher = documentHasher;
         this.maxHashBucketSize = maxHashBucketSize;
@@ -37,7 +37,7 @@ public class HashHeuristicCitationMatcher {
     
     //------------------------ LOGIC --------------------------
     
-    public HashHeuristicResult matchCitations(JavaPairRDD<Text, BytesWritable> citations, JavaPairRDD<Text, BytesWritable> documents, 
+    public HeuristicHashMatchingResult matchCitations(JavaPairRDD<Text, BytesWritable> citations, JavaPairRDD<Text, BytesWritable> documents, 
             boolean needUnmatched) {
         
         JavaPairRDD<String, String> citationHashIdPairs = generateHashIdPairs(citations, citationHasher);
@@ -63,7 +63,7 @@ public class HashHeuristicCitationMatcher {
         // convert string pairs to text pairs
         JavaPairRDD<Text, Text> textCitDocIdPairs = citationDocumentIdPairs.mapToPair(strCitDocId -> new Tuple2<Text, Text>(new Text(strCitDocId._1()), new Text(strCitDocId._2())));
         
-        return new HashHeuristicResult(textCitDocIdPairs, unmatchedCitations);
+        return new HeuristicHashMatchingResult(textCitDocIdPairs, unmatchedCitations);
     }
     
     

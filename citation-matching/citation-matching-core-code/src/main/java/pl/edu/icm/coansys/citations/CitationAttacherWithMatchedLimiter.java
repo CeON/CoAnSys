@@ -106,12 +106,12 @@ public class CitationAttacherWithMatchedLimiter implements Serializable {
     
     private double calculateTokenSimilarity(MatchableEntity citation, MatchableEntity document) {
         
-        Set<String> srcTokens = JavaConversions.asJavaSet(misc.niceTokens(citation.toReferenceString()));
-        Set<String> dstTokens = JavaConversions.asJavaSet(misc.niceTokens(document.toReferenceString()));
+        Set<String> citTokens = JavaConversions.asJavaSet(misc.niceTokens(citation.toReferenceString()));
+        Set<String> docTokens = JavaConversions.asJavaSet(misc.niceTokens(document.toReferenceString()));
         
-        long mutualTokensCount = srcTokens.stream().filter(x -> dstTokens.contains(x)).count();
+        long mutualTokensCount = citTokens.stream().filter(x -> docTokens.contains(x)).count();
         
-        double similarity = 2.0 * mutualTokensCount / (srcTokens.size() + dstTokens.size());
+        double similarity = 2.0 * mutualTokensCount / (citTokens.size() + docTokens.size());
         
         return similarity;
     }

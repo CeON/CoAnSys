@@ -20,9 +20,9 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import pl.edu.icm.coansys.citations.HashHeuristicCitationMatcher;
+import pl.edu.icm.coansys.citations.HeuristicHashCitationMatcher;
 import pl.edu.icm.coansys.citations.MatchableEntityHasher;
-import pl.edu.icm.coansys.citations.data.HashHeuristicResult;
+import pl.edu.icm.coansys.citations.data.HeuristicHashMatchingResult;
 import pl.edu.icm.coansys.citations.hashers.CitationNameYearHashGenerator;
 import pl.edu.icm.coansys.citations.hashers.CitationNameYearPagesHashGenerator;
 import pl.edu.icm.coansys.citations.hashers.DocumentNameYearHashGenerator;
@@ -38,7 +38,7 @@ import scala.Tuple2;
  * @author Łukasz Dumiszewski
  * @author madryk
  */
-public class HashHeuristicCitationMatcherTest {
+public class HeuristicHashCitationMatcherTest {
     
     
     private JavaSparkContext sparkContext;
@@ -47,7 +47,7 @@ public class HashHeuristicCitationMatcherTest {
     @BeforeMethod
     public void before() {
         
-        SparkConf conf = new SparkConf().setMaster("local").setAppName("HashHeuristicCitationMatcherTest")
+        SparkConf conf = new SparkConf().setMaster("local").setAppName("HeuristicHashCitationMatcherTest")
                 .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer");
         
         sparkContext = new JavaSparkContext(conf);
@@ -78,7 +78,7 @@ public class HashHeuristicCitationMatcherTest {
         
         String documentPath = "src/test/resources/heuristic/documents";
         
-        HashHeuristicCitationMatcher heuristicMatcher = new HashHeuristicCitationMatcher(
+        HeuristicHashCitationMatcher heuristicMatcher = new HeuristicHashCitationMatcher(
                 createMatchableEntityHasher(new CitationNameYearPagesHashGenerator()),
                 createMatchableEntityHasher(new DocumentNameYearPagesHashGenerator()), 10000);
         
@@ -91,7 +91,7 @@ public class HashHeuristicCitationMatcherTest {
         
         // execute
         
-        HashHeuristicResult matchedResult = heuristicMatcher.matchCitations(citations, documents, true);
+        HeuristicHashMatchingResult matchedResult = heuristicMatcher.matchCitations(citations, documents, true);
         
         
         // assert
@@ -113,7 +113,7 @@ public class HashHeuristicCitationMatcherTest {
         
         String documentPath = "src/test/resources/heuristic/documents";
         
-        HashHeuristicCitationMatcher heuristicMatcher = new HashHeuristicCitationMatcher(
+        HeuristicHashCitationMatcher heuristicMatcher = new HeuristicHashCitationMatcher(
                 createMatchableEntityHasher(new CitationNameYearPagesHashGenerator()), 
                 createMatchableEntityHasher(new DocumentNameYearNumNumHashGenerator()), 10000);
         
@@ -126,7 +126,7 @@ public class HashHeuristicCitationMatcherTest {
         
         // execute
         
-        HashHeuristicResult matchedResult = heuristicMatcher.matchCitations(citations, documents, true);
+        HeuristicHashMatchingResult matchedResult = heuristicMatcher.matchCitations(citations, documents, true);
         
         
         // assert
@@ -148,7 +148,7 @@ public class HashHeuristicCitationMatcherTest {
         
         String documentPath = "src/test/resources/heuristic/documents";
         
-        HashHeuristicCitationMatcher heuristicMatcher = new HashHeuristicCitationMatcher(
+        HeuristicHashCitationMatcher heuristicMatcher = new HeuristicHashCitationMatcher(
                 createMatchableEntityHasher(new CitationNameYearHashGenerator()), 
                 createMatchableEntityHasher(new DocumentNameYearStrictHashGenerator()), 10000);
         
@@ -160,7 +160,7 @@ public class HashHeuristicCitationMatcherTest {
         
         // execute
         
-        HashHeuristicResult matchedResult = heuristicMatcher.matchCitations(citations, documents, true);
+        HeuristicHashMatchingResult matchedResult = heuristicMatcher.matchCitations(citations, documents, true);
         
         
         // assert
@@ -182,7 +182,7 @@ public class HashHeuristicCitationMatcherTest {
         
         String documentPath = "src/test/resources/heuristic/documents";
         
-        HashHeuristicCitationMatcher heuristicMatcher = new HashHeuristicCitationMatcher(
+        HeuristicHashCitationMatcher heuristicMatcher = new HeuristicHashCitationMatcher(
                 createMatchableEntityHasher(new CitationNameYearHashGenerator()), 
                 createMatchableEntityHasher(new DocumentNameYearHashGenerator()), 10000);
         
@@ -194,7 +194,7 @@ public class HashHeuristicCitationMatcherTest {
         
         // execute
         
-        HashHeuristicResult matchedResult = heuristicMatcher.matchCitations(citations, documents, false);
+        HeuristicHashMatchingResult matchedResult = heuristicMatcher.matchCitations(citations, documents, false);
         
         
         // assert

@@ -19,7 +19,7 @@ import com.beust.jcommander.Parameters;
 import com.google.common.collect.Lists;
 
 import pl.edu.icm.coansys.citations.hashers.HashGenerator;
-import pl.edu.icm.coansys.citations.data.HashHeuristicResult;
+import pl.edu.icm.coansys.citations.data.HeuristicHashMatchingResult;
 import pl.edu.icm.coansys.citations.data.MatchableEntity;
 import pl.edu.icm.coansys.citations.data.TextWithBytesWritable;
 
@@ -60,25 +60,10 @@ public class CitationMatchingJob {
             JavaPairRDD<Text, BytesWritable> documents = sc.sequenceFile(params.documentPath, Text.class, BytesWritable.class);
             
             
-            List<Pair<MatchableEntityHasher, MatchableEntityHasher>> entitiesHashers = createMatchableEntityHashers(params.hashGeneratorClasses);
-            
-            JavaPairRDD<Text, BytesWritable> unmatchedCitations = citations;
-            JavaPairRDD<Text, Text> joinedCitDocIdPairs = JavaPairRDD.fromJavaRDD(sc.emptyRDD());
-            
-            Iterator<Pair<MatchableEntityHasher, MatchableEntityHasher>> entitiesHashersIterator = entitiesHashers.iterator();
-            while(entitiesHashersIterator.hasNext()) {
-                Pair<MatchableEntityHasher, MatchableEntityHasher> citAndDocHashers = entitiesHashersIterator.next();
-                HashHeuristicCitationMatcher hashHeuristicCitationMatcher = new HashHeuristicCitationMatcher(citAndDocHashers.getLeft(), citAndDocHashers.getRight(), params.maxHashBucketSize);
-                
-                HashHeuristicResult matchedResult = 
-                        hashHeuristicCitationMatcher.matchCitations(unmatchedCitations, documents, entitiesHashersIterator.hasNext());
-                
-                joinedCitDocIdPairs = joinedCitDocIdPairs.union(matchedResult.getCitDocIdPairs());
-                unmatchedCitations = matchedResult.getUnmatchedCitations();
-            }
+            JavaPairRDD<Text, Text> citIdDocIdPairs = matchCitDocByHashes(sc, citations, documents, createMatchableEntityHashers(params.hashGeneratorClasses), params.maxHashBucketSize);
             
             
-            JavaPairRDD<Text, TextWithBytesWritable> citIdDocPairs = documentAttacher.attachDocuments(joinedCitDocIdPairs, documents);
+            JavaPairRDD<Text, TextWithBytesWritable> citIdDocPairs = documentAttacher.attachDocuments(citIdDocIdPairs, documents);
             JavaPairRDD<TextWithBytesWritable, TextWithBytesWritable> citDocPairs = citationAttacher.attachCitationsAndLimitDocs(citIdDocPairs, citations);
             
             JavaPairRDD<TextWithBytesWritable, Text> matchedCitations = bestMatchedCitationPicker.pickBest(citDocPairs);
@@ -94,6 +79,28 @@ public class CitationMatchingJob {
 
 
     //------------------------ PRIVATE --------------------------
+    
+    private static JavaPairRDD<Text, Text> matchCitDocByHashes(JavaSparkContext sc,
+            JavaPairRDD<Text, BytesWritable> citations, JavaPairRDD<Text, BytesWritable> documents,
+            List<Pair<MatchableEntityHasher, MatchableEntityHasher>> entitiesHashers, long maxHashBucketSize) {
+        
+        JavaPairRDD<Text, BytesWritable> unmatchedCitations = citations;
+        JavaPairRDD<Text, Text> joinedCitDocIdPairs = JavaPairRDD.fromJavaRDD(sc.emptyRDD());
+        
+        Iterator<Pair<MatchableEntityHasher, MatchableEntityHasher>> entitiesHashersIterator = entitiesHashers.iterator();
+        while(entitiesHashersIterator.hasNext()) {
+            Pair<MatchableEntityHasher, MatchableEntityHasher> citAndDocHashers = entitiesHashersIterator.next();
+            HeuristicHashCitationMatcher heuristicHashCitationMatcher = new HeuristicHashCitationMatcher(citAndDocHashers.getLeft(), citAndDocHashers.getRight(), maxHashBucketSize);
+            
+            HeuristicHashMatchingResult matchedResult = 
+                    heuristicHashCitationMatcher.matchCitations(unmatchedCitations, documents, entitiesHashersIterator.hasNext());
+            
+            joinedCitDocIdPairs = joinedCitDocIdPairs.union(matchedResult.getCitDocIdPairs());
+            unmatchedCitations = matchedResult.getUnmatchedCitations();
+        }
+        
+        return joinedCitDocIdPairs;
+    }
     
     private static List<Pair<MatchableEntityHasher, MatchableEntityHasher>> createMatchableEntityHashers(List<String> hashGeneratorClassNames) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
         List<Pair<MatchableEntityHasher, MatchableEntityHasher>> matchableEntityHashers = Lists.newArrayList();
@@ -130,10 +137,10 @@ public class CitationMatchingJob {
         
         
         @Parameter(names = "-hashGeneratorClasses", required = true, 
-                description = "Name of classes used for generating hashes for citations and documents. Names must be seperated by colon sign (:). "
-                        + "First class will be used for citations and second for documents."
-                        + "Classes must implement pl.edu.icm.coansys.citations.hashers.HashGenerator interface."
-                        + "Parameter may be specified multiple times for multiple heuristics.")
+                description = "Names of classes used for generating hashes for citations and documents. The names must be seperated by colon sign (:). "
+                        + "The first class will be used for citations and the second for documents."
+                        + "The classes must implement pl.edu.icm.coansys.citations.hashers.HashGenerator interface."
+                        + "This parameter may be specified multiple times. Separately for each given heurisitic.")
         private List<String> hashGeneratorClasses;
         
         @Parameter(names = "-outputDirPath", required = true, description = "path to directory with results")

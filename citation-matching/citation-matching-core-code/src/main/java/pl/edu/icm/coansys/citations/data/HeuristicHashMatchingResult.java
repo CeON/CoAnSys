@@ -5,14 +5,14 @@ import org.apache.hadoop.io.Text;
 import org.apache.spark.api.java.JavaPairRDD;
 
 /**
- * Result of CitationHashHeuristicMatcher.
+ * Result of {@link pl.edu.icm.coansys.citations.HeuristicHashCitationMatcher}.
  * It contains matched citations and documents id pairs and
  * citations that was unmatched.
  * 
  * @author madryk
  *
  */
-public class HashHeuristicResult {
+public class HeuristicHashMatchingResult {
 
     private JavaPairRDD<Text, Text> citDocIdPairs;
     
@@ -21,7 +21,7 @@ public class HashHeuristicResult {
     
     //------------------------ CONSTRUCTORS --------------------------
     
-    public HashHeuristicResult(JavaPairRDD<Text, Text> citDocIdPairs, JavaPairRDD<Text, BytesWritable> unmatchedCitations) {
+    public HeuristicHashMatchingResult(JavaPairRDD<Text, Text> citDocIdPairs, JavaPairRDD<Text, BytesWritable> unmatchedCitations) {
         this.citDocIdPairs = citDocIdPairs;
         this.unmatchedCitations = unmatchedCitations;
     }
