@@ -1,17 +1,10 @@
 package pl.edu.icm.coansys.citations;
 
 import java.util.List;
-import java.util.function.Function;
 
-import org.apache.hadoop.io.BytesWritable;
-import org.apache.hadoop.io.Text;
-import org.apache.hadoop.io.Writable;
-
-import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 
 import pl.edu.icm.coansys.citations.data.MatchableEntity;
-import pl.edu.icm.coansys.citations.data.TextWithBytesWritable;
 import scala.Tuple2;
 
 /**
@@ -59,79 +52,14 @@ public class MatchableEntityDataProvider {
     
     //------------------------ LOGIC --------------------------
     
-    public static List<Tuple2<Text, BytesWritable>> generateEntitiesWritable(List<MatchableEntity> entities) {
-        List<Tuple2<Text, BytesWritable>> entitiesWritable = Lists.newArrayList();
+    public static List<Tuple2<String, MatchableEntity>> generateIdWithEntityTuples(List<MatchableEntity> entities) {
+        List<Tuple2<String, MatchableEntity>> entitiesWritable = Lists.newArrayList();
         
         for (MatchableEntity entity : entities) {
-            entitiesWritable.add(new Tuple2<Text, BytesWritable>(new Text(entity.id()), new BytesWritable(entity.data().toByteArray())));
+            entitiesWritable.add(new Tuple2<String, MatchableEntity>(entity.id(), entity));
         }
         
         return entitiesWritable;
     }
     
-    public static List<Tuple2<Text, Text>> generateCitIdDocIdPairs(List<MatchableEntity> citations, List<MatchableEntity> documents) {
-        
-        return generatePairs(citations, documents,
-                citation -> new Text(citation.id()),
-                document -> new Text(document.id()));
-        
-    }
-    
-    public static List<Tuple2<Text, TextWithBytesWritable>> generateCitIdDocPairs(List<MatchableEntity> citations, List<MatchableEntity> documents) {
-        
-        return generatePairs(citations, documents,
-                citation -> new Text(citation.id()),
-                document -> new TextWithBytesWritable(document.id(), document.data().toByteArray()));
-        
-    }
-    
-    public static List<Tuple2<TextWithBytesWritable, TextWithBytesWritable>> generateCitDocPairs(List<MatchableEntity> citations, List<MatchableEntity> documents) {
-        
-        return generatePairs(citations, documents,
-                citation -> new TextWithBytesWritable(citation.id(), citation.data().toByteArray()),
-                document -> new TextWithBytesWritable(document.id(), document.data().toByteArray()));
-        
-    }
-    
-    public static List<Tuple2<TextWithBytesWritable, Text>> generateMatchedCitations(List<MatchableEntity> citations, List<MatchableEntity> documents, List<Double> similarity) {
-        Preconditions.checkArgument(citations.size() == documents.size() && documents.size() == similarity.size());
-        
-        List<Tuple2<TextWithBytesWritable, Text>> matchedCitations = Lists.newArrayList();
-        
-        for (int i=0; i<citations.size(); ++ i) {
-            MatchableEntity citation = citations.get(i);
-            MatchableEntity document = documents.get(i);
-            
-            TextWithBytesWritable citationWritable = new TextWithBytesWritable(citation.id(), citation.data().toByteArray());
-            Text documentIdWithSimilarityWritable = new Text(similarity.get(i) + ":" + document.id());
-            
-            matchedCitations.add(new Tuple2<TextWithBytesWritable, Text>(citationWritable, documentIdWithSimilarityWritable));
-        }
-        
-        return matchedCitations;
-    }
-    
-    
-    //------------------------ PRIVATE --------------------------
-    
-    private static <K extends Writable, V extends Writable> List<Tuple2<K, V>> generatePairs(
-            List<MatchableEntity> citations, List<MatchableEntity> documents,
-            Function<MatchableEntity, K> citationToWritableFunction, Function<MatchableEntity, V> documentToWritableFunction) {
-        
-        Preconditions.checkArgument(citations.size() == documents.size());
-        
-        List<Tuple2<K, V>> pairs = Lists.newArrayList();
-        
-        for (int i=0; i<citations.size(); ++ i) {
-            MatchableEntity citation = citations.get(i);
-            MatchableEntity document = documents.get(i);
-            
-            K citationWritable = citationToWritableFunction.apply(citation);
-            V documentWritable = documentToWritableFunction.apply(document);
-            
-            pairs.add(new Tuple2<K, V>(citationWritable, documentWritable));
-        }
-        
-        return pairs;
-    }
 }

@@ -6,8 +6,6 @@ import static pl.edu.icm.coansys.citations.MatchableEntityDataProvider.*;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.hadoop.io.BytesWritable;
-import org.apache.hadoop.io.Text;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaSparkContext;
@@ -15,9 +13,10 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
-import pl.edu.icm.coansys.citations.data.TextWithBytesWritable;
+import pl.edu.icm.coansys.citations.data.MatchableEntity;
 import scala.Tuple2;
 
 /**
@@ -60,24 +59,26 @@ public class CitationAttacherWithMatchedLimiterTest {
         
         // given
         
-        JavaPairRDD<Text, TextWithBytesWritable> citIdDocPairs = sparkContext.parallelizePairs(generateCitIdDocPairs(
-                Lists.newArrayList(citation1, citation1, citation2),
-                Lists.newArrayList(document1, document2, document3)));
+        JavaPairRDD<String, MatchableEntity> citIdDocPairs = sparkContext.parallelizePairs(ImmutableList.of(
+                new Tuple2<>(citation1.id(), document1),
+                new Tuple2<>(citation1.id(), document2),
+                new Tuple2<>(citation2.id(), document3)));
         
-        JavaPairRDD<Text, BytesWritable> citations = sparkContext.parallelizePairs(generateEntitiesWritable(
+        JavaPairRDD<String, MatchableEntity> citations = sparkContext.parallelizePairs(generateIdWithEntityTuples(
                 Lists.newArrayList(citation1, citation2, citation3, citation4, citation5)));
         
         
         
         // execute
         
-        JavaPairRDD<TextWithBytesWritable, TextWithBytesWritable> actualCitDocPairs = citationAttacher.attachCitationsAndLimitDocs(citIdDocPairs, citations);
+        JavaPairRDD<MatchableEntity, MatchableEntity> actualCitDocPairs = citationAttacher.attachCitationsAndLimitDocs(citIdDocPairs, citations);
         
         
         // assert
-        List<Tuple2<TextWithBytesWritable, TextWithBytesWritable>> expectedCitDocPairs = generateCitDocPairs(
-                Lists.newArrayList(citation1, citation1, citation2),
-                Lists.newArrayList(document1, document2, document3));
+        List<Tuple2<MatchableEntity, MatchableEntity>> expectedCitDocPairs = ImmutableList.of(
+                new Tuple2<>(citation1, document1),
+                new Tuple2<>(citation1, document2),
+                new Tuple2<>(citation2, document3));
         
         assertCitDocPairsEquals(actualCitDocPairs.collect(), expectedCitDocPairs);
         
@@ -89,24 +90,29 @@ public class CitationAttacherWithMatchedLimiterTest {
         
         // given
         
-        JavaPairRDD<Text, TextWithBytesWritable> citIdDocPairs = sparkContext.parallelizePairs(generateCitIdDocPairs(
-                Lists.newArrayList(citation1, citation1, citation1, citation1, citation2),
-                Lists.newArrayList(document1, document2, document3, document4, document5)));
+        JavaPairRDD<String, MatchableEntity> citIdDocPairs = sparkContext.parallelizePairs(ImmutableList.of(
+                new Tuple2<>(citation1.id(), document1),
+                new Tuple2<>(citation1.id(), document2),
+                new Tuple2<>(citation1.id(), document3),
+                new Tuple2<>(citation1.id(), document4),
+                new Tuple2<>(citation2.id(), document5)));
         
-        JavaPairRDD<Text, BytesWritable> citations = sparkContext.parallelizePairs(generateEntitiesWritable(
+        JavaPairRDD<String, MatchableEntity> citations = sparkContext.parallelizePairs(generateIdWithEntityTuples(
                 Lists.newArrayList(citation1, citation2, citation3, citation4, citation5)));
         
         
         
         // execute
         
-        JavaPairRDD<TextWithBytesWritable, TextWithBytesWritable> actualCitDocPairs = citationAttacher.attachCitationsAndLimitDocs(citIdDocPairs, citations);
+        JavaPairRDD<MatchableEntity, MatchableEntity> actualCitDocPairs = citationAttacher.attachCitationsAndLimitDocs(citIdDocPairs, citations);
         
         
         // assert
-        List<Tuple2<TextWithBytesWritable, TextWithBytesWritable>> expectedCitDocPairs = generateCitDocPairs(
-                Lists.newArrayList(citation1, citation1, citation1, citation2),
-                Lists.newArrayList(document1, document2, document3, document5));
+        List<Tuple2<MatchableEntity, MatchableEntity>> expectedCitDocPairs = ImmutableList.of(
+                new Tuple2<>(citation1, document1),
+                new Tuple2<>(citation1, document2),
+                new Tuple2<>(citation1, document3),
+                new Tuple2<>(citation2, document5));
         
         assertCitDocPairsEquals(actualCitDocPairs.collect(), expectedCitDocPairs);
         
@@ -118,17 +124,18 @@ public class CitationAttacherWithMatchedLimiterTest {
         
         // given
         
-        JavaPairRDD<Text, TextWithBytesWritable> citIdDocPairs = sparkContext.parallelizePairs(generateCitIdDocPairs(
-                Lists.newArrayList(citation1, citation1, citation2),
-                Lists.newArrayList(document1, document2, document4)));
+        JavaPairRDD<String, MatchableEntity> citIdDocPairs = sparkContext.parallelizePairs(ImmutableList.of(
+                new Tuple2<>(citation1.id(), document1),
+                new Tuple2<>(citation1.id(), document2),
+                new Tuple2<>(citation2.id(), document4)));
         
-        JavaPairRDD<Text, BytesWritable> citations = sparkContext.parallelizePairs(Lists.newArrayList());
+        JavaPairRDD<String, MatchableEntity> citations = sparkContext.parallelizePairs(Lists.newArrayList());
         
         
         
         // execute
         
-        JavaPairRDD<TextWithBytesWritable, TextWithBytesWritable> actualCitDocPairs = citationAttacher.attachCitationsAndLimitDocs(citIdDocPairs, citations);
+        JavaPairRDD<MatchableEntity, MatchableEntity> actualCitDocPairs = citationAttacher.attachCitationsAndLimitDocs(citIdDocPairs, citations);
         
         
         // assert
@@ -140,29 +147,29 @@ public class CitationAttacherWithMatchedLimiterTest {
     
     //------------------------ PRIVATE --------------------------
     
-    private void assertCitDocPairsEquals(List<Tuple2<TextWithBytesWritable, TextWithBytesWritable>> actualCitDocPairs, List<Tuple2<TextWithBytesWritable, TextWithBytesWritable>> expectedCitDocPairs) {
+    private void assertCitDocPairsEquals(List<Tuple2<MatchableEntity, MatchableEntity>> actualCitDocPairs, List<Tuple2<MatchableEntity, MatchableEntity>> expectedCitDocPairs) {
         
         assertEquals(actualCitDocPairs.size(), expectedCitDocPairs.size());
         
-        for (Tuple2<TextWithBytesWritable, TextWithBytesWritable> actualCitDocPair : actualCitDocPairs) {
+        for (Tuple2<MatchableEntity, MatchableEntity> actualCitDocPair : actualCitDocPairs) {
             assertTrue(isInCitDocPairs(expectedCitDocPairs, actualCitDocPair));
         }
         
     }
     
     
-    private boolean isInCitDocPairs(List<Tuple2<TextWithBytesWritable, TextWithBytesWritable>> citDocPairs, Tuple2<TextWithBytesWritable, TextWithBytesWritable> citDocPairToFind) {
+    private boolean isInCitDocPairs(List<Tuple2<MatchableEntity, MatchableEntity>> citDocPairs, Tuple2<MatchableEntity, MatchableEntity> citDocPairToFind) {
         
-        Text citIdToFind = citDocPairToFind._1.text();
-        Text docIdToFind = citDocPairToFind._2.text();
+        String citIdToFind = citDocPairToFind._1.id();
+        String docIdToFind = citDocPairToFind._2.id();
         
-        for (Tuple2<TextWithBytesWritable, TextWithBytesWritable> citDocPair : citDocPairs) {
-            Text citId = citDocPair._1.text();
-            Text docId = citDocPair._2.text();
+        for (Tuple2<MatchableEntity, MatchableEntity> citDocPair : citDocPairs) {
+            String citId = citDocPair._1.id();
+            String docId = citDocPair._2.id();
             
             if (citId.equals(citIdToFind) && docId.equals(docIdToFind)) {
-                return Arrays.equals(citDocPair._1.bytes().copyBytes(), citDocPairToFind._1.bytes().copyBytes()) &&
-                        Arrays.equals(citDocPair._2.bytes().copyBytes(), citDocPairToFind._2.bytes().copyBytes());
+                return Arrays.equals(citDocPair._1.data().toByteArray(), citDocPairToFind._1.data().toByteArray()) &&
+                        Arrays.equals(citDocPair._2.data().toByteArray(), citDocPairToFind._2.data().toByteArray());
             }
         }
         

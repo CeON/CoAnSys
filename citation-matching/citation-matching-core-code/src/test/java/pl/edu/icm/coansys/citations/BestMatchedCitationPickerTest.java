@@ -6,7 +6,6 @@ import static pl.edu.icm.coansys.citations.MatchableEntityDataProvider.*;
 
 import java.util.List;
 
-import org.apache.hadoop.io.Text;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaSparkContext;
@@ -14,9 +13,10 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.ImmutableList;
 
-import pl.edu.icm.coansys.citations.data.TextWithBytesWritable;
+import pl.edu.icm.coansys.citations.data.IdWithSimilarity;
+import pl.edu.icm.coansys.citations.data.MatchableEntity;
 import scala.Tuple2;
 
 /**
@@ -62,23 +62,26 @@ public class BestMatchedCitationPickerTest {
         
         // given
         
-        JavaPairRDD<TextWithBytesWritable, TextWithBytesWritable> citDocPairs = sparkContext.parallelizePairs(generateCitDocPairs(
-                Lists.newArrayList(citation1, citation1, citation1, citation2, citation4, citation4),
-                Lists.newArrayList(document1, document2, document3, document4, document4, document5)));
+        JavaPairRDD<MatchableEntity, MatchableEntity> citDocPairs = sparkContext.parallelizePairs(ImmutableList.of(
+                new Tuple2<>(citation1, document1),
+                new Tuple2<>(citation1, document2),
+                new Tuple2<>(citation1, document3),
+                new Tuple2<>(citation2, document4),
+                new Tuple2<>(citation4, document4),
+                new Tuple2<>(citation4, document5)));
         
         
         
         // execute
         
-        JavaPairRDD<TextWithBytesWritable, Text> actualMatchedCitations = bestMatchedCitationPicker.pickBest(citDocPairs);
+        JavaPairRDD<MatchableEntity, IdWithSimilarity> actualMatchedCitations = bestMatchedCitationPicker.pickBest(citDocPairs);
         
         
         // assert
         
-        List<Tuple2<TextWithBytesWritable, Text>> expectedMatchedCitations = generateMatchedCitations(
-                Lists.newArrayList(citation1, citation4),
-                Lists.newArrayList(document2, document5),
-                Lists.newArrayList(0.748069, 0.739753));
+        List<Tuple2<MatchableEntity, IdWithSimilarity>> expectedMatchedCitations = ImmutableList.of(
+                new Tuple2<>(citation1, new IdWithSimilarity(document2.id(), 0.748069)),
+                new Tuple2<>(citation4, new IdWithSimilarity(document5.id(), 0.739753)));
         
         assertMatchedEquals(actualMatchedCitations.collect(), expectedMatchedCitations);
         
@@ -87,16 +90,16 @@ public class BestMatchedCitationPickerTest {
     
     //------------------------ PRIVATE --------------------------
     
-    private void assertMatchedEquals(List<Tuple2<TextWithBytesWritable, Text>> actualMatchedCitations, List<Tuple2<TextWithBytesWritable, Text>> expectedMatchedCitations) {
+    private void assertMatchedEquals(List<Tuple2<MatchableEntity, IdWithSimilarity>> actualMatchedCitations, List<Tuple2<MatchableEntity, IdWithSimilarity>> expectedMatchedCitations) {
         
         assertEquals(actualMatchedCitations.size(), expectedMatchedCitations.size());
         
-        for (Tuple2<TextWithBytesWritable, Text> expectedMatchedCitation : expectedMatchedCitations) {
+        for (Tuple2<MatchableEntity, IdWithSimilarity> expectedMatchedCitation : expectedMatchedCitations) {
             
-            String expectedCitId = expectedMatchedCitation._1.text().toString();
-            String expectedDocId = expectedMatchedCitation._2.toString().substring(expectedMatchedCitation._2.toString().indexOf(":") + 1);
+            String expectedCitId = expectedMatchedCitation._1.id();
+            String expectedDocId = expectedMatchedCitation._2.getId();
             
-            Tuple2<TextWithBytesWritable, Text> actualMatchedCitation = findMatchedCitation(actualMatchedCitations, expectedCitId, expectedDocId);
+            Tuple2<MatchableEntity, IdWithSimilarity> actualMatchedCitation = findMatchedCitation(actualMatchedCitations, expectedCitId, expectedDocId);
             if (actualMatchedCitation == null) {
                 fail("Expected matched citation not found (" + expectedCitId + ", " + expectedDocId + ")");
             }
@@ -106,12 +109,12 @@ public class BestMatchedCitationPickerTest {
         
     }
     
-    private Tuple2<TextWithBytesWritable, Text> findMatchedCitation(List<Tuple2<TextWithBytesWritable, Text>> matchedCitations, String citIdToFind, String docIdToFind) {
+    private Tuple2<MatchableEntity, IdWithSimilarity> findMatchedCitation(List<Tuple2<MatchableEntity, IdWithSimilarity>> matchedCitations, String citIdToFind, String docIdToFind) {
         
-        for (Tuple2<TextWithBytesWritable, Text> matchedCitation : matchedCitations) {
+        for (Tuple2<MatchableEntity, IdWithSimilarity> matchedCitation : matchedCitations) {
             
-            String citId = matchedCitation._1.text().toString();
-            String docId = matchedCitation._2.toString().substring(matchedCitation._2.toString().indexOf(":") + 1);
+            String citId = matchedCitation._1.id();
+            String docId = matchedCitation._2.getId();
             
             if (citId.equals(citIdToFind) && docId.equals(docIdToFind)) {
                 return matchedCitation;
@@ -122,13 +125,13 @@ public class BestMatchedCitationPickerTest {
         
     }
     
-    private void assertMatchedCitationEquals(Tuple2<TextWithBytesWritable, Text> expectedMatchedCitation, Tuple2<TextWithBytesWritable, Text> actualMatchedCitation) {
+    private void assertMatchedCitationEquals(Tuple2<MatchableEntity, IdWithSimilarity> expectedMatchedCitation, Tuple2<MatchableEntity, IdWithSimilarity> actualMatchedCitation) {
         
-        double expectedSimilarity = Double.parseDouble(expectedMatchedCitation._2.toString().split(":")[0]);
-        byte[] expectedCitationBytes = expectedMatchedCitation._1.bytes().copyBytes();
+        double expectedSimilarity = expectedMatchedCitation._2.getSimilarity();
+        byte[] expectedCitationBytes = expectedMatchedCitation._1.data().toByteArray();
         
-        double actualSimilarity = Double.parseDouble(actualMatchedCitation._2.toString().split(":")[0]);
-        byte[] actualCitationBytes = actualMatchedCitation._1.bytes().copyBytes();
+        double actualSimilarity = actualMatchedCitation._2.getSimilarity();
+        byte[] actualCitationBytes = actualMatchedCitation._1.data().toByteArray();
         
         assertEquals(expectedCitationBytes, actualCitationBytes);
         assertEquals(expectedSimilarity, actualSimilarity, DOUBLE_EPSILON);

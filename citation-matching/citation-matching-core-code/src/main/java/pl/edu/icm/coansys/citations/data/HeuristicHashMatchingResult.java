@@ -1,7 +1,5 @@
 package pl.edu.icm.coansys.citations.data;
 
-import org.apache.hadoop.io.BytesWritable;
-import org.apache.hadoop.io.Text;
 import org.apache.spark.api.java.JavaPairRDD;
 
 /**
@@ -14,14 +12,14 @@ import org.apache.spark.api.java.JavaPairRDD;
  */
 public class HeuristicHashMatchingResult {
 
-    private JavaPairRDD<Text, Text> citDocIdPairs;
+    private JavaPairRDD<String, String> citDocIdPairs;
     
-    private JavaPairRDD<Text, BytesWritable> unmatchedCitations;
+    private JavaPairRDD<String, MatchableEntity> unmatchedCitations;
     
     
     //------------------------ CONSTRUCTORS --------------------------
     
-    public HeuristicHashMatchingResult(JavaPairRDD<Text, Text> citDocIdPairs, JavaPairRDD<Text, BytesWritable> unmatchedCitations) {
+    public HeuristicHashMatchingResult(JavaPairRDD<String, String> citDocIdPairs, JavaPairRDD<String, MatchableEntity> unmatchedCitations) {
         this.citDocIdPairs = citDocIdPairs;
         this.unmatchedCitations = unmatchedCitations;
     }
@@ -29,11 +27,11 @@ public class HeuristicHashMatchingResult {
     
     //------------------------ GETTERS --------------------------
     
-    public JavaPairRDD<Text, Text> getCitDocIdPairs() {
+    public JavaPairRDD<String, String> getCitDocIdPairs() {
         return citDocIdPairs;
     }
     
-    public JavaPairRDD<Text, BytesWritable> getUnmatchedCitations() {
+    public JavaPairRDD<String, MatchableEntity> getUnmatchedCitations() {
         return unmatchedCitations;
     }
 }

@@ -9,7 +9,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.Text;
@@ -23,6 +25,7 @@ import org.testng.annotations.Test;
 import pl.edu.icm.coansys.citations.HeuristicHashCitationMatcher;
 import pl.edu.icm.coansys.citations.MatchableEntityHasher;
 import pl.edu.icm.coansys.citations.data.HeuristicHashMatchingResult;
+import pl.edu.icm.coansys.citations.data.MatchableEntity;
 import pl.edu.icm.coansys.citations.hashers.CitationNameYearHashGenerator;
 import pl.edu.icm.coansys.citations.hashers.CitationNameYearPagesHashGenerator;
 import pl.edu.icm.coansys.citations.hashers.DocumentNameYearHashGenerator;
@@ -48,7 +51,8 @@ public class HeuristicHashCitationMatcherTest {
     public void before() {
         
         SparkConf conf = new SparkConf().setMaster("local").setAppName("HeuristicHashCitationMatcherTest")
-                .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer");
+                .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
+                .set("spark.kryo.registrator", "pl.edu.icm.coansys.citations.MatchableEntityKryoRegistrator");
         
         sparkContext = new JavaSparkContext(conf);
         
@@ -83,9 +87,9 @@ public class HeuristicHashCitationMatcherTest {
                 createMatchableEntityHasher(new DocumentNameYearPagesHashGenerator()), 10000);
         
         
-        JavaPairRDD<Text, BytesWritable> citations = sparkContext.sequenceFile(citationPath, Text.class, BytesWritable.class);
+        JavaPairRDD<String, MatchableEntity> citations = loadEntities(sparkContext, citationPath);
         
-        JavaPairRDD<Text, BytesWritable> documents = sparkContext.sequenceFile(documentPath, Text.class, BytesWritable.class);
+        JavaPairRDD<String, MatchableEntity> documents = loadEntities(sparkContext, documentPath);
         
         
         
@@ -118,9 +122,9 @@ public class HeuristicHashCitationMatcherTest {
                 createMatchableEntityHasher(new DocumentNameYearNumNumHashGenerator()), 10000);
         
         
-        JavaPairRDD<Text, BytesWritable> citations = sparkContext.sequenceFile(citationPath, Text.class, BytesWritable.class);
+        JavaPairRDD<String, MatchableEntity> citations = loadEntities(sparkContext, citationPath);
         
-        JavaPairRDD<Text, BytesWritable> documents = sparkContext.sequenceFile(documentPath, Text.class, BytesWritable.class);
+        JavaPairRDD<String, MatchableEntity> documents = loadEntities(sparkContext, documentPath);
         
         
         
@@ -153,9 +157,9 @@ public class HeuristicHashCitationMatcherTest {
                 createMatchableEntityHasher(new DocumentNameYearStrictHashGenerator()), 10000);
         
         
-        JavaPairRDD<Text, BytesWritable> citations = sparkContext.sequenceFile(citationPath, Text.class, BytesWritable.class);
+        JavaPairRDD<String, MatchableEntity> citations = loadEntities(sparkContext, citationPath);
         
-        JavaPairRDD<Text, BytesWritable> documents = sparkContext.sequenceFile(documentPath, Text.class, BytesWritable.class);
+        JavaPairRDD<String, MatchableEntity> documents = loadEntities(sparkContext, documentPath);
         
         
         // execute
@@ -187,9 +191,9 @@ public class HeuristicHashCitationMatcherTest {
                 createMatchableEntityHasher(new DocumentNameYearHashGenerator()), 10000);
         
         
-        JavaPairRDD<Text, BytesWritable> citations = sparkContext.sequenceFile(citationPath, Text.class, BytesWritable.class);
+        JavaPairRDD<String, MatchableEntity> citations = loadEntities(sparkContext, citationPath);
         
-        JavaPairRDD<Text, BytesWritable> documents = sparkContext.sequenceFile(documentPath, Text.class, BytesWritable.class);
+        JavaPairRDD<String, MatchableEntity> documents = loadEntities(sparkContext, documentPath);
         
         
         // execute
@@ -206,40 +210,46 @@ public class HeuristicHashCitationMatcherTest {
     }
 
 
-
     
     
     //------------------------ PRIVATE --------------------------
 
-    
-    private void assertUnmatchedCitations(List<Tuple2<Text, BytesWritable>> actualUnmatchedCitations, String expectedUnmatchedCitationDirPath) throws IOException {
+    private static JavaPairRDD<String, MatchableEntity> loadEntities(JavaSparkContext sc, String entitiesFilePath) {
         
-        List<Pair<Text, BytesWritable>> expectedUnmatchedCitations = LocalSequenceFileUtils.readSequenceFile(new File(expectedUnmatchedCitationDirPath), Text.class, BytesWritable.class);
+        JavaPairRDD<String, MatchableEntity> entities = sc.sequenceFile(entitiesFilePath, Text.class, BytesWritable.class)
+                .mapToPair(x -> new Tuple2<String, MatchableEntity>(x._1.toString(), MatchableEntity.fromBytes(x._2.copyBytes())));
+        
+        return entities;
+    }
+    
+    private void assertUnmatchedCitations(List<Tuple2<String, MatchableEntity>> actualUnmatchedCitations, String expectedUnmatchedCitationDirPath) throws IOException {
+        
+        List<Pair<String, MatchableEntity>> expectedUnmatchedCitations = readUnmatchedCitationsFile(expectedUnmatchedCitationDirPath);
         
         assertEquals(expectedUnmatchedCitations.size(), actualUnmatchedCitations.size());
         
-        for (Tuple2<Text, BytesWritable> actualUnmatchedCitation : actualUnmatchedCitations) {
+        for (Tuple2<String, MatchableEntity> actualUnmatchedCitation : actualUnmatchedCitations) {
             assertTrue(isInUnmatchedCitations(expectedUnmatchedCitations, actualUnmatchedCitation));
         }
         
     }
     
     
-    private void assertMatchedCitations(List<Tuple2<Text, Text>> actualMatchedCitations, String expectedMatchedCitationDirPath) throws IOException {
+    private void assertMatchedCitations(List<Tuple2<String, String>> actualMatchedCitations, String expectedMatchedCitationDirPath) throws IOException {
         
-        List<Pair<Text, Text>> expectedMatchedCitations = LocalSequenceFileUtils.readSequenceFile(new File(expectedMatchedCitationDirPath), Text.class, Text.class);
+        List<Pair<String, String>> expectedMatchedCitations = readMatchedCitationsFile(expectedMatchedCitationDirPath);
         
         assertEquals(expectedMatchedCitations.size(), actualMatchedCitations.size());
         
-        for (Tuple2<Text, Text> actualCitationDocIdPair : actualMatchedCitations) {
+        for (Tuple2<String, String> actualCitationDocIdPair : actualMatchedCitations) {
             assertTrue(isInMatchedCitations(expectedMatchedCitations, actualCitationDocIdPair));
         }
     }
     
     
-    private boolean isInMatchedCitations(List<Pair<Text, Text>> citations, Tuple2<Text, Text> citationDocIdPair) {
+    private boolean isInMatchedCitations(List<Pair<String, String>> citations, Tuple2<String, String> citationDocIdPair) {
         
-        for (Pair<Text, Text> citDocIdPair : citations) { 
+        for (Pair<String, String> citDocIdPair : citations) { 
             if (citDocIdPair.getKey().equals(citationDocIdPair._1) && (citDocIdPair.getValue().equals(citationDocIdPair._2))) {
                 return true;
             }
@@ -249,11 +259,11 @@ public class HeuristicHashCitationMatcherTest {
         
     }
 
-    private boolean isInUnmatchedCitations(List<Pair<Text, BytesWritable>> citations, Tuple2<Text, BytesWritable> citation) {
+    private boolean isInUnmatchedCitations(List<Pair<String, MatchableEntity>> citations, Tuple2<String, MatchableEntity> citation) {
         
-        for (Pair<Text, BytesWritable> cit : citations) {
+        for (Pair<String, MatchableEntity> cit : citations) {
             if (cit.getKey().equals(citation._1)) {
-                return Arrays.equals(cit.getValue().copyBytes(), citation._2.copyBytes());
+                return Arrays.equals(cit.getValue().data().toByteArray(), citation._2.data().toByteArray());
             }
                 
         }
@@ -266,6 +276,32 @@ public class HeuristicHashCitationMatcherTest {
         MatchableEntityHasher matchableEntityHasher = new MatchableEntityHasher();
         matchableEntityHasher.setHashGenerator(hashGenerator);
         return matchableEntityHasher;
+    }
+    
+    
+    
+    private List<Pair<String, MatchableEntity>> readUnmatchedCitationsFile(String path) throws IOException {
+        
+        List<Pair<Text, BytesWritable>> unmatchedWritable = LocalSequenceFileUtils.readSequenceFile(new File(path), Text.class, BytesWritable.class);
+        
+        return unmatchedWritable.stream()
+                .map(pair -> new ImmutablePair<>(
+                        pair.getKey().toString(),
+                        MatchableEntity.fromBytes(pair.getValue().copyBytes())))
+                .collect(Collectors.toList());
+        
+    }
+    
+    private List<Pair<String, String>> readMatchedCitationsFile(String path) throws IOException {
+        
+        List<Pair<Text, Text>> matchedCitationsWritable = LocalSequenceFileUtils.readSequenceFile(new File(path), Text.class, Text.class);
+        
+        return matchedCitationsWritable.stream()
+                .map(pair -> new ImmutablePair<>(
+                        pair.getKey().toString(),
+                        pair.getValue().toString()))
+                .collect(Collectors.toList());
+        
     }
 
 

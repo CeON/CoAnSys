@@ -4,14 +4,13 @@ import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.hadoop.io.Text;
 import org.apache.spark.api.java.JavaPairRDD;
 
 import com.google.common.collect.Lists;
 
+import pl.edu.icm.coansys.citations.data.IdWithSimilarity;
 import pl.edu.icm.coansys.citations.data.MatchableEntity;
 import pl.edu.icm.coansys.citations.data.SimilarityMeasurer;
-import pl.edu.icm.coansys.citations.data.TextWithBytesWritable;
 import scala.Tuple2;
 
 /**
@@ -35,19 +34,18 @@ public class BestMatchedCitationPicker implements Serializable {
      * Similarity is calculated using {@link SimilarityMeasurer#similarity(MatchableEntity, MatchableEntity)}.
      * To be included in final results, similarity must be equal or greater than 0.5
      * 
-     * @return Rdd with keys being citations and values being {@link Text}s composed of similarity and document id separated by colon
+     * @return Rdd with keys being citations and values being ids with similarity
      */
-    public JavaPairRDD<TextWithBytesWritable, Text> pickBest(JavaPairRDD<TextWithBytesWritable, TextWithBytesWritable> citDocPairs) {
+    public JavaPairRDD<MatchableEntity, IdWithSimilarity> pickBest(JavaPairRDD<MatchableEntity, MatchableEntity> citDocPairs) {
         
-        JavaPairRDD<TextWithBytesWritable, Text> bestMatchedCitations = citDocPairs
+        JavaPairRDD<MatchableEntity, IdWithSimilarity> bestMatchedCitations = citDocPairs
                 .mapPartitionsToPair(citAndDocParitition -> {
                     
                     SimilarityMeasurer similarityMeasurer = new SimilarityMeasurer(SimilarityMeasurer.advancedFvBuilder());
                     
                     return calculateSimilarityAndFilter(similarityMeasurer, citAndDocParitition);
                 })
-                .reduceByKey((docWithSim1, docWithSim2) -> (docWithSim1.getSimilarity() > docWithSim2.getSimilarity()) ? docWithSim1 : docWithSim2)
-                .mapValues(docWithSim -> new Text(docWithSim.getSimilarity() + ":" + docWithSim.getId()));
+                .reduceByKey((docWithSim1, docWithSim2) -> (docWithSim1.getSimilarity() > docWithSim2.getSimilarity()) ? docWithSim1 : docWithSim2);
 
         return bestMatchedCitations;
     }
@@ -55,14 +53,14 @@ public class BestMatchedCitationPicker implements Serializable {
     
     //------------------------ PRIVATE --------------------------
     
-    private List<Tuple2<TextWithBytesWritable, IdWithSimilarity>> calculateSimilarityAndFilter(SimilarityMeasurer similarityMeasurer, Iterator<Tuple2<TextWithBytesWritable, TextWithBytesWritable>> citAndDocIterable) {
+    private List<Tuple2<MatchableEntity, IdWithSimilarity>> calculateSimilarityAndFilter(SimilarityMeasurer similarityMeasurer, Iterator<Tuple2<MatchableEntity, MatchableEntity>> citAndDocIterable) {
         
-        List<Tuple2<TextWithBytesWritable, IdWithSimilarity>> citDocIdPairsWithSimilarity = Lists.newArrayList();
+        List<Tuple2<MatchableEntity, IdWithSimilarity>> citDocIdPairsWithSimilarity = Lists.newArrayList();
         
         
         while(citAndDocIterable.hasNext()) {
             
-            Tuple2<TextWithBytesWritable, TextWithBytesWritable> citAndDoc = citAndDocIterable.next();
+            Tuple2<MatchableEntity, MatchableEntity> citAndDoc = citAndDocIterable.next();
             
             double similarity = calculateSimilarity(similarityMeasurer, citAndDoc._1, citAndDoc._2);
             
@@ -74,43 +72,23 @@ public class BestMatchedCitationPicker implements Serializable {
         return citDocIdPairsWithSimilarity;
     }
     
-    private Tuple2<TextWithBytesWritable, IdWithSimilarity> createCitDocWithSimilarityPair(
-            TextWithBytesWritable citationWritable, TextWithBytesWritable documentWritable, double similarity) {
+    private Tuple2<MatchableEntity, IdWithSimilarity> createCitDocWithSimilarityPair(
+            MatchableEntity citationWritable, MatchableEntity documentWritable, double similarity) {
         
-        return new Tuple2<TextWithBytesWritable, IdWithSimilarity>(
+        return new Tuple2<MatchableEntity, IdWithSimilarity>(
                 citationWritable, 
-                new IdWithSimilarity(documentWritable.text().toString(), similarity));
+                new IdWithSimilarity(documentWritable.id(), similarity));
     }
     
     private double calculateSimilarity(SimilarityMeasurer similarityMeasurer,
-            TextWithBytesWritable citationWritable, TextWithBytesWritable documentWritable) {
+            MatchableEntity citationWritable, MatchableEntity documentWritable) {
         
-        MatchableEntity citation = MatchableEntity.fromBytes(citationWritable.bytes().copyBytes());
-        MatchableEntity document = MatchableEntity.fromBytes(documentWritable.bytes().copyBytes());
+        MatchableEntity citation = citationWritable;
+        MatchableEntity document = documentWritable;
         
         double similarity = similarityMeasurer.similarity(citation, document);
         
         return similarity;
     }
 
-    
-    private static class IdWithSimilarity {
-        
-        private String id;
-        private double similarity;
-        
-        public IdWithSimilarity(String id, double similarity) {
-            this.id = id;
-            this.similarity = similarity;
-        }
-
-        public double getSimilarity() {
-            return similarity;
-        }
-
-        public String getId() {
-            return id;
-        }
-        
-    }
 }
