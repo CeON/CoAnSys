@@ -6,14 +6,11 @@ import java.util.Comparator;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.apache.hadoop.io.BytesWritable;
-import org.apache.hadoop.io.Text;
 import org.apache.spark.api.java.JavaPairRDD;
 
 import com.google.common.collect.MinMaxPriorityQueue;
 
 import pl.edu.icm.coansys.citations.data.MatchableEntity;
-import pl.edu.icm.coansys.citations.data.TextWithBytesWritable;
 import pl.edu.icm.coansys.citations.util.misc;
 import scala.Tuple2;
 import scala.collection.JavaConversions;
@@ -53,21 +50,19 @@ public class CitationAttacherWithMatchedLimiter implements Serializable {
      * the same citation to {@link #getSameCitationsLimit()} records.
      * Method limits records based on number of mutual tokens.
      */
-    public JavaPairRDD<TextWithBytesWritable, TextWithBytesWritable> attachCitationsAndLimitDocs(JavaPairRDD<Text, TextWithBytesWritable> citIdDocPairs, JavaPairRDD<Text, BytesWritable> citations) {
+    public JavaPairRDD<MatchableEntity, MatchableEntity> attachCitationsAndLimitDocs(JavaPairRDD<String, MatchableEntity> citIdDocPairs, JavaPairRDD<String, MatchableEntity> citations) {
         
-        JavaPairRDD<Text, TextWithBytesWritable> citationsTextWithBytes = citations.mapToPair(x -> new Tuple2<Text, TextWithBytesWritable>(x._1, new TextWithBytesWritable(x._1, x._2)));
-        
-        JavaPairRDD<TextWithBytesWritable, TextWithBytesWritable> citDocPairs = citIdDocPairs
+        JavaPairRDD<MatchableEntity, MatchableEntity> citDocPairs = citIdDocPairs
                 .groupByKey()
-                .join(citationsTextWithBytes)
+                .join(citations)
                 .flatMapToPair(docsWithCit -> {
                     
-                    MatchableEntity citation = MatchableEntity.fromBytes(docsWithCit._2._2.bytes().copyBytes());
+                    MatchableEntity citation = docsWithCit._2._2;
                     
-                    Collection<BytesWritableWithSimilarity> queue = calculateSimilarityAndLimitDocs(citation, docsWithCit._2._1);
+                    Collection<EntityWithSimilarity> docsFiltered = calculateSimilarityAndLimitDocs(citation, docsWithCit._2._1);
                     
-                    return queue.stream()
-                            .map(x -> new Tuple2<TextWithBytesWritable, TextWithBytesWritable>(docsWithCit._2._2, x.getBytesWritable()))
+                    return docsFiltered.stream()
+                            .map(x -> new Tuple2<MatchableEntity, MatchableEntity>(citation, x.getEntity()))
                             .collect(Collectors.toList());
                 });
         
@@ -84,20 +79,18 @@ public class CitationAttacherWithMatchedLimiter implements Serializable {
     
     //------------------------ PRIVATE --------------------------
     
-    private Collection<BytesWritableWithSimilarity> calculateSimilarityAndLimitDocs(MatchableEntity citation, Iterable<TextWithBytesWritable> documentsWritable) {
+    private Collection<EntityWithSimilarity> calculateSimilarityAndLimitDocs(MatchableEntity citation, Iterable<MatchableEntity> documents) {
         
-        MinMaxPriorityQueue<BytesWritableWithSimilarity> queue = MinMaxPriorityQueue
-                .orderedBy(new BytesWritableWithSimilarityComparator())
+        MinMaxPriorityQueue<EntityWithSimilarity> queue = MinMaxPriorityQueue
+                .orderedBy(new EntityWithSimilarityComparator())
                 .maximumSize(sameCitationsLimit)
                 .create();
         
-        for (TextWithBytesWritable documentWritable : documentsWritable) {
-            
-            MatchableEntity document = MatchableEntity.fromBytes(documentWritable.bytes().copyBytes());
+        for (MatchableEntity document : documents) {
             
             double similarity = calculateTokenSimilarity(citation, document);
             
-            queue.add(new BytesWritableWithSimilarity(similarity, documentWritable));
+            queue.add(new EntityWithSimilarity(document, similarity));
             
         }
         
@@ -118,30 +111,33 @@ public class CitationAttacherWithMatchedLimiter implements Serializable {
     
     
     
-    private static class BytesWritableWithSimilarity {
+    public static class EntityWithSimilarity implements Serializable {
         
+        private static final long serialVersionUID = 1L;
+        
+        
+        private MatchableEntity entity;
         private double similarity;
-        private TextWithBytesWritable bytesWritable;
         
-        public BytesWritableWithSimilarity(double similarity, TextWithBytesWritable bytesWritable) {
+        public EntityWithSimilarity(MatchableEntity entity, double similarity) {
+            this.entity = entity;
             this.similarity = similarity;
-            this.bytesWritable = bytesWritable;
         }
 
         public double getSimilarity() {
             return similarity;
         }
 
-        public TextWithBytesWritable getBytesWritable() {
-            return bytesWritable;
+        public MatchableEntity getEntity() {
+            return entity;
         }
         
     }
     
-    private static class BytesWritableWithSimilarityComparator implements Comparator<BytesWritableWithSimilarity> {
+    private static class EntityWithSimilarityComparator implements Comparator<EntityWithSimilarity> {
         
         @Override
-        public int compare(BytesWritableWithSimilarity o1, BytesWritableWithSimilarity o2) {
+        public int compare(EntityWithSimilarity o1, EntityWithSimilarity o2) {
             return -Double.compare(o1.getSimilarity(), o2.getSimilarity());
         }
         

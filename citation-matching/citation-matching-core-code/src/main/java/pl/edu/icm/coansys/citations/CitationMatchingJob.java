@@ -20,6 +20,8 @@ import com.google.common.collect.Lists;
 
 import pl.edu.icm.coansys.citations.hashers.HashGenerator;
 import pl.edu.icm.coansys.citations.data.HeuristicHashMatchingResult;
+import pl.edu.icm.coansys.citations.data.IdWithSimilarity;
+import scala.Tuple2;
 import pl.edu.icm.coansys.citations.data.MatchableEntity;
 import pl.edu.icm.coansys.citations.data.TextWithBytesWritable;
 
@@ -50,27 +52,27 @@ public class CitationMatchingJob {
         
         SparkConf conf = new SparkConf();
         conf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer");
-        conf.registerKryoClasses(new Class[]{MatchableEntity.class});
+        conf.set("spark.kryo.registrator", "pl.edu.icm.coansys.citations.MatchableEntityKryoRegistrator");
+        
         
         try (JavaSparkContext sc = new JavaSparkContext(conf)) {
             
             // read citations and documents
-            JavaPairRDD<Text, BytesWritable> citations = sc.sequenceFile(params.citationPath, Text.class, BytesWritable.class);
+            JavaPairRDD<String, MatchableEntity> citations = loadEntities(sc, params.citationPath);
 //            citations = citations.cache(); // cache here makes the join (a few lines below) not working - the join gives 0 results
-            JavaPairRDD<Text, BytesWritable> documents = sc.sequenceFile(params.documentPath, Text.class, BytesWritable.class);
+            JavaPairRDD<String, MatchableEntity> documents = loadEntities(sc, params.documentPath);
             
             
-            JavaPairRDD<Text, Text> citIdDocIdPairs = matchCitDocByHashes(sc, citations, documents, createMatchableEntityHashers(params.hashGeneratorClasses), params.maxHashBucketSize);
+            JavaPairRDD<String, String> citIdDocIdPairs = matchCitDocByHashes(sc, citations, documents, createMatchableEntityHashers(params.hashGeneratorClasses), params.maxHashBucketSize);
             
             
-            JavaPairRDD<Text, TextWithBytesWritable> citIdDocPairs = documentAttacher.attachDocuments(citIdDocIdPairs, documents);
-            JavaPairRDD<TextWithBytesWritable, TextWithBytesWritable> citDocPairs = citationAttacher.attachCitationsAndLimitDocs(citIdDocPairs, citations);
+            JavaPairRDD<String, MatchableEntity> citIdDocPairs = documentAttacher.attachDocuments(citIdDocIdPairs, documents);
+            JavaPairRDD<MatchableEntity, MatchableEntity> citDocPairs = citationAttacher.attachCitationsAndLimitDocs(citIdDocPairs, citations);
             
-            JavaPairRDD<TextWithBytesWritable, Text> matchedCitations = bestMatchedCitationPicker.pickBest(citDocPairs);
+            JavaPairRDD<MatchableEntity, IdWithSimilarity> matchedCitations = bestMatchedCitationPicker.pickBest(citDocPairs);
             
-            // save matched citations
-            matchedCitations.saveAsNewAPIHadoopFile(params.outputDirPath, TextWithBytesWritable.class, Text.class, SequenceFileOutputFormat.class);
             
+            saveMatchedCitations(sc, matchedCitations, params.outputDirPath);
         }
         
     }
@@ -80,20 +82,39 @@ public class CitationMatchingJob {
 
     //------------------------ PRIVATE --------------------------
     
-    private static JavaPairRDD<Text, Text> matchCitDocByHashes(JavaSparkContext sc,
-            JavaPairRDD<Text, BytesWritable> citations, JavaPairRDD<Text, BytesWritable> documents,
+    private static JavaPairRDD<String, MatchableEntity> loadEntities(JavaSparkContext sc, String entitiesFilePath) {
+        
+        JavaPairRDD<String, MatchableEntity> entities = sc.sequenceFile(entitiesFilePath, Text.class, BytesWritable.class)
+                .mapToPair(x -> new Tuple2<String, MatchableEntity>(x._1.toString(), MatchableEntity.fromBytes(x._2.copyBytes())));
+        
+        return entities;
+    }
+    
+    private static void saveMatchedCitations(JavaSparkContext sc, JavaPairRDD<MatchableEntity, IdWithSimilarity> matchedCitations, String outputDirPath) {
+        
+        matchedCitations
+            .mapToPair(x -> new Tuple2<TextWithBytesWritable, Text>(
+                    new TextWithBytesWritable(x._1.id(), x._1.data().toByteArray()),
+                    new Text(x._2.getSimilarity() + ":" + x._2.getId())))
+            .saveAsNewAPIHadoopFile(outputDirPath, TextWithBytesWritable.class, Text.class, SequenceFileOutputFormat.class);
+        
+    }
+    
+    
+    private static JavaPairRDD<String, String> matchCitDocByHashes(JavaSparkContext sc,
+            JavaPairRDD<String, MatchableEntity> citations, JavaPairRDD<String, MatchableEntity> documents,
             List<Pair<MatchableEntityHasher, MatchableEntityHasher>> entitiesHashers, long maxHashBucketSize) {
         
-        JavaPairRDD<Text, BytesWritable> unmatchedCitations = citations;
-        JavaPairRDD<Text, Text> joinedCitDocIdPairs = JavaPairRDD.fromJavaRDD(sc.emptyRDD());
+        JavaPairRDD<String, MatchableEntity> unmatchedCitations = citations;
+        JavaPairRDD<String, String> joinedCitDocIdPairs = JavaPairRDD.fromJavaRDD(sc.emptyRDD());
         
         Iterator<Pair<MatchableEntityHasher, MatchableEntityHasher>> entitiesHashersIterator = entitiesHashers.iterator();
         while(entitiesHashersIterator.hasNext()) {
             Pair<MatchableEntityHasher, MatchableEntityHasher> citAndDocHashers = entitiesHashersIterator.next();
-            HeuristicHashCitationMatcher heuristicHashCitationMatcher = new HeuristicHashCitationMatcher(citAndDocHashers.getLeft(), citAndDocHashers.getRight(), maxHashBucketSize);
+            HeuristicHashCitationMatcher hashHeuristicCitationMatcher = new HeuristicHashCitationMatcher(citAndDocHashers.getLeft(), citAndDocHashers.getRight(), maxHashBucketSize);
             
             HeuristicHashMatchingResult matchedResult = 
-                    heuristicHashCitationMatcher.matchCitations(unmatchedCitations, documents, entitiesHashersIterator.hasNext());
+                    hashHeuristicCitationMatcher.matchCitations(unmatchedCitations, documents, entitiesHashersIterator.hasNext());
             
             joinedCitDocIdPairs = joinedCitDocIdPairs.union(matchedResult.getCitDocIdPairs());
             unmatchedCitations = matchedResult.getUnmatchedCitations();

@@ -1,7 +1,5 @@
 package pl.edu.icm.coansys.citations;
 
-import org.apache.hadoop.io.BytesWritable;
-import org.apache.hadoop.io.Text;
 import org.apache.spark.api.java.JavaPairRDD;
 
 import pl.edu.icm.coansys.citations.data.HeuristicHashMatchingResult;
@@ -37,7 +35,7 @@ public class HeuristicHashCitationMatcher {
     
     //------------------------ LOGIC --------------------------
     
-    public HeuristicHashMatchingResult matchCitations(JavaPairRDD<Text, BytesWritable> citations, JavaPairRDD<Text, BytesWritable> documents, 
+    public HeuristicHashMatchingResult matchCitations(JavaPairRDD<String, MatchableEntity> citations, JavaPairRDD<String, MatchableEntity> documents, 
             boolean needUnmatched) {
         
         JavaPairRDD<String, String> citationHashIdPairs = generateHashIdPairs(citations, citationHasher);
@@ -53,26 +51,22 @@ public class HeuristicHashCitationMatcher {
         JavaPairRDD<String, String> citationDocumentIdPairs = citationHashIdPairs.join(documentHashIdPairs).mapToPair(cd->cd._2()).distinct();
         
         // find unmatched citations
-        JavaPairRDD<Text, BytesWritable> unmatchedCitations = null;
+        JavaPairRDD<String, MatchableEntity> unmatchedCitations = null;
         if (needUnmatched) {
-            JavaPairRDD<String, BytesWritable> citationIdBytes = citations.mapToPair(c->new Tuple2<String, BytesWritable>(c._1().toString(), c._2()));
-            unmatchedCitations = citationIdBytes.subtractByKey(citationDocumentIdPairs).mapToPair(c->new Tuple2<Text, BytesWritable>(new Text(c._1()), c._2()));
+            unmatchedCitations = citations.subtractByKey(citationDocumentIdPairs);
             
         }
-
-        // convert string pairs to text pairs
-        JavaPairRDD<Text, Text> textCitDocIdPairs = citationDocumentIdPairs.mapToPair(strCitDocId -> new Tuple2<Text, Text>(new Text(strCitDocId._1()), new Text(strCitDocId._2())));
         
-        return new HeuristicHashMatchingResult(textCitDocIdPairs, unmatchedCitations);
+        return new HeuristicHashMatchingResult(citationDocumentIdPairs, unmatchedCitations);
     }
     
     
     //------------------------ PRIVATE --------------------------
     
-    private JavaPairRDD<String, String> generateHashIdPairs(JavaPairRDD<Text, BytesWritable> matchableEntityBytes, MatchableEntityHasher hasher) {
+    private JavaPairRDD<String, String> generateHashIdPairs(JavaPairRDD<String, MatchableEntity> matchableEntityBytes, MatchableEntityHasher hasher) {
         
-        JavaPairRDD<String, String> hashIdPairs = matchableEntityBytes.flatMapToPair((Tuple2<Text, BytesWritable> keyValue)-> {
-            MatchableEntity matchableEntity = MatchableEntity.fromBytes(keyValue._2().copyBytes());
+        JavaPairRDD<String, String> hashIdPairs = matchableEntityBytes.flatMapToPair((Tuple2<String, MatchableEntity> keyValue)-> {
+            MatchableEntity matchableEntity = keyValue._2();
             return hasher.hashEntity(matchableEntity);
         });
         

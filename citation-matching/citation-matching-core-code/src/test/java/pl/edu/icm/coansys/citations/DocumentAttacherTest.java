@@ -6,8 +6,6 @@ import static pl.edu.icm.coansys.citations.MatchableEntityDataProvider.*;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.hadoop.io.BytesWritable;
-import org.apache.hadoop.io.Text;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaSparkContext;
@@ -15,9 +13,10 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
-import pl.edu.icm.coansys.citations.data.TextWithBytesWritable;
+import pl.edu.icm.coansys.citations.data.MatchableEntity;
 import scala.Tuple2;
 
 /**
@@ -60,24 +59,28 @@ public class DocumentAttacherTest {
         
         // given
         
-        JavaPairRDD<Text, Text> matchedCitations = sparkContext.parallelizePairs(generateCitIdDocIdPairs(
-                Lists.newArrayList(citation1, citation1, citation4, citation4),
-                Lists.newArrayList(document1, document2, document2, document5)));
+        JavaPairRDD<String, String> matchedCitations = sparkContext.parallelizePairs(ImmutableList.of(
+                new Tuple2<>(citation1.id(), document1.id()),
+                new Tuple2<>(citation1.id(), document2.id()),
+                new Tuple2<>(citation4.id(), document2.id()),
+                new Tuple2<>(citation4.id(), document5.id())));
         
-        JavaPairRDD<Text, BytesWritable> documents = sparkContext.parallelizePairs(generateEntitiesWritable(
+        JavaPairRDD<String, MatchableEntity> documents = sparkContext.parallelizePairs(generateIdWithEntityTuples(
                 Lists.newArrayList(document1, document2, document3, document4, document5)));
         
         
         
         // execute
         
-        JavaPairRDD<Text, TextWithBytesWritable> actualCitIdDocPairs = documentAttacher.attachDocuments(matchedCitations, documents);
+        JavaPairRDD<String, MatchableEntity> actualCitIdDocPairs = documentAttacher.attachDocuments(matchedCitations, documents);
         
         
         // assert
-        List<Tuple2<Text, TextWithBytesWritable>> expectedCitIdDocPairs = generateCitIdDocPairs(
-                Lists.newArrayList(citation1, citation1, citation4, citation4),
-                Lists.newArrayList(document1, document2, document2, document5));
+        List<Tuple2<String, MatchableEntity>> expectedCitIdDocPairs = ImmutableList.of(
+                new Tuple2<>(citation1.id(), document1),
+                new Tuple2<>(citation1.id(), document2),
+                new Tuple2<>(citation4.id(), document2),
+                new Tuple2<>(citation4.id(), document5));
         
         assertDocAttachedMatchedCitations(actualCitIdDocPairs.collect(), expectedCitIdDocPairs);
         
@@ -89,18 +92,18 @@ public class DocumentAttacherTest {
         
         // given
         
-        JavaPairRDD<Text, Text> matchedCitations = sparkContext.parallelizePairs(generateCitIdDocIdPairs(
-                Lists.newArrayList(citation1, citation1, citation4),
-                Lists.newArrayList(document1, document2, document5)));
+        JavaPairRDD<String, String> matchedCitations = sparkContext.parallelizePairs(ImmutableList.of(
+                new Tuple2<>(citation1.id(), document1.id()),
+                new Tuple2<>(citation1.id(), document2.id()),
+                new Tuple2<>(citation4.id(), document5.id())));
         
-        JavaPairRDD<Text, BytesWritable> documents = sparkContext.parallelizePairs(generateEntitiesWritable(
-                Lists.newArrayList()));
+        JavaPairRDD<String, MatchableEntity> documents = sparkContext.parallelizePairs(Lists.newArrayList());
         
         
         
         // execute
         
-        JavaPairRDD<Text, TextWithBytesWritable> actualCitIdDocPairs = documentAttacher.attachDocuments(matchedCitations, documents);
+        JavaPairRDD<String, MatchableEntity> actualCitIdDocPairs = documentAttacher.attachDocuments(matchedCitations, documents);
         
         
         // assert
@@ -112,28 +115,28 @@ public class DocumentAttacherTest {
     
     //------------------------ PRIVATE --------------------------
     
-    private void assertDocAttachedMatchedCitations(List<Tuple2<Text, TextWithBytesWritable>> actualCitIdDocPairs, List<Tuple2<Text, TextWithBytesWritable>> expectedCitIdDocPairs) {
+    private void assertDocAttachedMatchedCitations(List<Tuple2<String, MatchableEntity>> actualCitIdDocPairs, List<Tuple2<String, MatchableEntity>> expectedCitIdDocPairs) {
         
         assertEquals(actualCitIdDocPairs.size(), expectedCitIdDocPairs.size());
         
-        for (Tuple2<Text, TextWithBytesWritable> actualCitIdDocPair : actualCitIdDocPairs) {
+        for (Tuple2<String, MatchableEntity> actualCitIdDocPair : actualCitIdDocPairs) {
             assertTrue(isInCitIdDocPairs(expectedCitIdDocPairs, actualCitIdDocPair));
         }
     }
     
     
-    private boolean isInCitIdDocPairs(List<Tuple2<Text, TextWithBytesWritable>> citIdDocPairs, Tuple2<Text, TextWithBytesWritable> citIdDocPairToFind) {
+    private boolean isInCitIdDocPairs(List<Tuple2<String, MatchableEntity>> citIdDocPairs, Tuple2<String, MatchableEntity> citIdDocPairToFind) {
         
-        Text citIdToFind = citIdDocPairToFind._1;
-        Text docIdToFind = citIdDocPairToFind._2.text();
+        String citIdToFind = citIdDocPairToFind._1;
+        String docIdToFind = citIdDocPairToFind._2.id();
         
-        for (Tuple2<Text, TextWithBytesWritable> citIdDocPair : citIdDocPairs) {
+        for (Tuple2<String, MatchableEntity> citIdDocPair : citIdDocPairs) {
             
-            Text citId = citIdDocPair._1;
-            Text docId = citIdDocPair._2.text();
+            String citId = citIdDocPair._1;
+            String docId = citIdDocPair._2.id();
             
             if (citId.equals(citIdToFind) && docId.equals(docIdToFind)) {
-                return Arrays.equals(citIdDocPair._2.bytes().copyBytes(), citIdDocPairToFind._2.bytes().copyBytes());
+                return Arrays.equals(citIdDocPair._2.data().toByteArray(), citIdDocPairToFind._2.data().toByteArray());
             }
         }
         
