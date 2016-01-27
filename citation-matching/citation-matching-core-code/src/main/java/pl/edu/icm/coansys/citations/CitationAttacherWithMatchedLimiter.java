@@ -138,7 +138,12 @@ public class CitationAttacherWithMatchedLimiter implements Serializable {
         
         @Override
         public int compare(EntityWithSimilarity o1, EntityWithSimilarity o2) {
-            return -Double.compare(o1.getSimilarity(), o2.getSimilarity());
+            int similarityCompare = -Double.compare(o1.getSimilarity(), o2.getSimilarity());
+            
+            if (similarityCompare == 0) {
+                return o1.getEntity().id().compareTo(o2.getEntity().id());
+            }
+            return similarityCompare;
         }
         
     }

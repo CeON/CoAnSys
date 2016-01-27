@@ -40,8 +40,11 @@ public class MatchableEntityDataProvider {
     public static MatchableEntity document2 = MatchableEntity.fromParameters("doc_BBB",
             "Peeters, M.J.P.", null, "Orthogonal Representations over Finite Fields and the Chromatic Number of Graphs", null, "1996", null);
     
-    public static MatchableEntity document3 = MatchableEntity.fromParameters("doc_BBC",
+    public static MatchableEntity document3 = MatchableEntity.fromParameters("doc_BBC1",
             "Peeters, E.T.H.M., Klein, J.J.M., de", null, "Gebiedsvreemd water in de IJsselvallei.", null, "1996", null);
+    
+    public static MatchableEntity document3v2 = MatchableEntity.fromParameters("doc_BBC2",
+            "Peeters", null, "one two three four", null, "1996", null);
     
     public static MatchableEntity document4 = MatchableEntity.fromParameters("doc_BBD",
             "Smarandache, Roxana, Vontobel, Pascal O.", "July", "Absdet-Pseudo-Codewords and Perm-Pseudo-Codewords: Definitions and Properties", null, "2009", null);
