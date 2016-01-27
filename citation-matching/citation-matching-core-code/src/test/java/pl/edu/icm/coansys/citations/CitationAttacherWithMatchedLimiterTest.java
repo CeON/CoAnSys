@@ -5,6 +5,7 @@ import static pl.edu.icm.coansys.citations.MatchableEntityDataProvider.*;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
@@ -17,7 +18,9 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
 import pl.edu.icm.coansys.citations.data.MatchableEntity;
+import pl.edu.icm.coansys.citations.util.misc;
 import scala.Tuple2;
+import scala.collection.JavaConversions;
 
 /**
  * @author madryk
@@ -91,16 +94,21 @@ public class CitationAttacherWithMatchedLimiterTest {
         // given
         
         JavaPairRDD<String, MatchableEntity> citIdDocPairs = sparkContext.parallelizePairs(ImmutableList.of(
-                new Tuple2<>(citation1.id(), document1),
-                new Tuple2<>(citation1.id(), document2),
-                new Tuple2<>(citation1.id(), document3),
-                new Tuple2<>(citation1.id(), document4),
-                new Tuple2<>(citation2.id(), document5)));
+                new Tuple2<>(citation1.id(), document1),        // similarity: 0.25806451612903225
+                new Tuple2<>(citation1.id(), document2),        // similarity: 0.7741935483870968
+                new Tuple2<>(citation1.id(), document3v2),      // similarity: 0.16
+                new Tuple2<>(citation1.id(), document3),        // similarity: 0.16
+                new Tuple2<>(citation1.id(), document4),        // similarity: 0.0625
+                new Tuple2<>(citation2.id(), document5)));      // similarity: 0
         
         JavaPairRDD<String, MatchableEntity> citations = sparkContext.parallelizePairs(generateIdWithEntityTuples(
                 Lists.newArrayList(citation1, citation2, citation3, citation4, citation5)));
         
-        
+        System.out.println("TOKEN SIM: " + citation1.id() + " -> " + document1.id() + ": " + calculateTokenSimilarity(citation1, document1));
+        System.out.println("TOKEN SIM: " + citation1.id() + " -> " + document2.id() + ": " + calculateTokenSimilarity(citation1, document2));
+        System.out.println("TOKEN SIM: " + citation1.id() + " -> " + document3.id() + ": " + calculateTokenSimilarity(citation1, document3));
+        System.out.println("TOKEN SIM: " + citation1.id() + " -> " + document4.id() + ": " + calculateTokenSimilarity(citation1, document4));
+        System.out.println("TOKEN SIM: " + citation2.id() + " -> " + document5.id() + ": " + calculateTokenSimilarity(citation2, document5));
         
         // execute
         
@@ -116,6 +124,20 @@ public class CitationAttacherWithMatchedLimiterTest {
         
         assertCitDocPairsEquals(actualCitDocPairs.collect(), expectedCitDocPairs);
         
+    }
+    
+    private double calculateTokenSimilarity(MatchableEntity citation, MatchableEntity document) {
+        
+        Set<String> citTokens = JavaConversions.asJavaSet(misc.niceTokens(citation.toReferenceString()));
+        Set<String> docTokens = JavaConversions.asJavaSet(misc.niceTokens(document.toReferenceString()));
+        
+        long mutualTokensCount = citTokens.stream().filter(x -> docTokens.contains(x)).count();
+        
+        double similarity = 2.0 * mutualTokensCount / (citTokens.size() + docTokens.size());
+        
+        System.out.println("M/A: " + mutualTokensCount + "/" + citTokens.size() + "+" + docTokens.size() + "            " + (citTokens.size() + docTokens.size()));
+        
+        return similarity;
     }
     
     @Test
