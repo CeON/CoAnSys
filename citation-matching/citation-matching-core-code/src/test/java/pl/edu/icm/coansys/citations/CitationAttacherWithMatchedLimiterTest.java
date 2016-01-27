@@ -91,15 +91,15 @@ public class CitationAttacherWithMatchedLimiterTest {
         // given
         
         JavaPairRDD<String, MatchableEntity> citIdDocPairs = sparkContext.parallelizePairs(ImmutableList.of(
-                new Tuple2<>(citation1.id(), document1),
-                new Tuple2<>(citation1.id(), document2),
-                new Tuple2<>(citation1.id(), document3),
-                new Tuple2<>(citation1.id(), document4),
-                new Tuple2<>(citation2.id(), document5)));
+                new Tuple2<>(citation1.id(), document1),        // similarity: 0.25806451612903225
+                new Tuple2<>(citation1.id(), document2),        // similarity: 0.7741935483870968
+                new Tuple2<>(citation1.id(), document3v2),      // similarity: 0.16
+                new Tuple2<>(citation1.id(), document3),        // similarity: 0.16
+                new Tuple2<>(citation1.id(), document4),        // similarity: 0.0625
+                new Tuple2<>(citation2.id(), document5)));      // similarity: 0
         
         JavaPairRDD<String, MatchableEntity> citations = sparkContext.parallelizePairs(generateIdWithEntityTuples(
                 Lists.newArrayList(citation1, citation2, citation3, citation4, citation5)));
-        
         
         
         // execute
