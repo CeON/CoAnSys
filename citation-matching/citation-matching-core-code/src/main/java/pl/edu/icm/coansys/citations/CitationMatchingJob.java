@@ -9,6 +9,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
+import org.apache.spark.HashPartitioner;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaSparkContext;
@@ -70,8 +71,9 @@ public class CitationMatchingJob {
             
             JavaPairRDD<MatchableEntity, IdWithSimilarity> matchedCitations = bestMatchedCitationPicker.pickBest(citDocPairs);
             
-            
             saveMatchedCitations(sc, matchedCitations, params.outputDirPath);
+            
+           
         }
         
     }
@@ -92,6 +94,11 @@ public class CitationMatchingJob {
         }
         
         JavaPairRDD<String, MatchableEntity> entities = readEntities.mapToPair(x -> new Tuple2<String, MatchableEntity>(x._1.toString(), MatchableEntity.fromBytes(x._2.copyBytes())));
+        
+        numberOfPartitions = readEntities.partitions().size();
+        
+        entities = entities.partitionBy(new HashPartitioner(numberOfPartitions));
+        
         
         return entities;
     }
