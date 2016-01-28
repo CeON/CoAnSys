@@ -18,12 +18,12 @@ import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 import com.google.common.collect.Lists;
 
-import pl.edu.icm.coansys.citations.hashers.HashGenerator;
 import pl.edu.icm.coansys.citations.data.HeuristicHashMatchingResult;
 import pl.edu.icm.coansys.citations.data.IdWithSimilarity;
-import scala.Tuple2;
 import pl.edu.icm.coansys.citations.data.MatchableEntity;
 import pl.edu.icm.coansys.citations.data.TextWithBytesWritable;
+import pl.edu.icm.coansys.citations.hashers.HashGenerator;
+import scala.Tuple2;
 
 /**
  * 
@@ -58,9 +58,8 @@ public class CitationMatchingJob {
         try (JavaSparkContext sc = new JavaSparkContext(conf)) {
             
             // read citations and documents
-            JavaPairRDD<String, MatchableEntity> citations = loadEntities(sc, params.citationPath);
-//            citations = citations.cache(); // cache here makes the join (a few lines below) not working - the join gives 0 results
-            JavaPairRDD<String, MatchableEntity> documents = loadEntities(sc, params.documentPath);
+            JavaPairRDD<String, MatchableEntity> citations = loadEntities(sc, params.citationPath, params.numberOfPartitions);
+            JavaPairRDD<String, MatchableEntity> documents = loadEntities(sc, params.documentPath, params.numberOfPartitions);
             
             
             JavaPairRDD<String, String> citIdDocIdPairs = matchCitDocByHashes(sc, citations, documents, createMatchableEntityHashers(params.hashGeneratorClasses), params.maxHashBucketSize);
@@ -82,10 +81,17 @@ public class CitationMatchingJob {
 
     //------------------------ PRIVATE --------------------------
     
-    private static JavaPairRDD<String, MatchableEntity> loadEntities(JavaSparkContext sc, String entitiesFilePath) {
+    private static JavaPairRDD<String, MatchableEntity> loadEntities(JavaSparkContext sc, String entitiesFilePath, Integer numberOfPartitions) {
         
-        JavaPairRDD<String, MatchableEntity> entities = sc.sequenceFile(entitiesFilePath, Text.class, BytesWritable.class)
-                .mapToPair(x -> new Tuple2<String, MatchableEntity>(x._1.toString(), MatchableEntity.fromBytes(x._2.copyBytes())));
+        JavaPairRDD<Text, BytesWritable> readEntities = null; 
+        
+        if (numberOfPartitions == null) {
+            readEntities = sc.sequenceFile(entitiesFilePath, Text.class, BytesWritable.class);
+        } else {
+            readEntities = sc.sequenceFile(entitiesFilePath, Text.class, BytesWritable.class, numberOfPartitions);
+        }
+        
+        JavaPairRDD<String, MatchableEntity> entities = readEntities.mapToPair(x -> new Tuple2<String, MatchableEntity>(x._1.toString(), MatchableEntity.fromBytes(x._2.copyBytes())));
         
         return entities;
     }
@@ -169,6 +175,9 @@ public class CitationMatchingJob {
         
         @Parameter(names="-maxHashBucketSize", required = false, description = "max number of the citation-documents pairs for a given hash")
         private long maxHashBucketSize = 10000;
+        
+        @Parameter(names="-numberOfPartitions", required = false, description = "number of partitions used for rdds with citations and documents read from input files, if not set it will depend on the input format")
+        private Integer numberOfPartitions;
         
     }
     

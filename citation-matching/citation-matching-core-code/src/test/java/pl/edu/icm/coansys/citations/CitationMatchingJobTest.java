@@ -17,7 +17,6 @@ import org.testng.annotations.Test;
 
 import com.google.common.io.Files;
 
-import pl.edu.icm.coansys.citations.CitationMatchingJob;
 import pl.edu.icm.coansys.citations.data.TextWithBytesWritable;
 import pl.edu.icm.coansys.commons.hadoop.LocalSequenceFileUtils;
 import pl.edu.icm.sparkutils.test.SparkJob;
@@ -103,6 +102,8 @@ public class CitationMatchingJobTest {
                                            .addArg("-hashGeneratorClasses", "pl.edu.icm.coansys.citations.hashers.CitationNameYearHashGenerator:pl.edu.icm.coansys.citations.hashers.DocumentNameYearHashGenerator")
                                            
                                            .addArg("-outputDirPath", outputDirPath)
+                                           
+                                           .addArg("-numberOfPartitions", "5")
                                            
                                            .build();
         return sparkJob;
