@@ -43,7 +43,7 @@ public class CitationMatchingJob {
     
     //------------------------ LOGIC --------------------------
     
-    public static void main(String[] args) throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException, InterruptedException {
+    public static void main(String[] args) throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException {
         
         CitationMatchingJobParameters params = new CitationMatchingJobParameters();
         JCommander jcommander = new JCommander(params);
@@ -73,10 +73,6 @@ public class CitationMatchingJob {
             
             
             saveMatchedCitations(sc, matchedCitations, params.outputDirPath);
-            
-//            while(true) {
-//                Thread.sleep(5000);
-//            }
         }
         
     }
