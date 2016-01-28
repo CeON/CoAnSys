@@ -37,26 +37,9 @@
             <value>36</value>
         </property>
         <property>
-            <name>jobShuffleInputBufferPercent</name>
-            <value>0.70</value>
-        </property>
-        <property>
-            <name>mapredChildJavaOpts</name>
-            <!-- we need to put something other than an empty string here to get a proper default value -->
-            <value>-showversion</value>
-        </property>
-        <property>
             <name>maxHashBucketSize</name>
             <value>10000</value>
             <description>Buckets exceeding this limit will be omitted</description>
-        </property>
-        <property>
-            <name>maxBucketSize</name>
-            <value>10000</value>
-            <description>Buckets exceeding this limit will be omitted</description>
-        </property>
-        <property>
-            <name>workingDirectory</name>
         </property>
         <property>
             <name>sourceEntities</name>
@@ -73,14 +56,6 @@
         <name-node>${nameNode}</name-node>
         <configuration>
             <property>
-                <name>mapred.mapper.new-api</name>
-                <value>true</value>
-            </property>
-            <property>
-                <name>mapred.reducer.new-api</name>
-                <value>true</value>
-            </property>
-            <property>
                 <name>mapred.job.queue.name</name>
                 <value>${queueName}</value>
             </property>
@@ -93,37 +68,12 @@
                 <value>${pool}</value>
             </property>
             <property>
-                <name>mapreduce.inputformat.class</name>
-                <value>org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat</value>
-            </property>
-            <property>
-                <name>mapreduce.outputformat.class</name>
-                <value>org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat</value>
-            </property>
-            <property>
                 <name>mapred.reduce.tasks</name>
                 <value>${reduceTasks}</value>
             </property>
-            <property>
-                <name>mapred.job.shuffle.input.buffer.percent</name>
-                <value>${jobShuffleInputBufferPercent}</value>
-            </property>
-            <property>
-                <name>mapred.child.java.opts</name>
-                <value>${mapredChildJavaOpts}</value>
-            </property>
         </configuration>
     </global>
-    <start to="prepare"/>
-
-    <action name="prepare">
-        <fs>
-            <delete path="${workingDirectory}"/>
-            <mkdir path="${workingDirectory}"/>
-        </fs>
-        <ok to="citation-matching"/>
-        <error to="fail"/>
-    </action>
+    <start to="citation-matching"/>
 
     <action name="citation-matching">
         
