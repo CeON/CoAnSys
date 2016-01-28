@@ -51,9 +51,9 @@
             <description>Buckets exceeding this limit will be omitted</description>
         </property>
         <property>
-            <name>maxBucketSize</name>
-            <value>10000</value>
-            <description>Buckets exceeding this limit will be omitted</description>
+            <name>numberOfPartitions</name>
+            <value>2</value>
+            <description>number of spark partitions for citations and documents read from input paths</description>
         </property>
         <property>
             <name>workingDirectory</name>
@@ -150,6 +150,7 @@
             
             <arg>-outputDirPath = ${output}</arg>
             <arg>-maxHashBucketSize = ${maxHashBucketSize}</arg>
+            <arg>-numberOfPartitions = ${numberOfPartitions}</arg>
             
         </spark>
         <ok to="end"/>
