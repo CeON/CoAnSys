@@ -41,7 +41,7 @@ public class ConfigurableCitationMatchingService<INPUT_CIT_KEY, INPUT_CIT_VALUE,
     /**
      * Reads citations and documents from specified paths and invokes citation matching algorithm 
      * using {@link CoreCitationMatchingService#matchCitations(JavaPairRDD, JavaPairRDD)}.
-     * After that it save matched citations to path specified by last argument.
+     * After that it saves matched citations to path specified by last argument.
      */
     public void matchCitations(String inputCitationPath, String inputDocumentPath, String outputPath) {
         

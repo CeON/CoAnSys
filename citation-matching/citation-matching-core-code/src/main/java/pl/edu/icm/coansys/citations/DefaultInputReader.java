@@ -9,7 +9,7 @@ import pl.edu.icm.coansys.citations.data.MatchableEntity;
 import scala.Tuple2;
 
 /**
- * Default reader for input documents and citations.
+ * Default input reader of documents and citations.
  * If no input readers are specified for citation matching job
  * then this reader is used.
  * Reader assumes that input data is a sequence file where
