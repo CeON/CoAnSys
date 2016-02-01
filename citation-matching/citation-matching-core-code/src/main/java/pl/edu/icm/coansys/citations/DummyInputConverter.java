@@ -16,11 +16,17 @@ public class DummyInputConverter implements InputDocumentConverter<String, Match
     
     //------------------------ LOGIC --------------------------
     
+    /**
+     * Returns the same citations rdd that was specified as argument.
+     */
     @Override
     public JavaPairRDD<String, MatchableEntity> convertCitations(JavaPairRDD<String, MatchableEntity> inputCitations) {
         return inputCitations;
     }
 
+    /**
+     * Returns the same documents rdd that was specified as argument.
+     */
     @Override
     public JavaPairRDD<String, MatchableEntity> convertDocuments(JavaPairRDD<String, MatchableEntity> inputDocuments) {
         return inputDocuments;

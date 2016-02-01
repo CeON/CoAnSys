@@ -6,7 +6,7 @@ import pl.edu.icm.coansys.citations.data.IdWithSimilarity;
 import pl.edu.icm.coansys.citations.data.MatchableEntity;
 
 /**
- * Dummy converter o output matched citations.
+ * Dummy converter of output matched citations.
  * It has empty implementation of converting matched citations.
  * 
  * @author madryk
@@ -16,6 +16,9 @@ public class DummyOutputConverter implements OutputConverter<MatchableEntity, Id
     
     //------------------------ LOGIC --------------------------
     
+    /**
+     * Returns the same rdd that was specified as argument.
+     */
     @Override
     public JavaPairRDD<MatchableEntity, IdWithSimilarity> convertMatchedCitations(
             JavaPairRDD<MatchableEntity, IdWithSimilarity> matchedCitations) {

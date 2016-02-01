@@ -10,6 +10,11 @@ import scala.Tuple2;
 
 /**
  * Default reader for input documents and citations.
+ * If no input readers are specified for citation matching job
+ * then this reader is used.
+ * Reader assumes that input data is a sequence file where
+ * keys are entity identifiers (saved as {@link Text}) and values
+ * are {@link MatchableEntity}s (saved as {@link BytesWritable})
  * 
  * @author madryk
  */
@@ -20,11 +25,21 @@ public class DefaultInputReader implements InputCitationReader<String, Matchable
     
     //------------------------ LOGIC --------------------------
     
+    /**
+     * Returns spark rdd containing documents.
+     * Keys of returned rdd are strings containing entity id.
+     * Values of returned rdd are {@link MatchableEntity} objects
+     */
     @Override
     public JavaPairRDD<String, MatchableEntity> readDocuments(String inputDocumentPath, Integer numberOfPartitions) {
         return readEntities(inputDocumentPath, numberOfPartitions);
     }
 
+    /**
+     * Returns spark rdd containing citations.
+     * Keys of returned rdd are strings containing entity id.
+     * Values of returned rdd are {@link MatchableEntity} objects
+     */
     @Override
     public JavaPairRDD<String, MatchableEntity> readCitations(String inputCitationPath, Integer numberOfPartitions) {
         return readEntities(inputCitationPath, numberOfPartitions);

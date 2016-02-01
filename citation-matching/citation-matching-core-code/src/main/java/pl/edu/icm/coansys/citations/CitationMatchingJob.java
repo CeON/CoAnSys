@@ -3,17 +3,12 @@ package pl.edu.icm.coansys.citations;
 import java.io.IOException;
 import java.util.List;
 
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
-import com.google.common.collect.Lists;
-
-import pl.edu.icm.coansys.citations.hashers.HashGenerator;
 
 /**
  * 
@@ -23,6 +18,8 @@ import pl.edu.icm.coansys.citations.hashers.HashGenerator;
  */
 
 public class CitationMatchingJob {
+    
+    private static CoreCitationMatchingSimpleFactory coreCitationMatchingFactory = new CoreCitationMatchingSimpleFactory();
     
     
     //------------------------ LOGIC --------------------------
@@ -41,8 +38,7 @@ public class CitationMatchingJob {
         
         try (JavaSparkContext sc = new JavaSparkContext(conf)) {
             
-            @SuppressWarnings("rawtypes")
-            ConfigurableCitationMatchingService citationMatchingService = createConfigurableCitationMatchingService(sc, params);
+            ConfigurableCitationMatchingService<?,?,?,?,?,?> citationMatchingService = createConfigurableCitationMatchingService(sc, params);
             
             citationMatchingService.matchCitations(params.citationPath, params.documentPath, params.outputDirPath);
             
@@ -55,12 +51,11 @@ public class CitationMatchingJob {
 
     //------------------------ PRIVATE --------------------------
     
-    @SuppressWarnings("rawtypes")
-    private static ConfigurableCitationMatchingService createConfigurableCitationMatchingService(JavaSparkContext sc, CitationMatchingJobParameters params) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+    private static ConfigurableCitationMatchingService<?,?,?,?,?,?> createConfigurableCitationMatchingService(JavaSparkContext sc, CitationMatchingJobParameters params) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
         
-        ConfigurableCitationMatchingService configurableCitationMatchingService = new ConfigurableCitationMatchingService();
+        ConfigurableCitationMatchingService<?,?,?,?,?,?> configurableCitationMatchingService = new ConfigurableCitationMatchingService<>();
         
-        CoreCitationMatchingService coreCitationMatchingService = createCoreCitationMatchingService(sc, params);
+        CoreCitationMatchingService coreCitationMatchingService = coreCitationMatchingFactory.createCoreCitationMatchingService(sc, params.maxHashBucketSize, params.hashGeneratorClasses);
         
         configurableCitationMatchingService.setCoreCitationMatchingService(coreCitationMatchingService);
         configurableCitationMatchingService.setNumberOfPartitions(params.numberOfPartitions);
@@ -72,73 +67,42 @@ public class CitationMatchingJob {
         return configurableCitationMatchingService;
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-    private static void createAndSetInputCitationReaderAndConverter(ConfigurableCitationMatchingService citationMatchingService, JavaSparkContext sc, CitationMatchingJobParameters params) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+    private static <ICK, ICV, IDK, IDV, OMK, OMV> void createAndSetInputCitationReaderAndConverter(ConfigurableCitationMatchingService<ICK, ICV, IDK, IDV, OMK, OMV> citationMatchingService, JavaSparkContext sc, CitationMatchingJobParameters params) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
         
-        InputCitationReader inputCitationReader = Class.forName(params.inputCitationReaderClass).asSubclass(InputCitationReader.class).newInstance();
+        @SuppressWarnings("unchecked")
+        InputCitationReader<ICK, ICV> inputCitationReader = Class.forName(params.inputCitationReaderClass).asSubclass(InputCitationReader.class).newInstance();
         inputCitationReader.setSparkContext(sc);
         citationMatchingService.setInputCitationReader(inputCitationReader);
         
-        InputCitationConverter inputCitationConverter = Class.forName(params.inputCitationConverterClass).asSubclass(InputCitationConverter.class).newInstance();
+        @SuppressWarnings("unchecked")
+        InputCitationConverter<ICK, ICV>  inputCitationConverter = Class.forName(params.inputCitationConverterClass).asSubclass(InputCitationConverter.class).newInstance();
         citationMatchingService.setInputCitationConverter(inputCitationConverter);
         
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-    private static void createAndSetInputDocumentReaderAndConverter(ConfigurableCitationMatchingService service, JavaSparkContext sc, CitationMatchingJobParameters params) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+    private static <ICK, ICV, IDK, IDV, OMK, OMV> void createAndSetInputDocumentReaderAndConverter(ConfigurableCitationMatchingService<ICK, ICV, IDK, IDV, OMK, OMV> citationMatchingService, JavaSparkContext sc, CitationMatchingJobParameters params) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
         
-        InputDocumentReader inputDocumentReader = Class.forName(params.inputDocumentReaderClass).asSubclass(InputDocumentReader.class).newInstance();
+        @SuppressWarnings("unchecked")
+        InputDocumentReader<IDK, IDV> inputDocumentReader = Class.forName(params.inputDocumentReaderClass).asSubclass(InputDocumentReader.class).newInstance();
         inputDocumentReader.setSparkContext(sc);
-        service.setInputDocumentReader(inputDocumentReader);
+        citationMatchingService.setInputDocumentReader(inputDocumentReader);
         
-        InputDocumentConverter inputDocumentConverter = Class.forName(params.inputDocumentConverterClass).asSubclass(InputDocumentConverter.class).newInstance();
-        service.setInputDocumentConverter(inputDocumentConverter);
+        @SuppressWarnings("unchecked")
+        InputDocumentConverter<IDK, IDV> inputDocumentConverter = Class.forName(params.inputDocumentConverterClass).asSubclass(InputDocumentConverter.class).newInstance();
+        citationMatchingService.setInputDocumentConverter(inputDocumentConverter);
         
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-    private static void createAndSetOutputWriterAndConverter(ConfigurableCitationMatchingService citationMatchingService, JavaSparkContext sc, CitationMatchingJobParameters params) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+    private static <ICK, ICV, IDK, IDV, OMK, OMV> void createAndSetOutputWriterAndConverter(ConfigurableCitationMatchingService<ICK, ICV, IDK, IDV, OMK, OMV> citationMatchingService, JavaSparkContext sc, CitationMatchingJobParameters params) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
         
-        OutputWriter outputWriter = Class.forName(params.outputWriterClass).asSubclass(OutputWriter.class).newInstance();
+        @SuppressWarnings("unchecked")
+        OutputWriter<OMK, OMV> outputWriter = Class.forName(params.outputWriterClass).asSubclass(OutputWriter.class).newInstance();
         citationMatchingService.setOutputWriter(outputWriter);
         
-        OutputConverter outputConverter = Class.forName(params.outputConverterClass).asSubclass(OutputConverter.class).newInstance();
+        @SuppressWarnings("unchecked")
+        OutputConverter<OMK, OMV> outputConverter = Class.forName(params.outputConverterClass).asSubclass(OutputConverter.class).newInstance();
         citationMatchingService.setOutputConverter(outputConverter);
         
-    }
-    
-    
-    private static CoreCitationMatchingService createCoreCitationMatchingService(JavaSparkContext sc, CitationMatchingJobParameters params) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-        
-        CoreCitationMatchingService coreCitationMatchingService = new CoreCitationMatchingService();
-        coreCitationMatchingService.setSparkContext(sc);
-        coreCitationMatchingService.setMaxHashBucketSize(params.maxHashBucketSize);
-        coreCitationMatchingService.setMatchableEntityHashers(createMatchableEntityHashers(params.hashGeneratorClasses));
-        
-        return coreCitationMatchingService;
-    }
-    
-    private static List<Pair<MatchableEntityHasher, MatchableEntityHasher>> createMatchableEntityHashers(List<String> hashGeneratorClassNames) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-        List<Pair<MatchableEntityHasher, MatchableEntityHasher>> matchableEntityHashers = Lists.newArrayList();
-        
-        for (String citAndDocHashGeneratorClassNames : hashGeneratorClassNames) {
-            String citationHashGeneratorClassName = citAndDocHashGeneratorClassNames.split(":")[0];
-            String documentHashGeneratorClassName = citAndDocHashGeneratorClassNames.split(":")[1];
-            
-            MatchableEntityHasher citationHasher = createMatchableEntityHasher(citationHashGeneratorClassName);
-            MatchableEntityHasher documentHasher = createMatchableEntityHasher(documentHashGeneratorClassName);
-            
-            matchableEntityHashers.add(new ImmutablePair<MatchableEntityHasher, MatchableEntityHasher>(citationHasher, documentHasher));
-        }
-        
-        return matchableEntityHashers;
-    }
-    
-    private static MatchableEntityHasher createMatchableEntityHasher(String hashGeneratorClass) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-        HashGenerator hashGenerator = (HashGenerator) Class.forName(hashGeneratorClass).newInstance();
-        MatchableEntityHasher matchableEntityHasher = new MatchableEntityHasher();
-        matchableEntityHasher.setHashGenerator(hashGenerator);
-        return matchableEntityHasher;
     }
     
     

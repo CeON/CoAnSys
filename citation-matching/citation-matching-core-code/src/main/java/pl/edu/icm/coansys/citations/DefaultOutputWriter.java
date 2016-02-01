@@ -10,7 +10,13 @@ import pl.edu.icm.coansys.citations.data.TextWithBytesWritable;
 import scala.Tuple2;
 
 /**
- * Default writer of output matched citations
+ * Default writer of output matched citations.
+ * If no output writer is specified for citation matching job
+ * then this writer is used.
+ * Writer saves matched citation to a sequence file where
+ * keys are citations ({@link TextWithBytesWritable} class) and
+ * values are {@link Text}s that contains similarity and
+ * id of matched document separated by colon sign.
  * 
  * @author madryk
  */
@@ -19,6 +25,9 @@ public class DefaultOutputWriter implements OutputWriter<MatchableEntity, IdWith
     
     //------------------------ LOGIC --------------------------
     
+    /**
+     * Writes output matched citations rdd to path specified as argument.
+     */
     @Override
     public void writeMatchedCitations(JavaPairRDD<MatchableEntity, IdWithSimilarity> matchedCitations, String path) {
         
