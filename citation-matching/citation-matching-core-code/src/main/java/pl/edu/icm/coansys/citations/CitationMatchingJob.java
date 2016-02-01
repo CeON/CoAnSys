@@ -1,30 +1,14 @@
 package pl.edu.icm.coansys.citations;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.hadoop.io.BytesWritable;
-import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
-import org.apache.spark.HashPartitioner;
 import org.apache.spark.SparkConf;
-import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
-import com.google.common.collect.Lists;
-
-import pl.edu.icm.coansys.citations.data.HeuristicHashMatchingResult;
-import pl.edu.icm.coansys.citations.data.IdWithSimilarity;
-import pl.edu.icm.coansys.citations.data.MatchableEntity;
-import pl.edu.icm.coansys.citations.data.TextWithBytesWritable;
-import pl.edu.icm.coansys.citations.hashers.HashGenerator;
-import scala.Tuple2;
 
 /**
  * 
@@ -35,11 +19,7 @@ import scala.Tuple2;
 
 public class CitationMatchingJob {
     
-    private static DocumentAttacher documentAttacher = new DocumentAttacher();
-    
-    private static CitationAttacherWithMatchedLimiter citationAttacher = new CitationAttacherWithMatchedLimiter();
-    
-    private static BestMatchedCitationPicker bestMatchedCitationPicker = new BestMatchedCitationPicker();
+    private static CoreCitationMatchingSimpleFactory coreCitationMatchingFactory = new CoreCitationMatchingSimpleFactory();
     
     
     //------------------------ LOGIC --------------------------
@@ -58,20 +38,9 @@ public class CitationMatchingJob {
         
         try (JavaSparkContext sc = new JavaSparkContext(conf)) {
             
-            // read citations and documents
-            JavaPairRDD<String, MatchableEntity> citations = loadEntities(sc, params.citationPath, params.numberOfPartitions);
-            JavaPairRDD<String, MatchableEntity> documents = loadEntities(sc, params.documentPath, params.numberOfPartitions);
+            ConfigurableCitationMatchingService<?,?,?,?,?,?> citationMatchingService = createConfigurableCitationMatchingService(sc, params);
             
-            
-            JavaPairRDD<String, String> citIdDocIdPairs = matchCitDocByHashes(sc, citations, documents, createMatchableEntityHashers(params.hashGeneratorClasses), params.maxHashBucketSize);
-            
-            
-            JavaPairRDD<String, MatchableEntity> citIdDocPairs = documentAttacher.attachDocuments(citIdDocIdPairs, documents);
-            JavaPairRDD<MatchableEntity, MatchableEntity> citDocPairs = citationAttacher.attachCitationsAndLimitDocs(citIdDocPairs, citations);
-            
-            JavaPairRDD<MatchableEntity, IdWithSimilarity> matchedCitations = bestMatchedCitationPicker.pickBest(citDocPairs);
-            
-            saveMatchedCitations(sc, matchedCitations, params.outputDirPath);
+            citationMatchingService.matchCitations(params.citationPath, params.documentPath, params.outputDirPath);
             
            
         }
@@ -80,83 +49,60 @@ public class CitationMatchingJob {
 
 
 
-
     //------------------------ PRIVATE --------------------------
     
-    private static JavaPairRDD<String, MatchableEntity> loadEntities(JavaSparkContext sc, String entitiesFilePath, Integer numberOfPartitions) {
+    private static ConfigurableCitationMatchingService<?,?,?,?,?,?> createConfigurableCitationMatchingService(JavaSparkContext sc, CitationMatchingJobParameters params) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
         
-        JavaPairRDD<Text, BytesWritable> readEntities = null; 
+        ConfigurableCitationMatchingService<?,?,?,?,?,?> configurableCitationMatchingService = new ConfigurableCitationMatchingService<>();
         
-        if (numberOfPartitions == null) {
-            readEntities = sc.sequenceFile(entitiesFilePath, Text.class, BytesWritable.class);
-        } else {
-            readEntities = sc.sequenceFile(entitiesFilePath, Text.class, BytesWritable.class, numberOfPartitions);
-        }
+        CoreCitationMatchingService coreCitationMatchingService = coreCitationMatchingFactory.createCoreCitationMatchingService(sc, params.maxHashBucketSize, params.hashGeneratorClasses);
         
-        JavaPairRDD<String, MatchableEntity> entities = readEntities.mapToPair(x -> new Tuple2<String, MatchableEntity>(x._1.toString(), MatchableEntity.fromBytes(x._2.copyBytes())));
+        configurableCitationMatchingService.setCoreCitationMatchingService(coreCitationMatchingService);
+        configurableCitationMatchingService.setNumberOfPartitions(params.numberOfPartitions);
         
-        numberOfPartitions = readEntities.partitions().size();
+        createAndSetInputCitationReaderAndConverter(configurableCitationMatchingService, sc, params);
+        createAndSetInputDocumentReaderAndConverter(configurableCitationMatchingService, sc, params);
+        createAndSetOutputWriterAndConverter(configurableCitationMatchingService, sc, params);
         
-        entities = entities.partitionBy(new HashPartitioner(numberOfPartitions));
-        
-        
-        return entities;
+        return configurableCitationMatchingService;
     }
-    
-    private static void saveMatchedCitations(JavaSparkContext sc, JavaPairRDD<MatchableEntity, IdWithSimilarity> matchedCitations, String outputDirPath) {
+
+    private static <ICK, ICV, IDK, IDV, OMK, OMV> void createAndSetInputCitationReaderAndConverter(ConfigurableCitationMatchingService<ICK, ICV, IDK, IDV, OMK, OMV> citationMatchingService, JavaSparkContext sc, CitationMatchingJobParameters params) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
         
-        matchedCitations
-            .mapToPair(x -> new Tuple2<TextWithBytesWritable, Text>(
-                    new TextWithBytesWritable(x._1.id(), x._1.data().toByteArray()),
-                    new Text(x._2.getSimilarity() + ":" + x._2.getId())))
-            .saveAsNewAPIHadoopFile(outputDirPath, TextWithBytesWritable.class, Text.class, SequenceFileOutputFormat.class);
+        @SuppressWarnings("unchecked")
+        InputCitationReader<ICK, ICV> inputCitationReader = Class.forName(params.inputCitationReaderClass).asSubclass(InputCitationReader.class).newInstance();
+        inputCitationReader.setSparkContext(sc);
+        citationMatchingService.setInputCitationReader(inputCitationReader);
+        
+        @SuppressWarnings("unchecked")
+        InputCitationConverter<ICK, ICV>  inputCitationConverter = Class.forName(params.inputCitationConverterClass).asSubclass(InputCitationConverter.class).newInstance();
+        citationMatchingService.setInputCitationConverter(inputCitationConverter);
         
     }
-    
-    
-    private static JavaPairRDD<String, String> matchCitDocByHashes(JavaSparkContext sc,
-            JavaPairRDD<String, MatchableEntity> citations, JavaPairRDD<String, MatchableEntity> documents,
-            List<Pair<MatchableEntityHasher, MatchableEntityHasher>> entitiesHashers, long maxHashBucketSize) {
+
+    private static <ICK, ICV, IDK, IDV, OMK, OMV> void createAndSetInputDocumentReaderAndConverter(ConfigurableCitationMatchingService<ICK, ICV, IDK, IDV, OMK, OMV> citationMatchingService, JavaSparkContext sc, CitationMatchingJobParameters params) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
         
-        JavaPairRDD<String, MatchableEntity> unmatchedCitations = citations;
-        JavaPairRDD<String, String> joinedCitDocIdPairs = JavaPairRDD.fromJavaRDD(sc.emptyRDD());
+        @SuppressWarnings("unchecked")
+        InputDocumentReader<IDK, IDV> inputDocumentReader = Class.forName(params.inputDocumentReaderClass).asSubclass(InputDocumentReader.class).newInstance();
+        inputDocumentReader.setSparkContext(sc);
+        citationMatchingService.setInputDocumentReader(inputDocumentReader);
         
-        Iterator<Pair<MatchableEntityHasher, MatchableEntityHasher>> entitiesHashersIterator = entitiesHashers.iterator();
-        while(entitiesHashersIterator.hasNext()) {
-            Pair<MatchableEntityHasher, MatchableEntityHasher> citAndDocHashers = entitiesHashersIterator.next();
-            HeuristicHashCitationMatcher hashHeuristicCitationMatcher = new HeuristicHashCitationMatcher(citAndDocHashers.getLeft(), citAndDocHashers.getRight(), maxHashBucketSize);
-            
-            HeuristicHashMatchingResult matchedResult = 
-                    hashHeuristicCitationMatcher.matchCitations(unmatchedCitations, documents, entitiesHashersIterator.hasNext());
-            
-            joinedCitDocIdPairs = joinedCitDocIdPairs.union(matchedResult.getCitDocIdPairs());
-            unmatchedCitations = matchedResult.getUnmatchedCitations();
-        }
+        @SuppressWarnings("unchecked")
+        InputDocumentConverter<IDK, IDV> inputDocumentConverter = Class.forName(params.inputDocumentConverterClass).asSubclass(InputDocumentConverter.class).newInstance();
+        citationMatchingService.setInputDocumentConverter(inputDocumentConverter);
         
-        return joinedCitDocIdPairs;
     }
-    
-    private static List<Pair<MatchableEntityHasher, MatchableEntityHasher>> createMatchableEntityHashers(List<String> hashGeneratorClassNames) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-        List<Pair<MatchableEntityHasher, MatchableEntityHasher>> matchableEntityHashers = Lists.newArrayList();
+
+    private static <ICK, ICV, IDK, IDV, OMK, OMV> void createAndSetOutputWriterAndConverter(ConfigurableCitationMatchingService<ICK, ICV, IDK, IDV, OMK, OMV> citationMatchingService, JavaSparkContext sc, CitationMatchingJobParameters params) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
         
-        for (String citAndDocHashGeneratorClassNames : hashGeneratorClassNames) {
-            String citationHashGeneratorClassName = citAndDocHashGeneratorClassNames.split(":")[0];
-            String documentHashGeneratorClassName = citAndDocHashGeneratorClassNames.split(":")[1];
-            
-            MatchableEntityHasher citationHasher = createMatchableEntityHasher(citationHashGeneratorClassName);
-            MatchableEntityHasher documentHasher = createMatchableEntityHasher(documentHashGeneratorClassName);
-            
-            matchableEntityHashers.add(new ImmutablePair<MatchableEntityHasher, MatchableEntityHasher>(citationHasher, documentHasher));
-        }
+        @SuppressWarnings("unchecked")
+        OutputWriter<OMK, OMV> outputWriter = Class.forName(params.outputWriterClass).asSubclass(OutputWriter.class).newInstance();
+        citationMatchingService.setOutputWriter(outputWriter);
         
-        return matchableEntityHashers;
-    }
-    
-    private static MatchableEntityHasher createMatchableEntityHasher(String hashGeneratorClass) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-        HashGenerator hashGenerator = (HashGenerator) Class.forName(hashGeneratorClass).newInstance();
-        MatchableEntityHasher matchableEntityHasher = new MatchableEntityHasher();
-        matchableEntityHasher.setHashGenerator(hashGenerator);
-        return matchableEntityHasher;
+        @SuppressWarnings("unchecked")
+        OutputConverter<OMK, OMV> outputConverter = Class.forName(params.outputConverterClass).asSubclass(OutputConverter.class).newInstance();
+        citationMatchingService.setOutputConverter(outputConverter);
+        
     }
     
     
@@ -186,6 +132,26 @@ public class CitationMatchingJob {
         @Parameter(names="-numberOfPartitions", required = false, description = "number of partitions used for rdds with citations and documents read from input files, if not set it will depend on the input format")
         private Integer numberOfPartitions;
         
+        
+        @Parameter(names = "-inputDocumentReaderClass", required = false)
+        private String inputDocumentReaderClass = DefaultInputReader.class.getName();
+        
+        @Parameter(names = "-inputDocumentConverterClass", required = false)
+        private String inputDocumentConverterClass = DummyInputConverter.class.getName();
+        
+        
+        @Parameter(names = "-inputCitationReaderClass", required = false)
+        private String inputCitationReaderClass = DefaultInputReader.class.getName();
+        
+        @Parameter(names = "-inputCitationConverterClass", required = false)
+        private String inputCitationConverterClass = DummyInputConverter.class.getName();
+        
+        
+        @Parameter(names = "-outputWriterClass", required = false)
+        private String outputWriterClass = DefaultOutputWriter.class.getName();
+        
+        @Parameter(names = "-outputConverterClass", required = false)
+        private String outputConverterClass = DummyOutputConverter.class.getName();
     }
     
     

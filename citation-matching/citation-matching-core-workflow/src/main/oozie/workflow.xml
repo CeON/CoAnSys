@@ -51,6 +51,39 @@
         <property>
             <name>output</name>
         </property>
+        
+        <property>
+            <name>inputDocumentReaderClass</name>
+            <value>pl.edu.icm.coansys.citations.DefaultInputReader</value>
+            <description>Name of class used to read input documents</description>
+        </property>
+        <property>
+            <name>inputDocumentConverterClass</name>
+            <value>pl.edu.icm.coansys.citations.DummyInputConverter</value>
+            <description>Name of class used to convert input documents</description>
+        </property>
+        
+        <property>
+            <name>inputCitationReaderClass</name>
+            <value>pl.edu.icm.coansys.citations.DefaultInputReader</value>
+            <description>Name of class used to read input citations</description>
+        </property>
+        <property>
+            <name>inputCitationConverterClass</name>
+            <value>pl.edu.icm.coansys.citations.DummyInputConverter</value>
+            <description>Name of class used to convert input citations</description>
+        </property>
+        
+        <property>
+            <name>outputConverterClass</name>
+            <value>pl.edu.icm.coansys.citations.DummyOutputConverter</value>
+            <description>Name of class used to convert output matched citations for output writer</description>
+        </property>
+        <property>
+            <name>outputWriterClass</name>
+            <value>pl.edu.icm.coansys.citations.DefaultOutputWriter</value>
+            <description>Name of class used to write output matched citations</description>
+        </property>
     </parameters>
     <global>
         <job-tracker>${jobTracker}</job-tracker>
@@ -98,6 +131,15 @@
             <arg>-outputDirPath = ${output}</arg>
             <arg>-maxHashBucketSize = ${maxHashBucketSize}</arg>
             <arg>-numberOfPartitions = ${numberOfPartitions}</arg>
+            
+            <arg>-inputDocumentReaderClass = ${inputDocumentReaderClass}</arg>
+            <arg>-inputDocumentConverterClass = ${inputDocumentConverterClass}</arg>
+            
+            <arg>-inputCitationReaderClass = ${inputCitationReaderClass}</arg>
+            <arg>-inputCitationConverterClass = ${inputCitationConverterClass}</arg>
+            
+            <arg>-outputConverterClass = ${outputConverterClass}</arg>
+            <arg>-outputWriterClass = ${outputWriterClass}</arg>
             
         </spark>
         <ok to="end"/>
