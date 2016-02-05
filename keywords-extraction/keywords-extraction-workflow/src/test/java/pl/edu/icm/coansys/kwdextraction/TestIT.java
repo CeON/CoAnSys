@@ -68,6 +68,7 @@ public class TestIT {
                     actual = extractedKwds.getKeywordsList();
                     records ++;
                 }
+                reader.close();
             }
         }
         assertEquals(records, 1);

@@ -27,6 +27,7 @@ import java.util.Set;
  * 
  * @author acz
  */
+@SuppressWarnings({ "unchecked", "rawtypes" })
 public class QGramSimilarity extends SimilarityCalculator {
 
     public static final float APPROVE = 0.2f;
@@ -69,7 +70,7 @@ public class QGramSimilarity extends SimilarityCalculator {
         }
     }
 
-    private int distanceInt(String s1, String s2) {
+	private int distanceInt(String s1, String s2) {
 
         int qgramLoc;
         if (this.qgram == -1) {
@@ -111,7 +112,7 @@ public class QGramSimilarity extends SimilarityCalculator {
         return q;
     }
 
-    private int measureDistance(Map gramsS1, Map gramsS2) {
+	private int measureDistance(Map gramsS1, Map gramsS2) {
         int diff = 0;
         for (Map.Entry entry : (Set<Map.Entry>) gramsS1.entrySet()) {
             String gramS1 = (String) entry.getKey();

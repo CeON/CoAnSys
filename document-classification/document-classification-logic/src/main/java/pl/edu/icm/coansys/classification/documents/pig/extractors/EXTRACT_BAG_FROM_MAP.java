@@ -37,6 +37,7 @@ import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
  *
  * @author pdendek
  */
+@SuppressWarnings({ "unchecked" })
 public class EXTRACT_BAG_FROM_MAP extends EvalFunc<DataBag> {
 
     private static final Logger logger = LoggerFactory.getLogger(EXTRACT_KEY_TI_ABS_KW.class);
@@ -68,7 +69,9 @@ public class EXTRACT_BAG_FROM_MAP extends EvalFunc<DataBag> {
                         continue;
                     }
                     ret.add(TupleFactory.getInstance().newTuple(new ArrayList<String>() {
-                        {
+						private static final long serialVersionUID = 1L;
+
+						{
                             add(v.substring(1, v.length() - 1));
                         }
                     }));

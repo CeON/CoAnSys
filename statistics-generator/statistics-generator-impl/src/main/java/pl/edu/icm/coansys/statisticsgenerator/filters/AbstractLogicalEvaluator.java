@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+@SuppressWarnings({ "unchecked" })
 public abstract class AbstractLogicalEvaluator extends AbstractEvaluator<String> {
     
     final static Operator AND = new Operator("and", 2, Operator.Associativity.LEFT, 2);

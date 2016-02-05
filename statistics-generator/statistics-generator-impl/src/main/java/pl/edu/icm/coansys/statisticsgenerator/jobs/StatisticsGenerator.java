@@ -49,6 +49,7 @@ import pl.edu.icm.coansys.statisticsgenerator.operationcomponents.StatisticCalcu
  *
  * @author Artur Czeczko <a.czeczko@icm.edu.pl>
  */
+@SuppressWarnings({ "unchecked", "rawtypes" })
 public class StatisticsGenerator implements Tool {
 
     private static Logger logger = LoggerFactory.getLogger(StatisticsGenerator.class);

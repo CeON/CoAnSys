@@ -49,7 +49,6 @@ import pl.edu.icm.coansys.models.DocumentProtos.TextWithLanguage;
  *
  * @author pdendek
  */
-@SuppressWarnings("rawtypes")
 public class EXTRACT_MAP_CATEGOCC extends EvalFunc<Tuple> {
 
     private static final Logger logger = LoggerFactory.getLogger(EXTRACT_MAP_CATEGOCC.class);

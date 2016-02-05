@@ -60,6 +60,7 @@ public class TestIT {
                     assertTrue(nlmString.contains(TITLE_STRING));
                     records++;
                 }
+                reader.close();
             }
         }
         assertTrue(records > 0);

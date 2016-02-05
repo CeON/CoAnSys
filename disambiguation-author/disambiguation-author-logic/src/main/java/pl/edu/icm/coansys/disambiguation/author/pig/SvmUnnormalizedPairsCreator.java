@@ -41,6 +41,7 @@ import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.CosineSi
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.Disambiguator;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.Intersection;
 
+@SuppressWarnings({ "unchecked" })
 public class SvmUnnormalizedPairsCreator extends EvalFunc<DataBag> {
 
 	private static final Logger logger = LoggerFactory
@@ -218,7 +219,7 @@ public class SvmUnnormalizedPairsCreator extends EvalFunc<DataBag> {
 	}
 
 	@Override
-	public Schema outputSchema(@SuppressWarnings("unused") Schema p_input) {
+	public Schema outputSchema(Schema p_input) {
 		try {
 			return Schema.generateNestedSchema(DataType.TUPLE);
 		} catch (FrontendException e) {

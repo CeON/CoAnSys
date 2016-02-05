@@ -24,6 +24,7 @@ import org.apache.pig.builtin.PigStorage;
 import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
 
+@SuppressWarnings({ "unchecked" })
 public class NuberedPigStorage extends PigStorage {
 
 	static Long index = 0l;

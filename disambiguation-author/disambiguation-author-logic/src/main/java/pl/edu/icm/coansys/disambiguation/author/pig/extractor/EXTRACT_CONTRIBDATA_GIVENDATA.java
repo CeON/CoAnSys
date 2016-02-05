@@ -58,6 +58,7 @@ import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
  * @author pdendek
  * @author mwos
  */
+@SuppressWarnings({ "unchecked" })
 public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 
 	private static final Logger logger = LoggerFactory

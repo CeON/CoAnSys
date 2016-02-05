@@ -32,6 +32,7 @@ import pl.edu.icm.coansys.statisticsgenerator.operationcomponents.StatisticCalcu
  *
  * @author Artur Czeczko <a.czeczko@icm.edu.pl>
  */
+@SuppressWarnings({ "unchecked" })
 public class StatGeneratorConfiguration {
 
     private Map<String, FilterComponent> inputFilterComponents;

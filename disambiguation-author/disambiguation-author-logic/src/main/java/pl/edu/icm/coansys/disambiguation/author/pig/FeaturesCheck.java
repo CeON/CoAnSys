@@ -34,6 +34,7 @@ import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
  * 
  * @author mwos
  */
+@SuppressWarnings({ "unchecked" })
 public class FeaturesCheck extends AND<Boolean> {
 
 	private static final org.slf4j.Logger logger = LoggerFactory
