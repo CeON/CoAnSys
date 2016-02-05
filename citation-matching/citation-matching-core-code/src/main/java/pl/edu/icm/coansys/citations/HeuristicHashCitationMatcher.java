@@ -3,7 +3,6 @@ package pl.edu.icm.coansys.citations;
 import org.apache.spark.api.java.JavaPairRDD;
 
 import pl.edu.icm.coansys.citations.data.HeuristicHashMatchingResult;
-import pl.edu.icm.coansys.citations.data.InvalidHashExtractor;
 import pl.edu.icm.coansys.citations.data.MatchableEntity;
 import scala.Tuple2;
 
