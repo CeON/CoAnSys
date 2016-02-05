@@ -21,6 +21,7 @@ package pl.edu.icm.coansys.similarity.pig.udf;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
+
 import org.apache.pig.tools.parameters.ParseException;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;

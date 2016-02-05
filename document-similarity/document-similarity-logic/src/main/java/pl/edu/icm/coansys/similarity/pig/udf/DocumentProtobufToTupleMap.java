@@ -33,7 +33,10 @@ import org.apache.pig.data.DataByteArray;
 import org.apache.pig.data.DataType;
 import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
+import org.apache.pig.impl.logicalLayer.FrontendException;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
+
+import com.google.common.base.Joiner;
 
 import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
 import pl.edu.icm.coansys.models.DocumentProtos.Author;
@@ -41,9 +44,6 @@ import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
 import pl.edu.icm.coansys.models.DocumentProtos.KeywordsList;
 import pl.edu.icm.coansys.models.DocumentProtos.TextWithLanguage;
-
-import com.google.common.base.Joiner;
-import org.apache.pig.impl.logicalLayer.FrontendException;
 
 /**
  * 

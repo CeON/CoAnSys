@@ -18,7 +18,6 @@
 
 package pl.edu.icm.coansys.classification.documents.pig.extractors;
 
-import com.google.common.base.Joiner;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,11 +39,12 @@ import org.apache.zookeeper.KeeperException.UnimplementedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
+import com.google.common.base.Joiner;
+
 import pl.edu.icm.coansys.commons.java.Pair;
+import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
 import pl.edu.icm.coansys.models.DocumentProtos.ClassifCode;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
-import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
 import pl.edu.icm.coansys.models.DocumentProtos.KeywordsList;
 import pl.edu.icm.coansys.models.DocumentProtos.TextWithLanguage;
 

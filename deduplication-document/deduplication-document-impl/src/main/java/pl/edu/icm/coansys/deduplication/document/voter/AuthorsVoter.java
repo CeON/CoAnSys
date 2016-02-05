@@ -18,6 +18,7 @@
 package pl.edu.icm.coansys.deduplication.document.voter;
 
 import java.util.List;
+
 import pl.edu.icm.coansys.commons.java.Pair;
 import pl.edu.icm.coansys.commons.java.StringTools;
 import pl.edu.icm.coansys.commons.reparser.Node;

@@ -18,20 +18,6 @@
 
 package pl.edu.icm.coansys.kwdextraction;
 
-import java.io.File;
-import java.util.Arrays;
-import java.util.List;
-import org.apache.commons.io.FileUtils;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.BytesWritable;
-import org.apache.hadoop.io.SequenceFile;
-import org.apache.hadoop.io.Text;
-import static org.testng.Assert.*;
-import org.testng.annotations.Test;
-import pl.edu.icm.coansys.models.DocumentProtos;
-import pl.edu.icm.oozierunner.OozieRunner;
-
 public class TestIT {
 /*
     @Test

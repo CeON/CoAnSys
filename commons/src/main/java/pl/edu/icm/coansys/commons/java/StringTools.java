@@ -17,15 +17,15 @@
  */
 package pl.edu.icm.coansys.commons.java;
 
-import java.util.Map;
-
-
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Maps;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.lang.StringUtils;
+
+import com.google.common.base.Preconditions;
+import com.google.common.collect.Maps;
 
 /**
  *

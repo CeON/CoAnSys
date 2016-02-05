@@ -18,7 +18,6 @@
 
 package pl.edu.icm.coansys.classification.documents.pig.extractors;
 
-import com.google.protobuf.InvalidProtocolBufferException;
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -35,7 +34,8 @@ import org.apache.pig.impl.logicalLayer.schema.Schema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
+import com.google.protobuf.InvalidProtocolBufferException;
+
 import pl.edu.icm.coansys.models.DocumentProtos.ClassifCode;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 

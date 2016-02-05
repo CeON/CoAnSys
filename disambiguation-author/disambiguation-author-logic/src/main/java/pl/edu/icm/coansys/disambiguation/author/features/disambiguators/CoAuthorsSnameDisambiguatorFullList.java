@@ -18,8 +18,8 @@
 
 package pl.edu.icm.coansys.disambiguation.author.features.disambiguators;
 
-import java.util.List;
 import java.util.AbstractMap.SimpleEntry;
+import java.util.List;
 
 /**
  * Disambiguator for contributors with the same sname. It requires placing their

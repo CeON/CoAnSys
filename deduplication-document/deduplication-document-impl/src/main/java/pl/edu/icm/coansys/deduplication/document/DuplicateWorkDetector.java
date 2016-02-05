@@ -34,10 +34,10 @@ import org.apache.hadoop.util.ToolRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Preconditions;
+
 import pl.edu.icm.coansys.commons.spring.DiMapper;
 import pl.edu.icm.coansys.commons.spring.DiReducer;
-
-import com.google.common.base.Preconditions;
 
 /**
  * 

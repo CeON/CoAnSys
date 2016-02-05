@@ -20,10 +20,12 @@ package pl.edu.icm.coansys.deduplication.document.debugging;
 
 import java.io.IOException;
 import java.util.Arrays;
+
 import org.apache.pig.EvalFunc;
 import org.apache.pig.data.DataByteArray;
 import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
+
 import pl.edu.icm.coansys.models.DocumentProtos;
 
 /**

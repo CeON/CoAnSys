@@ -23,6 +23,7 @@
 package pl.edu.icm.coansys.commons.pig.udf;
 
 import java.io.IOException;
+
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.mapreduce.RecordReader;
 import org.apache.hadoop.mapreduce.lib.input.FileSplit;

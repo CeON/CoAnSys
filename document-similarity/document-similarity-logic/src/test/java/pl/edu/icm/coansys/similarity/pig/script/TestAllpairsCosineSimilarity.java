@@ -20,12 +20,14 @@ package pl.edu.icm.coansys.similarity.pig.script;
 
 import java.io.IOException;
 import java.util.LinkedList;
+
 import org.apache.hadoop.fs.Path;
 import org.apache.pig.pigunit.Cluster;
 import org.apache.pig.pigunit.PigTest;
 import org.apache.pig.tools.parameters.ParseException;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+
 import pl.edu.icm.coansys.similarity.test.utils.PigScriptExtractor;
 
 /**

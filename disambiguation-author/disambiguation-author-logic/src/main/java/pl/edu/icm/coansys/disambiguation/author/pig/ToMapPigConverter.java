@@ -18,12 +18,12 @@
 
 package pl.edu.icm.coansys.disambiguation.author.pig;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.pig.EvalFunc;
 import org.apache.pig.backend.executionengine.ExecException;
 import org.apache.pig.data.Tuple;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author mwos

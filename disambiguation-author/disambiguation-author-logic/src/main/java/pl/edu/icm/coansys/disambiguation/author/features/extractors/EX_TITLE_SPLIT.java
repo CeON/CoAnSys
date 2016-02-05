@@ -18,17 +18,16 @@
 
 package pl.edu.icm.coansys.disambiguation.author.features.extractors;
 
-import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DisambiguationExtractorDocument;
-import pl.edu.icm.coansys.disambiguation.author.normalizers.PigNormalizer;
-import pl.edu.icm.coansys.disambiguation.author.normalizers.DiacriticsRemover;
-import pl.edu.icm.coansys.models.DocumentProtos.TextWithLanguage;
-
 import org.apache.pig.data.DataBag;
 import org.apache.pig.data.DefaultDataBag;
 import org.apache.pig.data.Tuple;
 import org.apache.pig.data.TupleFactory;
 
+import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DisambiguationExtractorDocument;
+import pl.edu.icm.coansys.disambiguation.author.normalizers.DiacriticsRemover;
+import pl.edu.icm.coansys.disambiguation.author.normalizers.PigNormalizer;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
+import pl.edu.icm.coansys.models.DocumentProtos.TextWithLanguage;
 
 public class EX_TITLE_SPLIT extends DisambiguationExtractorDocument {
 

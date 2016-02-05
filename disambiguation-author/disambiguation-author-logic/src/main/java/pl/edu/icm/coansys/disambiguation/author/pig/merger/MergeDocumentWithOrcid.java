@@ -18,12 +18,11 @@
 package pl.edu.icm.coansys.disambiguation.author.pig.merger;
 
 
-import org.apache.hadoop.mapreduce.Counter;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.hadoop.mapreduce.Counter;
 import org.apache.pig.EvalFunc;
 import org.apache.pig.data.DataByteArray;
 import org.apache.pig.data.DataType;

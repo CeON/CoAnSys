@@ -23,6 +23,7 @@ import java.util.Iterator;
 
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.mapreduce.Reducer;
+
 import pl.edu.icm.coansys.disambiguation.auxil.TextArrayWritable;
 
 /**

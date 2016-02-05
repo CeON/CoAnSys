@@ -18,9 +18,9 @@
 
 package pl.edu.icm.coansys.deduplication.document.voter;
 
+import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
-import org.testng.Assert;
 
 import pl.edu.icm.coansys.deduplication.document.tool.MockDocumentMetadataFactory;
 import pl.edu.icm.coansys.models.DocumentProtos;

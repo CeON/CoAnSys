@@ -19,9 +19,7 @@
 package pl.edu.icm.coansys.classification.documents.pig.proceeders;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import org.apache.pig.EvalFunc;
 import org.apache.pig.data.DataBag;

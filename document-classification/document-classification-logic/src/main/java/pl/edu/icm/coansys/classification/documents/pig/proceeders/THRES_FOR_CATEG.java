@@ -20,12 +20,18 @@ package pl.edu.icm.coansys.classification.documents.pig.proceeders;
 
 import java.io.IOException;
 import java.util.Arrays;
+
 import org.apache.pig.EvalFunc;
-import org.apache.pig.data.*;
+import org.apache.pig.data.DataBag;
+import org.apache.pig.data.DataType;
+import org.apache.pig.data.DefaultDataBag;
+import org.apache.pig.data.Tuple;
+import org.apache.pig.data.TupleFactory;
 import org.apache.pig.impl.logicalLayer.FrontendException;
 import org.apache.pig.impl.logicalLayer.schema.Schema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
 
 /**

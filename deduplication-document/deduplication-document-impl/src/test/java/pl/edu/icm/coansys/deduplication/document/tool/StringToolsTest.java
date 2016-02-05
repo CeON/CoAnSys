@@ -18,11 +18,11 @@
 
 package pl.edu.icm.coansys.deduplication.document.tool;
 
-import pl.edu.icm.coansys.commons.java.StringTools;
 import org.testng.Assert;
-
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
+
+import pl.edu.icm.coansys.commons.java.StringTools;
 
 public class StringToolsTest {
 

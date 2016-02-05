@@ -19,8 +19,10 @@
 package pl.edu.icm.coansys.similarity.pig.udf;
 
 import java.io.IOException;
+
 import org.apache.pig.EvalFunc;
 import org.apache.pig.data.Tuple;
+
 import pl.edu.icm.coansys.commons.java.StopWordsRemover;
 
 public class StopWordFilter extends EvalFunc<Boolean> {

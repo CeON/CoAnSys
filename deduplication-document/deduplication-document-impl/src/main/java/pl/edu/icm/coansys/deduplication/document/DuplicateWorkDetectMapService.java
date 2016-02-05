@@ -17,7 +17,6 @@
  */
 package pl.edu.icm.coansys.deduplication.document;
 
-import pl.edu.icm.coansys.commons.java.DocumentWrapperUtils;
 import java.io.IOException;
 
 import org.apache.hadoop.io.BytesWritable;
@@ -29,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import pl.edu.icm.coansys.commons.java.DocumentWrapperUtils;
 import pl.edu.icm.coansys.commons.spring.DiMapService;
 import pl.edu.icm.coansys.deduplication.document.keygenerator.WorkKeyGenerator;
 import pl.edu.icm.coansys.models.DocumentProtos;

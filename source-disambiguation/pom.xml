@@ -8,16 +8,11 @@
         <groupId>pl.edu.icm.coansys</groupId>
         <version>1.10-rc3-SNAPSHOT</version>
     </parent>
-
-    <properties>
-        <!-- oozie-maven-plugin.version>1.2</oozie-maven-plugin.version -->
-        <!-- <oozie-runner.version>1.1</oozie-runner.version> -->
-    </properties>
-    <groupId>pl.edu.icm.coansys</groupId>
+																																																																																																																																																																								
     <artifactId>source-disambiguation</artifactId>
     <packaging>pom</packaging>
     <name>Source (Journal/Book) disambiguation Tool</name>
-
+																																																																							
     <modules>
         <module>source-disambiguation-logic</module>
         <module>source-disambiguation-workflow</module>

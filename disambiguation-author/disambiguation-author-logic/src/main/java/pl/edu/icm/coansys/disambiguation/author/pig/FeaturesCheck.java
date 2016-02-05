@@ -18,6 +18,8 @@
 
 package pl.edu.icm.coansys.disambiguation.author.pig;
 
+import java.util.Map;
+
 import org.apache.hadoop.mapreduce.Counter;
 import org.apache.pig.backend.executionengine.ExecException;
 import org.apache.pig.data.Tuple;
@@ -25,8 +27,6 @@ import org.apache.pig.tools.pigstats.PigStatusReporter;
 import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
-
-import java.util.Map;
 
 /**
  * Verify that the author may be similar (comparable) to someone by checking

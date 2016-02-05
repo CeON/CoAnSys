@@ -18,19 +18,26 @@
 
 package pl.edu.icm.coansys.deduplication.document;
 
-import pl.edu.icm.coansys.deduplication.document.comparator.WeightedMeanComparator;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import org.testng.Assert;
-import org.testng.annotations.*;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import static org.mockito.Mockito.*;
+
+import pl.edu.icm.coansys.deduplication.document.comparator.WeightedMeanComparator;
 import pl.edu.icm.coansys.deduplication.document.tool.MockDocumentMetadataFactory;
 import pl.edu.icm.coansys.deduplication.document.voter.AuthorsVoter;
-import pl.edu.icm.coansys.deduplication.document.voter.YearVoter;
 import pl.edu.icm.coansys.deduplication.document.voter.SimilarityVoter;
-import pl.edu.icm.coansys.deduplication.document.voter.Vote;
 import pl.edu.icm.coansys.deduplication.document.voter.TitleVoter;
+import pl.edu.icm.coansys.deduplication.document.voter.Vote;
+import pl.edu.icm.coansys.deduplication.document.voter.YearVoter;
 import pl.edu.icm.coansys.models.DocumentProtos;
 
 public class WeightedMeanComparatorTest {
