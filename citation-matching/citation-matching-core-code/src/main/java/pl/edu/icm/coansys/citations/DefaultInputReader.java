@@ -19,8 +19,6 @@ import scala.Tuple2;
  * @author madryk
  */
 public class DefaultInputReader implements InputCitationReader<String, MatchableEntity>, InputDocumentReader<String, MatchableEntity> {
-
-    private JavaSparkContext sparkContext;
     
     
     //------------------------ LOGIC --------------------------
@@ -31,8 +29,8 @@ public class DefaultInputReader implements InputCitationReader<String, Matchable
      * Values of returned rdd are {@link MatchableEntity} objects
      */
     @Override
-    public JavaPairRDD<String, MatchableEntity> readDocuments(String inputDocumentPath, Integer numberOfPartitions) {
-        return readEntities(inputDocumentPath, numberOfPartitions);
+    public JavaPairRDD<String, MatchableEntity> readDocuments(JavaSparkContext sparkContext, String inputDocumentPath, Integer numberOfPartitions) {
+        return readEntities(sparkContext, inputDocumentPath, numberOfPartitions);
     }
 
     /**
@@ -41,14 +39,14 @@ public class DefaultInputReader implements InputCitationReader<String, Matchable
      * Values of returned rdd are {@link MatchableEntity} objects
      */
     @Override
-    public JavaPairRDD<String, MatchableEntity> readCitations(String inputCitationPath, Integer numberOfPartitions) {
-        return readEntities(inputCitationPath, numberOfPartitions);
+    public JavaPairRDD<String, MatchableEntity> readCitations(JavaSparkContext sparkContext, String inputCitationPath, Integer numberOfPartitions) {
+        return readEntities(sparkContext, inputCitationPath, numberOfPartitions);
     }
 
     
     //------------------------ PRIVATE --------------------------
     
-    private JavaPairRDD<String, MatchableEntity> readEntities(String entitesPath, Integer numberOfPartitions) {
+    private JavaPairRDD<String, MatchableEntity> readEntities(JavaSparkContext sparkContext, String entitesPath, Integer numberOfPartitions) {
         
         JavaPairRDD<Text, BytesWritable> readEntities = null;
         
@@ -64,12 +62,5 @@ public class DefaultInputReader implements InputCitationReader<String, Matchable
         return entities;
     }
     
-    
-    //------------------------ SETTERS --------------------------
-    
-    @Override
-    public void setSparkContext(JavaSparkContext sparkContext) {
-        this.sparkContext = sparkContext;
-    }
 
 }

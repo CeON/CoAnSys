@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 import org.apache.spark.HashPartitioner;
 import org.apache.spark.Partitioner;
 import org.apache.spark.api.java.JavaPairRDD;
+import org.apache.spark.api.java.JavaSparkContext;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
@@ -44,6 +45,8 @@ public class ConfigurableCitationMatchingServiceTest {
     @Mock
     private CoreCitationMatchingService coreCitationMatchingService;
     
+    @Mock
+    private JavaSparkContext sparkContext;
     
     @Mock
     private JavaPairRDD<String, MatchableEntity> citations;
@@ -95,12 +98,12 @@ public class ConfigurableCitationMatchingServiceTest {
         
         // given
         
-        when(inputCitationReader.readCitations("/input/cit/path", 5)).thenReturn(citations);
+        when(inputCitationReader.readCitations(sparkContext, "/input/cit/path", 5)).thenReturn(citations);
         when(inputCitationConverter.convertCitations(citations)).thenReturn(convertedCitations);
         when(convertedCitations.partitions()).thenReturn(Lists.newArrayList(5));
         when(convertedCitations.partitionBy(any())).thenReturn(repartitionedCitations);
         
-        when(inputDocumentReader.readDocuments("/input/doc/path", 5)).thenReturn(documents);
+        when(inputDocumentReader.readDocuments(sparkContext, "/input/doc/path", 5)).thenReturn(documents);
         when(inputDocumentConverter.convertDocuments(documents)).thenReturn(convertedDocuments);
         when(convertedDocuments.partitions()).thenReturn(Lists.newArrayList(5));
         when(convertedDocuments.partitionBy(any())).thenReturn(repartitionedDocuments);
@@ -111,16 +114,16 @@ public class ConfigurableCitationMatchingServiceTest {
         
         // execute
         
-        citationMatchingService.matchCitations("/input/cit/path", "/input/doc/path", "/output/path");
+        citationMatchingService.matchCitations(sparkContext, "/input/cit/path", "/input/doc/path", "/output/path");
         
         
         // assert
         
-        verify(inputCitationReader).readCitations("/input/cit/path", 5);
+        verify(inputCitationReader).readCitations(sparkContext, "/input/cit/path", 5);
         verify(inputCitationConverter).convertCitations(citations);
         verify(convertedCitations).partitionBy(isA(HashPartitioner.class));
         
-        verify(inputDocumentReader).readDocuments("/input/doc/path", 5);
+        verify(inputDocumentReader).readDocuments(sparkContext, "/input/doc/path", 5);
         verify(inputDocumentConverter).convertDocuments(documents);
         verify(convertedDocuments).partitionBy(isA(HashPartitioner.class));
         

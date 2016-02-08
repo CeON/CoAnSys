@@ -16,16 +16,11 @@ public interface InputCitationReader<K,V> {
     /**
      * Returns spark rdd containing citations
      * 
+     * @param sparkContext - spark context which can be used to create rdd
      * @param inputCitationPath - path to citations file
      * @param numberOfPartitions - how many partitions should be created in citations rdd
      */
-    JavaPairRDD<K,V> readCitations(String inputCitationPath, Integer numberOfPartitions);
+    JavaPairRDD<K,V> readCitations(JavaSparkContext sparkContext, String inputCitationPath, Integer numberOfPartitions);
     
     
-    //------------------------ SETTERS --------------------------
-    
-    /**
-     * Sets spark context for this class
-     */
-    void setSparkContext(JavaSparkContext sparkContext);
 }
