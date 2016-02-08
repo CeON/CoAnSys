@@ -47,11 +47,11 @@ public class ConfigurableCitationMatchingService<INPUT_CIT_KEY, INPUT_CIT_VALUE,
         
         JavaPairRDD<INPUT_CIT_KEY, INPUT_CIT_VALUE> citations = inputCitationReader.readCitations(inputCitationPath, numberOfPartitions);
         JavaPairRDD<String, MatchableEntity> citationsConverted = inputCitationConverter.convertCitations(citations);
-        citationsConverted = repartitionEntities(citationsConverted);
+        citationsConverted = citationsConverted.partitionBy(new HashPartitioner(numberOfPartitions));
         
         JavaPairRDD<INPUT_DOC_KEY, INPUT_DOC_VALUE> documents = inputDocumentReader.readDocuments(inputDocumentPath, numberOfPartitions);
         JavaPairRDD<String, MatchableEntity> documentsConverted = inputDocumentConverter.convertDocuments(documents);
-        documentsConverted = repartitionEntities(documentsConverted);
+        documentsConverted = documentsConverted.partitionBy(new HashPartitioner(numberOfPartitions));
         
         
         JavaPairRDD<MatchableEntity, IdWithSimilarity> matchedCitations = coreCitationMatchingService.matchCitations(citationsConverted, documentsConverted);
@@ -59,15 +59,6 @@ public class ConfigurableCitationMatchingService<INPUT_CIT_KEY, INPUT_CIT_VALUE,
         
         JavaPairRDD<OUTPUT_MATCHED_KEY, OUTPUT_MACHED_VALUE> matchedCitationsConverted = outputConverter.convertMatchedCitations(matchedCitations);
         outputWriter.writeMatchedCitations(matchedCitationsConverted, outputPath);
-    }
-    
-    
-    //------------------------ PRIVATE --------------------------
-    
-    private JavaPairRDD<String, MatchableEntity> repartitionEntities(JavaPairRDD<String, MatchableEntity> entities) {
-        int numberOfPartitions = entities.partitions().size();
-        
-        return entities.partitionBy(new HashPartitioner(numberOfPartitions));
     }
 
 
