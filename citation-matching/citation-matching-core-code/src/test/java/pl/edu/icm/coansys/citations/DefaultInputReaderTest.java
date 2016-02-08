@@ -49,7 +49,6 @@ public class DefaultInputReaderTest {
     @BeforeMethod
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        inputReader.setSparkContext(sparkContext);
     }
     
     
@@ -66,7 +65,7 @@ public class DefaultInputReaderTest {
         
         // execute
         
-        JavaPairRDD<String, MatchableEntity> retDocuments = inputReader.readDocuments("/path/to/documents/", 10);
+        JavaPairRDD<String, MatchableEntity> retDocuments = inputReader.readDocuments(sparkContext, "/path/to/documents/", 10);
         
         
         // assert
@@ -91,7 +90,7 @@ public class DefaultInputReaderTest {
         
         // execute
         
-        JavaPairRDD<String, MatchableEntity> retDocuments = inputReader.readDocuments("/path/to/documents/", null);
+        JavaPairRDD<String, MatchableEntity> retDocuments = inputReader.readDocuments(sparkContext, "/path/to/documents/", null);
         
         
         // assert
@@ -116,7 +115,7 @@ public class DefaultInputReaderTest {
         
         // execute
         
-        JavaPairRDD<String, MatchableEntity> retCitations = inputReader.readCitations("/path/to/citations/", 10);
+        JavaPairRDD<String, MatchableEntity> retCitations = inputReader.readCitations(sparkContext, "/path/to/citations/", 10);
         
         
         // assert
@@ -141,7 +140,7 @@ public class DefaultInputReaderTest {
         
         // execute
         
-        JavaPairRDD<String, MatchableEntity> retCitations = inputReader.readCitations("/path/to/citations/", null);
+        JavaPairRDD<String, MatchableEntity> retCitations = inputReader.readCitations(sparkContext, "/path/to/citations/", null);
         
         
         // assert

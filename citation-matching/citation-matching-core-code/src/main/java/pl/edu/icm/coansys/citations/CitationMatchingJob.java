@@ -40,7 +40,7 @@ public class CitationMatchingJob {
             
             ConfigurableCitationMatchingService<?,?,?,?,?,?> citationMatchingService = createConfigurableCitationMatchingService(sc, params);
             
-            citationMatchingService.matchCitations(params.citationPath, params.documentPath, params.outputDirPath);
+            citationMatchingService.matchCitations(sc, params.citationPath, params.documentPath, params.outputDirPath);
             
            
         }
@@ -71,7 +71,6 @@ public class CitationMatchingJob {
         
         @SuppressWarnings("unchecked")
         InputCitationReader<ICK, ICV> inputCitationReader = Class.forName(params.inputCitationReaderClass).asSubclass(InputCitationReader.class).newInstance();
-        inputCitationReader.setSparkContext(sc);
         citationMatchingService.setInputCitationReader(inputCitationReader);
         
         @SuppressWarnings("unchecked")
@@ -84,7 +83,6 @@ public class CitationMatchingJob {
         
         @SuppressWarnings("unchecked")
         InputDocumentReader<IDK, IDV> inputDocumentReader = Class.forName(params.inputDocumentReaderClass).asSubclass(InputDocumentReader.class).newInstance();
-        inputDocumentReader.setSparkContext(sc);
         citationMatchingService.setInputDocumentReader(inputDocumentReader);
         
         @SuppressWarnings("unchecked")

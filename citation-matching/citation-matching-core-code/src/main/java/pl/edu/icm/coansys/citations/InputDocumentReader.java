@@ -16,16 +16,11 @@ public interface InputDocumentReader<K, V> {
     /**
      * Returns spark rdd containing documents
      * 
+     * @param sparkContext - spark context which can be used to create rdd
      * @param inputDocumentPath - path to documents file
      * @param numberOfPartitions - how many partitions should be created in citations rdd
      */
-    JavaPairRDD<K, V> readDocuments(String inputDocumentPath, Integer numberOfPartitions);
+    JavaPairRDD<K, V> readDocuments(JavaSparkContext sparkContext, String inputDocumentPath, Integer numberOfPartitions);
     
     
-    //------------------------ SETTERS --------------------------
-    
-    /**
-     * Sets spark context for this class
-     */
-    void setSparkContext(JavaSparkContext sparkContext);
 }
