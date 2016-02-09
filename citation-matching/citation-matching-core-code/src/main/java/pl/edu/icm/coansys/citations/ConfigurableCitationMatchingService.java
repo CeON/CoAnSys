@@ -2,6 +2,7 @@ package pl.edu.icm.coansys.citations;
 
 import org.apache.spark.HashPartitioner;
 import org.apache.spark.api.java.JavaPairRDD;
+import org.apache.spark.api.java.JavaSparkContext;
 
 import pl.edu.icm.coansys.citations.data.IdWithSimilarity;
 import pl.edu.icm.coansys.citations.data.MatchableEntity;
@@ -43,13 +44,13 @@ public class ConfigurableCitationMatchingService<INPUT_CIT_KEY, INPUT_CIT_VALUE,
      * using {@link CoreCitationMatchingService#matchCitations(JavaPairRDD, JavaPairRDD)}.
      * After that it saves matched citations to path specified by last argument.
      */
-    public void matchCitations(String inputCitationPath, String inputDocumentPath, String outputPath) {
+    public void matchCitations(JavaSparkContext sparkContext, String inputCitationPath, String inputDocumentPath, String outputPath) {
         
-        JavaPairRDD<INPUT_CIT_KEY, INPUT_CIT_VALUE> citations = inputCitationReader.readCitations(inputCitationPath, numberOfPartitions);
+        JavaPairRDD<INPUT_CIT_KEY, INPUT_CIT_VALUE> citations = inputCitationReader.readCitations(sparkContext, inputCitationPath, numberOfPartitions);
         JavaPairRDD<String, MatchableEntity> citationsConverted = inputCitationConverter.convertCitations(citations);
         citationsConverted = repartitionEntities(citationsConverted);
         
-        JavaPairRDD<INPUT_DOC_KEY, INPUT_DOC_VALUE> documents = inputDocumentReader.readDocuments(inputDocumentPath, numberOfPartitions);
+        JavaPairRDD<INPUT_DOC_KEY, INPUT_DOC_VALUE> documents = inputDocumentReader.readDocuments(sparkContext, inputDocumentPath, numberOfPartitions);
         JavaPairRDD<String, MatchableEntity> documentsConverted = inputDocumentConverter.convertDocuments(documents);
         documentsConverted = repartitionEntities(documentsConverted);
         
