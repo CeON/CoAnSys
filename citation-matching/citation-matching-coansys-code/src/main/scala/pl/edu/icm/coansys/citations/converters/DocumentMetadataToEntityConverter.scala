@@ -29,7 +29,7 @@ import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  * @author madryk
  */
-class DocumentMetadataToEntityConverter(basicMetadataToEntityConverter: BasicMetadataToEntityConverter) {
+class DocumentMetadataToEntityConverter(basicMetadataToEntityConverter: BasicMetadataToEntityConverter) extends Serializable {
   
   def this() { this(new BasicMetadataToEntityConverter()) }
   
