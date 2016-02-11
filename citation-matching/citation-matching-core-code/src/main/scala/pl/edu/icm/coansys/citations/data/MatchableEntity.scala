@@ -34,7 +34,7 @@ import pl.edu.icm.coansys.models.DocumentProtos.{DocumentMetadata, BasicMetadata
 /**
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  */
-class MatchableEntity(val data: MatchableEntityData) {
+class MatchableEntity(val data: MatchableEntityData) extends Serializable {
   def id = data.getId
 
   def author = removeDiacritics(data.getAuthor)
