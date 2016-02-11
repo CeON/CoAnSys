@@ -84,6 +84,19 @@
             <value>pl.edu.icm.coansys.citations.DefaultOutputWriter</value>
             <description>Name of class used to write output matched citations</description>
         </property>
+        
+        <property>
+            <name>sparkExecutorMemory</name>
+            <value>4G</value>
+        </property>
+        <property>
+            <name>sparkExecutorCores</name>
+            <value>1</value>
+        </property>
+        <property>
+            <name>sparkExecutorsNumber</name>
+            <value>36</value>
+        </property>
     </parameters>
     <global>
         <job-tracker>${jobTracker}</job-tracker>
@@ -120,6 +133,8 @@
 
             <jar>${wfDirectory}/lib/citation-matching-core-code-${projectVersion}.jar</jar>
         
+            <spark-opts>--executor-memory ${sparkExecutorMemory} --executor-cores ${sparkExecutorCores} --num-executors ${sparkExecutorsNumber}</spark-opts>
+            
             <arg>-citationPath = ${sourceEntities}</arg>
             <arg>-documentPath = ${destinationEntities}</arg>
             

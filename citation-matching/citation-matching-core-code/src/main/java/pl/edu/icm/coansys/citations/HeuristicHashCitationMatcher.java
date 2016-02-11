@@ -1,9 +1,9 @@
 package pl.edu.icm.coansys.citations;
 
+import org.apache.spark.HashPartitioner;
 import org.apache.spark.api.java.JavaPairRDD;
 
 import pl.edu.icm.coansys.citations.data.HeuristicHashMatchingResult;
-import pl.edu.icm.coansys.citations.data.InvalidHashExtractor;
 import pl.edu.icm.coansys.citations.data.MatchableEntity;
 import scala.Tuple2;
 
@@ -39,7 +39,10 @@ public class HeuristicHashCitationMatcher {
             boolean needUnmatched) {
         
         JavaPairRDD<String, String> citationHashIdPairs = generateHashIdPairs(citations, citationHasher);
+        citationHashIdPairs = citationHashIdPairs.partitionBy(new HashPartitioner(citationHashIdPairs.partitions().size()));
+        
         JavaPairRDD<String, String> documentHashIdPairs = generateHashIdPairs(documents, documentHasher);
+        documentHashIdPairs = documentHashIdPairs.partitionBy(new HashPartitioner(documentHashIdPairs.partitions().size()));
 
         // remove invalid hashes
         JavaPairRDD<String, Long> invalidHashes = invalidHashExtractor.extractInvalidHashes(citationHashIdPairs, documentHashIdPairs, maxHashBucketSize);
