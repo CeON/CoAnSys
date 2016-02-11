@@ -31,7 +31,7 @@ import pl.edu.icm.coansys.models.DocumentProtos.BasicMetadata
  * @author Mateusz Fedoryszak (m.fedoryszak@icm.edu.pl)
  * @author madryk
  */
-class BasicMetadataToEntityConverter {
+class BasicMetadataToEntityConverter extends Serializable {
   
   def convert(id: String, meta: BasicMetadata): MatchableEntity = {
     val data = MatchableEntityData.newBuilder()
