@@ -68,7 +68,7 @@ public class CoansysInputDocumentReaderTest {
         
         // execute
         
-        coansysInputDocumentReader.readDocuments(" ", 12);
+        coansysInputDocumentReader.readDocuments(sparkContext, " ", 12);
     }
     
     
@@ -85,7 +85,7 @@ public class CoansysInputDocumentReaderTest {
         
         // execute
         
-        JavaPairRDD<String, DocumentWrapper> retDocWrappers = coansysInputDocumentReader.readDocuments(inputDocumentPath, 10);
+        JavaPairRDD<String, DocumentWrapper> retDocWrappers = coansysInputDocumentReader.readDocuments(sparkContext, inputDocumentPath, 10);
         
         
         // assert

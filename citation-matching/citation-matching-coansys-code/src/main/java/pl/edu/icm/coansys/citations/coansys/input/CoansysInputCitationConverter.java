@@ -1,5 +1,7 @@
 package pl.edu.icm.coansys.citations.coansys.input;
 
+import java.io.Serializable;
+
 import org.apache.spark.api.java.JavaPairRDD;
 
 import pl.edu.icm.coansys.citations.InputCitationConverter;
@@ -13,9 +15,11 @@ import pl.edu.icm.coansys.models.DocumentProtos.ReferenceMetadata;
 * @author Łukasz Dumiszewski
 */
 
-public class CoansysInputCitationConverter implements InputCitationConverter<String, ReferenceMetadata> {
+public class CoansysInputCitationConverter implements InputCitationConverter<String, ReferenceMetadata>, Serializable {
 
     
+    private static final long serialVersionUID = 1L;
+
     private RawReferenceToEntityConverterFactory rawReferenceToEntityConverterFactory = new RawReferenceToEntityConverterFactory();
     
     private ReferenceMetadataConverter referenceMetadataConverter = new ReferenceMetadataConverter();

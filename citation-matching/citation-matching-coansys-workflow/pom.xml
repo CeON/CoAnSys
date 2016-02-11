@@ -11,6 +11,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <build>
+    
+        
         <plugins>
             <plugin>
                 <groupId>pl.edu.icm.maven</groupId>
@@ -22,14 +24,7 @@
     
     <dependencies>
         
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>citation-matching-core-workflow</artifactId>
-            <version>${project.version}</version>
-            <classifier>oozie-wf</classifier>
-            <type>tar.gz</type>
-        </dependency>
-        
+         
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>citation-matching-coansys-code</artifactId>

@@ -1,5 +1,7 @@
 package pl.edu.icm.coansys.citations.coansys.output;
 
+import java.io.Serializable;
+
 import org.apache.spark.api.java.JavaPairRDD;
 
 import com.google.common.base.Preconditions;
@@ -17,7 +19,9 @@ import pl.edu.icm.coansys.models.PICProtos.Reference;
  * @author Łukasz Dumiszewski
 */
 
-public class CoansysOutputConverter implements OutputConverter<String, PicOut> {
+public class CoansysOutputConverter implements OutputConverter<String, PicOut>, Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private MatchableEntityWithSimilarityConverter matchableEntityWithSimilarityConverter = new MatchableEntityWithSimilarityConverter();
     

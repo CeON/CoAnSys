@@ -93,7 +93,7 @@ public class CoansysInputCitationReaderTest {
         
         // execute
         
-        JavaPairRDD<String, ReferenceMetadata> citReferences = coansysInputCitationReader.readCitations(inputPath, 10);
+        JavaPairRDD<String, ReferenceMetadata> citReferences = coansysInputCitationReader.readCitations(sparkContext, inputPath, 10);
         
         
         // assert

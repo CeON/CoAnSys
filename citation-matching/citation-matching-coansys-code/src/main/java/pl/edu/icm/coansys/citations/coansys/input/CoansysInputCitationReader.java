@@ -1,5 +1,7 @@
 package pl.edu.icm.coansys.citations.coansys.input;
 
+import java.io.Serializable;
+
 import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.Writable;
 import org.apache.spark.api.java.JavaPairRDD;
@@ -18,10 +20,10 @@ import pl.edu.icm.coansys.models.DocumentProtos.ReferenceMetadata;
 * 
 */
 
-public class CoansysInputCitationReader implements InputCitationReader<String, ReferenceMetadata> {
+public class CoansysInputCitationReader implements InputCitationReader<String, ReferenceMetadata>, Serializable {
 
-    private JavaSparkContext sparkContext;
-    
+    private static final long serialVersionUID = 1L;
+
     private int maxSupportedCitationLength = 2000;
     
     private BytesWritableConverter bytesWritableConverter = new BytesWritableConverter();
@@ -36,7 +38,7 @@ public class CoansysInputCitationReader implements InputCitationReader<String, R
      * Reads citations from the given path as {@link DocumentWrapper}s and converts them to pairs of ({@link DocumentMetadata#getKey()}, {@link ReferenceMetadata})
      */
     @Override
-    public JavaPairRDD<String, ReferenceMetadata> readCitations(String inputCitationPath, Integer numberOfPartitions) {
+    public JavaPairRDD<String, ReferenceMetadata> readCitations(JavaSparkContext sparkContext, String inputCitationPath, Integer numberOfPartitions) {
         
         JavaPairRDD<Writable, BytesWritable> rawCitations = sparkContext.sequenceFile(inputCitationPath, Writable.class, BytesWritable.class, numberOfPartitions);
         
@@ -51,11 +53,6 @@ public class CoansysInputCitationReader implements InputCitationReader<String, R
 
     
     //------------------------ SETTERS --------------------------
-
-    @Override
-    public void setSparkContext(JavaSparkContext sparkContext) {
-        this.sparkContext = sparkContext;
-    }
 
     public void setBytesWritableConverter(BytesWritableConverter bytesWritableConverter) {
         this.bytesWritableConverter = bytesWritableConverter;

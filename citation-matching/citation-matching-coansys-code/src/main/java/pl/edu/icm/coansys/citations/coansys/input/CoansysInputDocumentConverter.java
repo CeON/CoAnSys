@@ -1,5 +1,7 @@
 package pl.edu.icm.coansys.citations.coansys.input;
 
+import java.io.Serializable;
+
 import org.apache.spark.api.java.JavaPairRDD;
 
 import com.google.common.base.Preconditions;
@@ -7,6 +9,7 @@ import com.google.common.base.Preconditions;
 import pl.edu.icm.coansys.citations.InputDocumentConverter;
 import pl.edu.icm.coansys.citations.converters.DocumentMetadataToEntityConverter;
 import pl.edu.icm.coansys.citations.data.MatchableEntity;
+import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
 import scala.Tuple2;
 
@@ -16,9 +19,11 @@ import scala.Tuple2;
 * @author Łukasz Dumiszewski
 */
 
-public class CoansysInputDocumentConverter implements InputDocumentConverter<String, DocumentWrapper> {
+public class CoansysInputDocumentConverter implements InputDocumentConverter<String, DocumentWrapper>, Serializable {
 
     
+    private static final long serialVersionUID = 1L;
+
     private DocumentMetadataToEntityConverter documentToMatchableEntityConverter = new DocumentMetadataToEntityConverter();
     
     

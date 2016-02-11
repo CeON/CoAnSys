@@ -1,5 +1,7 @@
 package pl.edu.icm.coansys.citations.coansys.output;
 
+import java.io.Serializable;
+
 import com.google.common.base.Preconditions;
 
 import pl.edu.icm.coansys.models.PICProtos.PicOut;
@@ -13,7 +15,9 @@ import scala.Tuple2;
  * @author Łukasz Dumiszewski
 */
 
-class ReferenceToPicOutConverter {
+class ReferenceToPicOutConverter implements Serializable {
+    
+    private static final long serialVersionUID = 1L;
     
     
     //------------------------ LOGIC --------------------------

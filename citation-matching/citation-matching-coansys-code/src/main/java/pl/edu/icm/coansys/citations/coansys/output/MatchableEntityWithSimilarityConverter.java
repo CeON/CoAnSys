@@ -1,5 +1,7 @@
 package pl.edu.icm.coansys.citations.coansys.output;
 
+import java.io.Serializable;
+
 import com.google.common.base.Preconditions;
 
 import pl.edu.icm.coansys.citations.data.IdWithSimilarity;
@@ -16,9 +18,11 @@ import scala.Tuple2;
  * @author Łukasz Dumiszewski
 */
 
-class MatchableEntityWithSimilarityConverter {
+class MatchableEntityWithSimilarityConverter implements Serializable {
 
-    
+    private static final long serialVersionUID = 1L;
+
+
     //------------------------ LOGIC --------------------------
     
     /**

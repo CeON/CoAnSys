@@ -60,7 +60,7 @@ public class CoansysCitationMatchingJob {
             
             ConfigurableCitationMatchingService<String, ReferenceMetadata, String, DocumentWrapper, String, PicOut> citationMatchingService = createConfigurableCitationMatchingService(sc, params);
             
-            citationMatchingService.matchCitations(params.inputCitationPath, params.inputDocumentPath, params.outputDirPath);
+            citationMatchingService.matchCitations(sc, params.inputCitationPath, params.inputDocumentPath, params.outputDirPath);
             
            
         }
@@ -87,7 +87,6 @@ public class CoansysCitationMatchingJob {
         
         
         CoansysInputCitationReader inputCitationReader = new CoansysInputCitationReader();
-        inputCitationReader.setSparkContext(sc);
         configurableCitationMatchingService.setInputCitationReader(inputCitationReader);
         
         CoansysInputCitationConverter inputCitationConverter = new CoansysInputCitationConverter();
@@ -95,7 +94,6 @@ public class CoansysCitationMatchingJob {
         
         
         CoansysInputDocumentReader inputDocumentReader = new CoansysInputDocumentReader();
-        inputDocumentReader.setSparkContext(sc);
         configurableCitationMatchingService.setInputDocumentReader(inputDocumentReader);
         
         CoansysInputDocumentConverter inputDocumentConverter = new CoansysInputDocumentConverter();
