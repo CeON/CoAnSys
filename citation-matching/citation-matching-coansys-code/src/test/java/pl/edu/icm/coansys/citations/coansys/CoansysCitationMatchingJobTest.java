@@ -1,9 +1,6 @@
 package pl.edu.icm.coansys.citations.coansys;
 
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -19,8 +16,6 @@ import org.testng.annotations.Test;
 import com.google.common.io.Files;
 
 import pl.edu.icm.coansys.commons.hadoop.LocalSequenceFileUtils;
-import pl.edu.icm.coansys.models.PICProtos.PicOut;
-import pl.edu.icm.coansys.models.PICProtos.Reference;
 import pl.edu.icm.sparkutils.test.SparkJob;
 import pl.edu.icm.sparkutils.test.SparkJobBuilder;
 import pl.edu.icm.sparkutils.test.SparkJobExecutor;
@@ -91,60 +86,9 @@ public class CoansysCitationMatchingJobTest {
         List<Pair<Text, BytesWritable>> expectedOutputDocIdPicOuts = LocalSequenceFileUtils.readSequenceFile(new File("src/test/resources/cm-output"), Text.class, BytesWritable.class);
         
     
-        assertEquals(actualOutputDocIdPicOuts.size(), expectedOutputDocIdPicOuts.size());
-    
-        for (Pair<Text, BytesWritable> actualDocIdPicOut : actualOutputDocIdPicOuts) {
-            assertTrue(isInExcpectedDocIdPicOuts(expectedOutputDocIdPicOuts, actualDocIdPicOut));
-        }
+        PicOutAssert.assertDocIdPicOutsEquals(expectedOutputDocIdPicOuts, actualOutputDocIdPicOuts);
     
 
-    }
-    
-    
-    //------------------------ PRIVATE --------------------------
-    
-    private boolean isInExcpectedDocIdPicOuts(List<Pair<Text, BytesWritable>> expectedOutputDocIdPicOuts, Pair<Text, BytesWritable> actualDocIdPicOut) throws Exception {
-    
-        for (Pair<Text, BytesWritable> expectedDocIdPicOut : expectedOutputDocIdPicOuts) {
-            
-            if (expectedDocIdPicOut.getKey().toString().equals(actualDocIdPicOut.getKey().toString())) {
-                PicOut expectedPicOut = PicOut.parseFrom(expectedDocIdPicOut.getValue().copyBytes());
-                PicOut actualPicOut = PicOut.parseFrom(actualDocIdPicOut.getValue().copyBytes());
-                assertPicOuts(expectedPicOut, actualPicOut);
-                return true;
-            }
-        }
-        
-        return false;
-    
-    }
-    
-    
-    private void assertPicOuts(PicOut expectedPicOut, PicOut actualPicOut) {
-        assertEquals(actualPicOut.getDocId(), expectedPicOut.getDocId());
-        assertEquals(actualPicOut.getRefsCount(), expectedPicOut.getRefsCount());
-        for (Reference actualRef : actualPicOut.getRefsList()) {
-            assertTrue(isInExpectedRefs(expectedPicOut.getRefsList(), actualRef));
-        }
-        
-    }
-
-
-    private boolean isInExpectedRefs(List<Reference> expectedRefs, Reference actualRef) {
-        for (Reference expectedRef : expectedRefs) {
-            if (refsEqual(expectedRef, actualRef)) {
-                return true;
-            }
-        }
-        
-        return false;
-        
-    }
-
-    private boolean refsEqual(Reference ref1, Reference ref2) {
-        return ref1.getDocId().equals(ref2.getDocId()) &&
-               (ref1.getRefNum() == ref2.getRefNum()) &&
-               ref1.getRawText().equals(ref2.getRawText()); 
     }
 
  

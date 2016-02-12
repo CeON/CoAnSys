@@ -32,6 +32,14 @@
         </dependency>
         
         <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>citation-matching-coansys-code</artifactId>
+            <version>${project.version}</version>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+        
+        <dependency>
             <groupId>pl.edu.icm.oozie</groupId>
             <artifactId>oozie-runner</artifactId>
             <scope>test</scope>
