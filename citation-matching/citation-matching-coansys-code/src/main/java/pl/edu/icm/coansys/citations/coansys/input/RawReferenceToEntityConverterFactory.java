@@ -12,7 +12,7 @@ import pl.edu.icm.coansys.citations.converters.RawReferenceToEntityConverter;
 * @author Łukasz Dumiszewski
 */
 
-class RawReferenceToEntityConverterFactory implements Serializable {
+public class RawReferenceToEntityConverterFactory implements Serializable {
 
     private static final long serialVersionUID = 1L;
     
@@ -33,7 +33,7 @@ class RawReferenceToEntityConverterFactory implements Serializable {
         try {
 
             if (this.model != null) {
-                parser = new CRFBibReferenceParser(this.model);
+                parser = new CRFBibReferenceParser(this.getClass().getResourceAsStream(this.model));
             }
             else {
                 parser = new CRFBibReferenceParser(this.getClass().getResourceAsStream("/pl/edu/icm/cermine/bibref/acrf.ser.gz"));
