@@ -12,6 +12,12 @@
     </properties>
     <build>
     
+        <testResources>
+            <testResource>
+                <directory>src/test/resources</directory>
+                <filtering>true</filtering>
+            </testResource>
+        </testResources>
         
         <plugins>
             <plugin>
@@ -29,6 +35,14 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>citation-matching-coansys-code</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>citation-matching-coansys-code</artifactId>
+            <version>${project.version}</version>
+            <type>test-jar</type>
+            <scope>test</scope>
         </dependency>
         
         <dependency>
