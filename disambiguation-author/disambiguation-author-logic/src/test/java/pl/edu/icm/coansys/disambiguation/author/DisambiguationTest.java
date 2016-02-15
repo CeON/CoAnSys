@@ -143,8 +143,7 @@ public class DisambiguationTest {
    			   	"EX_EMAIL_PREFIX" ,
    			   	"EX_DOC_AUTHS_FNAME_FST_LETTER",
    			   	"EX_AUTH_FNAME_FST_LETTER",
-   			   	"EX_PERSON_IDS",
-   			   	"EX_PERSON_PBN_ID"
+   			   	"EX_PERSON_ID_PBN"
    		};
    		String[] ids = {
    				"0",
@@ -161,8 +160,7 @@ public class DisambiguationTest {
    				"3",
    				"C",
    				"D",
-   				"E",
-   				"8.2"
+   				"8.5"
    		};
    		
    		assert ( ids.length == extractors.length );
@@ -302,8 +300,8 @@ public class DisambiguationTest {
    	public void pig_extractor_EXTRACT_CONTRIBDATA_GIVENDATA_getting_indicators() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
    		// test common contruction
    		new EXTRACT_CONTRIBDATA_GIVENDATA("-featureinfo Intersection#EX_PERSON_ID#1.0#1");	
-   		// test "climbing up" through inherited tree of extractor, note that EX_PERSON_COANSYS_ID extends EX_PERSON_ID
-   		new EXTRACT_CONTRIBDATA_GIVENDATA("-featureinfo Intersection#EX_PERSON_COANSYS_ID#1.0#1");
+   		// test "climbing up" through inherited tree of extractor, note that EX_PERSON_ID_COANSYS extends EX_PERSON_ID
+   		new EXTRACT_CONTRIBDATA_GIVENDATA("-featureinfo Intersection#EX_PERSON_ID_COANSYS#1.0#1");
    	}
    	
     // Tools:
@@ -436,7 +434,7 @@ public class DisambiguationTest {
    	public void pig_aproximateAND_exec_1() throws Exception {
    		AND<DataBag> aproximate = new AproximateAND_BFS(
    				"-0.98025095811271", 
-  				"Intersection#EX_PERSON_IDS#inf#1",
+  				"Intersection#EX_PERSON_ID_ORCID#inf#1",
    				"false",
    				"false",
    				"false"
@@ -447,34 +445,34 @@ public class DisambiguationTest {
    		
    		// contrib#0
    		Map<String,DataBag>map0 = new HashMap<String,DataBag>();
-   		addFeatureToMap(map0, "EX_PERSON_IDS", 1, 2);
+   		addFeatureToMap(map0, "EX_PERSON_ID_ORCID", 1, 2);
    		contribs.add( contribCreator("cid-0", "sname-0", map0) );
 
    		// contrib#1
    		Map<String,DataBag>map1 = new HashMap<String,DataBag>();
-   		addFeatureToMap(map1, "EX_PERSON_IDS", 1);
+   		addFeatureToMap(map1, "EX_PERSON_ID_ORCID", 1);
    		contribs.add( contribCreator("cid-1", "sname-0", map1) );
 
    		// contrib#2
    		Map<String,DataBag>map2 = new HashMap<String,DataBag>();
-   		addFeatureToMap(map2, "EX_PERSON_IDS", 3);
+   		addFeatureToMap(map2, "EX_PERSON_ID_ORCID", 3);
    		contribs.add( contribCreator("cid-2", "sname-0", map2) );
    		
    		// contrib#3
    		Map<String,DataBag>map3 = new HashMap<String,DataBag>();
-   		addFeatureToMap(map3, "EX_PERSON_IDS", 2, 3);
+   		addFeatureToMap(map3, "EX_PERSON_ID_ORCID", 2, 3);
    		contribs.add( contribCreator("cid-3", "sname-0", map3) );
    		
    		// contrib#4
    		Map<String,DataBag>map4 = new HashMap<String,DataBag>();
-   		addFeatureToMap(map4, "EX_PERSON_IDS", 4);
+   		addFeatureToMap(map4, "EX_PERSON_ID_ORCID", 4);
    		contribs.add( contribCreator("cid-4", "sname-0", map4) );
    		
    		Tuple input = new DefaultTuple();
    		DataBag contribsBag = tupleListToDataBag(contribs);
 		input.append( contribsBag );
 		
-		String apr_out = "{({(cid-0,sname-0,[EX_PERSON_IDS#{(1),(2)}]),(cid-1,sname-0,[EX_PERSON_IDS#{(1)}]),(cid-3,sname-0,[EX_PERSON_IDS#{(2),(3)}]),(cid-2,sname-0,[EX_PERSON_IDS#{(3)}])},{}),({(cid-4,sname-0,[EX_PERSON_IDS#{(4)}])},{})}";
+		String apr_out = "{({(cid-0,sname-0,[EX_PERSON_ID_ORCID#{(1),(2)}]),(cid-1,sname-0,[EX_PERSON_ID_ORCID#{(1)}]),(cid-3,sname-0,[EX_PERSON_ID_ORCID#{(2),(3)}]),(cid-2,sname-0,[EX_PERSON_ID_ORCID#{(3)}])},{}),({(cid-4,sname-0,[EX_PERSON_ID_ORCID#{(4)}])},{})}";
    		
 		assert( aproximate.exec(input).toString().equals( apr_out ) );
 	}
@@ -484,7 +482,7 @@ public class DisambiguationTest {
    	public void pig_exhaustiveAND_exec_0() throws Exception {
 		AND<DataBag> exhaustive = new ExhaustiveAND(
    				"-0.98025095811271", 
-  				"Intersection#EX_PERSON_IDS#inf#1",
+  				"Intersection#EX_PERSON_ID_ORCID#inf#1",
    				"false",
    				"false"
    			);
@@ -494,17 +492,17 @@ public class DisambiguationTest {
    		
    		// contrib#0
    		Map<String,DataBag>map0 = new HashMap<String,DataBag>();
-   		addFeatureToMap(map0, "EX_PERSON_IDS", 1, 2);
+   		addFeatureToMap(map0, "EX_PERSON_ID_ORCID", 1, 2);
    		contribs.add( contribCreator("cid-0", "sname-0", map0) );
 
    		// contrib#1
    		Map<String,DataBag>map1 = new HashMap<String,DataBag>();
-   		addFeatureToMap(map1, "EX_PERSON_IDS", 1);
+   		addFeatureToMap(map1, "EX_PERSON_ID_ORCID", 1);
    		contribs.add( contribCreator("cid-1", "sname-0", map1) );
 
    		// contrib#2
    		Map<String,DataBag>map2 = new HashMap<String,DataBag>();
-   		addFeatureToMap(map2, "EX_PERSON_IDS", 3);
+   		addFeatureToMap(map2, "EX_PERSON_ID_ORCID", 3);
    		contribs.add( contribCreator("cid-2", "sname-0", map2) );
    		
    		Tuple input = new DefaultTuple();

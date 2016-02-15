@@ -31,9 +31,10 @@ object CitEntityId {
 
   def fromString(citId: String) = {
     assert(citId.startsWith(prefix))
-    val slices: Array[String] = citId.substring(prefix.length).split(separator, 2)
-    val src: String = slices(0)
-    val pos: Int = slices(1).toInt
+    val noPrefix = citId.substring(prefix.length)
+    //val slices: Array[String] = citId.substring(prefix.length).split(separator, 2)
+    val src: String =noPrefix.substring(0, noPrefix.lastIndexOf("_"));
+    val pos: Int = noPrefix.substring(noPrefix.lastIndexOf("_")+1).toInt
 
     CitEntityId(src, pos)
   }

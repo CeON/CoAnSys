@@ -37,22 +37,26 @@ public class EX_PERSON_ID extends DisambiguationExtractorAuthor {
 	static protected List<String> PERSON_ID_KEY_NAME;// = "pbnPersonId";
 	static{
 		PERSON_ID_KEY_NAME = new ArrayList<String>();
-		PERSON_ID_KEY_NAME.add("pbnPersonId");
-		PERSON_ID_KEY_NAME.add("orcid-author-id");
 	}
 	
 	
 	public EX_PERSON_ID() {
 		super();
+		PERSON_ID_KEY_NAME.add("pbnPersonId");
+		PERSON_ID_KEY_NAME.add("orcidId");
 	}
 
 	public EX_PERSON_ID(PigNormalizer[] new_normalizers) {
 		super(new_normalizers);
+		PERSON_ID_KEY_NAME.add("pbnPersonId");
+		PERSON_ID_KEY_NAME.add("orcidId");
 	}
 	
-	protected EX_PERSON_ID(PigNormalizer[] new_normalizers, String person_id_key_name) {
+	protected EX_PERSON_ID(PigNormalizer[] new_normalizers, String[] person_id_key_name) {
 		super(new_normalizers);
-		PERSON_ID_KEY_NAME.add(person_id_key_name);
+		for(String pid_name : person_id_key_name){
+			PERSON_ID_KEY_NAME.add(pid_name);
+		}
 	}
 	
 	@Override

@@ -40,6 +40,10 @@
             <name>SPARK_NUM_EXECUTORS</name>
             <value>60</value>
         </property>
+         <property>
+            <name>SPARK_ADDITIONAL_OPTS</name>
+            <value> </value>
+        </property>
     </parameters>
  <start to="affiliation-organization-matching" />
     <action name="affiliation-organization-matching">
@@ -52,8 +56,8 @@
            <master>yarn-cluster</master>
             <name>Affiliation matching</name>
             <class>pl.edu.icm.coansys.matching.organization.DoMatching</class>
-            <jar>${comacWfPath}/lib/affiliation-organization-matching-impl-1.10-SNAPSHOT.jar</jar>
-            <spark-opts>--executor-memory ${SPARK_EXECUTOR_MEMORY} --driver-memory ${SPARK_DRIVER_MEMORY} --num-executors ${SPARK_NUM_EXECUTORS}</spark-opts>
+            <jar>${comacWfPath}/lib/affiliation-organization-matching-impl-${project.version}.jar</jar>
+            <spark-opts>--executor-memory ${SPARK_EXECUTOR_MEMORY} --driver-memory ${SPARK_DRIVER_MEMORY} --num-executors ${SPARK_NUM_EXECUTORS} ${SPARK_ADDITIONAL_OPTS}</spark-opts>
             <arg>${organizationsInputSeqFile}</arg>
             <arg>${documentsInputSeqFile}</arg>
             <arg>${outputSeqFile}</arg>

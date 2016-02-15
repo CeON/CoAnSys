@@ -37,7 +37,9 @@ maven-eclipse.xml
 #vim files
 *.swp
 /affiliation-organization-matching/affiliation-organization-matching-impl/src/main/scala/pl/edu/icm/coansys/matching/organization/TestMatchingT.scala
-
 dependency-reduced-pom.xml
 .cache-main
 .cache-tests
+/affiliation-organization-matching/affiliation-organization-matching-workflow/src/main/oozie/workflow.xml
+/deduplication-organization/deduplication-organization-workflow/src/main/oozie/workflow.xml
+

@@ -17,7 +17,7 @@
         <dependency>
             <groupId>pl.edu.icm.coansys</groupId>
             <artifactId>commons</artifactId>
-            <version>1.10-SPARK-CIT-SNAPSHOT</version>
+            <version>${project.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>

@@ -19,7 +19,7 @@
 		</dependency>       
         <dependency>
 	    	<groupId>pl.edu.icm.coansys</groupId>
-	    	<version>1.10-SNAPSHOT</version>
+	    	<version>1.10-rc3-SNAPSHOT</version>
 	    	<artifactId>models</artifactId>
 		</dependency>
         <dependency>

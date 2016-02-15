@@ -19,7 +19,8 @@
 
 	<modules>
 		<module>disambiguation-author-workflow</module>
-		<module>disambiguation-author-logic</module>
 		<module>disambiguation-author-comac-facade</module>
+		<module>disambiguation-author-logic</module>
+		<module>disambiguation-author-auxil</module>
 	</modules>
 </project>
