@@ -60,9 +60,13 @@ public class CoansysInputCitationConverterTest {
     private ArgumentCaptor<PairFlatMapFunction<Iterator<Tuple2<String, ReferenceMetadata>>, String, MatchableEntity>> convertToMatchableEntitiesFunction;
 
     
+    private String cermineCitationMetadataExtractModel = "model";
+    
+    
     @BeforeTest
     public void beforeTest() {
         MockitoAnnotations.initMocks(this);
+        coansysInputCitationConverter.setModel(cermineCitationMetadataExtractModel);
     }
     
     
@@ -98,7 +102,7 @@ public class CoansysInputCitationConverterTest {
         
         RawReferenceToEntityConverter rawReferenceToEntityConverter = mock(RawReferenceToEntityConverter.class);
         
-        when(rawReferenceToEntityConverterFactory.createRawReferenceToEntityConverter()).thenReturn(rawReferenceToEntityConverter);
+        when(rawReferenceToEntityConverterFactory.createRawReferenceToEntityConverter(cermineCitationMetadataExtractModel)).thenReturn(rawReferenceToEntityConverter);
         
         when(referenceMetadataConverter.convertToMatchableEntities(docIdReferenceIterator)).thenReturn(docIdMatchableEntities);
         
