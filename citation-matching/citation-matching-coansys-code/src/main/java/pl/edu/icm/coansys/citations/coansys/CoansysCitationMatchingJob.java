@@ -17,7 +17,6 @@ import pl.edu.icm.coansys.citations.coansys.input.CoansysInputCitationConverter;
 import pl.edu.icm.coansys.citations.coansys.input.CoansysInputCitationReader;
 import pl.edu.icm.coansys.citations.coansys.input.CoansysInputDocumentConverter;
 import pl.edu.icm.coansys.citations.coansys.input.CoansysInputDocumentReader;
-import pl.edu.icm.coansys.citations.coansys.input.RawReferenceToEntityConverterFactory;
 import pl.edu.icm.coansys.citations.coansys.output.CoansysOutputConverter;
 import pl.edu.icm.coansys.citations.coansys.output.CoansysOutputWriter;
 import pl.edu.icm.coansys.citations.hashers.CitationNameYearHashGenerator;
@@ -91,9 +90,7 @@ public class CoansysCitationMatchingJob {
         configurableCitationMatchingService.setInputCitationReader(inputCitationReader);
         
         CoansysInputCitationConverter inputCitationConverter = new CoansysInputCitationConverter();
-        RawReferenceToEntityConverterFactory rawReferenceToEntityConverterFactory = new RawReferenceToEntityConverterFactory();
-        rawReferenceToEntityConverterFactory.setModel(params.cermineCitationMetadataExtractModel);
-        inputCitationConverter.setRawReferenceToEntityConverterFactory(rawReferenceToEntityConverterFactory);
+        inputCitationConverter.setModel(params.cermineCitationMetadataExtractModel);
         configurableCitationMatchingService.setInputCitationConverter(inputCitationConverter);
         
         
