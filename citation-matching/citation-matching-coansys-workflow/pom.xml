@@ -12,12 +12,12 @@
     </properties>
     <build>
     
-        
         <plugins>
             <plugin>
                 <groupId>pl.edu.icm.maven</groupId>
                 <artifactId>oozie-maven-plugin</artifactId>
                 <extensions>true</extensions>
+                <configuration><filtering>true</filtering></configuration>
             </plugin>
         </plugins>
     </build>

@@ -57,7 +57,7 @@
 
             <class>pl.edu.icm.coansys.citations.coansys.CoansysCitationMatchingJob</class>
 
-            <jar>${wf:conf('oozie.wf.application.path')}/lib/citation-matching-coansys-code-${projectVersion}.jar</jar>
+            <jar>${wf:conf('oozie.wf.application.path')}/lib/citation-matching-coansys-code-${project.version}.jar</jar>
         
             <arg>-inputDocumentPath = ${input}</arg>
             <arg>-inputCitationPath = ${inputCitations}</arg>
