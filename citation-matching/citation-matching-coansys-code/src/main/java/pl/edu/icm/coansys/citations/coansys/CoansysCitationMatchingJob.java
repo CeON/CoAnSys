@@ -90,6 +90,7 @@ public class CoansysCitationMatchingJob {
         configurableCitationMatchingService.setInputCitationReader(inputCitationReader);
         
         CoansysInputCitationConverter inputCitationConverter = new CoansysInputCitationConverter();
+        inputCitationConverter.setModel(params.cermineCitationMetadataExtractModel);
         configurableCitationMatchingService.setInputCitationConverter(inputCitationConverter);
         
         
@@ -129,6 +130,9 @@ public class CoansysCitationMatchingJob {
         
         @Parameter(names="-numberOfPartitions", required = false, description = "number of partitions used for rdds with citations and documents read from input files, if not set it will depend on the input format")
         private Integer numberOfPartitions;
+        
+        @Parameter(names="-cermineCitationMetadataExtractModel", required = false, description = "classpath to model used by cermine to extract metadata from raw citation")
+        private String cermineCitationMetadataExtractModel = "/pl/edu/icm/cermine/bibref/acrf.ser.gz";
         
     }
 }

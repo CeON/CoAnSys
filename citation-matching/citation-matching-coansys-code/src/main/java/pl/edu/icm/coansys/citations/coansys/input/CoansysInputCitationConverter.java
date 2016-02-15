@@ -24,6 +24,8 @@ public class CoansysInputCitationConverter implements InputCitationConverter<Str
     
     private ReferenceMetadataConverter referenceMetadataConverter = new ReferenceMetadataConverter();
     
+    private String model;
+    
     
     
     //------------------------ LOGIC --------------------------
@@ -36,7 +38,7 @@ public class CoansysInputCitationConverter implements InputCitationConverter<Str
 
         return inputCitations.mapPartitionsToPair(docIdReferenceIterator -> {
             
-            RawReferenceToEntityConverter rawReferenceToEntityConverter = rawReferenceToEntityConverterFactory.createRawReferenceToEntityConverter();
+            RawReferenceToEntityConverter rawReferenceToEntityConverter = rawReferenceToEntityConverterFactory.createRawReferenceToEntityConverter(model);
             
             referenceMetadataConverter.setRawReferenceToEntityConverter(rawReferenceToEntityConverter);
             
@@ -55,6 +57,10 @@ public class CoansysInputCitationConverter implements InputCitationConverter<Str
 
     public void setReferenceMetadataConverter(ReferenceMetadataConverter referenceMetadataConverter) {
         this.referenceMetadataConverter = referenceMetadataConverter;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
     }
 
 
