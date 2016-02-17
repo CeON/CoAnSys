@@ -480,7 +480,13 @@
             <dependency>
                 <groupId>org.apache.spark</groupId>
                 <artifactId>spark-graphx_2.10</artifactId>
-                <version>1.3.0-cdh5.4.2</version>
+                <version>${coansys.spark.version}</version>
+            </dependency>
+            
+            <dependency>
+                <groupId>org.apache.spark</groupId>
+                <artifactId>spark-mllib_2.10</artifactId>
+                <version>${coansys.spark.version}</version>
             </dependency>
             
             <dependency>

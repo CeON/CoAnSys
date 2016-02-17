@@ -8,6 +8,12 @@ import org.apache.spark.api.java.JavaSparkContext;
 
 import com.google.common.collect.Lists;
 
+import pl.edu.icm.coansys.citations.hashers.CitationNameYearHashGenerator;
+import pl.edu.icm.coansys.citations.hashers.CitationNameYearPagesHashGenerator;
+import pl.edu.icm.coansys.citations.hashers.DocumentNameYearHashGenerator;
+import pl.edu.icm.coansys.citations.hashers.DocumentNameYearNumNumHashGenerator;
+import pl.edu.icm.coansys.citations.hashers.DocumentNameYearPagesHashGenerator;
+import pl.edu.icm.coansys.citations.hashers.DocumentNameYearStrictHashGenerator;
 import pl.edu.icm.coansys.citations.hashers.HashGenerator;
 
 
@@ -24,12 +30,12 @@ public class CoreCitationMatchingSimpleFactory {
     /**
      * Creates and returns {@link CoreCitationMatchingService}.
      */
-    public CoreCitationMatchingService createCoreCitationMatchingService(JavaSparkContext sc, long maxHashBucketSize, List<String> hashGeneratorClasses) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+    public CoreCitationMatchingService createCoreCitationMatchingService(JavaSparkContext sc, long maxHashBucketSize) {
         
         CoreCitationMatchingService coreCitationMatchingService = new CoreCitationMatchingService();
         coreCitationMatchingService.setSparkContext(sc);
         coreCitationMatchingService.setMaxHashBucketSize(maxHashBucketSize);
-        coreCitationMatchingService.setMatchableEntityHashers(createMatchableEntityHashers(hashGeneratorClasses));
+        coreCitationMatchingService.setMatchableEntityHashers(createDefaultMatchableEntityHashers());
         
         return coreCitationMatchingService;
     }
@@ -37,24 +43,34 @@ public class CoreCitationMatchingSimpleFactory {
     
     //------------------------ PRIVATE --------------------------
     
-    private List<Pair<MatchableEntityHasher, MatchableEntityHasher>> createMatchableEntityHashers(List<String> hashGeneratorClassNames) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+    private List<Pair<MatchableEntityHasher, MatchableEntityHasher>> createDefaultMatchableEntityHashers() {
         List<Pair<MatchableEntityHasher, MatchableEntityHasher>> matchableEntityHashers = Lists.newArrayList();
         
-        for (String citAndDocHashGeneratorClassNames : hashGeneratorClassNames) {
-            String citationHashGeneratorClassName = citAndDocHashGeneratorClassNames.split(":")[0];
-            String documentHashGeneratorClassName = citAndDocHashGeneratorClassNames.split(":")[1];
+        for (Pair<HashGenerator, HashGenerator> citAndDocHashGenerators : createDefaultHashGenerators()) {
             
-            MatchableEntityHasher citationHasher = createMatchableEntityHasher(citationHashGeneratorClassName);
-            MatchableEntityHasher documentHasher = createMatchableEntityHasher(documentHashGeneratorClassName);
+            MatchableEntityHasher citationHasher = createMatchableEntityHasher(citAndDocHashGenerators.getLeft());
+            MatchableEntityHasher documentHasher = createMatchableEntityHasher(citAndDocHashGenerators.getRight());
             
-            matchableEntityHashers.add(new ImmutablePair<MatchableEntityHasher, MatchableEntityHasher>(citationHasher, documentHasher));
+            matchableEntityHashers.add(new ImmutablePair<>(citationHasher, documentHasher));
         }
+        
         
         return matchableEntityHashers;
     }
     
-    private MatchableEntityHasher createMatchableEntityHasher(String hashGeneratorClass) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-        HashGenerator hashGenerator = (HashGenerator) Class.forName(hashGeneratorClass).newInstance();
+    private List<Pair<HashGenerator, HashGenerator>> createDefaultHashGenerators() {
+        List<Pair<HashGenerator, HashGenerator>> hashGenerators = Lists.newArrayList();
+        
+        hashGenerators.add(new ImmutablePair<>(new CitationNameYearPagesHashGenerator(), new DocumentNameYearPagesHashGenerator()));
+        hashGenerators.add(new ImmutablePair<>(new CitationNameYearPagesHashGenerator(), new DocumentNameYearNumNumHashGenerator()));
+        hashGenerators.add(new ImmutablePair<>(new CitationNameYearHashGenerator(), new DocumentNameYearStrictHashGenerator()));
+        hashGenerators.add(new ImmutablePair<>(new CitationNameYearHashGenerator(), new DocumentNameYearHashGenerator()));
+        
+        return hashGenerators;
+    }
+    
+    
+    private MatchableEntityHasher createMatchableEntityHasher(HashGenerator hashGenerator) {
         MatchableEntityHasher matchableEntityHasher = new MatchableEntityHasher();
         matchableEntityHasher.setHashGenerator(hashGenerator);
         return matchableEntityHasher;

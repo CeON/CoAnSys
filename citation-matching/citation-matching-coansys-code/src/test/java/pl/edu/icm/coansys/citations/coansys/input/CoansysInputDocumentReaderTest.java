@@ -68,7 +68,7 @@ public class CoansysInputDocumentReaderTest {
         
         // execute
         
-        coansysInputDocumentReader.readDocuments(sparkContext, " ", 12);
+        coansysInputDocumentReader.readDocuments(sparkContext, " ");
     }
     
     
@@ -79,20 +79,20 @@ public class CoansysInputDocumentReaderTest {
         
         String inputDocumentPath = "/path";
 
-        when(sparkContext.sequenceFile(inputDocumentPath, Writable.class, BytesWritable.class, 10)).thenReturn(rawDocuments);
+        when(sparkContext.sequenceFile(inputDocumentPath, Writable.class, BytesWritable.class)).thenReturn(rawDocuments);
         doReturn(docWrappers).when(rawDocuments).mapToPair(Mockito.any());
         
         
         // execute
         
-        JavaPairRDD<String, DocumentWrapper> retDocWrappers = coansysInputDocumentReader.readDocuments(sparkContext, inputDocumentPath, 10);
+        JavaPairRDD<String, DocumentWrapper> retDocWrappers = coansysInputDocumentReader.readDocuments(sparkContext, inputDocumentPath);
         
         
         // assert
         
         assertTrue(docWrappers == retDocWrappers);
         
-        verify(sparkContext).sequenceFile(inputDocumentPath, Writable.class, BytesWritable.class, 10);
+        verify(sparkContext).sequenceFile(inputDocumentPath, Writable.class, BytesWritable.class);
         
         verify(rawDocuments).mapToPair(convertToDocumentWrapperTuple2Function.capture());
         assertConvertToDocumentWrapperTuple2Function(convertToDocumentWrapperTuple2Function.getValue());

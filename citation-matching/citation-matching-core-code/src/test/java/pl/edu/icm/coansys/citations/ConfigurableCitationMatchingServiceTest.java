@@ -1,7 +1,8 @@
 package pl.edu.icm.coansys.citations;
 
+import static org.testng.AssertJUnit.assertTrue;
+import static org.testng.AssertJUnit.assertEquals;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -98,14 +99,14 @@ public class ConfigurableCitationMatchingServiceTest {
         
         // given
         
-        when(inputCitationReader.readCitations(sparkContext, "/input/cit/path", 5)).thenReturn(citations);
+        when(inputCitationReader.readCitations(sparkContext, "/input/cit/path")).thenReturn(citations);
         when(inputCitationConverter.convertCitations(citations)).thenReturn(convertedCitations);
-        when(convertedCitations.partitions()).thenReturn(Lists.newArrayList(5));
+        when(convertedCitations.partitions()).thenReturn(Lists.newArrayList(16));
         when(convertedCitations.partitionBy(any())).thenReturn(repartitionedCitations);
         
-        when(inputDocumentReader.readDocuments(sparkContext, "/input/doc/path", 5)).thenReturn(documents);
+        when(inputDocumentReader.readDocuments(sparkContext, "/input/doc/path")).thenReturn(documents);
         when(inputDocumentConverter.convertDocuments(documents)).thenReturn(convertedDocuments);
-        when(convertedDocuments.partitions()).thenReturn(Lists.newArrayList(5));
+        when(convertedDocuments.partitions()).thenReturn(Lists.newArrayList(12));
         when(convertedDocuments.partitionBy(any())).thenReturn(repartitionedDocuments);
         
         when(coreCitationMatchingService.matchCitations(repartitionedCitations, repartitionedDocuments)).thenReturn(matched);
@@ -119,13 +120,16 @@ public class ConfigurableCitationMatchingServiceTest {
         
         // assert
         
-        verify(inputCitationReader).readCitations(sparkContext, "/input/cit/path", 5);
+        verify(inputCitationReader).readCitations(sparkContext, "/input/cit/path");
         verify(inputCitationConverter).convertCitations(citations);
-        verify(convertedCitations).partitionBy(isA(HashPartitioner.class));
+        verify(convertedCitations).partitionBy(citationsPartitioner.capture());
+        assertPartitioner(citationsPartitioner.getValue(), 5);
         
-        verify(inputDocumentReader).readDocuments(sparkContext, "/input/doc/path", 5);
+        
+        verify(inputDocumentReader).readDocuments(sparkContext, "/input/doc/path");
         verify(inputDocumentConverter).convertDocuments(documents);
-        verify(convertedDocuments).partitionBy(isA(HashPartitioner.class));
+        verify(convertedDocuments).partitionBy(documentsPartitioner.capture());
+        assertPartitioner(documentsPartitioner.getValue(), 5);
         
         verify(coreCitationMatchingService).matchCitations(repartitionedCitations, repartitionedDocuments);
         
@@ -134,4 +138,12 @@ public class ConfigurableCitationMatchingServiceTest {
     }
     
     
+    //------------------------ PRIVATE --------------------------
+    
+    private void assertPartitioner(Partitioner actualPartitioner, int expectedNumPartitions) {
+        
+        assertTrue(actualPartitioner instanceof HashPartitioner);
+        assertEquals(expectedNumPartitions, actualPartitioner.numPartitions());
+        
+    }
 }

@@ -87,20 +87,20 @@ public class CoansysInputCitationReaderTest {
         String inputPath = "/this/is/a/path";
         
         
-        when(sparkContext.sequenceFile(inputPath, Writable.class, BytesWritable.class, 10)).thenReturn(rawCitations);
+        when(sparkContext.sequenceFile(inputPath, Writable.class, BytesWritable.class)).thenReturn(rawCitations);
         doReturn(docWrappers).when(rawCitations).map(Mockito.any());
         doReturn(docReferences).when(docWrappers).flatMapToPair(Mockito.any());
         
         // execute
         
-        JavaPairRDD<String, ReferenceMetadata> citReferences = coansysInputCitationReader.readCitations(sparkContext, inputPath, 10);
+        JavaPairRDD<String, ReferenceMetadata> citReferences = coansysInputCitationReader.readCitations(sparkContext, inputPath);
         
         
         // assert
         
         assertTrue(docReferences == citReferences);
         
-        verify(sparkContext).sequenceFile(inputPath, Writable.class, BytesWritable.class, 10);
+        verify(sparkContext).sequenceFile(inputPath, Writable.class, BytesWritable.class);
         
         verify(rawCitations).map(convertMatchedCitationFunction.capture());
         assertConvertToDocumentWrapperFunction(convertMatchedCitationFunction.getValue());

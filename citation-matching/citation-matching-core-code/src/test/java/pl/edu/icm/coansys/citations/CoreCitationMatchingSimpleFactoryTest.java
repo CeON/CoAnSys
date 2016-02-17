@@ -12,12 +12,12 @@ import org.apache.spark.api.java.JavaSparkContext;
 import org.mockito.internal.util.reflection.Whitebox;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.Lists;
-
 import pl.edu.icm.coansys.citations.hashers.CitationNameYearHashGenerator;
 import pl.edu.icm.coansys.citations.hashers.CitationNameYearPagesHashGenerator;
 import pl.edu.icm.coansys.citations.hashers.DocumentNameYearHashGenerator;
 import pl.edu.icm.coansys.citations.hashers.DocumentNameYearNumNumHashGenerator;
+import pl.edu.icm.coansys.citations.hashers.DocumentNameYearPagesHashGenerator;
+import pl.edu.icm.coansys.citations.hashers.DocumentNameYearStrictHashGenerator;
 
 /**
  * @author madryk
@@ -30,19 +30,16 @@ public class CoreCitationMatchingSimpleFactoryTest {
     //------------------------ TESTS --------------------------
     
     @Test
-    public void createCoreCitationMatchingService() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+    public void createCoreCitationMatchingService() {
         
         // given
         
         JavaSparkContext sparkContext = mock(JavaSparkContext.class);
         
-        String hashersPair1 = CitationNameYearHashGenerator.class.getName() + ":" + DocumentNameYearHashGenerator.class.getName();
-        String hashersPair2 = CitationNameYearPagesHashGenerator.class.getName() + ":" + DocumentNameYearNumNumHashGenerator.class.getName();
-        
         
         // execute
         
-        CoreCitationMatchingService citationMatchingService = coreCitationMatchingFactory.createCoreCitationMatchingService(sparkContext, 1000, Lists.newArrayList(hashersPair1, hashersPair2));
+        CoreCitationMatchingService citationMatchingService = coreCitationMatchingFactory.createCoreCitationMatchingService(sparkContext, 1000);
         
         
         // assert
@@ -57,19 +54,12 @@ public class CoreCitationMatchingSimpleFactoryTest {
         @SuppressWarnings("unchecked")
         List<Pair<MatchableEntityHasher, MatchableEntityHasher>> retHashers = (List<Pair<MatchableEntityHasher, MatchableEntityHasher>>) Whitebox.getInternalState(citationMatchingService, "matchableEntityHashers");
         
-        assertEquals(retHashers.size(), 2);
+        assertEquals(retHashers.size(), 4);
         
-        Object citHashGenerator1 = Whitebox.getInternalState(retHashers.get(0).getLeft(), "hashGenerator");
-        assertTrue(citHashGenerator1 instanceof CitationNameYearHashGenerator);
-        
-        Object docHashGenerator1 = Whitebox.getInternalState(retHashers.get(0).getRight(), "hashGenerator");
-        assertTrue(docHashGenerator1 instanceof DocumentNameYearHashGenerator);
-        
-        Object citHashGenerator2 = Whitebox.getInternalState(retHashers.get(1).getLeft(), "hashGenerator");
-        assertTrue(citHashGenerator2 instanceof CitationNameYearPagesHashGenerator);
-        
-        Object docHashGenerator2 = Whitebox.getInternalState(retHashers.get(1).getRight(), "hashGenerator");
-        assertTrue(docHashGenerator2 instanceof DocumentNameYearNumNumHashGenerator);
+        assertHashersPair(retHashers.get(0), CitationNameYearPagesHashGenerator.class, DocumentNameYearPagesHashGenerator.class);
+        assertHashersPair(retHashers.get(1), CitationNameYearPagesHashGenerator.class, DocumentNameYearNumNumHashGenerator.class);
+        assertHashersPair(retHashers.get(2), CitationNameYearHashGenerator.class, DocumentNameYearStrictHashGenerator.class);
+        assertHashersPair(retHashers.get(3), CitationNameYearHashGenerator.class, DocumentNameYearHashGenerator.class);
         
         
         Object retDocumentAttacher = Whitebox.getInternalState(citationMatchingService, "documentAttacher");
@@ -87,4 +77,13 @@ public class CoreCitationMatchingSimpleFactoryTest {
         
     }
     
+    private void assertHashersPair(Pair<MatchableEntityHasher, MatchableEntityHasher> actualHashersPair, Class<?> expectedCitHashGeneratorClass, Class<?> expectedDocHashGeneratorClass) {
+        
+        Object citHashGenerator = Whitebox.getInternalState(actualHashersPair.getLeft(), "hashGenerator");
+        assertTrue(expectedCitHashGeneratorClass.isInstance(citHashGenerator));
+        
+        Object docHashGenerator = Whitebox.getInternalState(actualHashersPair.getRight(), "hashGenerator");
+        assertTrue(expectedDocHashGeneratorClass.isInstance(docHashGenerator));
+        
+    }
 }

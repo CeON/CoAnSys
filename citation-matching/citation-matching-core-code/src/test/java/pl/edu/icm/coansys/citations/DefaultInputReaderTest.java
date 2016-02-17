@@ -40,7 +40,7 @@ public class DefaultInputReaderTest {
     private JavaPairRDD<String, MatchableEntity> citations;
     
     @Mock
-    JavaSparkContext sparkContext;
+    private JavaSparkContext sparkContext;
     
     @Captor
     private ArgumentCaptor<PairFunction<Tuple2<Text, BytesWritable>, String, MatchableEntity>> mapToEntityFunction;
@@ -54,33 +54,9 @@ public class DefaultInputReaderTest {
     
     //------------------------ TESTS --------------------------
     
+    
     @Test
     public void readDocuments() throws Exception {
-        
-        // given
-        
-        doReturn(documentsWritable).when(sparkContext).sequenceFile("/path/to/documents/", Text.class, BytesWritable.class, 10);
-        doReturn(documents).when(documentsWritable).mapToPair(any());
-        
-        
-        // execute
-        
-        JavaPairRDD<String, MatchableEntity> retDocuments = inputReader.readDocuments(sparkContext, "/path/to/documents/", 10);
-        
-        
-        // assert
-        
-        assertTrue(retDocuments == documents);
-        
-        verify(sparkContext).sequenceFile("/path/to/documents/", Text.class, BytesWritable.class, 10);
-        verify(documentsWritable).mapToPair(mapToEntityFunction.capture());
-        assertMapToEntityFunction(mapToEntityFunction.getValue());
-        
-    }
-    
-    
-    @Test
-    public void readDocuments_NULL_PARTITIONS() throws Exception {
         
         // given
         
@@ -90,7 +66,7 @@ public class DefaultInputReaderTest {
         
         // execute
         
-        JavaPairRDD<String, MatchableEntity> retDocuments = inputReader.readDocuments(sparkContext, "/path/to/documents/", null);
+        JavaPairRDD<String, MatchableEntity> retDocuments = inputReader.readDocuments(sparkContext, "/path/to/documents/");
         
         
         // assert
@@ -109,38 +85,13 @@ public class DefaultInputReaderTest {
         
         // given
         
-        doReturn(citationsWritable).when(sparkContext).sequenceFile("/path/to/citations/", Text.class, BytesWritable.class, 10);
-        doReturn(citations).when(citationsWritable).mapToPair(any());
-        
-        
-        // execute
-        
-        JavaPairRDD<String, MatchableEntity> retCitations = inputReader.readCitations(sparkContext, "/path/to/citations/", 10);
-        
-        
-        // assert
-        
-        assertTrue(retCitations == citations);
-        
-        verify(sparkContext).sequenceFile("/path/to/citations/", Text.class, BytesWritable.class, 10);
-        verify(citationsWritable).mapToPair(mapToEntityFunction.capture());
-        assertMapToEntityFunction(mapToEntityFunction.getValue());
-        
-    }
-    
-    
-    @Test
-    public void readCitations_NULL_PARTITIONS() throws Exception {
-        
-        // given
-        
         doReturn(citationsWritable).when(sparkContext).sequenceFile("/path/to/citations/", Text.class, BytesWritable.class);
         doReturn(citations).when(citationsWritable).mapToPair(any());
         
         
         // execute
         
-        JavaPairRDD<String, MatchableEntity> retCitations = inputReader.readCitations(sparkContext, "/path/to/citations/", null);
+        JavaPairRDD<String, MatchableEntity> retCitations = inputReader.readCitations(sparkContext, "/path/to/citations/");
         
         
         // assert

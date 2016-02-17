@@ -93,14 +93,6 @@ public class CitationMatchingJobTest {
                                            .addArg("-citationPath", citationPath)
                                            .addArg("-documentPath", documentPath)
                                            
-                                           .addArg("-hashGeneratorClasses", "pl.edu.icm.coansys.citations.hashers.CitationNameYearPagesHashGenerator:pl.edu.icm.coansys.citations.hashers.DocumentNameYearPagesHashGenerator")
-                                           
-                                           .addArg("-hashGeneratorClasses", "pl.edu.icm.coansys.citations.hashers.CitationNameYearPagesHashGenerator:pl.edu.icm.coansys.citations.hashers.DocumentNameYearNumNumHashGenerator")
-                                           
-                                           .addArg("-hashGeneratorClasses", "pl.edu.icm.coansys.citations.hashers.CitationNameYearHashGenerator:pl.edu.icm.coansys.citations.hashers.DocumentNameYearStrictHashGenerator")
-                                           
-                                           .addArg("-hashGeneratorClasses", "pl.edu.icm.coansys.citations.hashers.CitationNameYearHashGenerator:pl.edu.icm.coansys.citations.hashers.DocumentNameYearHashGenerator")
-                                           
                                            .addArg("-outputDirPath", outputDirPath)
                                            
                                            .addArg("-numberOfPartitions", "5")
