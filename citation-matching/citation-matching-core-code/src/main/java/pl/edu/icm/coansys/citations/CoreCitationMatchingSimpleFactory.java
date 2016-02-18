@@ -35,7 +35,7 @@ public class CoreCitationMatchingSimpleFactory {
         CoreCitationMatchingService coreCitationMatchingService = new CoreCitationMatchingService();
         coreCitationMatchingService.setSparkContext(sc);
         coreCitationMatchingService.setMaxHashBucketSize(maxHashBucketSize);
-        coreCitationMatchingService.setMatchableEntityHashers(createDefaultMatchableEntityHashers());
+        coreCitationMatchingService.setMatchableEntityHashers(createMatchableEntityHashers());
         
         return coreCitationMatchingService;
     }
@@ -43,10 +43,10 @@ public class CoreCitationMatchingSimpleFactory {
     
     //------------------------ PRIVATE --------------------------
     
-    private List<Pair<MatchableEntityHasher, MatchableEntityHasher>> createDefaultMatchableEntityHashers() {
+    private List<Pair<MatchableEntityHasher, MatchableEntityHasher>> createMatchableEntityHashers() {
         List<Pair<MatchableEntityHasher, MatchableEntityHasher>> matchableEntityHashers = Lists.newArrayList();
         
-        for (Pair<HashGenerator, HashGenerator> citAndDocHashGenerators : createDefaultHashGenerators()) {
+        for (Pair<HashGenerator, HashGenerator> citAndDocHashGenerators : createHashGenerators()) {
             
             MatchableEntityHasher citationHasher = createMatchableEntityHasher(citAndDocHashGenerators.getLeft());
             MatchableEntityHasher documentHasher = createMatchableEntityHasher(citAndDocHashGenerators.getRight());
@@ -58,7 +58,7 @@ public class CoreCitationMatchingSimpleFactory {
         return matchableEntityHashers;
     }
     
-    private List<Pair<HashGenerator, HashGenerator>> createDefaultHashGenerators() {
+    private List<Pair<HashGenerator, HashGenerator>> createHashGenerators() {
         List<Pair<HashGenerator, HashGenerator>> hashGenerators = Lists.newArrayList();
         
         hashGenerators.add(new ImmutablePair<>(new CitationNameYearPagesHashGenerator(), new DocumentNameYearPagesHashGenerator()));
