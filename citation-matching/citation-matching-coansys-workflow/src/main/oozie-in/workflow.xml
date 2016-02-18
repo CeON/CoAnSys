@@ -79,7 +79,7 @@
 
             <class>pl.edu.icm.coansys.citations.coansys.CoansysCitationMatchingJob</class>
 
-            <jar>${wf:conf('oozie.wf.application.path')}/lib/citation-matching-coansys-code-1.10-SPARK-CIT-SNAPSHOT.jar</jar>
+            <jar>${wf:conf('oozie.wf.application.path')}/lib/citation-matching-coansys-code-${project.version}.jar</jar>
         
             <spark-opts>--executor-memory ${sparkExecutorMemory} --executor-cores ${sparkExecutorCores} --num-executors ${sparkExecutorsNumber}</spark-opts>
             
