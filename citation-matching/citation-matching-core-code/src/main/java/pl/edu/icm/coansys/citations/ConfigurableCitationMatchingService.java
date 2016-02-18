@@ -46,11 +46,11 @@ public class ConfigurableCitationMatchingService<INPUT_CIT_KEY, INPUT_CIT_VALUE,
      */
     public void matchCitations(JavaSparkContext sparkContext, String inputCitationPath, String inputDocumentPath, String outputPath) {
         
-        JavaPairRDD<INPUT_CIT_KEY, INPUT_CIT_VALUE> citations = inputCitationReader.readCitations(sparkContext, inputCitationPath, numberOfPartitions);
+        JavaPairRDD<INPUT_CIT_KEY, INPUT_CIT_VALUE> citations = inputCitationReader.readCitations(sparkContext, inputCitationPath);
         JavaPairRDD<String, MatchableEntity> citationsConverted = inputCitationConverter.convertCitations(citations);
         citationsConverted = citationsConverted.partitionBy(new HashPartitioner(numberOfPartitions));
         
-        JavaPairRDD<INPUT_DOC_KEY, INPUT_DOC_VALUE> documents = inputDocumentReader.readDocuments(sparkContext, inputDocumentPath, numberOfPartitions);
+        JavaPairRDD<INPUT_DOC_KEY, INPUT_DOC_VALUE> documents = inputDocumentReader.readDocuments(sparkContext, inputDocumentPath);
         JavaPairRDD<String, MatchableEntity> documentsConverted = inputDocumentConverter.convertDocuments(documents);
         documentsConverted = documentsConverted.partitionBy(new HashPartitioner(numberOfPartitions));
         

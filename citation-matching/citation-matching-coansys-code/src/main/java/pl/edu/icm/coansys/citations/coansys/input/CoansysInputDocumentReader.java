@@ -33,11 +33,11 @@ public class CoansysInputDocumentReader implements InputDocumentReader<String, D
      * Reads documents from the given path as pairs of ({@link DocumentMetadata#getKey()}, {@link DocumentWrapper}) 
      */
     @Override
-    public JavaPairRDD<String, DocumentWrapper> readDocuments(JavaSparkContext sparkContext, String inputDocumentPath, Integer numberOfPartitions) {
+    public JavaPairRDD<String, DocumentWrapper> readDocuments(JavaSparkContext sparkContext, String inputDocumentPath) {
         
         Preconditions.checkArgument(StringUtils.isNotBlank(inputDocumentPath));
         
-        return sparkContext.sequenceFile(inputDocumentPath, Writable.class, BytesWritable.class, numberOfPartitions)
+        return sparkContext.sequenceFile(inputDocumentPath, Writable.class, BytesWritable.class)
                            .mapToPair(bw -> bytesWritableConverter.convertToDocumentWrapperTuple2(bw._2()));
     
     }

@@ -8,7 +8,6 @@ import org.apache.spark.api.java.JavaSparkContext;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
-import com.google.common.collect.Lists;
 
 import pl.edu.icm.coansys.citations.ConfigurableCitationMatchingService;
 import pl.edu.icm.coansys.citations.CoreCitationMatchingService;
@@ -19,12 +18,6 @@ import pl.edu.icm.coansys.citations.coansys.input.CoansysInputDocumentConverter;
 import pl.edu.icm.coansys.citations.coansys.input.CoansysInputDocumentReader;
 import pl.edu.icm.coansys.citations.coansys.output.CoansysOutputConverter;
 import pl.edu.icm.coansys.citations.coansys.output.CoansysOutputWriter;
-import pl.edu.icm.coansys.citations.hashers.CitationNameYearHashGenerator;
-import pl.edu.icm.coansys.citations.hashers.CitationNameYearPagesHashGenerator;
-import pl.edu.icm.coansys.citations.hashers.DocumentNameYearHashGenerator;
-import pl.edu.icm.coansys.citations.hashers.DocumentNameYearNumNumHashGenerator;
-import pl.edu.icm.coansys.citations.hashers.DocumentNameYearPagesHashGenerator;
-import pl.edu.icm.coansys.citations.hashers.DocumentNameYearStrictHashGenerator;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
 import pl.edu.icm.coansys.models.DocumentProtos.ReferenceMetadata;
 import pl.edu.icm.coansys.models.PICProtos.PicOut;
@@ -44,7 +37,7 @@ public class CoansysCitationMatchingJob {
     
     //------------------------ LOGIC --------------------------
     
-    public static void main(String[] args) throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException {
+    public static void main(String[] args) throws IOException {
         
         CoansysCitationMatchingJobParameters params = new CoansysCitationMatchingJobParameters();
         JCommander jcommander = new JCommander(params);
@@ -70,17 +63,12 @@ public class CoansysCitationMatchingJob {
     
     //------------------------ PRIVATE --------------------------
     
-    private static ConfigurableCitationMatchingService<String, ReferenceMetadata, String, DocumentWrapper, String, PicOut> createConfigurableCitationMatchingService(JavaSparkContext sc, CoansysCitationMatchingJobParameters params) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+    private static ConfigurableCitationMatchingService<String, ReferenceMetadata, String, DocumentWrapper, String, PicOut> createConfigurableCitationMatchingService(JavaSparkContext sc, CoansysCitationMatchingJobParameters params) {
         
         ConfigurableCitationMatchingService<String, ReferenceMetadata, String, DocumentWrapper, String, PicOut> configurableCitationMatchingService = new ConfigurableCitationMatchingService<>();
         
-        String heuristic1HashGenerators = CitationNameYearPagesHashGenerator.class.getName() + ":" + DocumentNameYearPagesHashGenerator.class.getName();
-        String heuristic2HashGenerators = CitationNameYearPagesHashGenerator.class.getName() + ":" + DocumentNameYearNumNumHashGenerator.class.getName();
-        String heuristic3HashGenerators = CitationNameYearHashGenerator.class.getName() + ":" + DocumentNameYearStrictHashGenerator.class.getName();
-        String heuristic4HashGenerators = CitationNameYearHashGenerator.class.getName() + ":" + DocumentNameYearHashGenerator.class.getName();
         
-        CoreCitationMatchingService coreCitationMatchingService = coreCitationMatchingFactory.createCoreCitationMatchingService(
-                sc, params.maxHashBucketSize, Lists.newArrayList(heuristic1HashGenerators, heuristic2HashGenerators, heuristic3HashGenerators, heuristic4HashGenerators));
+        CoreCitationMatchingService coreCitationMatchingService = coreCitationMatchingFactory.createCoreCitationMatchingService(sc, params.maxHashBucketSize);
         
         configurableCitationMatchingService.setCoreCitationMatchingService(coreCitationMatchingService);
         configurableCitationMatchingService.setNumberOfPartitions(params.numberOfPartitions);

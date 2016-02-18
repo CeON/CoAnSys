@@ -38,9 +38,9 @@ public class CoansysInputCitationReader implements InputCitationReader<String, R
      * Reads citations from the given path as {@link DocumentWrapper}s and converts them to pairs of ({@link DocumentMetadata#getKey()}, {@link ReferenceMetadata})
      */
     @Override
-    public JavaPairRDD<String, ReferenceMetadata> readCitations(JavaSparkContext sparkContext, String inputCitationPath, Integer numberOfPartitions) {
+    public JavaPairRDD<String, ReferenceMetadata> readCitations(JavaSparkContext sparkContext, String inputCitationPath) {
         
-        JavaPairRDD<Writable, BytesWritable> rawCitations = sparkContext.sequenceFile(inputCitationPath, Writable.class, BytesWritable.class, numberOfPartitions);
+        JavaPairRDD<Writable, BytesWritable> rawCitations = sparkContext.sequenceFile(inputCitationPath, Writable.class, BytesWritable.class);
         
         JavaRDD<DocumentWrapper> docWrappers = rawCitations.map(bw -> bytesWritableConverter.convertToDocumentWrapper(bw._2()));
         
