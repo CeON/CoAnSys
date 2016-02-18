@@ -1,7 +1,6 @@
 package pl.edu.icm.coansys.citations;
 
 import java.io.IOException;
-import java.util.List;
 
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;
@@ -55,7 +54,7 @@ public class CitationMatchingJob {
         
         ConfigurableCitationMatchingService<?,?,?,?,?,?> configurableCitationMatchingService = new ConfigurableCitationMatchingService<>();
         
-        CoreCitationMatchingService coreCitationMatchingService = coreCitationMatchingFactory.createCoreCitationMatchingService(sc, params.maxHashBucketSize, params.hashGeneratorClasses);
+        CoreCitationMatchingService coreCitationMatchingService = coreCitationMatchingFactory.createCoreCitationMatchingService(sc, params.maxHashBucketSize);
         
         configurableCitationMatchingService.setCoreCitationMatchingService(coreCitationMatchingService);
         configurableCitationMatchingService.setNumberOfPartitions(params.numberOfPartitions);
@@ -112,14 +111,6 @@ public class CitationMatchingJob {
         
         @Parameter(names = "-documentPath", required = true, description = "path to directory/file with documents")
         private String documentPath;
-        
-        
-        @Parameter(names = "-hashGeneratorClasses", required = true, 
-                description = "Names of classes used for generating hashes for citations and documents. The names must be seperated by colon sign (:). "
-                        + "The first class will be used for citations and the second for documents."
-                        + "The classes must implement pl.edu.icm.coansys.citations.hashers.HashGenerator interface."
-                        + "This parameter may be specified multiple times. Separately for each given heurisitic.")
-        private List<String> hashGeneratorClasses;
         
         @Parameter(names = "-outputDirPath", required = true, description = "path to directory with results")
         private String outputDirPath;

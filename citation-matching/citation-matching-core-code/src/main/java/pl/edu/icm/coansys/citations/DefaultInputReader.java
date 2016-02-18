@@ -29,8 +29,8 @@ public class DefaultInputReader implements InputCitationReader<String, Matchable
      * Values of returned rdd are {@link MatchableEntity} objects
      */
     @Override
-    public JavaPairRDD<String, MatchableEntity> readDocuments(JavaSparkContext sparkContext, String inputDocumentPath, Integer numberOfPartitions) {
-        return readEntities(sparkContext, inputDocumentPath, numberOfPartitions);
+    public JavaPairRDD<String, MatchableEntity> readDocuments(JavaSparkContext sparkContext, String inputDocumentPath) {
+        return readEntities(sparkContext, inputDocumentPath);
     }
 
     /**
@@ -39,22 +39,16 @@ public class DefaultInputReader implements InputCitationReader<String, Matchable
      * Values of returned rdd are {@link MatchableEntity} objects
      */
     @Override
-    public JavaPairRDD<String, MatchableEntity> readCitations(JavaSparkContext sparkContext, String inputCitationPath, Integer numberOfPartitions) {
-        return readEntities(sparkContext, inputCitationPath, numberOfPartitions);
+    public JavaPairRDD<String, MatchableEntity> readCitations(JavaSparkContext sparkContext, String inputCitationPath) {
+        return readEntities(sparkContext, inputCitationPath);
     }
 
     
     //------------------------ PRIVATE --------------------------
     
-    private JavaPairRDD<String, MatchableEntity> readEntities(JavaSparkContext sparkContext, String entitesPath, Integer numberOfPartitions) {
+    private JavaPairRDD<String, MatchableEntity> readEntities(JavaSparkContext sparkContext, String entitesPath) {
         
-        JavaPairRDD<Text, BytesWritable> readEntities = null;
-        
-        if (numberOfPartitions == null) {
-            readEntities = sparkContext.sequenceFile(entitesPath, Text.class, BytesWritable.class);
-        } else {
-            readEntities = sparkContext.sequenceFile(entitesPath, Text.class, BytesWritable.class, numberOfPartitions);
-        }
+        JavaPairRDD<Text, BytesWritable> readEntities = sparkContext.sequenceFile(entitesPath, Text.class, BytesWritable.class);
         
         JavaPairRDD<String, MatchableEntity> entities = readEntities.mapToPair(x -> new Tuple2<String, MatchableEntity>(x._1.toString(), MatchableEntity.fromBytes(x._2.copyBytes())));
         

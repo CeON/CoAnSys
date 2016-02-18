@@ -141,11 +141,6 @@
             <arg>-citationPath = ${sourceEntities}</arg>
             <arg>-documentPath = ${destinationEntities}</arg>
             
-            <arg>-hashGeneratorClasses = pl.edu.icm.coansys.citations.hashers.CitationNameYearPagesHashGenerator:pl.edu.icm.coansys.citations.hashers.DocumentNameYearPagesHashGenerator</arg>
-            <arg>-hashGeneratorClasses = pl.edu.icm.coansys.citations.hashers.CitationNameYearPagesHashGenerator:pl.edu.icm.coansys.citations.hashers.DocumentNameYearNumNumHashGenerator</arg>
-            <arg>-hashGeneratorClasses = pl.edu.icm.coansys.citations.hashers.CitationNameYearHashGenerator:pl.edu.icm.coansys.citations.hashers.DocumentNameYearStrictHashGenerator</arg>
-            <arg>-hashGeneratorClasses = pl.edu.icm.coansys.citations.hashers.CitationNameYearHashGenerator:pl.edu.icm.coansys.citations.hashers.DocumentNameYearHashGenerator</arg>
-            
             <arg>-outputDirPath = ${output}</arg>
             <arg>-maxHashBucketSize = ${maxHashBucketSize}</arg>
             <arg>-numberOfPartitions = ${numberOfPartitions}</arg>
