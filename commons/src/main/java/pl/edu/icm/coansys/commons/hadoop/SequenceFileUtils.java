@@ -34,12 +34,12 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.util.ReflectionUtils;
 
+import com.google.common.collect.Lists;
+
+import pl.edu.icm.coansys.commons.java.DocumentWrapperUtils;
 import pl.edu.icm.coansys.models.DocumentProtos;
 import pl.edu.icm.coansys.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
-
-import com.google.common.collect.Lists;
-import pl.edu.icm.coansys.commons.java.DocumentWrapperUtils;
 
 /**
  * Utility methods related to bw2proto sequence files

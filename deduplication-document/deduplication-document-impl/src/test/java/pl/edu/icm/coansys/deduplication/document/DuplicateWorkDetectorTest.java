@@ -22,16 +22,15 @@ import java.io.File;
 import java.net.URL;
 import java.util.List;
 
-import org.testng.Assert;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.util.ToolRunner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.testng.Assert;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.commons.hadoop.SequenceFileUtils;
 import pl.edu.icm.coansys.deduplication.document.tool.DuplicateGenerator;

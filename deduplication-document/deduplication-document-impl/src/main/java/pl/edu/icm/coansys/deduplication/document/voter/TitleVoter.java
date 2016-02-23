@@ -18,8 +18,6 @@
 
 package pl.edu.icm.coansys.deduplication.document.voter;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import pl.edu.icm.coansys.commons.java.DocumentWrapperUtils;
 import pl.edu.icm.coansys.commons.java.StringTools;
 import pl.edu.icm.coansys.commons.stringsimilarity.AllNumbersSimilarity;

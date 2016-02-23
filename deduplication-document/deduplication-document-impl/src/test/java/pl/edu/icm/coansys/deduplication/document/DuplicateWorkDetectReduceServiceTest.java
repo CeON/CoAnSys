@@ -20,21 +20,22 @@ package pl.edu.icm.coansys.deduplication.document;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import junit.framework.Assert;
+
 import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.Reducer.Context;
 import org.apache.log4j.Logger;
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
-import pl.edu.icm.coansys.deduplication.document.tool.MockDocumentMetadataFactory;
-import com.google.common.collect.Lists;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+
+import com.google.common.collect.Lists;
+
+import pl.edu.icm.coansys.deduplication.document.tool.MockDocumentMetadataFactory;
 import pl.edu.icm.coansys.models.DocumentProtos;
 
 

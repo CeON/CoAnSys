@@ -23,7 +23,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
 import org.apache.pig.tools.parameters.ParseException;
+
 import pl.edu.icm.coansys.similarity.test.utils.MacroExtractor;
 
 /**

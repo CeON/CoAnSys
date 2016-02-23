@@ -19,6 +19,7 @@ package pl.edu.icm.coansys.deduplication.document.voter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import pl.edu.icm.coansys.models.DocumentProtos;
 
 /**

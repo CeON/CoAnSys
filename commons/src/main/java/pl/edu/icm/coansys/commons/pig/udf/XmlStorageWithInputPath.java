@@ -18,15 +18,6 @@
 
 package pl.edu.icm.coansys.commons.pig.udf;
 
-import java.io.IOException;
-
-import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.mapreduce.RecordReader;
-import org.apache.hadoop.mapreduce.lib.input.FileSplit;
-import org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.PigSplit;
-import org.apache.pig.data.Tuple;
-//import org.apache.pig.piggybank.storage.XMLLoader;
-
 public class XmlStorageWithInputPath { 
 	/*extends XMLLoader {
 	

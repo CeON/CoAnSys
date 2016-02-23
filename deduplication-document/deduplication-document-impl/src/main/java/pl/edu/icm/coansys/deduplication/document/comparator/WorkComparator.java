@@ -21,6 +21,7 @@ package pl.edu.icm.coansys.deduplication.document.comparator;
 import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
+
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 
 /**

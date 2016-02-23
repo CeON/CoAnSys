@@ -28,9 +28,9 @@ import org.apache.hadoop.mapreduce.Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.edu.icm.coansys.models.DocumentProtos;
-
 import com.beust.jcommander.internal.Maps;
+
+import pl.edu.icm.coansys.models.DocumentProtos;
 
 public class DuplicateGenerateMapper extends Mapper<Writable, BytesWritable, Text, BytesWritable> {
     

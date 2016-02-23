@@ -17,11 +17,10 @@
  */
 package pl.edu.icm.coansys.nlmextraction;
 
-import com.google.protobuf.ByteString;
-import com.itextpdf.text.ExceptionConverter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.BytesWritable;
@@ -37,11 +36,12 @@ import org.jdom.Element;
 import org.jdom.output.XMLOutputter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.edu.icm.cermine.ComponentConfiguration;
-import pl.edu.icm.cermine.PdfBxStructureExtractor;
+
+import com.google.protobuf.ByteString;
+import com.itextpdf.text.ExceptionConverter;
+
 import pl.edu.icm.cermine.PdfNLMContentExtractor;
 import pl.edu.icm.cermine.exception.AnalysisException;
-import pl.edu.icm.cermine.structure.DocstrumSegmenter;
 import pl.edu.icm.coansys.models.DocumentProtos;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
 import pl.edu.icm.coansys.models.DocumentProtos.Media;

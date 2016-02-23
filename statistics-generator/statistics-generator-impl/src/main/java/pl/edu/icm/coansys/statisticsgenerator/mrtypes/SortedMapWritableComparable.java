@@ -27,6 +27,7 @@ import org.apache.hadoop.io.WritableComparable;
  *
  * @author Artur Czeczko <a.czeczko@icm.edu.pl>
  */
+@SuppressWarnings({ "unchecked", "rawtypes" })
 public class SortedMapWritableComparable extends SortedMapWritable implements WritableComparable<SortedMapWritableComparable> {
 
     public SortedMapWritableComparable() {

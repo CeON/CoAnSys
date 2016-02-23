@@ -18,10 +18,10 @@
 
 package pl.edu.icm.coansys.disambiguation.author.features.disambiguators;
 
+import java.util.AbstractMap.SimpleEntry;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.AbstractMap.SimpleEntry;
 
 
 public abstract class Disambiguator {

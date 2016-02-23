@@ -103,5 +103,6 @@ public final class ViewTool {
 
             throw new IllegalArgumentException("Cannot guess the protocol buffers class");
         }
+        sfReader.close();
     }
 }

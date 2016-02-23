@@ -19,6 +19,7 @@ package pl.edu.icm.coansys.deduplication.document.voter;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import pl.edu.icm.coansys.models.DocumentProtos;
 
 /**

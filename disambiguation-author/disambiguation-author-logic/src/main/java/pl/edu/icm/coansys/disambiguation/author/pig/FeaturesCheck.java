@@ -18,6 +18,8 @@
 
 package pl.edu.icm.coansys.disambiguation.author.pig;
 
+import java.util.Map;
+
 import org.apache.hadoop.mapreduce.Counter;
 import org.apache.pig.backend.executionengine.ExecException;
 import org.apache.pig.data.Tuple;
@@ -26,14 +28,13 @@ import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
 
-import java.util.Map;
-
 /**
  * Verify that the author may be similar (comparable) to someone by checking
  * whether there is a minimum number of features.
  * 
  * @author mwos
  */
+@SuppressWarnings({ "unchecked" })
 public class FeaturesCheck extends AND<Boolean> {
 
 	private static final org.slf4j.Logger logger = LoggerFactory

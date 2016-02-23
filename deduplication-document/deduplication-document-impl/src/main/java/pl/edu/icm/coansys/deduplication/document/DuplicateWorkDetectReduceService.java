@@ -17,8 +17,6 @@
  */
 package pl.edu.icm.coansys.deduplication.document;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,6 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.Text;
@@ -35,7 +34,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import pl.edu.icm.coansys.commons.java.DocumentWrapperUtils;
+
 import pl.edu.icm.coansys.commons.spring.DiReduceService;
 import pl.edu.icm.coansys.deduplication.document.keygenerator.WorkKeyGenerator;
 import pl.edu.icm.coansys.models.DocumentProtos;

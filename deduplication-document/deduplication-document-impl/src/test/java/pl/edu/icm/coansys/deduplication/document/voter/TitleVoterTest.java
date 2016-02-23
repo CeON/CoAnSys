@@ -22,9 +22,11 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
+
 import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
+
 import pl.edu.icm.coansys.deduplication.document.tool.MockDocumentMetadataFactory;
 import pl.edu.icm.coansys.deduplication.document.voter.Vote.VoteStatus;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;

@@ -19,6 +19,7 @@
 package pl.edu.icm.coansys.commons.pig.udf;
 
 import java.io.IOException;
+
 import org.apache.pig.EvalFunc;
 import org.apache.pig.data.Tuple;
 

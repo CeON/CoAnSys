@@ -18,10 +18,13 @@
 
 package pl.edu.icm.coansys.deduplication.document.tool;
 
-import com.beust.jcommander.internal.Lists;
 import java.util.List;
 import java.util.UUID;
+
 import org.apache.hadoop.io.BytesWritable;
+
+import com.beust.jcommander.internal.Lists;
+
 import pl.edu.icm.coansys.models.DocumentProtos;
 import pl.edu.icm.coansys.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.models.DocumentProtos.BasicMetadata;

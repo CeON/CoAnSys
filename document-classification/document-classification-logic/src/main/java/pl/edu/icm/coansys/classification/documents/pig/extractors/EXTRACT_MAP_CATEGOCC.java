@@ -18,9 +18,12 @@
 
 package pl.edu.icm.coansys.classification.documents.pig.extractors;
 
-import com.google.common.base.Joiner;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.pig.EvalFunc;
 import org.apache.pig.data.DataBag;
@@ -34,6 +37,8 @@ import org.apache.pig.impl.logicalLayer.schema.Schema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Joiner;
+
 import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
 import pl.edu.icm.coansys.models.DocumentProtos.ClassifCode;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
@@ -44,7 +49,6 @@ import pl.edu.icm.coansys.models.DocumentProtos.TextWithLanguage;
  *
  * @author pdendek
  */
-@SuppressWarnings("rawtypes")
 public class EXTRACT_MAP_CATEGOCC extends EvalFunc<Tuple> {
 
     private static final Logger logger = LoggerFactory.getLogger(EXTRACT_MAP_CATEGOCC.class);
