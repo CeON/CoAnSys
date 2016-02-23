@@ -191,25 +191,24 @@
     </profiles>
 
     <modules>
+        <module>affiliation-organization-matching</module>
         <module>citation-matching</module>
         <module>commons</module>
-        <module>models</module>
         <module>disambiguation</module>
         <module>disambiguation-author</module>
         <module>deduplication-document</module>
         <module>deduplication-organization</module>
-        <module>affiliation-organization-matching</module>
         <module>document-classification</module>
         <module>document-similarity</module>
         <module>integration</module>
         <module>keywords-extraction</module>
+        <module>models</module>
         <module>nlm-extraction</module>
-        <module>statistics-generator</module>
         <module>source-disambiguation</module>
+        <module>statistics-generator</module>
     </modules>
 
     <dependencies>
-
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
