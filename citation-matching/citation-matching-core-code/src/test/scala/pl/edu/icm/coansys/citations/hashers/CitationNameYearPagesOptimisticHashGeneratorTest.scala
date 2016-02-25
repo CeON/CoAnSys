@@ -18,8 +18,6 @@
 
 package pl.edu.icm.coansys.citations.hashers
 
-import org.apache.hadoop.io.{NullWritable, BytesWritable}
-import org.apache.hadoop.mrunit.mapreduce.MapDriver
 import org.junit.Assert.assertEquals
 import org.testng.annotations.Test
 import pl.edu.icm.coansys.citations.data.MatchableEntity

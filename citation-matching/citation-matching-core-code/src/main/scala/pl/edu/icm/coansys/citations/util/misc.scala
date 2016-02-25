@@ -20,11 +20,8 @@ package pl.edu.icm.coansys.citations.util
 
 import pl.edu.icm.coansys.models.DocumentProtos.{DocumentWrapper, ReferenceMetadata, BasicMetadata}
 import scala.collection.JavaConversions._
-import com.nicta.scoobi.io.sequence.SequenceInput.valueFromSequenceFile
-import com.nicta.scoobi.core.DList
 import pl.edu.icm.coansys.citations.data.MatchableEntity
 import pl.edu.icm.cermine.bibref.parsing.tools.CitationUtils
-import pl.edu.icm.coansys.citations.util.AugmentedDList.augmentDList
 import pl.edu.icm.cermine.bibref.CRFBibReferenceParser
 import pl.edu.icm.ceon.scala_commons.strings
 import pl.edu.icm.coansys.commons.java.DiacriticsRemover
