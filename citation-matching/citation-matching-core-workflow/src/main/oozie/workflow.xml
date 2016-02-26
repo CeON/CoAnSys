@@ -1,0 +1,166 @@
+<!--
+  ~ This file is part of CoAnSys project.
+  ~ Copyright (c) 2012-2015 ICM-UW
+  ~
+  ~ CoAnSys is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU Affero General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ CoAnSys is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  ~ GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License
+  ~ along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<workflow-app xmlns="uri:oozie:workflow:0.4" name="citations-core-workflow">
+    <parameters>
+        <property>
+            <name>jobTracker</name>
+        </property>
+        <property>
+            <name>nameNode</name>
+        </property>
+        <property>
+            <name>queueName</name>
+            <value>default</value>
+        </property>
+        <property>
+            <name>pool</name>
+            <value>default</value>
+        </property>
+        <property>
+            <name>maxHashBucketSize</name>
+            <value>10000</value>
+            <description>Buckets exceeding this limit will be omitted</description>
+        </property>
+        <property>
+            <name>numberOfPartitions</name>
+            <value>2</value>
+            <description>number of spark partitions for citations and documents read from input paths</description>
+        </property>
+        <property>
+            <name>sourceEntities</name>
+        </property>
+        <property>
+            <name>destinationEntities</name>
+        </property>
+        <property>
+            <name>output</name>
+        </property>
+        
+        <property>
+            <name>inputDocumentReaderClass</name>
+            <value>pl.edu.icm.coansys.citations.DefaultInputReader</value>
+            <description>Name of class used to read input documents</description>
+        </property>
+        <property>
+            <name>inputDocumentConverterClass</name>
+            <value>pl.edu.icm.coansys.citations.DummyInputConverter</value>
+            <description>Name of class used to convert input documents</description>
+        </property>
+        
+        <property>
+            <name>inputCitationReaderClass</name>
+            <value>pl.edu.icm.coansys.citations.DefaultInputReader</value>
+            <description>Name of class used to read input citations</description>
+        </property>
+        <property>
+            <name>inputCitationConverterClass</name>
+            <value>pl.edu.icm.coansys.citations.DummyInputConverter</value>
+            <description>Name of class used to convert input citations</description>
+        </property>
+        
+        <property>
+            <name>outputConverterClass</name>
+            <value>pl.edu.icm.coansys.citations.DummyOutputConverter</value>
+            <description>Name of class used to convert output matched citations for output writer</description>
+        </property>
+        <property>
+            <name>outputWriterClass</name>
+            <value>pl.edu.icm.coansys.citations.DefaultOutputWriter</value>
+            <description>Name of class used to write output matched citations</description>
+        </property>
+        
+        <property>
+            <name>sparkExecutorMemory</name>
+            <value>16G</value>
+            <description>memory for individual executor</description>
+        </property>
+        <property>
+            <name>sparkExecutorCores</name>
+            <value>4</value>
+            <description>number of cores used by single executor</description>
+        </property>
+        <property>
+            <name>sparkExecutorsNumber</name>
+            <value>36</value>
+            <description>total number of executors</description>
+        </property>
+    </parameters>
+    <global>
+        <job-tracker>${jobTracker}</job-tracker>
+        <name-node>${nameNode}</name-node>
+        <configuration>
+            <property>
+                <name>mapred.job.queue.name</name>
+                <value>${queueName}</value>
+            </property>
+            <property>
+                <name>oozie.launcher.mapred.fairscheduler.pool</name>
+                <value>${pool}</value>
+            </property>
+            <property>
+                <name>mapred.fairscheduler.pool</name>
+                <value>${pool}</value>
+            </property>
+        </configuration>
+    </global>
+    <start to="citation-matching"/>
+
+    <action name="citation-matching">
+        
+        <spark xmlns="uri:oozie:spark-action:0.1">
+
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+           
+            <master>yarn-cluster</master>
+            <mode>cluster</mode>
+            <name>citation-matching</name>
+
+            <class>pl.edu.icm.coansys.citations.CitationMatchingJob</class>
+
+            <jar>${wfDirectory}/lib/citation-matching-core-code-${projectVersion}.jar</jar>
+        
+            <spark-opts>--executor-memory ${sparkExecutorMemory} --executor-cores ${sparkExecutorCores} --num-executors ${sparkExecutorsNumber}</spark-opts>
+            
+            <arg>-citationPath = ${sourceEntities}</arg>
+            <arg>-documentPath = ${destinationEntities}</arg>
+            
+            <arg>-outputDirPath = ${output}</arg>
+            <arg>-maxHashBucketSize = ${maxHashBucketSize}</arg>
+            <arg>-numberOfPartitions = ${numberOfPartitions}</arg>
+            
+            <arg>-inputDocumentReaderClass = ${inputDocumentReaderClass}</arg>
+            <arg>-inputDocumentConverterClass = ${inputDocumentConverterClass}</arg>
+            
+            <arg>-inputCitationReaderClass = ${inputCitationReaderClass}</arg>
+            <arg>-inputCitationConverterClass = ${inputCitationConverterClass}</arg>
+            
+            <arg>-outputConverterClass = ${outputConverterClass}</arg>
+            <arg>-outputWriterClass = ${outputWriterClass}</arg>
+            
+        </spark>
+        <ok to="end"/>
+        <error to="fail"/>
+    </action>
+
+    <kill name="fail">
+        <message>Workflow failed, error message [${wf:errorMessage(wf:lastErrorNode())}]</message>
+    </kill>
+    <end name="end"/>
+</workflow-app>

@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>pl.edu.icm.coansys</groupId>
 		<artifactId>coansys</artifactId>
-		<version>1.10-rc3-SNAPSHOT</version>
+		<version>1.10-SPARK-CIT-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>commons</artifactId>
@@ -20,7 +20,7 @@
 		</dependency> --> 
 		<dependency>
 			<groupId>pl.edu.icm.coansys</groupId>
-			<version>1.10-rc3-SNAPSHOT</version>
+			<version>${project.version}</version>
 			<artifactId>models</artifactId>
 		</dependency>
 		<dependency>
@@ -90,6 +90,10 @@
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-mapper-asl</artifactId>
            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
         </dependency>
 	</dependencies>
 </project>
