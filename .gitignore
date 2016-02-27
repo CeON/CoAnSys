@@ -22,10 +22,10 @@ nb-configuration.xml
 *.war
 *.ear
 target/
+/*/target
 
 #pig temp files
 *.crc
-*part-r-00000
 _SUCCESS
 dummy
 
@@ -38,5 +38,8 @@ maven-eclipse.xml
 *.swp
 /affiliation-organization-matching/affiliation-organization-matching-impl/src/main/scala/pl/edu/icm/coansys/matching/organization/TestMatchingT.scala
 dependency-reduced-pom.xml
+.cache-main
+.cache-tests
 /affiliation-organization-matching/affiliation-organization-matching-workflow/src/main/oozie/workflow.xml
 /deduplication-organization/deduplication-organization-workflow/src/main/oozie/workflow.xml
+

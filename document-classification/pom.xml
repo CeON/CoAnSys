@@ -6,7 +6,7 @@
     <parent>
         <artifactId>coansys</artifactId>
         <groupId>pl.edu.icm.coansys</groupId>
-        <version>1.10-rc3-SNAPSHOT</version>
+        <version>1.10-SPARK-CIT-SNAPSHOT</version>
     </parent>
 
     <properties>
