@@ -192,22 +192,22 @@
     </profiles>
 
     <modules>
-        <module>commons</module>
-        <module>models</module>
-        <module>ceon-scala-commons-lite</module>
-        <module>citation-matching</module>
-        <module>disambiguation</module>
-        <module>disambiguation-author</module>
-        <module>deduplication-document</module>
-        <module>deduplication-organization</module>
-        <module>document-classification</module>
-        <module>document-similarity</module>
-        <module>integration</module>
-        <module>keywords-extraction</module>
-        <module>models</module>
-        <module>nlm-extraction</module>
-        <module>source-disambiguation</module>
-        <module>statistics-generator</module>
+	<module>affiliation-organization-matching</module>
+	<module>ceon-scala-commons-lite</module>
+	<module>citation-matching</module>
+	<module>commons</module>
+	<module>deduplication-document</module>
+	<module>deduplication-organization</module>
+	<module>disambiguation</module>
+	<module>disambiguation-author</module>
+	<module>document-classification</module>
+	<module>document-similarity</module>
+	<module>integration</module>
+	<module>keywords-extraction</module>
+	<module>models</module>
+	<module>nlm-extraction</module>
+	<module>source-disambiguation</module>
+	<module>statistics-generator</module>
     </modules>
 
     <dependencies>
