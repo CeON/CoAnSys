@@ -192,26 +192,25 @@
     </profiles>
 
     <modules>
-        <module>commons</module>
-        <module>models</module>
-        <module>ceon-scala-commons-lite</module>
-        <module>citation-matching</module>
-        <module>disambiguation</module>
-        <module>disambiguation-author</module>
-        <module>deduplication-document</module>
-        <module>deduplication-organization</module>
-        <module>affiliation-organization-matching</module>
-        <module>document-classification</module>
-        <module>document-similarity</module>
-        <module>integration</module>
-        <module>keywords-extraction</module>
-        <module>nlm-extraction</module>
-        <module>statistics-generator</module>
-        <module>source-disambiguation</module>
+	<module>affiliation-organization-matching</module>
+	<module>ceon-scala-commons-lite</module>
+	<module>citation-matching</module>
+	<module>commons</module>
+	<module>deduplication-document</module>
+	<module>deduplication-organization</module>
+	<module>disambiguation</module>
+	<module>disambiguation-author</module>
+	<module>document-classification</module>
+	<module>document-similarity</module>
+	<module>integration</module>
+	<module>keywords-extraction</module>
+	<module>models</module>
+	<module>nlm-extraction</module>
+	<module>source-disambiguation</module>
+	<module>statistics-generator</module>
     </modules>
 
     <dependencies>
-
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
@@ -219,85 +218,6 @@
             <scope>test</scope>
             <type>jar</type>
         </dependency>
-        
-<!--		
-		<dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-yarn-api</artifactId>
-            <version>${hadoop.version}</version>
-        </dependency>
-		<dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-yarn-client</artifactId>
-            <version>${hadoop.version}</version>
-        </dependency>
-		<dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-client</artifactId>
-            <version>${hadoop.version}</version>
-        </dependency>
-		<dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-mapreduce-client-app</artifactId>
-            <version>${hadoop.version}</version>
-        </dependency>
-		<dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-mapreduce-client-common</artifactId>
-            <version>${hadoop.version}</version>
-        </dependency>
-		<dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-mapreduce-client-core</artifactId>
-            <version>${hadoop.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-yarn-common</artifactId>
-            <version>${hadoop.common.version}</version>
-        </dependency>        
-        <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-yarn-common</artifactId>
-            <version>${hadoop.common.version}</version>
-        </dependency>        
-        <dependency>
-            <groupId>org.apache.hbase</groupId>
-            <artifactId>hbase-client</artifactId>
-            <version>${hbase.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.pig</groupId>
-            <artifactId>pig</artifactId>
-            <version>${pig.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.pig</groupId>
-            <artifactId>pigunit</artifactId>
-            <version>${pig.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>${slf4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.protobuf</groupId>
-            <artifactId>protobuf-java</artifactId>
-            <version>${protobuf.java.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-mapper-asl</artifactId>
-            <version>${jackson-mapper-asl.version}</version>
-            <type>jar</type>
-        </dependency>-->
     </dependencies>
 
     <dependencyManagement>
@@ -362,11 +282,7 @@
                 <artifactId>oozie-runner</artifactId>
                 <version>${oozie-runner.version}</version>
             </dependency>
-            
-            
-     
-		
-		<dependency>
+	<dependency>
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-yarn-api</artifactId>
             <version>${hadoop.version}</version>
@@ -555,16 +471,6 @@
             <name>Cloudera hadoop repository</name>
             <url>https://repository.cloudera.com/artifactory/cloudera-repos/</url>
         </repository>
-<!--        <repository>
-            <id>sonatype</id>
-            <name>Sonatype</name>
-            <url>https://oss.sonatype.org/content/repositories/releases/</url>
-        </repository>
-        <repository>
-            <id>nicta-scoobi</id>
-            <name>Scoobi repository</name>
-            <url>http://nicta.github.com/scoobi/releases/</url>
-        </repository>-->
     </repositories>
     <pluginRepositories>
         <pluginRepository>
