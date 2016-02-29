@@ -27,6 +27,7 @@
         <oozie-runner.version>1.4</oozie-runner.version>
         <jackson-mapper-asl.version>1.9.12</jackson-mapper-asl.version>
         <scala.version>2.10.6</scala.version>
+        <scala.binary.version>2.10</scala.binary.version>
         <coansys.spark.version>1.3.0-cdh5.4.2</coansys.spark.version>
     </properties>
 
@@ -191,9 +192,10 @@
     </profiles>
 
     <modules>
-        <module>citation-matching</module>
         <module>commons</module>
         <module>models</module>
+        <module>ceon-scala-commons-lite</module>
+        <module>citation-matching</module>
         <module>disambiguation</module>
         <module>disambiguation-author</module>
         <module>deduplication-document</module>
