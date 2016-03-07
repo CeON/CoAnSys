@@ -11,7 +11,6 @@
     <packaging>pom</packaging>
     <modules>
         <module>citation-matching-core-code</module>
-        <module>citation-matching-core-workflow</module>
         <module>citation-matching-coansys-code</module>
         <module>citation-matching-coansys-workflow</module>
     </modules>

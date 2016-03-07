@@ -1,2 +1,0 @@
-Here we will keep the expected results of the unfinished citation matching job. After the job will have been finished, the ../expectedOutput/matchedCitations
-will be the expected result. 
