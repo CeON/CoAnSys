@@ -3,7 +3,7 @@
   <parent>
     <groupId>pl.edu.icm.coansys</groupId>
     <artifactId>citation-matching</artifactId>
-    <version>1.10-SPARK-CIT-SNAPSHOT</version>
+    <version>1.10-rc3-SNAPSHOT</version>
   </parent>
   
   <artifactId>citation-matching-coansys-code</artifactId>

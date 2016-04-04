@@ -7,7 +7,7 @@
 
     <groupId>pl.edu.icm.coansys</groupId>
     <artifactId>models</artifactId>
-    <version>1.10-SPARK-CIT-SNAPSHOT</version> 
+    <version>1.10-rc3-SNAPSHOT</version> 
 
     <properties>
         <protobuf.java.version>2.5.0</protobuf.java.version>
