@@ -186,7 +186,7 @@
 		</property>
 		<property>
 			<name>and_aproximate_sim_limit</name>
-			<value>1000000000</value>
+			<value>10000000</value>
 			<description>Upper limit on the size of the contributors group for
 				aproximate disambiguation algorithm with storing calculated
 				similarities.
