@@ -72,7 +72,7 @@
         <dependency>
             <groupId>pl.edu.icm.cermine</groupId>
             <artifactId>cermine-impl</artifactId>
-            <version>1.8</version>
+            <version>1.8-SNAPSHOT</version>
         </dependency>
         
         <dependency>
