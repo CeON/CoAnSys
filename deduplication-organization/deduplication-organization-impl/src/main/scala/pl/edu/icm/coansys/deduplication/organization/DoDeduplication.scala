@@ -142,14 +142,20 @@ object DoDeduplication {
     val conf = new SparkConf().setAppName("Organization deduplication")
     val sc = new SparkContext(conf)
     val logData = sc.sequenceFile[String, BytesWritable](organizationFile);
-    if (logData.isEmpty) {
-       logData.saveAsSequenceFile(args(1));
-    } else {
-    val organizations= logData.map{
+    val orgBytes=logData.map{
       case (key, bw)=> {
-          OrganizationWrapper.parseFrom(bw.copyBytes);
+          (key,bw.copyBytes)
         }
     }
+    if (orgBytes.isEmpty) {
+      
+      orgBytes.saveAsSequenceFile(args(1));
+    } else {
+      val organizations= orgBytes.map{
+        case (key,bw)=> {
+          OrganizationWrapper.parseFrom(bw);
+        }
+      }
     dedupOrganizations(organizations).map((o:Array[Byte])=> {(OrganizationWrapper.parseFrom(o).getRowId,o)})
     .saveAsSequenceFile(args(1));
     }
