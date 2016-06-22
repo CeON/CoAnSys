@@ -42,7 +42,7 @@ object DoDeduplication {
   
   
   def dedupOrganizations(organizations:RDD[OrganizationWrapper]):RDD[Array[Byte]] = {
-     val toEdges = organizations.flatMap[(String, Array[Byte])] {
+    val toEdges = organizations.flatMap[(String, Array[Byte])] {
        record => {
         ((record.getOrganizationMetadata.getOriginalNameList.map(
           (name: String) => (simplify(name), record.toByteArray)
@@ -142,6 +142,9 @@ object DoDeduplication {
     val conf = new SparkConf().setAppName("Organization deduplication")
     val sc = new SparkContext(conf)
     val logData = sc.sequenceFile[String, BytesWritable](organizationFile);
+    if (logData.isEmpty) {
+       logData.saveAsSequenceFile(args(1));
+    } else {
     val organizations= logData.map{
       case (key, bw)=> {
           OrganizationWrapper.parseFrom(bw.copyBytes);
@@ -149,7 +152,7 @@ object DoDeduplication {
     }
     dedupOrganizations(organizations).map((o:Array[Byte])=> {(OrganizationWrapper.parseFrom(o).getRowId,o)})
     .saveAsSequenceFile(args(1));
-     
+    }
     
     
  }
