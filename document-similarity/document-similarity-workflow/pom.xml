@@ -4,7 +4,7 @@
     <parent>
         <groupId>pl.edu.icm.coansys</groupId>
         <artifactId>document-similarity</artifactId>
-        <version>1.10-rc3-SNAPSHOT</version>
+        <version>1.10-rc3</version>
     </parent>
     
     <artifactId>document-similarity-workflow</artifactId>
