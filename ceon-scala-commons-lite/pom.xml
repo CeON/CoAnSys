@@ -3,7 +3,7 @@
     <parent>
         <groupId>pl.edu.icm.coansys</groupId>
         <artifactId>coansys</artifactId>
-        <version>1.10-rc3</version>
+        <version>1.10-final-SNAPSHOT</version>
     </parent>
     <artifactId>ceon-scala-commons-lite</artifactId>
     <name>CeON Scala Commons Lite</name>
@@ -114,7 +114,7 @@
         <connection>scm:git:ssh://git@github.com/CeON/ceon-scala-commons.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/CeON/ceon-scala-commons.git</developerConnection>
         <url>https://github.com/CeON/ceon-scala-commons</url>
-        <tag>coansys-1.10-rc3</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <distributionManagement>

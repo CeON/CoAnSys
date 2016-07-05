@@ -3,7 +3,7 @@
 	<parent>
 		<artifactId>coansys</artifactId>
 		<groupId>pl.edu.icm.coansys</groupId>
-		<version>1.10-rc3</version>
+		<version>1.10-final-SNAPSHOT</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 
