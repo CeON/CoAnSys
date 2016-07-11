@@ -27,29 +27,34 @@ import java.util.List;
  */
 public class VotesProductComparator extends AbstractWorkComparator {
 
-    private int minVotersRequired;
+    private float minVotersWeightRequired;
     private float probabilityTreshold;
     private float tresholdIncreasingVotersRequired;
 
     
     @Override
     protected boolean calculateResult(List<Float> probabilities, List<Float> weights, StringBuilder debugOutputBuilder) {
-        int localVotersRequired = minVotersRequired;
+        double localVotersWeightRequired = minVotersWeightRequired;
         
         double probabilitiesProduct = 1.0;
         for (int i = 0; i < probabilities.size(); i++) {
             probabilitiesProduct *= probabilities.get(i);
         }
+        double weightsSum=0.0;
+        for (float f:weights) {
+            weightsSum+=f;
+        }
+        
         if (probabilitiesProduct <= tresholdIncreasingVotersRequired) {
-            localVotersRequired++;
+            localVotersWeightRequired+=0.5;
         }
         debugOutputBuilder.append("##PROBABILITIES_PRODUCT=").append(probabilitiesProduct);
-        return probabilities.size() >= localVotersRequired && probabilitiesProduct > probabilityTreshold;
+        return weightsSum >= localVotersWeightRequired && probabilitiesProduct > probabilityTreshold;
     }
 
     //******************** SETTERS ********************
-    public void setMinVotersRequired(int minVotersRequired) {
-        this.minVotersRequired = minVotersRequired;
+    public void setMinVotersWeightRequired(float minVotersRequired) {
+        this.minVotersWeightRequired = minVotersRequired;
     }
 
     public void setProbabilityTreshold(float probabilityTreshold) {
