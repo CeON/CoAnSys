@@ -37,6 +37,7 @@ import org.apache.hadoop.util.ReflectionUtils;
 import com.google.common.collect.Lists;
 
 import pl.edu.icm.coansys.commons.java.DocumentWrapperUtils;
+import pl.edu.icm.coansys.commons.java.Pair;
 import pl.edu.icm.coansys.models.DocumentProtos;
 import pl.edu.icm.coansys.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
@@ -94,6 +95,25 @@ public final class SequenceFileUtils {
         return texts;
     }
 
+     public static List<Pair<String,String>> readTextPairs(String inputFileUri) {
+        List<Pair<String,String>> texts = Lists.newArrayList();
+
+        SequenceFile.Reader reader = null;
+        try {
+            Configuration conf = new Configuration();
+            reader = getSequenceFileReader(inputFileUri, conf);
+            Writable key = (Writable)ReflectionUtils.newInstance(reader.getKeyClass(), conf);
+            Writable value = (Writable)ReflectionUtils.newInstance(reader.getValueClass(), conf);
+            while (reader.next(key, value)) {
+                texts.add(new Pair<>(((Text)key).toString(),((Text)value).toString()));
+            }
+        } catch (IOException e) {
+        } finally {
+            IOUtils.closeStream(reader);
+        }
+
+        return texts;
+    }
     
     public static void formatAndPrintToConsole(String inputFileUri) throws IOException {
         SequenceFile.Reader reader = null;
