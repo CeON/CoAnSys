@@ -18,6 +18,8 @@
 
 package pl.edu.icm.coansys.commons.java;
 
+import java.util.Objects;
+
 public class Pair<K,V> {
 	public Pair(K x, V y) {
 		this.x = x;
@@ -39,4 +41,37 @@ public class Pair<K,V> {
 	public void setY(V y) {
 		this.y = y;
 	}
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 23 * hash + Objects.hashCode(this.x);
+        hash = 23 * hash + Objects.hashCode(this.y);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (!( obj instanceof Pair )) {
+            return false;
+        }
+        final Pair<?, ?> other = (Pair<?, ?>) obj;
+        if (!Objects.equals(this.x, other.x)) {
+            return false;
+        }
+        if (!Objects.equals(this.y, other.y)) {
+            return false;
+        }
+        return true;
+    }
+    
+    
+    
+    
 }
