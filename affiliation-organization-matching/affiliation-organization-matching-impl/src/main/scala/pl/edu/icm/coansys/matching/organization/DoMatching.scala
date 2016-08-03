@@ -79,17 +79,21 @@ object DoMatching {
     val docAffHash = docData.flatMap {
       case (docId, docContent) => {
         val doc = DocumentWrapper.parseFrom(docContent);
+        val affList=doc.getDocumentMetadata.getAffiliationsList
+        val affByteArray=affList.map((a: Affiliation)=>{
+          a.toByteArray}).toArray
+          
         doc.getDocumentMetadata.getAffiliationsList.flatMap((a: Affiliation) => {
           val nn = trimOrganizationNamesForHash(a.getText)
 
           if (nn.size <= hashSize) {
-            (1 to nn.length).map(i => { (nn.substring(0, i), (docId, (a.getText, docContent))) })
+            (1 to nn.length).map(i => { (nn.substring(0, i), (docId, (a.getText,  (doc.getRowId,affByteArray)))) })
           } else {
             (0 to nn.length - hashSize).flatMap(i => {
               val t = nn.substring(i, i + hashSize);
-              (1 to t.length).map(j => { (t.substring(0, j), (docId, (a.getText, docContent))) })
+              (1 to t.length).map(j => { (t.substring(0, j), (docId, (a.getText,   (doc.getRowId,affByteArray)))) })
             }) ++ (1 to hashSize - 1).map(i => {
-              (nn.substring(nn.length - i), (docId, (a.getText, docContent)))
+              (nn.substring(nn.length - i), (docId, (a.getText,  (doc.getRowId,affByteArray))))
             })
           }
         })
@@ -105,7 +109,7 @@ object DoMatching {
     //      }
     //    }
     val matched = docAffHash.join(organizationsHash).filter {
-      case (key: String, ((docId: String, (affText: String, docContent: Array[Byte])), (orgName: String, orgId: String))) => {
+      case (key: String, ((docId: String, (affText: String ,affArray: (String,Array[Array[Byte]]))), (orgName: String, orgId: String))) => {
         simplify(affText).contains(orgName)
       }
     }
@@ -115,9 +119,9 @@ object DoMatching {
  //   println("matched count: " + matched.count);
     
     
-    val toGroup=matched.map[(String,((String,Array[Byte]),(String,String)))]{
-      case (key, ((docId, (affText, docContent)), (orgName, orgId))) => {
-         (docId, ((affText,docContent),(orgName,orgId))) 
+    val toGroup=matched.map[(String,((String,(String,Array[Array[Byte]])),(String,String)))]{
+      case (key, ((docId, (affText, affArray)), (orgName, orgId))) => {
+         (docId, ((affText,affArray),(orgName,orgId))) 
       }
     }
     val ready=toGroup.groupByKey.map{
@@ -125,13 +129,15 @@ object DoMatching {
             val packB=AllOrganizationFromDocMatchingOut.newBuilder;
             packB.setDocId(key);
             it.foreach{
-              case ((affText,docContent),(orgName,orgId)) => {
-                val doc = DocumentWrapper.parseFrom(docContent);
-                doc.getDocumentMetadata.getAffiliationsList.filter((a: Affiliation) => {
+              case ((affText,(docRowId,affArray)),(orgName,orgId)) => {
+                affArray.map((b:Array[Byte]) =>
+                {
+                  Affiliation.parseFrom(b)
+                }).filter((a: Affiliation) => {
                     simplify(a.getText).contains(orgName)
                   }).foreach ((a: Affiliation) => {
                     packB.addSingleMatchBuilder.setAffiliationId(a.getAffiliationId)
-                    .setDocId(doc.getRowId)
+                    .setDocId(docRowId)
                     .setOrganizationId(orgId)
                   })
               }
