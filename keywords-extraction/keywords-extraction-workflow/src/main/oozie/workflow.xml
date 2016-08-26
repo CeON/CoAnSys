@@ -13,6 +13,7 @@
 			<name-node>${nameNode}</name-node>
 			<prepare>
 				<delete path="${hdfsWorkingDirURI}/intermediate-data" />
+                <delete path="${hdfsDirOutputData}" />
 			</prepare>
 			<configuration>
 				<property>
