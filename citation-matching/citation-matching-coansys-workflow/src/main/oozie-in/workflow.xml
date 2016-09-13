@@ -92,13 +92,13 @@
 
             <jar>${comacWfPath}/lib/citation-matching-coansys-code-${project.version}.jar</jar>
         
-            <spark-opts>--executor-memory ${sparkExecutorMemory} --executor-cores ${sparkExecutorCores} --num-executors ${sparkExecutorsNumber} --conf spark.yarn.historyServer.address=${sparkHistoryServer} --conf spark.eventLog.dir=${sparkEventLogDir} --conf spark.eventLog.enabled=true</spark-opts>
+            <spark-opts>--conf spark.network.timeout 10000000 --conf spark.executor.heartbeatInterval=10000000 --executor-memory ${sparkExecutorMemory} --executor-cores ${sparkExecutorCores} --num-executors ${sparkExecutorsNumber} --conf spark.yarn.historyServer.address=${sparkHistoryServer} --conf spark.eventLog.dir=${sparkEventLogDir} --conf spark.eventLog.enabled=true</spark-opts>
             
             <arg>-inputDocumentPath = ${input}</arg>
             <arg>-inputCitationPath = ${inputCitations}</arg>
             
             <arg>-outputDirPath = ${output}</arg>
-            <arg>-numberOfPartitions = 196</arg>
+            <arg>-numberOfPartitions = 220</arg>
             
             <arg>-cermineCitationMetadataExtractModel = ${cermineCitationMetadataExtractModel}</arg>
             
