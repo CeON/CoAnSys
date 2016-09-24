@@ -7,6 +7,7 @@
 package pl.edu.icm.coansys.disambiguation.author.scala
 import java.io.File
 import org.apache.hadoop.io.BytesWritable
+import org.apache.pig.builtin.TOBAG
 import org.apache.pig.data.DefaultDataBag
 import org.apache.pig.data.Tuple
 import org.apache.pig.data.TupleFactory
@@ -176,16 +177,21 @@ object DisambiguationApr {
     
     val a=sc.textFile(and_inputDocsData)
     
-    val tupleSchema="a:(sname:int, datagroup:{(cId:chararray, sname:int, data:map[{(int)}])}, count:long)"
+   
+    
+    //tuples == D0
+    
+    val tuples=a.map ( x=> {
+         val tupleSchema="a:(sname:int, datagroup:{(cId:chararray, sname:int, data:map[{(int)}])}, count:long)"
     
     
     val schema=org.apache.pig.impl.util.Utils.parseSchema(tupleSchema)
     val converter = new org.apache.pig.builtin.Utf8StorageConverter()
     val fieldSchema = new org.apache.pig.ResourceSchema.ResourceFieldSchema(schema.getField("a"))
-    
-    //tuples == D0
-    
-    val tuples=a.map ( x=> converter.bytesToTuple(("("+x.replace('\t',',')+")").getBytes("UTF-8"), fieldSchema))
+        converter.bytesToTuple(("("+x.replace('\t',',')+")").getBytes("UTF-8"), fieldSchema)
+      
+      
+      })
     
     
     //
@@ -240,14 +246,16 @@ object DisambiguationApr {
     //I = foreach EBIG generate flatten(datagroup);
     //BIG = foreach I generate cId as cId, GenUUID( TOBAG(cId) ) as uuid;
     //
-    ebig.flatMap(x=> {
+    val big =ebig.flatMap(x=> {
        x.get(0).asInstanceOf[org.apache.pig.data.DataBag].iterator.asScala
       }).map( x => {
-        val genuud=new GenUUID
+        val genuuid=new GenUUID
+        val tfac=TupleFactory.getInstance
         val cid=x.get(0)
-        val t=TupleFactory.getInstance.newTuple
+        val t=tfac.newTuple
         t.append(cid)
-        
+        t.append(genuuid.exec(tfac.newTuple(new TOBAG().exec(tfac.newTuple(cid)))))
+        t
         
       })
     
@@ -259,6 +267,8 @@ object DisambiguationApr {
     //F = foreach ESINGLE generate datagroup.cId as cIds, GenUUID( datagroup.cId ) as uuid;
     //SINGLE = foreach F generate flatten( cIds ) as cId, uuid as uuid;
     //
+    
+    
     //-- -----------------------------------------------------
     //-- CLUSTERS FOR EXHAUSTIVE
     //-- -----------------------------------------------------
