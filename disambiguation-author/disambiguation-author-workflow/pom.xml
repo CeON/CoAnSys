@@ -36,6 +36,7 @@
                                     <filtering>true</filtering>
                                     <includes>
                                         <include>*.xml.*</include>
+                                        <include>*.xml</include>
                                         <include>*.properties</include>
                                     </includes>
                                 
