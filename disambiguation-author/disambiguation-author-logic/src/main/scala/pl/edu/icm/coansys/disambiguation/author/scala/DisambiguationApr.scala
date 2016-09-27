@@ -192,7 +192,7 @@ object DisambiguationApr {
     val eexh = e1.filter(x => {
       val s = x.get(0).asInstanceOf[org.apache.pig.data.DataBag].size
       s > 2 && s <= and_exhaustive_limit
-    }).repartition(sc.defaultParallelism*3)
+    }).repartition(sc.defaultParallelism*5)
     val ebig = e1.filter(x => { x.get(0).asInstanceOf[org.apache.pig.data.DataBag].size > and_exhaustive_limit })
 
     //
