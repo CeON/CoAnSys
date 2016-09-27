@@ -15,7 +15,6 @@ object DisambiguationApr {
 
   case class Config(
     and_inputDocsData: String = "workflows/pl.edu.icm.coansys-disambiguation-author-workflow/results/splitted/apr-no-sim",
-    out: File = new File("."),
     and_threshold: String = "-0.8",
     and_feature_info: String = "IntersectionPerMaxval#EX_DOC_AUTHS_SNAMES#1.0#1",
     and_aproximate_remember_sim: String = "false",
@@ -28,7 +27,7 @@ object DisambiguationApr {
   val parser = new scopt.OptionParser[Config]("disambiguationApr") {
     head("disambiguationApr", "1.x")
 
-    opt[String]('i', "input").action((x, c) =>
+    opt[String]('i', "and-inputDocsData").action((x, c) =>
       c.copy(and_inputDocsData = x)).text("and_inputDocsData")
 
     opt[String]('t', "and-threshold").action((x, c) =>
@@ -269,8 +268,8 @@ object DisambiguationApr {
           val cid = x.get(0)
           val t = tfac.newTuple
           t.append(x.get(0))
+          t.append(x.get(1))
 
-          //I thing simTriples are empty
           exhaustiveAND.exec(t).iterator.asInstanceOf[java.util.Iterator[Tuple]].asScala.toList
 
         }
