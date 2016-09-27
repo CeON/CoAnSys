@@ -2,7 +2,7 @@
 <workflow-app name="${project}-${subproject}" xmlns="uri:oozie:workflow:0.4">
 
 	<parameters>
-		<parameters>
+		
             <!-- spark parameters -->
         <property>
             <name>DFS_SOCKET_CLIENT_TIMEOUT</name>
@@ -48,7 +48,7 @@
             <name>SPARK_ADDITIONAL_OPTS</name>
             <value> </value>
         </property>
-    </parameters>
+    
     <!-- Properties associated with cluster parameters -->
 		<property>
 			<name>and_parallel</name>
