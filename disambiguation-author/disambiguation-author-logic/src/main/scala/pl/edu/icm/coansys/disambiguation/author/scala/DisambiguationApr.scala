@@ -218,7 +218,7 @@ object DisambiguationApr {
     val eexh = e1.filter(x => {
       val s = x.get(0).asInstanceOf[org.apache.pig.data.DataBag].size
       s > 2 && s <= and_exhaustive_limit
-    })
+    }).repartition(sc.defaultParallelism*3)
     val ebig = e1.filter(x => { x.get(0).asInstanceOf[org.apache.pig.data.DataBag].size > and_exhaustive_limit })
 
     //
@@ -281,14 +281,53 @@ object DisambiguationApr {
     //-- H: {cId: chararray,uuid: chararray}
     //H = foreach G3 generate flatten( cIds ) as cId, uuid;
     //
-    
-    
+
+    val g1 = eexh.flatMap {
+      x =>
+        {
+          val exhaustiveAND = new pl.edu.icm.coansys.disambiguation.author.pig.ExhaustiveAND(
+            and_threshold,
+            and_feature_info,
+            and_use_extractor_id_instead_name,
+            and_statistics
+          )
+          val tfac = TupleFactory.getInstance
+          val cid = x.get(0)
+          val t = tfac.newTuple
+          t.append(x.get(0))
+
+          //I thing simTriples are empty
+          exhaustiveAND.exec(t).iterator.asInstanceOf[java.util.Iterator[Tuple]].asScala.toList
+
+        }
+    }
+    val g3 = g1.filter(x => {
+      x.get(0) != null && x.get(1).asInstanceOf[org.apache.pig.data.DataBag].size > 0
+    })
+    val h = g3.flatMap {
+      x =>
+        {
+          val uuid = x.get(0)
+          val tfac = TupleFactory.getInstance
+          x.get(1).asInstanceOf[org.apache.pig.data.DataBag].iterator.asScala.map {
+            z =>
+              {
+                val t = tfac.newTuple
+                t.append(z)
+                t.append(uuid)
+                t
+              }
+          }
+        }
+    }
+
     //-- -----------------------------------------------------
     //-- STORING RESULTS
     //-- -----------------------------------------------------
     //
     //R = union SINGLE, BIG, H;
     //store R into '$and_outputContribs';
-
+    val r=single.union(big).union(h)
+    
   }
 }
