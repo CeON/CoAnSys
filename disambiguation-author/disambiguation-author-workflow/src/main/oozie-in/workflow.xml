@@ -396,7 +396,7 @@
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
             <prepare>
-               <delete path="${outputSeqFile}"/>
+               <delete path="${and_outputContribs}/apr-no-sim"/>
             </prepare>
            <master>yarn-cluster</master>
             <name>do_and_3</name>
