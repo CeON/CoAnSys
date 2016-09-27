@@ -22,9 +22,7 @@ object DisambiguationApr {
     and_use_extractor_id_instead_name: String = "true",
     and_statistics: String = "false",
     and_exhaustive_limit: Int = 6627,
-    libName: String = "", maxCount: Int = -1, verbose: Boolean = false, debug: Boolean = false,
-    mode: String = "", files: Seq[File] = Seq(), keepalive: Boolean = false,
-    jars: Seq[File] = Seq(), kwargs: Map[String, String] = Map()
+    and_outputContribs:String= "workflows/pl.edu.icm.coansys-disambiguation-author-workflow/results/outputContribs/apr-no-sim"
   )
 
   val parser = new scopt.OptionParser[Config]("disambiguationApr") {
@@ -46,86 +44,62 @@ object DisambiguationApr {
     opt[String]('l', "and-exhaustive-limit").action((x, c) =>
       c.copy(and_statistics = x)).text("and_exhaustive_limit")
 
-    opt[File]('o', "out").required().valueName("<file>").
-      action((x, c) => c.copy(out = x)).
-      text("out is a required file property")
+    opt[String]('o', "out").action((x, c) => c.copy(and_outputContribs = x)).
+      text("and_outputContribs")
 
-    opt[(String, Int)]("max").action({
-      case ((k, v), c) => c.copy(libName = k, maxCount = v)
-    }).
-      validate(x =>
-        if (x._2 > 0) success
-        else failure("Value <max> must be >0")).
-      keyValueName("<libname>", "<max>").
-      text("maximum count for <libname>")
+    
 
-    opt[Seq[File]]('j', "jars").valueName("<jar1>,<jar2>...").action((x, c) =>
-      c.copy(jars = x)).text("jars to include")
+    help( "help").text("prints this usage text")
 
-    opt[Map[String, String]]("kwargs").valueName("k1=v1,k2=v2...").action((x, c) =>
-      c.copy(kwargs = x)).text("other arguments")
-
-    opt[Unit]("verbose").action((_, c) =>
-      c.copy(verbose = true)).text("verbose is a flag")
-
-    opt[Unit]("debug").hidden().action((_, c) =>
-      c.copy(debug = true)).text("this option is hidden in the usage text")
-
-    help("help").text("prints this usage text")
-
-    arg[File]("<file>...").unbounded().optional().action((x, c) =>
-      c.copy(files = c.files :+ x)).text("optional unbounded args")
-
-    note("some notes.".newline)
-
-    cmd("update").action((_, c) => c.copy(mode = "update")).
-      text("update is a command.").
-      children(
-        opt[Unit]("not-keepalive").abbr("nk").action((_, c) =>
-          c.copy(keepalive = false)).text("disable keepalive"),
-        opt[Boolean]("xyz").action((x, c) =>
-          c.copy(xyz = x)).text("xyz is a boolean property"),
-        opt[Unit]("debug-update").hidden().action((_, c) =>
-          c.copy(debug = true)).text("this option is hidden in the usage text"),
-        checkConfig(c =>
-          if (c.keepalive && c.xyz) failure("xyz cannot keep alive")
-          else success)
-      )
+    
   }
 
   /**
    * @param args the command line arguments
    */
   def main(args: Array[String]): Unit = {
-    // parser.parse returns Option[C]
+    // %DEFAULT and_inputDocsData workflows/pl.edu.icm.coansys-disambiguation-author-workflow/results/splitted/apr-no-sim
+    var and_inputDocsData = "workflows/pl.edu.icm.coansys-disambiguation-author-workflow/results/splitted/apr-no-sim"
+    // %DEFAULT and_threshold '-0.8'
+    var and_threshold = "-0.8"
+    // %DEFAULT and_feature_info 'IntersectionPerMaxval#EX_DOC_AUTHS_SNAMES#1.0#1'
+    var and_feature_info = "IntersectionPerMaxval#EX_DOC_AUTHS_SNAMES#1.0#1"
+
+    // %DEFAULT and_aproximate_remember_sim 'false'
+    var and_aproximate_remember_sim = "false"
+    // %DEFAULT and_use_extractor_id_instead_name 'true'
+
+    var and_use_extractor_id_instead_name = "true"
+    // %DEFAULT and_statistics 'false'
+
+    var and_statistics = "false"
+    // %DEFAULT and_time ''
+    // %DEFAULT and_outputContribs disambiguation/outputContribs$and_time
+    // 
+    // 
+    var and_outputContribs="workflows/pl.edu.icm.coansys-disambiguation-author-workflow/results/outputContribs/apr-no-sim"
+    // %DEFAULT and_failedContribs disambiguation/failedContribs$and_time
+    // %DEFAULT and_exhaustive_limit 6627
+    var and_exhaustive_limit = 6627
+    
+   // parser.parse returns Option[C]
     parser.parse(args, Config()) match {
       case Some(config) =>
       // do stuff
-
+        and_inputDocsData=config.and_inputDocsData
+        and_threshold=config.and_threshold
+        and_feature_info=config.and_feature_info
+        and_aproximate_remember_sim=config.and_aproximate_remember_sim
+        and_use_extractor_id_instead_name=config.and_use_extractor_id_instead_name
+        and_statistics=config.and_statistics
+        and_outputContribs=config.and_outputContribs
+        and_exhaustive_limit=config.and_exhaustive_limit
       case None =>
       // arguments are bad, error message will have been displayed
+      return
     }
 
-    // %DEFAULT and_inputDocsData workflows/pl.edu.icm.coansys-disambiguation-author-workflow/results/splitted/apr-no-sim
-    def and_inputDocsData = "workflows/pl.edu.icm.coansys-disambiguation-author-workflow/results/splitted/apr-no-sim"
-    // %DEFAULT and_threshold '-0.8'
-    def and_threshold = "-0.8"
-    // %DEFAULT and_feature_info 'IntersectionPerMaxval#EX_DOC_AUTHS_SNAMES#1.0#1'
-    def and_feature_info = "IntersectionPerMaxval#EX_DOC_AUTHS_SNAMES#1.0#1"
-
-    // %DEFAULT and_aproximate_remember_sim 'false'
-    def and_aproximate_remember_sim = "false"
-    // %DEFAULT and_use_extractor_id_instead_name 'true'
-
-    def and_use_extractor_id_instead_name = "true"
-    // %DEFAULT and_statistics 'false'
-
-    def and_statistics = "false"
-    // %DEFAULT and_time ''
-    // %DEFAULT and_outputContribs disambiguation/outputContribs$and_time
-    // %DEFAULT and_failedContribs disambiguation/failedContribs$and_time
-    // %DEFAULT and_exhaustive_limit 6627
-    def and_exhaustive_limit = 6627
+   
     // DEFINE exhaustiveAND pl.edu.icm.coansys.disambiguation.author.pig.ExhaustiveAND('$and_threshold','$and_feature_info','$and_use_extractor_id_instead_name','$and_statistics');
     //DEFINE aproximateAND pl.edu.icm.coansys.disambiguation.author.pig.AproximateAND_BFS('$and_threshold', '$and_feature_info','$and_aproximate_remember_sim','$and_use_extractor_id_instead_name','$and_statistics');
     //DEFINE GenUUID pl.edu.icm.coansys.disambiguation.author.pig.GenUUID();
@@ -328,6 +302,10 @@ object DisambiguationApr {
     //R = union SINGLE, BIG, H;
     //store R into '$and_outputContribs';
     val r=single.union(big).union(h)
-    
+    r.map{
+      x=> {
+        x.get(0)+"\t"+x.get(1)
+      }
+    }.saveAsTextFile(and_outputContribs)
   }
 }
