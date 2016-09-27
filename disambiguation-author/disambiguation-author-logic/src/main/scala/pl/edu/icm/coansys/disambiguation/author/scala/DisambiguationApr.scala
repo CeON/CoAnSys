@@ -1,14 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 package pl.edu.icm.coansys.disambiguation.author.scala
 import java.io.File
 import org.apache.hadoop.io.BytesWritable
 import org.apache.pig.builtin.TOBAG
-import org.apache.pig.data.DefaultDataBag
+
 import org.apache.pig.data.Tuple
 import org.apache.pig.data.TupleFactory
 import org.apache.spark.SparkConf
@@ -262,6 +257,20 @@ object DisambiguationApr {
     //SINGLE = foreach F generate flatten( cIds ) as cId, uuid as uuid;
     //
 
+    val single = esingle.map {
+      x =>
+        {
+          val ci = x.get { 0 }
+          val genuuid = new GenUUID
+          val tfac = TupleFactory.getInstance
+          val cid = x.get(0)
+          val t = tfac.newTuple
+          t.append(cid)
+          t.append(genuuid.exec(tfac.newTuple(new TOBAG().exec(tfac.newTuple(cid)))))
+          t
+        }
+    }
+
     //-- -----------------------------------------------------
     //-- CLUSTERS FOR EXHAUSTIVE
     //-- -----------------------------------------------------
@@ -272,6 +281,8 @@ object DisambiguationApr {
     //-- H: {cId: chararray,uuid: chararray}
     //H = foreach G3 generate flatten( cIds ) as cId, uuid;
     //
+    
+    
     //-- -----------------------------------------------------
     //-- STORING RESULTS
     //-- -----------------------------------------------------
