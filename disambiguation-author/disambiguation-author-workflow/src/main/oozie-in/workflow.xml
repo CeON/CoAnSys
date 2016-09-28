@@ -409,9 +409,9 @@
 			<arg>--and-exhaustive-limit=${and_exhaustive_limit}</arg>
 <!--			<param>and_failedContribs=${and_failedContribs}</param>-->
 			<!--UDF config -->
-			<arg>--and_feature_info=${and_feature_info}</arg>
-			<arg>--and_statistics=${and_statistics}</arg>
-			<arg>--and_threshold=${and_threshold}</arg>
+			<arg>--and-feature-info=${and_feature_info}</arg>
+			<arg>--and-statistics=${and_statistics}</arg>
+			<arg>--and-threshold=${and_threshold}</arg>
         </spark>
         
         
