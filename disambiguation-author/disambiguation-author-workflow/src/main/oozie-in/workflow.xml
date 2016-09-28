@@ -404,10 +404,9 @@
             <jar>${comacWfPath}/lib/disambiguation-author-spark-jar-${project.version}.jar</jar>
             <spark-opts>--executor-memory ${SPARK_EXECUTOR_MEMORY} --driver-memory ${SPARK_DRIVER_MEMORY} --num-executors ${SPARK_NUM_EXECUTORS} ${SPARK_ADDITIONAL_OPTS}</spark-opts>
             <arg>--and-aproximate-remember-sim=false</arg>
-			<arg>--and-sample=1.0</arg>
 			<arg>--and-inputDocsData=${and_splitted_output_apr_no_sim}/*</arg>
 			<arg>--and-outputContribs=${and_outputContribs}/apr-no-sim</arg>
-			<arg>--and_exhaustive_limit=${and_exhaustive_limit}</arg>
+			<arg>--and-exhaustive-limit=${and_exhaustive_limit}</arg>
 <!--			<param>and_failedContribs=${and_failedContribs}</param>-->
 			<!--UDF config -->
 			<arg>--and_feature_info=${and_feature_info}</arg>
