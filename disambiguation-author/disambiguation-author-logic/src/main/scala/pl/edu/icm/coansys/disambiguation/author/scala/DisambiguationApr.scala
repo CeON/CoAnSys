@@ -38,12 +38,12 @@ object DisambiguationApr {
       c.copy(and_aproximate_remember_sim = x)).text("and_aproximate_remember_sim")
     opt[String]('e', "and-use-extractor-id-instead-name").action((x, c) =>
       c.copy(and_use_extractor_id_instead_name = x)).text("and_use_extractor_id_instead_name")
-    opt[String]('s', "and_statistics").action((x, c) =>
+    opt[String]('s', "and-statistics").action((x, c) =>
       c.copy(and_statistics = x)).text("and_statistics")
     opt[String]('l', "and-exhaustive-limit").action((x, c) =>
       c.copy(and_statistics = x)).text("and_exhaustive_limit")
 
-    opt[String]('o', "out").action((x, c) => c.copy(and_outputContribs = x)).
+    opt[String]('o', "and-outputContribs").action((x, c) => c.copy(and_outputContribs = x)).
       text("and_outputContribs")
 
     
