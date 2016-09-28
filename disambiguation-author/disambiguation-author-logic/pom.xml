@@ -175,7 +175,7 @@
         </dependency>
         <dependency>
             <groupId>com.github.scopt</groupId>
-            <artifactId>scopt_2.11</artifactId>
+            <artifactId>scopt_2.10</artifactId>
             <version>3.5.0</version>
         </dependency>
         <dependency>
