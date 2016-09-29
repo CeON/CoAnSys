@@ -196,10 +196,10 @@ object DisambiguationApr {
     //	ESINGLE if count <= 2,
     //	EEXH if ( count > 2 and count <= $and_exhaustive_limit ),
     //	EBIG if count > $and_exhaustive_limit;
-    val esingle = e1.filter(x => { x.get(0).asInstanceOf[org.apache.pig.data.DataBag].size <= 2 })
+    val esingle = e1.filter(x => { x.get(0).asInstanceOf[org.apache.pig.data.DataBag].size < 2 })
     val eexh = e1.filter(x => {
       val s = x.get(0).asInstanceOf[org.apache.pig.data.DataBag].size
-      s > 2 && s <= and_exhaustive_limit
+      s >= 2 && s <= and_exhaustive_limit
     }).repartition(sc.defaultParallelism*5)
     val ebig = e1.filter(x => { x.get(0).asInstanceOf[org.apache.pig.data.DataBag].size > and_exhaustive_limit })
 
@@ -242,17 +242,16 @@ object DisambiguationApr {
     val single = esingle.map {
       x =>
         {
-          val ci = x.get { 0 }
           val genuuid = new GenUUID
           val tfac = TupleFactory.getInstance
-          val cid = x.get(0)
+          val cid = x.get(0).asInstanceOf[org.apache.pig.data.DataBag].iterator.next.get(0)
           val t = tfac.newTuple
           t.append(cid)
           t.append(genuuid.exec(tfac.newTuple(new TOBAG().exec(tfac.newTuple(cid)))))
           t
         }
     }
-
+                                                                                                                    
     //-- -----------------------------------------------------
     //-- CLUSTERS FOR EXHAUSTIVE
     //-- -----------------------------------------------------
