@@ -72,7 +72,7 @@ public class EX_PERSON_ID extends DisambiguationExtractorAuthor {
 				if ( kv.getValue() == null || kv.getValue().isEmpty() ) {
 					continue;
 				}
-				t.append(kv.getValue());
+				t.append(normalizeExtracted(kv.getValue()));
 				db.add(t);
 				break;
 			}
