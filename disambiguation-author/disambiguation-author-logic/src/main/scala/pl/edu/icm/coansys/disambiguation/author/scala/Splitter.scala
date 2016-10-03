@@ -198,7 +198,7 @@ object Splitter {
       .flatMap[Tuple] {
       case (t: Text, bw: BytesWritable) =>
        {
-        val extractor= new EXTRACT_CONTRIBDATA_GIVENDATA(edgdParams)
+        val extractor= EXTRACT_CONTRIBDATA_GIVENDATA.get_EXTRACT_CONTRIBDATA_GIVENDATA(edgdParams)
         val t=TupleFactory.getInstance().newTuple;
         t.append(new DataByteArray(bw.copyBytes))
         val results: DataBag =extractor.exec(t)
