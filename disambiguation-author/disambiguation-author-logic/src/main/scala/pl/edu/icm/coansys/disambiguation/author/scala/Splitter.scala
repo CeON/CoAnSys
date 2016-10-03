@@ -408,7 +408,7 @@ def extractFirstTuple(tuple: Tuple): ContribInfoTuple = {
       tuple.get(0).asInstanceOf[String],
       tuple.get(1).asInstanceOf[String],
       tuple.get(2).asInstanceOf[Int],
-      tuple.get(3).asInstanceOf[Map[Object, Array[Object]]],
+      tuple.get(3).asInstanceOf[java.util.Map[Object, Array[Object]]].toMap,
       tuple.get(4).asInstanceOf[String])
   }
   
