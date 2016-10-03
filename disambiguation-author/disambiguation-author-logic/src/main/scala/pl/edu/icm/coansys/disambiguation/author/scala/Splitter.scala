@@ -8,7 +8,7 @@ package pl.edu.icm.coansys.disambiguation.author.scala
 
 import java.util.Collections
 import org.apache.hadoop.io.{BytesWritable, Text}
-import org.apache.pig.data.{DataBag, Tuple, TupleFactory}
+import org.apache.pig.data.{DataBag, Tuple, TupleFactory, DataByteArray}
 import org.apache.spark.SparkConf
 import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
@@ -196,7 +196,9 @@ object Splitter {
         val edgdParams = List("-featureinfo", and_feature_info,
           "-lang", and_lang, "-skipEmptyFeatures", and_skip_empty_features,
           "-useIdsForExtractors", and_use_extractor_id_instead_name).mkString(" ")
-        val results: DataBag = new EXTRACT_CONTRIBDATA_GIVENDATA(edgdParams).exec(TupleFactory.getInstance().newTuple(List(t, bw)))
+        val t=TupleFactory.getInstance().newTuple;
+        t.append(new DataByteArray(bw.copyBytes))
+        val results: DataBag = new EXTRACT_CONTRIBDATA_GIVENDATA(edgdParams).exec(t)
         results.iterator()
     }
       .map(extractFirstTuple(_))
