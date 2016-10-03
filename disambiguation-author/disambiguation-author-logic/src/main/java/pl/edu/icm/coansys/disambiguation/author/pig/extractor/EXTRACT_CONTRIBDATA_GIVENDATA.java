@@ -42,6 +42,7 @@ import org.slf4j.LoggerFactory;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
+import java.util.concurrent.ConcurrentHashMap;
 
 import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.DisambiguationExtractorFactory;
@@ -158,6 +159,18 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 		setDisambiguationExtractor(featureinfo);
 	}
 
+    
+    static ConcurrentHashMap<String,EXTRACT_CONTRIBDATA_GIVENDATA> extractors=new ConcurrentHashMap<>();
+    
+    public static synchronized EXTRACT_CONTRIBDATA_GIVENDATA get_EXTRACT_CONTRIBDATA_GIVENDATA(String params) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+        if (!extractors.contains(params)) {
+            extractors.put(params, new EXTRACT_CONTRIBDATA_GIVENDATA(params));
+        }
+        return extractors.get(params);
+    }
+    
+    
+    
 	public Map<String, Object> debugComponents() {
 		HashMap<String, Object> ret = new HashMap<String, Object>();
 		if (language != null) {
