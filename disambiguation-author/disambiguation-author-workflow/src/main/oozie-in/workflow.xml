@@ -313,7 +313,7 @@
 			<arg>--and-inputDocsData=${and_inputDocsData}</arg>
 			<arg>--and-splitted-output-one=${and_splitted_output_one}</arg>
 			<arg>--and-splitted-output-exh=${and_splitted_output_exh}</arg>
-			<arg>--and-splitted-output-apr_sim=${and_splitted_output_apr_sim}
+			<arg>--and-splitted-output-apr-sim=${and_splitted_output_apr_sim}
 			</arg>
 			<arg>--and-splitted-output-apr-no-sim=${and_splitted_output_apr_no_sim}
 			</arg>
