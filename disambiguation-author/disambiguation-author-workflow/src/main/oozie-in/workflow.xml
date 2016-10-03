@@ -303,7 +303,7 @@
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
            <master>yarn-cluster</master>
-            <name>do_and_3</name>
+            <name>split</name>
             <class>pl.edu.icm.coansys.disambiguation.author.scala.Splitter</class>
             <jar>${comacWfPath}/lib/disambiguation-author-spark-jar-${project.version}.jar</jar>
             <spark-opts>--executor-memory ${SPARK_EXECUTOR_MEMORY} --driver-memory ${SPARK_DRIVER_MEMORY} --num-executors ${SPARK_NUM_EXECUTORS} ${SPARK_ADDITIONAL_OPTS}</spark-opts>
