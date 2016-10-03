@@ -228,9 +228,9 @@ object Splitter {
 //
   // divide contribInfoRdd into Correct/Uncorrect classes
     //CORRECT
-    val correctCotrinbInfoRdd = b2.filter(_.surnameInt!=null)
+    val correctCotrinbInfoRdd = b2.filter(_.surnameStr!=null)
     //UNCORRECT
-    val noSurName = b2.filter(_.surnameInt==null)
+    val noSurName = b2.filter(_.surnameStr==null)
 
 
 
