@@ -299,31 +299,37 @@
 	</decision>
 
 	<action name="split">
-		<pig>
-			<script>splitter.pig</script>
-			<!--pig parameters: data paths, cluster config, etc -->
-			<param>and_sample=${and_sample}</param>
-			<param>and_inputDocsData=${and_inputDocsData}</param>
-			<param>and_splitted_output_one=${and_splitted_output_one}</param>
-			<param>and_splitted_output_exh=${and_splitted_output_exh}</param>
-			<param>and_splitted_output_apr_sim=${and_splitted_output_apr_sim}
-			</param>
-			<param>and_splitted_output_apr_no_sim=${and_splitted_output_apr_no_sim}
-			</param>
-			<param>and_cid_dockey=${and_cid_dockey}</param>
-			<param>and_cid_sname=${and_cid_sname}</param>
-			<param>and_aproximate_sim_limit=${and_aproximate_sim_limit}</param>
-			<param>and_exhaustive_limit=${and_exhaustive_limit}</param>
+        <spark xmlns="uri:oozie:spark-action:0.1">
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+           <master>yarn-cluster</master>
+            <name>do_and_3</name>
+            <class>pl.edu.icm.coansys.disambiguation.author.scala.Splitter</class>
+            <jar>${comacWfPath}/lib/disambiguation-author-spark-jar-${project.version}.jar</jar>
+            <spark-opts>--executor-memory ${SPARK_EXECUTOR_MEMORY} --driver-memory ${SPARK_DRIVER_MEMORY} --num-executors ${SPARK_NUM_EXECUTORS} ${SPARK_ADDITIONAL_OPTS}</spark-opts>
+            
+            
+            <arg>--and-sample=${and_sample}</arg>
+			<arg>--and-inputDocsData=${and_inputDocsData}</arg>
+			<arg>--and-splitted-output-one=${and_splitted_output_one}</arg>
+			<arg>--and-splitted-output-exh=${and_splitted_output_exh}</arg>
+			<arg>--and-splitted-output-apr_sim=${and_splitted_output_apr_sim}
+			</arg>
+			<arg>--and-splitted-output-apr-no-sim=${and_splitted_output_apr_no_sim}
+			</arg>
+			<arg>--and-cid-dockey=${and_cid_dockey}</arg>
+			<arg>--and-cid-sname=${and_cid_sname}</arg>
+			<arg>--and-aproximate-sim-limit=${and_aproximate_sim_limit}</arg>
+			<arg>--and-exhaustive-limit=${and_exhaustive_limit}</arg>
 			<!-- UDF config -->
-			<param>and_skip_empty_features=${and_skip_empty_features}</param>
-			<param>and_feature_info=${and_feature_info}</param>
-			<param>and_lang=${and_lang}</param>
-			<param>and_statistics=${and_statistics}</param>
-			<param>and_threshold=${and_threshold}</param>
-			<!--commons -->
-			<param>and_scheduler=${and_pool}</param>
-			<param>and_parallel_param=${and_parallel}</param>
-		</pig>
+			<arg>--and-skip-empty-features=${and_skip_empty_features}</arg>
+			<arg>--and-feature-info=${and_feature_info}</arg>
+			<arg>--and-lang=${and_lang}</arg>
+			<arg>--and-statistics=${and_statistics}</arg>
+			<arg>--and-threshold=${and_threshold}</arg>
+			
+        </spark>
+		
 		<ok to="do_and_0" />
 		<error to="kill" />
 	</action>
