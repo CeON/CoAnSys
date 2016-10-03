@@ -182,7 +182,7 @@ object Splitter {
     val sc = new SparkContext(conf)
 
     //A1 = LOAD '$and_inputDocsData' USING pl.edu.icm.coansys.commons.pig.udf.RichSequenceFileLoader('org.apache.hadoop.io.Text', 'org.apache.hadoop.io.BytesWritable') as (key:chararray, value:bytearray);
-    val a1= sc.sequenceFile[Text, BytesWritable](and_inputDocsData);
+    val a1= sc.sequenceFile[Text, BytesWritable](and_inputDocsData).repartition(sc.defaultParallelism*5);
     
    // A2 = sample A1 $and_sample;
    val a2=if (and_sample==1.0) a1 else a1.sample(false, and_sample, (new Random()).nextLong())
@@ -190,15 +190,18 @@ object Splitter {
     
    //B1 = foreach A2 generate flatten(snameDocumentMetaExtractor($1)) as (dockey:chararray, cId:chararray, sname:int, metadata:map[{(int)}],str_sname:chararray);
 
+    val edgdParams = List("-featureinfo", and_feature_info,
+          "-lang", and_lang, "-skipEmptyFeatures", and_skip_empty_features,
+          "-useIdsForExtractors", and_use_extractor_id_instead_name).mkString(" ") 
+   
    val b1=a2
       .flatMap[Tuple] {
       case (t: Text, bw: BytesWritable) =>
-        val edgdParams = List("-featureinfo", and_feature_info,
-          "-lang", and_lang, "-skipEmptyFeatures", and_skip_empty_features,
-          "-useIdsForExtractors", and_use_extractor_id_instead_name).mkString(" ")
+       
+        val extractor= new EXTRACT_CONTRIBDATA_GIVENDATA(edgdParams)
         val t=TupleFactory.getInstance().newTuple;
         t.append(new DataByteArray(bw.copyBytes))
-        val results: DataBag = new EXTRACT_CONTRIBDATA_GIVENDATA(edgdParams).exec(t)
+        val results: DataBag =extractor.exec(t)
         results.iterator()
     }
       .map(extractFirstTuple(_))
@@ -208,7 +211,7 @@ object Splitter {
 //B2 =  FILTER B1 BY (dockey is not null);
   val b2=b1.filter(null != _.docKey)
     
-
+b2.cache
 
 //
 //B3 = FOREACH B2 generate dockey, cId, str_sname, sname;
@@ -310,7 +313,7 @@ val d = good.groupByKey.map{
        (s,li,li.size)
    }
 }
-
+d.cache
 
 //
 //split D into
