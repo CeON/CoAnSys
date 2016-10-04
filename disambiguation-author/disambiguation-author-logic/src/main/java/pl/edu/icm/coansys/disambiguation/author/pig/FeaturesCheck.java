@@ -19,6 +19,7 @@
 package pl.edu.icm.coansys.disambiguation.author.pig;
 
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.hadoop.mapreduce.Counter;
 import org.apache.pig.backend.executionengine.ExecException;
@@ -61,7 +62,17 @@ public class FeaturesCheck extends AND<Boolean> {
 		super(logger, threshold, featureDescription, useIdsForExtractors);
 		this.isStatistics = Boolean.parseBoolean(printStatistics);
 	}
-
+     static ConcurrentHashMap<String,FeaturesCheck> extractors=new ConcurrentHashMap<>();
+    
+    public static synchronized FeaturesCheck getFeaturesCheck(String  threshold, String featureDescription,
+			String useIdsForExtractors, String printStatistics) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+        String key=threshold+featureDescription+useIdsForExtractors+printStatistics;
+        if (!extractors.containsKey(key)) {
+            extractors.put(key, new FeaturesCheck(threshold, featureDescription, useIdsForExtractors, printStatistics));
+        }
+        return extractors.get(key);
+    }
+    
 	@Override
 	public Boolean exec(Tuple input) {
 		// instance of reporter may change in each exec(...) run

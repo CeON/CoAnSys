@@ -265,7 +265,7 @@ b2.cache
 
  val fc=correctCotrinbInfoRdd.map ( x => {
        val checker=
-         new pl.edu.icm.coansys.disambiguation.author.pig.FeaturesCheck(and_threshold,and_feature_info,and_use_extractor_id_instead_name,and_statistics)
+         pl.edu.icm.coansys.disambiguation.author.pig.FeaturesCheck.getFeaturesCheck(and_threshold,and_feature_info,and_use_extractor_id_instead_name,and_statistics)
          val tfac = TupleFactory.getInstance
          val tempT = tfac.newTuple
          tempT.append(x.contribId)
