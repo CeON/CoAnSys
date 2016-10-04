@@ -270,7 +270,7 @@ b2.cache
          val tempT = tfac.newTuple
          tempT.append(x.contribId)
          tempT.append(x.surnameInt)
-         tempT.append(x.metadata)
+         tempT.append(mapAsJavaMap(x.metadata))
          (x,checker.exec(tempT))
          
       })
