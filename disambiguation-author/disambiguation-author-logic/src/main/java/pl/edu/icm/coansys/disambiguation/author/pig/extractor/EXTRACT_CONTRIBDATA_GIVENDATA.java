@@ -163,7 +163,7 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
     static ConcurrentHashMap<String,EXTRACT_CONTRIBDATA_GIVENDATA> extractors=new ConcurrentHashMap<>();
     
     public static synchronized EXTRACT_CONTRIBDATA_GIVENDATA get_EXTRACT_CONTRIBDATA_GIVENDATA(String params) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-        if (!extractors.contains(params)) {
+        if (!extractors.containsKey(params)) {
             extractors.put(params, new EXTRACT_CONTRIBDATA_GIVENDATA(params));
         }
         return extractors.get(params);
