@@ -412,14 +412,14 @@ def extractFirstTuple(tuple: Tuple): ContribInfoTuple = {
       tuple.get(0).asInstanceOf[String],
       tuple.get(1).asInstanceOf[String],
       tuple.get(2).asInstanceOf[Int],
-      tuple.get(3).asInstanceOf[java.util.Map[Object, Array[Object]]].toMap,
+      tuple.get(3).asInstanceOf[java.util.Map[Object, DataBag]].toMap,
       tuple.get(4).asInstanceOf[String])
   }
   
   case class ContribInfoTuple(docKey: String,
                               contribId: String,
                               surnameInt: Int,
-                              metadata: Map[Object, Array[Object]],
+                              metadata: Map[Object, DataBag],
                               surnameStr: String)
 
   
