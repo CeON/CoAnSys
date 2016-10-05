@@ -317,6 +317,7 @@
 			</arg>
 			<arg>--and-splitted-output-apr-no-sim=${and_splitted_output_apr_no_sim}
 			</arg>
+            <arg>--and-temp-dir=${and_temp_dir}</arg>
 			<arg>--and-cid-dockey=${and_cid_dockey}</arg>
 			<arg>--and-cid-sname=${and_cid_sname}</arg>
 			<arg>--and-aproximate-sim-limit=${and_aproximate_sim_limit}</arg>
