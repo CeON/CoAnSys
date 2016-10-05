@@ -96,7 +96,7 @@ object DisambiguationApr {
              z.substring(0, z.length-1)
           }  else {
             z
-          } }}.apply(and_feature_info))
+          } }}.apply(config.and_feature_info))
         and_aproximate_remember_sim=config.and_aproximate_remember_sim
         and_use_extractor_id_instead_name=config.and_use_extractor_id_instead_name
         and_statistics=config.and_statistics

@@ -163,7 +163,7 @@ object Splitter {
              z.substring(0, z.length-1)
           }  else {
             z
-          } }}.apply(and_feature_info))
+          } }}.apply(config.and_feature_info))
     and_lang = config.and_lang
     and_statistics = config.and_statistics
     and_threshold = config.and_threshold
