@@ -182,7 +182,7 @@ object Splitter {
     val sc = new SparkContext(conf)
 
     //A1 = LOAD '$and_inputDocsData' USING pl.edu.icm.coansys.commons.pig.udf.RichSequenceFileLoader('org.apache.hadoop.io.Text', 'org.apache.hadoop.io.BytesWritable') as (key:chararray, value:bytearray);
-    val a1= sc.sequenceFile[Text, BytesWritable](and_inputDocsData).repartition(sc.defaultParallelism*5);
+    val a1= sc.sequenceFile[Text, BytesWritable](and_inputDocsData)//.repartition(sc.defaultParallelism*5);
     
    // A2 = sample A1 $and_sample;
    val a2=if (and_sample==1.0) a1 else a1.sample(false, and_sample, (new Random()).nextLong())
