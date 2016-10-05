@@ -47,6 +47,7 @@ object Splitter {
     and_splitted_output_exh: String ="workflows/pl.edu.icm.coansys-disambiguation-author-workflow/results/splitted/apr-no-sim",
     and_splitted_output_apr_sim: String ="workflows/pl.edu.icm.coansys-disambiguation-author-workflow/results/splitted/apr-no-sim",
     and_splitted_output_apr_no_sim: String ="workflows/pl.edu.icm.coansys-disambiguation-author-workflow/results/splitted/apr-no-sim",
+    and_temp_dir: String ="workflows/pl.edu.icm.coansys-disambiguation-author-workflow/results/temp/",
     and_cid_dockey: String ="cid_dockey",
     and_cid_sname: String ="cid_sname",
     
@@ -79,7 +80,8 @@ object Splitter {
       c.copy(and_splitted_output_apr_sim = x)).text("and_splitted_output_apr_sim")
      opt[String]( "and-splitted-output-apr-no-sim").action((x, c) =>
       c.copy(and_splitted_output_apr_no_sim = x)).text("and_splitted_output_apr_no_sim")
-
+    opt[String]( "and-temp-dir").action((x, c) =>
+      c.copy(and_temp_dir = x)).text("and_temp_dir")
      opt[String]( "and-cid-dockey").action((x, c) =>
       c.copy(and_cid_dockey = x)).text("and_cid_dockey")
     opt[String]( "and-cid-sname").action((x, c) =>
@@ -119,6 +121,7 @@ object Splitter {
     var and_splitted_output_exh: String ="workflows/pl.edu.icm.coansys-disambiguation-author-workflow/results/splitted/apr-no-sim"
     var and_splitted_output_apr_sim: String ="workflows/pl.edu.icm.coansys-disambiguation-author-workflow/results/splitted/apr-no-sim"
     var and_splitted_output_apr_no_sim: String ="workflows/pl.edu.icm.coansys-disambiguation-author-workflow/results/splitted/apr-no-sim"
+    var and_temp_dir: String ="workflows/pl.edu.icm.coansys-disambiguation-author-workflow/results/temp/"
     var and_cid_dockey: String ="cid_dockey"
     var and_cid_sname: String ="cid_sname"
     
@@ -143,12 +146,13 @@ object Splitter {
     and_splitted_output_exh = config.and_splitted_output_exh
     and_splitted_output_apr_sim = config.and_splitted_output_apr_sim
     and_splitted_output_apr_no_sim = config.and_splitted_output_apr_no_sim
+    and_temp_dir=config.and_temp_dir
     and_cid_dockey = config.and_cid_dockey
     and_cid_sname = config.and_cid_sname
     
     and_aproximate_sim_limit = config.and_aproximate_sim_limit
     and_exhaustive_limit = config.and_exhaustive_limit
-     
+    
 //			<!-- UDF config -->
     and_skip_empty_features = config.and_skip_empty_features
     and_feature_info =  {(z:String) => { if (z.startsWith("\"")) {
@@ -182,7 +186,7 @@ object Splitter {
     val sc = new SparkContext(conf)
 
     //A1 = LOAD '$and_inputDocsData' USING pl.edu.icm.coansys.commons.pig.udf.RichSequenceFileLoader('org.apache.hadoop.io.Text', 'org.apache.hadoop.io.BytesWritable') as (key:chararray, value:bytearray);
-    val a1= sc.sequenceFile[Text, BytesWritable](and_inputDocsData)//.repartition(sc.defaultParallelism*5);
+    val a1= sc.sequenceFile[Text, BytesWritable](and_inputDocsData).repartition(sc.defaultParallelism*2);
     
    // A2 = sample A1 $and_sample;
    val a2=if (and_sample==1.0) a1 else a1.sample(false, and_sample, (new Random()).nextLong())
@@ -210,10 +214,12 @@ object Splitter {
     
 //-- debug data, for later results inspection
 //B2 =  FILTER B1 BY (dockey is not null);
-  val b2=b1.filter(null != _.docKey)
+  val b2t=b1.filter(null != _.docKey)
     
-b2.cache
+  b2t.saveAsObjectFile(and_temp_dir+"/splitted_1_temp")
 
+    
+  val b2=sc.objectFile[ContribInfoTuple](and_temp_dir+"/splitted_1_temp")
 //
 //B3 = FOREACH B2 generate dockey, cId, str_sname, sname;
 //STORE B3 INTO '$and_cid_sname'; 
@@ -332,14 +338,17 @@ val d1b=bad.map{
 //-- TODO: remove sname from datagroup. Then in UDFs as well..
 //D = foreach C generate group as sname, GOOD as datagroup, COUNT(GOOD) as count;
 //
-val d = good.groupByKey.map{
+val dt = good.groupByKey.map{
    case (s, it) => {
        val li=it.toList
        (s,li,li.size)
    }
 }
-d.cache
 
+dt.saveAsObjectFile(and_temp_dir+"/splitted_d_temp")
+
+    
+  val d=sc.objectFile[(Int,List[ContribInfoTuple],Int)](and_temp_dir+"/splitted_d_temp")
 //
 //split D into
 //        D1C if count == 1,
