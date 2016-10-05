@@ -397,7 +397,7 @@ def prepStrings(x:RDD[(Int,List[ContribInfoTuple],Int)]) :RDD[String] ={
         x.contribId+","+x.surnameInt+",["+
           (x.metadata.map{
              case (i,mapValIt) =>  {
-                 i+"#"+(mapValIt.mkString("{(", "),(", ")}"))
+                 i+"#"+(mapValIt.toList.mkString("{(", "),(", ")}"))
               }
           })+"]"
          })
