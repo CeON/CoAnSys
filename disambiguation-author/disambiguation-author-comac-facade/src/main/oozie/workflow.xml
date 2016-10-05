@@ -83,6 +83,11 @@
 
 		<!-- Additional out data paths -->
 		<property>
+			<name>and_temp_dir</name>
+			<value>${and_working_directory}/temp</value>
+			<description>Path for data used temporarly by jobs
+			</description>
+		</property><property>
 			<name>and_splitted_output</name>
 			<value>${and_working_directory}/splitted</value>
 			<description>Path for data with splitted groups of contributors
