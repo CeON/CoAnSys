@@ -197,7 +197,13 @@ object Splitter {
     val edgdParams = List("-featureinfo", and_feature_info,
           "-lang", and_lang, "-skipEmptyFeatures", and_skip_empty_features,
           "-useIdsForExtractors", and_use_extractor_id_instead_name).mkString(" ") 
-   
+  //DEFINE snameDocumentMetaExtractor pl.edu.icm.coansys.disambiguation.author.pig.extractor.
+  //EXTRACT_CONTRIBDATA_GIVENDATA
+  //('-featureinfo $and_feature_info 
+  //  -lang $and_lang 
+  //  -skipEmptyFeatures $and_skip_empty_features 
+  //  -useIdsForExtractors $and_use_extractor_id_instead_name');
+ 
    val b1=a2
       .flatMap[Tuple] {
       case (t: Text, bw: BytesWritable) =>
@@ -211,7 +217,7 @@ object Splitter {
     }
       .map(extractFirstTuple(_))
      
-    val debug_count_features=b1.map(x=>{
+    val debug_count_features=b1.filter(_.metadata.size>1).map(x=>{
       x.contribId+","+x.metadata.size
       }).saveAsTextFile(and_temp_dir+"/splitted_debug_1")
     
