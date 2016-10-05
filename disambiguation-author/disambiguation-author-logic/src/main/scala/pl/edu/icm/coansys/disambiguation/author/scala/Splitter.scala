@@ -357,13 +357,13 @@ dt.saveAsObjectFile(and_temp_dir+"/splitted_d_temp")
 //        D1000 if count > $and_aproximate_sim_limit;
 //        
 val d1c=d.filter{ case 
-  (s,li,c) => {c==1}}
+  (s,li,c) => {c==1}}.coalesce(sc.defaultParallelism*2)
 val d100=d.filter{ case 
-  (s,li,c) => {(c>1) && (c<=and_exhaustive_limit) }}
+  (s,li,c) => {(c>1) && (c<=and_exhaustive_limit) }}.coalesce(sc.defaultParallelism*2)
 val dx=d.filter{ case 
-  (s,li,c) => {(c>and_exhaustive_limit) && (c <= and_aproximate_sim_limit)}}
+  (s,li,c) => {(c>and_exhaustive_limit) && (c <= and_aproximate_sim_limit)}}.coalesce(sc.defaultParallelism*2)
 val d1000=d.filter{ case 
-  (s,li,c) => {c>and_aproximate_sim_limit}}
+  (s,li,c) => {c>and_aproximate_sim_limit}}.coalesce(sc.defaultParallelism*2)
     
 //              
 //              
