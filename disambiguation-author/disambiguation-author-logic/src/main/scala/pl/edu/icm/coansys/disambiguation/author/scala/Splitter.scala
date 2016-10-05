@@ -222,7 +222,31 @@ b2.cache
       t => t.docKey+"\t"+t.contribId+"\t"+t.surnameStr+"\t"+ t.surnameInt;
     }.saveAsTextFile(and_cid_sname)
 
-
+//
+//-- storing relation contributor id - document id, which we need in future during serialization
+//-- storing also external person ID for optional accuracy checking after basic AND workfloaw
+//-- note, that for optimization, external person ID might be under shorter name of EX_PERSON_ID feature, which is "8"
+//
+//B = foreach B2 generate dockey, cId, sname, metadata;
+//Q = foreach B generate cId, dockey, FLATTEN(((metadata#'EX_PERSON_ID' is not null) ? metadata#'EX_PERSON_ID' : metadata#'8')) as ex_person_id, sname;
+//store Q into '$and_cid_dockey';
+ val q=b2.map(x=> {
+     (x.contribId,x.docKey, if (x.metadata.get("EX_PERSON_ID")!=null)  x.metadata.get("EX_PERSON_ID") else x.metadata.get("8"),x.surnameInt)
+   }).map{
+     case (x,y,z,v) => {
+         if (z!=null) {
+           (x,y,z,v)
+         } else {
+           (x,y,"z",v)
+         }
+     }
+   }.map{
+     case (x,y,z,v) => {
+        x+"\t"+y+"\t"+z+"\t"+v
+         }
+      
+   }.saveAsTextFile(and_cid_dockey)
+   
 //B = foreach B2 generate dockey, cId, sname, metadata;
 //
 //-- check if sname exists
@@ -361,31 +385,7 @@ prepStrings(d1000) .saveAsTextFile(and_splitted_output_apr_sim)
 //
 prepStrings(dx) .saveAsTextFile(and_splitted_output_apr_no_sim)  
 
-//
-//-- storing relation contributor id - document id, which we need in future during serialization
-//-- storing also external person ID for optional accuracy checking after basic AND workfloaw
-//-- note, that for optimization, external person ID might be under shorter name of EX_PERSON_ID feature, which is "8"
-//
-//B = foreach B2 generate dockey, cId, sname, metadata;
-//Q = foreach B generate cId, dockey, FLATTEN(((metadata#'EX_PERSON_ID' is not null) ? metadata#'EX_PERSON_ID' : metadata#'8')) as ex_person_id, sname;
-//store Q into '$and_cid_dockey';
- val q=b2.map(x=> {
-     (x.contribId,x.docKey, if (x.metadata.get("EX_PERSON_ID")!=null)  x.metadata.get("EX_PERSON_ID") else x.metadata.get("8"),x.surnameInt)
-   }).map{
-     case (x,y,z,v) => {
-         if (z!=null) {
-           (x,y,z,v)
-         } else {
-           (x,y,"z",v)
-         }
-     }
-   }.map{
-     case (x,y,z,v) => {
-        x+"\t"+y+"\t"+z+"\t"+v
-         }
-      
-   }.saveAsTextFile(and_cid_dockey)
-   
+
     
     
   }
