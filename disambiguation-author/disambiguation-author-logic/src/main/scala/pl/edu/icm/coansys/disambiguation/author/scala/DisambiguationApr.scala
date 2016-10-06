@@ -159,6 +159,9 @@ object DisambiguationApr {
       val schema = org.apache.pig.impl.util.Utils.parseSchema(tupleSchema)
       val converter = new org.apache.pig.builtin.Utf8StorageConverter()
       val fieldSchema = new org.apache.pig.ResourceSchema.ResourceFieldSchema(schema.getField("a"))
+      if (!x.contains("[")) {
+        Console.err.println("Problematic string :"+x)
+      }
       converter.bytesToTuple(("(" + x.replace('\t', ',') + ")").getBytes("UTF-8"), fieldSchema)
 
     })
