@@ -356,44 +356,54 @@
 	</action>
 
 	<action name="do_and_1">
-		<pig>
-			<script>disambiguation_exh.pig</script>
-			<!--pig parameters: data paths, cluster config, etc -->
-			<param>and_sample=1.0</param>
-			<param>and_inputDocsData=${and_splitted_output_exh}/*</param>
-			<param>and_outputContribs=${and_outputContribs}/exh</param>
-			<param>mapredChildJavaOpts=${and_mapredChildJavaOpts_exh}</param>
+		<spark xmlns="uri:oozie:spark-action:0.1">
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <prepare>
+               <delete path="${and_outputContribs}/apr-sim"/>
+            </prepare>
+           <master>yarn-cluster</master>
+            <name>do_and_1</name>
+            <class>pl.edu.icm.coansys.disambiguation.author.scala.DisambiguationExh</class>
+            <jar>${comacWfPath}/lib/disambiguation-author-spark-jar-${project.version}.jar</jar>
+            <spark-opts>--executor-memory ${SPARK_EXECUTOR_MEMORY} --driver-memory ${SPARK_DRIVER_MEMORY} --num-executors ${SPARK_NUM_EXECUTORS} ${SPARK_ADDITIONAL_OPTS}</spark-opts>
+            <arg>--and-inputDocsData=${and_splitted_output_exh}/*</arg>
+            <arg>--and-outputContribs=${and_outputContribs}/exh</arg>
+			
+<!--			<param>and_sample=1.0</param>-->
 			<!--UDF config -->
-			<param>and_feature_info=${and_feature_info}</param>
-			<param>and_statistics=${and_statistics}</param>
-			<param>and_threshold=${and_threshold}</param>
-			<!--commons -->
-			<param>and_scheduler=${and_pool}</param>
-			<param>and_parallel_param=${and_parallel}</param>
+			<arg>--and-feature-info=${and_feature_info}</arg>
+			<arg>--and-statistics=${and_statistics}</arg>
+			<arg>--and-threshold=${and_threshold}</arg>
+			
 		</pig>
 		<ok to="do_and_2" />
 		<error to="kill" />
 	</action>
 
 	<action name="do_and_2">
-		<pig>
-			<script>disambiguation_apr.pig</script>
-			<!--pig parameters: data paths, cluster config, etc -->
-			<param>and_aproximate_remember_sim=true</param>
-			<param>and_sample=1.0</param>
-			<param>and_inputDocsData=${and_splitted_output_apr_sim}/*</param>
-			<param>and_outputContribs=${and_outputContribs}/apr-sim</param>
-			<param>mapredChildJavaOpts=${and_mapredChildJavaOpts_apr_sim}</param>
-			<param>and_exhaustive_limit=${and_exhaustive_limit}</param>
-			<param>and_failedContribs=${and_failedContribs}</param>
+		<spark xmlns="uri:oozie:spark-action:0.1">
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <prepare>
+               <delete path="${and_outputContribs}/apr-sim"/>
+            </prepare>
+           <master>yarn-cluster</master>
+            <name>do_and_2</name>
+            <class>pl.edu.icm.coansys.disambiguation.author.scala.DisambiguationApr</class>
+            <jar>${comacWfPath}/lib/disambiguation-author-spark-jar-${project.version}.jar</jar>
+            <spark-opts>--executor-memory ${SPARK_EXECUTOR_MEMORY} --driver-memory ${SPARK_DRIVER_MEMORY} --num-executors ${SPARK_NUM_EXECUTORS} ${SPARK_ADDITIONAL_OPTS}</spark-opts>
+            <arg>--and-aproximate-remember-sim=true</arg>
+            <arg>--and-inputDocsData=${and_splitted_output_apr_sim}/*</arg>
+            <arg>--and-outputContribs=${and_outputContribs}/apr-sim</arg>
+			<arg>--and-exhaustive-limit=${and_exhaustive_limit}</arg>
+<!--			<param>and_failedContribs=${and_failedContribs}</param>-->
 			<!--UDF config -->
-			<param>and_feature_info=${and_feature_info}</param>
-			<param>and_statistics=${and_statistics}</param>
-			<param>and_threshold=${and_threshold}</param>
+			<arg>--and-feature-info=${and_feature_info}</arg>
+			<arg>--and-statistics=${and_statistics}</arg>
+			<arg>--and-threshold=${and_threshold}</arg>
 			<!--commons -->
-			<param>and_scheduler=${and_pool}</param>
-			<param>and_parallel_param=${and_parallel}</param>
-		</pig>
+        </spark>
 		<ok to="do_and_3" />
 		<error to="kill" />
 	</action>
