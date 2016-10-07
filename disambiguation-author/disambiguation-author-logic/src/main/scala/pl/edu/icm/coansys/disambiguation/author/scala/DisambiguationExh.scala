@@ -81,7 +81,16 @@ object DisambiguationExh {
       // do stuff
         and_inputDocsData=config.and_inputDocsData
         and_threshold=config.and_threshold
-        and_feature_info=config.and_feature_info
+        and_feature_info= 
+         {(z:String) => { if (z.startsWith("\"")) {
+             z.substring(1)
+          }  else {
+            z
+          } }}.apply({(z:String) => { if (z.endsWith("\"")) {
+             z.substring(0, z.length-1)
+          }  else {
+            z
+          } }}.apply(config.and_feature_info))
         and_use_extractor_id_instead_name=config.and_use_extractor_id_instead_name
         and_statistics=config.and_statistics
         and_outputContribs=config.and_outputContribs
