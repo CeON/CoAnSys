@@ -376,7 +376,7 @@
 			<arg>--and-statistics=${and_statistics}</arg>
 			<arg>--and-threshold=${and_threshold}</arg>
 			
-		</pig>
+        </spark>
 		<ok to="do_and_2" />
 		<error to="kill" />
 	</action>
