@@ -251,7 +251,7 @@ object Splitter {
    })
  q.flatMap{
      case (x,y,z,v) => {
-         if (z==null)  {
+         if (z==null || z.isEmpty)  {
            List((x,y,"",v))
          } else {
            val db=z.get
