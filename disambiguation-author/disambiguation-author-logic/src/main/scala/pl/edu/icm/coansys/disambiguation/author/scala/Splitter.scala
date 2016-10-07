@@ -246,14 +246,21 @@ object Splitter {
 //B = foreach B2 generate dockey, cId, sname, metadata;
 //Q = foreach B generate cId, dockey, FLATTEN(((metadata#'EX_PERSON_ID' is not null) ? metadata#'EX_PERSON_ID' : metadata#'8')) as ex_person_id, sname;
 //store Q into '$and_cid_dockey';
- val q=b2.map(x=> {
+ val q = b2.map(x=> {
      (x.contribId,x.docKey, if (x.metadata.get("EX_PERSON_ID")!=null)  x.metadata.get("EX_PERSON_ID") else x.metadata.get("8"),x.surnameInt)
-   }).map{
+   })
+ q.flatMap{
      case (x,y,z,v) => {
-         if (z!=null) {
-           (x,y,z,v)
+         if (z==null)  {
+           List((x,y,"",v))
          } else {
-           (x,y,"z",v)
+           val db=z.get
+           if (db.isEmpty) {
+             List((x,y,"",v))
+           } else {
+             db.iterator.flatMap(t=>{t.iterator.map(n=>(x,y,n.toString(),v))})
+           }
+           
          }
      }
    }.map{
