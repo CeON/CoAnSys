@@ -21,6 +21,8 @@ package pl.edu.icm.coansys.disambiguation.author.pig;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.hadoop.mapreduce.Counter;
 import org.apache.pig.EvalFunc;
@@ -47,6 +49,9 @@ public abstract class AND<T> extends EvalFunc<T> {
 		return threshold;
 	}
 
+    static DisambiguationExtractorFactory staticDisambigFactory=null;
+   
+    
 	// benchmark staff
 	public AND(org.slf4j.Logger logger, String threshold,
 			String featureDescription, String useIdsForExtractorsStr)
@@ -61,7 +66,13 @@ public abstract class AND<T> extends EvalFunc<T> {
 		List<FeatureInfo> FIFinall = new LinkedList<FeatureInfo>();
 		List<PigDisambiguator> FeaturesFinall = new LinkedList<PigDisambiguator>();
 
-		DisambiguationExtractorFactory extrFactory = new DisambiguationExtractorFactory();
+        synchronized (this.getClass()) {
+            if (staticDisambigFactory==null) {
+                staticDisambigFactory=new DisambiguationExtractorFactory();
+            }
+        }
+        
+		DisambiguationExtractorFactory extrFactory = staticDisambigFactory;
 		DisambiguatorFactory ff = new DisambiguatorFactory();
 		Disambiguator d;
 
