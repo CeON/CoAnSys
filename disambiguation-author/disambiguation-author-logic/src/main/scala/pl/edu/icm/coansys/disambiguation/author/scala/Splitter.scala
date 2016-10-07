@@ -217,9 +217,6 @@ object Splitter {
     }
       .map(extractFirstTuple(_))
      
-    val debug_count_features=b1.filter(_.metadata.size>1).map(x=>{
-      x.contribId+","+x.metadata.size
-      }).saveAsTextFile(and_temp_dir+"/splitted_debug_1")
     
     
 //-- debug data, for later results inspection
