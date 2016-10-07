@@ -422,7 +422,7 @@ def prepStrings(x:RDD[(Int,List[ContribInfoTuple],Int)]) :RDD[String] ={
               }
           }).mkString(","))+"]"
          })
-       .mkString("{", "},{", "}")+"\t"+c
+       .mkString("{(", "),(", ")}")+"\t"+c
      } 
  }
 }  
