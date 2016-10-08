@@ -313,7 +313,7 @@ object Splitter {
          val tfac = TupleFactory.getInstance
          val tempT = tfac.newTuple
          tempT.append(x.contribId)
-         tempT.append(if (x.surnameNotNull) x.surnameInt else null)
+         tempT.append(if (x.surnameNotNull) x.surnameInt else "")
          tempT.append(mapAsJavaMap(x.metadata))
          (x,checker.exec(tempT))
          
