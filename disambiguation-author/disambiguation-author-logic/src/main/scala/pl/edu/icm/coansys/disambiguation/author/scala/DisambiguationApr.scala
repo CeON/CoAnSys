@@ -176,7 +176,7 @@ object DisambiguationApr {
     val d = tuples.filter(z =>
       {
         z.get(1).asInstanceOf[org.apache.pig.data.DataBag].size > 0
-      })
+      }).repartition(sc.defaultParallelism*5)
     //
     //-- -----------------------------------------------------
     //-- BIG GRUPS OF CONTRIBUTORS 
@@ -222,10 +222,10 @@ object DisambiguationApr {
     //
     val big = ebig.flatMap(x => {
       x.get(0).asInstanceOf[org.apache.pig.data.DataBag].iterator.asScala
-    }).map(x => {
+    }).map(y => {
       val genuuid = new GenUUID
       val tfac = TupleFactory.getInstance
-      val cid = x.get(0)
+      val cid = y.get(0)
       val t = tfac.newTuple
       t.append(cid)
       t.append(genuuid.exec(tfac.newTuple(new TOBAG().exec(tfac.newTuple(cid)))))

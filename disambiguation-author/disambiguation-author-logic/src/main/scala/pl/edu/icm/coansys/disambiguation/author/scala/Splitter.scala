@@ -232,7 +232,7 @@ object Splitter {
 //STORE B3 INTO '$and_cid_sname'; 
 //
     b2.map {
-      t => t.docKey+"\t"+t.contribId+"\t"+t.surnameStr+"\t"+ t.surnameInt;
+      t => t.docKey+"\t"+t.contribId+"\t"+t.surnameStr+"\t"+ (if (t.surnameNotNull) t.surnameInt else "")
     }.saveAsTextFile(and_cid_sname)
 
 //
@@ -313,7 +313,7 @@ object Splitter {
          val tfac = TupleFactory.getInstance
          val tempT = tfac.newTuple
          tempT.append(x.contribId)
-         tempT.append(x.surnameInt)
+         tempT.append(if (x.surnameNotNull) x.surnameInt else null)
          tempT.append(mapAsJavaMap(x.metadata))
          (x,checker.exec(tempT))
          
@@ -438,14 +438,16 @@ def extractFirstTuple(tuple: Tuple): ContribInfoTuple = {
       tuple.get(1).asInstanceOf[String],
       tuple.get(2).asInstanceOf[Int],
       tuple.get(3).asInstanceOf[java.util.Map[Object, DataBag]].toMap,
-      tuple.get(4).asInstanceOf[String])
+      tuple.get(4).asInstanceOf[String],
+      tuple.get(5).asInstanceOf[Boolean])
   }
   
   case class ContribInfoTuple(docKey: String,
                               contribId: String,
                               surnameInt: Int,
                               metadata: Map[Object, DataBag],
-                              surnameStr: String)
+                              surnameStr: String,
+                              surnameNotNull: Boolean)
 
   
 }

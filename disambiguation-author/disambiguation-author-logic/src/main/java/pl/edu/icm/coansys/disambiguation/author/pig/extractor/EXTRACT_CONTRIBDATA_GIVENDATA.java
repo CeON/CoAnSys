@@ -244,7 +244,7 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 				// taking from document metadata data specific for each contrib
 				finalAuthorMap = extractAuthBasedFeatures(dm, DocumentMap, i);
 				Object[] to = new Object[] { docKey, cId, normalizedSname,
-						finalAuthorMap, rawNormalizedSname };
+						finalAuthorMap, rawNormalizedSname, normalizedSname!=null };
 				Tuple t = TupleFactory.getInstance()
 						.newTuple(Arrays.asList(to));
 				ret.add(t);
