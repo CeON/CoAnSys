@@ -19,6 +19,7 @@ package pl.edu.icm.coansys.disambiguation.author.features.extractors;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.lang.StringUtils;
 
 import org.apache.pig.data.DataBag;
 import org.apache.pig.data.DefaultDataBag;
@@ -67,7 +68,7 @@ public class EX_PERSON_ID extends DisambiguationExtractorAuthor {
 		Author a = dm.getBasicMetadata().getAuthor(fakeIndex);
 		for (KeyValue kv : a.getExtIdList()) {
 			if (PERSON_ID_KEY_NAME.contains(kv.getKey())) {
-				if ( kv.getValue() == null || kv.getValue().isEmpty() ) {
+				if ( StringUtils.isBlank(kv.getValue()) ) {
 					continue;
 				}
 				t.append(normalizeExtracted(kv.getValue()));
