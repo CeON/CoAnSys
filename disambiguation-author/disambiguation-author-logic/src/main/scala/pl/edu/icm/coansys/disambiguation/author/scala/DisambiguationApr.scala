@@ -249,7 +249,7 @@ object DisambiguationApr {
           val tfac = TupleFactory.getInstance
           val cid = x.get(0).asInstanceOf[org.apache.pig.data.DataBag].iterator.next.get(0)
           val t = tfac.newTuple
-          t.append(cid).asInstanceOf[String]
+          t.append(cid.asInstanceOf[String])
           t.append(genuuid.exec(tfac.newTuple(new TOBAG().exec(tfac.newTuple(cid)))))
           t
         }
