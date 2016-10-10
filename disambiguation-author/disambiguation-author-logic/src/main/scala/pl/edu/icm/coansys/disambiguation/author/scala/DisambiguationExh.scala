@@ -164,7 +164,7 @@ val d100a = tuples.flatMap{x => {
      val uuid=x.get(0)
      x.get(1).asInstanceOf[org.apache.pig.data.DataBag].iterator.asScala.map{
        z => {
-         (uuid,z.get(0))
+         (z.get(0),uuid)
        }
      }
    }
