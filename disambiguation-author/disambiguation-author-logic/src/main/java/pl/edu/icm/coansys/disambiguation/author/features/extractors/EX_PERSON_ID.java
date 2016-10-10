@@ -35,7 +35,7 @@ import pl.edu.icm.coansys.models.DocumentProtos.KeyValue;
 //Note that we do not use normalization for that one.
 public class EX_PERSON_ID extends DisambiguationExtractorAuthor {
 
-	static protected List<String> PERSON_ID_KEY_NAME = new ArrayList<String>();
+	protected List<String> PERSON_ID_KEY_NAME = new ArrayList<String>();
 	
 	
 	
