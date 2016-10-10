@@ -297,7 +297,7 @@ object DisambiguationApr {
             z =>
               {
                 val t = tfac.newTuple
-                t.append(z.asInstanceOf[String])
+                t.append(z.get(0).asInstanceOf[String])
                 t.append(uuid)
                 t
               }
