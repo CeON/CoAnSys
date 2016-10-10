@@ -225,7 +225,7 @@ object DisambiguationApr {
     }).map(y => {
       val genuuid = new GenUUID
       val tfac = TupleFactory.getInstance
-      val cid = y.get(0)
+      val cid = y.get(0).asInstanceOf[String]
       val t = tfac.newTuple
       t.append(cid)
       t.append(genuuid.exec(tfac.newTuple(new TOBAG().exec(tfac.newTuple(cid)))))
@@ -249,7 +249,7 @@ object DisambiguationApr {
           val tfac = TupleFactory.getInstance
           val cid = x.get(0).asInstanceOf[org.apache.pig.data.DataBag].iterator.next.get(0)
           val t = tfac.newTuple
-          t.append(cid)
+          t.append(cid).asInstanceOf[String]
           t.append(genuuid.exec(tfac.newTuple(new TOBAG().exec(tfac.newTuple(cid)))))
           t
         }
@@ -297,7 +297,7 @@ object DisambiguationApr {
             z =>
               {
                 val t = tfac.newTuple
-                t.append(z)
+                t.append(z.asInstanceOf[String])
                 t.append(uuid)
                 t
               }
