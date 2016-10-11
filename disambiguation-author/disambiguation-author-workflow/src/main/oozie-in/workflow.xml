@@ -347,7 +347,7 @@
                <delete path="${and_outputContribs}/apr-sim"/>
             </prepare>
            <master>yarn-cluster</master>
-            <name>do_and_1</name>
+            <name>do_and_0</name>
             <class>pl.edu.icm.coansys.disambiguation.author.scala.DisambiguationOne</class>
             <jar>${comacWfPath}/lib/disambiguation-author-spark-jar-${project.version}.jar</jar>
             <spark-opts>--executor-memory ${SPARK_EXECUTOR_MEMORY} --driver-memory ${SPARK_DRIVER_MEMORY} --num-executors ${SPARK_NUM_EXECUTORS} ${SPARK_ADDITIONAL_OPTS}</spark-opts>
