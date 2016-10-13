@@ -433,28 +433,7 @@
 			<arg>--and-statistics=${and_statistics}</arg>
 			<arg>--and-threshold=${and_threshold}</arg>
         </spark>
-        
-        
-     <!--   <pig>
-			<script>disambiguation_apr.pig</script>
-			< !- - pig parameters: data paths, cluster config, etc - ->
-			<param>and_aproximate_remember_sim=false</param>
-			<param>and_sample=1.0</param>
-			<param>and_inputDocsData=${and_splitted_output_apr_no_sim}/*</param>
-			<param>and_outputContribs=${and_outputContribs}/apr-no-sim</param>
-			<param>mapredChildJavaOpts=${and_mapredChildJavaOpts_apr_no_sim}
-			</param>
-			<param>and_exhaustive_limit=${and_exhaustive_limit}</param>
-			<param>and_failedContribs=${and_failedContribs}</param>
-			<! - -UDF config - ->
-			<param>and_feature_info=${and_feature_info}</param>
-			<param>and_statistics=${and_statistics}</param>
-			<param>and_threshold=${and_threshold}</param>
-			<!- -commons - ->
-			<param>and_scheduler=${and_pool}</param>
-			<param>and_parallel_param=${and_parallel}</param>
-		</pig>-->
-		<ok to="serialize_do" />
+ 		<ok to="serialize_do" />
 		<error to="kill" />
 	</action>
 
@@ -466,17 +445,21 @@
 	<!-- *************************************************** -->
 
 	<action name="serialize_do">
-		<pig>
-			<script>serialize.pig</script>
-			<!--pig parameters: data paths, cluster config, etc -->
-			<param>and_outputContribs=${and_outputContribs}</param>
-			<param>and_scheduler=${and_pool}</param>
-			<param>and_cid_dockey=${and_cid_dockey}</param>
-			<param>and_outputPB=${and_outputPB}</param>
-			<param>and_output_unserialized=${and_output_unserialized}</param>
-			<!--commons -->
-			<param>and_scheduler=${and_pool}</param>
-			<param>and_parallel_param=${and_parallel}</param>
+		<spark xmlns="uri:oozie:spark-action:0.1">
+            <job-tracker>${jobTracker}</job-tracker>
+            <name-node>${nameNode}</name-node>
+            <prepare>
+               <delete path="${and_outputContribs}/apr-sim"/>
+            </prepare>
+           <master>yarn-cluster</master>
+            <name>serialize</name>
+            <class>pl.edu.icm.coansys.disambiguation.author.scala.Serialize</class>
+            <jar>${comacWfPath}/lib/disambiguation-author-spark-jar-${project.version}.jar</jar>
+            <spark-opts>--executor-memory ${SPARK_EXECUTOR_MEMORY} --driver-memory ${SPARK_DRIVER_MEMORY} --num-executors ${SPARK_NUM_EXECUTORS} ${SPARK_ADDITIONAL_OPTS}</spark-opts>
+            <arg>--and-outputContribs=${and_outputContribs}</arg>
+            <arg>--and-cid-dockey=${and_cid_dockey}</arg>
+            <arg>--and-outputPB=${and_outputPB}</arg>
+            <arg>--and-output-unserialized=${and_output_unserialized}</arg>
 		</pig>
 		<ok to="check_accuracy_decision" />
 		<error to="kill" />
