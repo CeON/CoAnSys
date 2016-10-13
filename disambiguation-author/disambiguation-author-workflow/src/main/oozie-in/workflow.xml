@@ -448,9 +448,6 @@
 		<spark xmlns="uri:oozie:spark-action:0.1">
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
-            <prepare>
-               <delete path="${and_outputContribs}/apr-sim"/>
-            </prepare>
            <master>yarn-cluster</master>
             <name>serialize</name>
             <class>pl.edu.icm.coansys.disambiguation.author.scala.Serialize</class>
