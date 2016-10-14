@@ -23,11 +23,11 @@ public class ContributorWithExtractedFeatures implements Serializable{
     String docKey;
     String contributorId;
     Map<String,Collection<Integer>> metadata;
-    int surnameInt;
+    Integer surnameInt;
     String surnameString;
     boolean surnameNotNull;
 
-    public ContributorWithExtractedFeatures(String docKey, String contributorId, Map<String, Collection<Integer>> metadata, int surnameInt, String surnameString, boolean surnameNotNull) {
+    public ContributorWithExtractedFeatures(String docKey, String contributorId, Map<String, Collection<Integer>> metadata, Integer surnameInt, String surnameString, boolean surnameNotNull) {
         this.docKey = docKey;
         this.contributorId = contributorId;
         this.metadata = metadata;
@@ -48,7 +48,7 @@ public class ContributorWithExtractedFeatures implements Serializable{
         return metadata;
     }
 
-    public int getSurnameInt() {
+    public Integer getSurnameInt() {
         return surnameInt;
     }
 
@@ -62,7 +62,7 @@ public class ContributorWithExtractedFeatures implements Serializable{
     
     public Tuple asTuple(){
         Object[] to = new Object[] { docKey, contributorId, surnameInt,
-						hashMapToDataBag(), surnameInt, isSurnameNotNull() };
+						hashMapToDataBag(), surnameString, isSurnameNotNull() };
 		return  TupleFactory.getInstance()
 						.newTuple(Arrays.asList(to));
     }
