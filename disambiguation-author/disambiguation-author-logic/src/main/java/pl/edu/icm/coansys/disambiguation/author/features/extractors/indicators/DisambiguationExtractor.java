@@ -38,19 +38,13 @@ public class DisambiguationExtractor {
 		normalizers = new_normalizers.clone();
 	}
 
-	public int normalizeExtracted( String extracted ) {
-	  try {	
-        String tmp = extracted;
+	public Integer normalizeExtracted( String extracted ) {
+	     String tmp = extracted;
 		for ( PigNormalizer pn: normalizers ) {
 			tmp = pn.normalize( tmp );
 		}
 		return tohashCode.normalize(tmp);
-        
-      } catch (RuntimeException e) {
-          e.printStackTrace();
-          System.err.println("to hashcode is null: "+(tohashCode==null));
-          throw e;
-      }
+      
 	}
 	
 	public static boolean isClassifCode(String str) {
