@@ -18,6 +18,8 @@
 
 package pl.edu.icm.coansys.disambiguation.author.features.extractors;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import org.apache.pig.data.DataBag;
 import org.apache.pig.data.DefaultDataBag;
 import org.apache.pig.data.TupleFactory;
@@ -39,17 +41,17 @@ public class EX_CLASSIFICATION_CODES extends DisambiguationExtractorDocument {
 	}
 
 	@Override
-	public DataBag extract(Object o, String lang) {
+	public Collection<Integer> extract(Object o, String lang) {
 		DocumentMetadata dm = (DocumentMetadata) o;
-		DataBag db = new DefaultDataBag();
+		ArrayList<Integer> ret=new ArrayList<Integer>();
 
 		// classification codes:
 		for (ClassifCode cc : dm.getBasicMetadata().getClassifCodeList()) {
 			for (String s : cc.getValueList()) {
 				if ( s != null && !s.isEmpty() ) {
-					Object normalized = normalizeExtracted(s);
+					Integer normalized = normalizeExtracted(s);
 					if (normalized != null) {
-						db.add(TupleFactory.getInstance().newTuple(normalized));
+						ret.add(normalized);
 					}
 				}
 			}
@@ -60,17 +62,16 @@ public class EX_CLASSIFICATION_CODES extends DisambiguationExtractorDocument {
 			if (lang == null || k.getLanguage().equalsIgnoreCase(lang)) {
 				for (String s : k.getKeywordsList()) {
 					if ( s != null && !s.isEmpty() && isClassifCode(s)) {
-						Object normalized = normalizeExtracted(s);
+						Integer normalized = normalizeExtracted(s);
 						if (normalized != null) {
-							db.add(TupleFactory.getInstance().newTuple(
-									normalizeExtracted(normalized)));
+							ret.add(normalized);
 						}
 					}
 				}
 			}
 		}
 
-		return db;
+		return ret;
 	}
 
 	@Override

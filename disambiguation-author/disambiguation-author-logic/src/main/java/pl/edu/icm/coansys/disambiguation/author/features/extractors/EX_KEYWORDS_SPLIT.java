@@ -18,6 +18,8 @@
 
 package pl.edu.icm.coansys.disambiguation.author.features.extractors;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -42,11 +44,10 @@ public class EX_KEYWORDS_SPLIT extends DisambiguationExtractorDocument {
 	}
 
 	@Override
-	public DataBag extract(Object o, String lang) {
+	public Collection<Integer> extract(Object o, String lang) {
 
 		DocumentMetadata dm = (DocumentMetadata) o;
-		DataBag db = new DefaultDataBag();
-		Set<Object> set = new HashSet<Object>();
+		Set<Integer> set = new HashSet<Integer>();
 		DiacriticsRemover DR = new DiacriticsRemover();
 
 		for (KeywordsList k : dm.getKeywordsList()) {
@@ -67,7 +68,7 @@ public class EX_KEYWORDS_SPLIT extends DisambiguationExtractorDocument {
 					if (word.isEmpty()) {
 						continue;
 					}
-					Object normalized = normalizeExtracted(word);
+					Integer normalized = normalizeExtracted(word);
 					if (normalized != null) {
 						set.add(normalized);
 					}
@@ -75,11 +76,9 @@ public class EX_KEYWORDS_SPLIT extends DisambiguationExtractorDocument {
 			}
 		}
 
-		for (Object single : set.toArray()) {
-			db.add(TupleFactory.getInstance().newTuple(single));
-		}
+		
 
-		return db;
+		return set;
 	}
 
 	@Override

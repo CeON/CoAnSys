@@ -18,12 +18,11 @@
 package pl.edu.icm.coansys.disambiguation.author.features.extractors;
 
 import pl.edu.icm.coansys.disambiguation.author.normalizers.PigNormalizer;
-import pl.edu.icm.coansys.disambiguation.author.normalizers.ToHashCode;
 
 
 public class EX_PERSON_ID_COANSYS extends EX_PERSON_ID {
 
-	private static PigNormalizer[] new_normalizers = {new ToHashCode()};
+	private static PigNormalizer[] new_normalizers = {};
 	private static String[] usedIDs = {"coansys/disambiguation-author"};
 
 	public EX_PERSON_ID_COANSYS() {

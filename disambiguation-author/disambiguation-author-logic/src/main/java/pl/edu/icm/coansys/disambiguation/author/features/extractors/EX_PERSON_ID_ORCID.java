@@ -24,7 +24,7 @@ import pl.edu.icm.coansys.disambiguation.author.normalizers.ToHashCode;
 public class EX_PERSON_ID_ORCID extends EX_PERSON_ID {
 
 
-        private static PigNormalizer[] new_normalizers = {new ToHashCode()};
+        private static PigNormalizer[] new_normalizers = {};
         private static String[] usedIDs = {"orcidId"};
 
         public EX_PERSON_ID_ORCID() {

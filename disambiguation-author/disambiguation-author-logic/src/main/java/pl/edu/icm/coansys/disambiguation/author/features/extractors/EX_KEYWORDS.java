@@ -18,6 +18,8 @@
 
 package pl.edu.icm.coansys.disambiguation.author.features.extractors;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import org.apache.pig.data.DataBag;
 import org.apache.pig.data.DefaultDataBag;
 import org.apache.pig.data.TupleFactory;
@@ -38,10 +40,10 @@ public class EX_KEYWORDS extends DisambiguationExtractorDocument {
 	}
 
 	@Override
-	public DataBag extract(Object o, String lang) {
+	public Collection<Integer> extract(Object o, String lang) {
 
 		DocumentMetadata dm = (DocumentMetadata) o;
-		DataBag db = new DefaultDataBag();
+		ArrayList<Integer> ret=new ArrayList<Integer>();
 
 		for (KeywordsList k : dm.getKeywordsList()) {
 			if (lang != null && !k.getLanguage().equalsIgnoreCase(lang)) {
@@ -51,14 +53,14 @@ public class EX_KEYWORDS extends DisambiguationExtractorDocument {
 				if (s.isEmpty() || isClassifCode(s)) {
 					continue;
 				}
-				Object normalized = normalizeExtracted(s);
+				Integer normalized = normalizeExtracted(s);
 				if (normalized != null) {
-					db.add(TupleFactory.getInstance().newTuple(normalized));
+					ret.add(normalized);
 				}
 			}
 		}
 
-		return db;
+		return ret;
 	}
 
 	@Override

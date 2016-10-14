@@ -21,7 +21,7 @@ package pl.edu.icm.coansys.disambiguation.author.normalizers;
 public class DiacriticsRemover implements PigNormalizer {
 
 	@Override
-	public Object normalize(Object text) {
+	public String normalize(String text) {
 
 		if (text == null) {
 			return null;

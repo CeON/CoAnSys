@@ -18,22 +18,28 @@
 
 package pl.edu.icm.coansys.disambiguation.author.normalizers;
 
-public class ToHashCode implements PigNormalizer {
+import java.text.ParseException;
 
-	@Override
-	public Object normalize(Object text) {
+public class ToHashCode  {
+    
+	public Integer normalize(String text) {
 
 		if (text == null) {
 			return null;
 		}
 
-		Integer tmp;
+		Integer tmp=null ;
+        boolean parsed=false;
+        try {
+            tmp=Integer.parseInt(text);
+            parsed=true;
+        } catch (Exception e){
+            
+        }
 
-		if (text instanceof Integer) {
-			tmp = (Integer) text;
-		} else {
+		if (! parsed) {
 			tmp = text.hashCode();
-		}
+		} 
 
 		return tmp;
 	}

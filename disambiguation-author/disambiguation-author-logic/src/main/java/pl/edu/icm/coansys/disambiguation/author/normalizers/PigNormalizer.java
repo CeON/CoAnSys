@@ -20,6 +20,6 @@ package pl.edu.icm.coansys.disambiguation.author.normalizers;
 
 public interface PigNormalizer {
 	
-    Object normalize( Object text );
+    String normalize( String text );
 	
 }

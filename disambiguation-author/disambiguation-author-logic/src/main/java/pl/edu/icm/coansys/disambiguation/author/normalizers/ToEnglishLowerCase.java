@@ -23,7 +23,7 @@ import pl.edu.icm.coansys.commons.java.DiacriticsRemover;
 public class ToEnglishLowerCase implements PigNormalizer {
 
 	@Override
-	public Object normalize(Object text) {
+	public String normalize(String text) {
 
 		if (text == null) {
 			return null;

@@ -75,9 +75,9 @@ public class DisambiguationTest {
 		String toELCExpected = "ezaaaazolc gesla jazn ae 1234567890";
 		Integer toHashExpected = -1486600746;
 		Integer DisExtrExpected = diacRmExpected.toLowerCase().hashCode();
-		Object a, b, c, d, e, f;
+		String a, b, c, d, e, f;
 		String tmp;
-		
+		Integer hashCode;
 		// testing critical changes in DiacriticsRemover
 		tmp = DiacriticsRemover.removeDiacritics( text );
 		assert( tmp.equals(diacRmExpected) );
@@ -87,11 +87,11 @@ public class DisambiguationTest {
 		assert( a.equals( toELCExpected ) );
 		b = (new ToEnglishLowerCase()).normalize( a );
 		assert( a.equals( b ) );
-		a = (new ToHashCode()).normalize( text );
-		assert( a.equals( toHashExpected ) );
-		a = (new ToHashCode()).normalize( (Object) text );
-		assert( a.equals( toHashExpected ) );
-		f = (new pl.edu.icm.coansys.disambiguation.author.normalizers.DiacriticsRemover()).normalize((Object) text);
+		hashCode = (new ToHashCode()).normalize( text );
+		assert( hashCode.equals( toHashExpected ) );
+		hashCode = (new ToHashCode()).normalize(  text );
+		assert( hashCode.equals( toHashExpected ) );
+		f = (new pl.edu.icm.coansys.disambiguation.author.normalizers.DiacriticsRemover()).normalize(text);
 		assert( f.equals( diacRmExpected ) );
 		
 		// checking null argument / multi spaces:
@@ -105,16 +105,16 @@ public class DisambiguationTest {
 		
 		e = (new ToEnglishLowerCase()).normalize( null );
 		assert( e == null );		
-		e = (new ToHashCode()).normalize( null );
-		assert( e == null );		
+		hashCode = (new ToHashCode()).normalize( null );
+		assert( hashCode == null );		
 
 		
 		// DisambiguationExtractor - normalizeExtracted tests:
 		// testing normalize tool, which is using after data extraction
 		DisambiguationExtractorDocument DED = 
 				new DisambiguationExtractorDocument();
-		a = DED.normalizeExtracted( text );
-		assert( a.equals( DisExtrExpected ) );
+		hashCode = DED.normalizeExtracted( text );
+		assert( hashCode.equals( DisExtrExpected ) );
    	}
    	
    	
