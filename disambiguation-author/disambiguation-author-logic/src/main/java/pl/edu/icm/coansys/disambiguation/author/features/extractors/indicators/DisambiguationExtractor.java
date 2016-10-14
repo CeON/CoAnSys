@@ -32,7 +32,7 @@ public class DisambiguationExtractor {
 				new ToLowerCase()
 			};
 	}
-	ToHashCode tohashCode=new ToHashCode();
+	final ToHashCode tohashCode=new ToHashCode();
     
 	public DisambiguationExtractor( PigNormalizer[] new_normalizers ) {
 		normalizers = new_normalizers.clone();
