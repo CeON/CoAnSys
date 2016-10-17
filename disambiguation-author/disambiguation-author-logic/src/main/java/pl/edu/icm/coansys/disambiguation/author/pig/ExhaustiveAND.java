@@ -294,7 +294,7 @@ public class ExhaustiveAND extends AND<DataBag> {
 				contribKeys.add(authorIds[id]);
 				contribs.add(TupleFactory.getInstance().newTuple(authorIds[id]));
 			}
-
+            Collections.sort(contribKeys);
 			String clusterId = idgenerator.genetareId(contribKeys);
 
 			Object[] to = new Object[] { clusterId, contribs };
