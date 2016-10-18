@@ -1,13 +1,5 @@
-{
-  if (y != null) true
-  else
-    false
-}
-*/
-
 package pl.edu.icm.coansys.disambiguation.author.scala
 
-import java.util.Collections
 import org.apache.hadoop.io.{BytesWritable, Text}
 import org.apache.pig.data.{DataBag, Tuple, TupleFactory, DataByteArray}
 import org.apache.spark.SparkConf
