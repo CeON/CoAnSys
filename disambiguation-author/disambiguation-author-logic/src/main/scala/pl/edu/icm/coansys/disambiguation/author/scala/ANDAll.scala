@@ -70,11 +70,10 @@ object ANDAll {
           }
         }.apply(x)))).text("and_feature_info")
     opt[String]("and-outputContribs").action((x, c) =>{
-      c.copy(and_outputContribs = x);
-      c.copy(and_outputContribs_one = x+"/one");
-      c.copy(and_outputContribs_exh = x+"/exh");
-      c.copy(and_outputContribs_apr_sim= x+"/apr_sim");
-      c.copy(and_outputContribs_apr_no_sim = x+"/apr_no_sim")
+      c.copy(and_outputContribs = x).copy(and_outputContribs_one = x+"/one")
+      .copy(and_outputContribs_exh = x+"/exh")
+      .copy(and_outputContribs_apr_sim= x+"/apr_sim")
+      .copy(and_outputContribs_apr_no_sim = x+"/apr_no_sim")
     }
     ).text("and_outputContribs")
       
