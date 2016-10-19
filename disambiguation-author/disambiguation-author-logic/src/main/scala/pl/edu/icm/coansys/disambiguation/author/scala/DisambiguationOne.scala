@@ -7,31 +7,32 @@ import org.apache.pig.builtin.TOBAG
 import org.apache.pig.data.TupleFactory
 import org.apache.spark.SparkConf
 import org.apache.spark.SparkContext
+import org.apache.spark.rdd.RDD
 import pl.edu.icm.coansys.disambiguation.author.pig.GenUUID
+import pl.edu.icm.coansys.disambiguation.model.ContributorWithExtractedFeatures
 import scala.collection.JavaConverters._
 
 object DisambiguationOne {
 
-  case class Config(
-    and_inputDocsData: String = "workflows/pl.edu.icm.coansys-disambiguation-author-workflow/results/splitted/apr-no-sim",
-    and_outputContribs:String= "workflows/pl.edu.icm.coansys-disambiguation-author-workflow/results/outputContribs/apr-no-sim"
-  )
-
-  val parser = new scopt.OptionParser[Config]("disambiguationApr") {
-    head("disambiguationOne", "1.x")
-
-    opt[String]('i', "and-inputDocsData").action((x, c) =>
-      c.copy(and_inputDocsData = x)).text("and_inputDocsData")
-   opt[String]('o', "and-outputContribs").action((x, c) => c.copy(and_outputContribs = x)).
-      text("and_outputContribs")
-
-    
-
-    help( "help").text("prints this usage text")
-
-    
+ 
+  def process (input:RDD[(Int, List[ContributorWithExtractedFeatures], Int)] ):RDD[(String,String)]= {
+      input.flatMap{
+       case (cid, list,count) =>{
+           val genuuid = new GenUUID
+           list.map(x=> ((x.getContributorId,genuuid.exec(List(x).asJava))))
+       }
+      }
   }
-
+  
+  def process (c:pl.edu.icm.coansys.disambiguation.author.scala.Config, sc:SparkContext):RDD[(String,String)]={
+    val input = sc.objectFile[(Int, List[ContributorWithExtractedFeatures], Int)](c.and_splitted_output_one)
+    val res=process(input)
+    res.map{
+      case (x,y) => { x+"\t"+y} 
+    }.saveAsTextFile(c.and_outputContribs_one)
+    res
+  }
+  
   /**
    * @param args the command line arguments
    */
@@ -111,4 +112,26 @@ val e1=tuples.flatMap(x=>{
       }
     }.saveAsTextFile(and_outputContribs)
   }
+   case class Config(
+    and_inputDocsData: String = "workflows/pl.edu.icm.coansys-disambiguation-author-workflow/results/splitted/apr-no-sim",
+    and_outputContribs:String= "workflows/pl.edu.icm.coansys-disambiguation-author-workflow/results/outputContribs/apr-no-sim"
+  )
+
+  val parser = new scopt.OptionParser[Config]("disambiguationApr") {
+    head("disambiguationOne", "1.x")
+
+    opt[String]('i', "and-inputDocsData").action((x, c) =>
+      c.copy(and_inputDocsData = x)).text("and_inputDocsData")
+   opt[String]('o', "and-outputContribs").action((x, c) => c.copy(and_outputContribs = x)).
+      text("and_outputContribs")
+
+    
+
+    help( "help").text("prints this usage text")
+
+    
+  }
+  
+  
+  
 }

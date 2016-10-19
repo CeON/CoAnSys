@@ -18,6 +18,7 @@
 
 package pl.edu.icm.coansys.disambiguation.author.pig;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -28,6 +29,7 @@ import org.apache.pig.tools.pigstats.PigStatusReporter;
 import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
+import pl.edu.icm.coansys.disambiguation.model.ContributorWithExtractedFeatures;
 
 /**
  * Verify that the author may be similar (comparable) to someone by checking
@@ -73,6 +75,62 @@ public class FeaturesCheck extends AND<Boolean> {
         return extractors.get(key);
     }
     
+    
+    public Boolean exec(ContributorWithExtractedFeatures cont){
+        if (cont.getContributorId() == null || cont.getSurnameInt() == null || !cont.isSurnameNotNull()|| cont.getMetadata() == null
+				|| cont.getContributorId().isEmpty() ) {
+			logger.info("Skipping " + (++skipedContribCounter) + " / "
+					+ allContribCounter + " contrib: cid = " + cont.getContributorId()
+					+ ", sname = " + cont.getSurnameInt()
+                    + ", surname = "+ cont.getSurnameString() 
+					+ ". Cid or sname or feature map with null value.");
+			reportContrib(REPORTER_CONST.EMPTY);
+			return false;
+		}
+        allContribCounter++;
+
+		double simil = getThreshold();
+		for (int d = 0; d < features.length; d++) {
+			// Taking features from each keys (name of extractor = feature name)
+			// In contribsT.get(i) there is map we need.
+			// From this map (collection of i'th contributor's features)
+			// we take Bag with value of given feature.
+			// Here we have sure that following Object = DateBag.
+
+			         Collection<Integer> o = cont.getMetadata().get(featureInfos[d]
+					.getFeatureExtractorName());
+
+			// probably feature does not exist
+			if (o == null) {
+				continue;
+			}
+
+			simil += calculateAffinity(o, o, d);
+
+			// contributor is similar to himself so maybe comparable to other
+			// contributors
+			if (simil >= 0) {
+				reportContrib(REPORTER_CONST.SIMILAR);
+				return true;
+			}
+		}
+
+		if (isStatistics) {
+			logger.info("Skipping " + (++skipedContribCounter) + " / "
+					+ allContribCounter + " contrib: cid = " + cont.getContributorId()
+					+ ", sname = " + cont.getSurnameInt() + ". Not enough features.");
+		}
+
+		reportContrib(REPORTER_CONST.DISIMILAR);
+		return false;
+    
+        
+        
+        
+    }
+    
+    
+    
 	@Override
 	public Boolean exec(Tuple input) {
 		// instance of reporter may change in each exec(...) run
@@ -107,43 +165,9 @@ public class FeaturesCheck extends AND<Boolean> {
 			reportContrib(REPORTER_CONST.EMPTY);
 			return false;
 		}
-
-		allContribCounter++;
-
-		double simil = getThreshold();
-		for (int d = 0; d < features.length; d++) {
-			// Taking features from each keys (name of extractor = feature name)
-			// In contribsT.get(i) there is map we need.
-			// From this map (collection of i'th contributor's features)
-			// we take Bag with value of given feature.
-			// Here we have sure that following Object = DateBag.
-
-			Object o = featuresMap.get(featureInfos[d]
-					.getFeatureExtractorName());
-
-			// probably feature does not exist
-			if (o == null) {
-				continue;
-			}
-
-			simil += calculateAffinity(o, o, d);
-
-			// contributor is similar to himself so maybe comparable to other
-			// contributors
-			if (simil >= 0) {
-				reportContrib(REPORTER_CONST.SIMILAR);
-				return true;
-			}
-		}
-
-		if (isStatistics) {
-			logger.info("Skipping " + (++skipedContribCounter) + " / "
-					+ allContribCounter + " contrib: cid = " + cid
-					+ ", sname = " + sname + ". Not enough features.");
-		}
-
-		reportContrib(REPORTER_CONST.DISIMILAR);
-		return false;
+        ContributorWithExtractedFeatures cwe=
+            new ContributorWithExtractedFeatures(null, cid, (Map<String,Collection<Integer>>)(Map)featuresMap,Integer.parseInt(sname) , sname, false);
+		return exec(cwe);
 	}
 
 	// Pig Status Reporter staff:
