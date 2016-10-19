@@ -270,7 +270,7 @@ object ANDAll {
 
     val d1b = bad.map {
       case (x, f) => {
-        (x.getSurnameInt.intValue, List(x), 1)
+        (if (x.getSurnameInt!=null) (x.getSurnameInt.intValue) else (0), List(x), 1)
       }
     }
     //
