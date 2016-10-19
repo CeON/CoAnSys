@@ -294,17 +294,17 @@
 	<decision name="startFrom">
 		<switch>
 			<case to="do_and_0">${skipSplitting eq "true"}</case>
-			<default to="split" />
+			<default to="all" />
 		</switch>
 	</decision>
 
-	<action name="split">
+	<action name="all">
         <spark xmlns="uri:oozie:spark-action:0.1">
             <job-tracker>${jobTracker}</job-tracker>
             <name-node>${nameNode}</name-node>
            <master>yarn-cluster</master>
             <name>split</name>
-            <class>pl.edu.icm.coansys.disambiguation.author.scala.Splitter</class>
+            <class>pl.edu.icm.coansys.disambiguation.author.scala.ANDAll</class>
             <jar>${comacWfPath}/lib/disambiguation-author-spark-jar-${project.version}.jar</jar>
             <spark-opts>--executor-memory ${SPARK_EXECUTOR_MEMORY} --driver-memory ${SPARK_DRIVER_MEMORY} --num-executors ${SPARK_NUM_EXECUTORS} ${SPARK_ADDITIONAL_OPTS}</spark-opts>
             
@@ -315,8 +315,8 @@
 			<arg>--and-splitted-output-exh=${and_splitted_output_exh}</arg>
 			<arg>--and-splitted-output-apr-sim=${and_splitted_output_apr_sim}
 			</arg>
-			<arg>--and-splitted-output-apr-no-sim=${and_splitted_output_apr_no_sim}
-			</arg>
+			<arg>--and-splitted-output-apr-no-sim=${and_splitted_output_apr_no_sim}</arg>              
+            <arg>--and-outputContribs=${and_outputContribs}</arg>
             <arg>--and-temp-dir=${and_temp_dir}</arg>
 			<arg>--and-cid-dockey=${and_cid_dockey}</arg>
 			<arg>--and-cid-sname=${and_cid_sname}</arg>
@@ -331,7 +331,7 @@
 			
         </spark>
 		
-		<ok to="do_and_0" />
+		<ok to="do_and_1" />
 		<error to="kill" />
 	</action>
 
