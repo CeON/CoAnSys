@@ -52,6 +52,8 @@ public class PigDisambiguator{
 			return calculateAffinity((Tuple) f1, (Tuple) f2);	 
 		}else if(f1 instanceof String && f2 instanceof String ){
 			return calculateAffinity((String) f1, (String) f2);
+		}else if(f1 instanceof List && f2 instanceof List ){
+			return d.calculateAffinity((List) f1, (List) f2);
 		}else{
 			throw new IllegalArgumentException("data type "+ f1.getClass()
 					+ " or " + f2.getClass() +" unsupported in calculateAffinity");
