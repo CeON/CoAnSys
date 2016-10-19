@@ -19,6 +19,7 @@
 package pl.edu.icm.coansys.disambiguation.author.pig;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -52,8 +53,8 @@ public class PigDisambiguator{
 			return calculateAffinity((Tuple) f1, (Tuple) f2);	 
 		}else if(f1 instanceof String && f2 instanceof String ){
 			return calculateAffinity((String) f1, (String) f2);
-		}else if(f1 instanceof List && f2 instanceof List ){
-			return d.calculateAffinity((List) f1, (List) f2);
+		}else if(f1 instanceof Collection && f2 instanceof Collection ){
+			return d.calculateAffinity((Collection) f1, (Collection) f2);
 		}else{
 			throw new IllegalArgumentException("data type "+ f1.getClass()
 					+ " or " + f2.getClass() +" unsupported in calculateAffinity");
