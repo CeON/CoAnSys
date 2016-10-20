@@ -331,7 +331,7 @@
 			
         </spark>
 		
-		<ok to="do_and_1" />
+		<ok to="do_and_2" />
 		<error to="kill" />
 	</action>
 
