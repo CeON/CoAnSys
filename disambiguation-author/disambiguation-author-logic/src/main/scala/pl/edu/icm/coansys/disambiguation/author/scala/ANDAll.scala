@@ -343,7 +343,11 @@ object ANDAll {
     //store D100 into '$and_splitted_output_exh';
     //
     d100.saveAsObjectFile(config.and_splitted_output_exh)
-
+    val exhRes=DisambiguationExh.process(d100, config)
+    
+    exhRes.map{
+      case (x,y) => { x+"\t"+y} 
+    }.saveAsTextFile(config.and_outputContribs_exh)
     
     //store D1000 into '$and_splitted_output_apr_sim';
 

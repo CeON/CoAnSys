@@ -36,12 +36,15 @@ import pl.edu.icm.coansys.disambiguation.clustering.strategies.ClusteringStrateg
 import pl.edu.icm.coansys.disambiguation.clustering.strategies.CompleteLinkageHACStrategy_StateOfTheArt;
 import pl.edu.icm.coansys.disambiguation.idgenerators.IdGenerator;
 import pl.edu.icm.coansys.disambiguation.idgenerators.UuIdGenerator;
+import pl.edu.icm.coansys.disambiguation.model.ContributorWithExtractedFeatures;
 
 public class ExhaustiveAND extends AND<DataBag> {
 
 	private final float NOT_CALCULATED = Float.NEGATIVE_INFINITY;
-	private float sim[][];
-	private int N;
+	@Deprecated
+    private float sim[][];
+	@Deprecated
+    private int N;
 	private static final org.slf4j.Logger logger = LoggerFactory
 			.getLogger(ExhaustiveAND.class);
 
@@ -68,6 +71,114 @@ public class ExhaustiveAND extends AND<DataBag> {
 		}
 	}
 
+    
+    public DataBag exec(List<ContributorWithExtractedFeatures> li, List<Tuple> preCalculatedSims){
+       try {
+        if (li == null || li.size() == 0) {
+            return null;
+        }
+        int n = li.size();
+        String[] contribsId = new String[n];
+        List<Map<String, Object>> contribsT = new ArrayList<Map<String, Object>>();
+        int k = 0;
+        Object sname=null;
+        for (ContributorWithExtractedFeatures cont : li) {
+            // getting contrib id from tuple
+            contribsId[k++] = cont.getContributorId();
+            // getting map with features
+            contribsT.add((Map<String, Object>) (Map) cont.getMetadata());
+            sname=cont.getSurnameInt();
+        }
+        float[][] csim=simInit(n);
+        
+        // if we got sim values to init
+			if (preCalculatedSims!=null) {
+				// benchamrk
+				gotSim = true;
+				// taking bag with calculated similarities
+
+					// iterating through bag, dropping bag to Tuple array
+					for  (Tuple t: preCalculatedSims ) {
+						
+						calculatedSimCounter++;
+
+						int idX = (Integer) t.get(0);
+						int idY = (Integer) t.get(1);
+						float simValue = (Float) t.get(2);
+
+						try {
+							csim[idX][idY] = simValue;
+
+						} catch (java.lang.ArrayIndexOutOfBoundsException e) {
+							String m = "Out of bounds during sim init by values from input: "
+									+ "idX: "
+									+ idX
+									+ ", idY: "
+									+ idY
+									+ ", sim.length: "
+									+ csim.length
+									+ ", contrib number: " + contribsT.size();
+
+							if (csim.length > idX) {
+								m += ", sim[idX].length: " + csim[idX].length;
+							}
+							m += "\n" + "During processing tuple: "
+									+ t.toString();
+
+							logger.error(m, e);
+							logger.info("Leaving all sim values for record");
+
+							csim=simInit(n);
+						}
+					}
+				}
+            
+         // fill sim matrix
+			calculateAffinity(contribsT,csim);
+			
+			// clusterAssociations[ index_kontrybutora ] = associated cluster id
+			ClusteringStrategy strategy = new CompleteLinkageHACStrategy_StateOfTheArt();
+			int[] clusterAssociations = strategy.clusterize(csim);
+
+			int[][] clusters = splitIntoClusters(clusterAssociations,n);
+
+			// creating records for each contrib: contrib key, author UUID
+			DataBag ret = createResultingTuples(clusters, contribsId);
+
+			// this action will add some information to the monit
+			if (isStatistics) {
+				Collections.sort(clustersSizes, Collections.reverseOrder());
+				int biggestCluster = clustersSizes.isEmpty() ? 1
+						: clustersSizes.get(0);
+
+				// stopping timer for current play (not thread)
+				/*
+				 * STATISTICS DESCRIPTION: ## sname ## #STAT# tag for parser ##
+				 * this algorithm name, ## is some sim from aproximate, ##
+				 * exhaustive execution id, ## number of contribs, ## clusters
+				 * number after exhaustive, ## calculated sim values number IN
+				 * APROXIMATE which we got here ## - ## - ## time [s]
+				 */
+				timer.stop("#STAT#", sname, "exh", gotSim, timerPlayId, N,
+						finalClusterNumber, calculatedSimCounter,
+						biggestCluster, "#time", clustersSizes);
+			}
+
+			return ret;
+
+		} catch (Exception e) {
+			// Throwing an exception would cause the task to fail.
+			logger.error("Caught exception processing input row:\n"
+					+ StackTraceExtractor.getStackTrace(e));
+			return null;
+		}   
+            
+			
+
+    }
+    
+    
+    
 	/**
 	 * @param Tuple
 	 *            with: bag: {(contribId:chararray, sname:chararray or int,
@@ -215,7 +326,34 @@ public class ExhaustiveAND extends AND<DataBag> {
 			}
 		}
 	}
+   
+    private float[][] simInit(int n) {
+        float[][] newSim=new float[n][];
+		for (int i = 1; i < n; i++) {
+			newSim[i] = new float[i];
+			for (int j = 0; j < i; j++) {
+				newSim[i][j] = NOT_CALCULATED;
+			}
+		}
+        return newSim;
+    }
+        
+    private void calculateAffinity(List<Map<String, Object>> contribsT, float [][] csim) {
+		// N^2 / 2 * features number - already calculated sim values
+		for (int i = 1; i < contribsT.size(); i++) {
+			for (int j = 0; j < i; j++) {
+				// if sim value is already calculated, we do not need to
+				// calculate one more time
+				if (csim[i][j] != NOT_CALCULATED) {
+					continue;
+				}
 
+				csim[i][j] = calculateContribsAffinityForAllFeatures(contribsT,
+						i, j, false);
+			}
+		}
+	}    
+        
 	private void calculateAffinity(List<Map<String, Object>> contribsT) {
 		// N^2 / 2 * features number - already calculated sim values
 		for (int i = 1; i < contribsT.size(); i++) {
@@ -231,20 +369,24 @@ public class ExhaustiveAND extends AND<DataBag> {
 			}
 		}
 	}
+    
+    protected int[][] splitIntoClusters(int[] clusterAssociation) {
+        return splitIntoClusters(clusterAssociation, N);
+    }
 
-	protected int[][] splitIntoClusters(int[] clusterAssociation) {
+	protected int[][] splitIntoClusters(int[] clusterAssociation, int n) {
 		// cluster[ cluster id ] = array with contributors' simIds
-		int[][] clusters = new int[N][];
-		int[] index = new int[N];
-		int[] clusterSize = new int[N];
-		assert (clusterAssociation.length == N);
+		int[][] clusters = new int[n][];
+		int[] index = new int[n];
+		int[] clusterSize = new int[n];
+		assert (clusterAssociation.length == n);
 
 		// preparing clusters' sizes
-		for (int i = 0; i < N; i++) {
+		for (int i = 0; i < n; i++) {
 			clusterSize[clusterAssociation[i]]++;
 		}
 		// reserving memory
-		for (int i = 0; i < N; i++) {
+		for (int i = 0; i < n; i++) {
 			if (clusterSize[i] > 0) {
 				clusters[i] = new int[clusterSize[i]];
 			} else {
@@ -263,7 +405,7 @@ public class ExhaustiveAND extends AND<DataBag> {
 		}
 		// filling clusters
 		int id;
-		for (int i = 0; i < N; i++) {
+		for (int i = 0; i < n; i++) {
 			id = clusterAssociation[i];
 			clusters[id][index[id]] = i;
 			index[id]++;
