@@ -72,8 +72,8 @@ object ANDAll {
     opt[String]("and-outputContribs").action((x, c) =>{
       c.copy(and_outputContribs = x).copy(and_outputContribs_one = x+"/one")
       .copy(and_outputContribs_exh = x+"/exh")
-      .copy(and_outputContribs_apr_sim= x+"/apr_sim")
-      .copy(and_outputContribs_apr_no_sim = x+"/apr_no_sim")
+      .copy(and_outputContribs_apr_sim= x+"/apr-sim")
+      .copy(and_outputContribs_apr_no_sim = x+"/apr-no-sim")
     }
     ).text("and_outputContribs")
       
