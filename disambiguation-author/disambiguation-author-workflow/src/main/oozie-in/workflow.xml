@@ -331,7 +331,7 @@
 			
         </spark>
 		
-		<ok to="do_and_2" />
+		<ok to="serialize_do" />
 		<error to="kill" />
 	</action>
 
