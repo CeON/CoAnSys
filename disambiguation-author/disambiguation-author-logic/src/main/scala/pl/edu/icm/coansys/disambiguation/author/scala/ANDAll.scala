@@ -342,7 +342,6 @@ object ANDAll {
     
     //store D100 into '$and_splitted_output_exh';
     //
-    d100.saveAsObjectFile(config.and_splitted_output_exh)
     val exhRes=DisambiguationExh.process(d100, config)
     
     exhRes.map{
@@ -351,12 +350,21 @@ object ANDAll {
     
     //store D1000 into '$and_splitted_output_apr_sim';
 
-    d1000.saveAsObjectFile(config.and_splitted_output_apr_sim)
-
+     
+    val apr_sim_res=DisambiguationApr.process(d1000, config, true, sc)
+    
+    apr_sim_res.map{
+      case (x,y) => { x+"\t"+y} 
+    }.saveAsTextFile(config.and_outputContribs_apr_sim)
+    
     //store DX into '$and_splitted_output_apr_no_sim';
     //
-    dx.saveAsObjectFile(config.and_splitted_output_apr_no_sim)
-
+    //dx.saveAsObjectFile(config.and_splitted_output_apr_no_sim)
+    val apr_no_sim_res=DisambiguationApr.process(dx, config, false, sc)
+    
+    apr_no_sim_res.map{
+      case (x,y) => { x+"\t"+y} 
+    }.saveAsTextFile(config.and_outputContribs_apr_no_sim)
   }
 
 

@@ -8,48 +8,140 @@ import org.apache.pig.data.Tuple
 import org.apache.pig.data.TupleFactory
 import org.apache.spark.SparkConf
 import org.apache.spark.SparkContext
+import org.apache.spark.rdd.RDD
+import pl.edu.icm.coansys.disambiguation.author.pig.AproximateAND_BFS.ClusterData
 import pl.edu.icm.coansys.disambiguation.author.pig.GenUUID
+import pl.edu.icm.coansys.disambiguation.model.ContributorWithExtractedFeatures
 import scala.collection.JavaConverters._
 
 object DisambiguationApr {
+   def process (input:RDD[(Int, List[ContributorWithExtractedFeatures], Int)],
+   conf: pl.edu.icm.coansys.disambiguation.author.scala.Config,
+   aproximateRemeberSim: Boolean ,
+   sc:SparkContext):RDD[(String,String)]= {
+     //D1 = foreach D0 generate *, COUNT(datagroup) as cnt;                  
 
-  case class Config(
-    and_inputDocsData: String = "workflows/pl.edu.icm.coansys-disambiguation-author-workflow/results/splitted/apr-no-sim",
-    and_threshold: String = "-0.8",
-    and_feature_info: String = "IntersectionPerMaxval#EX_DOC_AUTHS_SNAMES#1.0#1",
-    and_aproximate_remember_sim: String = "false",
-    and_use_extractor_id_instead_name: String = "true",
-    and_statistics: String = "false",
-    and_exhaustive_limit: Int = 6627,
-    and_outputContribs:String= "workflows/pl.edu.icm.coansys-disambiguation-author-workflow/results/outputContribs/apr-no-sim"
-  )
+    //D2 = filter D1 by (cnt>0);
+    //D = foreach D2 generate sname, datagroup, count;
+    // d=D
+    val d = input.filter(z =>
+      {
+        z._2.length>0
+      })
+    //
+    //
+    //-- -----------------------------------------------------
+    //-- BIG GRUPS OF CONTRIBUTORS 
+    //-- -----------------------------------------------------
+    //
+    //-- D1000A: {datagroup: NULL,simTriples: NULL}
+    //E1 = foreach D generate flatten( aproximateAND( datagroup ) ) as (datagroup:{ ( cId:chararray, sname:int, data:map[{(int)}] ) }, simTriples:{});
+    val e1 = d.flatMap[ClusterData](x => {
+      val abfs = new pl.edu.icm.coansys.disambiguation.author.pig.AproximateAND_BFS(conf.and_threshold, conf.and_feature_info, aproximateRemeberSim.toString(), conf.and_use_extractor_id_instead_name, conf.and_statistics)
+      abfs.exec(x._2.asJava).asScala
+    })
+  
+     //E2 = foreach E1 generate datagroup, simTriples, COUNT( datagroup ) as count;
+    e1.cache
+    //split E2 into
+    //	ESINGLE if count <= 2,
+    //	EEXH if ( count > 2 and count <= $and_exhaustive_limit ),
+    //	EBIG if count > $and_exhaustive_limit;
+    val esingle = e1.filter(x => { x.contList.size < 2 })
+    val eexh = e1.filter(x => {
+      val s = x.contList.size
+      s >= 2 && s <= conf.and_exhaustive_limit
+    }).repartition(sc.defaultParallelism*5)
+    val ebig = e1.filter(x => { x.contList.size > conf.and_exhaustive_limit })
 
-  val parser = new scopt.OptionParser[Config]("disambiguationApr") {
-    head("disambiguationApr", "1.x")
+     //
+    //-- -----------------------------------------------------
+    //-- TOO BIG CLUSTERS FOR EXHAUSTIVE
+    //-- -----------------------------------------------------
+    //-- TODO maybe MagicAND for such big clusters in future
+    //-- then storing data below and add new node in workflow after aproximates:
+    //-- store EBIG into '$and_failedContribs';
+    //--
+    //-- For now: each contributor from too big cluster is going to get his own UUID
+    //-- so we need to "ungroup by sname".
+    //
+    //I = foreach EBIG generate flatten(datagroup);
+    //BIG = foreach I generate cId as cId, GenUUID( TOBAG(cId) ) as uuid;
+    //
+    val big = ebig.flatMap(x => {
+      x.contList.asScala
+    }).map(y => {
+      val genuuid = new GenUUID
+      val cid = y.getContributorId
+      (cid,genuuid.exec(List(y).asJava))
+    })
 
-    opt[String]('i', "and-inputDocsData").action((x, c) =>
-      c.copy(and_inputDocsData = x)).text("and_inputDocsData")
+    //
+    //-- -----------------------------------------------------
+    //-- CLUSTERS WITH ONE CONTRIBUTOR
+    //-- -----------------------------------------------------
+    //
+    //F = foreach ESINGLE generate datagroup.cId as cIds, GenUUID( datagroup.cId ) as uuid;
+    //SINGLE = foreach F generate flatten( cIds ) as cId, uuid as uuid;
+    //
 
-    opt[String]('t', "and-threshold").action((x, c) =>
-      c.copy(and_threshold = x)).text("and_threshold")
-    opt[String]('f', "and-feature-info").action((x, c) =>
-      c.copy(and_feature_info = x)).text("and_feature_info")
-    opt[String]('a', "and-aproximate-remember-sim").action((x, c) =>
-      c.copy(and_aproximate_remember_sim = x)).text("and_aproximate_remember_sim")
-    opt[String]('e', "and-use-extractor-id-instead-name").action((x, c) =>
-      c.copy(and_use_extractor_id_instead_name = x)).text("and_use_extractor_id_instead_name")
-    opt[String]('s', "and-statistics").action((x, c) =>
-      c.copy(and_statistics = x)).text("and_statistics")
-    opt[Int]('l', "and-exhaustive-limit").action((x, c) =>
-      c.copy(and_exhaustive_limit = x)).text("and_exhaustive_limit")
+    val single = esingle.map {
+      x =>
+        {
+         val genuuid = new GenUUID
+         val cid = x.contList.get(0).getContributorId
+         (cid,genuuid.exec(List(x.contList.get(0)).asJava))
+        }
+    }
+                                                                                                                    
+    //-- -----------------------------------------------------
+    //-- CLUSTERS FOR EXHAUSTIVE
+    //-- -----------------------------------------------------
+    //
+    //G1 = foreach EEXH generate flatten( exhaustiveAND( datagroup, simTriples ) ) as (uuid:chararray, cIds:{(chararray)});
+    //G2 = foreach G1 generate *, COUNT(cIds) as cnt;
+    //G3 = filter G2 by (uuid is not null and cnt>0);
+    //-- H: {cId: chararray,uuid: chararray}
+    //H = foreach G3 generate flatten( cIds ) as cId, uuid;
+    //
 
-    opt[String]('o', "and-outputContribs").action((x, c) => c.copy(and_outputContribs = x)).
-      text("and_outputContribs")
+    val g1 = eexh.flatMap {
+      x =>
+        {
+          val exhaustiveAND = new pl.edu.icm.coansys.disambiguation.author.pig.ExhaustiveAND(
+            conf.and_threshold,
+            conf.and_feature_info,
+            conf.and_use_extractor_id_instead_name,
+            conf.and_statistics
+          )
+          exhaustiveAND.exec(x.contList, x.clusterSimilarities).asScala
 
+        }
+    }
+    val g3 = g1.filter(x => {
+      x.get(0) != null && x.get(1).asInstanceOf[org.apache.pig.data.DataBag].size > 0
+    })
+    val h = g3.flatMap {
+      x =>
+        {
+          val uuid= x.get(0).toString
+          x.get(1).asInstanceOf[org.apache.pig.data.DataBag].iterator.asScala.map {
+            z =>
+              {
+                (z.get(0).asInstanceOf[String],uuid)
+              }
+          }
+        }
+    }
+
+    //-- -----------------------------------------------------
+    //-- STORING RESULTS
+    //-- -----------------------------------------------------
+    //
+    //R = union SINGLE, BIG, H;
+    //store R into '$and_outputContribs';
     
-
-    help( "help").text("prints this usage text")
-
+    single.union(big).union(h)
     
   }
 
@@ -318,4 +410,46 @@ object DisambiguationApr {
       }
     }.saveAsTextFile(and_outputContribs)
   }
+  
+  case class Config(
+    and_inputDocsData: String = "workflows/pl.edu.icm.coansys-disambiguation-author-workflow/results/splitted/apr-no-sim",
+    and_threshold: String = "-0.8",
+    and_feature_info: String = "IntersectionPerMaxval#EX_DOC_AUTHS_SNAMES#1.0#1",
+    and_aproximate_remember_sim: String = "false",
+    and_use_extractor_id_instead_name: String = "true",
+    and_statistics: String = "false",
+    and_exhaustive_limit: Int = 6627,
+    and_outputContribs:String= "workflows/pl.edu.icm.coansys-disambiguation-author-workflow/results/outputContribs/apr-no-sim"
+  )
+
+  val parser = new scopt.OptionParser[Config]("disambiguationApr") {
+    head("disambiguationApr", "1.x")
+
+    opt[String]('i', "and-inputDocsData").action((x, c) =>
+      c.copy(and_inputDocsData = x)).text("and_inputDocsData")
+
+    opt[String]('t', "and-threshold").action((x, c) =>
+      c.copy(and_threshold = x)).text("and_threshold")
+    opt[String]('f', "and-feature-info").action((x, c) =>
+      c.copy(and_feature_info = x)).text("and_feature_info")
+    opt[String]('a', "and-aproximate-remember-sim").action((x, c) =>
+      c.copy(and_aproximate_remember_sim = x)).text("and_aproximate_remember_sim")
+    opt[String]('e', "and-use-extractor-id-instead-name").action((x, c) =>
+      c.copy(and_use_extractor_id_instead_name = x)).text("and_use_extractor_id_instead_name")
+    opt[String]('s', "and-statistics").action((x, c) =>
+      c.copy(and_statistics = x)).text("and_statistics")
+    opt[Int]('l', "and-exhaustive-limit").action((x, c) =>
+      c.copy(and_exhaustive_limit = x)).text("and_exhaustive_limit")
+
+    opt[String]('o', "and-outputContribs").action((x, c) => c.copy(and_outputContribs = x)).
+      text("and_outputContribs")
+
+    
+
+    help( "help").text("prints this usage text")
+
+    
+  }
+  
+  
 }
