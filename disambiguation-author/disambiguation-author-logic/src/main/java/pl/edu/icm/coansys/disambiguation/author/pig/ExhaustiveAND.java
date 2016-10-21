@@ -72,7 +72,7 @@ public class ExhaustiveAND extends AND<DataBag> {
 	}
 
     
-    public DataBag exec(List<ContributorWithExtractedFeatures> li, List<Tuple> preCalculatedSims){
+    public DataBag exec(List<ContributorWithExtractedFeatures> li, List<ClusterSimTriple> preCalculatedSims){
        try {
         if (li == null || li.size() == 0) {
             return null;
@@ -98,13 +98,13 @@ public class ExhaustiveAND extends AND<DataBag> {
 				// taking bag with calculated similarities
 
 					// iterating through bag, dropping bag to Tuple array
-					for  (Tuple t: preCalculatedSims ) {
+					for  (ClusterSimTriple t: preCalculatedSims ) {
 						
 						calculatedSimCounter++;
 
-						int idX = (Integer) t.get(0);
-						int idY = (Integer) t.get(1);
-						float simValue = (Float) t.get(2);
+						int idX = t.a;
+						int idY = t.b;
+						float simValue = t.sim;
 
 						try {
 							csim[idX][idY] = simValue;
