@@ -192,7 +192,7 @@ object ANDAll {
       }
     }.map {
       case (x, exId) => {
-        x.getContributorId + "\t" + x.getDocKey + "\t" + exId + "\t" + x.getSurnameInt
+        x.getContributorId + "\t" + x.getDocKey + "\t" + exId + "\t" + (if (x.getSurnameInt==null) 0 else x.getSurnameInt)
       }
 
     }.saveAsTextFile(config.and_cid_dockey)
