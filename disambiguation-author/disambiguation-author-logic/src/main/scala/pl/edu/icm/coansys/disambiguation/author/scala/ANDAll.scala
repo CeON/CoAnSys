@@ -29,14 +29,14 @@ object ANDAll {
 
     opt[String]('i', "and-inputDocsData").action((x, c) =>
       c.copy(and_inputDocsData = x)).text("and_inputDocsData")
-    opt[String]("and-splitted-output-one").action((x, c) =>
+  /*  opt[String]("and-splitted-output-one").action((x, c) =>
       c.copy(and_splitted_output_one = x)).text("and_splitted_output_one")
     opt[String]("and-splitted-output-exh").action((x, c) =>
       c.copy(and_splitted_output_exh = x)).text("and_splitted_output_exh")
     opt[String]("and-splitted-output-apr-sim").action((x, c) =>
       c.copy(and_splitted_output_apr_sim = x)).text("and_splitted_output_apr_sim")
     opt[String]("and-splitted-output-apr-no-sim").action((x, c) =>
-      c.copy(and_splitted_output_apr_no_sim = x)).text("and_splitted_output_apr_no_sim")
+      c.copy(and_splitted_output_apr_no_sim = x)).text("and_splitted_output_apr_no_sim")*/
     opt[String]("and-temp-dir").action((x, c) =>
       c.copy(and_temp_dir = x)).text("and_temp_dir")
     opt[String]("and-cid-dockey").action((x, c) =>

@@ -24,14 +24,7 @@ object DisambiguationOne {
       }
   }
   
-  def process (c:pl.edu.icm.coansys.disambiguation.author.scala.Config, sc:SparkContext):RDD[(String,String)]={
-    val input = sc.objectFile[(Int, List[ContributorWithExtractedFeatures], Int)](c.and_splitted_output_one)
-    val res=process(input)
-    res.map{
-      case (x,y) => { x+"\t"+y} 
-    }.saveAsTextFile(c.and_outputContribs_one)
-    res
-  }
+ 
   
   /**
    * @param args the command line arguments

@@ -9,10 +9,10 @@ package pl.edu.icm.coansys.disambiguation.author.scala
 case class Config (
     and_sample: Double = 1.0,
     and_inputDocsData: String = "workflows/pl.edu.icm.coansys-disambiguation-author-workflow/results/splitted/apr-no-sim",
-    and_splitted_output_one: String = "workflows/pl.edu.icm.coansys-disambiguation-author-workflow/results/splitted/apr-no-sim",
+    /*and_splitted_output_one: String = "workflows/pl.edu.icm.coansys-disambiguation-author-workflow/results/splitted/apr-no-sim",
     and_splitted_output_exh: String = "workflows/pl.edu.icm.coansys-disambiguation-author-workflow/results/splitted/apr-no-sim",
     and_splitted_output_apr_sim: String = "workflows/pl.edu.icm.coansys-disambiguation-author-workflow/results/splitted/apr-no-sim",
-    and_splitted_output_apr_no_sim: String = "workflows/pl.edu.icm.coansys-disambiguation-author-workflow/results/splitted/apr-no-sim",
+    and_splitted_output_apr_no_sim: String = "workflows/pl.edu.icm.coansys-disambiguation-author-workflow/results/splitted/apr-no-sim",*/
     and_temp_dir: String = "workflows/pl.edu.icm.coansys-disambiguation-author-workflow/results/temp/",
     and_cid_dockey: String = "cid_dockey",
     and_cid_sname: String = "cid_sname",
@@ -36,3 +36,4 @@ case class Config (
     and_output_unserialized: String = "workflows/pl.edu.icm.coansys-disambiguation-author-workflow/results/unserializad"
   
 ) extends java.io.Serializable
+
