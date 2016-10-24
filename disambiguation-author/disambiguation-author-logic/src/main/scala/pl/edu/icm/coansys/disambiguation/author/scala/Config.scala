@@ -31,5 +31,8 @@ case class Config (
     and_outputContribs_one:String= "workflows/pl.edu.icm.coansys-disambiguation-author-workflow/results/outputContribs/one",
     and_outputContribs_exh:String= "workflows/pl.edu.icm.coansys-disambiguation-author-workflow/results/outputContribs/exh",
     and_outputContribs_apr_sim:String= "workflows/pl.edu.icm.coansys-disambiguation-author-workflow/results/outputContribs/apr_sim",
-    and_outputContribs_apr_no_sim:String= "workflows/pl.edu.icm.coansys-disambiguation-author-workflow/results/outputContribs/apr_no_sim"
-  ) extends java.io.Serializable
+    and_outputContribs_apr_no_sim:String= "workflows/pl.edu.icm.coansys-disambiguation-author-workflow/results/outputContribs/apr_no_sim",
+    and_outputPB: String = "workflows/pl.edu.icm.coansys-disambiguation-author-workflow/results/outputPB",
+    and_output_unserialized: String = "workflows/pl.edu.icm.coansys-disambiguation-author-workflow/results/unserializad"
+  
+) extends java.io.Serializable

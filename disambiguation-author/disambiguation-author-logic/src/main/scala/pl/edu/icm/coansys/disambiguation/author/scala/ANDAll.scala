@@ -50,7 +50,12 @@ object ANDAll {
     //			<!-- UDF config -->
     opt[String]("and-skip-empty-features").action((x, c) =>
       c.copy(and_skip_empty_features = x)).text("and_skip_empty_features")
+     opt[String]("and-outputPB").action((x, c) =>
+      c.copy(and_outputPB = x)).text("and_outputPB")
 
+    opt[String]("and-output-unserialized").action((x, c) =>
+      c.copy(and_output_unserialized = x)).text("and_output_unserialized")
+    
     opt[String]('f', "and-feature-info").action((x, c) =>
       c.copy(and_feature_info = { (z: String) =>
           {
@@ -365,6 +370,9 @@ object ANDAll {
     apr_no_sim_res.map{
       case (x,y) => { x+"\t"+y} 
     }.saveAsTextFile(config.and_outputContribs_apr_no_sim)
+    
+    Serialize.process(config, sc)
+    
   }
 
 

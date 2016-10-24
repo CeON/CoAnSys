@@ -1,20 +1,68 @@
 
 package pl.edu.icm.coansys.disambiguation.author.scala
-import java.io.File
-import org.apache.hadoop.io.BytesWritable
-import org.apache.pig.builtin.TOBAG
 
-import org.apache.pig.data.Tuple
-import org.apache.pig.data.TupleFactory
 import org.apache.spark.SparkConf
 import org.apache.spark.SparkContext
-import pl.edu.icm.coansys.disambiguation.author.pig.GenUUID
 import pl.edu.icm.coansys.models.DisambiguationAuthorProtos.ContributorDescription
 import pl.edu.icm.coansys.models.DisambiguationAuthorProtos.DisambiguationAuthorOut
 import scala.collection.JavaConverters._
 
 object Serialize {
 
+  def process(conf:pl.edu.icm.coansys.disambiguation.author.scala.Config, sc:SparkContext):Unit ={
+    
+    val cidDocKey = sc.textFile(conf.and_cid_dockey).map(x => {
+      val line = x.split("\t")
+      (line(0), (line(1), line(2), line(3)))
+    })
+    //CidAuuid = LOAD '$and_outputContribs/*' as (cId:chararray, uuid:chararray);
+    val contribs = sc.textFile(conf.and_outputContribs+"/*/*").map(x => {
+      val line = x.split("\t")
+      (line(0), line(1))
+    })
+
+
+    //A = JOIN CidDkey BY cId, CidAuuid BY cId;
+    //
+
+    val a = cidDocKey.join(contribs)
+
+    //B = FOREACH A generate CidDkey::cId as cId, uuid as uuid, docKey as docKey, ex_person_id_unused, sname_unused;
+
+    /* val b=a.map{
+   case (cid,((docKey,ex_Peson_id, sname),uuid)) => {
+   //    (dockeycid,)
+   }
+ }*/
+
+    //-- store unserialized results for optional accuracy checking
+    //-- (cId, coansysId, dockKey, externalId, sname)
+    //-- MAY BE COMMENTED IN PRODUCTION WHEN CHECKING NODE IN WORKFLOW IS TURNED OFF
+    //STORE B into '$and_output_unserialized'; 
+    a.map {
+      case (cid, ((docKey, ex_Peson_id, sname), uuid)) => {
+        cid + "\t" + uuid + "\t" + docKey + "\t" + ex_Peson_id + "\t" + sname
+      }
+    }.saveAsTextFile(conf.and_output_unserialized)
+
+    //-- prepare and store serialized, final AND output
+    //C = group B by docKey;
+    //-- D = FOREACH C generate group as docKey, B as trio;
+    //DEFINE serialize pl.edu.icm.coansys.disambiguation.author.pig.serialization.SERIALIZE_RESULTS();
+    //E = FOREACH C generate FLATTEN(serialize(*));
+    //STORE E into '$and_outputPB' USING pl.edu.icm.coansys.commons.pig.udf.RichSequenceFileLoader('org.apache.hadoop.io.Text', 'org.apache.hadoop.io.BytesWritable');
+    a.map {
+      case (cid, ((docKey, ex_Peson_id, sname), uuid)) => {
+        (docKey, (cid, uuid))
+      }
+    }.groupByKey().map {
+      case (docKey, iter) => {
+        getProtocolBuffersByteAFrom(docKey, iter)
+      }
+    }.saveAsSequenceFile(conf.and_outputPB)
+  }
+  
+  
   case class Config(
 
     and_outputContribs: String = "workflows/pl.edu.icm.coansys-disambiguation-author-workflow/results/outputContribs/*/*",
@@ -122,7 +170,7 @@ object Serialize {
     }.saveAsSequenceFile(and_outputPB)
 
   }
-
+  
   def getProtocolBuffersByteAFrom(docKey: String, iter: Iterable[(String, String)]): (String, Array[Byte]) = {
 
     val outb = DisambiguationAuthorOut.newBuilder();
