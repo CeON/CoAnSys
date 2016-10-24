@@ -311,11 +311,11 @@
             
             <arg>--and-sample=${and_sample}</arg>
 			<arg>--and-inputDocsData=${and_inputDocsData}</arg>
-			<arg>--and-splitted-output-one=${and_splitted_output_one}</arg>
-			<arg>--and-splitted-output-exh=${and_splitted_output_exh}</arg>
-			<arg>--and-splitted-output-apr-sim=${and_splitted_output_apr_sim}
+		<!--	<arg>- -and-splitted-output-one=${and_splitted_output_one}</arg>
+			<arg>- -and-splitted-output-exh=${and_splitted_output_exh}</arg>
+			<arg>- -and-splitted-output-apr-sim=${and_splitted_output_apr_sim}
 			</arg>
-			<arg>--and-splitted-output-apr-no-sim=${and_splitted_output_apr_no_sim}</arg>              
+			<arg>- -and-splitted-output-apr-no-sim=${and_splitted_output_apr_no_sim}</arg>    -->          
             <arg>--and-outputContribs=${and_outputContribs}</arg>
             <arg>--and-temp-dir=${and_temp_dir}</arg>
 			<arg>--and-cid-dockey=${and_cid_dockey}</arg>
