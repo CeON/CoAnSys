@@ -328,10 +328,11 @@
 			<arg>--and-lang=${and_lang}</arg>
 			<arg>--and-statistics=${and_statistics}</arg>
 			<arg>--and-threshold=${and_threshold}</arg>
-			
+			<arg>--and-outputPB=${and_outputPB}</arg>
+            <arg>--and-output-unserialized=${and_output_unserialized}</arg>
         </spark>
 		
-		<ok to="serialize_do" />
+		<ok to="check_accuracy_decision" />
 		<error to="kill" />
 	</action>
 
