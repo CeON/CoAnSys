@@ -17,7 +17,9 @@
  */
 package pl.edu.icm.coansys.disambiguation.author.features.extractors;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -56,22 +58,22 @@ public class EX_PERSON_ID_NOT_STATED extends DisambiguationExtractorAuthor {
 	}
 
 	@Override
-	public DataBag extract(Object o, int fakeIndex, String lang) {
+	public Collection<Integer> extract(Object o, int fakeIndex, String lang) {
 		DocumentMetadata dm = (DocumentMetadata) o;
-		DataBag db = new DefaultDataBag();
+		ArrayList<Integer> ret=new ArrayList<Integer>();
 
 		Author a = dm.getBasicMetadata().getAuthor(fakeIndex);
 		for (KeyValue kv : a.getExtIdList()) {
 			String id_name = kv.getKey();
 			if (!skip_id_set.contains(id_name)) {
 				String id_value = kv.getValue();
-				Object normalized = normalizeExtracted(id_name + "|" + id_value);
+				Integer normalized = normalizeExtracted(id_name + "|" + id_value);
 				if ( normalized != null ) {
-					db.add(TupleFactory.getInstance().newTuple(normalized));
+					ret.add(normalized);
 				}
 			}
 		}
-		return db;
+		return ret;
 	}
 
 	@Override

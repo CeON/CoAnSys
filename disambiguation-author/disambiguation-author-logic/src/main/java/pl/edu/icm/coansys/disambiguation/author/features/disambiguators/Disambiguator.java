@@ -19,6 +19,7 @@
 package pl.edu.icm.coansys.disambiguation.author.features.disambiguators;
 
 import java.util.AbstractMap.SimpleEntry;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -26,7 +27,7 @@ import java.util.Set;
 
 public abstract class Disambiguator {
 
-	public abstract double calculateAffinity(List<Object> f1, List<Object> f2);
+	public abstract double calculateAffinity(Collection<Object> f1, Collection<Object> f2);
 	protected double weight = 1;
 	protected double maxVal = 1;
 	
@@ -47,7 +48,7 @@ public abstract class Disambiguator {
 
 	// O( f1.size() + f2.size() )
 	public SimpleEntry<Integer, Integer> intersectionAndSum(
-			List<Object> f1, List<Object> f2) {
+			Collection<Object> f1, Collection<Object> f2) {
 		
 		if(f1==null || f2==null){
 			int size = 0;

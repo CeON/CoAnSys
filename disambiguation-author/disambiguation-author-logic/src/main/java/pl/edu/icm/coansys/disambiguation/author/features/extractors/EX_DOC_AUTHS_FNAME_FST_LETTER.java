@@ -18,6 +18,8 @@
 
 package pl.edu.icm.coansys.disambiguation.author.features.extractors;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import org.apache.pig.data.DataBag;
 import org.apache.pig.data.DefaultDataBag;
 import org.apache.pig.data.Tuple;
@@ -40,10 +42,10 @@ public class EX_DOC_AUTHS_FNAME_FST_LETTER extends DisambiguationExtractorDocume
 	}
 
 	@Override
-	public DataBag extract(Object o, String lang) {
+	public Collection<Integer> extract(Object o, String lang) {
 		TupleFactory tf = TupleFactory.getInstance();
 		DocumentMetadata dm = (DocumentMetadata) o;
-		DataBag db = new DefaultDataBag();
+		ArrayList<Integer> ret=new ArrayList<Integer>();
 
 		for (Author a : dm.getBasicMetadata().getAuthorList()) {
 			if (a == null) {
@@ -65,15 +67,14 @@ public class EX_DOC_AUTHS_FNAME_FST_LETTER extends DisambiguationExtractorDocume
 			String initial = str_normalized_fname.substring(0, 1);
 			Tuple t = tf.newTuple();
 
-			Object normalized = normalizeExtracted(initial);
+			Integer normalized = normalizeExtracted(initial);
 			if (normalized == null) {
 				continue;
 			}
-			t.append(normalized);
-			db.add(t);
+            ret.add(normalized);
 		}
 
-		return db;
+		return ret;
 	}
 
 	@Override

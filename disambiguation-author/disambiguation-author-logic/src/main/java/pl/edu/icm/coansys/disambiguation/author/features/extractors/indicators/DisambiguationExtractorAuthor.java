@@ -18,7 +18,7 @@
 
 package pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators;
 
-import org.apache.pig.data.DataBag;
+import java.util.Collection;
 
 import pl.edu.icm.coansys.disambiguation.author.normalizers.PigNormalizer;
 
@@ -29,11 +29,11 @@ public class DisambiguationExtractorAuthor extends DisambiguationExtractor {
 		super( new_normalizers );
 	}
 	
-	public DataBag extract( Object o, int authorIndex, String lang ) {
+	public Collection<Integer> extract( Object o, int authorIndex, String lang ) {
 		return null;
 	}
 
-	public DataBag extract( Object o, int authorIndex ) {
+	public Collection<Integer> extract( Object o, int authorIndex ) {
 		return extract( o, authorIndex, null );
 	}
 }

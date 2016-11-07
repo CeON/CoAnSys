@@ -18,6 +18,8 @@
 
 package pl.edu.icm.coansys.disambiguation.author.features.extractors;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import org.apache.pig.data.DataBag;
 import org.apache.pig.data.DefaultDataBag;
 import org.apache.pig.data.Tuple;
@@ -44,34 +46,32 @@ public class EX_EMAIL_PREFIX extends DisambiguationExtractorAuthor {
 			.getLogger(EX_EMAIL_PREFIX.class);
 
 	@Override
-	public DataBag extract(Object o, int fakeIndex, String lang) {
+	public Collection<Integer> extract(Object o, int fakeIndex, String lang) {
 
-		DataBag db = new DefaultDataBag();
+		ArrayList<Integer> ret=new ArrayList<Integer>();
 		try {
 			DocumentMetadata dm = (DocumentMetadata) o;
-			Tuple t = TupleFactory.getInstance().newTuple();
 			Author a = dm.getBasicMetadata().getAuthor(fakeIndex);
 			String email = a.getEmail();
 			
 			if ( email == null ) {
-				return db;
+				return ret;
 			}
 			email = email.replaceAll("@.+", "");
 			if ( email.length() == 0 ) {
-				return db;
+				return ret;
 			}
 			
-			Object normalized = normalizeExtracted(email);
+			Integer normalized = normalizeExtracted(email);
 			
 			if ( normalized != null ) {
-				t.append(normalized);
-				db.add(t);
+				ret.add(normalized);
 			}
 		} catch (Exception e) {
 			logger.error("Problem with extraction or normalization of email ",
 					e);
 		}
-		return db;
+		return ret;
 	}
 
 	@Override

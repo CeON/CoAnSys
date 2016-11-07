@@ -29,21 +29,22 @@ public class DisambiguationExtractor {
 	public DisambiguationExtractor(){
 		normalizers = new PigNormalizer[] {
 				new DiacriticsRemover(), 
-				new ToLowerCase(),
-				new ToHashCode()
+				new ToLowerCase()
 			};
 	}
-	
+	final ToHashCode tohashCode=new ToHashCode();
+    
 	public DisambiguationExtractor( PigNormalizer[] new_normalizers ) {
 		normalizers = new_normalizers.clone();
 	}
 
-	public Object normalizeExtracted( Object extracted ) {
-		Object tmp = extracted;
+	public Integer normalizeExtracted( String extracted ) {
+	     String tmp = extracted;
 		for ( PigNormalizer pn: normalizers ) {
 			tmp = pn.normalize( tmp );
 		}
-		return tmp;
+		return tohashCode.normalize(tmp);
+      
 	}
 	
 	public static boolean isClassifCode(String str) {

@@ -18,6 +18,7 @@
 
 package pl.edu.icm.coansys.disambiguation.author.features.disambiguators;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +40,7 @@ public class CosineSimilarity extends Disambiguator {
 	}
 
 	@Override
-	public double calculateAffinity(List<Object> f1, List<Object> f2) {
+	public double calculateAffinity(Collection<Object> f1, Collection<Object> f2) {
         Map<Object, Integer> v1 = calculateVector(f1);
         Map<Object, Integer> v2 = calculateVector(f2);
         if(v1.size()==0 && v2.size()==0){
@@ -53,7 +54,7 @@ public class CosineSimilarity extends Disambiguator {
         return cossim * weight;
     }
 
-    private Map<Object, Integer> calculateVector(List<Object> tokens) {
+    private Map<Object, Integer> calculateVector(Collection<Object> tokens) {
         HashMap<Object, Integer> vector = new HashMap<Object, Integer>();
         if(tokens==null){
         	return vector;
