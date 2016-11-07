@@ -27,7 +27,7 @@ object DisambiguationApr {
     val d = input.filter(z =>
       {
         z._2.length>0
-      })
+      }).repartition(20*sc.defaultParallelism)
     //
     //
     //-- -----------------------------------------------------

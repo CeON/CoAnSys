@@ -312,16 +312,16 @@ object ANDAll {
     //        
     val d1c = d.filter {
       case (s, li, c) => { c == 1 }
-    }.coalesce(sc.defaultParallelism * 2)
+    }.coalesce(sc.defaultParallelism * 10)
     val d100 = d.filter {
       case (s, li, c) => { (c > 1) && (c <= config.and_exhaustive_limit) }
-    }.coalesce(sc.defaultParallelism * 2)
+    }.coalesce(sc.defaultParallelism * 10)
     val dx = d.filter {
       case (s, li, c) => { (c > config.and_exhaustive_limit) && (c <= config.and_aproximate_sim_limit) }
-    }.coalesce(sc.defaultParallelism * 2)
+    }.coalesce(sc.defaultParallelism * 10)
     val d1000 = d.filter {
       case (s, li, c) => { c > config.and_aproximate_sim_limit }
-    }.coalesce(sc.defaultParallelism * 2)
+    }.coalesce(sc.defaultParallelism * 10)
 
     //              
     //              
