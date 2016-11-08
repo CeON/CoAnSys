@@ -49,6 +49,7 @@ import pl.edu.icm.coansys.disambiguation.author.pig.AproximateAND_BFS;
 import pl.edu.icm.coansys.disambiguation.author.pig.ExhaustiveAND;
 import pl.edu.icm.coansys.disambiguation.author.pig.extractor.EXTRACT_CONTRIBDATA_GIVENDATA;
 import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
+import static org.testng.Assert.*;
 
 // TODO:
 /* EXTRACTORS tests. Building metadata (author) example:
@@ -80,7 +81,7 @@ public class DisambiguationTest {
 		Integer hashCode;
 		// testing critical changes in DiacriticsRemover
 		tmp = DiacriticsRemover.removeDiacritics( text );
-		assert( tmp.equals(diacRmExpected) );
+		assertEquals(tmp,(diacRmExpected) );
 		
 		// testing normalizers
 		a = (new ToEnglishLowerCase()).normalize( text );
@@ -413,7 +414,7 @@ public class DisambiguationTest {
    				"false");
    		
                 String apr_out = "{({(0,0,[0#{(1),(2),(3)},1#{(1),(2),(3)},6#{(1),(2),(3)},7#{(1),(2),(3)}]),(1,1,[0#{(1),(2),(3)},1#{(1),(2),(3)},6#{(1),(2),(3)},7#{(1),(2),(3)}]),(2,2,[0#{(1),(2),(3)},1#{(4),(5),(6)},6#{(1),(2),(3)},7#{(1),(2),(3)}])},{(1,0,1.6666666),(2,0,0.6666667)}),({(3,3,[0#{(7),(8),(9)},1#{(7),(8),(9)},6#{(7),(8),(9)},7#{(7),(8),(9)}]),(4,4,[0#{(7),(8),(9)},1#{(7),(8),(9)},6#{(7),(8),(9)},7#{(7),(8),(9)}]),(5,5,[0#{(1),(2),(3)},1#{(4),(5),(6)},6#{(7),(8),(9)},7#{(7),(8),(9)}])},{(1,0,1.6666666),(2,0,0.0)})}";
-		assert( aproximate.exec(input).toString().equals( apr_out ) );
+		assertEquals(aproximate.exec(input).toString(),  apr_out  );
    	
    		// EXHAUSTIVE
    		AND<DataBag> exhaustive = new ExhaustiveAND(

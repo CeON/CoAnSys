@@ -325,11 +325,11 @@ public class AproximateAND_BFS extends AND<DataBag> {
 	// calculating affinity, clustering and creating result bag
 	// N^2 / 2
 	// simIdToClusterId[ contrib input index ]= contrib index in his cluster
-	private int simIdToClusterId[];
+	//private int simIdToClusterId[];
 
 	private DataBag MBFS(List<Map<String, Object>> contribsT) {
 
-		simIdToClusterId = new int[N];
+		int simIdToClusterId[] = new int[N];
 		final int guard = Integer.MIN_VALUE;
 		Deque<Integer> toCluster = new ArrayDeque<Integer>(N + 1);
 		List<Integer> clustered = new ArrayList<Integer>(N);
@@ -384,7 +384,7 @@ public class AproximateAND_BFS extends AND<DataBag> {
 						// cluster so we can add sim value to result bag
 						if (rememberSim) {
 							clusterSimilarities.add(clusterTriple
-									.toClusterTuple(idToCluster));
+									.toClusterTuple(simIdToClusterId));
 						}
 					} else {
 						// putting back the node, because it it has no
@@ -407,7 +407,7 @@ public class AproximateAND_BFS extends AND<DataBag> {
 				// adding this to result, starting new one
 				addClusterToResultBag(idToCluster, presentClusterSize, ret,
 						clusterContribDatas, clusterSimilarities,
-						otherSimilaritiesTriples);
+						otherSimilaritiesTriples,simIdToClusterId);
 
 				// next cluster begin
 				clusterContribDatas = new DefaultDataBag();
@@ -426,7 +426,7 @@ public class AproximateAND_BFS extends AND<DataBag> {
 		// add last cluster to result bag
 		addClusterToResultBag(idToCluster, presentClusterSize, ret,
 				clusterContribDatas, clusterSimilarities,
-				otherSimilaritiesTriples);
+				otherSimilaritiesTriples,simIdToClusterId);
 
 		return ret;
 	}
@@ -434,7 +434,8 @@ public class AproximateAND_BFS extends AND<DataBag> {
 	private void addClusterToResultBag(int[] idToCluster,
 			int presentClusterSize, DataBag ret, DataBag clusterContribDatas,
 			DataBag clusterSimilarities,
-			List<SimTriple> otherSimilaritiesTriples) {
+			List<SimTriple> otherSimilaritiesTriples,
+            int simIdToClusterId[]) {
 		if (clusterContribDatas != null) {
 
 			// adding similarities for nodes which had not been
@@ -464,8 +465,8 @@ public class AproximateAND_BFS extends AND<DataBag> {
     
     
 	public static class SimTriple {
-		private int v, u;
-		private float sim;
+		private final int v, u;
+		private final float sim;
 
 		SimTriple(int v, int u, float sim) {
 			this.v = v;
