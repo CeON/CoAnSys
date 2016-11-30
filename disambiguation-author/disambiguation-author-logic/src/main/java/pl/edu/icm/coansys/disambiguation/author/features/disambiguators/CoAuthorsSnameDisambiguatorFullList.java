@@ -50,6 +50,12 @@ public class CoAuthorsSnameDisambiguatorFullList extends Disambiguator {
 		this.maxVal = maxVal;
 	}
 	
+    @Override
+    @SuppressWarnings("unchecked")
+     public double calculateAffinitySorted(List<Integer> f1, List<Integer> f2){
+         return calculateAffinity((Collection<Object>) (List) f1,(Collection<Object>)(List) f2);
+     }
+    
 	@Override
 	public double calculateAffinity(Collection<Object> f1, Collection<Object> f2) {
 

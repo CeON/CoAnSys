@@ -46,6 +46,10 @@ public class PigDisambiguator{
 		this.d = d;
 	}
 	
+	public double calculateAffinitySorted(List<Integer> f1, List<Integer> f2) {
+		return d.calculateAffinitySorted(f1, f2);
+	}
+    
 	public double calculateAffinity(Object f1, Object f2) {
 		if(f1 instanceof DataBag && f2 instanceof DataBag ){
 			return calculateAffinity((DataBag) f1, (DataBag) f2);

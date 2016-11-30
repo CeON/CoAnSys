@@ -21,8 +21,10 @@ package pl.edu.icm.coansys.disambiguation.author.pig;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -88,11 +90,17 @@ public class AproximateAND_BFS extends AND<DataBag> {
         
     }
   
-    private  List<Map<String, Object>> createContribsT(List<ContributorWithExtractedFeatures> li){
-          List<Map<String, Object>> contribsT = new ArrayList<Map<String, Object>>(
+    private  List<Map<String, List<Integer>>> createContribsT(List<ContributorWithExtractedFeatures> li){
+          List<Map<String, List<Integer>>> contribsT = new ArrayList<>(
 					li.size());
           for (ContributorWithExtractedFeatures c:li) {
-              contribsT.add((Map) c.getMetadata());
+              Map<String,List<Integer>> map=new HashMap<>();
+              for (Map.Entry<String,Collection<Integer>> ent:c.getMetadata().entrySet()) {
+                  ArrayList<Integer> list=new ArrayList<>(ent.getValue());
+                  Collections.sort(list);
+                  map.put(ent.getKey(), list);
+              } 
+              contribsT.add( map);
           }
           return contribsT;
     }
@@ -120,7 +128,7 @@ public class AproximateAND_BFS extends AND<DataBag> {
 			toCluster.add(i);
 		}
 		toCluster.add(guard);
-        List<Map<String, Object>>  contribsT=createContribsT(contribs);
+        List<Map<String, List<Integer>>>  contribsT=createContribsT(contribs);
 		// iterating through all nodes (contributors) to cluster - have not been
 		// clustered so far; (>1) because of GUARD
 		while (toCluster.size() > 1) {
@@ -136,7 +144,7 @@ public class AproximateAND_BFS extends AND<DataBag> {
 					// removing node from not clustered nodes queue
 					int u = toCluster.pollFirst();
 
-					float simil = calculateContribsAffinityForAllFeatures(
+					float simil = calculateContribsAffinityForAllFeaturesaOnSortedLists(
 							contribsT, v, u, !rememberSim);
 
 					// creating similarity triple

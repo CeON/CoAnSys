@@ -28,6 +28,7 @@ import java.util.Set;
 public abstract class Disambiguator {
 
 	public abstract double calculateAffinity(Collection<Object> f1, Collection<Object> f2);
+    public abstract double calculateAffinitySorted(List<Integer> f1, List<Integer> f2);
 	protected double weight = 1;
 	protected double maxVal = 1;
 	
