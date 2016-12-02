@@ -105,6 +105,8 @@ public class CosineSimilarity extends Disambiguator {
             Pair<Integer,Integer> p2=vector2.get(i2);
             if (Objects.equals(p1.getX(), p2.getX())) {
                  ret +=  p1.getY()* p2.getY();
+                 i1++;
+                 i2++;
             } else {
                 if (p1.getX()<p2.getX()) {
                     i1++;
