@@ -28,6 +28,7 @@ import java.util.logging.Logger;
 import org.apache.hadoop.mapreduce.Counter;
 import org.apache.pig.EvalFunc;
 import org.apache.pig.tools.pigstats.PigStatusReporter;
+import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.CosineSimilarity;
 
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.Disambiguator;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.DisambiguatorFactory;
@@ -113,9 +114,9 @@ public abstract class AND<T> extends EvalFunc<T> {
     
     
     protected float calculateContribsAffinityForAllFeaturesaOnSortedLists(
-			List<Map<String, List<Integer>>> contribsT, int indexA, int indexB,
+			List<Map<String, CosineSimilarity.CosineSimilarityList>> contribsT, int indexA, int indexB,
 			boolean breakWhenPositive) {
-		Map<String, List<Integer>> mA, mB;
+		Map<String, CosineSimilarity.CosineSimilarityList> mA, mB;
 		double affinity = threshold;
 		
 		// Taking features from each keys (name of extractor = feature name)
@@ -132,14 +133,14 @@ public abstract class AND<T> extends EvalFunc<T> {
 		}
 		
 		for (int d = 0; d < features.length; d++) {
-			List<Integer> oA = mA.get(featureInfos[d].getFeatureExtractorName());
-			List<Integer> oB = mB.get(featureInfos[d].getFeatureExtractorName());
+			CosineSimilarity.CosineSimilarityList oA = mA.get(featureInfos[d].getFeatureExtractorName());
+			CosineSimilarity.CosineSimilarityList oB = mB.get(featureInfos[d].getFeatureExtractorName());
 
 			if (oA == null || oB == null) {
 				continue;
 			}
 			
-			double ca = calculateAffinitySorted(oA, oB, d);
+			double ca = calculateAffinitySorted(oA.getOrigList(), oB.getOrigList(),oA,oB, d);
 			if ( Double.isNaN(ca) ) {
 				throw new NumberFormatException("NaN result of calculated affinity. Check disambiguator (meybe 0 * inf?).");
 			}
@@ -206,10 +207,10 @@ public abstract class AND<T> extends EvalFunc<T> {
 	}
 
     protected double calculateAffinitySorted(List<Integer> featureDescriptionA,
-			List<Integer> featureDescriptionB, int featureIndex) {
+			List<Integer> featureDescriptionB,CosineSimilarity.CosineSimilarityList l1, CosineSimilarity.CosineSimilarityList l2, int featureIndex) {
 
 		return features[featureIndex].calculateAffinitySorted(featureDescriptionA,
-				featureDescriptionB);
+				featureDescriptionB,l1,l2);
 	}
     
     

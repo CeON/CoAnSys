@@ -39,6 +39,7 @@ import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
 import pl.edu.icm.coansys.disambiguation.author.benchmark.TimerSyso;
+import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.CosineSimilarity;
 import pl.edu.icm.coansys.disambiguation.model.ContributorWithExtractedFeatures;
 
 public class AproximateAND_BFS extends AND<DataBag> {
@@ -90,15 +91,15 @@ public class AproximateAND_BFS extends AND<DataBag> {
         
     }
   
-    private  List<Map<String, List<Integer>>> createContribsT(List<ContributorWithExtractedFeatures> li){
-          List<Map<String, List<Integer>>> contribsT = new ArrayList<>(
+    private  List<Map<String, CosineSimilarity.CosineSimilarityList>> createContribsT(List<ContributorWithExtractedFeatures> li){
+          List<Map<String, CosineSimilarity.CosineSimilarityList>> contribsT = new ArrayList<>(
 					li.size());
           for (ContributorWithExtractedFeatures c:li) {
-              Map<String,List<Integer>> map=new HashMap<>();
+              Map<String,CosineSimilarity.CosineSimilarityList> map=new HashMap<>();
               for (Map.Entry<String,Collection<Integer>> ent:c.getMetadata().entrySet()) {
                   ArrayList<Integer> list=new ArrayList<>(ent.getValue());
                   Collections.sort(list);
-                  map.put(ent.getKey(), list);
+                  map.put(ent.getKey(), new CosineSimilarity.CosineSimilarityList(list));
               } 
               contribsT.add( map);
           }
@@ -128,7 +129,7 @@ public class AproximateAND_BFS extends AND<DataBag> {
 			toCluster.add(i);
 		}
 		toCluster.add(guard);
-        List<Map<String, List<Integer>>>  contribsT=createContribsT(contribs);
+        List<Map<String, CosineSimilarity.CosineSimilarityList>>  contribsT=createContribsT(contribs);
 		// iterating through all nodes (contributors) to cluster - have not been
 		// clustered so far; (>1) because of GUARD
 		while (toCluster.size() > 1) {

@@ -27,6 +27,7 @@ import java.util.List;
 import org.apache.pig.backend.executionengine.ExecException;
 import org.apache.pig.data.DataBag;
 import org.apache.pig.data.Tuple;
+import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.CosineSimilarity;
 
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.Disambiguator;
 
@@ -46,8 +47,12 @@ public class PigDisambiguator{
 		this.d = d;
 	}
 	
-	public double calculateAffinitySorted(List<Integer> f1, List<Integer> f2) {
-		return d.calculateAffinitySorted(f1, f2);
+	public double calculateAffinitySorted(List<Integer> f1, List<Integer> f2, CosineSimilarity.CosineSimilarityList l1, CosineSimilarity.CosineSimilarityList l2) {
+        if (d instanceof CosineSimilarity && l1!=null && l2 !=null) {
+            return ((CosineSimilarity)d).calculateAffinitySorted(l1, l2);
+        }
+        
+        return d.calculateAffinitySorted(f1, f2);
 	}
     
 	public double calculateAffinity(Object f1, Object f2) {

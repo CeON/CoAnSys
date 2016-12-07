@@ -33,6 +33,22 @@ import pl.edu.icm.coansys.commons.java.Pair;
 @SuppressWarnings("boxing")
 public class CosineSimilarity extends Disambiguator {
 
+    public static class CosineSimilarityList {
+        List<Pair<Integer, Integer>> counts;
+        double length;
+        List<Integer> origList;
+        public CosineSimilarityList(List<Integer> li){
+            origList=li;
+            counts=calculateCounts(li);
+            length=vectorLength(counts);
+        }
+
+        public List<Integer> getOrigList() {
+            return origList;
+        }
+        
+    }
+    
 	public CosineSimilarity() {
 		super();
 	}
@@ -61,8 +77,24 @@ public class CosineSimilarity extends Disambiguator {
          
          
      }
-    
-    List<Pair<Integer, Integer>> calculateCounts(List<Integer> li) {
+     public double calculateAffinitySorted(CosineSimilarityList f1, CosineSimilarityList f2){
+        
+        if(f1.counts.size()==0 && f1.counts.size()==0){
+        	return 0;
+        }
+        double cossim = dotProduct(f1.counts, f2.counts) / (f1.length * f2.length);
+        // Note that inf * 0 is indeterminate form (what gives NaN)
+        if ( cossim == 0 ) {
+        	return 0;
+        }
+        return cossim * weight;
+         
+         
+         
+     }
+     
+     
+    static  List<Pair<Integer, Integer>> calculateCounts(List<Integer> li) {
         ArrayList<Pair<Integer, Integer>> ret = new ArrayList<>();
         if (li.isEmpty()) {
             return ret;
@@ -87,7 +119,7 @@ public class CosineSimilarity extends Disambiguator {
 
     }
      
-    private double vectorLength(List<Pair<Integer, Integer>> vector) {
+    static private double vectorLength(List<Pair<Integer, Integer>> vector) {
         double ret = 0.0;
         for (Pair<Integer, Integer> entry : vector) {
             ret += entry.getY() * entry.getY();
