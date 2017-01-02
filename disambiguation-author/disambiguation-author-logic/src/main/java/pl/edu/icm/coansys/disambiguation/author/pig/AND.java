@@ -185,6 +185,10 @@ public abstract class AND<T> extends EvalFunc<T> {
 			}
 			
 			double ca = calculateAffinity(oA, oB, d);
+            //DEbug
+            if (ca<0) {
+                System.out.println("Found negativve affinity for feature: "+features[d].getClass().getName()+" value= "+ca+" tested "+oA+" "+oB);
+                }
 			if ( Double.isNaN(ca) ) {
 				throw new NumberFormatException("NaN result of calculated affinity. Check disambiguator (meybe 0 * inf?).");
 			}
