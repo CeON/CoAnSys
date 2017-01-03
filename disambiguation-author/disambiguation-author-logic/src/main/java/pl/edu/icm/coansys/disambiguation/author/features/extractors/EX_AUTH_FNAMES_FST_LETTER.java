@@ -22,7 +22,6 @@ package pl.edu.icm.coansys.disambiguation.author.features.extractors;
 import pl.edu.icm.coansys.disambiguation.author.normalizers.DiacriticsRemover;
 import pl.edu.icm.coansys.disambiguation.author.normalizers.FirstLetter;
 import pl.edu.icm.coansys.disambiguation.author.normalizers.PigNormalizer;
-import pl.edu.icm.coansys.disambiguation.author.normalizers.ToHashCode;
 import pl.edu.icm.coansys.disambiguation.author.normalizers.ToLowerCase;
 
 public class EX_AUTH_FNAMES_FST_LETTER extends EX_AUTH_FNAMES {
@@ -30,7 +29,6 @@ public class EX_AUTH_FNAMES_FST_LETTER extends EX_AUTH_FNAMES {
 		new FirstLetter(),
 		new DiacriticsRemover(), 
 		new ToLowerCase(),
-		new ToHashCode()
 	};
 
 	public EX_AUTH_FNAMES_FST_LETTER() {

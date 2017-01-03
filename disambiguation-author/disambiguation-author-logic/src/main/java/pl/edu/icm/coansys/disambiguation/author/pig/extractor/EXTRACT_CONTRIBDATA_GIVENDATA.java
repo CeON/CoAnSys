@@ -42,6 +42,7 @@ import org.slf4j.LoggerFactory;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
+import java.util.concurrent.ConcurrentHashMap;
 
 import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.DisambiguationExtractorFactory;
@@ -49,6 +50,7 @@ import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.D
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DisambiguationExtractorAuthor;
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DisambiguationExtractorDocument;
 import pl.edu.icm.coansys.disambiguation.features.FeatureInfo;
+import pl.edu.icm.coansys.disambiguation.model.ContributorWithExtractedFeatures;
 import pl.edu.icm.coansys.models.DocumentProtos.Author;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
@@ -158,6 +160,18 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 		setDisambiguationExtractor(featureinfo);
 	}
 
+    
+    static ConcurrentHashMap<String,EXTRACT_CONTRIBDATA_GIVENDATA> extractors=new ConcurrentHashMap<>();
+    
+    public static synchronized EXTRACT_CONTRIBDATA_GIVENDATA get_EXTRACT_CONTRIBDATA_GIVENDATA(String params) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+        if (!extractors.containsKey(params)) {
+            extractors.put(params, new EXTRACT_CONTRIBDATA_GIVENDATA(params));
+        }
+        return extractors.get(params);
+    }
+    
+    
+    
 	public Map<String, Object> debugComponents() {
 		HashMap<String, Object> ret = new HashMap<String, Object>();
 		if (language != null) {
@@ -180,16 +194,28 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 
 	@Override
 	public DataBag exec(Tuple input) throws IOException {
-
-		initializePigReporterWithZeroes();
+        initializePigReporterWithZeroes();
 
 		if (input == null || input.size() == 0) {
 			return null;
 		}
+        DataBag ret = new DefaultDataBag();
+        for (ContributorWithExtractedFeatures cont:extract((DataByteArray)input.get(0))){
+           
+				ret.add(cont.asTuple());
+        }
+        
+        return ret;
+        
+    }
+        
+        
+    
+	
+	public Collection<ContributorWithExtractedFeatures> extract(DataByteArray dba) throws IOException {	
 
 		try {
-			DataByteArray dba = (DataByteArray) input.get(0);
-
+			
 			DocumentWrapper dw = DocumentWrapper.parseFrom(dba.get());
 			dba = null;
 
@@ -199,8 +225,8 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 			dw = null;
 
 			// result bag with tuples, which describe each contributor
-			DataBag ret = new DefaultDataBag();
-
+			Collection<ContributorWithExtractedFeatures> ret = new ArrayList<>();
+            
 			Collection<Author> authors = dm.getBasicMetadata().getAuthorList();
 			reportAuthors(authors);
 			if (authors.isEmpty()) {
@@ -208,9 +234,9 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 				return ret;
 			}
 
-			Map<String, DataBag> finalAuthorMap;
+			Map<String, Collection<Integer>> finalAuthorMap;
 			// taking from document metadata data universal for all contribs
-			Map<String, DataBag> DocumentMap = extractDocBasedFeatures(dm);
+			Map<String, Collection<Integer>> documentMap = extractDocBasedFeatures(dm);
 			// creating disambiguation extractor only for normalizer
 			DisambiguationExtractor extractor = new DisambiguationExtractor();
 
@@ -220,7 +246,7 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 			for (Author a : authors) {
 				i++;
 				// here we have sure that Object = Integer
-				Object normalizedSname = extractor.normalizeExtracted(a.getSurname());
+				Integer normalizedSname = extractor.normalizeExtracted(a.getSurname());
 				// additional code for keeping information about the real surname for debug reasons
 				String rawNormalizedSname = a.getSurname().toLowerCase();
 				
@@ -229,12 +255,9 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 
 				String cId = UUID.nameUUIDFromBytes(a.toByteArray()).toString();
 				// taking from document metadata data specific for each contrib
-				finalAuthorMap = extractAuthBasedFeatures(dm, DocumentMap, i);
-				Object[] to = new Object[] { docKey, cId, normalizedSname,
-						finalAuthorMap, rawNormalizedSname };
-				Tuple t = TupleFactory.getInstance()
-						.newTuple(Arrays.asList(to));
-				ret.add(t);
+				finalAuthorMap = extractAuthBasedFeatures(dm, documentMap, i);
+				ret.add(new ContributorWithExtractedFeatures(docKey, cId, finalAuthorMap, normalizedSname, rawNormalizedSname, 
+                    normalizedSname!=null));
 			}
 
 			if (returnNull) {
@@ -249,13 +272,13 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 		}
 	}
 
-	private Map<String, DataBag> extractAuthBasedFeatures(DocumentMetadata dm,
-			Map<String, DataBag> InitialMap, int authorIndex) {
+	private Map<String,Collection<Integer>> extractAuthBasedFeatures(DocumentMetadata dm,
+			Map<String, Collection<Integer>> InitialMap, int authorIndex) {
 
-		Map<String, DataBag> finalAuthorMap = new HashMap<String, DataBag>(
+		Map<String, Collection<Integer>> finalAuthorMap = new HashMap<String, Collection<Integer>>(
 				InitialMap);
 		// in arrays we are storing DataBags from extractors
-		DataBag extractedAuthorObj;
+		Collection<Integer> extractedAuthorObj;
 
 		for (int j = 0; j < des4Author.size(); j++) {
 			extractedAuthorObj = des4Author.get(j).extract(dm, authorIndex,
@@ -272,10 +295,10 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 		return finalAuthorMap;
 	}
 
-	private Map<String, DataBag> extractDocBasedFeatures(DocumentMetadata dm) {
-		Map<String, DataBag> map = new HashMap<String, DataBag>();
+	private Map<String, Collection<Integer>> extractDocBasedFeatures(DocumentMetadata dm) {
+		Map<String, Collection<Integer>> map = new HashMap<String, Collection<Integer>>();
 		// in arrays we are storing DataBags from extractors
-		DataBag extractedDocObj;
+		Collection<Integer> extractedDocObj;
 		for (int i = 0; i < des4Doc.size(); i++) {
 			extractedDocObj = des4Doc.get(i).extract(dm, language);
 			// monit to pig status reporter
@@ -356,7 +379,7 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 		counterOriginalSname[REPORTER_CONST.EXIST].increment(0);
 	}
 
-	private void reportAuthorDataExistance(DataBag extractedAuthorObj, int j) {
+	private void reportAuthorDataExistance(Collection<Integer> extractedAuthorObj, int j) {
 		if (countersExist == null) {
 			return;
 		}
@@ -367,7 +390,7 @@ public class EXTRACT_CONTRIBDATA_GIVENDATA extends EvalFunc<DataBag> {
 		}
 	}
 
-	private void raportDocumentDataExistance(DataBag extractedDocObj, int i) {
+	private void raportDocumentDataExistance(Collection<Integer> extractedDocObj, int i) {
 		if (countersExist == null) {
 			return;
 		}

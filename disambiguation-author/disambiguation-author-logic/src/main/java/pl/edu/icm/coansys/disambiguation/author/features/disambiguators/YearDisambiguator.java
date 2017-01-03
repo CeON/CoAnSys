@@ -18,6 +18,7 @@
 
 package pl.edu.icm.coansys.disambiguation.author.features.disambiguators;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -47,14 +48,21 @@ public class YearDisambiguator extends Disambiguator {
 		this.maxVal = maxVal;
 	}
 	
+    @Override
+    @SuppressWarnings("unchecked")
+     public double calculateAffinitySorted(List<Integer> f1, List<Integer> f2){
+         return calculateAffinity((Collection<Object>) (List) f1,(Collection<Object>)(List) f2);
+     }
+    
+    
 	@Override
-	public double calculateAffinity( List<Object> f1, List<Object> f2 ) {
+	public double calculateAffinity(Collection<Object> f1, Collection<Object> f2) {
 		
 		if ( f1.isEmpty() || f2.isEmpty() ) {
 			return 0;
 		}
-		Object first = f1.get(0);
-		Object second = f2.get(0);
+		Object first = f1.iterator().next();
+		Object second = f2.iterator().next();
 		
 		if ( first == null || second == null ) {
 			return 0;

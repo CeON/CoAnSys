@@ -18,10 +18,8 @@
 
 package pl.edu.icm.coansys.disambiguation.author.features.extractors;
 
-import org.apache.pig.data.DataBag;
-import org.apache.pig.data.DefaultDataBag;
-import org.apache.pig.data.Tuple;
-import org.apache.pig.data.TupleFactory;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import pl.edu.icm.coansys.disambiguation.author.features.extractors.indicators.DisambiguationExtractorDocument;
 import pl.edu.icm.coansys.disambiguation.author.normalizers.PigNormalizer;
@@ -40,13 +38,13 @@ public class EX_YEAR extends DisambiguationExtractorDocument {
 	}
 
 	@Override
-	public DataBag extract( Object o, String lang ) {
+	public Collection<Integer> extract( Object o, String lang ) {
 		DocumentMetadata dm = (DocumentMetadata) o;
 		
-		DataBag db = new DefaultDataBag();
+		ArrayList<Integer> ret=new ArrayList<Integer>();
 		String year = dm.getBasicMetadata().getYear();
 		if ( year == null || year.isEmpty() ) {
-			return db;
+			return ret;
 		}
 		
 		int intYear;
@@ -54,13 +52,11 @@ public class EX_YEAR extends DisambiguationExtractorDocument {
 		try {
 			intYear = Integer.parseInt( year );
 		} catch( NumberFormatException e ) {
-			return db;
+			return ret;
 		}
+		ret.add(intYear);
 		
-		Tuple t = TupleFactory.getInstance().newTuple( intYear );
-		db.add( t );
-		
-		return db;
+		return ret;
 	}
 
 	@Override

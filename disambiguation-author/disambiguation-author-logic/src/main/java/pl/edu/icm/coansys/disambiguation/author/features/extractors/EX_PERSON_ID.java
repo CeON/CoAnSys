@@ -18,7 +18,9 @@
 package pl.edu.icm.coansys.disambiguation.author.features.extractors;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import org.apache.commons.lang.StringUtils;
 
 import org.apache.pig.data.DataBag;
 import org.apache.pig.data.DefaultDataBag;
@@ -34,10 +36,8 @@ import pl.edu.icm.coansys.models.DocumentProtos.KeyValue;
 //Note that we do not use normalization for that one.
 public class EX_PERSON_ID extends DisambiguationExtractorAuthor {
 
-	static protected List<String> PERSON_ID_KEY_NAME;// = "pbnPersonId";
-	static{
-		PERSON_ID_KEY_NAME = new ArrayList<String>();
-	}
+	protected List<String> PERSON_ID_KEY_NAME = new ArrayList<String>();
+	
 	
 	
 	public EX_PERSON_ID() {
@@ -60,24 +60,21 @@ public class EX_PERSON_ID extends DisambiguationExtractorAuthor {
 	}
 	
 	@Override
-	public DataBag extract(Object o, int fakeIndex, String lang) {
-		TupleFactory tf = TupleFactory.getInstance();
+	public Collection<Integer> extract(Object o, int fakeIndex, String lang) {
 		DocumentMetadata dm = (DocumentMetadata) o;
-		DataBag db = new DefaultDataBag();
-		Tuple t = tf.newTuple();
-
+		ArrayList<Integer> ret=new ArrayList<Integer>();
+	
 		Author a = dm.getBasicMetadata().getAuthor(fakeIndex);
 		for (KeyValue kv : a.getExtIdList()) {
 			if (PERSON_ID_KEY_NAME.contains(kv.getKey())) {
-				if ( kv.getValue() == null || kv.getValue().isEmpty() ) {
+				if ( StringUtils.isBlank(kv.getValue()) ) {
 					continue;
 				}
-				t.append(kv.getValue());
-				db.add(t);
+				ret.add(normalizeExtracted(kv.getValue()));
 				break;
 			}
 		}
-		return db;
+		return ret;
 	}
 
 	@Override

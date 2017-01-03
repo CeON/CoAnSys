@@ -19,6 +19,34 @@
     <build>
         <plugins>
             <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.7</version>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>src/main/oozie</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>src/main/oozie-in</directory>
+                                    <filtering>true</filtering>
+                                    <includes>
+                                        <include>*.xml.*</include>
+                                        <include>*.xml</include>
+                                        <include>*.properties</include>
+                                    </includes>
+                                
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>pl.edu.icm.maven</groupId>
                 <artifactId>oozie-maven-plugin</artifactId>
                 <extensions>true</extensions>
@@ -33,7 +61,7 @@
     <dependencies>
         <dependency>
             <groupId>pl.edu.icm.coansys</groupId>
-            <artifactId>disambiguation-author-logic</artifactId>
+            <artifactId>disambiguation-author-spark-jar</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

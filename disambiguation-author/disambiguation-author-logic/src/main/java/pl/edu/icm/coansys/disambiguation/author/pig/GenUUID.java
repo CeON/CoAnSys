@@ -19,6 +19,7 @@
 package pl.edu.icm.coansys.disambiguation.author.pig;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -29,6 +30,7 @@ import org.apache.pig.data.Tuple;
 
 import pl.edu.icm.coansys.disambiguation.idgenerators.IdGenerator;
 import pl.edu.icm.coansys.disambiguation.idgenerators.UuIdGenerator;
+import pl.edu.icm.coansys.disambiguation.model.ContributorWithExtractedFeatures;
 
 /**
  * @author pdendek
@@ -38,6 +40,16 @@ public class GenUUID extends EvalFunc< String> {
 
     private IdGenerator idgenerator = new UuIdGenerator();
 
+    
+    public String exec(Collection<ContributorWithExtractedFeatures> cwe) {
+        List<String> l = new LinkedList<String>();
+        for (ContributorWithExtractedFeatures c:cwe) {
+            l.add(c.getContributorId());
+        }
+        return idgenerator.genetareId(l);
+    }
+    
+    
     /**
      * @param Tuple input with DataBag with Strings - contributors' names, 
      * for whom we want to find unique id

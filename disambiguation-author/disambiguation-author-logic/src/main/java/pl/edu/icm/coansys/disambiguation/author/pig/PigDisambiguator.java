@@ -19,6 +19,7 @@
 package pl.edu.icm.coansys.disambiguation.author.pig;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -26,6 +27,7 @@ import java.util.List;
 import org.apache.pig.backend.executionengine.ExecException;
 import org.apache.pig.data.DataBag;
 import org.apache.pig.data.Tuple;
+import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.CosineSimilarity;
 
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.Disambiguator;
 
@@ -45,6 +47,14 @@ public class PigDisambiguator{
 		this.d = d;
 	}
 	
+	public double calculateAffinitySorted(List<Integer> f1, List<Integer> f2, CosineSimilarity.CosineSimilarityList l1, CosineSimilarity.CosineSimilarityList l2) {
+        if (d instanceof CosineSimilarity && l1!=null && l2 !=null) {
+            return ((CosineSimilarity)d).calculateAffinitySorted(l1, l2);
+        }
+        
+        return d.calculateAffinitySorted(f1, f2);
+	}
+    
 	public double calculateAffinity(Object f1, Object f2) {
 		if(f1 instanceof DataBag && f2 instanceof DataBag ){
 			return calculateAffinity((DataBag) f1, (DataBag) f2);
@@ -52,6 +62,8 @@ public class PigDisambiguator{
 			return calculateAffinity((Tuple) f1, (Tuple) f2);	 
 		}else if(f1 instanceof String && f2 instanceof String ){
 			return calculateAffinity((String) f1, (String) f2);
+		}else if(f1 instanceof Collection && f2 instanceof Collection ){
+			return d.calculateAffinity((Collection) f1, (Collection) f2);
 		}else{
 			throw new IllegalArgumentException("data type "+ f1.getClass()
 					+ " or " + f2.getClass() +" unsupported in calculateAffinity");

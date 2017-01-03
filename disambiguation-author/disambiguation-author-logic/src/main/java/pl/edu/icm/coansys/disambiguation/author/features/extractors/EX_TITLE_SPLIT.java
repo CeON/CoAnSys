@@ -18,6 +18,8 @@
 
 package pl.edu.icm.coansys.disambiguation.author.features.extractors;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import org.apache.pig.data.DataBag;
 import org.apache.pig.data.DefaultDataBag;
 import org.apache.pig.data.Tuple;
@@ -40,10 +42,10 @@ public class EX_TITLE_SPLIT extends DisambiguationExtractorDocument {
 	}
 
 	@Override
-	public DataBag extract(Object o, String lang) {
+	public Collection<Integer> extract(Object o, String lang) {
 
 		DocumentMetadata dm = (DocumentMetadata) o;
-		DataBag db = new DefaultDataBag();
+		ArrayList<Integer> ret=new ArrayList<Integer>();
 		DiacriticsRemover DR = new DiacriticsRemover();
 
 		for (TextWithLanguage title : dm.getBasicMetadata().getTitleList()) {
@@ -60,16 +62,15 @@ public class EX_TITLE_SPLIT extends DisambiguationExtractorDocument {
 				if (s.isEmpty()) {
 					continue;
 				}
-				Object normalized = normalizeExtracted(s);
+				Integer normalized = normalizeExtracted(s);
 				if (normalized == null) {
 					continue;
 				}
-				Tuple t = TupleFactory.getInstance().newTuple(normalized);
-				db.add(t);
+                ret.add(normalized);
 			}
 		}
 
-		return db;
+		return ret;
 	}
 
 	@Override

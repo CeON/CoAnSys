@@ -18,13 +18,17 @@
 
 package pl.edu.icm.coansys.disambiguation.author.pig;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.hadoop.mapreduce.Counter;
 import org.apache.pig.EvalFunc;
 import org.apache.pig.tools.pigstats.PigStatusReporter;
+import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.CosineSimilarity;
 
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.Disambiguator;
 import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.DisambiguatorFactory;
@@ -47,6 +51,9 @@ public abstract class AND<T> extends EvalFunc<T> {
 		return threshold;
 	}
 
+    static DisambiguationExtractorFactory staticDisambigFactory=null;
+   
+    
 	// benchmark staff
 	public AND(org.slf4j.Logger logger, String threshold,
 			String featureDescription, String useIdsForExtractorsStr)
@@ -61,7 +68,13 @@ public abstract class AND<T> extends EvalFunc<T> {
 		List<FeatureInfo> FIFinall = new LinkedList<FeatureInfo>();
 		List<PigDisambiguator> FeaturesFinall = new LinkedList<PigDisambiguator>();
 
-		DisambiguationExtractorFactory extrFactory = new DisambiguationExtractorFactory();
+        synchronized (this.getClass()) {
+            if (staticDisambigFactory==null) {
+                staticDisambigFactory=new DisambiguationExtractorFactory();
+            }
+        }
+        
+		DisambiguationExtractorFactory extrFactory = staticDisambigFactory;
 		DisambiguatorFactory ff = new DisambiguatorFactory();
 		Disambiguator d;
 
@@ -98,6 +111,52 @@ public abstract class AND<T> extends EvalFunc<T> {
 				.size()]);
 	}
 
+    
+    
+    protected float calculateContribsAffinityForAllFeaturesaOnSortedLists(
+			List<Map<String, CosineSimilarity.CosineSimilarityList>> contribsT, int indexA, int indexB,
+			boolean breakWhenPositive) {
+		Map<String, CosineSimilarity.CosineSimilarityList> mA, mB;
+		double affinity = threshold;
+		
+		// Taking features from each keys (name of extractor = feature name)
+		// In contribsT.get(i) there is map we need.
+		// From this map (collection of i'th contributor's features)
+		// we take Bag with value of given feature.
+		// Here we have sure that following Object = DateBag.
+		mA = contribsT.get(indexA);
+		mB = contribsT.get(indexB);
+
+		// probably map is empty for some contrib
+		if (mA == null || mB == null) {
+			return 0;
+		}
+		
+		for (int d = 0; d < features.length; d++) {
+			CosineSimilarity.CosineSimilarityList oA = mA.get(featureInfos[d].getFeatureExtractorName());
+			CosineSimilarity.CosineSimilarityList oB = mB.get(featureInfos[d].getFeatureExtractorName());
+
+			if (oA == null || oB == null) {
+				continue;
+			}
+			
+			double ca = calculateAffinitySorted(oA.getOrigList(), oB.getOrigList(),oA,oB, d);
+			if ( Double.isNaN(ca) ) {
+				throw new NumberFormatException("NaN result of calculated affinity. Check disambiguator (meybe 0 * inf?).");
+			}
+			affinity += ca;
+
+			if (affinity >= 0 && breakWhenPositive) {
+				// because we do not remember sim values this time
+				// we can break calculations
+				break;
+			}
+		}
+		return (float) affinity;
+	}
+    
+    
+    
 	protected float calculateContribsAffinityForAllFeatures(
 			List<Map<String, Object>> contribsT, int indexA, int indexB,
 			boolean breakWhenPositive) {
@@ -126,6 +185,10 @@ public abstract class AND<T> extends EvalFunc<T> {
 			}
 			
 			double ca = calculateAffinity(oA, oB, d);
+            //DEbug
+            if (ca<0) {
+                System.out.println("Found negativve affinity for feature: "+features[d].getClass().getName()+" value= "+ca+" tested "+oA+" "+oB);
+                }
 			if ( Double.isNaN(ca) ) {
 				throw new NumberFormatException("NaN result of calculated affinity. Check disambiguator (meybe 0 * inf?).");
 			}
@@ -147,6 +210,14 @@ public abstract class AND<T> extends EvalFunc<T> {
 				featureDescriptionB);
 	}
 
+    protected double calculateAffinitySorted(List<Integer> featureDescriptionA,
+			List<Integer> featureDescriptionB,CosineSimilarity.CosineSimilarityList l1, CosineSimilarity.CosineSimilarityList l2, int featureIndex) {
+
+		return features[featureIndex].calculateAffinitySorted(featureDescriptionA,
+				featureDescriptionB,l1,l2);
+	}
+    
+    
 	protected void pigReporterSizeInfo(String blockName, long l) {
 
 		if ( myreporter == null ) {

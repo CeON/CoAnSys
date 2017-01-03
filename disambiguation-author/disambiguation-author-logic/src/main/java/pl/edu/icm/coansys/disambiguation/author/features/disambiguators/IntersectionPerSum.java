@@ -19,6 +19,7 @@
 package pl.edu.icm.coansys.disambiguation.author.features.disambiguators;
 
 import java.util.AbstractMap.SimpleEntry;
+import java.util.Collection;
 import java.util.List;
 
 public class IntersectionPerSum extends Disambiguator {
@@ -32,8 +33,15 @@ public class IntersectionPerSum extends Disambiguator {
 		super(weight, maxVal);
 	}
 
+    
+    @Override
+    @SuppressWarnings("unchecked")
+     public double calculateAffinitySorted(List<Integer> f1, List<Integer> f2){
+         return calculateAffinity((Collection<Object>) (List) f1,(Collection<Object>)(List) f2);
+     }
+    
 	@Override
-	public double calculateAffinity(List<Object> f1, List<Object> f2) {
+	public double calculateAffinity(Collection<Object> f1, Collection<Object> f2) {
 		SimpleEntry<Integer, Integer> p = intersectionAndSum(f1, f2);
 		int intersection = p.getKey();
 		int sum = p.getValue();

@@ -21,8 +21,10 @@ package pl.edu.icm.coansys.disambiguation.author.pig;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Deque;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -37,9 +39,18 @@ import org.slf4j.LoggerFactory;
 
 import pl.edu.icm.coansys.commons.java.StackTraceExtractor;
 import pl.edu.icm.coansys.disambiguation.author.benchmark.TimerSyso;
+import pl.edu.icm.coansys.disambiguation.author.features.disambiguators.CosineSimilarity;
+import pl.edu.icm.coansys.disambiguation.model.ContributorWithExtractedFeatures;
 
 public class AproximateAND_BFS extends AND<DataBag> {
 
+    public static class ClusterData {
+        public ArrayList<ContributorWithExtractedFeatures> contList=new ArrayList<>();
+        public ArrayList<ClusterSimTriple> clusterSimilarities=new ArrayList<>();
+    }
+    
+    
+    
 	private Tuple datain[];
 	private int N;
 	private static final org.slf4j.Logger logger = LoggerFactory
@@ -72,6 +83,162 @@ public class AproximateAND_BFS extends AND<DataBag> {
 
 	}
 
+    public List<ClusterData> exec(List<ContributorWithExtractedFeatures> li) /* throws IOException */{
+        if (li == null || li.size() == 0) {
+			return null;
+		}
+        return MBFSTyped(li);
+        
+    }
+  
+    private  List<Map<String, CosineSimilarity.CosineSimilarityList>> createContribsT(List<ContributorWithExtractedFeatures> li){
+          List<Map<String, CosineSimilarity.CosineSimilarityList>> contribsT = new ArrayList<>(
+					li.size());
+          for (ContributorWithExtractedFeatures c:li) {
+              Map<String,CosineSimilarity.CosineSimilarityList> map=new HashMap<>();
+              for (Map.Entry<String,Collection<Integer>> ent:c.getMetadata().entrySet()) {
+                  ArrayList<Integer> list=new ArrayList<>(ent.getValue());
+                  Collections.sort(list);
+                  map.put(ent.getKey(), new CosineSimilarity.CosineSimilarityList(list));
+              } 
+              contribsT.add( map);
+          }
+          return contribsT;
+    }
+    
+    	private List<ClusterData> MBFSTyped(List<ContributorWithExtractedFeatures> contribs) {
+            int n=contribs.size();
+		int[] simIdToClusterId = new int[n];
+		final int guard = Integer.MIN_VALUE;
+		Deque<Integer> toCluster = new ArrayDeque<Integer>(n + 1);
+		List<Integer> clustered = new ArrayList<Integer>(n);
+		int idToCluster[] = new int[n];
+		int presentClusterId = 0;
+		int presentClusterSize = 0;
+		int p = 0; // index in clustered of processing node (contributor)
+
+		
+        ArrayList<ClusterData> ret=new ArrayList<>();
+        
+        ClusterData currentClusterData = null;
+		List<SimTriple> otherSimilaritiesTriples = new ArrayList<SimTriple>(n);
+		SimTriple clusterTriple = null;
+
+		// init
+		for (int i = 0; i < n; i++) {
+			toCluster.add(i);
+		}
+		toCluster.add(guard);
+        List<Map<String, CosineSimilarity.CosineSimilarityList>>  contribsT=createContribsT(contribs);
+		// iterating through all nodes (contributors) to cluster - have not been
+		// clustered so far; (>1) because of GUARD
+		while (toCluster.size() > 1) {
+			// if there are already clustered nodes, we are going to their
+			// adjacent nodes, where "adjacent nodes" - all nodes which have not
+			// been clustered so far (on toCluster list).
+			if (p < clustered.size()) {
+				// taking clustered parent, for which we are going to find
+				// children
+				int v = clustered.get(p++);
+				// while exist some unvisited adjacent node
+				while (toCluster.getFirst() != guard) {
+					// removing node from not clustered nodes queue
+					int u = toCluster.pollFirst();
+
+					float simil = calculateContribsAffinityForAllFeaturesaOnSortedLists(
+							contribsT, v, u, !rememberSim);
+
+					// creating similarity triple
+					if (rememberSim) {
+						clusterTriple = new SimTriple(u, v, simil);
+					}
+
+					// potentially the same contributors
+					if (simil >= 0) {
+						clustered.add(u);
+						idToCluster[u] = presentClusterId;
+						simIdToClusterId[u] = presentClusterSize++;
+						currentClusterData.contList.add(contribs.get(u));
+
+						// here we have sure that nodes v and u are in one
+						// cluster so we can add sim value to result bag
+						if (rememberSim) {
+                            
+							currentClusterData.clusterSimilarities.add(clusterTriple.toClusterSimTriple(simIdToClusterId));
+						}
+					} else {
+						// putting back the node, because it it has no
+						// connection with examined cluster
+						toCluster.addLast(u);
+
+						// Nodes v and u are different for now, but we want to
+						// remember their similarity in case of adding u to
+						// cluster with v in future.
+						if (rememberSim) {
+							otherSimilaritiesTriples.add(clusterTriple);
+						}
+					}
+				}
+				// putting GUARD to the end
+				toCluster.add(toCluster.pollFirst());
+
+			} else {
+				// there is no possibility to enlarge present cluster, 
+				// adding this to result, starting new one
+				addClusterToResultBag(idToCluster, presentClusterSize, ret,
+						currentClusterData,
+						otherSimilaritiesTriples,simIdToClusterId);
+
+				// next cluster begin
+                currentClusterData=new  ClusterData();
+                otherSimilaritiesTriples.clear();
+
+				int v = toCluster.pollFirst();
+				clustered.add(v);
+				idToCluster[v] = ++presentClusterId;
+				simIdToClusterId[v] = 0;
+				presentClusterSize = 1;
+				currentClusterData.contList.add(contribs.get(v));
+			}
+		}
+
+		// add last cluster to result bag
+		addClusterToResultBag(idToCluster, presentClusterSize, ret,
+				currentClusterData, 
+				otherSimilaritiesTriples, simIdToClusterId);
+
+		return ret;
+	}
+    
+    private void addClusterToResultBag(int[] idToCluster,
+			int presentClusterSize, List<ClusterData> ret, ClusterData currentCluster,
+			List<SimTriple> otherSimilaritiesTriples,int[] simIdToClusterId) {
+		if (currentCluster != null) {
+
+			// adding similarities for nodes which had not been
+			// connected in first time ( similarity < 0 )
+			for (SimTriple t : otherSimilaritiesTriples) {
+				// checking if clusters of both nodes are identical.
+				// One of them is in examined cluster.
+				if (idToCluster[t.v] == idToCluster[t.u]) {
+					currentCluster.clusterSimilarities.add(t.toClusterSimTriple(simIdToClusterId));
+				}
+			}
+			pigReporterSizeInfo( "AproximateAND output cluster", currentCluster.contList.size() );
+			
+			ret.add(currentCluster);
+
+			// benchmark
+			if (isStatistics) {
+				calculatedSimCounter += currentCluster.clusterSimilarities.size();
+				if (presentClusterSize > 1) {
+					clustersSizes.add(presentClusterSize);
+				}
+			}
+		}
+	}
+
+    
 	/**
 	 * @param Tuple
 	 *            with bag: {(contribId:chararray, sname:chararray or int,
@@ -167,11 +334,11 @@ public class AproximateAND_BFS extends AND<DataBag> {
 	// calculating affinity, clustering and creating result bag
 	// N^2 / 2
 	// simIdToClusterId[ contrib input index ]= contrib index in his cluster
-	private int simIdToClusterId[];
+	//private int simIdToClusterId[];
 
 	private DataBag MBFS(List<Map<String, Object>> contribsT) {
 
-		simIdToClusterId = new int[N];
+		int simIdToClusterId[] = new int[N];
 		final int guard = Integer.MIN_VALUE;
 		Deque<Integer> toCluster = new ArrayDeque<Integer>(N + 1);
 		List<Integer> clustered = new ArrayList<Integer>(N);
@@ -226,7 +393,7 @@ public class AproximateAND_BFS extends AND<DataBag> {
 						// cluster so we can add sim value to result bag
 						if (rememberSim) {
 							clusterSimilarities.add(clusterTriple
-									.toClusterTuple());
+									.toClusterTuple(simIdToClusterId));
 						}
 					} else {
 						// putting back the node, because it it has no
@@ -249,7 +416,7 @@ public class AproximateAND_BFS extends AND<DataBag> {
 				// adding this to result, starting new one
 				addClusterToResultBag(idToCluster, presentClusterSize, ret,
 						clusterContribDatas, clusterSimilarities,
-						otherSimilaritiesTriples);
+						otherSimilaritiesTriples,simIdToClusterId);
 
 				// next cluster begin
 				clusterContribDatas = new DefaultDataBag();
@@ -268,7 +435,7 @@ public class AproximateAND_BFS extends AND<DataBag> {
 		// add last cluster to result bag
 		addClusterToResultBag(idToCluster, presentClusterSize, ret,
 				clusterContribDatas, clusterSimilarities,
-				otherSimilaritiesTriples);
+				otherSimilaritiesTriples,simIdToClusterId);
 
 		return ret;
 	}
@@ -276,7 +443,8 @@ public class AproximateAND_BFS extends AND<DataBag> {
 	private void addClusterToResultBag(int[] idToCluster,
 			int presentClusterSize, DataBag ret, DataBag clusterContribDatas,
 			DataBag clusterSimilarities,
-			List<SimTriple> otherSimilaritiesTriples) {
+			List<SimTriple> otherSimilaritiesTriples,
+            int simIdToClusterId[]) {
 		if (clusterContribDatas != null) {
 
 			// adding similarities for nodes which had not been
@@ -285,7 +453,7 @@ public class AproximateAND_BFS extends AND<DataBag> {
 				// checking if clusters of both nodes are identical.
 				// One of them is in examined cluster.
 				if (idToCluster[t.v] == idToCluster[t.u]) {
-					clusterSimilarities.add(t.toClusterTuple());
+					clusterSimilarities.add(t.toClusterTuple(simIdToClusterId));
 				}
 			}
 			pigReporterSizeInfo( "AproximateAND output cluster", clusterContribDatas.size() );
@@ -303,9 +471,11 @@ public class AproximateAND_BFS extends AND<DataBag> {
 		}
 	}
 
-	class SimTriple {
-		private int v, u;
-		private float sim;
+    
+    
+	public static class SimTriple {
+		private final int v, u;
+		private final float sim;
 
 		SimTriple(int v, int u, float sim) {
 			this.v = v;
@@ -313,15 +483,21 @@ public class AproximateAND_BFS extends AND<DataBag> {
 			this.sim = sim;
 		}
 
-		Object[] toClusterObjectArray() {
+        ClusterSimTriple toClusterSimTriple(int[] simIdToClusterId) {
+			int a = Math.min(simIdToClusterId[v], simIdToClusterId[u]);
+			int b = Math.max(simIdToClusterId[v], simIdToClusterId[u]);
+			return new ClusterSimTriple( b, a, sim );
+		}
+        
+		Object[] toClusterObjectArray(int[] simIdToClusterId) {
 			int a = Math.min(simIdToClusterId[v], simIdToClusterId[u]);
 			int b = Math.max(simIdToClusterId[v], simIdToClusterId[u]);
 			return new Object[] { b, a, sim };
 		}
 
-		Tuple toClusterTuple() {
+		Tuple toClusterTuple(int[] simIdToClusterId) {
 			return TupleFactory.getInstance().newTuple(
-					Arrays.asList(toClusterObjectArray()));
+					Arrays.asList(toClusterObjectArray(simIdToClusterId)));
 		}
 	}
 }
