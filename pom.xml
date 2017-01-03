@@ -14,10 +14,10 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <hadoop.version>2.6.0-cdh5.7.1</hadoop.version>
-        <hadoop.common.version>2.6.0-cdh5.7.1</hadoop.common.version>
-        <pig.version>0.12.0-cdh5.7.1</pig.version>
-        <hbase.version>1.2.0-cdh5.7.1</hbase.version>
+        <hadoop.version>2.6.0-cdh5.9.0</hadoop.version>
+        <hadoop.common.version>2.6.0-cdh5.9.0</hadoop.common.version>
+        <pig.version>0.12.0-cdh5.9.0</pig.version>
+        <hbase.version>1.2.0-cdh5.9.0</hbase.version>
         <slf4j.version>1.6.4</slf4j.version>
         <protobuf.java.version>2.5.0</protobuf.java.version>
         <testng.version>6.5.2</testng.version>
@@ -28,7 +28,7 @@
         <jackson-mapper-asl.version>1.9.12</jackson-mapper-asl.version>
         <scala.version>2.10.6</scala.version>
         <scala.binary.version>2.10</scala.binary.version>
-        <coansys.spark.version>1.6.0-cdh5.7.1</coansys.spark.version>
+        <coansys.spark.version>1.6.0-cdh5.9.0</coansys.spark.version>
     </properties>
 
     <build>
