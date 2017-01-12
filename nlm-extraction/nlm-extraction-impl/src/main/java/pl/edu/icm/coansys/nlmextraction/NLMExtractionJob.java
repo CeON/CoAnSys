@@ -97,7 +97,7 @@ public class NLMExtractionJob implements Tool {
 
                         InputStream pdfIS = media.getContent().newInput();
                         try {
-                            PdfNLMContentExtractor.THREADS_NUMBER = 1;
+                            //PdfNLMContentExtractor.THREADS_NUMBER = 1;
                             PdfNLMContentExtractor nlmExtr = new PdfNLMContentExtractor();
                             Element nlmContent = nlmExtr.extractContent(pdfIS);
 
