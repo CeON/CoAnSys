@@ -19,7 +19,7 @@ public class CoansysCitationMatchingWorkflowIT {
     
     //------------------------ TESTS --------------------------
     
-    //@Test
+    @Test
     public void testCoansysCitationMatchingWorkflow() throws Exception {
         
         // given
