@@ -33,8 +33,6 @@ public class OddsCharsKeyGeneratorTest {
     public void testGenerateKey() {
         DocumentProtos.DocumentMetadata doc = MockDocumentMetadataFactory.createDocumentMetadata("A comparison of associated dsd sd");
         
-        Assert.assertEquals("cmaio", keyGen.generateKey(doc, 0));
-        Assert.assertEquals("cmaioascae", keyGen.generateKey(doc, 1));
-        Assert.assertEquals("cmaioascaeddd", keyGen.generateKey(doc, 2));
+        Assert.assertEquals("cmaio", keyGen.generateKey(doc));
     }
 }

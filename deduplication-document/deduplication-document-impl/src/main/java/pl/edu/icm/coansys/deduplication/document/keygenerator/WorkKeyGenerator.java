@@ -25,5 +25,5 @@ import pl.edu.icm.coansys.models.DocumentProtos;
  * @author Artur Czeczko <a.czeczko@icm.edu.pl>
  */
 public interface WorkKeyGenerator {
-    public String generateKey(DocumentProtos.DocumentMetadata doc, int level);
+    public String generateKey(DocumentProtos.DocumentMetadata doc);
 }

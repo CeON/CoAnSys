@@ -54,7 +54,7 @@ public class DuplicateWorkDetectMapService implements DiMapService<Writable, Byt
 
         DocumentWrapper docWrapper = DocumentProtos.DocumentWrapper.parseFrom(value.copyBytes());
 
-        String docKey = keyGen.generateKey(docWrapper.getDocumentMetadata(), 0);
+        String docKey = keyGen.generateKey(docWrapper.getDocumentMetadata());
 
         if (!docKey.isEmpty()) {
             DocumentWrapper thinDocWrapper = DocumentWrapperUtils.cloneDocumentMetadata(docWrapper);

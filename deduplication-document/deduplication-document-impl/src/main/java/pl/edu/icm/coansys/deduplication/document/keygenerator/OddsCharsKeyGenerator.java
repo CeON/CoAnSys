@@ -38,7 +38,7 @@ public class OddsCharsKeyGenerator implements WorkKeyGenerator {
      * @param level influences the keyLength, the keyLength is a multiplication of the level and {@link #KEY_PART_LENGTH} 
      */
     @Override
-    public String generateKey(DocumentProtos.DocumentMetadata doc, int level) {
+    public String generateKey(DocumentProtos.DocumentMetadata doc) {
         String docKey = DocumentWrapperUtils.getMainTitle(doc);
         docKey = StringTools.normalize(docKey);
         docKey = StringTools.removeStopWords(docKey);
@@ -50,7 +50,7 @@ public class OddsCharsKeyGenerator implements WorkKeyGenerator {
         }
         docKey = oddCharsSB.toString();
         
-        int keyLength = level*KEY_PART_LENGTH+KEY_PART_LENGTH;
+        int keyLength = KEY_PART_LENGTH;
         if (docKey.length() > keyLength) {
             docKey = docKey.substring(0, keyLength);
         }
