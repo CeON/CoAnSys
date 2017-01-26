@@ -17,14 +17,8 @@
  */
 package pl.edu.icm.coansys.deduplication.document.comparator;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-
-import org.apache.hadoop.io.BytesWritable;
-import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapreduce.Reducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,31 +41,34 @@ public abstract class AbstractWorkComparator implements WorkComparator {
 
     /**
      * Tells whether the given documents are duplicates.
+     * @param doc1
+     * @param doc2
+     * @param debugInfo
+     * @return 
      */
     @Override
-    public boolean isDuplicate(DocumentProtos.DocumentMetadata doc1, DocumentProtos.DocumentMetadata doc2, Reducer<Text, BytesWritable, Text, Text>.Context context) {
+    public boolean isDuplicate(DocumentProtos.DocumentMetadata doc1, DocumentProtos.DocumentMetadata doc2, StringBuilder debugInfo) {
 
-        List<Float> probabilities = new ArrayList<Float>();
-        List<Float> weights = new ArrayList<Float>();
+        List<Float> probabilities = new ArrayList<>();
+        List<Float> weights = new ArrayList<>();
 
         String ids = doc1.getKey() + ", " + doc2.getKey();
         StringBuilder logBuilder = new StringBuilder();
 
-        StringBuilder debugOutputBuilder = new StringBuilder();
-        debugOutputBuilder.append(compactTitle(doc1)).append(", ").append(compactTitle(doc2));
+        //StringBuilder debugOutputBuilder = new StringBuilder();
+        storeDebugInfo(debugInfo, compactTitle(doc1), ", ", compactTitle(doc2));
 
         if (similarityVoters != null) {
             for (SimilarityVoter voter : similarityVoters) {
-                debugOutputBuilder.append("#").append(voter.getClass().getSimpleName());
+                storeDebugInfo(debugInfo, "#", voter.getClass().getSimpleName());
                 Vote vote = voter.vote(doc1, doc2);
                 Vote.VoteStatus status = vote.getStatus();
-                debugOutputBuilder.append(":").append(vote.getStatus().name());
+                storeDebugInfo(debugInfo, ":", status.name());
 
-                switch (vote.getStatus()) {
+                switch (status) {
                     case EQUALS:
                         logger.info("Documents " + ids + " considered as duplicates because of result EQUALS of voter "
                                 + voter.getClass().getName());
-                        writeDebugOutputToContext(context, ids, debugOutputBuilder.toString());
                         return true;
                     case NOT_EQUALS:
                         return false;
@@ -83,31 +80,24 @@ public abstract class AbstractWorkComparator implements WorkComparator {
                                 .append(", weight ").append(voter.getWeight()).append('\n');
                         probabilities.add(vote.getProbability());
                         weights.add(voter.getWeight());
-                        debugOutputBuilder.append("-").append(vote.getProbability());
+                        storeDebugInfo(debugInfo, "-", vote.getProbability());
                 }
             }
         }
 
-        boolean result = calculateResult(probabilities, weights, debugOutputBuilder);
+        boolean result = calculateResult(probabilities, weights, debugInfo);
 
         if (result) {
             logger.info(ids + " considered as duplicates because:\n" + logBuilder.toString());
-            //logger.info("doc1:\n" + doc1.getDocumentMetadata());
-            //logger.info("doc2:\n" + doc2.getDocumentMetadata());
-            writeDebugOutputToContext(context, ids, debugOutputBuilder.toString());
         }
 
         return result;
     }
 
-    private static void writeDebugOutputToContext(Reducer<Text, BytesWritable, Text, Text>.Context context, String key, String value) {
-        if (context != null) {
-            try {
-                context.write(new Text(key), new Text(value));
-            } catch (IOException ex) {
-                java.util.logging.Logger.getLogger(AbstractWorkComparator.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (InterruptedException ex) {
-                java.util.logging.Logger.getLogger(AbstractWorkComparator.class.getName()).log(Level.SEVERE, null, ex);
+    protected static void storeDebugInfo(StringBuilder builderToStore, Object... infos) {
+        if (builderToStore != null) {
+            for (Object info : infos) {
+                builderToStore.append(info);
             }
         }
     }
