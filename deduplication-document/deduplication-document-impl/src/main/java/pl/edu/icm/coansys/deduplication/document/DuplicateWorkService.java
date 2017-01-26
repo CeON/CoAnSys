@@ -23,9 +23,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.hadoop.io.BytesWritable;
-import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapreduce.Reducer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +32,6 @@ import com.google.common.collect.Sets;
 
 import pl.edu.icm.coansys.deduplication.document.comparator.WorkComparator;
 import pl.edu.icm.coansys.models.DocumentProtos;
-import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
 
 /**
  * 
@@ -71,10 +67,10 @@ public class DuplicateWorkService {
      * 
      * 
      * @param documents
-     * @param context
+     * @param debugInfo
      * @return 
      */
-    public Map<Integer, Set<DocumentProtos.DocumentMetadata>> findDuplicates(List<DocumentProtos.DocumentMetadata> documents, Reducer<Text, BytesWritable, Text, Text>.Context context) {
+    public Map<Integer, Set<DocumentProtos.DocumentMetadata>> findDuplicates(List<DocumentProtos.DocumentMetadata> documents, StringBuilder debugInfo) {
         Map<Integer, Set<DocumentProtos.DocumentMetadata>> sameWorksMap = Maps.newHashMap();
 
         List<DocumentProtos.DocumentMetadata> documentsCopy = Lists.newArrayList(documents);
@@ -87,7 +83,7 @@ public class DuplicateWorkService {
                 if (document.getKey().equals(other.getKey())) {
                     documentsCopy.remove(other);
                 } else {
-                    if (duplicateWorkComparator.isDuplicate(document, other, context)) {
+                    if (duplicateWorkComparator.isDuplicate(document, other, debugInfo)) {
                         addSameWorks(sameWorksMap, i, document, other);
                         documentsCopy.remove(other);
                     }

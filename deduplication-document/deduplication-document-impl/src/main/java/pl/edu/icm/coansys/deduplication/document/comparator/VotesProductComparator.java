@@ -33,7 +33,7 @@ public class VotesProductComparator extends AbstractWorkComparator {
 
     
     @Override
-    protected boolean calculateResult(List<Float> probabilities, List<Float> weights, StringBuilder debugOutputBuilder) {
+    protected boolean calculateResult(List<Float> probabilities, List<Float> weights, StringBuilder debugInfo) {
         double localVotersWeightRequired = minVotersWeightRequired;
         
         double probabilitiesProduct = 1.0;
@@ -48,7 +48,7 @@ public class VotesProductComparator extends AbstractWorkComparator {
         if (probabilitiesProduct <= tresholdIncreasingVotersRequired) {
             localVotersWeightRequired+=0.5;
         }
-        debugOutputBuilder.append("##PROBABILITIES_PRODUCT=").append(probabilitiesProduct);
+        storeDebugInfo(debugInfo, "##PROBABILITIES_PRODUCT=", probabilitiesProduct);
         return weightsSum >= localVotersWeightRequired && probabilitiesProduct > probabilityTreshold;
     }
 

@@ -28,7 +28,7 @@ import java.util.List;
 public class WeightedMeanComparator extends AbstractWorkComparator {
     
     @Override
-    protected boolean calculateResult(List<Float> probabilities, List<Float> weights, StringBuilder debugOutputBuilder) {
+    protected boolean calculateResult(List<Float> probabilities, List<Float> weights, StringBuilder debugInfo) {
         double weightsSum = 0.0;
         double probabilitiesSum = 0.0;
         
@@ -41,7 +41,7 @@ public class WeightedMeanComparator extends AbstractWorkComparator {
             probabilitiesSum += probabilities.get(i);
             weightsSum += weights.get(i);
         }
-        debugOutputBuilder.append("##WEIGHTED_MEAN=").append(probabilitiesSum);
+        storeDebugInfo(debugInfo, "##WEIGHTED_MEAN=", probabilitiesSum);
         return (weightsSum > 0) && (probabilitiesSum / weightsSum > 0.5);
     }
 }
