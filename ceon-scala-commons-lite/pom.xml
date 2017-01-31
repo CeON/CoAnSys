@@ -94,11 +94,6 @@
                     </descriptorRefs>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>2.4.1</version>
-            </plugin>
         </plugins>
     </build>
 
@@ -109,26 +104,6 @@
             <url>http://maven.icm.edu.pl/artifactory/repo</url>
         </repository>
     </repositories>
-
-    <scm>
-        <connection>scm:git:ssh://git@github.com/CeON/ceon-scala-commons.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/CeON/ceon-scala-commons.git</developerConnection>
-        <url>https://github.com/CeON/ceon-scala-commons</url>
-        <tag>HEAD</tag>
-    </scm>
-
-    <distributionManagement>
-        <snapshotRepository>
-            <id>ceon-commons-snapshots</id>
-            <name>maven.ceon.pl-snapshots</name>
-            <url>http://maven.icm.edu.pl/artifactory/ceon-commons-snapshots</url>
-        </snapshotRepository>
-        <repository>
-            <id>ceon-commons-releases</id>
-            <name>maven.ceon.pl-releases</name>
-            <url>http://maven.icm.edu.pl/artifactory/ceon-commons-releases</url>
-        </repository>
-    </distributionManagement>
 
     <ciManagement>
         <system>jenkins</system>
