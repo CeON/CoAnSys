@@ -2,12 +2,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>pl.edu.icm.coansys</groupId>
+        <artifactId>coansys</artifactId>
+        <version>1.10-final-SNAPSHOT</version>
+    </parent>
     <name>Models</name>
     <description>Models used in CoAnSys</description>
-
-    <groupId>pl.edu.icm.coansys</groupId>
     <artifactId>models</artifactId>
-    <version>1.10-final-SNAPSHOT</version> 
 
     <properties>
         <protobuf.java.version>2.5.0</protobuf.java.version>
