@@ -3,7 +3,7 @@
   <parent>
     <groupId>pl.edu.icm.coansys</groupId>
     <artifactId>citation-matching</artifactId>
-    <version>1.10-final-SNAPSHOT</version>
+    <version>1.10</version>
   </parent>
   <artifactId>citation-matching-core-code</artifactId>     
   
