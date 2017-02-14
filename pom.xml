@@ -9,7 +9,7 @@
     <groupId>pl.edu.icm.coansys</groupId>
     <artifactId>coansys</artifactId>
     <name>Content Analysis Systems</name>
-    <version>1.10</version>
+    <version>1.11-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <properties>
@@ -478,7 +478,7 @@
         <connection>scm:git:ssh://git@github.com/CeON/CoAnSys.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/CeON/CoAnSys.git</developerConnection>
         <url>https://github.com/CeON/CoAnSys</url>
-      <tag>coansys-1.10</tag>
+      <tag>HEAD</tag>
   </scm>
 
     <distributionManagement>

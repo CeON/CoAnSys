@@ -2,7 +2,7 @@
     <parent>
         <artifactId>affiliation-organization-matching</artifactId>
         <groupId>pl.edu.icm.coansys</groupId>
-        <version>1.10</version>
+        <version>1.11-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>affiliation-organization-matching-workflow</artifactId>

@@ -6,7 +6,7 @@
     <parent>
         <artifactId>coansys</artifactId>
         <groupId>pl.edu.icm.coansys</groupId>
-        <version>1.10</version>
+        <version>1.11-SNAPSHOT</version>
     </parent>
 
     <artifactId>source-disambiguation</artifactId>
