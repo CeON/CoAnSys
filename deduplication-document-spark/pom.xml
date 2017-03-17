@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>pl.edu.icm.coansys</groupId>
+        <artifactId>coansys</artifactId>
+        <version>1.11-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>deduplication-document-spark</artifactId>
+    <packaging>pom</packaging>
+    <name>Deduplication - Document SparkVersion</name>
+    <url>http://maven.apache.org</url>
+
+    <modules>
+        <module>deduplication-document-spark-impl</module>
+        <module>deduplication-document-spark-workflow</module>
+    </modules>
+</project>
