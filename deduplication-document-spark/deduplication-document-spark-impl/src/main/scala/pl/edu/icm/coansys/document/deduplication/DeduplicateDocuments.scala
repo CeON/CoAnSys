@@ -22,123 +22,146 @@ import org.apache.spark.rdd.RDD
 import pl.edu.icm.coansys.deduplication.document.comparator.VotesProductComparator
 import pl.edu.icm.coansys.deduplication.document.comparator.WorkComparator
 import scala.collection.mutable.ListBuffer
+import java.io.File
+import java.io.PrintWriter
+import pl.edu.icm.coansys.document.deduplication._
 
 object DeduplicateDocuments {
   val log = org.slf4j.LoggerFactory.getLogger(getClass().getName())
-  val initialClusteringKeySize = 5
-  val maximumClusteringKeySize = 15
-  val maximumClusterSize = 300
+  val initialClusteringKeySize = 7
+  val maximumClusteringKeySize = 18
+  val maximumClusterSize = 600
   //max author count - ignored
 
   //  def calculateKey(doc: DocumentMetadata): String = {
   //    new OddsCharsKeyGenerator().generateKey(doc)
   //  }
 
+  def isValidDocument(doc: DocumentWrapper): Boolean = {
+    var res = false
+    if (doc.hasDocumentMetadata) {
+        val md = doc.getDocumentMetadata
+        if(md.hasBasicMetadata) {
+            val bmd = md.getBasicMetadata
+            if(bmd.getTitleCount()>0||bmd.getAuthorCount>0||bmd.hasDoi||bmd.hasJournal) {
+                res=true
+            }
+        }
+    }
+    res
+  }
+
   def calculateKey(doc: DocumentMetadata, size: Int): String = {
     new CustomOddsCharsKeyGenerator(size).generateKey(doc)
   }
 
-  def prepareClusters(inputDocs: RDD[DocumentWrapper]): RDD[(String, Iterable[DocumentWrapper])] = {
-    log.info("Started preparation of clusters.")
-    var keySize = initialClusteringKeySize
-
-    var approvedClusters: RDD[(String, Iterable[DocumentWrapper])] = null
-    var docs = inputDocs
-    var docCount = 0L
-    var iteration = 1
-
-    while ({ docCount = docs.count; docCount } > 0 && keySize < maximumClusteringKeySize) {
-      log.info("Starting iteration %d, keySize: %d, docs to count: %d".format(iteration, keySize, docCount))
-
-      var processedClusters = docs.map(doc => (calculateKey(doc.getDocumentMetadata, keySize), doc)).groupByKey()
-      var posClusters = processedClusters.filter(p => p._2.size <= maximumClusterSize)
-      if (approvedClusters == null) {
-        approvedClusters = posClusters
-      } else {
-        approvedClusters = approvedClusters.union(posClusters)
-      }
-      docs = processedClusters.filter(p => p._2.size > maximumClusterSize).flatMap(p => p._2)
-      keySize += 1
-      iteration += 1
+  def calculateKeys(doc: DocumentMetadata): Array[String] = {
+    val keySizes = initialClusteringKeySize to maximumClusteringKeySize
+    val generator = new CustomOddsCharsKeyGenerator()
+    generator.setKeySizes(keySizes.toArray)
+    var res = generator.generateKeyList(doc)
+    //special case: if doc 
+    if (res(0) == "") {
+      res = Array.fill[String](keySizes.length)(doc.getKey)
     }
-    log.info("Finished loop, keySize: %d, iterations done: %d, docs left: %d".format(keySize - 1, iteration - 1, docCount))
-    if (docCount > 0) {
-      log.info("Adding leftovers (%d documents) with keySize %d".format(docCount, keySize))
-      approvedClusters = approvedClusters.union(docs.map(doc => (calculateKey(doc.getDocumentMetadata, keySize), doc)).groupByKey())
-    }
-    approvedClusters
+    res
   }
 
-  /**
-   * @param args the command line arguments
-   */
-  def main(args: Array[String]): Unit = {
-    println("Starting app")
-    //load the file:
-    if (args.size == 0) {
-      println("No args supported, exitting.")
-      return ;
-    } else {
-      println("Arguments:")
-      args.foreach(println);
-    }
-    println("Creating context...")
+  def cleanKeyArray(in: Array[String]): Array[String] = {
 
-    val conf = new SparkConf()
-      .setAppName("Document deduplication")
-      .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
-      .set("spark.kryo.registrator", "pl.edu.icm.coansys.document.deduplication.DocumentWrapperKryoRegistrator")
+    null
+  }
 
-    val sc = new SparkContext(conf)
-    Logger.getLogger("pl.edu.icm.coansys.deduplication.document.comparator.AbstractWorkComparator").setLevel(Level.WARN)
-    println("Created context...")
-    sc.getConf.getAll.foreach(x => println(x._1 + ": " + x._2))
-    val inputDocuments = args(0)
-    val outputDocuments = args(1)
+  def prepareClustersV2(inputDocs: RDD[(String, DocumentWrapper)]): RDD[(String, Iterable[DocumentWrapper])] = {
+    log.info("Initializing cluster preparation (V2)")
+    val keySizes = (initialClusteringKeySize to maximumClusteringKeySize).toArray
+    log.info("Will use key sizes: " + keySizes.mkString(", "))
+    val idClusterKeys = inputDocs.mapValues(doc => calculateKeys(doc.getDocumentMetadata())); //we loose documents here, ony ids are preseved
+    val clusterDoc = idClusterKeys.flatMap(p => p._2.map(idcluster => (idcluster, p._1)))
 
-    //    val debugDir = if (args.size > 2) Some(args(2)) else None
+    val clusterSizes = idClusterKeys.flatMap(x => (x._2.map(y => (y, 1)))).reduceByKey(_ + _)
 
-    val rawbytes = sc.sequenceFile[String, BytesWritable](inputDocuments).mapValues(_.copyBytes)
-    log.info("Loaded raw bytes.")
-    //    rawbytes.count()
-    //    log.info("Counted raw bytes.")
+    //build rdd (docId, (clusterId, clusterSize) )
+    val docClustersWithSizes = clusterDoc.join(clusterSizes).map(p => (p._2._1, (p._1, p._2._2)))
+    //build rdd - (docId, clusterId)
+    val selectedClusters = docClustersWithSizes.reduceByKey((x, y) => {
+      if (x._2 <= maximumClusterSize) {
+        if (y._2 <= maximumClusterSize) {
+          if (x._1.length <= y._1.length) { x } else { y }
+        } else {
+          x
+        }
+      } else {
+        if (y._2 <= maximumClusterSize) {
+          y
+        } else {
+          if (x._1.length > y._1.length) { x } else { y }
+        }
+      }
+    }).mapValues(_._1)
 
-    val wrappers = rawbytes.mapValues(b => DocumentProtos.DocumentWrapper.parseFrom(b))
+    inputDocs.join(selectedClusters).map(p => (p._2._2, p._2._1)).groupByKey
+  }
 
-    
-//    val initialGroups = wrappers.map(t => (calculateKey(t._2.getDocumentMetadata, initialClusteringKeySize), t._2)).groupByKey()
-    val initialGroups = prepareClusters(wrappers.map(_._2))
-    log.info("After initial group preparation count.")
-    //    val igs = initialGroups.count()
-    val clustersToDeduplicate = initialGroups.filter(t => t._2.size > 1)
-    //    val deduplicatedClusters = clustersToDeduplicate.flatMap(x => deduplicateCluster(x._2, x._1))
-    val timedDeduplicated = clustersToDeduplicate.map(x => timedDeduplicateCluster(x._2, x._1))
-    val deduplicatedClusters = timedDeduplicated.flatMap(x => x._1)
-    val timing = timedDeduplicated.map(x => x._2)
+  def prepareClusters(inputDocs: RDD[(String, DocumentWrapper)]): RDD[(String, Iterable[DocumentWrapper])] = {
+    log.info("Started preparation of clusters.")
+    var keySizes = (initialClusteringKeySize to maximumClusteringKeySize).toArray
+    log.info("Will use key sizes: " + keySizes.mkString(", "))
+    var idClusterKeys = inputDocs.mapValues(doc => calculateKeys(doc.getDocumentMetadata())); //we loose documents here, ony ids are preseved
+    var approvedClusters: RDD[(String, Iterable[String])] = null;
 
-    log.info("After reducing clusters (comparison)")
-    val merged = deduplicatedClusters.map(x => (mergeDocuments(x._2)))
-    log.info("Finished merge")
-    //    val mergedSize = merged.count()
+    //clusters to do are expected to have key as the first in key set.
+    var clustersToDo = idClusterKeys.map(p => (p._2.head, (p._1, p._2.drop(1))))
+    do {
+      var currentKeySize = keySizes.head
+      keySizes = keySizes.drop(1)
+      log.info("Preparing clusters with key size: " + currentKeySize)
+      val newDivision = clustersToDo.groupByKey
+      log.info("Created new division, had " + clustersToDo.count + " document to group, built up " + newDivision.count + " clusters out of them.")
+      def clusterApproved(clusterId: String, cluster: Iterable[(String, Array[String])]): Boolean = {
+        (cluster.size <= maximumClusterSize) || (clusterId.length < currentKeySize)
+      }
 
-    val single = initialGroups.filter(t => t._2.size == 1)
-    //    log.info("Got initial group count=" + igs + "; singular=" + single.count + 
-    //             "; multiple=" + clustersToDeduplicate.count + "; reducedCount=" + deduplicatedClusters.count())
-    //    
-    //now merge the arrays:
-    val toWrite = merged.union(single.map(x => x._2.head)).map(doc => (doc.getDocumentMetadata.getKey, doc))
-    if ("-" != outputDocuments) {
-      val bas = toWrite.mapValues(doc => doc.toByteArray())
-      bas.saveAsSequenceFile(outputDocuments);
-    }
-    val tgrouped = timing.groupByKey;
-    val stats = tgrouped.map(x => timingStats(x._1, x._2)).collect
-    println("================ Timing stats ======================")
-    stats.sortBy(x => x._1).map(_.productIterator.toList.mkString(",")).foreach(println)
-    println("================ end of timing stats ======================")
+      val goodClusters = if (keySizes.length > 0)
+        newDivision.filter(p => clusterApproved(p._1, p._2))
+      else
+        newDivision
 
-    println("Exit")
+      val goodClustersCleaned = goodClusters.mapValues(cl => cl.map(_._1))
 
+      if (approvedClusters == null) {
+        approvedClusters = goodClustersCleaned
+      } else {
+        approvedClusters = approvedClusters.union(goodClustersCleaned)
+      }
+
+      if (keySizes.length > 0) {
+        val unapprovedClusters = newDivision.filter(p => (!clusterApproved(p._1, p._2)))
+        clustersToDo = unapprovedClusters.flatMap(p => p._2.map(x => (x._2.head, (x._1, x._2.drop(1)))))
+        val sleft = clustersToDo.count
+        log.info("Finished cluster selection, good: " + goodClusters.count + "; too big: " + unapprovedClusters.count + " clusters.")
+        log.info("Finished iteration, " + sleft + " documents left.")
+        if (sleft == 0) {
+          log.info("Cluster preparation finished, all is OK.")
+        }
+      } else {
+        log.info("Finished last iteration.")
+      }
+    } while (keySizes.length > 0);
+
+    log.info("Preparing docs again.")
+    //now join:
+    val doclClusterMap = approvedClusters.flatMap(v => v._2.map(x => (x, v._1)))
+    val totalDocs = doclClusterMap.count()
+    log.info("Finished flat map for join, docs: " + totalDocs)
+    val clusteringRes = doclClusterMap.join(inputDocs).map(x => x._2);
+    val clusteringResCount = clusteringRes.count
+    log.info("Finished join, got clustered docs: " + clusteringResCount)
+
+    val res = clusteringRes.groupByKey()
+    val resSize = res.count
+    log.info("Finished cluster preparation, got clusters: " + resSize)
+    res
   }
 
   def buildDocumentsMerger(): DuplicatesMerger = {
@@ -295,4 +318,123 @@ object DeduplicateDocuments {
     (rresult, (cluster.size, (rresult.size, end - start)))
   }
 
+  /**
+   * @param args the command line arguments
+   */
+  def main(args: Array[String]): Unit = {
+    val enableClusterSummary = false;
+    val fixInvalidDocuments = true;
+    val removeDoubles=true;
+    println("Starting app")
+    //load the file:
+    if (args.size == 0) {
+      println("No args supported, exitting.")
+      return ;
+    } else {
+      println("Arguments:")
+      args.foreach(println);
+    }
+    println("Creating context...")
+
+    val conf = new SparkConf()
+      .setAppName("Document deduplication")
+      .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
+      .set("spark.kryo.registrator", "pl.edu.icm.coansys.document.deduplication.DocumentWrapperKryoRegistrator")
+
+    val sc = new SparkContext(conf)
+    Logger.getLogger("pl.edu.icm.coansys.deduplication.document.comparator.AbstractWorkComparator").setLevel(Level.WARN)
+    println("Created context...")
+    sc.getConf.getAll.foreach(x => println(x._1 + ": " + x._2))
+    val inputDocuments = args(0) //  "/user/kura/curr-res-navigator/hbase-sf-out/DOCUMENT"
+    val outputDocuments = args(1)
+
+    //    val debugDir = if (args.size > 2) Some(args(2)) else None
+
+    val rawbytes = sc.sequenceFile[String, BytesWritable](inputDocuments).mapValues(_.copyBytes)
+    log.info("Loaded raw bytes.")
+    //    rawbytes.count()
+    //    log.info("Counted raw bytes.")
+
+    val dirtyWrappers = rawbytes.mapValues(b => DocumentProtos.DocumentWrapper.parseFrom(b))
+    
+    //fix invalid documents:
+    val fixedWrappers = if(fixInvalidDocuments) {
+        val x = dirtyWrappers.filter(w=>isValidDocument(w._2))
+        val afterSize = x.count;
+        val preSize = dirtyWrappers.count
+        log.info("Filtering invalid documents done, before filtering: "+preSize+" and after filtering "+afterSize+" documents left.")
+        x
+    }   else {
+        dirtyWrappers
+    }  
+        
+    val wrappers = if(removeDoubles) {
+        fixedWrappers.reduceByKey((x,y)=>y)
+    } else {
+        fixedWrappers
+    }
+        
+        
+    //    val initialGroups = wrappers.map(t => (calculateKey(t._2.getDocumentMetadata, initialClusteringKeySize), t._2)).groupByKey()
+    val initialGroups = prepareClustersV2(wrappers)
+    log.info("After initial group preparation count.")
+
+    if (enableClusterSummary) {
+      //prepare cluster summary  
+
+      val largeClusters = initialGroups.filter(_._2.size > 1000)
+
+      largeClusters.mapValues(_.size).take(250).foreach(println)
+
+      val sampledResult = largeClusters.mapValues(x => (x.size, x.take(10))).collect
+
+      //      val result = largeClusters.collect()
+      sampledResult.foreach(x => {
+        val docs = x._2._2
+        val clusterId = x._1
+        val fileBase = clusterId + "-%04d-".format(docs.size)
+        println(fileBase)
+
+        println("Writing docs...")
+        var pw = new PrintWriter(new File(fileBase + "docs.txt"), "UTF-8")
+        docs.foreach(x => { pw.println(x.getDocumentMetadata()); pw.println("====================") })
+        pw.close
+      })
+      return
+    }
+
+    //    val igs = initialGroups.count()
+    val clustersToDeduplicate = initialGroups.filter(t => t._2.size > 1)
+    //val deduplicatedClusters = clustersToDeduplicate.flatMap(x => deduplicateCluster(x._2, x._1))
+    val timedDeduplicated = clustersToDeduplicate.map(x => timedDeduplicateCluster(x._2, x._1))
+    val deduplicatedClusters = timedDeduplicated.flatMap(x => x._1)
+    val timing = timedDeduplicated.map(x => x._2)
+
+    log.info("After reducing clusters (comparison)")
+    val merged = deduplicatedClusters.map(x => (mergeDocuments(x._2)))
+    log.info("Finished merge")
+    //    val mergedSize = merged.count()
+
+    val single = initialGroups.filter(t => t._2.size == 1)
+    //    log.info("Got initial group count=" + igs + "; singular=" + single.count + 
+    //             "; multiple=" + clustersToDeduplicate.count + "; reducedCount=" + deduplicatedClusters.count())
+    //    
+    //now merge the arrays:
+    val toWrite = merged.union(single.map(x => x._2.head)).map(doc => (doc.getDocumentMetadata.getKey, doc))
+    if ("-" != outputDocuments) {
+      val bas = toWrite.mapValues(doc => doc.toByteArray())
+      bas.saveAsSequenceFile(outputDocuments);
+    } else {
+        log.info("Simulating timing by counting.")
+        toWrite.count()
+    }
+    val tgrouped = timing.groupByKey;
+    val stats = tgrouped.map(x => timingStats(x._1, x._2)).collect
+    println("================ Timing stats ======================")
+    stats.sortBy(x => x._1).map(_.productIterator.toList.mkString(",")).foreach(println)
+    println("================ end of timing stats ======================")
+
+    println("Exit")
+
+  }
 }
