@@ -5,6 +5,7 @@
  */
 package pl.edu.icm.coansys.document.deduplication;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -21,7 +22,7 @@ import scala.Tuple2;
  *
  * @author Aleksander Nowinski <aleksander.nowinski@gmail.com>
  */
-public class TileTask {
+public class TileTask implements Serializable{
     String clusterId;
     List<DocumentWrapper> rows;
     List<DocumentWrapper> columns;
@@ -33,15 +34,20 @@ public class TileTask {
     }
     
     
-            
-    public List<Tuple2<String, String>> processPairs(BiPredicate<DocumentWrapper, DocumentWrapper> x) {
+    /**
+     * Generate list of pairs of the documents, where predicate is conformed, ie function 
+     * passed returned true. The predicate is assumed to be symmetrical, so it is executed 
+     * only once on each pair.
+     * 
+     * @param equalityTest predicate which defines whether or no two elements are considered matching (typically equal)
+     * @return list of pairs of keys of equal documents (documents where equalityTest returned true)
+     */        
+    public List<Tuple2<String, String>> processPairs(BiPredicate<DocumentWrapper, DocumentWrapper> equalityTest) {
         List<Tuple2<String, String>> res = new ArrayList<>();
-        
-
         for (DocumentWrapper row : rows) {
             for (DocumentWrapper column : columns) {
                 if(row.getDocumentMetadata().getKey().compareTo(column.getDocumentMetadata().getKey())<0){
-                    if(x.test(row, column)) {
+                    if(equalityTest.test(row, column)) {
                         res.add(new Tuple2<>(row.getDocumentMetadata().getKey(), column.getDocumentMetadata().getKey()));
                     }
                 }
