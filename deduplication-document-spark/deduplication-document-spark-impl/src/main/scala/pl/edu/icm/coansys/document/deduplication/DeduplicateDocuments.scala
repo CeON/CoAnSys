@@ -8,7 +8,9 @@ import org.apache.log4j.ConsoleAppender
 import org.apache.log4j.Level
 import org.apache.log4j.Logger
 import org.apache.log4j.PatternLayout
+import org.apache.spark.HashPartitioner
 import org.apache.spark.SparkConf
+import org.apache.spark.api.java.function.VoidFunction
 import pl.edu.icm.coansys.deduplication.document.voter.AuthorsVoter
 import pl.edu.icm.coansys.deduplication.document.voter.DoiVoter
 import pl.edu.icm.coansys.deduplication.document.voter.IssueVolumeVoter
@@ -36,7 +38,7 @@ object DeduplicateDocuments {
     val initialClusteringKeySize = 7
     val maximumClusteringKeySize = 18
     val maximumClusterSize = 600
-    val tileSize = 50
+    val tileSize = 30
     
 
     def isValidDocument(doc: DocumentWrapper): Boolean = {
@@ -252,12 +254,33 @@ object DeduplicateDocuments {
 
         (rresult, (cluster.size, (rresult.size, end - start)))
     }
-    implicit def toJavaBiPredicate[A, B](predicate: (A, B) ⇒ Boolean) =
+    
+    implicit def toJavaBiPredicate[A, B](predicate: (A, B) => Boolean) =
         new BiPredicate[A, B] {
             def test(a: A, b: B) = predicate(a, b)
         }
+    
+//    
+//    implicit def toVoidFunction[T](runMethod: (T) => Unit) =
+//        new VoidFunction[T]() {
+//            def call(t:T) = runMethod(t)
+//        }
 
 
+    def reconfigureLogging(sc: SparkContext) = {
+        ExecuteOnceOnExecutorsHelpers.executeEverywhere(sc, "RECONFIGURE_LOGGING", true, 
+                                                        new VoidFunction[java.util.Iterator[_]]() { 
+                def call(t :java.util.Iterator[_]) :Unit={
+                    Logger.getLogger("pl.edu.icm.coansys.deduplication.document.comparator.AbstractWorkComparator").setLevel(Level.WARN)
+                    val console = new ConsoleAppender(new PatternLayout("%d [%p|%c|%C{1}] %m%n"), ConsoleAppender.SYSTEM_OUT); //create appender
+                    console.activateOptions();
+                    Logger.getLogger("pl.edu.icm").addAppender(console)
+                    log.info("Reconfigured logger...")
+                }
+            }
+        )
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -283,11 +306,8 @@ object DeduplicateDocuments {
         .set("spark.kryo.registrator", "pl.edu.icm.coansys.document.deduplication.DocumentWrapperKryoRegistrator")
 
         val sc = new SparkContext(conf)
-        Logger.getLogger("pl.edu.icm.coansys.deduplication.document.comparator.AbstractWorkComparator").setLevel(Level.WARN)
-        val console = new ConsoleAppender(new PatternLayout("%d [%p|%c|%C{1}] %m%n"), ConsoleAppender.SYSTEM_OUT); //create appender
-        console.activateOptions();
-        Logger.getLogger("pl.edu.icm").addAppender(console)
-        log.info("Reconfigured logger...")
+        reconfigureLogging(sc)
+        
         println("Created context...")
         sc.getConf.getAll.foreach(x => println(x._1 + ": " + x._2))
         val inputDocuments = args(0) //  "/user/kura/curr-res-navigator/hbase-sf-out/DOCUMENT"
@@ -303,7 +323,7 @@ object DeduplicateDocuments {
             val x = dirtyWrappers.filter(w => isValidDocument(w._2))
             val afterSize = x.count;
             val preSize = dirtyWrappers.count
-            log.info("Filtering invalid documents done, before filtering: " + preSize + " and after filtering " + afterSize + " documents left.")
+            log.info(f"Filtering invalid documents done, before filtering: $preSize and after filtering $afterSize documents left.")
             x
         } else {
             dirtyWrappers
@@ -315,11 +335,12 @@ object DeduplicateDocuments {
             fixedWrappers
         }
         wrappers.persist(StorageLevel.MEMORY_AND_DISK)
+        val initialSize = wrappers.count
+        log.info(f"Starting processing with $initialSize documents.")
     
-    
-        //    val initialGroups = wrappers.map(t => (calculateKey(t._2.getDocumentMetadata, initialClusteringKeySize), t._2)).groupByKey()
         val initialGroups = prepareClustersV2(wrappers)
         initialGroups.persist(StorageLevel.MEMORY_AND_DISK)
+        
 
         if (enableClusterSummary) {
             //prepare cluster summary  
@@ -343,31 +364,54 @@ object DeduplicateDocuments {
 
         //    val igs = initialGroups.count()
         val clustersToDeduplicate = initialGroups.filter(t => t._2.size > 1)
-
-        val tiledTasks = clustersToDeduplicate.flatMap(
-            p => TileTask.parallelize(p._1, p._2, tileSize).map(v => (p._1, v))
-        )
-
-    
-
-        val equalityClusters = tiledTasks.flatMapValues(
-            v => { 
-                val comparator = buildWorkComparator
-                v.processPairs( (a: DocumentWrapper, b: DocumentWrapper) => 
-                    comparator.isDuplicate(a.getDocumentMetadata, b.getDocumentMetadata, null))
-                    }
-                ).mapValues(v => List(v._1, v._2))
-        val allItemsTraces = initialGroups.flatMapValues(l => l.map(v => List(v.getDocumentMetadata.getKey)))
-        val finalClusters = equalityClusters.union(allItemsTraces).mapValues(List(_)).
+        val initialClusterCount = clustersToDeduplicate.count
+        
+        val tiledTasks = clustersToDeduplicate.flatMap( p => TileTask.parallelize(p._1, p._2, tileSize) )
+        val shuffledTiledTasks = tiledTasks.repartition(5000);
+        shuffledTiledTasks.persist(StorageLevel.MEMORY_AND_DISK)
+        val tileCount = shuffledTiledTasks.count;
+        
+        log.info(f"Prepared $initialClusterCount clusters, and then split it to $tileCount tiles")
+//        val comparator = sc.broadcast(buildWorkComparator)
+        reconfigureLogging(sc)
+        val partialEqualityClusters = shuffledTiledTasks.flatMap(
+                v => { 
+                    val t0=java.lang.System.currentTimeMillis()
+                    log.info("Starting tile task %s".format(v.getTaskId))
+                    val comparator = buildWorkComparator
+                    val res = v.processPairs( (a: DocumentWrapper, b: DocumentWrapper) => 
+                        comparator.isDuplicate(a.getDocumentMetadata, b.getDocumentMetadata, null))
+                    val time = (java.lang.System.currentTimeMillis()-t0)/1000.
+                    log.info(f"Finishing tile task ${v.getTaskId} in $time%.4f sec")
+                    res
+                }
+            )
+//        equalityClusters.persist(StorageLevel.MEMORY_AND_DISK)
+//        log.info("Got totally "+partialEqualityClusters.count+" partial equality clusters.");
+//        val filteredSizes = partialEqualityClusters.mapValues(x=>1).reduceByKey(_+_).filter(p=>p._2>500)
+//        log.info("After filtering "+partialEqualityClusters.count+" equality clusters left.");
+//        
+//        val eqclsizes= filteredSizes.collect.sortBy (_._2)
+//        println("Equality cluster sizes:")
+//        eqclsizes.foreach(println(_))
+//        println("Done.\n\n")
+        
+        val finalClusters = partialEqualityClusters.mapValues(List(_)).
             reduceByKey(
-            (a, b) => TileTask.coalesceResult(a.map(x => x.asJava).asJava, b.map(x => x.asJava).asJava).
-                asScala.toList.map(x => x.asScala.toList)
+                (a, b) => TileTask.coalesceResult(a, b).toList
             ).flatMap(
                 p => {
                     val cid = p._1
                     val cl = p._2
                     cl.zipWithIndex.map(q => (cid + f"_${q._2}%03d", q._1))
                 })
+            
+        finalClusters.persist(StorageLevel.MEMORY_AND_DISK_SER);
+        val finclSizes=finalClusters.mapValues(_.size).filter(_._2>500).collect.sortBy(_._1)
+        println("\n\nFinal cluster sizes:")
+        finclSizes.foreach(println(_))
+        println("Done.")
+        
         val finalDocClusters = finalClusters.flatMapValues(x => x).
             map(v => (v._2, v._1)).join(wrappers).map(v => (v._2._1, v._2._2)).
             groupByKey()

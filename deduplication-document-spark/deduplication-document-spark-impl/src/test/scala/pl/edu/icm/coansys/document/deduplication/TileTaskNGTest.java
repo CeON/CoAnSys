@@ -9,11 +9,9 @@ import com.google.common.collect.ContiguousSet;
 import com.google.common.collect.DiscreteDomain;
 import com.google.common.collect.Range;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
 import static org.testng.Assert.*;
 import org.testng.annotations.AfterMethod;
@@ -68,11 +66,20 @@ public class TileTaskNGTest {
         System.out.println(documents.stream().limit(10).map(v -> v.toString()).reduce(((s1, s2) -> s1 + "\n" + s2)));
 
         TileTask instance = new TileTask("test", documents, documents);
-        List<Tuple2<String, String>> res = instance.processPairs((a, b) -> false);
-        assertEquals(res.size(), 0);
+        List<Tuple2<String, List<String>>> res = instance.processPairs((a, b) -> false);
+        
+        assertEquals(res.size(), size);
+        assertTrue(res.stream().anyMatch(p->p._2.size()==1));
+        assertEquals(res.stream().map(p->p._2.get(0)).distinct().count(), size);
 
+        
         res = instance.processPairs((a, b) -> true);
-        assertEquals(res.size(), size * (size - 1) / 2);
+        assertEquals(res.size(), 1);
+        assertEquals(res.get(0)._2.size(), size);
+        
+        
+        
+        assertTrue(res.stream().allMatch(x->x._1().equals(instance.getClusterId())));
 
         res = instance.processPairs(
                 (a, b) -> {
@@ -84,7 +91,15 @@ public class TileTaskNGTest {
                 });
 //        System.out.println("Generated pairs:");
 //        System.out.println(res.stream().map(v -> v.toString()).reduce(((s1, s2) -> s1 + ", " + s2)));
-        assertEquals(res.size(), 1000);
+        assertTrue(res.stream().allMatch(x->x._1().equals(instance.getClusterId())));
+        assertEquals(res.size(), 100);
+        
+        res.stream().map(x->x._2).forEach(
+                x->{ 
+                    String ke = x.get(0).substring(5);
+                    assertTrue(x.stream().allMatch(key->key.endsWith(ke)));
+                }
+        );
 
     }
 
