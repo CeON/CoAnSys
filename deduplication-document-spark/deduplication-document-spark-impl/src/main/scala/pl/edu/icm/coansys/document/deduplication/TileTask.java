@@ -91,16 +91,17 @@ public class TileTask implements Serializable {
     public List<Tuple2<String, List<String>>> processPairs(BiPredicate<DocumentWrapper, DocumentWrapper> equalityTest) {
         List<List<String>> raw = new ArrayList<>();
         for (DocumentWrapper row : rows) {
-            final List<String> rlist = new ArrayList<>();
-            rlist.add(row.getDocumentMetadata().getKey());
             List<String> equalColums = columns.stream()
                     .filter(
                             column -> (row.getDocumentMetadata().getKey().compareTo(column.getDocumentMetadata().getKey()) < 0)
                             && (equalityTest.test(row, column))
                     ).map(column -> column.getDocumentMetadata().getKey())
                     .collect(Collectors.toList());
-            rlist.addAll(equalColums);
-            raw.add(rlist);
+            if (!equalColums.isEmpty()) {
+                final List<String> rlist = new ArrayList<>(equalColums);
+                rlist.add(row.getDocumentMetadata().getKey());
+                raw.add(rlist);
+            }
         }
         raw = coalesceResult(raw);
         return raw.stream().map(list -> new Tuple2<>(clusterId, list)).collect(Collectors.toList());
@@ -158,7 +159,7 @@ public class TileTask implements Serializable {
         List<List<String>> res = new ArrayList<>();
         while (!all.isEmpty()) {
             Set<String> current = all.remove(0);
-            boolean anyChange = false;
+            boolean anyChange;
             do {
                 anyChange = false;
                 ListIterator<Set<String>> li = all.listIterator();
