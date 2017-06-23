@@ -4,13 +4,7 @@ import org.apache.spark.SparkContext
 import org.apache.spark.SparkContext._
 import java.util.function.BiPredicate
 import org.apache.hadoop.io.BytesWritable
-import org.apache.log4j.ConsoleAppender
-import org.apache.log4j.Level
-import org.apache.log4j.Logger
-import org.apache.log4j.PatternLayout
-import org.apache.spark.HashPartitioner
 import org.apache.spark.SparkConf
-import org.apache.spark.api.java.function.VoidFunction
 import pl.edu.icm.coansys.deduplication.document.voter.AuthorsVoter
 import pl.edu.icm.coansys.deduplication.document.voter.DoiVoter
 import pl.edu.icm.coansys.deduplication.document.voter.IssueVolumeVoter
@@ -28,422 +22,320 @@ import org.apache.spark.storage.StorageLevel
 import pl.edu.icm.coansys.deduplication.document.comparator.VotesProductComparator
 import pl.edu.icm.coansys.deduplication.document.comparator.WorkComparator
 import scala.collection.mutable.ListBuffer
-import java.io.File
-import java.io.PrintWriter
 import pl.edu.icm.coansys.document.deduplication._
 import scala.collection.JavaConverters._
 
 object DeduplicateDocuments {
-    val log = org.slf4j.LoggerFactory.getLogger(getClass().getName())
-    val initialClusteringKeySize = 7
-    val maximumClusteringKeySize = 18
-    val maximumClusterSize = 600
-    val tileSize = 30
+  val log = org.slf4j.LoggerFactory.getLogger(getClass().getName())
+  val initialClusteringKeySize = 7
+  val maximumClusteringKeySize = 14
+  val maximumClusterSize = 2000
+  val tileSize = 100
+
+    
+    
+  implicit def toJavaBiPredicate[A, B](predicate: (A, B) => Boolean) =
+    new BiPredicate[A, B] {
+      def test(a: A, b: B) = predicate(a, b)
+    }
+
+    
+  def isValidDocument(doc: DocumentWrapper): Boolean = { //todo: fix based on if return value.
+    var res = false;
+    if (doc.hasDocumentMetadata()) {
+      val md = doc.getDocumentMetadata
+      if (md.hasBasicMetadata) {
+        val bmd = md.getBasicMetadata
+        if (bmd.getTitleCount() > 0 || bmd.getAuthorCount > 0 || bmd.hasDoi || bmd.hasJournal) {
+          res = true
+        }
+      }
+    }
+    res
+  }
     
 
-    def isValidDocument(doc: DocumentWrapper): Boolean = {
-        var res = false
-        if (doc.hasDocumentMetadata) {
-            val md = doc.getDocumentMetadata
-            if (md.hasBasicMetadata) {
-                val bmd = md.getBasicMetadata
-                if (bmd.getTitleCount() > 0 || bmd.getAuthorCount > 0 || bmd.hasDoi || bmd.hasJournal) {
-                    res = true
-                }
-            }
-        }
-        res
+  def calculateKey(doc: DocumentMetadata, size: Int): String = {
+    new CustomOddsCharsKeyGenerator(size).generateKey(doc)
+  }
+
+  def calculateKeys(doc: DocumentMetadata): Array[String] = {
+    val keySizes = initialClusteringKeySize to maximumClusteringKeySize
+    val generator = new CustomOddsCharsKeyGenerator()
+    generator.setKeySizes(keySizes.toArray)
+    var res = generator.generateKeyList(doc)
+    //special case: if doc has no title.
+    if (res(0) == "") {
+      res = Array.fill[String](keySizes.length)(doc.getKey)
     }
+    res
+  }
 
-    def calculateKey(doc: DocumentMetadata, size: Int): String = {
-        new CustomOddsCharsKeyGenerator(size).generateKey(doc)
-    }
+  def prepareClustersV2(inputDocs: RDD[(String, DocumentWrapper)]): RDD[(String, Iterable[DocumentWrapper])] = {
+    log.info("Initializing cluster preparation (V2)")
+    val keySizes = (initialClusteringKeySize to maximumClusteringKeySize).toArray
+    log.info("Will use key sizes: " + keySizes.mkString(", "))
+    val idClusterKeys = inputDocs.mapValues(doc => calculateKeys(doc.getDocumentMetadata())); //we loose documents here, ony ids are preseved
+    val clusterDoc = idClusterKeys.flatMap(p => p._2.map(idcluster => (idcluster, p._1)))
 
-    def calculateKeys(doc: DocumentMetadata): Array[String] = {
-        val keySizes = initialClusteringKeySize to maximumClusteringKeySize
-        val generator = new CustomOddsCharsKeyGenerator()
-        generator.setKeySizes(keySizes.toArray)
-        var res = generator.generateKeyList(doc)
-        //special case: if doc 
-        if (res(0) == "") {
-            res = Array.fill[String](keySizes.length)(doc.getKey)
-        }
-        res
-    }
+    val clusterSizes = idClusterKeys.flatMap(x => (x._2.map(y => (y, 1)))).reduceByKey(_ + _)
 
-    def prepareClustersV2(inputDocs: RDD[(String, DocumentWrapper)]): RDD[(String, Iterable[DocumentWrapper])] = {
-        log.info("Initializing cluster preparation (V2)")
-        val keySizes = (initialClusteringKeySize to maximumClusteringKeySize).toArray
-        log.info("Will use key sizes: " + keySizes.mkString(", "))
-        val idClusterKeys = inputDocs.mapValues(doc => calculateKeys(doc.getDocumentMetadata())); //we loose documents here, ony ids are preseved
-        val clusterDoc = idClusterKeys.flatMap(p => p._2.map(idcluster => (idcluster, p._1)))
-
-        val clusterSizes = idClusterKeys.flatMap(x => (x._2.map(y => (y, 1)))).reduceByKey(_ + _)
-
-        //build rdd (docId, (clusterId, clusterSize) )
-        val docClustersWithSizes = clusterDoc.join(clusterSizes).map(p => (p._2._1, (p._1, p._2._2)))
-        //build rdd - (docId, clusterId)
-        val selectedClusters = docClustersWithSizes.reduceByKey((x, y) => {
-                if (x._2 <= maximumClusterSize) {
-                    if (y._2 <= maximumClusterSize) {
-                        if (x._1.length <= y._1.length) { x } else { y }
-                    } else {
-                        x
-                    }
-                } else {
-                    if (y._2 <= maximumClusterSize) {
-                        y
-                    } else {
-                        if (x._1.length > y._1.length) { x } else { y }
-                    }
-                }
-            }).mapValues(_._1)
-        inputDocs.join(selectedClusters).map(p => (p._2._2, p._2._1)).groupByKey
-    }
-
-    def buildDocumentsMerger(): DuplicatesMerger = {
-        val res = new AdvancedDuplicatesMerger
-        res.setup("")
-        res
-    }
-
-    def mergeDocuments(docs: List[DocumentWrapper]): DocumentWrapper = {
-        val merger = buildDocumentsMerger()
-        val merged = merger.merge(docs);
-        merged
-    }
-
-    def buildWorkComparator(): WorkComparator = {
-        val result = new VotesProductComparator;
-        result.setMinVotersWeightRequired(1.5f)
-        result.setProbabilityTreshold(0.5f)
-        result.setTresholdIncreasingVotersRequired(0.7f)
-
-        val voters = new ListBuffer[SimilarityVoter]()
-        val dv = new DoiVoter()
-        dv.setWeight(1.0f)
-        voters += dv
-        val jv = new JournalVoter()
-        jv.setWeight(0.3f)
-        jv.setDisapproveLevel(0.5f)
-        jv.setApproveLevel(0.05f)
-        voters += jv
-
-        val wivv = new IssueVolumeVoter
-        wivv.setWeight(0.3f)
-        wivv.setAbstainIfAbsent(true)
-        wivv.setSubsetResult(0.8f)
-        wivv.setPartiallyMatchResult(0.52f)
-        voters += wivv
-
-        val wpv = new PagesVoter
-        wpv.setWeight(.3f)
-        wpv.setAbstainIfAbsent(true)
-        wpv.setAbsentResult(0.6f)
-        wpv.setSubsetResult(0.75f)
-        wpv.setPartiallyMatchResult(0.64f)
-        wpv.setRemoveRepeated(true)
-        voters += wpv
-
-        val wyv = new YearVoter
-        wyv.setWeight(.3f)
-        wyv.setAbstainIfAbsent(true)
-        wyv.setAbsentResult(.52f)
-        wyv.setSubsetResult(.9f)
-        wyv.setPartiallyMatchResult(.75f)
-        wyv.setRemoveRepeated(true)
-        voters += wyv
-
-        val wtv = new TitleVoter()
-        wtv.setWeight(0.8f)
-        wtv.setDisapproveLevel(0.11f)
-        wtv.setApproveLevel(0.001f)
-        wtv.setMaxNormalizedTitleLength(90)
-        voters += wtv
-
-        val wav = new AuthorsVoter
-        wav.setWeight(0.8f)
-        wav.setDisapproveLevel(0.2f)
-        wav.setApproveLevel(0.03f)
-        voters += wav
-
-        result.setSimilarityVoters(voters)
-        result;
-    }
-
-    //size, num, min time, max time, avg time, avg_group_count
-    def timingStats(size: Int, measurements: Iterable[(Int, Long)]): (Int, Int, Double, Double, Double, Double) = {
-        val count = measurements.size
-        val times = measurements.map(_._2)
-        val minTime = times.min / 1000.0
-        val maxTime = times.max / 1000.0
-        val avgTime = times.sum / (1000.0 * count)
-        val avgGroupSize = measurements.map(_._1).sum / (1.0 * count)
-        (size, count, minTime, maxTime, avgTime, avgGroupSize);
-    }
-
-    def clusterAnalysis(cluster: Iterable[DocumentWrapper], clusterId: String): (List[DocumentWrapper], Array[Array[Int]]) = {
-        log.info("Analysing cluster {}, size: {}", clusterId, cluster.size)
-
-        val res = Array.ofDim[Int](cluster.size, cluster.size)
-        val sorted = cluster.toList.sortBy(dw => dw.getDocumentMetadata.getKey)
-        val comparator = buildWorkComparator()
-
-        val sind = sorted.toList.zipWithIndex
-
-        val procStart = System.currentTimeMillis
-        sind.foreach(p1 => {
-                val i1 = p1._2
-                val d1 = p1._1
-                //make sure diagonal is zeroed
-                (0 to cluster.size - 1).foreach(i => res(i)(i) = 0)
-                //simple iteration over table
-                sind.foreach(p2 => {
-                        val i2 = p2._2
-                        val d2 = p2._1
-                        if (i1 < i2) {
-                            val s = System.currentTimeMillis
-                            comparator.isDuplicate(d1.getDocumentMetadata, d2.getDocumentMetadata, null)
-                            val e = System.currentTimeMillis
-                            res(i1)(i2) = (e - s).toInt
-                        }
-                    })
-            })
-        val procEnd = System.currentTimeMillis
-        val elapsedSteps = res.map(_.sum).sum
-        log.info("Finished processing, elapsed: %.3f, sum of steps: %.3f".format((procEnd - procStart) / 1000.0, elapsedSteps / 1000.0))
-
-        (sorted, res)
-    }
-
-    //todo: timing depending on size
-    //Deduplicates the documents within single cluster, and creates a number of clusters containing documensts which
-    //are assumed to be duplicates.
-    def deduplicateCluster(cluster: Iterable[DocumentWrapper], clusterId: String): Iterable[(String, List[DocumentWrapper])] = {
-        log.info("Deduplicating cluster {}, size: {}", clusterId, cluster.size)
-        //
-        Logger.getLogger("pl.edu.icm.coansys.deduplication.document.comparator.AbstractWorkComparator").setLevel(Level.WARN)
-        if (cluster.size > 30) {
-
-            log.info("Sample document: \n{}", cluster.head.getDocumentMetadata.getBasicMetadata)
-        }
-        val startTime = System.currentTimeMillis();
-        val classes = ListBuffer[ListBuffer[DocumentWrapper]]()
-        val comparator = buildWorkComparator()
-        cluster.foreach(x => {
-                val arr = classes.find(a => { comparator.isDuplicate(x.getDocumentMetadata, a(0).getDocumentMetadata, null) })
-                if (arr.isEmpty) {
-                    val nclass = ListBuffer(x)
-                    classes += nclass
-                } else {
-                    arr.get += x
-                }
-            })
-        val t: Double = (System.currentTimeMillis() - startTime) / 1000.0
-        val res = classes.zipWithIndex.map(x => (clusterId + x._2, x._1.toList))
-        log.info("Deduplicated cluster " + clusterId + ", size " + cluster.size + " in " + t + " sec into " + res.size + " groups.")
-
-        res
-
-    }
-
-    def timedDeduplicateCluster(cluster: Iterable[DocumentWrapper], clusterId: String): (Iterable[(String, List[DocumentWrapper])], (Int, (Int, Long))) = {
-        val start = System.currentTimeMillis;
-        val rresult = deduplicateCluster(cluster, clusterId);
-        val end = System.currentTimeMillis
-
-        (rresult, (cluster.size, (rresult.size, end - start)))
-    }
-    
-    implicit def toJavaBiPredicate[A, B](predicate: (A, B) => Boolean) =
-        new BiPredicate[A, B] {
-            def test(a: A, b: B) = predicate(a, b)
-        }
-    
-//    
-//    implicit def toVoidFunction[T](runMethod: (T) => Unit) =
-//        new VoidFunction[T]() {
-//            def call(t:T) = runMethod(t)
-//        }
-
-
-    def reconfigureLogging(sc: SparkContext) = {
-        ExecuteOnceOnExecutorsHelpers.executeEverywhere(sc, "RECONFIGURE_LOGGING", true, 
-                                                        new VoidFunction[java.util.Iterator[_]]() { 
-                def call(t :java.util.Iterator[_]) :Unit={
-                    Logger.getLogger("pl.edu.icm.coansys.deduplication.document.comparator.AbstractWorkComparator").setLevel(Level.WARN)
-                    val console = new ConsoleAppender(new PatternLayout("%d [%p|%c|%C{1}] %m%n"), ConsoleAppender.SYSTEM_OUT); //create appender
-                    console.activateOptions();
-                    Logger.getLogger("pl.edu.icm").addAppender(console)
-                    log.info("Reconfigured logger...")
-                }
-            }
-        )
-    }
-    
-    /**
-     * @param args the command line arguments
-     */
-    def main(args: Array[String]): Unit = {
-        val enableClusterSummary = false;
-        val fixInvalidDocuments = true;
-        val removeDoubles = true;
-
-        println("Starting app")
-        //load the file:
-        if (args.size == 0) {
-            println("No args supported, exitting.")
-            return ;
+    //build rdd (docId, (clusterId, clusterSize) )
+    val docClustersWithSizes = clusterDoc.join(clusterSizes).map(p => (p._2._1, (p._1, p._2._2)))
+    //build rdd - (docId, clusterId)
+    val selectedClusters = docClustersWithSizes.reduceByKey((x, y) => {
+      if (x._2 <= maximumClusterSize) {
+        if (y._2 <= maximumClusterSize) {
+          if (x._1.length <= y._1.length) { x } else { y }
         } else {
-            println("Arguments:")
-            args.foreach(println);
+          x
         }
-        println("Creating context...")
-
-        val conf = new SparkConf()
-        .setAppName("Document deduplication")
-        .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
-        .set("spark.kryo.registrator", "pl.edu.icm.coansys.document.deduplication.DocumentWrapperKryoRegistrator")
-
-        val sc = new SparkContext(conf)
-        reconfigureLogging(sc)
-        
-        println("Created context...")
-        sc.getConf.getAll.foreach(x => println(x._1 + ": " + x._2))
-        val inputDocuments = args(0) //  "/user/kura/curr-res-navigator/hbase-sf-out/DOCUMENT"
-        val outputDocuments = args(1)
-
-        val rawbytes = sc.sequenceFile[String, BytesWritable](inputDocuments).mapValues(_.copyBytes)
-        log.info("Loaded raw bytes.")
-
-        val dirtyWrappers = rawbytes.mapValues(b => DocumentProtos.DocumentWrapper.parseFrom(b))
-
-        //fix invalid documents:
-        val fixedWrappers = if (fixInvalidDocuments) {
-            val x = dirtyWrappers.filter(w => isValidDocument(w._2))
-            val afterSize = x.count;
-            val preSize = dirtyWrappers.count
-            log.info(f"Filtering invalid documents done, before filtering: $preSize and after filtering $afterSize documents left.")
-            x
+      } else {
+        if (y._2 <= maximumClusterSize) {
+          y
         } else {
-            dirtyWrappers
+          if (x._1.length > y._1.length) { x } else { y }
         }
+      }
+    }).mapValues(_._1)
+    inputDocs.join(selectedClusters).map(p => (p._2._2, p._2._1)).groupByKey
+  }
 
-        val wrappers = if (removeDoubles) {
-            fixedWrappers.reduceByKey((x, y) => y)
-        } else {
-            fixedWrappers
-        }
-        wrappers.persist(StorageLevel.MEMORY_AND_DISK)
-        val initialSize = wrappers.count
-        log.info(f"Starting processing with $initialSize documents.")
-    
-        val initialGroups = prepareClustersV2(wrappers)
-        initialGroups.persist(StorageLevel.MEMORY_AND_DISK)
-        
+  def buildDocumentsMerger(): DuplicatesMerger = {
+    val res = new AdvancedDuplicatesMerger
+    res.setup("")
+    res
+  }
 
-        if (enableClusterSummary) {
-            //prepare cluster summary  
-            val largeClusters = initialGroups.filter(_._2.size > 1000)
-            largeClusters.mapValues(_.size).take(250).foreach(println)
-            val sampledResult = largeClusters.mapValues(x => (x.size, x.take(10))).collect
-            //      val result = largeClusters.collect()
-            sampledResult.foreach(x => {
-                    val docs = x._2._2
-                    val clusterId = x._1
-                    val fileBase = clusterId + "-%04d-".format(docs.size)
-                    println(fileBase)
+  def mergeDocuments(docs: List[DocumentWrapper]): DocumentWrapper = {
+    val merger = buildDocumentsMerger()
+    val merged = merger.merge(docs);
+    merged
+  }
 
-                    println("Writing docs...")
-                    var pw = new PrintWriter(new File(fileBase + "docs.txt"), "UTF-8")
-                    docs.foreach(x => { pw.println(x.getDocumentMetadata()); pw.println("====================") })
-                    pw.close
-                })
-            return
-        }
+  def buildWorkComparator(): WorkComparator = {
+    val result = new VotesProductComparator;
+    result.setMinVotersWeightRequired(1.5f)
+    result.setProbabilityTreshold(0.5f)
+    result.setTresholdIncreasingVotersRequired(0.7f)
 
-        //    val igs = initialGroups.count()
-        val clustersToDeduplicate = initialGroups.filter(t => t._2.size > 1)
-        val initialClusterCount = clustersToDeduplicate.count
-        
-        val tiledTasks = clustersToDeduplicate.flatMap( p => TileTask.parallelize(p._1, p._2, tileSize) )
-        val shuffledTiledTasks = tiledTasks.repartition(5000);
-        shuffledTiledTasks.persist(StorageLevel.MEMORY_AND_DISK)
-        val tileCount = shuffledTiledTasks.count;
-        
-        log.info(f"Prepared $initialClusterCount clusters, and then split it to $tileCount tiles")
-//        val comparator = sc.broadcast(buildWorkComparator)
-        reconfigureLogging(sc)
-        val partialEqualityClusters = shuffledTiledTasks.flatMap(
-                v => { 
-                    val t0=java.lang.System.currentTimeMillis()
-                    log.info("Starting tile task %s".format(v.getTaskId))
-                    val comparator = buildWorkComparator
-                    val res = v.processPairs( (a: DocumentWrapper, b: DocumentWrapper) => 
-                        comparator.isDuplicate(a.getDocumentMetadata, b.getDocumentMetadata, null))
-                    val time = (java.lang.System.currentTimeMillis()-t0)/1000.
-                    log.info(f"Finishing tile task ${v.getTaskId} in $time%.4f sec")
-                    res
-                }
-            )
-//        equalityClusters.persist(StorageLevel.MEMORY_AND_DISK)
-//        log.info("Got totally "+partialEqualityClusters.count+" partial equality clusters.");
-//        val filteredSizes = partialEqualityClusters.mapValues(x=>1).reduceByKey(_+_).filter(p=>p._2>500)
-//        log.info("After filtering "+partialEqualityClusters.count+" equality clusters left.");
-//        
-//        val eqclsizes= filteredSizes.collect.sortBy (_._2)
-//        println("Equality cluster sizes:")
-//        eqclsizes.foreach(println(_))
-//        println("Done.\n\n")
-        
-        val finalClusters = partialEqualityClusters.mapValues(List(_)).
-            reduceByKey(
-                (a, b) => TileTask.coalesceResult(a, b).toList
-            ).flatMap(
-                p => {
-                    val cid = p._1
-                    val cl = p._2
-                    cl.zipWithIndex.map(q => (cid + f"_${q._2}%03d", q._1))
-                })
-            
-        finalClusters.persist(StorageLevel.MEMORY_AND_DISK_SER);
-        val finclSizes=finalClusters.mapValues(_.size).filter(_._2>500).collect.sortBy(_._1)
-        println("\n\nFinal cluster sizes:")
-        finclSizes.foreach(println(_))
-        println("Done.")
-        
-        val finalDocClusters = finalClusters.flatMapValues(x => x).
-            map(v => (v._2, v._1)).join(wrappers).map(v => (v._2._1, v._2._2)).
-            groupByKey()
-    
-        val singularClustersAfterDeduplication = finalDocClusters.filter(p=>p._2.size==1)
-        val pluralClustersAfterDeduplication = finalDocClusters.filter(p=>p._2.size>1)
+    val voters = new ListBuffer[SimilarityVoter]()
+    val dv = new DoiVoter()
+    dv.setWeight(1.0f)
+    voters += dv
+    val jv = new JournalVoter()
+    jv.setWeight(0.3f)
+    jv.setDisapproveLevel(0.5f)
+    jv.setApproveLevel(0.05f)
+    voters += jv
 
-        log.info("After reducing clusters (comparison)")
-        val merged = pluralClustersAfterDeduplication.map(x => (mergeDocuments(x._2.toList)))
-        log.info("Finished merge")
-            //    val mergedSize = merged.count()
+    val wivv = new IssueVolumeVoter
+    wivv.setWeight(0.3f)
+    wivv.setAbstainIfAbsent(true)
+    wivv.setSubsetResult(0.8f)
+    wivv.setPartiallyMatchResult(0.52f)
+    voters += wivv
 
-        val single = initialGroups.filter(t => t._2.size == 1)
-            //    log.info("Got initial group count=" + igs + "; singular=" + single.count + 
-            //             "; multiple=" + clustersToDeduplicate.count + "; reducedCount=" + deduplicatedClusters.count())
-            //    
-            //now merge the arrays:
-        val toWrite = merged.union(single.union(singularClustersAfterDeduplication).map(x => x._2.head)).map(doc => (doc.getDocumentMetadata.getKey, doc))
-        if ("-" != outputDocuments) {
-            val bas = toWrite.mapValues(doc => doc.toByteArray())
-            bas.saveAsSequenceFile(outputDocuments);
-        } else {
-            log.info("Simulating timing by counting.")
-            toWrite.count()
-        }
-//    val tgrouped = timing.groupByKey;
-//    val stats = tgrouped.map(x => timingStats(x._1, x._2)).collect
-//    println("================ Timing stats ======================")
-//    stats.sortBy(x => x._1).map(_.productIterator.toList.mkString(",")).foreach(println)
-//    println("================ end of timing stats ======================")
+    val wpv = new PagesVoter
+    wpv.setWeight(.3f)
+    wpv.setAbstainIfAbsent(true)
+    wpv.setAbsentResult(0.6f)
+    wpv.setSubsetResult(0.75f)
+    wpv.setPartiallyMatchResult(0.64f)
+    wpv.setRemoveRepeated(true)
+    voters += wpv
 
-        println("Exit")
+    val wyv = new YearVoter
+    wyv.setWeight(.3f)
+    wyv.setAbstainIfAbsent(true)
+    wyv.setAbsentResult(.52f)
+    wyv.setSubsetResult(.9f)
+    wyv.setPartiallyMatchResult(.75f)
+    wyv.setRemoveRepeated(true)
+    voters += wyv
 
+    val wtv = new TitleVoter()
+    wtv.setWeight(0.8f)
+    wtv.setDisapproveLevel(0.11f)
+    wtv.setApproveLevel(0.001f)
+    wtv.setMaxNormalizedTitleLength(90)
+    voters += wtv
+
+    val wav = new AuthorsVoter
+    wav.setWeight(0.8f)
+    wav.setDisapproveLevel(0.2f)
+    wav.setApproveLevel(0.03f)
+    voters += wav
+
+    result.setSimilarityVoters(voters)
+    result;
+  }
+
+
+  /**
+   * @param args the command line arguments
+   */
+  def main(args: Array[String]): Unit = {
+    val enableClusterSummary = false;
+    val fixInvalidDocuments = true;
+    val removeDoubles = true;
+
+    println("Starting app")
+    //load the file:
+    if (args.size == 0) {
+      println("No args supplied, exitting.")
+      return ;
+    } else { //todo: add arguments interpretation.
+      println("Arguments:")
+      args.foreach(println);
     }
+    println("Creating context...")
+
+    val conf = new SparkConf()
+      .setAppName("Document deduplication")
+      .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
+      .set("spark.kryo.registrator", "pl.edu.icm.coansys.document.deduplication.DocumentWrapperKryoRegistrator")
+
+    val sc = new SparkContext(conf)
+
+    println("Created context...")
+    sc.getConf.getAll.foreach(x => println(x._1 + ": " + x._2))
+    val inputDocuments = args(0)
+    //  "/user/kura/curr-res-navigator/hbase-sf-out/DOCUMENT"
+    //  "/user/kura/curr-res-navigator-no-blogs/hbase-sf-out/DOCUMENT"
+    val outputDocuments = args(1)
+
+    val rawbytes = sc.sequenceFile[String, BytesWritable](inputDocuments).mapValues(_.copyBytes)
+    println("Loaded raw bytes.")
+
+    val dirtyWrappers = rawbytes.mapValues(b => DocumentProtos.DocumentWrapper.parseFrom(b))
+
+    //fix invalid documents:
+    val fixedWrappers = if (fixInvalidDocuments) {
+      val x = dirtyWrappers.filter(w => isValidDocument(w._2))
+      val afterSize = x.count;
+      val preSize = dirtyWrappers.count
+      log.info(f"Filtering invalid documents done, before filtering: $preSize and after filtering $afterSize documents left.")
+      x
+    } else {
+      dirtyWrappers
+    }
+
+    val wrappers = if (removeDoubles) {
+      fixedWrappers.reduceByKey((x, y) => y)
+    } else {
+      fixedWrappers
+    }
+//    wrappers.persist(StorageLevel.MEMORY_AND_DISK)
+
+    val initialSize = wrappers.count
+    println(f"Starting processing with $initialSize documents.")
+
+    val initialGroups = prepareClustersV2(wrappers)
+    initialGroups.persist//(StorageLevel.MEMORY_AND_DISK)
+
+    val clustersToDeduplicate = initialGroups.filter(t => t._2.size > 1)
+    val initialClusterCount = clustersToDeduplicate.count
+    //TODO: some statistics here on cluster, would be useful.
+
+    val tiledTasks = clustersToDeduplicate.flatMap(p => TileTask.parallelize(p._1, p._2, tileSize))
+    tiledTasks.persist//(StorageLevel.MEMORY_AND_DISK)
+    val tileCount = tiledTasks.count;
+
+    println(f"Prepared $initialClusterCount clusters, and then split it to $tileCount tiles")
+    //        val comparator = sc.broadcast(buildWorkComparator) //todo: can we do comparator broadcast variable?
+
+    val partialEqualityClusters = tiledTasks.flatMap(
+      v => {
+        val t0 = java.lang.System.currentTimeMillis()
+        //                    log.info("Starting tile task %s".format(v.getTaskId))
+        val comparator = buildWorkComparator
+        val res = v.processPairs((a: DocumentWrapper, b: DocumentWrapper) =>
+          comparator.isDuplicate(a.getDocumentMetadata, b.getDocumentMetadata, null))
+        val time = (java.lang.System.currentTimeMillis() - t0) / 1000.0
+        log.info(f"Finishing tile task ${v.getTaskId} in $time%.4f sec")
+        res
+      }
+    )
+    // At this moment we have RDD of (String, Seq[String]) (clusterId and list of 'equal' ids inside this cluster    
+    // let's save it: 
+    // partialEqualityClusters.saveAsObjectFile ("hdfs:///user/axnow/intermediate/pec");
+    // //later, in other program - watch, you have tuples out of the box :)
+    // val loadedPec  = sc.objectFile[(String, java.util.List[String])]("intermediate/pec")
+    // val partialEqualityClusters = loadedPec
+    // 
+    // 
+    //        equalityClusters.persist(StorageLevel.MEMORY_AND_DISK)
+    //        log.info("Got totally "+partialEqualityClusters.count+" partial equality clusters.");
+    //        val filteredSizes = partialEqualityClusters.mapValues(x=>1).reduceByKey(_+_).filter(p=>p._2>500)
+    //        log.info("After filtering "+partialEqualityClusters.count+" equality clusters left.");
+    //        
+    //        val eqclsizes= filteredSizes.collect.sortBy (_._2)
+    //        println("Equality cluster sizes:")
+    //        eqclsizes.foreach(println(_))
+    //        println("Done.\n\n")
+
+    val finalClusters = partialEqualityClusters.mapValues(List(_)).
+      reduceByKey(_ ++ _). //one long list of lists of ids
+      map(pair => {
+        val t0 = java.lang.System.currentTimeMillis()
+        val res = TileTask.coalesceResult(pair._2.asJava)
+        val tt = System.currentTimeMillis() - t0;
+        val clusterSize=pair._2.size
+        log.info(f"Finished tile coalesce task. (Cluster,time[s], size): ${pair._1}, ${tt / 1000.0}, ${pair._2.size}")
+        (pair._1, res)
+      }).
+      flatMap( //build proper ids for equality clusters.
+        p => {
+          val cid = p._1
+          val cl = p._2
+          cl.zipWithIndex.map(q => (cid + f"_${q._2}%03d", q._1))
+        }
+      )
+    //now we got all the items in place    
+    finalClusters.persist(StorageLevel.MEMORY_AND_DISK_SER);
+    val finclSizes = finalClusters.mapValues(_.size).takeOrdered(100)(Ordering[Int].on(-_._2))
+    println("Top 100 cluster sizes:")
+    finclSizes.foreach(println(_))
+    println("-----\n\n")
+
+    //count clusters, documents in clusters and number of documents to be deduced:
+    val finalClusterCount = finalClusters.count
+    val documentInFinalClusterCount = finalClusters.map(_._2.size).reduce(_ + _)
+    val documentRemovedDuringClusteringCount = documentInFinalClusterCount - finalClusterCount
+    println(f"Finally created $finalClusterCount clusters, containing $documentInFinalClusterCount documents, $documentRemovedDuringClusteringCount documents will be removed.")
+
+    // merge documents
+    val docIdWithClusterId = finalClusters.flatMapValues(x => x).
+      map(v => (v._2, v._1))
+    val documentWrappersPrepared = wrappers.leftOuterJoin(docIdWithClusterId);
+    val mergedDocuments = documentWrappersPrepared.filter(_._2._2.isDefined).
+      map(x => (x._2._2, List(x._2._1))).reduceByKey(_ ++ _). //get lists of cluster documents by cluster id
+      map(kv => {
+        val doc = mergeDocuments(kv._2)
+        (doc.getDocumentMetadata.getKey, doc)
+      })
+
+    // documents not touched
+    val singularDocuments = documentWrappersPrepared.filter(_._2._2.isEmpty).map(x => (x._1, x._2._1))
+
+    //final result.
+    val finalResult = singularDocuments.union(mergedDocuments)
+    finalResult.persist
+    
+    val finalSize = finalResult.count
+    println(f"Final counts:\n-----------\n"+
+            f" input: $initialSize\n"+
+            f" output: $finalSize\n"+
+            f" removed: $documentRemovedDuringClusteringCount\n"+
+            f" difference: ${initialSize-finalSize-documentRemovedDuringClusteringCount}")
+        
+    if ("-" != outputDocuments) {
+      val bas = finalResult.mapValues(doc => doc.toByteArray()).saveAsSequenceFile(outputDocuments);
+    } else {
+      log.info("Simulating timing by counting.")
+      finalResult.count()
+      println("Finished counting.")
+    }
+  }
 }

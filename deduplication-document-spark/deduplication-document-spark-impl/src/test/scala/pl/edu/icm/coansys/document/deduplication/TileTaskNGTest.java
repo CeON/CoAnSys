@@ -57,7 +57,8 @@ public class TileTaskNGTest {
     /**
      * Test of processPairs method, of class TileTask.
      */
-    @Test
+//    @Test
+//    @Ignore
     public void testProcessPairs() {
         System.out.println("processPairs");
         int size = 500;
