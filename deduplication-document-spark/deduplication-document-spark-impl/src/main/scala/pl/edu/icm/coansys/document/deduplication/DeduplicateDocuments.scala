@@ -27,19 +27,12 @@ import scala.collection.JavaConverters._
 
 object DeduplicateDocuments {
   val log = org.slf4j.LoggerFactory.getLogger(getClass().getName())
-  val initialClusteringKeySize = 7
-  val maximumClusteringKeySize = 14
-  val maximumClusterSize = 2000
-  val tileSize = 100
 
-    
-    
   implicit def toJavaBiPredicate[A, B](predicate: (A, B) => Boolean) =
     new BiPredicate[A, B] {
       def test(a: A, b: B) = predicate(a, b)
     }
 
-    
   def isValidDocument(doc: DocumentWrapper): Boolean = { //todo: fix based on if return value.
     var res = false;
     if (doc.hasDocumentMetadata()) {
@@ -53,13 +46,12 @@ object DeduplicateDocuments {
     }
     res
   }
-    
 
   def calculateKey(doc: DocumentMetadata, size: Int): String = {
     new CustomOddsCharsKeyGenerator(size).generateKey(doc)
   }
 
-  def calculateKeys(doc: DocumentMetadata): Array[String] = {
+  def calculateKeys(doc: DocumentMetadata, initialClusteringKeySize: Int, maximumClusteringKeySize: Int): Array[String] = {
     val keySizes = initialClusteringKeySize to maximumClusteringKeySize
     val generator = new CustomOddsCharsKeyGenerator()
     generator.setKeySizes(keySizes.toArray)
@@ -71,11 +63,12 @@ object DeduplicateDocuments {
     res
   }
 
-  def prepareClustersV2(inputDocs: RDD[(String, DocumentWrapper)]): RDD[(String, Iterable[DocumentWrapper])] = {
+  def prepareClustersV2(inputDocs: RDD[(String, DocumentWrapper)], initialClusteringKeySize: Int,
+    maximumClusteringKeySize: Int, maximumClusterSize: Int): RDD[(String, Iterable[DocumentWrapper])] = {
     log.info("Initializing cluster preparation (V2)")
     val keySizes = (initialClusteringKeySize to maximumClusteringKeySize).toArray
     log.info("Will use key sizes: " + keySizes.mkString(", "))
-    val idClusterKeys = inputDocs.mapValues(doc => calculateKeys(doc.getDocumentMetadata())); //we loose documents here, ony ids are preseved
+    val idClusterKeys = inputDocs.mapValues(doc => calculateKeys(doc.getDocumentMetadata(), initialClusteringKeySize, maximumClusteringKeySize)); //we loose documents here, ony ids are preseved
     val clusterDoc = idClusterKeys.flatMap(p => p._2.map(idcluster => (idcluster, p._1)))
 
     val clusterSizes = idClusterKeys.flatMap(x => (x._2.map(y => (y, 1)))).reduceByKey(_ + _)
@@ -171,24 +164,67 @@ object DeduplicateDocuments {
     result;
   }
 
-
+  case class Config(
+    inputFile: String = "",
+    outputFile: String = "",
+    dumpClusters: Boolean = false,
+    keySizeMin: Int = 5,
+    keySizeMax: Int = 10,
+    clusterSizeMax: Int = 500,
+    tileSize: Int = 25
+  )
   /**
    * @param args the command line arguments
    */
   def main(args: Array[String]): Unit = {
-    val enableClusterSummary = false;
     val fixInvalidDocuments = true;
     val removeDoubles = true;
 
-    println("Starting app")
-    //load the file:
-    if (args.size == 0) {
-      println("No args supplied, exitting.")
-      return ;
-    } else { //todo: add arguments interpretation.
-      println("Arguments:")
-      args.foreach(println);
+    println("Starting document deduplication")
+
+    val parser = new scopt.OptionParser[Config]("CoAnSys Deduplicate Documents") {
+      head("Deduplicate documents", "0.1")
+
+//      opt[Unit]('c', "dump-clusters").action((x, c) =>
+//        c.copy(dumpClusters = true)).text("dump similarity clusters into debug/clusters hdfs dir during run")
+
+      opt[Int]("cluster-key-min").abbr("kmn").action((x, c) => c.copy(keySizeMin = x)).
+        validate(x =>
+          if (x >= 2) success
+          else failure("Value <cluster-key-min> must be >=2")).
+        text("shortest valid key for cluster, defines pre-clustering. Recommended value more thab 4, minimum 2.")
+
+      opt[Int]("cluster-key-max").abbr("kmx").action((x, c) => c.copy(keySizeMax = x)).
+        validate(x =>
+          if (x >= 2 && x <= 20) success
+          else failure("Value <cluster-key-min> must be >=2")).
+        text("longest valid key for cluster, during pre-clustering. Used to split large clusters. Recommended value more than min, minimum 2, max 20.")
+
+      opt[Int]("cluster-size-max").abbr("cs").action((x, c) => c.copy(clusterSizeMax = x)).
+        text("Largest acceptable cluster size during preclustering phase. If cluster exceeds algorithm attempts to use longer key if possible. Typically 400+")
+
+      opt[Int]("tile-size").abbr("ts").action((x, c) => c.copy(keySizeMax = x)).
+        validate(x =>
+          if (x >= 2) success
+          else failure("Value <tile-size> must be >=2")).
+        text("Size of the tile tasks used to split large clusters. Min 2, recommended approx 40")
+
+      arg[String]("<input>").required.text("Input sequence file").action((f, c) => c.copy(inputFile = f))
+      arg[String]("<output>").optional.text("Output sequence file. If ommited, then no output is written but calculation is done.").action((f, c) => c.copy(outputFile = f))
+      note("Blah")
     }
+
+    val cfg: Config = parser.parse(args, Config()) match {
+      case Some(config) =>
+        println(f"Got config:\n${config}")
+        println(config);
+        config
+      case None =>
+        // arguments are bad, error message will have been displayed
+        println("No config.")
+        return
+    }
+
     println("Creating context...")
 
     val conf = new SparkConf()
@@ -199,11 +235,15 @@ object DeduplicateDocuments {
     val sc = new SparkContext(conf)
 
     println("Created context...")
-    sc.getConf.getAll.foreach(x => println(x._1 + ": " + x._2))
-    val inputDocuments = args(0)
+    //    sc.getConf.getAll.foreach(x => println(x._1 + ": " + x._2))
+    val inputDocuments = cfg.inputFile
     //  "/user/kura/curr-res-navigator/hbase-sf-out/DOCUMENT"
     //  "/user/kura/curr-res-navigator-no-blogs/hbase-sf-out/DOCUMENT"
-    val outputDocuments = args(1)
+    val outputDocuments = cfg.outputFile
+    val tileSize = cfg.tileSize
+    val initialClusteringKeySize = cfg.keySizeMin
+    val maximumClusteringKeySize = cfg.keySizeMax
+    val maximumClusterSize = cfg.clusterSizeMax
 
     val rawbytes = sc.sequenceFile[String, BytesWritable](inputDocuments).mapValues(_.copyBytes)
     println("Loaded raw bytes.")
@@ -226,20 +266,20 @@ object DeduplicateDocuments {
     } else {
       fixedWrappers
     }
-//    wrappers.persist(StorageLevel.MEMORY_AND_DISK)
+    //    wrappers.persist(StorageLevel.MEMORY_AND_DISK)
 
     val initialSize = wrappers.count
     println(f"Starting processing with $initialSize documents.")
 
-    val initialGroups = prepareClustersV2(wrappers)
-    initialGroups.persist//(StorageLevel.MEMORY_AND_DISK)
+    val initialGroups = prepareClustersV2(wrappers, initialClusteringKeySize, maximumClusteringKeySize, maximumClusterSize)
+    initialGroups.persist //(StorageLevel.MEMORY_AND_DISK)
 
     val clustersToDeduplicate = initialGroups.filter(t => t._2.size > 1)
     val initialClusterCount = clustersToDeduplicate.count
     //TODO: some statistics here on cluster, would be useful.
 
     val tiledTasks = clustersToDeduplicate.flatMap(p => TileTask.parallelize(p._1, p._2, tileSize))
-    tiledTasks.persist//(StorageLevel.MEMORY_AND_DISK)
+    tiledTasks.persist //(StorageLevel.MEMORY_AND_DISK)
     val tileCount = tiledTasks.count;
 
     println(f"Prepared $initialClusterCount clusters, and then split it to $tileCount tiles")
@@ -281,7 +321,7 @@ object DeduplicateDocuments {
         val t0 = java.lang.System.currentTimeMillis()
         val res = TileTask.coalesceResult(pair._2.asJava)
         val tt = System.currentTimeMillis() - t0;
-        val clusterSize=pair._2.size
+        val clusterSize = pair._2.size
         log.info(f"Finished tile coalesce task. (Cluster,time[s], size): ${pair._1}, ${tt / 1000.0}, ${pair._2.size}")
         (pair._1, res)
       }).
@@ -322,15 +362,15 @@ object DeduplicateDocuments {
     //final result.
     val finalResult = singularDocuments.union(mergedDocuments)
     finalResult.persist
-    
+
     val finalSize = finalResult.count
-    println(f"Final counts:\n-----------\n"+
-            f" input: $initialSize\n"+
-            f" output: $finalSize\n"+
-            f" removed: $documentRemovedDuringClusteringCount\n"+
-            f" difference: ${initialSize-finalSize-documentRemovedDuringClusteringCount}")
-        
-    if ("-" != outputDocuments) {
+    println(f"Final counts:\n-----------\n" +
+      f" input: $initialSize\n" +
+      f" output: $finalSize\n" +
+      f" removed: $documentRemovedDuringClusteringCount\n" +
+      f" difference: ${initialSize - finalSize - documentRemovedDuringClusteringCount}")
+
+    if ("-" != outputDocuments && !outputDocuments.isEmpty) {
       val bas = finalResult.mapValues(doc => doc.toByteArray()).saveAsSequenceFile(outputDocuments);
     } else {
       log.info("Simulating timing by counting.")
