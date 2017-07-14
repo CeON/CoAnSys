@@ -10,15 +10,11 @@ import org.apache.spark.serializer.KryoRegistrator;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentMetadata;
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 /**
- *
- * @author Aleksander Nowinski <aleksander.nowinski@gmail.com>
+ * Simple class which registers custom serializers for the documents protocol 
+ * buffer generated classes.
+ * @author Aleksander Nowinski <a.nowinski@icm.edu.pl>
  */
 public class DocumentWrapperKryoRegistrator implements KryoRegistrator {
 

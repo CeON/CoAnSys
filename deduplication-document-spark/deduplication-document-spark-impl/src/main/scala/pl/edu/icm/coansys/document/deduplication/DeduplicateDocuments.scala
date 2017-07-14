@@ -34,44 +34,45 @@ object DeduplicateDocuments {
     }
 
   def isValidDocument(doc: DocumentWrapper): Boolean = { //todo: fix based on if return value.
-    var res = false;
     if (doc.hasDocumentMetadata()) {
       val md = doc.getDocumentMetadata
       if (md.hasBasicMetadata) {
         val bmd = md.getBasicMetadata
-        if (bmd.getTitleCount() > 0 || bmd.getAuthorCount > 0 || bmd.hasDoi || bmd.hasJournal) {
-          res = true
-        }
+        (bmd.getTitleCount() > 0 || bmd.getAuthorCount > 0 || bmd.hasDoi || bmd.hasJournal)
+      } else {
+          false
       }
+    } else {
+        false
     }
-    res
   }
 
-  def calculateKey(doc: DocumentMetadata, size: Int): String = {
-    new CustomOddsCharsKeyGenerator(size).generateKey(doc)
-  }
-
-  def calculateKeys(doc: DocumentMetadata, initialClusteringKeySize: Int, maximumClusteringKeySize: Int): Array[String] = {
+  def calculateKeys(doc: DocumentMetadata, initialClusteringKeySize: Int, maximumClusteringKeySize: Int): Seq[String] = {
     val keySizes = initialClusteringKeySize to maximumClusteringKeySize
-    val generator = new CustomOddsCharsKeyGenerator()
-    generator.setKeySizes(keySizes.toArray)
-    var res = generator.generateKeyList(doc)
-    //special case: if doc has no title.
-    if (res(0) == "") {
+    var res = MultiLengthTitleKeyGenerator.generateKeys(doc)(keySizes)
+    if (res.head.isEmpty) {
       res = Array.fill[String](keySizes.length)(doc.getKey)
     }
     res
   }
 
-  def prepareClustersV2(inputDocs: RDD[(String, DocumentWrapper)], initialClusteringKeySize: Int,
+  /**
+   * Group items into large clusters, within which detailed analysis will be
+   * held. Items are grouped by keys generated from the normalised titles.
+   * If the cluster is too big, then longer keys are used, so smaller clusters are 
+   * generated. Treshold is maximumClusterSize.
+   * 
+   */
+  def prepareInitialClustering(inputDocs: RDD[(String, DocumentWrapper)], initialClusteringKeySize: Int,
     maximumClusteringKeySize: Int, maximumClusterSize: Int): RDD[(String, Iterable[DocumentWrapper])] = {
-    log.info("Initializing cluster preparation (V2)")
-    val keySizes = (initialClusteringKeySize to maximumClusteringKeySize).toArray
+    log.info("Initializing cluster preparation.")
+    val keySizes = initialClusteringKeySize to maximumClusteringKeySize
     log.info("Will use key sizes: " + keySizes.mkString(", "))
-    val idClusterKeys = inputDocs.mapValues(doc => calculateKeys(doc.getDocumentMetadata(), initialClusteringKeySize, maximumClusteringKeySize)); //we loose documents here, ony ids are preseved
-    val clusterDoc = idClusterKeys.flatMap(p => p._2.map(idcluster => (idcluster, p._1)))
-
-    val clusterSizes = idClusterKeys.flatMap(x => (x._2.map(y => (y, 1)))).reduceByKey(_ + _)
+    
+    val idClusterKeys = inputDocs.mapValues(doc => calculateKeys(
+            doc.getDocumentMetadata(), initialClusteringKeySize, maximumClusteringKeySize)) //we loose documents here, ony ids are preseved
+    val clusterDoc = idClusterKeys.flatMap(kv => kv._2.map(idcluster => (idcluster, kv._1))) // (clusterId => docId)
+    val clusterSizes = idClusterKeys.flatMap(x => (x._2.map(y => (y, 1)))).reduceByKey(_ + _) //(clusterId => clusterSize)
 
     //build rdd (docId, (clusterId, clusterSize) )
     val docClustersWithSizes = clusterDoc.join(clusterSizes).map(p => (p._2._1, (p._1, p._2._2)))
@@ -237,8 +238,9 @@ object DeduplicateDocuments {
     println("Created context...")
     //    sc.getConf.getAll.foreach(x => println(x._1 + ": " + x._2))
     val inputDocuments = cfg.inputFile
-    //  "/user/kura/curr-res-navigator/hbase-sf-out/DOCUMENT"
-    //  "/user/kura/curr-res-navigator-no-blogs/hbase-sf-out/DOCUMENT"
+    // for pasting into console:
+    //  val inputDocuments = "/user/kura/curr-res-navigator/hbase-sf-out/DOCUMENT"
+    //  val inputDocuments = "/user/kura/curr-res-navigator-no-blogs/hbase-sf-out/DOCUMENT"
     val outputDocuments = cfg.outputFile
     val tileSize = cfg.tileSize
     val initialClusteringKeySize = cfg.keySizeMin
@@ -266,60 +268,45 @@ object DeduplicateDocuments {
     } else {
       fixedWrappers
     }
-    //    wrappers.persist(StorageLevel.MEMORY_AND_DISK)
 
     val initialSize = wrappers.count
     println(f"Starting processing with $initialSize documents.")
 
-    val initialGroups = prepareClustersV2(wrappers, initialClusteringKeySize, maximumClusteringKeySize, maximumClusterSize)
+    val initialGroups = prepareInitialClustering(wrappers, initialClusteringKeySize, maximumClusteringKeySize, maximumClusterSize)
     initialGroups.persist //(StorageLevel.MEMORY_AND_DISK)
 
     val clustersToDeduplicate = initialGroups.filter(t => t._2.size > 1)
     val initialClusterCount = clustersToDeduplicate.count
     //TODO: some statistics here on cluster, would be useful.
 
-    val tiledTasks = clustersToDeduplicate.flatMap(p => TileTask.parallelize(p._1, p._2, tileSize))
+//    val tiledTasks = clustersToDeduplicate.flatMap(p => TileTask.parallelize(p._1, p._2, tileSize))
+    val tiledTasks = clustersToDeduplicate.flatMap(p => CartesianTaskSplit.parallelizeCluster(p._1, p._2, tileSize))
+    
     tiledTasks.persist //(StorageLevel.MEMORY_AND_DISK)
     val tileCount = tiledTasks.count;
 
     println(f"Prepared $initialClusterCount clusters, and then split it to $tileCount tiles")
     //        val comparator = sc.broadcast(buildWorkComparator) //todo: can we do comparator broadcast variable?
 
+    //build (clusterId, Seq(docId)) rdd:    
     val partialEqualityClusters = tiledTasks.flatMap(
-      v => {
+      task => {
         val t0 = java.lang.System.currentTimeMillis()
-        //                    log.info("Starting tile task %s".format(v.getTaskId))
         val comparator = buildWorkComparator
-        val res = v.processPairs((a: DocumentWrapper, b: DocumentWrapper) =>
+        val res = task.processPairs((a: DocumentWrapper, b: DocumentWrapper) =>
           comparator.isDuplicate(a.getDocumentMetadata, b.getDocumentMetadata, null))
         val time = (java.lang.System.currentTimeMillis() - t0) / 1000.0
-        log.info(f"Finishing tile task ${v.getTaskId} in $time%.4f sec")
-        res
+        //useful for identification of possible problem.
+        log.info(f"Finishing tile task ${task.taskId} in $time%.4f sec")
+        res.map((task.clusterId, _))
       }
     )
-    // At this moment we have RDD of (String, Seq[String]) (clusterId and list of 'equal' ids inside this cluster    
-    // let's save it: 
-    // partialEqualityClusters.saveAsObjectFile ("hdfs:///user/axnow/intermediate/pec");
-    // //later, in other program - watch, you have tuples out of the box :)
-    // val loadedPec  = sc.objectFile[(String, java.util.List[String])]("intermediate/pec")
-    // val partialEqualityClusters = loadedPec
-    // 
-    // 
-    //        equalityClusters.persist(StorageLevel.MEMORY_AND_DISK)
-    //        log.info("Got totally "+partialEqualityClusters.count+" partial equality clusters.");
-    //        val filteredSizes = partialEqualityClusters.mapValues(x=>1).reduceByKey(_+_).filter(p=>p._2>500)
-    //        log.info("After filtering "+partialEqualityClusters.count+" equality clusters left.");
-    //        
-    //        val eqclsizes= filteredSizes.collect.sortBy (_._2)
-    //        println("Equality cluster sizes:")
-    //        eqclsizes.foreach(println(_))
-    //        println("Done.\n\n")
-
+    
     val finalClusters = partialEqualityClusters.mapValues(List(_)).
-      reduceByKey(_ ++ _). //one long list of lists of ids
+      reduceByKey(_ ++ _). //one long list of lists of ids for each cluster
       map(pair => {
         val t0 = java.lang.System.currentTimeMillis()
-        val res = TileTask.coalesceResult(pair._2.asJava)
+        val res = CartesianTaskSplit.coalesceClusters(pair._2.asJava)
         val tt = System.currentTimeMillis() - t0;
         val clusterSize = pair._2.size
         log.info(f"Finished tile coalesce task. (Cluster,time[s], size): ${pair._1}, ${tt / 1000.0}, ${pair._2.size}")
