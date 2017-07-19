@@ -124,25 +124,14 @@ store tcX into '$outputPath$TERM_COUNT';
 
 --**************** word count rank *****************
 tc = load '$outputPath$TERM_COUNT' as (val:double);
-group_by_terms = group doc_all by term;
-wc = foreach group_by_terms generate COUNT(doc_all) as count, group as term, doc_all.docId as docs;
-wc_rankedX = rank wc by count asc;
-store wc_rankedX into '$outputPath$WORD_RANK';
-wc_ranked = load '$outputPath$WORD_RANK' as (rank_num:long,count:long,term:chararray,docs:{t:(docId:chararray)});
-wc_ranked_hr = foreach wc_ranked generate rank_num,count,term;
-store wc_ranked_hr into '$outputPath$WORD_RANK_HR'; 
-
---SPLIT wc_ranked INTO
---  term_condition_accepted_tmp IF ($0 <= (double)tc.val*$removal_rate and $0 >= $removal_least_used),
---  term_condition_not_accepted_tmp IF ($0 > (double)tc.val*$removal_rate or $0 < $removal_least_used); 
+wc = foreach group_by_terms generate COUNT(terms) as count, group as term;
+wc_ranked = rank wc by count asc;
+store wc_ranked into '$outputPath$WORD_RANK_HR'; 
 
 term_condition_accepted_tmp = filter wc_ranked by ($0 <= (double)tc.val*$removal_rate and $0 >= $removal_least_used);
-term_condition_not_accepted_tmp = filter wc_ranked by ($0 > (double)tc.val*$removal_rate or $0 < $removal_least_used);
-		
-doc_selected_termsX = foreach term_condition_accepted_tmp generate FLATTEN(docs) as docId, term;
+term_condition_accepted_tmp_joined_with_docs = join term_condition_accepted_tmp by term, doc_all by term;
+doc_selected_termsX = foreach term_condition_accepted_tmp_joined_with_docs generate doc_all::docId, doc_all::term;
 store doc_selected_termsX into '$outputPath$WORD_COUNT';
-doc_selected_termsX2 = foreach term_condition_not_accepted_tmp generate term;
-store doc_selected_termsX2 into '$outputPath$WORD_COUNT_NEG';
 --**************** word count rank *****************
 
 --****************** tfidf calc ********************
