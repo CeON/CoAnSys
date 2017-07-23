@@ -10,7 +10,12 @@
     <artifactId>deduplication-document-spark-impl</artifactId>
     <packaging>jar</packaging>
     <name>Deduplication - Document - SparkVersion - Implementation</name>
-
+    <licenses>
+        <license>
+            <name>GNU AFFERO GENERAL PUBLIC LICENSE, Version 3 (AGPL-3.0)</name>
+            <url>http://opensource.org/licenses/AGPL-3.0</url>
+        </license>
+    </licenses>    
     <distributionManagement>
         <repository>
             <id>ssh-cypisek</id>
@@ -21,6 +26,8 @@
     <build>
         <sourceDirectory>src/main/scala</sourceDirectory>
         <testSourceDirectory>src/test/scala</testSourceDirectory>
+            
+        
             
         <plugins>
             <plugin>
@@ -179,6 +186,12 @@
             <groupId>org.scalatest</groupId>
             <artifactId>scalatest_2.10</artifactId>
             <version>3.0.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.holdenkarau</groupId>
+            <artifactId>spark-testing-base_2.11</artifactId>
+            <version>1.6.0_0.7.2</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

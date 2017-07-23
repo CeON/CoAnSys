@@ -1,9 +1,20 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+ * This file is part of CoAnSys project.
+ * Copyright (c) 2012-2017 ICM-UW
+ * 
+ * CoAnSys is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
 
+ * CoAnSys is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Affero General Public License
+ * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
+ */
 package pl.edu.icm.coansys.document.deduplication
 
 import pl.edu.icm.coansys.models.DocumentProtos.DocumentWrapper
@@ -43,6 +54,7 @@ class CartesianTaskSplit(
 }
 
 object CartesianTaskSplit {
+  val log = org.slf4j.LoggerFactory.getLogger(getClass().getName())
     /**
      * Combine clusters which have non-empty intersection, so result will be
      * only separate lists.
@@ -70,18 +82,18 @@ object CartesianTaskSplit {
     /** Split one large cluster into parallel tasks of the given size.
     */
     def parallelizeCluster(clusterId: String, documents: Iterable[DocumentWrapper], tileSize: Int): Seq[CartesianTaskSplit] = {
-        println(f"Document count: ${documents.size}, tile size $tileSize")
+        log.info(f"Document count: ${documents.size}, tile size $tileSize")
         val ntiles = documents.size/tileSize + (if(documents.size % tileSize>0) 1 else 0)
         println(f"ntiles: $ntiles")
         
-        val sdoc = documents.toSeq.sorted(Ordering.by[DocumentWrapper, String](_.getDocumentMetadata.getKey))
-        val groupedDocs = sdoc.zipWithIndex.map(docidx => (docidx._2%ntiles, docidx._1)).groupBy[Int](_._1).mapValues(_.map(_._2))
+        val sdoc = documents.toVector.sorted(Ordering.by[DocumentWrapper, String](_.getDocumentMetadata.getKey))
+        val groupedDocs = sdoc.zipWithIndex.map(docidx => (docidx._2%ntiles, docidx._1)).groupBy[Int](_._1).mapValues(_.map(_._2).toVector).toVector
         val res = groupedDocs.flatMap(kv => 
                 groupedDocs.map(kvin => new CartesianTaskSplit(
                         clusterId, f"${clusterId}_${kv._1}:${kv._2}",kv._2, kvin._2
                     )
                 )
             )
-        res.toSeq
+        res
     }
 }

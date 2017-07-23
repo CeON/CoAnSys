@@ -1,3 +1,21 @@
+/*
+ * This file is part of CoAnSys project.
+ * Copyright (c) 2012-2017 ICM-UW
+ * 
+ * CoAnSys is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * CoAnSys is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Affero General Public License
+ * along with CoAnSys. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package pl.edu.icm.coansys.document.deduplication
 import scala.collection.JavaConversions._
 import org.apache.spark.SparkContext
@@ -18,13 +36,15 @@ import pl.edu.icm.coansys.document.deduplication.merge.DuplicatesMerger
 import pl.edu.icm.coansys.models.DocumentProtos
 import pl.edu.icm.coansys.models.DocumentProtos._
 import org.apache.spark.rdd.RDD
-import org.apache.spark.storage.StorageLevel
 import pl.edu.icm.coansys.deduplication.document.comparator.VotesProductComparator
 import pl.edu.icm.coansys.deduplication.document.comparator.WorkComparator
 import scala.collection.mutable.ListBuffer
 import pl.edu.icm.coansys.document.deduplication._
 import scala.collection.JavaConverters._
 
+/** Main application for the deduplication of the documents. 
+ * 
+ */
 object DeduplicateDocuments {
   val log = org.slf4j.LoggerFactory.getLogger(getClass().getName())
 
@@ -47,6 +67,7 @@ object DeduplicateDocuments {
     }
   }
 
+    
   def calculateKeys(doc: DocumentMetadata, initialClusteringKeySize: Int, maximumClusteringKeySize: Int): Seq[String] = {
     val keySizes = initialClusteringKeySize to maximumClusteringKeySize
     var res = MultiLengthTitleKeyGenerator.generateKeys(doc)(keySizes)
@@ -58,7 +79,9 @@ object DeduplicateDocuments {
 
   /**
    * Group items into large clusters, within which detailed analysis will be
-   * held. Items are grouped by keys generated from the normalised titles.
+   * held. 
+   *
+   *  Items are grouped by keys generated from the normalised titles.
    * If the cluster is too big, then longer keys are used, so smaller clusters are 
    * generated. Treshold is maximumClusterSize.
    * 
@@ -73,7 +96,7 @@ object DeduplicateDocuments {
             doc.getDocumentMetadata(), initialClusteringKeySize, maximumClusteringKeySize)) //we loose documents here, ony ids are preseved
     val clusterDoc = idClusterKeys.flatMap(kv => kv._2.map(idcluster => (idcluster, kv._1))) // (clusterId => docId)
     val clusterSizes = idClusterKeys.flatMap(x => (x._2.map(y => (y, 1)))).reduceByKey(_ + _) //(clusterId => clusterSize)
-
+    
     //build rdd (docId, (clusterId, clusterSize) )
     val docClustersWithSizes = clusterDoc.join(clusterSizes).map(p => (p._2._1, (p._1, p._2._2)))
     //build rdd - (docId, clusterId)
@@ -101,12 +124,21 @@ object DeduplicateDocuments {
     res
   }
 
+  /**
+   * Merge the documents using appropriate document merger.
+   */
   def mergeDocuments(docs: List[DocumentWrapper]): DocumentWrapper = {
     val merger = buildDocumentsMerger()
     val merged = merger.merge(docs);
     merged
   }
 
+  /**
+   * Defines comparator according to the weights resulting from experiments. 
+   * 
+   * This is reimplementation of the original Spring XML bean definition, which 
+   * was unnecessary complication at this moment.
+   */
   def buildWorkComparator(): WorkComparator = {
     val result = new VotesProductComparator;
     result.setMinVotersWeightRequired(1.5f)
@@ -165,18 +197,60 @@ object DeduplicateDocuments {
     result;
   }
 
+    
   case class Config(
     inputFile: String = "",
     outputFile: String = "",
     dumpClusters: Boolean = false,
     keySizeMin: Int = 5,
-    keySizeMax: Int = 10,
+    keySizeMax: Int = 15,
     clusterSizeMax: Int = 500,
-    tileSize: Int = 25
+    tileSize: Int = 25,
+    filterInvalidDocuments: Boolean = false,
+    removeDuplicateDocuments: Boolean = false
   )
-  /**
-   * @param args the command line arguments
+
+  /** Load the documents from the given sequence file, do the optional 
+   * cleanups.
+   * 
    */
+  def loadDocuments( sc: SparkContext, file: String,
+                    filterInvalid: Boolean, removeDoubles: Boolean):RDD[(String, DocumentWrapper)] = {
+         val rawbytes = sc.sequenceFile[String, BytesWritable](file).mapValues(_.copyBytes)
+    println("Loaded raw bytes.")
+
+    val dirtyWrappers = rawbytes.mapValues(b => DocumentProtos.DocumentWrapper.parseFrom(b))
+
+    //fix invalid documents:
+    val fixedWrappers = if (filterInvalid) {
+      val x = dirtyWrappers.filter(w => isValidDocument(w._2))
+      val afterSize = x.count;
+      val preSize = dirtyWrappers.count
+      log.info(f"Filtering invalid documents done, before filtering: $preSize and after filtering $afterSize documents left.")
+      x
+    } else {
+      dirtyWrappers
+    }
+
+    if (removeDoubles) {
+      fixedWrappers.reduceByKey((x, y) => y)
+    } else {
+      fixedWrappers
+    }
+  }
+  
+  /** Debug method to printout top clusters. */
+  def printTopClusters(finalClusters:RDD[(String, Seq[String])], count:Int):Unit = {
+    val finclSizes = finalClusters.mapValues(_.size).takeOrdered(100)(Ordering[Int].on(-_._2))
+    println("Top 100 cluster sizes:")
+    finclSizes.foreach(println(_))
+    println("-----\n\n")
+
+  }
+  
+    
+  
+     
   def main(args: Array[String]): Unit = {
     val fixInvalidDocuments = true;
     val removeDoubles = true;
@@ -185,10 +259,13 @@ object DeduplicateDocuments {
 
     val parser = new scopt.OptionParser[Config]("CoAnSys Deduplicate Documents") {
       head("Deduplicate documents", "0.1")
-
-//      opt[Unit]('c', "dump-clusters").action((x, c) =>
-//        c.copy(dumpClusters = true)).text("dump similarity clusters into debug/clusters hdfs dir during run")
-
+                
+      opt[Unit]('f', "filter-invalid").action((x, c) =>
+        c.copy(filterInvalidDocuments = true)).text("filter invalid (empty) documents before run.")
+                
+      opt[Unit]('d', "remove-doubles").action((x, c) =>
+        c.copy(removeDuplicateDocuments = true)).text("filter out duplicates sharing the same key before processing.")
+                
       opt[Int]("cluster-key-min").abbr("kmn").action((x, c) => c.copy(keySizeMin = x)).
         validate(x =>
           if (x >= 2) success
@@ -222,12 +299,13 @@ object DeduplicateDocuments {
         config
       case None =>
         // arguments are bad, error message will have been displayed
-        println("No config.")
+        println("No config, aborting.")
         return
     }
 
     println("Creating context...")
 
+    //required to operate protobuf correctly
     val conf = new SparkConf()
       .setAppName("Document deduplication")
       .set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
@@ -242,52 +320,27 @@ object DeduplicateDocuments {
     //  val inputDocuments = "/user/kura/curr-res-navigator/hbase-sf-out/DOCUMENT"
     //  val inputDocuments = "/user/kura/curr-res-navigator-no-blogs/hbase-sf-out/DOCUMENT"
     val outputDocuments = cfg.outputFile
-    val tileSize = cfg.tileSize
-    val initialClusteringKeySize = cfg.keySizeMin
-    val maximumClusteringKeySize = cfg.keySizeMax
-    val maximumClusterSize = cfg.clusterSizeMax
-
-    val rawbytes = sc.sequenceFile[String, BytesWritable](inputDocuments).mapValues(_.copyBytes)
-    println("Loaded raw bytes.")
-
-    val dirtyWrappers = rawbytes.mapValues(b => DocumentProtos.DocumentWrapper.parseFrom(b))
-
-    //fix invalid documents:
-    val fixedWrappers = if (fixInvalidDocuments) {
-      val x = dirtyWrappers.filter(w => isValidDocument(w._2))
-      val afterSize = x.count;
-      val preSize = dirtyWrappers.count
-      log.info(f"Filtering invalid documents done, before filtering: $preSize and after filtering $afterSize documents left.")
-      x
-    } else {
-      dirtyWrappers
-    }
-
-    val wrappers = if (removeDoubles) {
-      fixedWrappers.reduceByKey((x, y) => y)
-    } else {
-      fixedWrappers
-    }
-
+    
+        
+    //load documents 
+    val wrappers = loadDocuments(sc, inputDocuments, cfg.filterInvalidDocuments, cfg.removeDuplicateDocuments)
     val initialSize = wrappers.count
     println(f"Starting processing with $initialSize documents.")
 
-    val initialGroups = prepareInitialClustering(wrappers, initialClusteringKeySize, maximumClusteringKeySize, maximumClusterSize)
-    initialGroups.persist //(StorageLevel.MEMORY_AND_DISK)
+    val initialGroups = prepareInitialClustering(wrappers, cfg.keySizeMin, cfg.keySizeMax, cfg.clusterSizeMax)
+    initialGroups.persist
 
     val clustersToDeduplicate = initialGroups.filter(t => t._2.size > 1)
     val initialClusterCount = clustersToDeduplicate.count
     //TODO: some statistics here on cluster, would be useful.
 
-//    val tiledTasks = clustersToDeduplicate.flatMap(p => TileTask.parallelize(p._1, p._2, tileSize))
-    val tiledTasks = clustersToDeduplicate.flatMap(p => CartesianTaskSplit.parallelizeCluster(p._1, p._2, tileSize))
+    val tiledTasks = clustersToDeduplicate.flatMap(p => CartesianTaskSplit.parallelizeCluster(p._1, p._2, cfg.tileSize))
     
-    tiledTasks.persist //(StorageLevel.MEMORY_AND_DISK)
+    tiledTasks.persist
     val tileCount = tiledTasks.count;
 
     println(f"Prepared $initialClusterCount clusters, and then split it to $tileCount tiles")
-    //        val comparator = sc.broadcast(buildWorkComparator) //todo: can we do comparator broadcast variable?
-
+    
     //build (clusterId, Seq(docId)) rdd:    
     val partialEqualityClusters = tiledTasks.flatMap(
       task => {
@@ -319,16 +372,15 @@ object DeduplicateDocuments {
           cl.zipWithIndex.map(q => (cid + f"_${q._2}%03d", q._1))
         }
       )
+      
     //now we got all the items in place    
-    finalClusters.persist(StorageLevel.MEMORY_AND_DISK_SER);
-    val finclSizes = finalClusters.mapValues(_.size).takeOrdered(100)(Ordering[Int].on(-_._2))
-    println("Top 100 cluster sizes:")
-    finclSizes.foreach(println(_))
-    println("-----\n\n")
+    finalClusters.persist
+    
+    printTopClusters(finalClusters, 100)
 
     //count clusters, documents in clusters and number of documents to be deduced:
     val finalClusterCount = finalClusters.count
-    val documentInFinalClusterCount = finalClusters.map(_._2.size).reduce(_ + _)
+    val documentInFinalClusterCount = finalClusters.map(_._2.size).fold(0)(_ + _)
     val documentRemovedDuringClusteringCount = documentInFinalClusterCount - finalClusterCount
     println(f"Finally created $finalClusterCount clusters, containing $documentInFinalClusterCount documents, $documentRemovedDuringClusteringCount documents will be removed.")
 
@@ -337,7 +389,7 @@ object DeduplicateDocuments {
       map(v => (v._2, v._1))
     val documentWrappersPrepared = wrappers.leftOuterJoin(docIdWithClusterId);
     val mergedDocuments = documentWrappersPrepared.filter(_._2._2.isDefined).
-      map(x => (x._2._2, List(x._2._1))).reduceByKey(_ ++ _). //get lists of cluster documents by cluster id
+      map(x => (x._2._2, List(x._2._1))).foldByKey(List())(_ ++ _). //get lists of cluster documents by cluster id
       map(kv => {
         val doc = mergeDocuments(kv._2)
         (doc.getDocumentMetadata.getKey, doc)
