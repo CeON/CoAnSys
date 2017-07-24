@@ -1,6 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
-        <artifactId>deduplication-document</artifactId>
+        <artifactId>deduplication-document-spark</artifactId>
         <groupId>pl.edu.icm.coansys</groupId>
         <version>1.11-SNAPSHOT</version>
     </parent>
@@ -11,6 +11,12 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+    <licenses>
+        <license>
+            <name>GNU AFFERO GENERAL PUBLIC LICENSE, Version 3 (AGPL-3.0)</name>
+            <url>http://opensource.org/licenses/AGPL-3.0</url>
+        </license>
+    </licenses>    
     <build>
         <plugins>
             <plugin>
@@ -23,7 +29,7 @@
     <dependencies>
         <dependency>
             <groupId>pl.edu.icm.coansys</groupId>
-            <artifactId>deduplication-document-impl</artifactId>
+            <artifactId>deduplication-document-spark-impl</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
