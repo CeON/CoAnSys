@@ -10,6 +10,7 @@
 
 # Netbeans files #
 nb-configuration.xml
+nbaction.xml
 
 # IntelliJ IDEA files #
 .idea
@@ -43,3 +44,4 @@ dependency-reduced-pom.xml
 /affiliation-organization-matching/affiliation-organization-matching-workflow/src/main/oozie/workflow.xml
 /deduplication-organization/deduplication-organization-workflow/src/main/oozie/workflow.xml
 
+/deduplication-document-spark/deduplication-document-spark-impl/nbproject/

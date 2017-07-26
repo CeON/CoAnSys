@@ -198,6 +198,7 @@
 	<module>citation-matching</module>
 	<module>commons</module>
 	<module>deduplication-document</module>
+	<module>deduplication-document-spark</module>
 	<module>deduplication-organization</module>
 	<module>disambiguation</module>
 	<module>disambiguation-author</module>
