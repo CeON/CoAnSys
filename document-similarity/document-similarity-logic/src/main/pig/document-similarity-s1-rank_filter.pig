@@ -125,8 +125,13 @@ store tcX into '$outputPath$TERM_COUNT';
 --**************** word count rank *****************
 tc = load '$outputPath$TERM_COUNT' as (val:double);
 wc = foreach group_by_terms generate COUNT(terms) as count, group as term;
-wc_ranked = rank wc by count asc;
-store wc_ranked into '$outputPath$WORD_RANK_HR'; 
+
+-- git#432 replacing buggy pig rank function with custom solution taken from document-similarity-s1-ship-rank_filter.pig
+-- wc_ranked = rank wc by count asc;
+-- store wc_ranked into '$outputPath$WORD_RANK_HR'; 
+wc_tmp = order wc by count asc parallel 1;
+STORE wc_tmp INTO '$outputPath$WORD_RANK_HR' using pl.edu.icm.coansys.similarity.pig.serializers.RankStorage();
+wc_ranked = LOAD '$outputPath$WORD_RANK_HR' as (rank_num:long, count:long, term:chararray);
 
 term_condition_accepted_tmp = filter wc_ranked by ($0 <= (double)tc.val*$removal_rate and $0 >= $removal_least_used);
 term_condition_accepted_tmp_joined_with_docs = join term_condition_accepted_tmp by term, doc_all by term;
