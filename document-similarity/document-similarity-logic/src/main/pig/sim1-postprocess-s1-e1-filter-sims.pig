@@ -19,6 +19,7 @@
 %default parallel 10
 %default tmpCompressionCodec gz
 %default mapredChildJavaOpts -Xmx8000m
+%default mapreduceTaskTimeout 7200000
 
 %default jars '*.jar'
 %default commonJarsPath '../../../../document-similarity-workflow/target/oozie-wf/lib/$jars'
@@ -29,6 +30,7 @@ SET default_parallel $parallel
 SET mapred.child.java.opts $mapredChildJavaOpts
 SET mapreduce.map.java.opts $mapredChildJavaOpts
 SET mapreduce.reduce.java.opts $mapredChildJavaOpts
+SET mapreduce.task.timeout $mapreduceTaskTimeout
 SET pig.tmpfilecompression true
 SET pig.tmpfilecompression.codec $tmpCompressionCodec
 %DEFAULT scheduler default
